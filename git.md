@@ -7,6 +7,12 @@ git config --global core.editor emacs
 #list
 git config --list
 ```
+```bash
+ssh-keygen -t rsa -C userid #your userid
+```
+
+<++>
+**Warning: Permanently added the RSA host key for IP address '13.229.188.59' to the list of known hosts.**
 ### remote
 show remote
 ``` bash

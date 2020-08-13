@@ -12,3 +12,7 @@ fuser -vm .
 ``` bash
 duE "M|G" | sort -h
 ```
+### create file
+``` bash
+cat > test << "EOF"
+```
