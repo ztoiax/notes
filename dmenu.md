@@ -32,19 +32,19 @@ www.123.123/12312 adfasdf
 ```bash
 egrep '((http|https)://|www\.)' lstest #your file name
 ```
-![avatar](/home/tz/md/Pictures/dmenu/1.png)
+![avatar](/Pictures/dmenu/1.png)
 
 ### Get url tail
 ```bash
 egrep '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 ```
-![avatar](/home/tz/md/Pictures/dmenu/2.png)
+![avatar](/Pictures/dmenu/2.png)
 
 ### -o cut
 ```bash
 egrep -o '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 ```
-![avatar](/home/tz/md/Pictures/dmenu/3.png)
+![avatar](/Pictures/dmenu/3.png)
 
 ### Get last command output with function of bindkey
 ```bash
@@ -58,14 +58,14 @@ zle -N searchurl
 bindkey "^[u" searchurl
 ```
 
-![avatar](/home/tz/md/Pictures/dmenu/4.gif)
+![avatar](/Pictures/dmenu/4.gif)
 
 ### For dir regux
 ```bash
 dir="bin|boot|dev|etc|home|lib|lib64|lost+found|mnt|opt|proc|root|run|sbin|srv|sys|tmp|usr|var"
 egrep -o "/($dir)/[a-zA-Z0-9/.]*" lstest
 ```
-![avatar](/home/tz/md/Pictures/dmenu/5.png)
+![avatar](/Pictures/dmenu/5.png)
 
 ### Get the path in the same way
 ```bash
@@ -75,7 +75,7 @@ function cpdir {
     $(history | tail -n 1 | awk '{$1="";print $0}') | egrep -o "/($dir)/[a-zA-Z0-9/.]*" | dmenu -p "copy url" -l 10 | xclip -selection clipboard
 }
 ```
-![avatar](/home/tz/md/Pictures/dmenu/6.gif)
+![avatar](/Pictures/dmenu/6.gif)
 
 ## Search by file
 **Can search**
@@ -95,10 +95,10 @@ function checkfile {
     esac
 }
 ```
-![avatar](/home/tz/md/Pictures/dmenu/7.gif)
+![avatar](/Pictures/dmenu/7.gif)
 
 ## Build a script of search engines
 This is a [script link](https://github.com/ztoiax/userfulscripts/blob/master/dmenu-search.sh
  "With a Title").
 
-![avatar](/home/tz/md/Pictures/dmenu/8.gif)
+![avatar](/Pictures/dmenu/8.gif)
