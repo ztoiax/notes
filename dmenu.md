@@ -1,21 +1,25 @@
-# dmenu useful sctripts
+# dmenu 的正确使用方式
 
 <!-- vim-markdown-toc GFM -->
 
 * [Get information with regux in chaos](#get-information-with-regux-in-chaos)
-    * [Create file](#create-file)
+    * [Create a messy file](#create-a-messy-file)
     * [Get url head](#get-url-head)
     * [Get url tail](#get-url-tail)
     * [-o cut](#-o-cut)
-    * [Get last command output with function of bindkey](#get-last-command-output-with-function-of-bindkey)
+    * [获取上一条命令所输出的网址,并用浏览器打开](#获取上一条命令所输出的网址并用浏览器打开)
     * [For dir regux](#for-dir-regux)
     * [Get the path in the same way](#get-the-path-in-the-same-way)
-* [Search by file](#search-by-file)
+    * [当然也可以直接复制命令的所有输出](#当然也可以直接复制命令的所有输出)
+* [Search by file with dmenu menu...](#search-by-file-with-dmenu-menu)
 * [Build a script of search engines](#build-a-script-of-search-engines)
 
 <!-- vim-markdown-toc -->
+
 ## Get information with regux in chaos
-### Create file
+
+### Create a messy file
+
 ```bash
 #my file name is lstest
 12321https://www.google.com/
@@ -28,29 +32,38 @@ www.123.123/12312 adfasdf
 123 /home/tz/ 12312312
 123 /home/tz/.config
 ```
+
 ### Get url head
+
 ```bash
 egrep '((http|https)://|www\.)' lstest #your file name
 ```
+
 ![avatar](/Pictures/dmenu/1.png)
 
 ### Get url tail
+
 ```bash
 egrep '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 ```
+
 ![avatar](/Pictures/dmenu/2.png)
 
 ### -o cut
+
 ```bash
 egrep -o '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 ```
+
 ![avatar](/Pictures/dmenu/3.png)
 
-### Get last command output with function of bindkey
+### 获取上一条命令所输出的网址,并用浏览器打开
+
 ```bash
 # add function
 function searchurl {
     $(history | tail -n 1 | awk '{$1="";print $0}') | egrep -o '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' | dmenu -p "search url" -l 10 | xargs xdg-open &> /dev/null
+#如果只需要复制网址，把"xargs xdg-open &> /dev/null" 替换成"xclip -selection clipboard"
 }
 # zsh bindkey
 zle -N searchurl
@@ -61,13 +74,16 @@ bindkey "^[u" searchurl
 ![avatar](/Pictures/dmenu/4.gif)
 
 ### For dir regux
+
 ```bash
 dir="bin|boot|dev|etc|home|lib|lib64|lost+found|mnt|opt|proc|root|run|sbin|srv|sys|tmp|usr|var"
 egrep -o "/($dir)/[a-zA-Z0-9/.]*" lstest
 ```
+
 ![avatar](/Pictures/dmenu/5.png)
 
 ### Get the path in the same way
+
 ```bash
 function cpdir {
 # set dir varible
@@ -75,13 +91,32 @@ function cpdir {
     $(history | tail -n 1 | awk '{$1="";print $0}') | egrep -o "/($dir)/[a-zA-Z0-9/.]*" | dmenu -p "copy url" -l 10 | xclip -selection clipboard
 }
 ```
+
 ![avatar](/Pictures/dmenu/6.gif)
 
-## Search by file
+### 当然也可以直接复制命令的所有输出
+
+```bash
+function cpline {
+    $(history | tail -n 1 | awk '{$1="";print $0}') | dmenu -p "copy line" -l 10 | xclip -selection clipboard
+}
+
+# 通过历史记录,选择要复制的命令的输出,注意命令会重复执行
+function cpcommand {
+    $(history | sort -nr | awk '{$1="";print $0}' | dmenu -p "copy content" -l 10) | xclip -selection clipboard
+}
+```
+
+![avatar](/Pictures/dmenu/9.gif)
+
+## Search by file with dmenu menu...
+
 **Can search**
-+ `XK`
-+ `Port`
-+ `other any file`
+
+- `XK`
+- `Port`
+- `other any file`
+
 ```bash
 # It is realized by two-layer menu.
 function checkfile {
@@ -95,10 +130,11 @@ function checkfile {
     esac
 }
 ```
+
 ![avatar](/Pictures/dmenu/7.gif)
 
 ## Build a script of search engines
-This is a [script link](https://github.com/ztoiax/userfulscripts/blob/master/dmenu-search.sh
- "With a Title").
+
+This is a [script code link](https://github.com/ztoiax/userfulscripts/blob/master/dmenu-search.sh "With a Title").
 
 ![avatar](/Pictures/dmenu/8.gif)
