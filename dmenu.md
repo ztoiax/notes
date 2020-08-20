@@ -9,10 +9,10 @@
     * [-o cut](#-o-cut)
     * [获取上一条命令所输出的网址,并用浏览器打开](#获取上一条命令所输出的网址并用浏览器打开)
     * [For dir regux](#for-dir-regux)
-    * [Get the path in the same way](#get-the-path-in-the-same-way)
-    * [当然也可以直接复制命令的所有输出](#当然也可以直接复制命令的所有输出)
-* [Search by file with dmenu menu...](#search-by-file-with-dmenu-menu)
-* [Build a script of search engines](#build-a-script-of-search-engines)
+    * [Copy the path in the same way](#copy-the-path-in-the-same-way)
+    * [当然也以行为单位，复制命令的输出](#当然也以行为单位复制命令的输出)
+* [通过 dmenu menu 二级菜单，可快速获取并复制文件内容，代替 grep](#通过-dmenu-menu-二级菜单可快速获取并复制文件内容代替-grep)
+* [建一个搜索引擎合集脚本，配合 dmenu 使用](#建一个搜索引擎合集脚本配合-dmenu-使用)
 
 <!-- vim-markdown-toc -->
 
@@ -82,7 +82,7 @@ egrep -o "/($dir)/[a-zA-Z0-9/.]*" lstest
 
 ![avatar](/Pictures/dmenu/5.png)
 
-### Get the path in the same way
+### Copy the path in the same way
 
 ```bash
 function cpdir {
@@ -94,9 +94,10 @@ function cpdir {
 
 ![avatar](/Pictures/dmenu/6.gif)
 
-### 当然也可以直接复制命令的所有输出
+### 当然也以行为单位，复制命令的输出
 
 ```bash
+# 复制上一条执行的命令的输出
 function cpline {
     $(history | tail -n 1 | awk '{$1="";print $0}') | dmenu -p "copy line" -l 10 | xclip -selection clipboard
 }
@@ -109,7 +110,7 @@ function cpcommand {
 
 ![avatar](/Pictures/dmenu/9.gif)
 
-## Search by file with dmenu menu...
+## 通过 dmenu menu 二级菜单，可快速获取并复制文件内容，代替 grep
 
 **Can search**
 
@@ -133,7 +134,7 @@ function checkfile {
 
 ![avatar](/Pictures/dmenu/7.gif)
 
-## Build a script of search engines
+## 建一个搜索引擎合集脚本，配合 dmenu 使用
 
 This is a [script code link](https://github.com/ztoiax/userfulscripts/blob/master/dmenu-search.sh "With a Title").
 
