@@ -21,6 +21,7 @@
     * [读取日志](#读取日志)
     * [读取实时日志](#读取实时日志)
     * [读取实时错误日志](#读取实时错误日志)
+    * [读取日志 size](#读取日志-size)
 * [实战调试](#实战调试)
     * [查看错误](#查看错误)
     * [解决办法](#解决办法)
@@ -32,6 +33,12 @@
 
 - systemd 通过`cgroup`(控制组)来追踪进程，而不是 PID
 - systemd 执行的第一个目标是 `default.target`但实际上 `default.target` 是指向 `graphical.target` 的软链接
+
+```
+systemctl get-default
+#output
+graphical.target
+```
 
 ```sh
 grep Requires= /usr/lib/systemd/system/graphical.target
@@ -249,6 +256,14 @@ journalctl -f
 journalctl -fp err
 ```
 
+### 读取日志 size
+
+```sh
+sudo journalctl --disk-usage
+
+```
+
+
 ## 实战调试
 
 ### 查看错误
@@ -290,7 +305,9 @@ sudo echo "blacklist sp5100_tco" > /etc/modprobe.d/sp5100_tco.conf
 
 kvm 是因为存储池里有之前临时挂载 vm，现在没有挂载也就读取错误
 解决办法取消存储池错误的 vm 即可
+
 ## referece
+
 - [ruanyif](http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html)
 - [linux china](https://linux.cn/article-4505-1.html)
 - [linux china2](https://linux.cn/article-5457-1.html)
