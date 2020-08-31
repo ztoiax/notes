@@ -8,6 +8,12 @@
     * [mtr](#mtr)
     * [tcpdump](#tcpdump)
     * [arp](#arp)
+    * [netstat](#netstat)
+        * [统计tcp数量](#统计tcp数量)
+        * [显示LISTEM状态tcp](#显示listem状态tcp)
+        * [不解析地址(提高速度)](#不解析地址提高速度)
+        * [显示所有LISTEM状态tcp,udp进程](#显示所有listem状态tcpudp进程)
+        * [统计本地tcp链接数量](#统计本地tcp链接数量)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -48,6 +54,43 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 ## arp
 
 `arp -a` 显示`mac`地址
+
+## netstat
+
+| 参数 | 操作                 |
+| ---- | ----                 |
+| -a   | 所有                 |
+| -t   | tcp                  |
+| -u   | udp                  |
+| -n   | 不解析地址(提高速度) |
+| -p   | 进程                 |
+| -c   | 实时监控             |
+| -l   | LISTEN               |
+
+### 统计tcp数量
+```sh
+netstat -t | wc -l
+```
+
+### 显示LISTEM状态tcp
+```sh
+netstat -lt
+```
+
+### 不解析地址(提高速度)
+```sh
+netstat -lnt
+```
+
+### 显示所有LISTEM状态tcp,udp进程
+
+```sh
+netstat -tunlp
+```
+### 统计本地tcp链接数量
+```sh
+netstat -tn | awk '{print $4}' | awk -F ":" '{print $1}' | sort | uniq -c
+```
 
 # reference
 
