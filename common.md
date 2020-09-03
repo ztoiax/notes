@@ -16,6 +16,13 @@
         * [查看当前分区谁在使用](#查看当前分区谁在使用)
         * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
     * [cron](#cron)
+    * [mdadm(RAID)](#mdadmraid)
+        * [创建RAID5](#创建raid5)
+        * [创建RAID5,并设置备份磁盘](#创建raid5并设置备份磁盘)
+        * [保存配置文件](#保存配置文件)
+        * [性能测试](#性能测试)
+        * [硬盘装载](#硬盘装载)
+        * [卸载RAID](#卸载raid)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -217,6 +224,67 @@ du -cha --max-depth=1 . | grep -E "M|G" | sort -h
 # 开启服务
 systemctl restart cronie.service
 ```
+## mdadm(RAID)
+
+| 参数 | 操作                   |
+| ---- | ---------------------- |
+| -l   | raid级别 |
+| -n   | 硬盘数量 |
+| -x   | 设置备份磁盘 |
+| -S   | 关闭RAID(remember umount) |
+| -R   | enableRAID |
+| -D   | 查看设备信息(cat /proc/mdstat)|
+
+
+### 创建RAID5
+```sh
+mdadm -C /dev/md0 -a yes -l 5 -n 3 /dev/sdb /dev/sdc /dev/sdd
+```
+### 创建RAID5,并设置备份磁盘
+```sh
+mdadm -C /dev/md0 -a yes -l 5 -n 3 -x 1 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+```
+### 保存配置文件
+```sh
+mdadm -D --scan > /etc/mdadm.conf
+```
+### 性能测试
+```sh
+root@localhost ~# hdparm -t /dev/md0
+/dev/md0:
+ Timing buffered disk reads: 1418 MB in  3.01 seconds = 471.61 MB/sec
+
+root@localhost ~# echo 3 > /proc/sys/vm/drop_caches
+
+root@localhost ~# hdparm -t /dev/sda
+/dev/sda:
+ Timing buffered disk reads: 810 MB in  3.00 seconds = 269.99 MB/sec
+
+```
+### 硬盘装载
+```sh
+# 把sdb设置为故障
+mdadm /dev/md0 -f /dev/sdb
+
+# 移除sdb
+mdadm /dev/md0 -r /dev/sdb
+
+# 添加新的sdb
+mdadm /dev/md0 -a /dev/sdb
+```
+
+
+### 卸载RAID
+```sh
+umount /dev/md0
+mdadm -S /dev/md0
+mdadm --zero-superblock /dev/sdb
+mdadm --zero-superblock /dev/sdc
+mdadm --zero-superblock /dev/sdd
+```
+
+
+
 # reference
 
 - [cron](https://linux.cn/article-7513-1.html)
