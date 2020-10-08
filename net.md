@@ -103,7 +103,8 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 ```sh
 sudo tcpdump -vv host 192.168.1.1
 ```
-
+- [termshark](https://github.com/gcla/termshark)
+- [wireshark](https://github.com/wireshark/wireshark)
 ### 捕抓 eth0 源端口是 80 的 10 个数据包,保存至 packets.pcap
 
 ```sh
