@@ -10,12 +10,16 @@
 * [综合](#综合)
     * [dstat](#dstat)
         * [每 2 秒(默认是 1 秒)输出 cpu 信息,一共 5 次](#每-2-秒默认是-1-秒输出-cpu-信息一共-5-次)
+* [CPU](#cpu)
+    * [perf](#perf)
 * [IO](#io)
     * [dd](#dd)
     * [hdparm](#hdparm)
 * [disk](#disk)
     * [agedu](#agedu)
         * [只统计.conf 文件](#只统计conf-文件)
+* [开机](#开机)
+    * [bootchart](#bootchart)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -83,9 +87,12 @@ httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,1
 ## bmon
 
 ![avatar](/Pictures/benchmark/3.png)
+
 ## speedometer
+
 **useage** `speedometer -rx eth0`
 ![avatar](/Pictures/benchmark/4.png)
+
 # 综合
 
 ## dstat
@@ -100,6 +107,10 @@ httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,1
 ```sh
 dstat -c 2 5
 ```
+
+# CPU
+
+## perf
 
 # IO
 
@@ -165,8 +176,19 @@ agedu -w
 
 ![avatar](/Pictures/benchmark/2.png)
 
+# 开机
+
+## bootchart
+
+```sh
+sudo bootchartd
+```
+
+![avatar](/Pictures/benchmark/5.png)
+
 # reference
 
+- [当 Linux 内核遭遇鲨鱼—kernelshark](https://mp.weixin.qq.com/s?__biz=MzI3NzA5MzUxNA==&mid=2664608433&idx=1&sn=e19f0b6e311e12c4cbfda284c35b04c4&chksm=f04d9f54c73a1642b557617f2048fc74c924c53f633d735b4f89fa68013bcceb1f1fac02f30c&mpshare=1&scene=1&srcid=10093X7r15gdQX99G0DTR42o&sharer_sharetime=1602206243755&sharer_shareid=5dbb730cd6722d0343328086d9ad7dce#rd)
 - [LinuxCast.net 每日播客](https://study.163.com/course/courseMain.htm?courseId=221001)
 - [又一波你可能不知道的 Linux 命令行网络监控工具](https://linux.cn/article-5461-1.html)
-- [Linux性能优化：CPU篇](https://zhuanlan.zhihu.com/p/180402964)
+- [Linux 性能优化：CPU 篇](https://zhuanlan.zhihu.com/p/180402964)

@@ -97,6 +97,8 @@ iptables 按规则顺序检查，条件满足则执行，否则检查下一条�
 | REJECT   | 拒绝数据包通过，必要时会给数据发送端一个响应的信息。                 |
 | LOG      | 在/var/log/messages 文件中记录日志信息，然后将数据包传递给下一条规则 |
 
+![avatar](/Pictures/iptables/3.png)
+
 ```sh
 # 创建 INPUT 链的第2条规则
 iptables -I INPUT 2
