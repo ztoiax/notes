@@ -231,7 +231,7 @@ systemctl is-enabled sshd.service
 ```
 
 ## journalctl
-
+`/etc/systemd/system.conf` 设置的默认值(关机等待进程时间...)
 ### 读取日志
 
 ```sh

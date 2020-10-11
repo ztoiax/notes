@@ -8,8 +8,10 @@
     * [fd](#fd)
         * [instead find](#instead-find)
 * [char](#char)
+    * [exa](#exa)
+        * [Advanced ls](#advanced-ls)
     * [bat](#bat)
-        * [instead cat](#instead-cat)
+        * [Advanced cat](#advanced-cat)
     * [ag](#ag)
         * [instead grep](#instead-grep)
     * [fzf](#fzf)
@@ -52,11 +54,17 @@
 
 # char
 
+## [exa](https://github.com/ogham/exa)
+
+### Advanced ls
+
+![avatar](/Pictures/awesomecli/11.png)
+
 ## [bat](https://github.com/sharkdp/bat)
 
 ![avatar](/Pictures/awesomecli/9.png)
 
-### instead cat
+### Advanced cat
 
 ## ag
 
@@ -67,6 +75,8 @@
 ![avatar](/Pictures/awesomecli/8.png)
 
 ## [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy)
+
+![avatar](/Pictures/awesomecli/10.png)
 
 ### Advanced git diff
 
