@@ -2,6 +2,7 @@
 
 * [防火墙](#防火墙)
     * [iptables](#iptables)
+    * [> `iptables` 已经落后了，建议使用 nftables 一个替换现有{ip,ip6,arp,eb}tables的框架。Main differences with iptables](#-iptables-已经落后了建议使用-nftables-一个替换现有ipip6arpebtables的框架main-differences-with-iptables)
         * [iptables 和 netfilter 的关系](#iptables-和-netfilter-的关系)
         * [iptables 传输数据包的过程](#iptables-传输数据包的过程)
         * [iptables 的表和链](#iptables-的表和链)
@@ -23,6 +24,7 @@
             * [将所有内部地址,伪装成一个外部公网地址](#将所有内部地址伪装成一个外部公网地址)
             * [通过 nat 隐藏源 ip 地址](#通过-nat-隐藏源-ip-地址)
         * [保存规则](#保存规则)
+        * [转换成 nftables](#转换成-nftables)
         * [最近一次启动后所记录的数据包](#最近一次启动后所记录的数据包)
 * [reference](#reference)
 
@@ -32,20 +34,22 @@
 
 ## iptables
 
+> `iptables` 已经落后了，建议使用 [nftables](https://wiki.nftables.org/wiki-nftables/index.php/Why_nftables%3F_) 一个替换现有{ip,ip6,arp,eb}tables的框架。[Main differences with iptables](https://wiki.nftables.org/wiki-nftables/index.php/Main_differences_with_iptables)
+---
+> [iptables转换为nftables的命令](#nftables)
+
 ### iptables 和 netfilter 的关系
 
 `iptables` 只是防火墙的管理工具，真正实现防火墙功能的是 `netfilter`，它是 Linux 内核中实现包过滤的内部结构
 
 ### iptables 传输数据包的过程
 
-① 当一个数据包进入网卡时，它首先进入 PREROUTING 链，内核根据数据包目的 IP 判断是否需要转送出去。
-
-② 如果数据包就是进入本机的，它就会沿着图向下移动，到达 INPUT 链。数据包到了 INPUT 链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些数据包会经过 OUTPUT 链，然后到达 POSTROUTING 链输出。
-
-③ 如果数据包是要转发出去的，且内核允许转发，数据包就会如图所示向右移动，经过 FORWARD 链，然后到达 POSTROUTING 链输出。
+> - ① 当一个数据包进入网卡时，它首先进入 PREROUTING 链，内核根据数据包目的 IP 判断是否需要转送出去。
+> - ② 如果数据包就是进入本机的，它就会沿着图向下移动，到达 INPUT 链。数据包到了 INPUT 链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些数据包会经过 OUTPUT 链，然后到达 POSTROUTING 链输出。
+> - ③ 如果数据包是要转发出去的，且内核允许转发，数据包就会如图所示向右移动，经过 FORWARD 链，然后到达 POSTROUTING 链输出。
 ![avatar](/Pictures/iptables/1.png)
 
-①->②
+> ①->②
 ①->③
 
 ### iptables 的表和链
@@ -215,10 +219,22 @@ iptable -t nat -A POSTROUTING -j SNAT --to-source 1.2.3.4
 | arch   | /etc/iptables           |
 
 ```sh
-iptables-save > /etc/iptables/iptables.rules
+iptables-save > /etc/iptables/iptables.bak
+# 只备份filter
+iptables-save -t filter > filter.bak
+
 # 重新加载配置文件
-iptables-restore < /etc/iptables/iptables.rules
+iptables-restore < /etc/iptables/iptables.bak
 systemctl reload iptables
+```
+<span id="nftables"></span>
+### 转换成 nftables
+
+```sh
+iptables-save > save.txt
+iptables-restore-translate -f save.txt > ruleset.nft
+nft -f ruleset.nft
+nft list ruleset
 ```
 
 ### 最近一次启动后所记录的数据包
@@ -231,4 +247,4 @@ journalctl -k | grep "IN=.*OUT=.*" | less
 
 - [Linux 高级系统管理](https://study.163.com/course/courseMain.htm?courseId=232008)
 - [iptables 详解](https://www.jianshu.com/p/8b0642cf8d34?utm_campaign=hugo)
-- [ipset](https://linux.cn/article-4904-1.html?wx)
+- [Moving from iptables to nftables](https://wiki.nftables.org/wiki-nftables/index.php/Moving_from_iptables_to_nftables)

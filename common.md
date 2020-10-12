@@ -202,8 +202,8 @@ sed -e 's/a/b/g'  FILE
 ```sh
 ll > test
 
-# 打印所有行
-awk '{ print NR;}' test
+# 打印行数(类似于wc -l)
+awk 'END { print NR;}' test
 
 # 打印第1列
 awk '{print $1}' test

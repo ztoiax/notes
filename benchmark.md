@@ -8,9 +8,11 @@
     * [bmon](#bmon)
     * [speedometer](#speedometer)
 * [综合](#综合)
+    * [sar](#sar)
     * [dstat](#dstat)
         * [每 2 秒(默认是 1 秒)输出 cpu 信息,一共 5 次](#每-2-秒默认是-1-秒输出-cpu-信息一共-5-次)
 * [CPU](#cpu)
+    * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
     * [perf](#perf)
 * [IO](#io)
     * [dd](#dd)
@@ -95,6 +97,47 @@ httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,1
 
 # 综合
 
+## sar
+
+| 参数 | 操作   |
+| ---- | ------ |
+| -u   | 使用率 |
+| -P   | 核心   |
+| -b   | IO   |
+| -B   | 内存速率   |
+| -W   | 交换分区速率   |
+| -r   | 内存和交换分区   |
+| -d   | 硬盘(块设备)   |
+| -I   | 中断   |
+| -n   | 网络   |
+| -x   | 进程(pid)   |
+| -q   | 进程负载   |
+
+
+```sh
+# cpu使用率
+sar -u 1 10
+# 网络统计数据
+sar -n DEV 1 10
+sar -n EDEV 1 10
+```
+
+- 1 间隔时间
+- 10 次数
+
+```sh
+# 打印 cpu 序号为 5,7,1,3 核心的 cpu 使用率
+sar -P 5,7,1,3 1
+
+# 打印每个核心的cpu使用率
+sar -P ALL 1 10
+
+# 打印 idle 小于 10 的 cpu 核心
+sar -P ALL 1 | tail -n+3 | awk '$NF<10 {print $0}'
+
+# 打印所有中断的统计数据
+sar -I ALL 1 10
+```
 ## dstat
 
 | 参数   | 操作         |
@@ -109,6 +152,11 @@ dstat -c 2 5
 ```
 
 # CPU
+
+
+## 获取保留两位小数的 CPU 占用率：
+
+top -b -n1 | grep ^%Cpu | awk '{printf("Current CPU Utilization is : %.2f%"), 100-\$8}'
 
 ## perf
 
@@ -192,3 +240,4 @@ sudo bootchartd
 - [LinuxCast.net 每日播客](https://study.163.com/course/courseMain.htm?courseId=221001)
 - [又一波你可能不知道的 Linux 命令行网络监控工具](https://linux.cn/article-5461-1.html)
 - [Linux 性能优化：CPU 篇](https://zhuanlan.zhihu.com/p/180402964)
+- [Linux统计/监控工具SAR详细介绍](https://www.jianshu.com/p/08cc9a39a265)
