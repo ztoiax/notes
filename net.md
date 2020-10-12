@@ -4,6 +4,8 @@
     * [ip](#ip)
         * [ip 别名(创建子接口)](#ip-别名创建子接口)
     * [ethtool](#ethtool)
+    * [nmcli](#nmcli)
+        * [交互模式](#交互模式)
     * [traceroute](#traceroute)
     * [tcptraceroute](#tcptraceroute)
     * [mtr](#mtr)
@@ -12,7 +14,7 @@
         * [捕抓 eth0 源端口是 80 的 10 个数据包,保存至 packets.pcap](#捕抓-eth0-源端口是-80-的-10-个数据包保存至-packetspcap)
         * [捕抓源是 192.168.1.1 的 icmp 协议](#捕抓源是-19216811-的-icmp-协议)
         * [捕抓 1-1024 端口(不包含 443 端口),并且包大于 1000 字节的流量](#捕抓-1-1024-端口不包含-443-端口并且包大于-1000-字节的流量)
-        * [捕抓目标端口80的数据流量](#捕抓目标端口80的数据流量)
+        * [捕抓目标端口 80 的数据流量](#捕抓目标端口-80-的数据流量)
     * [arp](#arp)
     * [netstat](#netstat)
         * [统计 tcp 数量](#统计-tcp-数量)
@@ -53,6 +55,46 @@ EOF
 - `ethtool -i eth0`显示`eth0`接口的驱动信息
 - `ethtool -a eth0`显示`eth0`接口的自动协商的详细信息
 - `ethtool -S etho`显示`eth0`接口的状态
+
+## nmcli
+
+```sh
+# 显示连接
+nmcli connection show
+
+# 显示活跃连接
+nmcli connection show --active
+
+# 添加eth2新连接
+nmcli connection add type ethernet ifname eth2
+
+# 开启，关闭
+nmcli connection up eth0
+nmcli connection down eth0
+
+# 修改ip
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 ipv4.address 192.168.100.2/24
+
+# 修改为dhcp
+nmcli connection modify eth0 ipv4.method auto
+
+#
+nmcli device show
+```
+
+### 交互模式
+
+```sh
+# 进入交互模式
+nmcli connection edit eth0
+
+# 修改ip
+goto ipv4
+set ipv4.address 192.168.100.2/24
+save
+```
+
 
 ## traceroute
 
@@ -103,8 +145,10 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 ```sh
 sudo tcpdump -vv host 192.168.1.1
 ```
+
 - [termshark](https://github.com/gcla/termshark)
 - [wireshark](https://github.com/wireshark/wireshark)
+
 ### 捕抓 eth0 源端口是 80 的 10 个数据包,保存至 packets.pcap
 
 ```sh
@@ -122,12 +166,12 @@ sudo tcpdump icmp -n and src 192.168.1.1
 ```sh
 sudo tcpdump -n not port 443 and portrange 1-1024 and greater 1000
 ```
-### 捕抓目标端口80的数据流量
+
+### 捕抓目标端口 80 的数据流量
 
 ```sh
 tcpdump -ni eth0 dst port 80
 ```
-
 
 ## arp
 
@@ -149,7 +193,7 @@ tcpdump -ni eth0 dst port 80
 
 ```sh
 netstat -t | wc -l
-```
+````
 
 ### 显示 LISTEM 状态 tcp
 
@@ -179,3 +223,4 @@ netstat -tn | awk '{print $4}' | awk -F ":" '{print $1}' | sort | uniq -c
 
 - [linux china](https://linux.cn/article-9358-1.html)
 - [LinuxCast.net 每日播客](https://study.163.com/course/courseMain.htm?courseId=221001)
+- [在命令行中使用 nmcli 来管理网络连接 | Linux 中国](https://mp.weixin.qq.com/s?__biz=MjM5NjQ4MjYwMQ==&mid=2664623350&idx=3&sn=0e4f7ff89170be816daf7b94c0c777d0&chksm=bdced7b08ab95ea6085718176a1325dfb7c09a1ad9abe33c58d35b2bd2ec0f5a5043ca125f8a&mpshare=1&scene=1&srcid=1012v37rkYRVe9EamFSHzoqv&sharer_sharetime=1602496258631&sharer_shareid=5dbb730cd6722d0343328086d9ad7dce#rd)

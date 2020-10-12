@@ -201,6 +201,10 @@ sed -e 's/a/b/g'  FILE
 
 ```sh
 ll > test
+
+# 打印所有行
+awk '{ print NR;}' test
+
 # 打印第1列
 awk '{print $1}' test
 
@@ -215,6 +219,12 @@ awk 'NR == 5 {print $1,$5,$NF}' test
 
 # 以:为分隔符，打印第3列大于1000的行
 awk -F ":" '$3 >= 1000' /etc/passwd
+
+# 打印有apk的行的第二列(增强版grep)
+awk '/apk/ { print $2;}' test
+
+# 打印行号加所有行(类似于cat -n)
+awk '{ print NR" "$0;}' lstest
 ```
 
 ## other
@@ -323,3 +333,4 @@ mdadm --zero-superblock /dev/sdd
 - [sed](https://linux.cn/article-6578-1-rel.html)
 - [sed2](https://linux.cn/article-10232-1.html)
 - [Make 命令教程](http://www.ruanyifeng.com/blog/2015/02/make.html)
+- [awk 实用学习指南 | Linux 中国](https://mp.weixin.qq.com/s?__biz=MjM5NjQ4MjYwMQ==&mid=2664624200&idx=2&sn=d1c968904c55de1875907ce49b9e46f8&chksm=bdcecb0e8ab942180ca22f9ec4cb5b4c4d3e0df0d9dd6b13ff1de1e04a89ab84e724cb549a03&mpshare=1&scene=1&srcid=1012DOi5bDFPP4geI536oQfi&sharer_sharetime=1602496699415&sharer_shareid=5dbb730cd6722d0343328086d9ad7dce#rd)
