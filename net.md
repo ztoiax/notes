@@ -12,7 +12,8 @@
     * [tcpdump](#tcpdump)
         * [捕抓 192.168.1.1 的包](#捕抓-19216811-的包)
         * [捕抓 eth0 源端口是 80 的 10 个数据包,保存至 packets.pcap](#捕抓-eth0-源端口是-80-的-10-个数据包保存至-packetspcap)
-        * [捕抓源是 192.168.1.1 的 icmp 协议](#捕抓源是-19216811-的-icmp-协议)
+        * [捕抓 eth0 网卡的 icmp 流量](#捕抓-eth0-网卡的-icmp-流量)
+        * [捕抓源是 192.168.1.1 的 icmp 流量](#捕抓源是-19216811-的-icmp-流量)
         * [捕抓 1-1024 端口(不包含 443 端口),并且包大于 1000 字节的流量](#捕抓-1-1024-端口不包含-443-端口并且包大于-1000-字节的流量)
         * [捕抓目标端口 80 的数据流量](#捕抓目标端口-80-的数据流量)
     * [arp](#arp)
@@ -95,7 +96,6 @@ set ipv4.address 192.168.100.2/24
 save
 ```
 
-
 ## traceroute
 
 它通过在一系列数据包中设置数据包头的 TTL（生存时间）字段来捕获数据包所经过的路径，以及数据包从一跳到下一跳需要的时间。
@@ -155,10 +155,16 @@ sudo tcpdump -vv host 192.168.1.1
 sudo tcpdump -c 10 -i eth0 src port 80 -w packets.pcap
 ```
 
-### 捕抓源是 192.168.1.1 的 icmp 协议
+### 捕抓 eth0 网卡的 icmp 流量
 
 ```sh
-sudo tcpdump icmp -n and src 192.168.1.1
+sudo tcpdump -i eth0 icmp
+```
+
+### 捕抓源是 192.168.1.1 的 icmp 流量
+
+```sh
+sudo tcpdump -i eth0 icmp -n and src 192.168.1.1
 ```
 
 ### 捕抓 1-1024 端口(不包含 443 端口),并且包大于 1000 字节的流量
@@ -193,7 +199,7 @@ tcpdump -ni eth0 dst port 80
 
 ```sh
 netstat -t | wc -l
-````
+```
 
 ### 显示 LISTEM 状态 tcp
 
