@@ -10,19 +10,20 @@
     * [tcptraceroute](#tcptraceroute)
     * [mtr](#mtr)
     * [tcpdump](#tcpdump)
-        * [捕抓 192.168.1.1 的包](#捕抓-19216811-的包)
-        * [捕抓 eth0 源端口是 80 的 10 个数据包,保存至 packets.pcap](#捕抓-eth0-源端口是-80-的-10-个数据包保存至-packetspcap)
-        * [捕抓 eth0 网卡的 icmp 流量](#捕抓-eth0-网卡的-icmp-流量)
-        * [捕抓源是 192.168.1.1 的 icmp 流量](#捕抓源是-19216811-的-icmp-流量)
-        * [捕抓 1-1024 端口(不包含 443 端口),并且包大于 1000 字节的流量](#捕抓-1-1024-端口不包含-443-端口并且包大于-1000-字节的流量)
-        * [捕抓目标端口 80 的数据流量](#捕抓目标端口-80-的数据流量)
+        * [基本命令](#基本命令)
+        * [捕抓 TCP SYN，ACK 和 FIN 包](#捕抓-tcp-synack-和-fin-包)
     * [arp](#arp)
+    * [arpwatch](#arpwatch)
     * [netstat](#netstat)
         * [统计 tcp 数量](#统计-tcp-数量)
         * [显示 LISTEM 状态 tcp](#显示-listem-状态-tcp)
         * [不解析地址(提高速度)](#不解析地址提高速度)
         * [显示所有 LISTEM 状态 tcp,udp 进程](#显示所有-listem-状态-tcpudp-进程)
         * [统计本地 tcp 链接数量](#统计本地-tcp-链接数量)
+    * [nmap](#nmap)
+        * [基本命令](#基本命令-1)
+        * [显示本机网络，路由信息](#显示本机网络路由信息)
+        * [扫描文件内的 ip 地址](#扫描文件内的-ip-地址)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -140,48 +141,72 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 | greater   | 只捕抓大于指定字节的流量   |
 | less      | 只捕抓小于于指定字节的流量 |
 
-### 捕抓 192.168.1.1 的包
-
-```sh
-sudo tcpdump -vv host 192.168.1.1
-```
-
 - [termshark](https://github.com/gcla/termshark)
 - [wireshark](https://github.com/wireshark/wireshark)
 
-### 捕抓 eth0 源端口是 80 的 10 个数据包,保存至 packets.pcap
+### 基本命令
 
 ```sh
-sudo tcpdump -c 10 -i eth0 src port 80 -w packets.pcap
-```
+# 捕抓 192.168.1.1 的包
+sudo tcpdump -vv host 192.168.1.1
 
-### 捕抓 eth0 网卡的 icmp 流量
-
-```sh
+# 捕抓 eth0 网卡的 icmp 流量
 sudo tcpdump -i eth0 icmp
-```
 
-### 捕抓源是 192.168.1.1 的 icmp 流量
-
-```sh
+# 捕抓源是 192.168.1.1 的 icmp 流量
 sudo tcpdump -i eth0 icmp -n and src 192.168.1.1
-```
 
-### 捕抓 1-1024 端口(不包含 443 端口),并且包大于 1000 字节的流量
+# 捕抓 eth0 源端口是 80 的 10 个数据包,保存至 packets.pcap
+sudo tcpdump -c 10 -i eth0 src port 80 -w packets.pcap
 
-```sh
+# 捕抓目标端口 80 的数据流量
+tcpdump -ni eth0 dst port 80
+
+# 捕抓 1-1024 端口(不包含 443 端口),并且包大于 1000 字节的流量
 sudo tcpdump -n not port 443 and portrange 1-1024 and greater 1000
 ```
 
-### 捕抓目标端口 80 的数据流量
+### 捕抓 TCP SYN，ACK 和 FIN 包
 
 ```sh
-tcpdump -ni eth0 dst port 80
+# 只捕抓TCP syn包：
+tcpdump -i eth0 "tcp[tcpflags] & (tcp-syn) != 0"
+
+# 只捕抓TCP ack包：
+tcpdump -i eth0 "tcp[tcpflags] & (tcp-ack) != 0"
+
+# 只捕抓TCP FIN包：
+tcpdump -i eth0 "tcp[tcpflags] & (tcp-fin) != 0"
+
+# 只捕抓TCP SYN或ACK包：
+tcpdump -i eth0 "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0"
+
+# 只捕抓TCP SYN或ACK包(不包含22端口)：
+tcpdump -i eth0 not port 22 and "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0"
+
+# 只捕抓TCP SYN或ACK包(不包含22,80端口)：
+tcpdump -i ens3 not port 22 and not port 80 and "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0"
 ```
 
 ## arp
 
-`arp -a` 显示`mac`地址
+```sh
+arp -a
+
+# 不解析域名
+arp -n
+
+# 删除192.168.1.1条目
+arp -d 192.168.1.1
+```
+
+## arpwatch
+
+监听网络上 ARP 的记录
+
+```sh
+arpwatch -i enp27s0 -f arpwatch.log
+```
 
 ## netstat
 
@@ -225,8 +250,55 @@ netstat -tunlp
 netstat -tn | awk '{print $4}' | awk -F ":" '{print $1}' | sort | uniq -c
 ```
 
+## nmap
+
+### 基本命令
+
+```sh
+# 扫描指定ip端口
+nmap 127.0.0.1
+
+# 详细扫描
+nmap -v 127.0.0.1
+
+# 详细扫描2
+nmap -A 127.0.0.1
+
+# 扫描192.68.1.0网段
+nmap "192.68.1.*"
+
+# 扫描192.68.1.0网段,排除192.168.1.1
+nmap "192.68.1.*" --exclude 192.168.1.1
+
+# 扫描192.168.1.200-254
+nmap 192.168.1.200-254
+
+# 扫描特定端口
+nmap -p 80 127.0.0.1
+```
+
+### 显示本机网络，路由信息
+
+```sh
+nmap --iflist
+```
+
+### 扫描文件内的 ip 地址
+
+```sh
+cat > nmapfile << 'EOF'
+127.0.0.1
+192.168.1.1
+192.168.100.208
+EOF
+
+nmap -iL nmapfile
+```
+
 # reference
 
 - [linux china](https://linux.cn/article-9358-1.html)
 - [LinuxCast.net 每日播客](https://study.163.com/course/courseMain.htm?courseId=221001)
 - [在命令行中使用 nmcli 来管理网络连接 | Linux 中国](https://mp.weixin.qq.com/s?__biz=MjM5NjQ4MjYwMQ==&mid=2664623350&idx=3&sn=0e4f7ff89170be816daf7b94c0c777d0&chksm=bdced7b08ab95ea6085718176a1325dfb7c09a1ad9abe33c58d35b2bd2ec0f5a5043ca125f8a&mpshare=1&scene=1&srcid=1012v37rkYRVe9EamFSHzoqv&sharer_sharetime=1602496258631&sharer_shareid=5dbb730cd6722d0343328086d9ad7dce#rd)
+- [如何使用 tcpdump 来捕获 TCP SYN，ACK 和 FIN 包](https://linux.cn/article-3967-1.html)
+- [给 Linux 系统/网络管理员的 nmap 的 29 个实用例子](https://linux.cn/article-2561-3.html?pr)

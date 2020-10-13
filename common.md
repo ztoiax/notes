@@ -14,7 +14,7 @@
         * [sed](#sed)
         * [awk](#awk)
     * [other](#other)
-        * [查看当前分区谁在使用](#查看当前分区谁在使用)
+        * [fuser](#fuser)
         * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
     * [cron](#cron)
     * [mdadm(RAID)](#mdadmraid)
@@ -229,10 +229,15 @@ awk '{ print NR" "$0;}' lstest
 
 ## other
 
-### 查看当前分区谁在使用
+### fuser
 
 ```bash
+
+# 查看当前分区谁在使用
 fuser -vm .
+
+# 查看10808端口进程
+fuser -n tcp -v  10808
 ```
 
 ### 列出子目录的大小，并计总大小
@@ -242,6 +247,7 @@ du -cha --max-depth=1 . | grep -E "M|G" | sort -h
 ```
 
 ## cron
+
 ```sh
 # .---------------- 分 (0 - 59)
 # |  .------------- 时 (0 - 23)
