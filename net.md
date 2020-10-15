@@ -24,6 +24,8 @@
         * [基本命令](#基本命令-1)
         * [显示本机网络，路由信息](#显示本机网络路由信息)
         * [扫描文件内的 ip 地址](#扫描文件内的-ip-地址)
+    * [curl](#curl)
+        * [基本命令](#基本命令-2)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -151,16 +153,19 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 sudo tcpdump -vv host 192.168.1.1
 
 # 捕抓 eth0 网卡的 icmp 流量
-sudo tcpdump -i eth0 icmp
+sudo tcpdump -ni eth0 icmp
 
 # 捕抓源是 192.168.1.1 的 icmp 流量
-sudo tcpdump -i eth0 icmp -n and src 192.168.1.1
+sudo tcpdump -ni eth0 icmp -n and src 192.168.1.1
 
 # 捕抓 eth0 源端口是 80 的 10 个数据包,保存至 packets.pcap
 sudo tcpdump -c 10 -i eth0 src port 80 -w packets.pcap
 
 # 捕抓目标端口 80 的数据流量
 tcpdump -ni eth0 dst port 80
+
+# 捕抓目标ip 192.168.1.1 端口 22 的数据流量
+tcpdump -ni eth0 dst 192.168.1.1 and port 22
 
 # 捕抓 1-1024 端口(不包含 443 端口),并且包大于 1000 字节的流量
 sudo tcpdump -n not port 443 and portrange 1-1024 and greater 1000
@@ -294,6 +299,26 @@ EOF
 
 nmap -iL nmapfile
 ```
+## curl
+### 基本命令
+```sh
+# 查看请求过程
+curl -v www.baidu.com
+
+# 显示2进制报文
+curl --trace - www.baidu.com
+
+# 发送用户名:tz 密码:12345
+curl -u 'tz:12345' 127.0.0.1:80
+
+# 指定 HTTP 请求的代理。如果没有指定代理协议，默认为 HTTP。
+curl -x socks5://james:cats@myproxy.com:8080 https://www.example.com
+
+# 下载回应文件(类似于wget)
+curl -O https://st.suckless.org/patches/font2/st-font2-20190416-ba72400.diff
+```
+
+
 
 # reference
 
@@ -302,3 +327,4 @@ nmap -iL nmapfile
 - [在命令行中使用 nmcli 来管理网络连接 | Linux 中国](https://mp.weixin.qq.com/s?__biz=MjM5NjQ4MjYwMQ==&mid=2664623350&idx=3&sn=0e4f7ff89170be816daf7b94c0c777d0&chksm=bdced7b08ab95ea6085718176a1325dfb7c09a1ad9abe33c58d35b2bd2ec0f5a5043ca125f8a&mpshare=1&scene=1&srcid=1012v37rkYRVe9EamFSHzoqv&sharer_sharetime=1602496258631&sharer_shareid=5dbb730cd6722d0343328086d9ad7dce#rd)
 - [如何使用 tcpdump 来捕获 TCP SYN，ACK 和 FIN 包](https://linux.cn/article-3967-1.html)
 - [给 Linux 系统/网络管理员的 nmap 的 29 个实用例子](https://linux.cn/article-2561-3.html?pr)
+- [curl 的用法指南](http://www.ruanyifeng.com/blog/2019/09/curl-reference.html)
