@@ -14,9 +14,10 @@
 * [`TOMCAT`](#tomcat)
     * [基本命令](#基本命令-1)
     * [zrlog](#zrlog)
-    * [mysql](#mysql)
+    * [mysql zrlog](#mysql-zrlog)
         * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
         * [zrlog 连接 mysql](#zrlog-连接-mysql)
+        * [nginx 反向代理 tomcat](#nginx-反向代理-tomcat)
 * [reference](#reference)
 * [其它文章](#其它文章)
 
@@ -236,7 +237,7 @@ curl 127.0.0.1:80/test
 
 ```sh
 # 虚拟主机配置在server.xml下
-<Host name="localhost"  appBase="webapps"
+<Host name="tzlog.com"  appBase="webapps"
     unpackWARs="true" autoDeploy="true">
 ...
 </HOST>
@@ -284,7 +285,7 @@ http://127.0.0.1:8080/zrlog/install
 
 ![avatar](/Pictures/nginx/2.png)
 
-## mysql
+## mysql zrlog
 
 从 CentOS 7 开始，`yum` 安装 `MySQL` 默认安装的会是 `MariaDB`
 
@@ -332,6 +333,24 @@ quit
 ```
 
 ![avatar](/Pictures/nginx/3.png)
+
+### nginx 反向代理 tomcat
+
+```sh
+server
+{
+        server_name  tzlog.com;
+    location / {
+        proxy_pass http://tzlog.com:8081/zrlog/;
+        proxy_set_header HOST $host;
+        proxy_set_header X-Real_IP $remote_addr;
+        proxy_set_header X-Forwared-For $proxy_add_x_forwarded_for;
+    }
+
+        access_log /var/log/nginx/zrlog-access.log;
+        error_log  /var/log/nginx/zrlog-error.log;
+}
+```
 
 # reference
 

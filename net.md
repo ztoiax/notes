@@ -307,6 +307,16 @@ nmap -iL nmapfile
 
 ### 基本命令
 
+注意url目录后要有`/`
+```sh
+# 错误
+curl http://tzlog.com:8081/zrlog
+
+# 正确
+curl http://tzlog.com:8081/zrlog/
+```
+
+
 ```sh
 # 查看请求过程
 curl -v www.baidu.com

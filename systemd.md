@@ -17,6 +17,7 @@
     * [重新加载配置文件](#重新加载配置文件)
     * [重启所有的守护进程](#重启所有的守护进程)
     * [查看是不是引导启动](#查看是不是引导启动)
+    * [unmask](#unmask)
 * [journalctl](#journalctl)
     * [读取日志](#读取日志)
     * [读取实时日志](#读取实时日志)
@@ -230,8 +231,18 @@ systemctl daemon-reload
 systemctl is-enabled sshd.service
 ```
 
+### unmask
+
+systemd 支持 mask 操作，如果一个服务被 mask 了，那么它无法被手动启动或者被其他服务所启动，也无法被设置为开机启动。
+
+```sh
+systemctl unmask httpd.service
+```
+
 ## journalctl
+
 `/etc/systemd/system.conf` 设置的默认值(关机等待进程时间...)
+
 ### 读取日志
 
 ```sh
@@ -262,7 +273,6 @@ journalctl -fp err
 sudo journalctl --disk-usage
 
 ```
-
 
 ## 实战调试
 
@@ -311,4 +321,3 @@ kvm 是因为存储池里有之前临时挂载 vm，现在没有挂载也就读�
 - [ruanyif](http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html)
 - [linux china](https://linux.cn/article-4505-1.html)
 - [linux china2](https://linux.cn/article-5457-1.html)
-
