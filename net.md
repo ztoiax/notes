@@ -83,6 +83,9 @@ nmcli connection modify eth0 ipv4.address 192.168.100.2/24
 # 修改为dhcp
 nmcli connection modify eth0 ipv4.method auto
 
+# 修改dns
+nmcli connection modify "Wired Connection" ipv4.dns "114.114.114.114 223.5.5.5"
+
 #
 nmcli device show
 ```
@@ -299,8 +302,11 @@ EOF
 
 nmap -iL nmapfile
 ```
+
 ## curl
+
 ### 基本命令
+
 ```sh
 # 查看请求过程
 curl -v www.baidu.com
@@ -317,8 +323,6 @@ curl -x socks5://james:cats@myproxy.com:8080 https://www.example.com
 # 下载回应文件(类似于wget)
 curl -O https://st.suckless.org/patches/font2/st-font2-20190416-ba72400.diff
 ```
-
-
 
 # reference
 
