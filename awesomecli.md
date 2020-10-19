@@ -4,19 +4,25 @@
     * [advcpmv](#advcpmv)
         * [instead cp,mv](#instead-cpmv)
     * [ranger](#ranger)
+    * [broot](#broot)
     * [nnn](#nnn)
+    * [mc](#mc)
     * [fd](#fd)
         * [instead find](#instead-find)
+    * [lazygit](#lazygit)
+        * [instead git](#instead-git)
 * [char](#char)
     * [exa](#exa)
-        * [Advanced ls](#advanced-ls)
+        * [highlight ls](#highlight-ls)
     * [bat](#bat)
-        * [Advanced cat](#advanced-cat)
+        * [highlight cat](#highlight-cat)
+    * [alder](#alder)
+        * [highlight tree](#highlight-tree)
     * [ag](#ag)
         * [instead grep](#instead-grep)
     * [fzf](#fzf)
     * [diff-so-fancy](#diff-so-fancy)
-        * [Advanced git diff](#advanced-git-diff)
+        * [highlight git diff](#highlight-git-diff)
     * [pet](#pet)
         * [Simple command-line snippet manager](#simple-command-line-snippet-manager)
 * [disk](#disk)
@@ -44,19 +50,34 @@
 
 ![avatar](/Pictures/awesomecli/5.png)
 
+## [broot](https://github.com/Canop/broot)
+
+![avatar](/Pictures/awesomecli/1.gif)
+
 ## [nnn](https://github.com/jarun/nnn)
 
 ![avatar](/Pictures/awesomecli/4.png)
+
+## [mc](https://github.com/MidnightCommander/mc)
+
+支持鼠标操作
+![avatar](/Pictures/awesomecli/13.png)
 
 ## [fd](https://github.com/sharkdp/fd)
 
 ### instead find
 
+## [lazygit](https://github.com/jesseduffield/lazygit)
+
+### instead git
+
+![avatar](/Pictures/awesomecli/12.png)
+
 # char
 
 ## [exa](https://github.com/ogham/exa)
 
-### Advanced ls
+### highlight ls
 
 ![avatar](/Pictures/awesomecli/11.png)
 
@@ -64,7 +85,13 @@
 
 ![avatar](/Pictures/awesomecli/9.png)
 
-### Advanced cat
+### highlight cat
+
+## alder
+
+### highlight tree
+
+![avatar](/Pictures/awesomecli/14.png)
 
 ## ag
 
@@ -78,7 +105,7 @@
 
 ![avatar](/Pictures/awesomecli/10.png)
 
-### Advanced git diff
+### highlight git diff
 
 ## [pet](https://github.com/knqyf263/pet)
 

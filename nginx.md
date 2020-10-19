@@ -2,6 +2,7 @@
 
 * [LNMP](#lnmp)
 * [nginx](#nginx)
+    * [基本配置](#基本配置)
     * [基本命令](#基本命令)
     * [日志](#日志)
     * [用户密码认证](#用户密码认证)
@@ -18,6 +19,10 @@
         * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
         * [zrlog 连接 mysql](#zrlog-连接-mysql)
         * [nginx 反向代理 tomcat](#nginx-反向代理-tomcat)
+* [php-fpm](#php-fpm)
+    * [php-fpm.conf](#php-fpmconf)
+    * [php-fpm 进程池](#php-fpm-进程池)
+    * [php.ini](#phpini)
 * [reference](#reference)
 * [其它文章](#其它文章)
 
@@ -26,6 +31,13 @@
 # LNMP
 
 # nginx
+
+## 基本配置
+
+```sh
+# cpu核心数
+worker_processes  1;
+```
 
 ## 基本命令
 
@@ -336,6 +348,12 @@ quit
 
 ### nginx 反向代理 tomcat
 
+将域名加入`/etc/hosts`
+
+```sh
+echo "127.0.0.1 tzlog.com" >> /etc/hosts
+```
+
 ```sh
 server
 {
@@ -352,6 +370,66 @@ server
 }
 ```
 
+# php-fpm
+
+- PHP-FPM(PHP FastCGI Process Manager)意：PHP FastCGI 进程管理器，用于管理 PHP 进程池的软件，用于接受 web 服务器的请求。
+- PHP-FPM 提供了更好的 PHP 进程管理方式，可以有效控制内存和进程、可以平滑重载 PHP 配置
+
+```sh
+# 服务端192.168.100.208
+echo "<?php echo phpinfo(); ?>" > /usr/share/nginx/html/tz.php
+
+# 客户端测试
+curl -x 192.168.100.208:80 tz.com/tz.php | php
+```
+
+## php-fpm.conf
+
+- 可配置多个`pool`
+
+> 默认配置了一个`www` pool
+> 如果 nginx 有多个站点，都使用一个 pool，则会有单点错误
+> 因此要每个站点都配置一个 pool
+
+```sh
+pid = /var/log/php-fpm/php-fpm.pid
+include=/etc/php/php-fpm.d/*.conf
+```
+
+## php-fpm 进程池
+
+- 配置文件`/etc/php/php-fpm.d/www.conf`
+
+| 参数                 | 内容                                                                                                                                           |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| pm = dynamic         | 动态管理                                                                                                                                       |
+| pm.max_children      | 静态方式下开启的 php-fpm 进程数量，在动态方式下他限定 php-fpm 的最大进程数（这里要注意 pm.max_spare_servers 的值只能小于等于 pm.max_children） |
+| pm.start_servers     | 动态方式下的起始 php-fpm 进程数量                                                                                                              |
+| pm.min_spare_servers | 动态方式空闲状态下的最小 php-fpm 进程数量                                                                                                      |
+| pm.max_spare_servers | 动态方式空闲状态下的最大 php-fpm 进程数量                                                                                                      |
+
+```sh
+# 慢执行日志配置
+request_slowlog_timeout = 1
+slowlog = /var/log/php-fpm/www-slow.log
+```
+
+## php.ini
+
+```sh
+# 设置errors日志
+error_log = /var/log/php-fpm/php_errors.log
+```
+
+**sed** 快速设置 errors 日志
+
+```sh
+sed -i "/;error_log = php_errors.log/cerror_log = /var/log/php-fpm/php_errors.log" /etc/php/php.ini
+# 需要自己创建文件
+sudo mkdir /var/log/php-fpm
+touch /var/log/php-fpm/php_errors.log
+```
+
 # reference
 
 - [Nginx 安装 SSL 配置 HTTPS 超详细完整教程全过程](https://developer.aliyun.com/article/766958)
@@ -364,3 +442,5 @@ server
 # 其它文章
 
 - [Dropbox 正在用 Envoy 替换 Nginx，这还是我第一次看到讨论 Nginx 作为 Web 服务器的缺点 --ruanyif](https://dropbox.tech/infrastructure/how-we-migrated-dropbox-from-nginx-to-envoy)
+
+- [LNMP 一键安装包](https://github.com/licess/lnmp)
