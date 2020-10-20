@@ -16,7 +16,6 @@
     * [基本命令](#基本命令-1)
     * [zrlog](#zrlog)
     * [mysql zrlog](#mysql-zrlog)
-        * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
         * [zrlog 连接 mysql](#zrlog-连接-mysql)
         * [nginx 反向代理 tomcat](#nginx-反向代理-tomcat)
 * [php-fpm](#php-fpm)
@@ -298,33 +297,6 @@ http://127.0.0.1:8080/zrlog/install
 ![avatar](/Pictures/nginx/2.png)
 
 ## mysql zrlog
-
-从 CentOS 7 开始，`yum` 安装 `MySQL` 默认安装的会是 `MariaDB`
-
-### Centos 7 安装 MySQL
-
-整个过程需要科学上网
-
-```sh
-# 下载
-wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
-
-# 安装源
-rpm -Uvh mysql80-community-release-el7-3.noarch.rpm
-
-# 查看安装是否成功
-yum repolist enabled | grep "mysql.*-community.*"
-
-# 查看当前MySQL Yum Repository中所有MySQL版本（每个版本在不同的子仓库中）
-yum repolist all | grep mysql
-
-# 切换版本
-yum-config-manager --disable mysql80-community
-yum-config-manager --enable mysql57-community
-
-# 安装
-yum install mysql-community-server
-```
 
 ### zrlog 连接 mysql
 

@@ -10,10 +10,14 @@
     * [fd](#fd)
         * [instead find](#instead-find)
     * [lazygit](#lazygit)
+        * [git tui](#git-tui)
+    * [bit](#bit)
         * [instead git](#instead-git)
 * [char](#char)
     * [exa](#exa)
         * [highlight ls](#highlight-ls)
+    * [lsd](#lsd)
+        * [highlight ls and support icon](#highlight-ls-and-support-icon)
     * [bat](#bat)
         * [highlight cat](#highlight-cat)
     * [alder](#alder)
@@ -25,6 +29,8 @@
         * [highlight git diff](#highlight-git-diff)
     * [pet](#pet)
         * [Simple command-line snippet manager](#simple-command-line-snippet-manager)
+    * [glow](#glow)
+        * [markdown preview cli version](#markdown-preview-cli-version)
 * [disk](#disk)
     * [dfc](#dfc)
         * [instead df](#instead-df)
@@ -69,9 +75,12 @@
 
 ## [lazygit](https://github.com/jesseduffield/lazygit)
 
-### instead git
+### git tui
 
-![avatar](/Pictures/awesomecli/12.png)
+## [bit](https://github.com/chriswalz/bit)
+
+### instead git
+![avatar](/Pictures/awesomecli/15.png)
 
 # char
 
@@ -80,6 +89,11 @@
 ### highlight ls
 
 ![avatar](/Pictures/awesomecli/11.png)
+## [lsd](https://github.com/Peltoche/lsd)
+
+### highlight ls and support icon
+
+![avatar](/Pictures/awesomecli/14.png)
 
 ## [bat](https://github.com/sharkdp/bat)
 
@@ -112,6 +126,12 @@
 ![avatar](/Pictures/awesomecli/3.png)
 
 ### Simple command-line snippet manager
+
+## [glow](https://github.com/charmbracelet/glow)
+
+### markdown preview cli version
+
+![avatar](/Pictures/awesomecli/16.png)
 
 # disk
 
