@@ -127,7 +127,7 @@ git reset --hard <HASD>
 git reset --soft <HASD>
 
 # 回退后强制push远程分支
-git push -u origin master
+git push -u origin +master
 ```
 
 #### 合并 3 次分支(保留文件)
