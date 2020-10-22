@@ -167,27 +167,27 @@ sed -n '5,$p' FILE
 sed -n -e '5,10!p' inputfile
 
 # 删除带有"192.168.100.1"的行
-sed -e '/192.168.100.1/d' FILE
+sed -i '/192.168.100.1/d' FILE
 
 # 删除第1行
-sed -e '1d' FILE
+sed -i '1d' FILE
 
 # 在第1行插入newline
-sed -e '1inewline' FILE
+sed -i '1inewline' FILE
 
 # 在第1行替换成newline
-sed -e '1cnewline' FILE
+sed -i '1cnewline' FILE
 
 # 在第1行结尾添加newline
-sed -e '1anewline' FILE
+sed -i '1anewline' FILE
 
 # 在每1行结尾添加newline
-sed -e '1,$anewline' FILE
+sed -i '1,$anewline' FILE
 
 # 将第1个a替换成b 类似vim的替换
-sed -e 's/a/b/'  FILE
+sed -i 's/a/b/'  FILE
 # 将文件内所有a替换成b
-sed -e 's/a/b/g'  FILE
+sed -i 's/a/b/g'  FILE
 ```
 
 ### awk

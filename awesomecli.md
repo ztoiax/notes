@@ -37,6 +37,9 @@
     * [cfdisk](#cfdisk)
         * [instead fdisk](#instead-fdisk)
     * [duf](#duf)
+    * [ncdu](#ncdu)
+* [net](#net)
+    * [prettyping](#prettyping)
 * [other](#other)
     * [Termshark](#termshark)
         * [wireshark cli version](#wireshark-cli-version)
@@ -51,6 +54,11 @@
 ## [advcpmv](https://github.com/jarun/advcpmv)
 
 ### instead cp,mv
+```sh
+alias mv="advmv -g"
+alias cp="advcp -g"
+```
+
 
 ## [ranger](https://github.com/ranger/ranger)
 
@@ -61,6 +69,15 @@
 ![avatar](/Pictures/awesomecli/1.gif)
 
 ## [nnn](https://github.com/jarun/nnn)
+```sh
+git clone https://github.com/jarun/nnn.git
+cd nnn
+sudo cp nnn /bin/
+# 显示图标
+sudo make O_NERD=1
+
+```
+
 
 ![avatar](/Pictures/awesomecli/4.png)
 
@@ -151,6 +168,12 @@
 
 ![avatar](/Pictures/awesomecli/2.png)
 
+## [ncdu](https://github.com/rofl0r/ncdu)
+![avatar](/Pictures/awesomecli/ncdu.png)
+# net
+## [prettyping](https://github.com/denilsonsa/prettyping)
+
+![avatar](/Pictures/awesomecli/ping.png)
 # other
 
 ## [Termshark](https://github.com/gcla/termshark)
@@ -166,3 +189,4 @@
 # reference
 
 - [命令行基础工具的更佳替代品](https://linux.cn/article-4042-1.html)
+- [命令行：增强版](https://linux.cn/article-10171-1.html)

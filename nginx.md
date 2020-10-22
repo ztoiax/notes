@@ -12,7 +12,7 @@
     * [负载均衡](#负载均衡)
         * [upstream](#upstream)
         * [echo 变量](#echo-变量)
-* [`TOMCAT`](#tomcat)
+* [TOMCAT](#tomcat)
     * [基本命令](#基本命令-1)
     * [zrlog](#zrlog)
     * [mysql zrlog](#mysql-zrlog)
@@ -234,7 +234,7 @@ location /test {
 curl 127.0.0.1:80/test
 ```
 
-# `TOMCAT`
+# TOMCAT
 
 - 虽然 Tomcat 也可以认为是 HTTP 服务器，但通常它仍然会和 Nginx 配合在一起使用：动静态资源分离——运用 Nginx 的反向代理功能分发请求：所有动态资源的请求交给 Tomcat，而静态资源的请求（例如图片、视频、CSS、JavaScript 文件等）则直接由 Nginx 返回到浏览器，这样能大大减轻 Tomcat 的压力。
 

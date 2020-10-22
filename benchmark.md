@@ -8,12 +8,13 @@
     * [bmon](#bmon)
     * [speedometer](#speedometer)
 * [综合](#综合)
-    * [sar](#sar)
+    * [sar(sysstat)](#sarsysstat)
     * [dstat](#dstat)
         * [每 2 秒(默认是 1 秒)输出 cpu 信息,一共 5 次](#每-2-秒默认是-1-秒输出-cpu-信息一共-5-次)
 * [CPU](#cpu)
     * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
     * [perf](#perf)
+* [memory](#memory)
 * [IO](#io)
     * [dd](#dd)
     * [hdparm](#hdparm)
@@ -97,7 +98,7 @@ httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,1
 
 # 综合
 
-## sar
+## sar(sysstat)
 
 | 参数 | 操作   |
 | ---- | ------ |
@@ -114,6 +115,9 @@ httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,1
 | -q   | 进程负载   |
 
 
+- 1 间隔时间
+- 10 次数
+
 ```sh
 # cpu使用率
 sar -u 1 10
@@ -121,9 +125,6 @@ sar -u 1 10
 sar -n DEV 1 10
 sar -n EDEV 1 10
 ```
-
-- 1 间隔时间
-- 10 次数
 
 ```sh
 # 打印 cpu 序号为 5,7,1,3 核心的 cpu 使用率
@@ -159,7 +160,10 @@ dstat -c 2 5
 top -b -n1 | grep ^%Cpu | awk '{printf("Current CPU Utilization is : %.2f%"), 100-\$8}'
 
 ## perf
-
+# memory
+ps -aux | sort -k4nr | head -K
+ps aux --sort -rss | head
+top -c -b -o +%MEM | head -n 20 | tail -15
 # IO
 
 ```sh

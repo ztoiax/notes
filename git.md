@@ -11,9 +11,11 @@
             * [回退单个文件](#回退单个文件)
             * [恢复干净的工作区](#恢复干净的工作区)
     * [remote](#remote)
+* [git-extras](#git-extras)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
 * [关于 Git 的书](#关于-git-的书)
+* [online tools](#online-tools)
 
 <!-- vim-markdown-toc -->
 
@@ -123,6 +125,9 @@ git reset --hard <HASD>
 
 # 撤销到hash值所代表的commit(保留文件)
 git reset --soft <HASD>
+
+# 回退后强制push远程分支
+git push -u origin master
 ```
 
 #### 合并 3 次分支(保留文件)
@@ -173,16 +178,22 @@ git fetch <REMOTE>
 # 合并
 git merge
 
+# 取消合并
+git merge --abort
+
 # 取回远程仓库的变化，并与本地分支合并
 git pull <REMOTE> <BRANCH>
 ```
+
+# git-extras
+
+- [git-extras](https://github.com/tj/git-extras/blob/master/Commands.md#git-alias)
 
 # reference
 
 - [这才是真正的 Git——Git 实用技巧](https://zhuanlan.zhihu.com/p/192961725)
 - [常用 Git 命令清单](https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html)
 - [git 命令思维导图](https://www.processon.com/view/link/5c6e2755e4b03334b523ffc3#map)
-- [Learn Git Branching](https://learngitbranching.js.org/?demo=&locale=zh_CN)
 
 # 优秀文章
 
@@ -197,3 +208,7 @@ git pull <REMOTE> <BRANCH>
 
 - [git book 官方教材](https://git-scm.com/book/zh/v2)
 - [git magic](http://www-cs-students.stanford.edu/~blynn/gitmagic/intl/zh_cn/index.html#_%E8%87%B4%E8%B0%A2)
+
+# online tools
+
+- [Learn Git Branching](https://learngitbranching.js.org/?demo=&locale=zh_CN)
