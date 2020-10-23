@@ -3,25 +3,27 @@
 * [mysql](#mysql)
     * [基本命令](#基本命令)
         * [连接数据库](#连接数据库)
-        * [mysql 基本操作](#mysql-基本操作)
-    * [表操作](#表操作)
-        * [临时表](#临时表)
-        * [复制表](#复制表)
-    * [以下练习需下载数据库](#以下练习需下载数据库)
+        * [基本命令](#基本命令-1)
+        * [用户设置](#用户设置)
+        * [配置(varibles)操作](#配置varibles操作)
+    * [下载数据库进行 SQL语句 练习](#下载数据库进行-sql语句-练习)
     * [DQL](#dql)
         * [select](#select)
+            * [where](#where)
+            * [order,regexp(正则表达式)](#orderregexp正则表达式)
             * [union](#union)
             * [连接](#连接)
                 * [INNER JOIN](#inner-join)
                 * [LEFT JOIN](#left-join)
                 * [RIGHT JOIN](#right-join)
         * [SQL FUNCTION](#sql-function)
-            * [显示函数](#显示函数)
-            * [取值函数](#取值函数)
     * [DML](#dml)
+        * [CREATE(创建)](#create创建)
         * [insert](#insert)
+            * [选取另一个表的数据,导入进新表](#选取另一个表的数据导入进新表)
         * [update](#update)
         * [delete](#delete)
+            * [删除重复的数据](#删除重复的数据)
         * [alter](#alter)
     * [DCL](#dcl)
     * [帮助文档](#帮助文档)
@@ -80,7 +82,7 @@ mysql -uroot -p'newpassword' -S/tmp/mysql.sock
 mysql -uroot -p'newpassword' -e "show databases"
 ```
 
-### mysql 基本操作
+### 基本命令
 
 - 注意命令后面要加`;`
 
@@ -103,20 +105,42 @@ show processlist;
 # 查看数据库保存目录
 show variables like 'data%';
 
+# 查看所有表
+show tables;
+
+# SQL FUNCTION
+# 查看当前使用哪个数据库
+select database();
+
+# 查看当前登录用户
+select user();
+
+# 查看数据库版本
+select version();
+```
+
+### 用户设置
+
+```sql
 # 创建用户
 create user 'tz'@'127.0.0.1' identified by 'YouPassword';
+
 # 授予权限
 grant all privileges on tz.* to 'tz'@'127.0.0.1';
+
 # 刷新权限
 FLUSH PRIVILEGES;
+
 # 删除用户
 drop user 'tz'@'127.0.0.1';
 ```
 
+### 配置(varibles)操作
+- 注意`variables` 的修改，永久保存要写入`/etc/my.cnf`
 ```sql
-# 查看配置
+# 查看配置(变量)
 show variables;
-# 查看前面是max_connect的配置(通配符%)
+# 查看字段前面包含max_connect的配置(通配符%)
 show variables like 'max_connect%';
 
 mysql> show variables like 'max_connect%';
@@ -128,86 +152,16 @@ mysql> show variables like 'max_connect%';
 +--------------------+-------+
 2 rows in set (0.01 sec)
 
-# 配置(重启后失效)
+# 修改配置(重启后失效)
 set global max_connect_errors=1000;
 # 永久保存,要写入/etc/my.cnf
 echo "max_connect_errors=1000" >> /etc/my.cnf
 ```
 
-## 表操作
-
-`字段`
-
-- AUTO_INCREMENT 增量
+## 下载数据库进行 SQL语句 练习
 
 ```sql
-# 创建名为links的表，第一个字段是id，第二个字段是name
-create table links(`id` int (4), `name` char(50)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# 创建tz数据库主键为id
-create table tz(`id` int (8), `name` varchar(50), `date` DATE, primary key (`id`));
-```
-
-```sql
-# 查看links表里的字段
-desc links;
-mysql> desc links;
-+-------+----------+------+-----+---------+-------+
-| Field | Type     | Null | Key | Default | Extra |
-+-------+----------+------+-----+---------+-------+
-| id    | int      | YES  |     | NULL    |       |
-| name  | char(50) | YES  |     | NULL    |       |
-+-------+----------+------+-----+---------+-------+
-2 rows in set (0.00 sec)
-```
-
-```sql
-# 查看所有表
-show tables;
-
-# 查看tz表详细信息
-show create table links\G;
-
-mysql> show create table links\G;
-*************************** 1. row ***************************
-       Table: links
-Create Table: CREATE TABLE `links` (
-  `id` int DEFAULT NULL,
-  `name` char(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
-1 row in set (0.00 sec)
-
-ERROR:
-No query specified
-```
-
-### 临时表
-
-- 断开与数据库的连接后，临时表就会自动被销毁
-
-```sql
-CREATE TEMPORARY TABLE temp (id int);
-```
-
-### 复制表
-
-```sql
-# 创建表
-create table clone (`id` int (8), `name` varchar(50), `date` DATE, primary key (`id`));
-
-# 复制数据
-INSERT INTO clone (id,name,date) SELECT id,name FROM tz;
-
-# 删除重复数据
-CREATE TABLE tmp SELECT id, name, date FROM tz  GROUP BY (id, name, date);
-DROP TABLE tz;
-ALTER TABLE tmp RENAME TO tz;
-```
-
-## 以下练习需下载数据库
-
-```sql
-# 创建china数据库
+# 连接数据库后,创建china数据库
 create database china;
 ```
 
@@ -237,12 +191,21 @@ mysql -uroot -pYouPassward china < china_area_mysql.sql
 - group by
 
 ```sql
+# 连接数据库后
 use china;
 
-# 从表 cnarea_2019 选取 name 列的数据
+# cnarea_2019表别名为ca
+select * from cnarea_2019 as ca;
+# 恢复
+select * from ca as cnarea_2019;
+
+# 从表 cnarea_2019 选取所有列
+select * from cnarea_2019;
+
+# 从表 cnarea_2019 选取 name 列
 select name from cnarea_2019;
 
-# 从表 cnarea_2019 选取 name 和 id 列的数据
+# 从表 cnarea_2019 选取 name 和 id 列
 select id,name from cnarea_2019;
 
 # 选取所有列，但只显示前2行
@@ -251,20 +214,13 @@ select * from cnarea_2019 limit 2;
 # 选取所有列，但只显示3到6行
 select * from cnarea_2019 limit 2,4;
 
-#  结果集中会自动去重复数据
-select distinct name from cnarea_2019;
-
+# 选取level字段,过滤重复的数据
+select distinct level from cnarea_2019;
+```
+#### where
+```sql
 # 选取id=174909的数据
-select * from cnarea_2019 where id=174909 limit 1;
-
-# 查看id=174909的name数据
-select name from cnarea_2019 where id=174909 limit 1;
-
-# 选取name='陆庄村村委会'的数据
-select * from cnarea_2019 where name='陆庄村村委会' limit 1;
-
-# 选取id10和id20的
-select * from cnarea_2019 where id in (10,20);
+select * from cnarea_2019 where id=174909;
 
 # 选取id大于10的
 select * from cnarea_2019 where id > 10
@@ -272,9 +228,16 @@ select * from cnarea_2019 where id > 10
 # 选取10<=id<=30的
 select * from cnarea_2019 where id<=30 and id>=10;
 
+# 选取id10和id20的
+select * from cnarea_2019 where id in (10,20);
+
 # 选取非空小于10的
 select * from ca where id is not null and id < 10;
+```
 
+#### order,regexp(正则表达式)
+
+```sql
 # 选取id<=10,按level字段进行排序
 select * from cnarea_2019 where id<=10 order by level;
 # level降序
@@ -284,19 +247,14 @@ select * from cnarea_2019 where id<=10 order by level desc,id ASC;
 
 # regexp(正则表达式)
 select * from cnarea_2019 where id regexp '^1';
-
-# 表别名ca
-select * from cnarea_2019 as ca;
-
-# 选取level字段,过滤重复的数据
-select distinct level from ca;
 ```
 
 #### union
 
-多个表显示
+- 多个表显示
 
 ```sql
+# 从tz表和cnarea_2019表,选取id,name列
 select id,name from cnarea_2019 where id<10 union select id,name from tz;
 MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,name from tz;
 +----+--------------------------+
@@ -314,9 +272,11 @@ MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,nam
 |  1 | tz                       |
 +----+--------------------------+
 
-select id from cnarea_2019 where id<10 union select id from ca where id<10;
-# 选取包含重复(all)
-select id from cnarea_2019 where id<10 union all select id from ca where id<10;
+# 选取列,不包含重复数据
+select id from cnarea_2019 where id<10 union select id from tz where id<10;
+
+# 选取列,包含重复数据(all)
+select id from cnarea_2019 where id<10 union all select id from tz where id<10;
 ```
 
 #### 连接
@@ -346,119 +306,165 @@ SELECT a.id, a.name, b.pinyin FROM cnarea_2019 a RIGHT JOIN ca b ON a.id = b.id;
 
 ### SQL FUNCTION
 
-#### 显示函数
-
 ```sql
-# 查看当前使用哪个数据库
-select database();
+# 选取id的最大值,level的最小值
+select max(id),min(level) as max from cnarea_2019;
 
-# 查看当前登录用户
-select user();
+# 选取level的平均值,id的总值
+select sum(id),avg(level) from ca;
 
-# 查看数据库版本
-select version();
-```
-
-#### 取值函数
-
-```sql
 # 查看总列数
 select count(1) as name from cnarea_2019;
 
 # 统计level的个数
-select count(distinct level) from cnarea_2019;
+select count(distinct level) as totals from cnarea_2019;
 
 # 对level重复数据的进行统计
-select level, count(*) as totals from cnarea_2019 group by level;
-
-# 选取id的最大值
-select max(id) as max from cnarea_2019;
-
-# 选取id的最小值
-select min(id) as max from cnarea_2019;
-
-# 选取id的平均值
-select avg(id) from ca;
-
-# 选取id的总值
-select sum(id) from ca;
+select level, count(1) as totals from cnarea_2019 group by level;
 
 # 对不同的level，选取id的平均值
-select level,avg(id) from ca group by level;
-MariaDB [china]> select level,avg(id) from ca group by level;
+select level,avg(id) from cnarea_2019 group by level;
+MariaDB [china]> select level,avg(id) from cnarea_2019 group by level;
 +-------+-------------+
 | level | avg(id)     |
 +-------+-------------+
-|     0 | 400487.0909 |
-|     1 | 419231.0432 |
-|     2 | 409585.0334 |
-|     3 | 611843.9998 |
-|     4 | 350573.3046 |
+|     0 | 388711.0000 |
+|     1 | 418104.0377 |
+|     2 | 409478.6649 |
+|     3 | 611846.9998 |
+|     4 | 350576.9638 |
 +-------+-------------+
 
 # 对不同的level，选取id的平均值大于400000
-select level,avg(id) from ca group by level having avg(id) > 400000;
-MariaDB [china]> select level,avg(id) from ca group by level having avg(id) > 400000;
+select level,avg(id) from cnarea_2019 group by level having avg(id) > 400000;
+MariaDB [china]> select level,avg(id) from cnarea_2019 group by level having avg(id) > 400000;
 +-------+-------------+
 | level | avg(id)     |
 +-------+-------------+
-|     0 | 400487.0909 |
-|     1 | 419231.0432 |
-|     2 | 409585.0334 |
-|     3 | 611843.9998 |
+|     1 | 418104.0377 |
+|     2 | 409478.6649 |
+|     3 | 611846.9998 |
 +-------+-------------+
 ```
 ## DML
 
-有的地方把 DML 语句（增删改）和 DQL 语句（查询）统称为 DML 语句
+- 有的地方把 DML 语句（增删改）和 DQL 语句（查询）统称为 DML 语句
+### CREATE(创建)
 
+字段属性
+
+- AUTO_INCREMENT 自动增量(每条新记录递增 1)
+- NOT NULL 字段不能为空
+- primary key (`字段`) 设置主键(数据不能重复)
+
+```sql
+# 创建new数据库设置 id 为主键,不能为空,自动增量
+CREATE TABLE new(
+`id` int (8) NOT NULL AUTO_INCREMENT,
+`name` varchar(50),
+`date` DATE,
+primary key (`id`))
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+# 设置初始值为100
+ALTER TABLE new AUTO_INCREMENT=100;
+
+# 查看new表里的字段
+MariaDB [china]> desc new;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(8)      | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(50) | YES  |     | NULL    |                |
+| date  | date        | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+
+# 查看new表详细信息
+show create table new\G;
+
+MariaDB [china]> show create table new\G;
+*************************** 1. row ***************************
+       Table: new
+Create Table: CREATE TABLE `new` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+
+# 创建临时表(断开与数据库的连接后，临时表就会自动被销毁)
+CREATE TEMPORARY TABLE temp (`id` int);
+```
 ### insert
 
 ```sql
 # 插入新数据
-insert into cnarea_2019 (id, level) values (783563, 4);
-
-# 或者直接插入
-insert into cnarea_2019 values (783563, 4);
+insert into new (name,date) values ('tz','2020-10-24');
 
 # 插入多条数据
-insert into cnarea_2019 (id, level) values
-(783564, 4),
-(783565, 4),
-(783566, 4);
+insert into new (name,date) values
+('tz1','2020-10-24'),
+('tz2','2020-10-24'),
+('tz3','2020-10-24');
 
 # 查看
-MariaDB [china]> select * from cnarea_2019 where id=783563\G;
-*************************** 1. row ***************************
-         id: 783563
-      level: 4
-parent_code: 0
-  area_code: 0
-   zip_code: 000000
-  city_code:
-       name:
- short_name:
-merger_name:
-     pinyin:
-        lng: 0.000000
-        lat: 0.000000
-1 row in set (0.000 sec)
+select * from new;
 
-# 从link字段导入进links3.注意:(表是区分大小的)
-create table links3 (`id` int(4), `name` char(50));
-insert into links (id, name) values (1, 'tz');
-insert into links3 (id,name) select id,name from links where id=1;
+MariaDB [china]> select * from new;
++-----+------+------------+
+| id  | name | date       |
++-----+------+------------+
+| 100 | tz   | 2020-10-24 |
+| 102 | tz1  | 2020-10-24 |
+| 103 | tz2  | 2020-10-24 |
+| 104 | tz3  | 2020-10-24 |
++-----+------+------------+
+
+# 可以看到 id 字段自动增量
+```
+#### 选取另一个表的数据,导入进新表
+
+- 把cnarea_2019表里的字段,导入进newcn表.注意:(表是区分大小的)
+```sql
+
+# 创建名为newcn数据库
+create table newcn (
+`id` int(4),
+`name` varchar(50));
+
+# 导入1条数据
+insert into newcn (id,name) select id,name from cnarea_2019 where id=1;
+# 可多次导入
+insert into newcn (id,name) select id,name from cnarea_2019 where id >= 2 and id <=10 ;
+
+# 查看结果
+MariaDB [china]>  select * from newcn;
++------+--------------------------+
+| id   | name                     |
++------+--------------------------+
+|    1 | 北京市                   |
+|    2 | 直辖区                   |
+|    3 | 东城区                   |
+|    4 | 东华门街道               |
+|    5 | 多福巷社区居委会         |
+|    6 | 银闸社区居委会           |
+|    7 | 东厂社区居委会           |
+|    8 | 智德社区居委会           |
+|    9 | 南池子社区居委会         |
+|   10 | 黄图岗社区居委会         |
++------+--------------------------+
 ```
 ### update
 ```sql
 # 修改id=1的city_code字段为111
-update ca set city_code=111 where id=1;
+update cnarea_2019 set city_code=111 where id=1;
 
 # 对每个id-3,填回刚才删除的id1,2,3
-update ca set id=(id-3) where id>2;
+update cnarea_2019 set id=(id-3) where id>2;
 
 # 对小于level平均值进行加1
-update ca set level=(level+1) where level<=(select avg(level) from ca);
+update cnarea_2019 set level=(level+1) where level<=(select avg(level) from cnarea_2019);
 ```
 
 
@@ -466,12 +472,12 @@ update ca set level=(level+1) where level<=(select avg(level) from ca);
 
 ```sql
 # 删除id1
-delete from ca where id=1;
-# 删除id2,3
-delete from ca where id in (2,3);
+delete from cnarea_2019 where id=1;
+# 删除id2和4
+delete from cnarea_2019 where id in (2,4);
 
-# 检查
-select level, count(*) as totals from cn group by level;
+# 查看结果
+select level, count(*) as totals from cnarea_2019 group by level;
 
 # 删除表
 delete from cnarea_2019;
@@ -481,44 +487,67 @@ truncate table cnarea_2019;
 
 # 删除数据库
 drop database china;
+
+# 记得重新恢复数据库
+create database china;
+mysql -uroot -pYouPassward china < china_area_mysql.sql
 ```
 
+#### 删除重复的数据
+
+```sql
+# 创建表
+create table clone (`id` int (8), `name` varchar(50), `date` DATE);
+
+# 插入数据
+insert into clone (id,name,date) values
+(1,'tz','2020-10-24'),
+(2,'tz','2020-10-24'),
+(2,'tz','2020-10-24'),
+(2,'tz1','2020-10-24'),
+(2,'tz1','2020-10-24');
+
+# 通过加入主健(PRIMARY KEY)删除重复的数据
+ALTER IGNORE TABLE clone ADD PRIMARY KEY (id, name);
+```
 ### alter
 
 ```sql
 # 重命名表
-alter table cnarea_2019 rename ca;
+ALTER TABLE cnarea_2019 RENAME ca;
 
 # 将列name改名为mingzi,类型改为char(50)
-alter table ca change name mingzi char(50);
+ALTER TABLE ca change name mingzi char(50);
 
 # 删除字段
-ALTER TABLE tz DROP id;
+ALTER TABLE ca DROP id;
 
 # 添加字段
-ALTER TABLE tz ADD id INT FIRST;
+ALTER TABLE ca ADD id INT FIRST;
 
 # 重命名id字段为number(bigint类型)
-ALTER TABLE tz CHANGE id number BIGINT;
+ALTER TABLE ca CHANGE id number BIGINT;
+
 # 修改number为int类型
-ALTER TABLE tz MODIFY number INT;
+ALTER TABLE ca MODIFY number INT;
 # 或者
-ALTER TABLE tz CHANGE number number INT;
+ALTER TABLE ca CHANGE number number INT;
 
-# 修改tz表id字段默认值1000
-ALTER TABLE tz MODIFY id BIGINT NOT NULL DEFAULT 1000;
+# 修改ca表id字段默认值1000
+ALTER TABLE ca MODIFY id BIGINT NOT NULL DEFAULT 1000;
 # 或者
-ALTER TABLE tz ALTER id SET DEFAULT 1000;
-
-# 修改ca表的存储引擎
-ALTER TABLE ca ENGINE = MYISAM;
+ALTER TABLE ca ALTER id SET DEFAULT 1000;
 
 # 添加主键，确保该主键默认不为空（NOT NULL）
 ALTER TABLE ca MODIFY id INT NOT NULL;
 ALTER TABLE ca ADD PRIMARY KEY (id);
 # 删除主键
 ALTER TABLE ca DROP PRIMARY KEY;
+
+# 修改ca表的存储引擎
+ALTER TABLE ca ENGINE = MYISAM;
 ```
+
 ## DCL
 DCL 语句主要是管理数据库权限的时候使用
 
@@ -569,6 +598,10 @@ ALTER table ca DROP INDEX indexName;
 ### 备份
 
 ```sql
+# 创建tz表
+create table tz (`id` int (8), `name` varchar(50), `date` DATE);
+insert into clone (id,name,date) values (1,'tz','2020-10-24');
+
 # 导出tz表
 SELECT * FROM tz INTO OUTFILE '/tmp/tz.txt';
 
