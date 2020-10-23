@@ -8,7 +8,7 @@
         * [临时表](#临时表)
         * [复制表](#复制表)
     * [以下练习需下载数据库](#以下练习需下载数据库)
-    * [字段数据操作](#字段数据操作)
+    * [DQL](#dql)
         * [select](#select)
             * [union](#union)
             * [连接](#连接)
@@ -18,9 +18,13 @@
         * [SQL FUNCTION](#sql-function)
             * [显示函数](#显示函数)
             * [取值函数](#取值函数)
+    * [DML](#dml)
         * [insert](#insert)
+        * [update](#update)
         * [delete](#delete)
         * [alter](#alter)
+    * [DCL](#dcl)
+    * [帮助文档](#帮助文档)
     * [事务](#事务)
     * [INDEX](#index)
     * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
@@ -216,7 +220,7 @@ cd china_area_mysql
 mysql -uroot -pYouPassward china < china_area_mysql.sql
 ```
 
-## 字段数据操作
+## DQL
 
 ### select
 
@@ -241,8 +245,11 @@ select name from cnarea_2019;
 # 从表 cnarea_2019 选取 name 和 id 列的数据
 select id,name from cnarea_2019;
 
-# 选取所有列，但只显示第1行
-select * from cnarea_2019 limit 1;
+# 选取所有列，但只显示前2行
+select * from cnarea_2019 limit 2;
+
+# 选取所有列，但只显示3到6行
+select * from cnarea_2019 limit 2,4;
 
 #  结果集中会自动去重复数据
 select distinct name from cnarea_2019;
@@ -313,7 +320,10 @@ select id from cnarea_2019 where id<10 union all select id from ca where id<10;
 ```
 
 #### 连接
-
+- 只返回两张表匹配的记录，这叫内连接（inner join）。
+- 返回匹配的记录，以及表 A 多余的记录，这叫左连接（left join）。
+- 返回匹配的记录，以及表 B 多余的记录，这叫右连接（right join）。
+- 返回匹配的记录，以及表 A 和表 B 各自的多余记录，这叫全连接（full join）。
 ##### INNER JOIN
 
 ```sql
@@ -398,12 +408,24 @@ MariaDB [china]> select level,avg(id) from ca group by level having avg(id) > 40
 |     3 | 611843.9998 |
 +-------+-------------+
 ```
+## DML
+
+有的地方把 DML 语句（增删改）和 DQL 语句（查询）统称为 DML 语句
 
 ### insert
 
 ```sql
-# 新建新数据
+# 插入新数据
 insert into cnarea_2019 (id, level) values (783563, 4);
+
+# 或者直接插入
+insert into cnarea_2019 values (783563, 4);
+
+# 插入多条数据
+insert into cnarea_2019 (id, level) values
+(783564, 4),
+(783565, 4),
+(783566, 4);
 
 # 查看
 MariaDB [china]> select * from cnarea_2019 where id=783563\G;
@@ -427,6 +449,18 @@ create table links3 (`id` int(4), `name` char(50));
 insert into links (id, name) values (1, 'tz');
 insert into links3 (id,name) select id,name from links where id=1;
 ```
+### update
+```sql
+# 修改id=1的city_code字段为111
+update ca set city_code=111 where id=1;
+
+# 对每个id-3,填回刚才删除的id1,2,3
+update ca set id=(id-3) where id>2;
+
+# 对小于level平均值进行加1
+update ca set level=(level+1) where level<=(select avg(level) from ca);
+```
+
 
 ### delete
 
@@ -436,14 +470,6 @@ delete from ca where id=1;
 # 删除id2,3
 delete from ca where id in (2,3);
 
-# 修改id=1的city_code字段为111
-update ca set city_code=111 where id=1;
-
-# 对每个id-3,填回刚才删除的id1,2,3
-update ca set id=(id-3) where id>2;
-
-# 对小于level平均值进行加1
-update ca set level=(level+1) where level<=(select avg(level) from ca);
 # 检查
 select level, count(*) as totals from cn group by level;
 
@@ -451,6 +477,8 @@ select level, count(*) as totals from cn group by level;
 delete from cnarea_2019;
 # 删除表(无法回退)
 truncate table cnarea_2019;
+# 这两者的区别简单理解就是 drop 语句删除表之后，可以通过日志进行回复，而 truncate 删除表之后永远恢复不了，所以，一般不使用 truncate 进行表的删除。
+
 # 删除数据库
 drop database china;
 ```
@@ -491,6 +519,21 @@ ALTER TABLE ca ADD PRIMARY KEY (id);
 # 删除主键
 ALTER TABLE ca DROP PRIMARY KEY;
 ```
+## DCL
+DCL 语句主要是管理数据库权限的时候使用
+
+## 帮助文档
+
+```sql
+# 按照层次查询
+? contents;
+? Account Management
+# 数据类型
+? Data Types
+? VARCHAR
+? SHOW
+```
+
 
 ## 事务
 
@@ -808,9 +851,6 @@ show engines;
 # 查看目前使用的存储引擎
 show variables like 'storage_engine';
 
-# 查看links表所使用的存储引擎
-show create table links;
-
 # 查看索引包含主键
 show index from ca;
 ```
@@ -827,11 +867,10 @@ show index from ca;
 - [MySQL 入门教程](https://github.com/jaywcjlove/mysql-tutorial)
 - [sql 语句教程](https://www.1keydata.com/cn/sql/)
 - [W3cSchool SQL 教程](https://www.w3school.com.cn/sql/index.asp)
-- [SQL Exercises(英文)](https://en.wikibooks.org/wiki/SQL_Exercises/The_computer_store)
 - [MySQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
-
+- [138 张图带你 MySQL 入门](https://mp.weixin.qq.com/s?src=11&timestamp=1603417035&ver=2661&signature=Z-XNfjtR11GhHg29XAiBZ0RAiMHavvRavxB1ccysnXtAKChrVkXo*zx3DKFPSxDESZ9lwRM7C8-*yu1dEGmXwHgv1qe7V-WvwLUUQe7Nz7RUwEuJmLYqVRnOWtONHeL-&new=1)
 # reference items
-
+- [数据库表连接的简单解释](http://www.ruanyifeng.com/blog/2019/01/table-join.html?utm_source=tuicool&utm_medium=referral)
 - [MySQL 资源大全中文版](https://github.com/jobbole/awesome-mysql-cn)
 
 # online tools
