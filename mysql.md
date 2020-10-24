@@ -1,13 +1,13 @@
 <!-- vim-markdown-toc GFM -->
 
-* [mysql](#mysql)
+* [mysql教程](#mysql教程)
     * [基本命令](#基本命令)
         * [连接数据库](#连接数据库)
-        * [基本命令](#基本命令-1)
+        * [常用命令](#常用命令)
         * [用户设置](#用户设置)
             * [授予权限,远程登陆](#授予权限远程登陆)
         * [配置(varibles)操作](#配置varibles操作)
-    * [下载数据库进行 SQL 语句 练习](#下载数据库进行-sql-语句-练习)
+    * [下载数据库进行 SQL 语句 学习](#下载数据库进行-sql-语句-学习)
     * [DQL](#dql)
         * [select](#select)
             * [where](#where)
@@ -26,10 +26,12 @@
         * [INNER JOIN](#inner-join)
         * [LEFT JOIN](#left-join)
         * [RIGHT JOIN](#right-join)
+        * [full outer join](#full-outer-join)
     * [DCL](#dcl)
     * [帮助文档](#帮助文档)
     * [事务](#事务)
     * [INDEX](#index)
+        * [索引速度测试](#索引速度测试)
     * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
         * [备份](#备份)
         * [主从备份](#主从备份)
@@ -53,7 +55,7 @@
 
 <!-- vim-markdown-toc -->
 
-# mysql
+# mysql教程
 
 吐嘈一下`Mysql`排版比`MariaDB`更好
 
@@ -65,6 +67,7 @@
 
 ![avatar](/Pictures/mysql/mysql.png)
 
+[Centos7安装Mysql](#install)
 ## 基本命令
 
 ### 连接数据库
@@ -83,7 +86,7 @@ mysql -uroot -p'newpassword' -S/tmp/mysql.sock
 mysql -uroot -p'newpassword' -e "show databases"
 ```
 
-### 基本命令
+### 常用命令
 
 - 注意命令后面要加`;`
 
@@ -120,6 +123,7 @@ select user();
 select version();
 ```
 
+> [跳过用户设置，直接进入SQL语句学习(建议)](#sql)
 ### 用户设置
 
 ```sql
@@ -186,15 +190,16 @@ set global max_connect_errors=1000;
 echo "max_connect_errors=1000" >> /etc/my.cnf
 ```
 
-## 下载数据库进行 SQL 语句 练习
+## 下载数据库进行 SQL 语句 学习
 
+<span id="sql"></span>
 ```sql
 # 连接数据库后,创建china数据库
 create database china;
 ```
 
 ```sh
-# 下载2019年中国数据库进行练习
+# 下载2019年中国地区表
 git clone https://github.com/kakuilan/china_area_mysql.git
 cd china_area_mysql
 
@@ -219,10 +224,13 @@ mysql -uroot -pYouPassward china < china_area_mysql.sql
 - group by
 
 ```sql
-# 连接数据库后
+# 连接数据库后,进入china数据库
 use china;
 
-# cnarea_2019表别名为ca
+# 查看表cnarea_2019 字段
+desc cnarea_2019
+
+# 可以创建ca别名,更快输入
 select * from cnarea_2019 as ca;
 # 恢复
 select * from ca as cnarea_2019;
@@ -562,7 +570,7 @@ ALTER TABLE ca ENGINE = MYISAM;
 
 ## JOIN
 
-从两个或更多的表中获取结果
+从两个或更多的表中获取结果.[图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
 
 - 只返回两张表匹配的记录，这叫内连接（inner join）。
 - 返回匹配的记录，以及表 A 多余的记录，这叫左连接（left join）。
@@ -571,6 +579,7 @@ ALTER TABLE ca ENGINE = MYISAM;
 
 ![avatar](/Pictures/mysql/join.png)
 
+![avatar](/Pictures/mysql/join1.png)
 ### INNER JOIN
 
 ```sql
@@ -582,7 +591,6 @@ from new,cnarea_2019 where cnarea_2019.id=new.id;
 select new.id,new.date,cnarea_2019.name
 from new inner join cnarea_2019 on cnarea_2019.id=new.id;
 
-MariaDB [china]> select new.id,new.date,cnarea_2019.name from new,cnarea_2019 where cnarea_2019.id=new.id;
 +-----+------------+--------------------------+
 | id  | date       | name                     |
 +-----+------------+--------------------------+
@@ -600,7 +608,7 @@ MariaDB [china]> select new.id,new.date,cnarea_2019.name from new,cnarea_2019 wh
 
 ```sql
 # 左连接，以左表(new)id字段个数进行选取.所以结果与inner join一样
-MariaDB [china]> select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new left join cnarea_2019 on new.id=cnarea_2019.id limit 10;
+select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new left join cnarea_2019 on new.id=cnarea_2019.id limit 10;
 +-----+------------+--------------------------+-----------+
 | id  | date       | name                     | pinyin    |
 +-----+------------+--------------------------+-----------+
@@ -619,7 +627,7 @@ MariaDB [china]> select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from
 ```sql
 # 右连接，以右表(cnarea_2019)id字段个数进行选取.因左表(new)没有右表数据多,所以id,date字段为null
 
-MariaDB [china]> select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new right join cnarea_2019 on new.id=cnarea_2019.id limit 10;
+select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new right join cnarea_2019 on new.id=cnarea_2019.id limit 10;
 +------+------------+--------------------------+-------------+
 | id   | date       | name                     | pinyin      |
 +------+------------+--------------------------+-------------+
@@ -635,6 +643,16 @@ MariaDB [china]> select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from
 | NULL | NULL       | 黄图岗社区居委会         | HuangTuGang |
 +------+------------+--------------------------+-------------+
 ```
+### full outer join
+```sql
+# 如果mysql不支持full outer,可以使用union
+SELECT * FROM new LEFT JOIN cnarea_2019 ON new.id = cnarea_2019.id
+
+UNION
+
+SELECT * FROM new RIGHT JOIN cnarea_2019 ON new.id =cnarea_2019.id;
+```
+
 
 ## DCL
 
@@ -678,6 +696,21 @@ ALTER table ca ADD INDEX indexName(id);
 # 删除索引
 ALTER table ca DROP INDEX indexName;
 ```
+### 索引速度测试
+```sql
+# 测试效果
+select name,pinyin,short_name,merger_name from  cnarea_2019;
+```
+> **结果:** `783562 rows in set (0.264 sec)`
+
+```sql
+# 添加索引
+CREATE INDEX short_name_index ON cnarea_2019 (short_name);
+CREATE INDEX name_index ON cnarea_2019 (name);
+CREATE INDEX merger_name_index ON cnarea_2019 (merger_name);
+```
+> **结果:** `783562 rows in set (0.223 sec)`
+
 
 ## mysqldump 备份和恢复
 
@@ -816,7 +849,7 @@ mysql root@localhost:(none)> SELECT DISTINCT CONCAT('User: ''',user,'''@''',host
 (1142, "SELECT command denied to user 'root'@'localhost' for table 'user'")
 ```
 
-![avatar](/Pictures/mysql/1.png)
+![avatar](/Pictures/mysql/mycli.png)
 
 ### [mydumper](https://github.com/maxbube/mydumper)
 
@@ -837,7 +870,7 @@ mydumper \
 --compress-protocol
 ```
 
-![avatar](/Pictures/mysql/2.png)
+![avatar](/Pictures/mysql/du.png)
 
 ```sh
 # 不带压缩备份,最后再用7z压缩
@@ -852,7 +885,7 @@ mydumper \
 --compress-protocol
 ```
 
-![avatar](/Pictures/mysql/3.png)
+![avatar](/Pictures/mysql/du1.png)
 
 ```sh
 # 恢复
@@ -865,6 +898,7 @@ myloader \
 --verbose=3
 ```
 
+<span id="install"></span>
 ## Centos 7 安装 MySQL
 
 从 CentOS 7 开始，`yum` 安装 `MySQL` 默认安装的会是 `MariaDB`
@@ -990,6 +1024,8 @@ show index from ca;
 - [21 分钟 MySQL 基础入门](https://github.com/jaywcjlove/mysql-tutorial/blob/master/21-minutes-MySQL-basic-entry.md#%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5)
 - [数据库的最简单实现](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
 - [Mydumper - MySQL 数据库备份工具](https://linux.cn/article-5330-1.html)
+- [阿里规定超过三张表禁止 join，为啥？](https://zhuanlan.zhihu.com/p/158866182)
+- [图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
 
 # 优秀教程
 
@@ -998,7 +1034,6 @@ show index from ca;
 - [W3cSchool SQL 教程](https://www.w3school.com.cn/sql/index.asp)
 - [MySQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
 - [138 张图带你 MySQL 入门](https://mp.weixin.qq.com/s?src=11&timestamp=1603417035&ver=2661&signature=Z-XNfjtR11GhHg29XAiBZ0RAiMHavvRavxB1ccysnXtAKChrVkXo*zx3DKFPSxDESZ9lwRM7C8-*yu1dEGmXwHgv1qe7V-WvwLUUQe7Nz7RUwEuJmLYqVRnOWtONHeL-&new=1)
-
 # reference items
 
 - [数据库表连接的简单解释](http://www.ruanyifeng.com/blog/2019/01/table-join.html?utm_source=tuicool&utm_medium=referral)
@@ -1007,7 +1042,3 @@ show index from ca;
 # online tools
 
 - [创建数据库的实体-关系图的工具 dbdiagram](https://dbdiagram.io)
-
-```
-
-```
