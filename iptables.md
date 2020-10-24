@@ -157,6 +157,8 @@ iptables -P OUTPUT ACCEPT
 
 ### 基本命令
 
+- 注意`ACCEPT`,`DROP`必须要大写
+
 #### 只允许 tcp 协议,访问 80 端口
 
 ```sh
@@ -181,6 +183,11 @@ iptables -I INPUT -p tcp --dport 80 -m time --timestart 9:00 --timestop 18:00 -j
 iptables -I INPUT -p tcp --dport 22 -s 192.168.1.0/24 -j ACCEPT
 iptables -A INPUT -p tcp --dport 22 -j DROP
 #注意要把拒绝规则放在后面
+
+# mysql
+iptables -I INPUT -p tcp --dport 3306 -s 127.0.0.1 -j ACCEPT
+iptables -I INPUT -p tcp --dport 3306 -s 192.168.1.0/24 -j ACCEPT
+iptables -A INPUT -p tcp --dport 3306 -j DROP
 ```
 
 #### 禁止用户访问 www.baidu.com 的网站。

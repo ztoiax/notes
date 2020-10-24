@@ -5,17 +5,14 @@
         * [连接数据库](#连接数据库)
         * [基本命令](#基本命令-1)
         * [用户设置](#用户设置)
+            * [授予权限,远程登陆](#授予权限远程登陆)
         * [配置(varibles)操作](#配置varibles操作)
-    * [下载数据库进行 SQL语句 练习](#下载数据库进行-sql语句-练习)
+    * [下载数据库进行 SQL 语句 练习](#下载数据库进行-sql-语句-练习)
     * [DQL](#dql)
         * [select](#select)
             * [where](#where)
             * [order,regexp(正则表达式)](#orderregexp正则表达式)
             * [union](#union)
-            * [连接](#连接)
-                * [INNER JOIN](#inner-join)
-                * [LEFT JOIN](#left-join)
-                * [RIGHT JOIN](#right-join)
         * [SQL FUNCTION](#sql-function)
     * [DML](#dml)
         * [CREATE(创建)](#create创建)
@@ -25,6 +22,10 @@
         * [delete](#delete)
             * [删除重复的数据](#删除重复的数据)
         * [alter](#alter)
+    * [JOIN](#join)
+        * [INNER JOIN](#inner-join)
+        * [LEFT JOIN](#left-join)
+        * [RIGHT JOIN](#right-join)
     * [DCL](#dcl)
     * [帮助文档](#帮助文档)
     * [事务](#事务)
@@ -122,21 +123,48 @@ select version();
 ### 用户设置
 
 ```sql
-# 创建用户
+# 创建用户名为tz的用户
 create user 'tz'@'127.0.0.1' identified by 'YouPassword';
 
-# 授予权限
-grant all privileges on tz.* to 'tz'@'127.0.0.1';
+# 查看所有用户
+SELECT DISTINCT CONCAT('User: ''',user,'''@''',host,''';') AS query FROM mysql.user;
 
-# 刷新权限
-FLUSH PRIVILEGES;
+# 查看用户权限
+show grants for 'tz'@'%';
 
 # 删除用户
 drop user 'tz'@'127.0.0.1';
 ```
 
+#### 授予权限,远程登陆
+
+```sql
+
+# 允许root从'192.168.100.208'主机china库下的所有表
+grant all privileges on china.* to 'root'@'192.168.100.208' identified by 'YouPassword' WITH GRANT OPTION;;
+
+# 允许root从'192.168.100.208'主机china库下的cnarea_2019表
+grant all PRIVILEGES on china.cnarea_2019 to 'root'@'%'  identified by 'YouPassword' WITH GRANT OPTION;
+
+# 允许所有用户连接所有库下的所有表(%:表示通配符)
+grant all PRIVILEGES on *.* to  'root'@'%' identified by 'YouPassword' WITH GRANT OPTION;
+
+# 刷新权限
+FLUSH PRIVILEGES;
+```
+
+```sh
+# 记得在服务器里关闭防火墙
+iptables -F
+
+# 连接远程数据库(我这里是192.168.1.221)
+mysql -u root -p 'YouPassword' -h 192.168.1.221
+```
+
 ### 配置(varibles)操作
+
 - 注意`variables` 的修改，永久保存要写入`/etc/my.cnf`
+
 ```sql
 # 查看配置(变量)
 show variables;
@@ -158,7 +186,7 @@ set global max_connect_errors=1000;
 echo "max_connect_errors=1000" >> /etc/my.cnf
 ```
 
-## 下载数据库进行 SQL语句 练习
+## 下载数据库进行 SQL 语句 练习
 
 ```sql
 # 连接数据库后,创建china数据库
@@ -217,7 +245,9 @@ select * from cnarea_2019 limit 2,4;
 # 选取level字段,过滤重复的数据
 select distinct level from cnarea_2019;
 ```
+
 #### where
+
 ```sql
 # 选取id=174909的数据
 select * from cnarea_2019 where id=174909;
@@ -279,31 +309,6 @@ select id from cnarea_2019 where id<10 union select id from tz where id<10;
 select id from cnarea_2019 where id<10 union all select id from tz where id<10;
 ```
 
-#### 连接
-- 只返回两张表匹配的记录，这叫内连接（inner join）。
-- 返回匹配的记录，以及表 A 多余的记录，这叫左连接（left join）。
-- 返回匹配的记录，以及表 B 多余的记录，这叫右连接（right join）。
-- 返回匹配的记录，以及表 A 和表 B 各自的多余记录，这叫全连接（full join）。
-##### INNER JOIN
-
-```sql
-SELECT a.id, a.name, b.pinyin FROM cnarea_2019 a INNER JOIN ca b ON a.id = b.id;
-# 或者
-SELECT a.id, a.name, b.pinyin FROM cnarea_2019 a, ca b WHERE a.id = b.id;
-```
-
-##### LEFT JOIN
-
-```sql
-SELECT a.id, a.name, b.pinyin FROM cnarea_2019 a LEFT JOIN ca b ON a.id = b.id;
-```
-
-##### RIGHT JOIN
-
-```sql
-SELECT a.id, a.name, b.pinyin FROM cnarea_2019 a RIGHT JOIN ca b ON a.id = b.id;
-```
-
 ### SQL FUNCTION
 
 ```sql
@@ -346,9 +351,11 @@ MariaDB [china]> select level,avg(id) from cnarea_2019 group by level having avg
 |     3 | 611846.9998 |
 +-------+-------------+
 ```
+
 ## DML
 
 - 有的地方把 DML 语句（增删改）和 DQL 语句（查询）统称为 DML 语句
+
 ### CREATE(创建)
 
 字段属性
@@ -396,6 +403,7 @@ Create Table: CREATE TABLE `new` (
 # 创建临时表(断开与数据库的连接后，临时表就会自动被销毁)
 CREATE TEMPORARY TABLE temp (`id` int);
 ```
+
 ### insert
 
 ```sql
@@ -423,9 +431,11 @@ MariaDB [china]> select * from new;
 
 # 可以看到 id 字段自动增量
 ```
+
 #### 选取另一个表的数据,导入进新表
 
-- 把cnarea_2019表里的字段,导入进newcn表.注意:(表是区分大小的)
+- 把 cnarea_2019 表里的字段,导入进 newcn 表.注意:(表是区分大小的)
+
 ```sql
 
 # 创建名为newcn数据库
@@ -455,7 +465,9 @@ MariaDB [china]>  select * from newcn;
 |   10 | 黄图岗社区居委会         |
 +------+--------------------------+
 ```
+
 ### update
+
 ```sql
 # 修改id=1的city_code字段为111
 update cnarea_2019 set city_code=111 where id=1;
@@ -466,7 +478,6 @@ update cnarea_2019 set id=(id-3) where id>2;
 # 对小于level平均值进行加1
 update cnarea_2019 set level=(level+1) where level<=(select avg(level) from cnarea_2019);
 ```
-
 
 ### delete
 
@@ -510,6 +521,7 @@ insert into clone (id,name,date) values
 # 通过加入主健(PRIMARY KEY)删除重复的数据
 ALTER IGNORE TABLE clone ADD PRIMARY KEY (id, name);
 ```
+
 ### alter
 
 ```sql
@@ -548,7 +560,84 @@ ALTER TABLE ca DROP PRIMARY KEY;
 ALTER TABLE ca ENGINE = MYISAM;
 ```
 
+## JOIN
+
+从两个或更多的表中获取结果
+
+- 只返回两张表匹配的记录，这叫内连接（inner join）。
+- 返回匹配的记录，以及表 A 多余的记录，这叫左连接（left join）。
+- 返回匹配的记录，以及表 B 多余的记录，这叫右连接（right join）。
+- 返回匹配的记录，以及表 A 和表 B 各自的多余记录，这叫全连接（full join）。
+
+![avatar](/Pictures/mysql/join.png)
+
+### INNER JOIN
+
+```sql
+# 选取new表id,date字段和cnarea_2019表name字段
+select new.id,new.date,cnarea_2019.name
+from new,cnarea_2019 where cnarea_2019.id=new.id;
+
+# 或者
+select new.id,new.date,cnarea_2019.name
+from new inner join cnarea_2019 on cnarea_2019.id=new.id;
+
+MariaDB [china]> select new.id,new.date,cnarea_2019.name from new,cnarea_2019 where cnarea_2019.id=new.id;
++-----+------------+--------------------------+
+| id  | date       | name                     |
++-----+------------+--------------------------+
+|   1 | 2020-10-24 | 北京市                   |
+|   2 | 2020-10-24 | 直辖区                   |
+|   3 | 2020-10-24 | 东城区                   |
+| 100 | 2020-10-24 | 安德路社区居委会         |
+| 102 | 2020-10-24 | 七区社区居委会           |
+| 103 | 2020-10-24 | 化工社区居委会           |
+| 104 | 2020-10-24 | 安德里社区居委会         |
++-----+------------+--------------------------+
+```
+
+### LEFT JOIN
+
+```sql
+# 左连接，以左表(new)id字段个数进行选取.所以结果与inner join一样
+MariaDB [china]> select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new left join cnarea_2019 on new.id=cnarea_2019.id limit 10;
++-----+------------+--------------------------+-----------+
+| id  | date       | name                     | pinyin    |
++-----+------------+--------------------------+-----------+
+|   1 | 2020-10-24 | 北京市                   | BeiJing   |
+|   2 | 2020-10-24 | 直辖区                   | BeiJing   |
+|   3 | 2020-10-24 | 东城区                   | DongCheng |
+| 100 | 2020-10-24 | 安德路社区居委会         | AnDeLu    |
+| 102 | 2020-10-24 | 七区社区居委会           | QiQu      |
+| 103 | 2020-10-24 | 化工社区居委会           | HuaGong   |
+| 104 | 2020-10-24 | 安德里社区居委会         | AnDeLi    |
++-----+------------+--------------------------+-----------+
+```
+
+### RIGHT JOIN
+
+```sql
+# 右连接，以右表(cnarea_2019)id字段个数进行选取.因左表(new)没有右表数据多,所以id,date字段为null
+
+MariaDB [china]> select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new right join cnarea_2019 on new.id=cnarea_2019.id limit 10;
++------+------------+--------------------------+-------------+
+| id   | date       | name                     | pinyin      |
++------+------------+--------------------------+-------------+
+|    1 | 2020-10-24 | 北京市                   | BeiJing     |
+|    2 | 2020-10-24 | 直辖区                   | BeiJing     |
+|    3 | 2020-10-24 | 东城区                   | DongCheng   |
+| NULL | NULL       | 东华门街道               | DongHuaMen  |
+| NULL | NULL       | 多福巷社区居委会         | DuoFuXiang  |
+| NULL | NULL       | 银闸社区居委会           | YinZha      |
+| NULL | NULL       | 东厂社区居委会           | DongChang   |
+| NULL | NULL       | 智德社区居委会           | ZhiDe       |
+| NULL | NULL       | 南池子社区居委会         | NanChiZi    |
+| NULL | NULL       | 黄图岗社区居委会         | HuangTuGang |
++------+------------+--------------------------+-------------+
+```
+
 ## DCL
+
 DCL 语句主要是管理数据库权限的时候使用
 
 ## 帮助文档
@@ -562,7 +651,6 @@ DCL 语句主要是管理数据库权限的时候使用
 ? VARCHAR
 ? SHOW
 ```
-
 
 ## 事务
 
@@ -719,7 +807,15 @@ MariaDB [tz]> show slave status\G;
 
 ### [mycli](https://github.com/dbcli/mycli)
 
-更友好的 mysql 命令行
+- 更友好的 mysql 命令行
+- 目前发现不能,修改和查看用户权限
+
+```sql
+mysql root@localhost:(none)> SELECT DISTINCT CONCAT('User: ''',user,'''@''',host,''';') AS query FROM mysq
+                          -> l.user;
+(1142, "SELECT command denied to user 'root'@'localhost' for table 'user'")
+```
+
 ![avatar](/Pictures/mysql/1.png)
 
 ### [mydumper](https://github.com/maxbube/mydumper)
@@ -902,10 +998,16 @@ show index from ca;
 - [W3cSchool SQL 教程](https://www.w3school.com.cn/sql/index.asp)
 - [MySQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
 - [138 张图带你 MySQL 入门](https://mp.weixin.qq.com/s?src=11&timestamp=1603417035&ver=2661&signature=Z-XNfjtR11GhHg29XAiBZ0RAiMHavvRavxB1ccysnXtAKChrVkXo*zx3DKFPSxDESZ9lwRM7C8-*yu1dEGmXwHgv1qe7V-WvwLUUQe7Nz7RUwEuJmLYqVRnOWtONHeL-&new=1)
+
 # reference items
+
 - [数据库表连接的简单解释](http://www.ruanyifeng.com/blog/2019/01/table-join.html?utm_source=tuicool&utm_medium=referral)
 - [MySQL 资源大全中文版](https://github.com/jobbole/awesome-mysql-cn)
 
 # online tools
 
 - [创建数据库的实体-关系图的工具 dbdiagram](https://dbdiagram.io)
+
+```
+
+```
