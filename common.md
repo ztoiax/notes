@@ -221,10 +221,16 @@ awk 'NR == 5 {print $1,$5,$NF}' test
 awk -F ":" '$3 >= 1000' /etc/passwd
 
 # 打印有apk的行的第二列(增强版grep)
-awk '/apk/ { print $2;}' test
+awk '/apk/ { print $2}' test
+
+# 打印有apk的行的倒数第3行和最后一行
+awk '/apk/ {print $(NF-4),$NF}' test
+
+# 第一列与第一列交换
+awk '{ print $2"="$1}' test
 
 # 打印行号加所有行(类似于cat -n)
-awk '{ print NR" "$0;}' lstest
+awk '{ print NR" "$0}' test
 ```
 
 ## other

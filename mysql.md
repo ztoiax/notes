@@ -1,9 +1,9 @@
 <!-- vim-markdown-toc GFM -->
 
-* [mysql教程](#mysql教程)
+* [mysql SQL 命令入门教程](#mysql-sql-命令入门教程)
     * [基本命令](#基本命令)
         * [连接数据库](#连接数据库)
-        * [常用命令](#常用命令)
+        * [常用 SQL 命令](#常用-sql-命令)
         * [用户设置](#用户设置)
             * [授予权限,远程登陆](#授予权限远程登陆)
         * [配置(varibles)操作](#配置varibles操作)
@@ -12,8 +12,9 @@
         * [select](#select)
             * [where](#where)
             * [order,regexp(正则表达式)](#orderregexp正则表达式)
-            * [union](#union)
         * [SQL FUNCTION](#sql-function)
+            * [加密函数](#加密函数)
+            * [自定义函数](#自定义函数)
     * [DML](#dml)
         * [CREATE(创建)](#create创建)
         * [insert](#insert)
@@ -22,6 +23,7 @@
         * [delete](#delete)
             * [删除重复的数据](#删除重复的数据)
         * [alter](#alter)
+    * [union(多个表显示以列为单位)](#union多个表显示以列为单位)
     * [JOIN](#join)
         * [INNER JOIN](#inner-join)
         * [LEFT JOIN](#left-join)
@@ -34,7 +36,7 @@
         * [索引速度测试](#索引速度测试)
     * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
         * [备份](#备份)
-        * [主从备份](#主从备份)
+        * [主从同步(Master/Slave)](#主从同步masterslave)
             * [主服务器配置](#主服务器配置)
             * [从服务器配置](#从服务器配置)
     * [高效强大的 mysql 软件](#高效强大的-mysql-软件)
@@ -47,6 +49,7 @@
                 * [修改密码成功后](#修改密码成功后)
                 * [如果出现以下报错(密码不满足策略安全)](#如果出现以下报错密码不满足策略安全)
                     * [修复](#修复-1)
+        * [开启日志显示 ok，但查询后并没有开启](#开启日志显示-ok但查询后并没有开启)
     * [存储组件](#存储组件)
 * [reference](#reference)
 * [优秀教程](#优秀教程)
@@ -55,7 +58,7 @@
 
 <!-- vim-markdown-toc -->
 
-# mysql教程
+# mysql SQL 命令入门教程
 
 吐嘈一下`Mysql`排版比`MariaDB`更好
 
@@ -67,28 +70,44 @@
 
 ![avatar](/Pictures/mysql/mysql.png)
 
-[Centos7安装Mysql](#install)
+[Centos7 安装 Mysql](#install)
+
 ## 基本命令
 
 ### 连接数据库
 
+| 参数 | 内容                 |
+| ---- | -------------------- |
+| -u   | 用户                 |
+| -p   | 密码                 |
+| -S   | 使用 socks 进行连接  |
+| -h   | 连接指定 ip 的数据库 |
+| -e   | 执行 shell 命令      |
+
 ```sh
-# 连接
-mysql -uroot -p'newpassword'
+# 首先要连接进数据库
+mysql -uroot -pYouPassword
 
-# 远程连接
-mysql -uroot -p'newpassword' -h192.168.100.208 -P3306
+# -h 连接192.168.100.208主机的数据库
+mysql -uroot -pYouPassword -h192.168.100.208 -P3306
 
-# 使用socket连接(mysql不仅监听3306端口，还监听mysql.sock)
-mysql -uroot -p'newpassword' -S/tmp/mysql.sock
+# -S 使用socket连接(mysql不仅监听3306端口，还监听mysql.sock)
+mysql -uroot -pYouPassword -S/tmp/mysql.sock
 
-# 连接后执行命令
-mysql -uroot -p'newpassword' -e "show databases"
+# -e 可以执行 sql 命令(这里是show databases;)
+mysql -uroot -pYouPassword -e "show databases"
 ```
 
-### 常用命令
+### 常用 SQL 命令
 
-- 注意命令后面要加`;`
+在 `linux` 终端输入的命令是 `shell` 命令
+
+而 `SQL` 命令指进入数据库里的命令
+
+- **注意:** SQL 命令后面要加 `;`
+
+- SQL 命令**大小写不敏感** `CREATE` 或 `create` 都可以
+- 而表(table)是要**区分大小写**的
 
 ```sql
 # 创建名为tz的数据库
@@ -100,17 +119,32 @@ show databases;
 # 使用tz数据库
 use tz;
 
+# 查看tz数据库里的表
+show tables;
+
 # 查看数据库状态
 show status;
+
+# 查看mysql的插入次数;
+show status like "com_insert%";
+
+# 查看mysql的删除次数;
+show status like "com_delete%";
+
+# 查看mysql的查询次数;
+show status like "com_select%";
+
+# 查看mysql服务器运行时间
+show status like "uptime";
+
+# 查看mysql连接次数
+show status like 'connections';
 
 # 查看数据库队列
 show processlist;
 
 # 查看数据库保存目录
 show variables like 'data%';
-
-# 查看所有表
-show tables;
 
 # SQL FUNCTION
 # 查看当前使用哪个数据库
@@ -123,14 +157,18 @@ select user();
 select version();
 ```
 
-> [跳过用户设置，直接进入SQL语句学习(建议)](#sql)
 ### 用户设置
+
+> [如没有遇到用户权限问题，或者远程用户连接数据库。可跳过用户设置(建议)](#sql)
 
 ```sql
 # 创建用户名为tz的用户
 create user 'tz'@'127.0.0.1' identified by 'YouPassword';
 
 # 查看所有用户
+SELECT user,host FROM mysql.user;
+
+# 详细查看所有用户
 SELECT DISTINCT CONCAT('User: ''',user,'''@''',host,''';') AS query FROM mysql.user;
 
 # 查看用户权限
@@ -193,6 +231,7 @@ echo "max_connect_errors=1000" >> /etc/my.cnf
 ## 下载数据库进行 SQL 语句 学习
 
 <span id="sql"></span>
+
 ```sql
 # 连接数据库后,创建china数据库
 create database china;
@@ -222,21 +261,35 @@ mysql -uroot -pYouPassward china < china_area_mysql.sql
 
 - order by
 - group by
+- distinct
+
+---
+
+**语法:**
+
+> ```sql
+> SELECT 列名称 FROM 表名称
+> ```
+
+---
 
 ```sql
 # 连接数据库后,进入china数据库
 use china;
 
-# 查看表cnarea_2019 字段
+# 查看表cnarea_2019 的字段(列)
 desc cnarea_2019
 
-# 可以创建ca别名,更快输入
-select * from cnarea_2019 as ca;
-# 恢复
-select * from ca as cnarea_2019;
+# 将cnarea_2019表改名为ca,方便输入
+alter table cnarea_2019 rename ca;
+# 改回来
+alter table ca rename cnarea_2019;
 
-# 从表 cnarea_2019 选取所有列
+# 从表 cnarea_2019 选取所有列(*表示所有列)
 select * from cnarea_2019;
+
+# 如果刚才将表改成ca名，就是以下命令
+select * from ca;
 
 # 从表 cnarea_2019 选取 name 列
 select name from cnarea_2019;
@@ -250,11 +303,13 @@ select * from cnarea_2019 limit 2;
 # 选取所有列，但只显示3到6行
 select * from cnarea_2019 limit 2,4;
 
-# 选取level字段,过滤重复的数据
+# 选取level列,用distinct过滤重复的数据
 select distinct level from cnarea_2019;
 ```
 
 #### where
+
+有条件地从表中选取数据
 
 ```sql
 # 选取id=174909的数据
@@ -287,37 +342,13 @@ select * from cnarea_2019 where id<=10 order by level desc,id ASC;
 select * from cnarea_2019 where id regexp '^1';
 ```
 
-#### union
-
-- 多个表显示
-
-```sql
-# 从tz表和cnarea_2019表,选取id,name列
-select id,name from cnarea_2019 where id<10 union select id,name from tz;
-MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,name from tz;
-+----+--------------------------+
-| id | name                     |
-+----+--------------------------+
-|  1 | 北京市                   |
-|  2 | 直辖区                   |
-|  3 | 东城区                   |
-|  4 | 东华门街道               |
-|  5 | 多福巷社区居委会         |
-|  6 | 银闸社区居委会           |
-|  7 | 东厂社区居委会           |
-|  8 | 智德社区居委会           |
-|  9 | 南池子社区居委会         |
-|  1 | tz                       |
-+----+--------------------------+
-
-# 选取列,不包含重复数据
-select id from cnarea_2019 where id<10 union select id from tz where id<10;
-
-# 选取列,包含重复数据(all)
-select id from cnarea_2019 where id<10 union all select id from tz where id<10;
-```
-
 ### SQL FUNCTION
+
+**语法**
+
+> ```sql
+> SELECT function(列名称) FROM 表名称
+> ```
 
 ```sql
 # 选取id的最大值,level的最小值
@@ -359,6 +390,36 @@ MariaDB [china]> select level,avg(id) from cnarea_2019 group by level having avg
 |     3 | 611846.9998 |
 +-------+-------------+
 ```
+
+#### 加密函数
+
+```sql
+select md5('123');
+
+# 保留两位小数
+select format(111.111,2);
+
+# 加锁函数
+select get_lock('lockname',10);
+select is_free_lock('lockname');
+select release_lock('lockname');
+```
+
+#### 自定义函数
+
+**语法：**
+
+> ```sql
+> create function 函数名([参数列表]) returns 数据类型
+>
+> begin
+>
+> sql语句;
+>
+> return 值;
+>
+> end;
+> ```
 
 ## DML
 
@@ -414,6 +475,12 @@ CREATE TEMPORARY TABLE temp (`id` int);
 
 ### insert
 
+**语法**
+
+> ```sql
+> INSERT INTO 表名称 (列1, 列2,...) VALUES (值1, 值2,....)
+> ```
+
 ```sql
 # 插入新数据
 insert into new (name,date) values ('tz','2020-10-24');
@@ -427,6 +494,7 @@ insert into new (name,date) values
 # 查看
 select * from new;
 
+# 可以看到 id 字段自动增量
 MariaDB [china]> select * from new;
 +-----+------+------------+
 | id  | name | date       |
@@ -436,13 +504,11 @@ MariaDB [china]> select * from new;
 | 103 | tz2  | 2020-10-24 |
 | 104 | tz3  | 2020-10-24 |
 +-----+------+------------+
-
-# 可以看到 id 字段自动增量
 ```
 
 #### 选取另一个表的数据,导入进新表
 
-- 把 cnarea_2019 表里的字段,导入进 newcn 表.注意:(表是区分大小的)
+- 把 cnarea_2019 表里的字段,导入进 newcn 表.
 
 ```sql
 
@@ -476,6 +542,12 @@ MariaDB [china]>  select * from newcn;
 
 ### update
 
+**语法：**
+
+> ```sql
+> UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 某值
+> ```
+
 ```sql
 # 修改id=1的city_code字段为111
 update cnarea_2019 set city_code=111 where id=1;
@@ -488,6 +560,12 @@ update cnarea_2019 set level=(level+1) where level<=(select avg(level) from cnar
 ```
 
 ### delete
+
+**语法：**
+
+> ```sql
+> DELETE FROM 表名称 WHERE 列名称 = 值
+> ```
 
 ```sql
 # 删除id1
@@ -532,6 +610,22 @@ ALTER IGNORE TABLE clone ADD PRIMARY KEY (id, name);
 
 ### alter
 
+**语法：**
+
+> ```sql
+> ALTER TABLE table_name
+> 动作 column_name 内容
+> ```
+
+| 动作   | 内容             |
+| ------ | ---------------- |
+| ADD    | 添加列           |
+| DROP   | 删除列           |
+| RENAME | 修改表名         |
+| CHANGE | 修改列名         |
+| MODIFY | 修改列的数据类型 |
+| ENGINE | 修改存储引擎     |
+
 ```sql
 # 重命名表
 ALTER TABLE cnarea_2019 RENAME ca;
@@ -539,21 +633,21 @@ ALTER TABLE cnarea_2019 RENAME ca;
 # 将列name改名为mingzi,类型改为char(50)
 ALTER TABLE ca change name mingzi char(50);
 
-# 删除字段
+# 删除id列
 ALTER TABLE ca DROP id;
 
-# 添加字段
+# 添加id列
 ALTER TABLE ca ADD id INT FIRST;
 
-# 重命名id字段为number(bigint类型)
+# 重命名id列为number(bigint类型)
 ALTER TABLE ca CHANGE id number BIGINT;
 
-# 修改number为int类型
-ALTER TABLE ca MODIFY number INT;
+# 修改city_code列,为char(50)类型
+ALTER TABLE ca MODIFY city_code char(50);
 # 或者
-ALTER TABLE ca CHANGE number number INT;
+ALTER TABLE ca CHANGE city_code city_code char(50);
 
-# 修改ca表id字段默认值1000
+# 修改ca表id列默认值1000
 ALTER TABLE ca MODIFY id BIGINT NOT NULL DEFAULT 1000;
 # 或者
 ALTER TABLE ca ALTER id SET DEFAULT 1000;
@@ -568,6 +662,42 @@ ALTER TABLE ca DROP PRIMARY KEY;
 ALTER TABLE ca ENGINE = MYISAM;
 ```
 
+## union(多个表显示以列为单位)
+
+**语法：**
+
+> ```sql
+> SELECT 列名称 FROM 表名称
+> UNION
+> SELECT 列名称 FROM 表名称
+> ```
+
+```sql
+# 从tz表和cnarea_2019表,选取id,name列
+select id,name from cnarea_2019 where id<10 union select id,name from tz;
+MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,name from tz;
++----+--------------------------+
+| id | name                     |
++----+--------------------------+
+|  1 | 北京市                   |
+|  2 | 直辖区                   |
+|  3 | 东城区                   |
+|  4 | 东华门街道               |
+|  5 | 多福巷社区居委会         |
+|  6 | 银闸社区居委会           |
+|  7 | 东厂社区居委会           |
+|  8 | 智德社区居委会           |
+|  9 | 南池子社区居委会         |
+|  1 | tz                       |
++----+--------------------------+
+
+# 选取列,不包含重复数据
+select id from cnarea_2019 where id<10 union select id from tz where id<10;
+
+# 选取列,包含重复数据(all)
+select id from cnarea_2019 where id<10 union all select id from tz where id<10;
+```
+
 ## JOIN
 
 从两个或更多的表中获取结果.[图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
@@ -580,6 +710,15 @@ ALTER TABLE ca ENGINE = MYISAM;
 ![avatar](/Pictures/mysql/join.png)
 
 ![avatar](/Pictures/mysql/join1.png)
+**语法：**
+
+> ```sql
+> SELECT 列名称
+> FROM 表名称1
+> INNER JOIN 表名称2
+> ON 表名称1.列名称=表名称2.列名称
+> ```
+
 ### INNER JOIN
 
 ```sql
@@ -643,7 +782,9 @@ select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new right join c
 | NULL | NULL       | 黄图岗社区居委会         | HuangTuGang |
 +------+------------+--------------------------+-------------+
 ```
+
 ### full outer join
+
 ```sql
 # 如果mysql不支持full outer,可以使用union
 SELECT * FROM new LEFT JOIN cnarea_2019 ON new.id = cnarea_2019.id
@@ -652,7 +793,6 @@ UNION
 
 SELECT * FROM new RIGHT JOIN cnarea_2019 ON new.id =cnarea_2019.id;
 ```
-
 
 ## DCL
 
@@ -696,11 +836,14 @@ ALTER table ca ADD INDEX indexName(id);
 # 删除索引
 ALTER table ca DROP INDEX indexName;
 ```
+
 ### 索引速度测试
+
 ```sql
 # 测试效果
 select name,pinyin,short_name,merger_name from  cnarea_2019;
 ```
+
 > **结果:** `783562 rows in set (0.264 sec)`
 
 ```sql
@@ -709,8 +852,8 @@ CREATE INDEX short_name_index ON cnarea_2019 (short_name);
 CREATE INDEX name_index ON cnarea_2019 (name);
 CREATE INDEX merger_name_index ON cnarea_2019 (merger_name);
 ```
-> **结果:** `783562 rows in set (0.223 sec)`
 
+> **结果:** `783562 rows in set (0.223 sec)`
 
 ## mysqldump 备份和恢复
 
@@ -738,22 +881,27 @@ mysqldump -uroot -pYouPassward tz > tz.sql
 mysqldump -uroot -pYouPassward tz links > links-tables.sql
 
 # 备份所有数据库
-mysqldump -uroot -pYouPassward -A > mysqlbak.sql
+mysqldump -uroot -pYouPassward --all-databases  > all.sql
 
 # 只备份所有数据库表结构(不包含表数据)
-mysqldump -uroot -pYouPassward -d -A > mysqlbak-structure.sql
+mysqldump -uroot -pYouPassward -d --all-databases > mysqlbak-structure.sql
 
 # 恢复
 
-# 恢复数据库到tz数据库
+# 恢复到tz数据库
 mysql -uroot -pYouPassward tz < tz.sql
+
+# 恢复所有数据库
+mysql -uroot -pYouPassward < all.sql
 
 MariaDB [tz] < source tz.sql
 ```
 
-### 主从备份
+### 主从同步(Master/Slave)
 
 #### 主服务器配置
+
+- `/etc/my.cnf` 文件配置
 
 ```sh
 [mysqld]
@@ -765,12 +913,21 @@ binlog-ignore-db=tzblock # 忽略指定库tzblock
 ```
 
 ```sh
+# 备份
+#进入数据库后给数据库加上一把锁，阻止对数据库进行任何的写操作
+flush tables with read lock;
+
 # 备份tz数据库
 mysqldump -uroot -pYouPassward tz > /root/tz.sql
+
+# 对数据库解锁，恢复对主数据库的操作
+unlock tables;
 ```
 
+查看主服务状态
+
 ```sql
-show master status;
+# 日志目录 /var/lib/mysql/centos7.000001
 
 mysql> show master status;
 ERROR 2006 (HY000): MySQL server has gone away
@@ -784,10 +941,11 @@ Current database: tz
 | centos7.000001 |      156 |              |                  |                   |
 +----------------+----------+--------------+------------------+-------------------+
 1 row in set (0.02 sec)
-# 日志目录 /var/lib/mysql/centos7.000001
 ```
 
 #### 从服务器配置
+
+- `/etc/my.cnf` 文件配置
 
 ```sh
 [mysqld]
@@ -796,15 +954,26 @@ server-id=128
 
 ```sh
 # 复制主服务器的tz.sql备份文件
-scp -r "root@192.168.100.208:/root/tz.sql" /tmp/mybak
+scp -r "root@192.168.100.208:/root/tz.sql" /tmp/
 # 创建tz数据库
 mysql -uroot -p
 ```
 
+恢复 tz 数据库
+
 ```sql
+# 先创建 tz 数据库
 create database tz;
-# 恢复tz数据库
-mysql -uroot -p tz < /tmp/mybak/tz.sql
+
+# 导入
+mysql -uroot -p tz < /tmp/tz.sql
+
+# 如果出现以下核对错误
+ERROR 1273 (HY000) at line 47: Unknown collation: 'utf8mb4_0900_ai_ci'
+# 通过修改编码修复
+sed -i 's/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g' /tmp/tz.sql
+# 再次运行
+mysql -uroot -p tz < /tmp/tz.sql
 ```
 
 ```sql
@@ -812,11 +981,15 @@ mysql -uroot -p tz < /tmp/mybak/tz.sql
 stop slave;
 
 # 开启同步功能
-CHANGE MASTER TO MASTER_HOST = '192.168.100.208', MASTER_USER = 'root', MASTER_PASSWORD = 'newpassword',MASTER_LOG_FILE='centos7.000001', MASTER_LOG_POS=6501;
+CHANGE MASTER TO
+MASTER_HOST = '192.168.100.208',
+MASTER_USER = 'root',
+MASTER_PASSWORD = 'YouPassword',
+MASTER_LOG_FILE='centos7.000001',
+MASTER_LOG_POS=6501;
 
+# 开启同步
 start slave;
-# 恢复主服务器写操作
-unlocak talbes;
 ```
 
 ```sql
@@ -834,6 +1007,11 @@ MariaDB [tz]> show slave status\G;
          Relay_Master_Log_File: centos7.000001
               Slave_IO_Running: Connecting
              Slave_SQL_Running: Yes
+```
+
+```sh
+# 测试能不能连接主服务器
+mysql -uroot -p201997102 -h 192.168.100.208 -P3306
 ```
 
 ## 高效强大的 mysql 软件
@@ -899,6 +1077,7 @@ myloader \
 ```
 
 <span id="install"></span>
+
 ## Centos 7 安装 MySQL
 
 从 CentOS 7 开始，`yum` 安装 `MySQL` 默认安装的会是 `MariaDB`
@@ -927,6 +1106,8 @@ yum install mysql-community-server
 ```
 
 ## 常见错误
+
+- 日志目录`/var/lib/mysql`
 
 ### 登录错误
 
@@ -1000,6 +1181,24 @@ mysql> alter user 'root'@'localhost' identified by 'newpassword';
 Query OK, 0 rows affected (0.52 sec)
 ```
 
+### 开启日志显示 ok，但查询后并没有开启
+
+```sql
+# 10.5.6-MariaDB-log Arch Linux
+MariaDB [(none)]> SET GLOBAL slow_query_log = 'ON';
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB [(none)]> show variables like 'slow_query_log';
++----------------+-------+
+| Variable_name  | Value |
++----------------+-------+
+| slow_query_log | OFF   |
++----------------+-------+
+1 row in set (0.001 sec)
+
+# 写入/etc/my.cnf后，重启服务后,可以启动日志(显示on)
+```
+
 ## 存储组件
 
 [mysql 索引结构是在存储引擎层面实现的](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
@@ -1034,6 +1233,8 @@ show index from ca;
 - [W3cSchool SQL 教程](https://www.w3school.com.cn/sql/index.asp)
 - [MySQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
 - [138 张图带你 MySQL 入门](https://mp.weixin.qq.com/s?src=11&timestamp=1603417035&ver=2661&signature=Z-XNfjtR11GhHg29XAiBZ0RAiMHavvRavxB1ccysnXtAKChrVkXo*zx3DKFPSxDESZ9lwRM7C8-*yu1dEGmXwHgv1qe7V-WvwLUUQe7Nz7RUwEuJmLYqVRnOWtONHeL-&new=1)
+- [MySQL 常用工具选型和建议](https://zhuanlan.zhihu.com/p/86846532)
+
 # reference items
 
 - [数据库表连接的简单解释](http://www.ruanyifeng.com/blog/2019/01/table-join.html?utm_source=tuicool&utm_medium=referral)
