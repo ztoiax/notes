@@ -76,7 +76,7 @@ SET GLOBAL slow_query_log = 'ON';
 
 - binlog_do_db：此参数表示只记录指定数据库的二进制日志
 - binlog_ignore_db：此参数表示不记录指定的数据库的二进制日志
--
+
 - sync_binlog=n，n 次事务提交后，将执行一次 fsync 之类的磁盘同步指令,同时将 Binlog 文件缓存刷新到磁盘。
 
 ```sh
@@ -114,21 +114,27 @@ pugre master logs before current_date - interval 1 day;
 
 ## 慢查询优化
 
-````sql
+```sql
 查看慢查询相关配置
 show variables like "%slow%";
 
 show status like "%slow%";
 ```
+
 ### mysqldumpslow 自带慢查询命令
+
 ```sql
-mysqldumpslow -s c -t 10 /var/log/mysql/mysql_slow.log # 取出使用最多的10条慢查询
+# 取出使用最多的10条慢查询
+mysqldumpslow -s c -t 10 /var/log/mysql/mysql_slow.log
 
-mysqldumpslow -s t -t 3 /var/log/mysql/mysql_slow.log # 取出查询时间最慢的3条慢查询
+# 取出查询时间最慢的3条慢查询
+mysqldumpslow -s t -t 3 /var/log/mysql/mysql_slow.log
 
-mysqldumpslow -s t -t 10 -g “left join” /var/log/mysql/mysql_slow.log # 得到按照时间排序的前10条里面含有左连接的查询语句
+# 得到按照时间排序的前10条里面含有左连接的查询语句
+mysqldumpslow -s t -t 10 -g “left join” /var/log/mysql/mysql_slow.log
 
- mysqldumpslow -s r -t 10 -g 'left join' /var/log/mysqld/mysql_slow.log # 按照扫描行数最多的
+# 按照扫描行数最多的
+mysqldumpslow -s r -t 10 -g 'left join' /var/log/mysqld/mysql_slow.log
 ```
 
 ### [mysqlsla](https://github.com/daniel-nichter/hackmysql.com/tree/master/mysqlsla)
@@ -141,7 +147,7 @@ mysqlsla 来自于 hackmysql.com，此网站的软件 2015 就不再维护了
 mysqlsla --log-type slow /var/log/mysql/mysql_slow.log
 mysqlsla --log-type general /var/log/mysql/mysql_general.log
 mysqlsla --log-type error /var/log/mysql/mysql_error.log
-````
+```
 
 # reference
 

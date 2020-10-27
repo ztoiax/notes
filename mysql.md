@@ -10,8 +10,10 @@
     * [下载数据库进行 SQL 语句 学习](#下载数据库进行-sql-语句-学习)
     * [DQL](#dql)
         * [select](#select)
-            * [where](#where)
-            * [order,regexp(正则表达式)](#orderregexp正则表达式)
+            * [where (条件选取)](#where-条件选取)
+            * [order by (排序)](#order-by-排序)
+            * [group by (分组)](#group-by-分组)
+            * [regexp (正则表达式)](#regexp-正则表达式)
         * [SQL FUNCTION](#sql-function)
             * [加密函数](#加密函数)
             * [自定义函数](#自定义函数)
@@ -28,11 +30,11 @@
         * [INNER JOIN](#inner-join)
         * [LEFT JOIN](#left-join)
         * [RIGHT JOIN](#right-join)
-        * [full outer join](#full-outer-join)
+        * [FULL OUTER JOIN](#full-outer-join)
     * [DCL](#dcl)
     * [帮助文档](#帮助文档)
     * [事务](#事务)
-    * [INDEX](#index)
+    * [INDEX(索引)](#index索引)
         * [索引速度测试](#索引速度测试)
     * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
         * [备份](#备份)
@@ -42,6 +44,8 @@
     * [高效强大的 mysql 软件](#高效强大的-mysql-软件)
         * [mycli](#mycli)
         * [mydumper](#mydumper)
+        * [percona-toolkit 运维监控工具](#percona-toolkit-运维监控工具)
+        * [innotop](#innotop)
     * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
     * [常见错误](#常见错误)
         * [登录错误](#登录错误)
@@ -50,6 +54,8 @@
                 * [如果出现以下报错(密码不满足策略安全)](#如果出现以下报错密码不满足策略安全)
                     * [修复](#修复-1)
         * [开启日志显示 ok，但查询后并没有开启](#开启日志显示-ok但查询后并没有开启)
+        * [ERROR 2013 (HY000): Lost connection to MySQL server during query(导致无法 stop slave;)](#error-2013-hy000-lost-connection-to-mysql-server-during-query导致无法-stop-slave)
+        * [ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (111)(连接不了数据库)](#error-2002-hy000-cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-111连接不了数据库)
     * [存储组件](#存储组件)
 * [reference](#reference)
 * [优秀教程](#优秀教程)
@@ -83,6 +89,7 @@
 | -S   | 使用 socks 进行连接  |
 | -h   | 连接指定 ip 的数据库 |
 | -e   | 执行 shell 命令      |
+| -P   | 连接端口             |
 
 ```sh
 # 首先要连接进数据库
@@ -240,28 +247,31 @@ create database china;
 ```sh
 # 下载2019年中国地区表
 git clone https://github.com/kakuilan/china_area_mysql.git
-cd china_area_mysql
+# 如果网速太慢，使用这条国内通道
+git clone https://gitee.com/qfzya/china_area_mysql.git
 
 # 导入表到china库
-mysql -uroot -pYouPassward china < china_area_mysql.sql
+cd china_area_mysql
+mysql -uroot -pYouPassward china < cnarea20191031.sql
 ```
 
 ## DQL
 
 ### select
 
-对`值(values)`的操作
+对 `值(values)` 的操作
 
+- regexp
 - having
-- where
 - is null
 - is not null
 
-对`字段`的操作
+对 `字段` 的操作
 
 - order by
 - group by
 - distinct
+- where
 
 ---
 
@@ -300,46 +310,144 @@ select id,name from cnarea_2019;
 # 选取所有列，但只显示前2行
 select * from cnarea_2019 limit 2;
 
-# 选取所有列，但只显示3到6行
-select * from cnarea_2019 limit 2,4;
-
 # 选取level列,用distinct过滤重复的数据
 select distinct level from cnarea_2019;
+
+# 选取所有列，但只显示100到70000行
+select * from cnarea_2019 limit 100,70000;
 ```
 
-#### where
+以下 where 实现结果同上.有人说这样更快.但我自己测试过,没有太大差别
 
-有条件地从表中选取数据
+![测试结果](/mysql-problm.md)
 
 ```sql
-# 选取id=174909的数据
-select * from cnarea_2019 where id=174909;
+select * from cnarea_2019 where id > 100 limit 70000;
+```
 
-# 选取id大于10的
-select * from cnarea_2019 where id > 10
+#### where (条件选取)
 
-# 选取10<=id<=30的
+**语法:**
+
+> ```sql
+> SELECT 列名称 FROM 表名称 WHERE 列名称 条件
+> ```
+
+---
+
+以条件从表中选取数据
+
+```sql
+# 选取 id=1 的数据
+select * from cnarea_2019 where id=1;
+
+MariaDB [china]> select * from cnarea_2019 where id=1;
++----+-------+-------------+--------------+----------+-----------+-----------+------------+-------------+---------+------------+-----------+
+| id | level | parent_code | area_code    | zip_code | city_code | name      | short_name | merger_name | pinyin  | lng        | lat       |
++----+-------+-------------+--------------+----------+-----------+-----------+------------+-------------+---------+------------+-----------+
+|  1 |     0 |           0 | 110000000000 |   000000 |           | 北京市    | 北京       | 北京        | BeiJing | 116.407526 | 39.904030 |
++----+-------+-------------+--------------+----------+-----------+-----------+------------+-------------+---------+------------+-----------+
+```
+
+```sql
+# 结尾处加入 \G 以列的方式显示
+select * from cnarea_2019 where id=1\G;
+
+MariaDB [china]> select * from cnarea_2019 where id=1\G;
+*************************** 1. row ***************************
+         id: 1
+      level: 0
+parent_code: 0
+  area_code: 110000000000
+   zip_code: 000000
+  city_code:
+       name: 北京市
+ short_name: 北京
+merger_name: 北京
+     pinyin: BeiJing
+        lng: 116.407526
+        lat: 39.904030
+```
+
+```sql
+# 选取 id 小于10的数据
+select * from cnarea_2019 where id < 10;
+
+# 选取 10<=id<=30 的数据
 select * from cnarea_2019 where id<=30 and id>=10;
 
-# 选取id10和id20的
+# 选取 id等于10 和 id等于20 的数据
 select * from cnarea_2019 where id in (10,20);
 
-# 选取非空小于10的
+# 选取 not null(非空) 和 id 小于10的数据
 select * from ca where id is not null and id < 10;
 ```
 
-#### order,regexp(正则表达式)
+#### order by (排序)
+
+**语法:**
+
+> ```sql
+> SELECT 列名称 FROM 表名称 ORDER BY 列名称
+> # or
+> SELECT 列名称 FROM 表名称 WHERE 列名称 条件 ORDER BY 列名称
+> ```
+
+---
 
 ```sql
-# 选取id<=10,按level字段进行排序
-select * from cnarea_2019 where id<=10 order by level;
-# level降序
-select * from cnarea_2019 where id<=10 order by level desc;
-# level降序,再以id顺序显示
-select * from cnarea_2019 where id<=10 order by level desc,id ASC;
+# 以 level 字段进行排序
+select * from cnarea_2019 order by level;
 
-# regexp(正则表达式)
-select * from cnarea_2019 where id regexp '^1';
+# 选取 id<=10 ,以 level 字段进行排序
+select * from cnarea_2019 where id<=10 order by level;
+
+# desc 降序
+select * from cnarea_2019 where id<=10 order by level desc;
+
+# level 降序,再以 id 顺序显示
+select * from cnarea_2019 where id<=10 order by level desc,id ASC;
+```
+
+#### group by (分组)
+
+```sql
+# 以 level 进行分组
+select level from cnarea_2019 group by level;
+
+# 结果和select distinct level from cnarea_2019;一样
++-------+
+| level |
++-------+
+|     0 |
+|     1 |
+|     2 |
+|     3 |
+|     4 |
++-------+
+
+# 以 level 进行分组，再以 降序 选取
+select level from cnarea_2019 group by level order by level desc;
+
++-------+
+| level |
++-------+
+|     4 |
+|     3 |
+|     2 |
+|     1 |
+|     0 |
++-------+
+```
+
+#### regexp (正则表达式)
+
+```sql
+# 选取以 '广州' 开头的 name 字段
+select name from cnarea_2019 where name regexp '^广州';
+
+# 选取包含 '广州' 的name 字段
+select name from cnarea_2019 where name regexp '.*广州';
 ```
 
 ### SQL FUNCTION
@@ -427,49 +535,70 @@ select release_lock('lockname');
 
 ### CREATE(创建)
 
-字段属性
+**语法：**
 
-- AUTO_INCREMENT 自动增量(每条新记录递增 1)
-- NOT NULL 字段不能为空
-- primary key (`字段`) 设置主键(数据不能重复)
+> ```sql
+> CREATE TABLE 表名称
+> # 注意：列属性可添加和不添加，并且不区分大小写
+> (
+> 列名称1 数据类型 列属性,
+> 列名称2 数据类型 列属性,
+> 列名称3 数据类型 列属性,
+> ....
+> )
+> ```
+
+**列(字段)属性：**
+
+- UNIQUE 唯一性索引
+
+  > - 列(字段) 内的数据不能出现重复
+  >
+  > - 建立索引,提高查询速度
+
+- primary key ( `列名称` ) 设置主键
+  > - 和 UNIQUE(唯一性索引) 一样。列(字段) 内的数据不能出现重复
+  >
+  > - 主键一定是唯一性索引，唯一性索引并不一定就是主键。
+  >
+  > - 一个表中可以有多个唯一性索引，但只能有一个主键。
+  >
+  > - 主键列不允许空值，而唯一性索引列允许空值。
 
 ```sql
 # 创建new数据库设置 id 为主键,不能为空,自动增量
 CREATE TABLE new(
-`id` int (8) NOT NULL AUTO_INCREMENT,
-`name` varchar(50),
+`id` int (8) AUTO_INCREMENT,        # AUTO_INCREMENT 自动增量(每条新记录递增 1)
+`name` varchar(50) NOT NULL UNIQUE, # NOT NULL 设置不能为空 # UNIQUE 设置唯一性索引
 `date` DATE,
-primary key (`id`))
+primary key (`id`))                 # 设置主健为 id 字段(列)
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-# 设置初始值为100
-ALTER TABLE new AUTO_INCREMENT=100;
-
 # 查看new表里的字段
-MariaDB [china]> desc new;
+desc new;
 +-------+-------------+------+-----+---------+----------------+
 | Field | Type        | Null | Key | Default | Extra          |
 +-------+-------------+------+-----+---------+----------------+
 | id    | int(8)      | NO   | PRI | NULL    | auto_increment |
-| name  | varchar(50) | YES  |     | NULL    |                |
+| name  | varchar(50) | NO   | UNI | NULL    |                |
 | date  | date        | YES  |     | NULL    |                |
 +-------+-------------+------+-----+---------+----------------+
 
 # 查看new表详细信息
 show create table new\G;
-
-MariaDB [china]> show create table new\G;
 *************************** 1. row ***************************
        Table: new
 Create Table: CREATE TABLE `new` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) DEFAULT NULL,
+  `name` varchar(50) NOT NULL,
   `date` date DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+1 row in set (0.000 sec)
 
 
-# 创建临时表(断开与数据库的连接后，临时表就会自动被销毁)
+# 创建临时表(断开与数据库的连接后，临时表就会自动销毁)
 CREATE TEMPORARY TABLE temp (`id` int);
 ```
 
@@ -482,7 +611,10 @@ CREATE TEMPORARY TABLE temp (`id` int);
 > ```
 
 ```sql
-# 插入新数据
+# 设置初始值为100
+ALTER TABLE new AUTO_INCREMENT=100;
+
+# 插入一条数据
 insert into new (name,date) values ('tz','2020-10-24');
 
 # 插入多条数据
@@ -509,13 +641,17 @@ MariaDB [china]> select * from new;
 #### 选取另一个表的数据,导入进新表
 
 - 把 cnarea_2019 表里的字段,导入进 newcn 表.
+  **语法：**
+  > ```sql
+  > INSERT INTO 新表名称 (列1, 列2,...) SELECT (列1, 列2,....) FROM 旧表名称;
+  > ```
 
 ```sql
 
 # 创建名为newcn数据库
 create table newcn (
-`id` int(4),
-`name` varchar(50));
+id int(4) unique auto_increment,
+name varchar(50));
 
 # 导入1条数据
 insert into newcn (id,name) select id,name from cnarea_2019 where id=1;
@@ -523,7 +659,7 @@ insert into newcn (id,name) select id,name from cnarea_2019 where id=1;
 insert into newcn (id,name) select id,name from cnarea_2019 where id >= 2 and id <=10 ;
 
 # 查看结果
-MariaDB [china]>  select * from newcn;
+select * from newcn;
 +------+--------------------------+
 | id   | name                     |
 +------+--------------------------+
@@ -783,7 +919,7 @@ select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new right join c
 +------+------------+--------------------------+-------------+
 ```
 
-### full outer join
+### FULL OUTER JOIN
 
 ```sql
 # 如果mysql不支持full outer,可以使用union
@@ -820,21 +956,38 @@ DCL 语句主要是管理数据库权限的时候使用
 - `ROLLBACK TO savepoint_name;` 回滚到
 - `RELEASE SAVEPOINT savepoint_name;` // 删除指定保留点
 
-## INDEX
+## INDEX(索引)
+
+**语法：**
+
+> ```sql
+> CREATE INDEX 索引名
+> ON 表名 (列1, 列2,...)
+> # 降序
+> CREATE INDEX 索引名
+> ON 表名 (列1, 列2,... DESC)
+> ```
 
 ```sql
 # 显示索引
 SHOW INDEX FROM ca;
 
 # 添加索引id
-CREATE INDEX id_index ON ca (id);
+CREATE INDEX name ON ca (id);
+
+# 添加索引id,name
+CREATE INDEX name ON ca (id,name);
+
+# 添加索引降序id,name
+CREATE INDEX name ON ca (id,name desc);
+
 # 删除索引
-DROP INDEX id_index ON ca;
+DROP INDEX name ON ca;
 
 # 添加索引id
-ALTER table ca ADD INDEX indexName(id);
+ALTER table ca ADD INDEX name(id);
 # 删除索引
-ALTER table ca DROP INDEX indexName;
+ALTER table ca DROP INDEX name;
 ```
 
 ### 索引速度测试
@@ -924,6 +1077,14 @@ mysqldump -uroot -pYouPassward tz > /root/tz.sql
 unlock tables;
 ```
 
+```sql
+# 启用slave权限
+grant PRIVILEGES SLAVE on *.* to  'root'@'%';
+
+# 或者启用所有权限
+grant all on *.* to  'root'@'%';
+```
+
 查看主服务状态
 
 ```sql
@@ -950,6 +1111,9 @@ Current database: tz
 ```sh
 [mysqld]
 server-id=128
+
+replicate-do-db = tz     #只同步abc库
+slave-skip-errors = all   #忽略因复制出现的所有错误
 ```
 
 ```sh
@@ -986,7 +1150,7 @@ MASTER_HOST = '192.168.100.208',
 MASTER_USER = 'root',
 MASTER_PASSWORD = 'YouPassword',
 MASTER_LOG_FILE='centos7.000001',
-MASTER_LOG_POS=6501;
+MASTER_LOG_POS=156;
 
 # 开启同步
 start slave;
@@ -1015,6 +1179,8 @@ mysql -uroot -p201997102 -h 192.168.100.208 -P3306
 ```
 
 ## 高效强大的 mysql 软件
+
+- [MySQL 常用工具选型和建议](https://zhuanlan.zhihu.com/p/86846532)
 
 ### [mycli](https://github.com/dbcli/mycli)
 
@@ -1076,6 +1242,37 @@ myloader \
 --verbose=3
 ```
 
+### percona-toolkit 运维监控工具
+
+[percona-toolkit 工具的使用](https://www.cnblogs.com/chenpingzhao/p/4850420.html)
+
+> centos7 安装:
+>
+> ```sh
+> # 安装依赖
+> yum install perl-DBI perl-DBD-MySQL perl-Time-HiRes perl-IO-Socket-SSL
+> # 需要科学上网
+> wget https://www.percona.com/downloads/percona-toolkit/3.2.1/binary/redhat/7/x86_64/percona-toolkit-3.2.1-1.el7.x86_64.rpm
+> ```
+
+```sh
+# 分析slow log
+pt-query-digest  --type=slowlog /var/log/mysql/mysql_slow.log > /tmp/pt_slow.log
+cat /tmp/pt_slow.log
+
+# 分析general log
+pt-query-digest  --type=genlog /var/log/mysql/mysql_general.log > /tmp/pt_general.log
+cat /tmp/pt_general.log
+```
+
+### [innotop](https://github.com/innotop/innotop)
+
+- [MySQL 监控-innotop](https://www.jianshu.com/p/b8508fe10b8e)
+
+这是在用 `mysqlslap` 进行压力测试下的监控
+
+![avatar](/Pictures/mysql/innotop.png)
+![avatar](/Pictures/mysql/mysqlslap.png)
 <span id="install"></span>
 
 ## Centos 7 安装 MySQL
@@ -1199,6 +1396,22 @@ MariaDB [(none)]> show variables like 'slow_query_log';
 # 写入/etc/my.cnf后，重启服务后,可以启动日志(显示on)
 ```
 
+### ERROR 2013 (HY000): Lost connection to MySQL server during query(导致无法 stop slave;)
+
+**修复:**
+
+```sql
+show variables like 'connect_timeout';
+# 缩短连接时间
+set global connect_timeout=2;
+```
+
+### ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (111)(连接不了数据库)
+
+- `systemctl restart mysql` 重启配置没问题
+- `ps aux | grep mysql` 进程存在
+- 内存不足
+
 ## 存储组件
 
 [mysql 索引结构是在存储引擎层面实现的](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
@@ -1233,7 +1446,7 @@ show index from ca;
 - [W3cSchool SQL 教程](https://www.w3school.com.cn/sql/index.asp)
 - [MySQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
 - [138 张图带你 MySQL 入门](https://mp.weixin.qq.com/s?src=11&timestamp=1603417035&ver=2661&signature=Z-XNfjtR11GhHg29XAiBZ0RAiMHavvRavxB1ccysnXtAKChrVkXo*zx3DKFPSxDESZ9lwRM7C8-*yu1dEGmXwHgv1qe7V-WvwLUUQe7Nz7RUwEuJmLYqVRnOWtONHeL-&new=1)
-- [MySQL 常用工具选型和建议](https://zhuanlan.zhihu.com/p/86846532)
+- [书写高质量 SQL 的 30 条建议](https://zhuanlan.zhihu.com/p/260536848)
 
 # reference items
 
