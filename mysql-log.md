@@ -80,7 +80,12 @@ SET GLOBAL slow_query_log = 'ON';
 - sync_binlog=n，n 次事务提交后，将执行一次 fsync 之类的磁盘同步指令,同时将 Binlog 文件缓存刷新到磁盘。
 
 ```sh
-log_bin = filename
+[mysqld]
+datadir = /var/lib/mysql/
+log-bin=bin.log
+log-bin-index=bin-log.index
+max_binlog_size=100M
+binlog_format=row
 ```
 
 ```sql

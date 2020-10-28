@@ -4,40 +4,36 @@
     * [基本命令](#基本命令)
         * [连接数据库](#连接数据库)
         * [常用 SQL 命令](#常用-sql-命令)
-        * [用户设置](#用户设置)
-            * [授予权限,远程登陆](#授予权限远程登陆)
-        * [配置(varibles)操作](#配置varibles操作)
     * [下载数据库进行 SQL 语句 学习](#下载数据库进行-sql-语句-学习)
-    * [DQL](#dql)
-        * [select](#select)
+    * [DQL（查询）](#dql查询)
+        * [SELECT](#select)
             * [where (条件选取)](#where-条件选取)
             * [order by (排序)](#order-by-排序)
             * [group by (分组)](#group-by-分组)
             * [regexp (正则表达式)](#regexp-正则表达式)
+        * [UNION (多个表显示,以列为单位)](#union-多个表显示以列为单位)
+        * [JOIN (多个表显示,以行为单位)](#join-多个表显示以行为单位)
         * [SQL FUNCTION](#sql-function)
             * [加密函数](#加密函数)
             * [自定义函数](#自定义函数)
-    * [DML](#dml)
+    * [DML (增删改操作)](#dml-增删改操作)
         * [CREATE(创建)](#create创建)
         * [insert](#insert)
             * [选取另一个表的数据,导入进新表](#选取另一个表的数据导入进新表)
         * [update](#update)
         * [delete](#delete)
             * [删除重复的数据](#删除重复的数据)
-        * [alter](#alter)
-    * [union(多个表显示以列为单位)](#union多个表显示以列为单位)
-    * [JOIN](#join)
-        * [INNER JOIN](#inner-join)
-        * [LEFT JOIN](#left-join)
-        * [RIGHT JOIN](#right-join)
-        * [FULL OUTER JOIN](#full-outer-join)
+        * [ALTER](#alter)
+        * [INDEX (索引)](#index-索引)
+            * [索引速度测试](#索引速度测试)
+        * [undrop-for-innodb](#undrop-for-innodb)
     * [DCL](#dcl)
-    * [帮助文档](#帮助文档)
+        * [帮助文档](#帮助文档)
+        * [用户权限设置](#用户权限设置)
+            * [授予权限,远程登陆](#授予权限远程登陆)
+        * [配置(varibles)操作](#配置varibles操作)
     * [事务](#事务)
-    * [INDEX(索引)](#index索引)
-        * [索引速度测试](#索引速度测试)
     * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
-        * [备份](#备份)
         * [主从同步(Master/Slave)](#主从同步masterslave)
             * [主服务器配置](#主服务器配置)
             * [从服务器配置](#从服务器配置)
@@ -105,6 +101,8 @@ mysql -uroot -pYouPassword -S/tmp/mysql.sock
 mysql -uroot -pYouPassword -e "show databases"
 ```
 
+[如需连接远程数据库 (可跳转至用户权限设置)](#user)
+
 ### 常用 SQL 命令
 
 在 `linux` 终端输入的命令是 `shell` 命令
@@ -164,80 +162,7 @@ select user();
 select version();
 ```
 
-### 用户设置
-
-> [如没有遇到用户权限问题，或者远程用户连接数据库。可跳过用户设置(建议)](#sql)
-
-```sql
-# 创建用户名为tz的用户
-create user 'tz'@'127.0.0.1' identified by 'YouPassword';
-
-# 查看所有用户
-SELECT user,host FROM mysql.user;
-
-# 详细查看所有用户
-SELECT DISTINCT CONCAT('User: ''',user,'''@''',host,''';') AS query FROM mysql.user;
-
-# 查看用户权限
-show grants for 'tz'@'%';
-
-# 删除用户
-drop user 'tz'@'127.0.0.1';
-```
-
-#### 授予权限,远程登陆
-
-```sql
-
-# 允许root从'192.168.100.208'主机china库下的所有表
-grant all privileges on china.* to 'root'@'192.168.100.208' identified by 'YouPassword' WITH GRANT OPTION;;
-
-# 允许root从'192.168.100.208'主机china库下的cnarea_2019表
-grant all PRIVILEGES on china.cnarea_2019 to 'root'@'%'  identified by 'YouPassword' WITH GRANT OPTION;
-
-# 允许所有用户连接所有库下的所有表(%:表示通配符)
-grant all PRIVILEGES on *.* to  'root'@'%' identified by 'YouPassword' WITH GRANT OPTION;
-
-# 刷新权限
-FLUSH PRIVILEGES;
-```
-
-```sh
-# 记得在服务器里关闭防火墙
-iptables -F
-
-# 连接远程数据库(我这里是192.168.1.221)
-mysql -u root -p 'YouPassword' -h 192.168.1.221
-```
-
-### 配置(varibles)操作
-
-- 注意`variables` 的修改，永久保存要写入`/etc/my.cnf`
-
-```sql
-# 查看配置(变量)
-show variables;
-# 查看字段前面包含max_connect的配置(通配符%)
-show variables like 'max_connect%';
-
-mysql> show variables like 'max_connect%';
-+--------------------+-------+
-| Variable_name      | Value |
-+--------------------+-------+
-| max_connect_errors | 100   |
-| max_connections    | 151   |
-+--------------------+-------+
-2 rows in set (0.01 sec)
-
-# 修改配置(重启后失效)
-set global max_connect_errors=1000;
-# 永久保存,要写入/etc/my.cnf
-echo "max_connect_errors=1000" >> /etc/my.cnf
-```
-
 ## 下载数据库进行 SQL 语句 学习
-
-<span id="sql"></span>
 
 ```sql
 # 连接数据库后,创建china数据库
@@ -255,9 +180,9 @@ cd china_area_mysql
 mysql -uroot -pYouPassward china < cnarea20191031.sql
 ```
 
-## DQL
+## DQL（查询）
 
-### select
+### SELECT
 
 对 `值(values)` 的操作
 
@@ -319,7 +244,7 @@ select * from cnarea_2019 limit 100,70000;
 
 以下 where 实现结果同上.有人说这样更快.但我自己测试过,没有太大差别
 
-![测试结果](/mysql-problm.md)
+![测试结果](/mysql-problem.md)
 
 ```sql
 select * from cnarea_2019 where id > 100 limit 70000;
@@ -450,6 +375,149 @@ select name from cnarea_2019 where name regexp '^广州';
 select name from cnarea_2019 where name regexp '.*广州';
 ```
 
+### UNION (多个表显示,以列为单位)
+
+**语法：**
+
+> ```sql
+> SELECT 列名称 FROM 表名称
+> UNION
+> SELECT 列名称 FROM 表名称
+> ```
+
+```sql
+# 从tz表和cnarea_2019表,选取id,name列
+select id,name from cnarea_2019 where id<10 union select id,name from tz;
+MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,name from tz;
++----+--------------------------+
+| id | name                     |
++----+--------------------------+
+|  1 | 北京市                   |
+|  2 | 直辖区                   |
+|  3 | 东城区                   |
+|  4 | 东华门街道               |
+|  5 | 多福巷社区居委会         |
+|  6 | 银闸社区居委会           |
+|  7 | 东厂社区居委会           |
+|  8 | 智德社区居委会           |
+|  9 | 南池子社区居委会         |
+|  1 | tz                       |
++----+--------------------------+
+
+# 选取列,不包含重复数据
+select id from cnarea_2019 where id<10 union select id from tz where id<10;
+
+# 选取列,包含重复数据(all)
+select id from cnarea_2019 where id<10 union all select id from tz where id<10;
+
+# 选取以 深圳市 和 北京市 开头的数据
+select id,name from cnarea_2019 where name regexp '^深圳市' union select id,name from cnarea_2019 where name regexp '^北京市';
+```
+
+### JOIN (多个表显示,以行为单位)
+
+从两个或更多的表中获取结果.[图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
+
+- 只返回两张表匹配的记录，这叫内连接（inner join）。
+- 返回匹配的记录，以及表 A 多余的记录，这叫左连接（left join）。
+- 返回匹配的记录，以及表 B 多余的记录，这叫右连接（right join）。
+- 返回匹配的记录，以及表 A 和表 B 各自的多余记录，这叫全连接（full join）。
+
+![avatar](/Pictures/mysql/join.png)
+
+![avatar](/Pictures/mysql/join1.png)
+**语法：**
+
+> ```sql
+> SELECT 列名称
+> FROM 表名称1
+> INNER JOIN 表名称2
+> ON 表名称1.列名称=表名称2.列名称
+> ```
+
+---
+
+**INNER JOIN**
+
+```sql
+# 选取new表id,date字段和cnarea_2019表name字段
+select new.id,new.date,cnarea_2019.name
+from new,cnarea_2019 where cnarea_2019.id=new.id;
+
+# 或者
+select new.id,new.date,cnarea_2019.name
+from new inner join cnarea_2019 on cnarea_2019.id=new.id;
+
++-----+------------+--------------------------+
+| id  | date       | name                     |
++-----+------------+--------------------------+
+|   1 | 2020-10-24 | 北京市                   |
+|   2 | 2020-10-24 | 直辖区                   |
+|   3 | 2020-10-24 | 东城区                   |
+| 100 | 2020-10-24 | 安德路社区居委会         |
+| 102 | 2020-10-24 | 七区社区居委会           |
+| 103 | 2020-10-24 | 化工社区居委会           |
+| 104 | 2020-10-24 | 安德里社区居委会         |
++-----+------------+--------------------------+
+```
+
+---
+
+**LEFT JOIN**
+
+```sql
+# 左连接，以左表(new)id字段个数进行选取.所以结果与inner join一样
+select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new left join cnarea_2019 on new.id=cnarea_2019.id limit 10;
++-----+------------+--------------------------+-----------+
+| id  | date       | name                     | pinyin    |
++-----+------------+--------------------------+-----------+
+|   1 | 2020-10-24 | 北京市                   | BeiJing   |
+|   2 | 2020-10-24 | 直辖区                   | BeiJing   |
+|   3 | 2020-10-24 | 东城区                   | DongCheng |
+| 100 | 2020-10-24 | 安德路社区居委会         | AnDeLu    |
+| 102 | 2020-10-24 | 七区社区居委会           | QiQu      |
+| 103 | 2020-10-24 | 化工社区居委会           | HuaGong   |
+| 104 | 2020-10-24 | 安德里社区居委会         | AnDeLi    |
++-----+------------+--------------------------+-----------+
+```
+
+---
+
+**RIGHT JOIN**
+
+```sql
+# 右连接，以右表(cnarea_2019)id字段个数进行选取.因左表(new)没有右表数据多,所以id,date字段为null
+
+select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new right join cnarea_2019 on new.id=cnarea_2019.id limit 10;
++------+------------+--------------------------+-------------+
+| id   | date       | name                     | pinyin      |
++------+------------+--------------------------+-------------+
+|    1 | 2020-10-24 | 北京市                   | BeiJing     |
+|    2 | 2020-10-24 | 直辖区                   | BeiJing     |
+|    3 | 2020-10-24 | 东城区                   | DongCheng   |
+| NULL | NULL       | 东华门街道               | DongHuaMen  |
+| NULL | NULL       | 多福巷社区居委会         | DuoFuXiang  |
+| NULL | NULL       | 银闸社区居委会           | YinZha      |
+| NULL | NULL       | 东厂社区居委会           | DongChang   |
+| NULL | NULL       | 智德社区居委会           | ZhiDe       |
+| NULL | NULL       | 南池子社区居委会         | NanChiZi    |
+| NULL | NULL       | 黄图岗社区居委会         | HuangTuGang |
++------+------------+--------------------------+-------------+
+```
+
+---
+
+**FULL OUTER JOIN**
+
+```sql
+# 如果mysql不支持full outer,可以使用union
+SELECT * FROM new LEFT JOIN cnarea_2019 ON new.id = cnarea_2019.id
+
+UNION
+
+SELECT * FROM new RIGHT JOIN cnarea_2019 ON new.id =cnarea_2019.id;
+```
+
 ### SQL FUNCTION
 
 **语法**
@@ -529,7 +597,7 @@ select release_lock('lockname');
 > end;
 > ```
 
-## DML
+## DML (增删改操作)
 
 - 有的地方把 DML 语句（增删改）和 DQL 语句（查询）统称为 DML 语句
 
@@ -548,15 +616,13 @@ select release_lock('lockname');
 > )
 > ```
 
-**列(字段)属性：**
+**索引：** 列(字段)相当于一本书，创建 **索引** 就相当于建立 **书目录**,可提高查询速度. [跳转至索引部分](#index)
 
-- UNIQUE 唯一性索引
+- **UNIQUE** 唯一性索引
 
   > - 列(字段) 内的数据不能出现重复
-  >
-  > - 建立索引,提高查询速度
 
-- primary key ( `列名称` ) 设置主键
+- **PRIMARY KEY** ( `列名称` ) 设置主键
   > - 和 UNIQUE(唯一性索引) 一样。列(字段) 内的数据不能出现重复
   >
   > - 主键一定是唯一性索引，唯一性索引并不一定就是主键。
@@ -674,6 +740,9 @@ select * from newcn;
 |    9 | 南池子社区居委会         |
 |   10 | 黄图岗社区居委会         |
 +------+--------------------------+
+
+# 插入包含 广州 的数据
+insert into newcn (id,name) select id,name from cnarea_2019 where name regexp '广州.*';
 ```
 
 ### update
@@ -693,6 +762,12 @@ update cnarea_2019 set id=(id-3) where id>2;
 
 # 对小于level平均值进行加1
 update cnarea_2019 set level=(level+1) where level<=(select avg(level) from cnarea_2019);
+
+# 把 广州 修改为 北京,replace() 修改列的某一部分值
+update cnarea_2019 set name=replace(name,'广州','北京') where name regexp '广州.*';
+
+# 把以 北京 和 深圳 开头的数据，修改为 广州
+update cnarea_2019 set name=replace(name,'深圳','广州'),name=replace(name,'北京','广州') where name regexp '^深圳' or name regexp '^北京';
 ```
 
 ### delete
@@ -742,9 +817,18 @@ insert into clone (id,name,date) values
 
 # 通过加入主健(PRIMARY KEY)删除重复的数据
 ALTER IGNORE TABLE clone ADD PRIMARY KEY (id, name);
+
+select * from clone;
++----+------+------------+
+| id | name | date       |
++----+------+------------+
+|  1 | tz   | 2020-10-24 |
+|  2 | tz   | 2020-10-24 |
+|  2 | tz1  | 2020-10-24 |
++----+------+------------+
 ```
 
-### alter
+### ALTER
 
 **语法：**
 
@@ -798,165 +882,9 @@ ALTER TABLE ca DROP PRIMARY KEY;
 ALTER TABLE ca ENGINE = MYISAM;
 ```
 
-## union(多个表显示以列为单位)
+<span id="index"></span>
 
-**语法：**
-
-> ```sql
-> SELECT 列名称 FROM 表名称
-> UNION
-> SELECT 列名称 FROM 表名称
-> ```
-
-```sql
-# 从tz表和cnarea_2019表,选取id,name列
-select id,name from cnarea_2019 where id<10 union select id,name from tz;
-MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,name from tz;
-+----+--------------------------+
-| id | name                     |
-+----+--------------------------+
-|  1 | 北京市                   |
-|  2 | 直辖区                   |
-|  3 | 东城区                   |
-|  4 | 东华门街道               |
-|  5 | 多福巷社区居委会         |
-|  6 | 银闸社区居委会           |
-|  7 | 东厂社区居委会           |
-|  8 | 智德社区居委会           |
-|  9 | 南池子社区居委会         |
-|  1 | tz                       |
-+----+--------------------------+
-
-# 选取列,不包含重复数据
-select id from cnarea_2019 where id<10 union select id from tz where id<10;
-
-# 选取列,包含重复数据(all)
-select id from cnarea_2019 where id<10 union all select id from tz where id<10;
-```
-
-## JOIN
-
-从两个或更多的表中获取结果.[图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
-
-- 只返回两张表匹配的记录，这叫内连接（inner join）。
-- 返回匹配的记录，以及表 A 多余的记录，这叫左连接（left join）。
-- 返回匹配的记录，以及表 B 多余的记录，这叫右连接（right join）。
-- 返回匹配的记录，以及表 A 和表 B 各自的多余记录，这叫全连接（full join）。
-
-![avatar](/Pictures/mysql/join.png)
-
-![avatar](/Pictures/mysql/join1.png)
-**语法：**
-
-> ```sql
-> SELECT 列名称
-> FROM 表名称1
-> INNER JOIN 表名称2
-> ON 表名称1.列名称=表名称2.列名称
-> ```
-
-### INNER JOIN
-
-```sql
-# 选取new表id,date字段和cnarea_2019表name字段
-select new.id,new.date,cnarea_2019.name
-from new,cnarea_2019 where cnarea_2019.id=new.id;
-
-# 或者
-select new.id,new.date,cnarea_2019.name
-from new inner join cnarea_2019 on cnarea_2019.id=new.id;
-
-+-----+------------+--------------------------+
-| id  | date       | name                     |
-+-----+------------+--------------------------+
-|   1 | 2020-10-24 | 北京市                   |
-|   2 | 2020-10-24 | 直辖区                   |
-|   3 | 2020-10-24 | 东城区                   |
-| 100 | 2020-10-24 | 安德路社区居委会         |
-| 102 | 2020-10-24 | 七区社区居委会           |
-| 103 | 2020-10-24 | 化工社区居委会           |
-| 104 | 2020-10-24 | 安德里社区居委会         |
-+-----+------------+--------------------------+
-```
-
-### LEFT JOIN
-
-```sql
-# 左连接，以左表(new)id字段个数进行选取.所以结果与inner join一样
-select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new left join cnarea_2019 on new.id=cnarea_2019.id limit 10;
-+-----+------------+--------------------------+-----------+
-| id  | date       | name                     | pinyin    |
-+-----+------------+--------------------------+-----------+
-|   1 | 2020-10-24 | 北京市                   | BeiJing   |
-|   2 | 2020-10-24 | 直辖区                   | BeiJing   |
-|   3 | 2020-10-24 | 东城区                   | DongCheng |
-| 100 | 2020-10-24 | 安德路社区居委会         | AnDeLu    |
-| 102 | 2020-10-24 | 七区社区居委会           | QiQu      |
-| 103 | 2020-10-24 | 化工社区居委会           | HuaGong   |
-| 104 | 2020-10-24 | 安德里社区居委会         | AnDeLi    |
-+-----+------------+--------------------------+-----------+
-```
-
-### RIGHT JOIN
-
-```sql
-# 右连接，以右表(cnarea_2019)id字段个数进行选取.因左表(new)没有右表数据多,所以id,date字段为null
-
-select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new right join cnarea_2019 on new.id=cnarea_2019.id limit 10;
-+------+------------+--------------------------+-------------+
-| id   | date       | name                     | pinyin      |
-+------+------------+--------------------------+-------------+
-|    1 | 2020-10-24 | 北京市                   | BeiJing     |
-|    2 | 2020-10-24 | 直辖区                   | BeiJing     |
-|    3 | 2020-10-24 | 东城区                   | DongCheng   |
-| NULL | NULL       | 东华门街道               | DongHuaMen  |
-| NULL | NULL       | 多福巷社区居委会         | DuoFuXiang  |
-| NULL | NULL       | 银闸社区居委会           | YinZha      |
-| NULL | NULL       | 东厂社区居委会           | DongChang   |
-| NULL | NULL       | 智德社区居委会           | ZhiDe       |
-| NULL | NULL       | 南池子社区居委会         | NanChiZi    |
-| NULL | NULL       | 黄图岗社区居委会         | HuangTuGang |
-+------+------------+--------------------------+-------------+
-```
-
-### FULL OUTER JOIN
-
-```sql
-# 如果mysql不支持full outer,可以使用union
-SELECT * FROM new LEFT JOIN cnarea_2019 ON new.id = cnarea_2019.id
-
-UNION
-
-SELECT * FROM new RIGHT JOIN cnarea_2019 ON new.id =cnarea_2019.id;
-```
-
-## DCL
-
-DCL 语句主要是管理数据库权限的时候使用
-
-## 帮助文档
-
-```sql
-# 按照层次查询
-? contents;
-? Account Management
-# 数据类型
-? Data Types
-? VARCHAR
-? SHOW
-```
-
-## 事务
-
-- `BEGIN` 开始一个事务
-- `ROLLBACK` 事务回滚
-- `COMMIT` 事务确认
-
-- `SAVEPOINT savepoint_name;` 声明一个
-- `ROLLBACK TO savepoint_name;` 回滚到
-- `RELEASE SAVEPOINT savepoint_name;` // 删除指定保留点
-
-## INDEX(索引)
+### INDEX (索引)
 
 **语法：**
 
@@ -990,7 +918,7 @@ ALTER table ca ADD INDEX name(id);
 ALTER table ca DROP INDEX name;
 ```
 
-### 索引速度测试
+#### 索引速度测试
 
 ```sql
 # 测试效果
@@ -1008,46 +936,193 @@ CREATE INDEX merger_name_index ON cnarea_2019 (merger_name);
 
 > **结果:** `783562 rows in set (0.223 sec)`
 
+### undrop-for-innodb
+
+安装
+
+```sh
+git clone https://github.com/twindb/undrop-for-innodb.git
+cd undrop-for-innodb
+sudo make install
+```
+
+```sh
+# 注意：目前还是在undrop-for-innodb
+# 生成pages-ibdata1目录,目录下按照每个页为一个文件
+stream_parser -f /var/lib/mysql/ibdata1
+```
+
+## DCL
+
+DCL (语句主要是管理数据库权限的时候使用)
+
+### 帮助文档
+
+```sql
+# 按照层次查询
+? contents;
+? Account Management
+# 数据类型
+? Data Types
+? VARCHAR
+? SHOW
+```
+
+### 用户权限设置
+
+```sql
+# 创建用户名为tz的用户
+create user 'tz'@'127.0.0.1' identified by 'YouPassword';
+
+# 查看所有用户
+SELECT user,host FROM mysql.user;
+
+# 详细查看所有用户
+SELECT DISTINCT CONCAT('User: ''',user,'''@''',host,''';') AS query FROM mysql.user;
+
+# 查看用户权限
+show grants for 'tz'@'%';
+
+# 删除用户
+drop user 'tz'@'127.0.0.1';
+```
+
+<span id="user"></span>
+
+#### 授予权限,远程登陆
+
+**语法：**
+
+> ```sql
+> GRANT PRIVILEGES ON 数据库名.表名 TO '用户名'@'IP地址' IDENTIFIED BY 'YouPassword' WITH GRANT OPTION;
+> ```
+
+```sql
+
+# 允许root从'192.168.100.208'主机china库下的所有表
+grant all privileges on china.* to 'root'@'192.168.100.208' identified by 'YouPassword' WITH GRANT OPTION;
+
+# 允许root从'192.168.100.208'主机china库下的cnarea_2019表
+grant all PRIVILEGES on china.cnarea_2019 to 'root'@'%'  identified by 'YouPassword' WITH GRANT OPTION;
+
+# 允许所有用户连接所有库下的所有表(%:表示通配符)
+grant all PRIVILEGES on *.* to  'root'@'%' identified by 'YouPassword' WITH GRANT OPTION;
+
+# 刷新权限
+FLUSH PRIVILEGES;
+```
+
+```sh
+# 记得在服务器里关闭防火墙
+iptables -F
+
+# 连接远程数据库(我这里是192.168.100.208)
+mysql -u root -p 'YouPassword' -h 192.168.100.208
+```
+
+### 配置(varibles)操作
+
+- 注意`variables` 的修改，永久保存要写入`/etc/my.cnf`
+  [详细配置说明](https://github.com/jaywcjlove/mysql-tutorial/blob/master/chapter2/2.6.md#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9)
+
+```sql
+# 查看配置(变量)
+show variables;
+# 查看字段前面包含max_connect的配置(通配符%)
+show variables like 'max_connect%';
+
+mysql> show variables like 'max_connect%';
++--------------------+-------+
+| Variable_name      | Value |
++--------------------+-------+
+| max_connect_errors | 100   |
+| max_connections    | 151   |
++--------------------+-------+
+2 rows in set (0.01 sec)
+
+# 修改配置(重启后失效)
+set global max_connect_errors=1000;
+# 永久保存,要写入/etc/my.cnf
+echo "max_connect_errors=1000" >> /etc/my.cnf
+```
+
+## 事务
+
+- `BEGIN` 开始一个事务
+- `ROLLBACK` 事务回滚
+- `COMMIT` 事务确认
+
+- `SAVEPOINT savepoint_name;` 声明一个
+- `ROLLBACK TO savepoint_name;` 回滚到
+- `RELEASE SAVEPOINT savepoint_name;` // 删除指定保留点
+
 ## mysqldump 备份和恢复
 
 > [建议使用更快更强大的 mydumper](#mydumper)
 
-### 备份
+- 先创建一个数据表
 
 ```sql
-# 创建tz表
+use china;
 create table tz (`id` int (8), `name` varchar(50), `date` DATE);
-insert into clone (id,name,date) values (1,'tz','2020-10-24');
+insert into tz (id,name,date) values (1,'tz','2020-10-24');
+```
 
-# 导出tz表
+- 1.使用 `mysqlimport` 导入**(不推荐)**
+
+  > 因为 `mysqlimport` 是把数据**导入新增**进去表里，而非恢复
+
+```sql
+# 导出tz表. 注意：路径要加''
 SELECT * FROM tz INTO OUTFILE '/tmp/tz.txt';
 
-# 导出tz表csv格式
+# 删除表和表的数据
+drop table tz;
+
+# 导入前要创建一个新的表
+create table tz (`id` int (8), `name` varchar(50), `date` DATE);
+```
+
+回到终端使用 `mysqlimport` 进行数据导入:
+
+```sh
+mysqlimport china /tmp/tz.txt
+```
+
+导出 tz 表 `csv` 格式,但**不能使用**`mysqlimport` 进行导入
+
+```sql
 SELECT * FROM tz INTO OUTFILE '/tmp/tz.csv'
-    FIELDS TERMINATED BY ',' ENCLOSED BY '"'
-    LINES TERMINATED BY '\r\n';
+FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n';
+```
 
-# 备份tz数据库
-mysqldump -uroot -pYouPassward tz > tz.sql
+- 2.使用 `mysqldump` 备份
 
-# 备份links表
-mysqldump -uroot -pYouPassward tz links > links-tables.sql
+```sql
+# 备份 china 数据库
+
+mysqldump -uroot -pYouPassward china > china.sql
+
+# 备份 china 数据库里的 tz 表
+
+mysqldump -uroot -pYouPassward china tz > tz-tables.sql
 
 # 备份所有数据库
-mysqldump -uroot -pYouPassward --all-databases  > all.sql
 
-# 只备份所有数据库表结构(不包含表数据)
+mysqldump -uroot -pYouPassward --all-databases > all.sql
+
+# -d 只备份所有数据库表结构(不包含表数据)
+
 mysqldump -uroot -pYouPassward -d --all-databases > mysqlbak-structure.sql
 
-# 恢复
+# 恢复到 china 数据库
 
-# 恢复到tz数据库
-mysql -uroot -pYouPassward tz < tz.sql
+mysql -uroot -pYouPassward china < china.sql
 
 # 恢复所有数据库
-mysql -uroot -pYouPassward < all.sql
 
-MariaDB [tz] < source tz.sql
+mysql -uroot -pYouPassward < all.sql
 ```
 
 ### 主从同步(Master/Slave)
@@ -1195,9 +1270,10 @@ mysql root@localhost:(none)> SELECT DISTINCT CONCAT('User: ''',user,'''@''',host
 
 ![avatar](/Pictures/mysql/mycli.png)
 
+<span id="mydumper"></span>
+
 ### [mydumper](https://github.com/maxbube/mydumper)
 
-<span id="mydumper"></span>
 Mydumper 是 MySQL 数据库服务器备份工具，它比 MySQL 自带的 mysqldump 快很多
 
 ```sh
@@ -1415,9 +1491,21 @@ set global connect_timeout=2;
 ## 存储组件
 
 [mysql 索引结构是在存储引擎层面实现的](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
+修改默认 engine:
+
+> ```sh
+> [mysqld]
+> default_storage_engine=CSV
+> ```
 
 - MyIsam: 速度更快,因为 MyISAM 内部维护了一个计数器，可以直接调取,使用 b+树索引
+
+  > 表锁
+
 - InnoDB: 事务更好,使用 b+树索引
+  > 行锁
+  > 支持事务
+  > 自动灾难恢复
 
 ```sql
 # 查看支持的存储引擎
@@ -1426,8 +1514,8 @@ show engines;
 # 查看目前使用的存储引擎
 show variables like 'storage_engine';
 
-# 查看索引包含主键
-show index from ca;
+# 修改ca表的存储引擎为MYISAM
+ALTER TABLE ca ENGINE = MYISAM;
 ```
 
 # reference
