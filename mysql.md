@@ -119,7 +119,7 @@ mysql -uroot -pYouPassword -e "show databases"
 - 而表(table)是要**区分大小写**的
 
 ```sql
-# 创建名为tz的数据库
+# 创建名为 tz 的数据库
 create database tz;
 
 # 查看数据库
@@ -179,7 +179,7 @@ git clone https://github.com/kakuilan/china_area_mysql.git
 # 如果网速太慢，使用这条国内通道
 git clone https://gitee.com/qfzya/china_area_mysql.git
 
-# 导入表到china库
+# 导入表到 china 库
 cd china_area_mysql
 mysql -uroot -pYouPassward china < cnarea20191031.sql
 ```
@@ -213,13 +213,13 @@ mysql -uroot -pYouPassward china < cnarea20191031.sql
 ---
 
 ```sql
-# 连接数据库后,进入china数据库
+# 连接数据库后,进入 china 数据库
 use china;
 
-# 查看表cnarea_2019 的字段(列)
+# 查看表 cnarea_2019 的字段(列)
 desc cnarea_2019
 
-# 将cnarea_2019表改名为ca,方便输入
+# 将 cnarea_2019 表改名为 ca ,方便输入
 alter table cnarea_2019 rename ca;
 # 改回来
 alter table ca rename cnarea_2019;
@@ -227,7 +227,7 @@ alter table ca rename cnarea_2019;
 # 从表 cnarea_2019 选取所有列(*表示所有列)
 select * from cnarea_2019;
 
-# 如果刚才将表改成ca名，就是以下命令
+# 如果刚才将表改成 ca 名，就是以下命令
 select * from ca;
 
 # 从表 cnarea_2019 选取 name 列
@@ -239,7 +239,7 @@ select id,name from cnarea_2019;
 # 选取所有列，但只显示前2行
 select * from cnarea_2019 limit 2;
 
-# 选取level列,用distinct过滤重复的数据
+# 选取 level 列,用 distinct 过滤重复的数据
 select distinct level from cnarea_2019;
 
 # 选取所有列，但只显示100到70000行
@@ -248,7 +248,7 @@ select * from cnarea_2019 limit 100,70000;
 
 以下 where 实现结果同上.有人说这样更快.但我自己测试过,没有太大差别
 
-![测试结果](/mysql-problem.md)
+[测试结果](/mysql-problem.md)
 
 ```sql
 select * from cnarea_2019 where id > 100 limit 70000;
@@ -305,10 +305,10 @@ select * from cnarea_2019 where id < 10;
 # 选取 10<=id<=30 的数据
 select * from cnarea_2019 where id<=30 and id>=10;
 
-# 选取 id等于10 和 id等于20 的数据
+# 选取 id 等于10 和 id等于20 的数据
 select * from cnarea_2019 where id in (10,20);
 
-# 选取 not null(非空) 和 id 小于10的数据
+# 选取 not null(非空) 和 id 小于 10 的数据
 select * from ca where id is not null and id < 10;
 ```
 
@@ -390,7 +390,7 @@ select name from cnarea_2019 where name regexp '.*广州';
 > ```
 
 ```sql
-# 从tz表和cnarea_2019表,选取id,name列
+# 从 tz 表和 cnarea_2019 表,选取 id,name 列
 select id,name from cnarea_2019 where id<10 union select id,name from tz;
 MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,name from tz;
 +----+--------------------------+
@@ -444,7 +444,7 @@ select id,name from cnarea_2019 where name regexp '^深圳市' union select id,n
 **INNER JOIN**
 
 ```sql
-# 选取new表id,date字段和cnarea_2019表name字段
+# 选取 new 表的 id 和 date 字段以及 cnarea_2019 表的 name 字段
 select new.id,new.date,cnarea_2019.name
 from new,cnarea_2019 where cnarea_2019.id=new.id;
 
@@ -514,7 +514,7 @@ select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new right join c
 **FULL OUTER JOIN**
 
 ```sql
-# 如果mysql不支持full outer,可以使用union
+# 如果mysql不支持 full outer,可以使用 union
 SELECT * FROM new LEFT JOIN cnarea_2019 ON new.id = cnarea_2019.id
 
 UNION
@@ -531,22 +531,22 @@ SELECT * FROM new RIGHT JOIN cnarea_2019 ON new.id =cnarea_2019.id;
 > ```
 
 ```sql
-# 选取id的最大值,level的最小值
+# 选取 id 的最大值和 level 的最小值
 select max(id),min(level) as max from cnarea_2019;
 
-# 选取level的平均值,id的总值
+# 选取 level 的平均值和 id 的总值
 select sum(id),avg(level) from ca;
 
 # 查看总列数
 select count(1) as name from cnarea_2019;
 
-# 统计level的个数
+# 统计 level 的个数
 select count(distinct level) as totals from cnarea_2019;
 
-# 对level重复数据的进行统计
+# 对 level 重复数据的进行统计
 select level, count(1) as totals from cnarea_2019 group by level;
 
-# 对不同的level，选取id的平均值
+# 对不同的 level，选取 id 的平均值
 select level,avg(id) from cnarea_2019 group by level;
 MariaDB [china]> select level,avg(id) from cnarea_2019 group by level;
 +-------+-------------+
@@ -559,7 +559,7 @@ MariaDB [china]> select level,avg(id) from cnarea_2019 group by level;
 |     4 | 350576.9638 |
 +-------+-------------+
 
-# 对不同的level，选取id的平均值大于400000
+# 对不同的 level，选取 id 的平均值大于400000
 select level,avg(id) from cnarea_2019 group by level having avg(id) > 400000;
 MariaDB [china]> select level,avg(id) from cnarea_2019 group by level having avg(id) > 400000;
 +-------+-------------+
@@ -636,7 +636,7 @@ select release_lock('lockname');
   > - 主键列不允许空值，而唯一性索引列允许空值。
 
 ```sql
-# 创建new数据库设置 id 为主键,不能为空,自动增量
+# 创建 new 数据库设置 id 为主键,不能为空,自动增量
 CREATE TABLE new(
 `id` int (8) AUTO_INCREMENT,        # AUTO_INCREMENT 自动增量(每条新记录递增 1)
 `name` varchar(50) NOT NULL UNIQUE, # NOT NULL 设置不能为空 # UNIQUE 设置唯一性索引
@@ -644,7 +644,7 @@ CREATE TABLE new(
 primary key (`id`))                 # 设置主健为 id 字段(列)
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-# 查看new表里的字段
+# 查看 new 表里的字段
 desc new;
 +-------+-------------+------+-----+---------+----------------+
 | Field | Type        | Null | Key | Default | Extra          |
@@ -718,12 +718,12 @@ MariaDB [china]> select * from new;
 
 ```sql
 
-# 创建名为newcn数据库
+# 创建名为 newcn 数据库
 create table newcn (
 id int(4) unique auto_increment,
 name varchar(50));
 
-# 导入1条数据
+# 导入 1 条数据
 insert into newcn (id,name) select id,name from cnarea_2019 where id=1;
 # 可多次导入
 insert into newcn (id,name) select id,name from cnarea_2019 where id >= 2 and id <=10 ;
@@ -758,10 +758,10 @@ insert into newcn (id,name) select id,name from cnarea_2019 where name regexp '�
 > ```
 
 ```sql
-# 修改id=1的city_code字段为111
+# 修改 id=1 的 city_code 字段为111
 update cnarea_2019 set city_code=111 where id=1;
 
-# 对每个id-3,填回刚才删除的id1,2,3
+# 对每个 id-3 填回刚才删除的 id1,2,3
 update cnarea_2019 set id=(id-3) where id>2;
 
 # 对小于level平均值进行加1
@@ -783,9 +783,9 @@ update cnarea_2019 set name=replace(name,'深圳','广州'),name=replace(name,'�
 > ```
 
 ```sql
-# 删除id1
+# 删除 id1
 delete from cnarea_2019 where id=1;
-# 删除id2和4
+# 删除 id2和4
 delete from cnarea_2019 where id in (2,4);
 
 # 查看结果
@@ -819,8 +819,10 @@ insert into clone (id,name,date) values
 (2,'tz1','2020-10-24'),
 (2,'tz1','2020-10-24');
 
-# 通过加入主健(PRIMARY KEY)删除重复的数据
+# 通过加入 主健(PRIMARY KEY) 删除重复的数据
 ALTER IGNORE TABLE clone ADD PRIMARY KEY (id, name);
+# 或者加入 唯一性索引(UNIQUE)
+ALTER IGNORE TABLE clone ADD UNIQUE KEY (id, name);
 
 select * from clone;
 +----+------+------------+
@@ -831,7 +833,7 @@ select * from clone;
 |  2 | tz1  | 2020-10-24 |
 +----+------+------------+
 ```
-
+[误删数据进行回滚，跳转至事务](#transaction)
 ### ALTER
 
 **语法：**
@@ -854,24 +856,24 @@ select * from clone;
 # 重命名表
 ALTER TABLE cnarea_2019 RENAME ca;
 
-# 将列name改名为mingzi,类型改为char(50)
+# 将列 name 改名为 mingzi ,类型改为 char(50)
 ALTER TABLE ca change name mingzi char(50);
 
-# 删除id列
+# 删除 id 列
 ALTER TABLE ca DROP id;
 
-# 添加id列
+# 添加 id 列
 ALTER TABLE ca ADD id INT FIRST;
 
-# 重命名id列为number(bigint类型)
+# 重命名 id 列为 number(bigint类型)
 ALTER TABLE ca CHANGE id number BIGINT;
 
-# 修改city_code列,为char(50)类型
+# 修改 city_code 列,为 char(50) 类型
 ALTER TABLE ca MODIFY city_code char(50);
 # 或者
 ALTER TABLE ca CHANGE city_code city_code char(50);
 
-# 修改ca表id列默认值1000
+# 修改 ca 表 id 列默认值1000
 ALTER TABLE ca MODIFY id BIGINT NOT NULL DEFAULT 1000;
 # 或者
 ALTER TABLE ca ALTER id SET DEFAULT 1000;
@@ -879,10 +881,14 @@ ALTER TABLE ca ALTER id SET DEFAULT 1000;
 # 添加主键，确保该主键默认不为空（NOT NULL）
 ALTER TABLE ca MODIFY id INT NOT NULL;
 ALTER TABLE ca ADD PRIMARY KEY (id);
+
 # 删除主键
 ALTER TABLE ca DROP PRIMARY KEY;
 
-# 修改ca表的存储引擎
+# 删除唯一性索引(unique)的 id 字段
+ALTER TABLE ca DROP index id;
+
+# 修改 ca 表的存储引擎
 ALTER TABLE ca ENGINE = MYISAM;
 ```
 
@@ -1482,7 +1488,8 @@ set connect_timeout=2;
 ## 存储引擎
 
 [mysql 索引结构是在存储引擎层面实现的](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
-修改默认 engine:
+
+修改默认存储引擎 `engine`:
 
 > ```sh
 > [mysqld]
@@ -1491,20 +1498,20 @@ set connect_timeout=2;
 
 - MyIsam: 速度更快,因为 MyISAM 内部维护了一个计数器，可以直接调取,使用 b+树索引
 
-  > 表锁
-
+  > 表锁(对表的锁)
+  >
   > 不支持事务
-
+  >
   > 缓冲池只缓存索引文件，不缓冲数据文件
-
+  >
   > 由 MYD 和 MYI 文件组成，MYD 用来存放数据文件，MYI 用来存放索引文件
 
 - InnoDB: 事务更好,使用 b+树索引
 
-  > 行锁,表锁
-
+  > 行锁(对行的锁),表锁(对表的锁)
+  >
   > 支持事务
-
+  >
   > 自动灾难恢复
 
 ```sql
@@ -1531,10 +1538,24 @@ ALTER TABLE ca ENGINE = MYISAM;
 > # 解锁
 > UNLOCK TABLES;
 > ```
+通过队列查看是否有lock:
+```sql
+show processlist;
+```
 
-MyISAM 在执行查询语句（SELECT）前，会自动给涉及的表加读锁，在执行更新操作
-（UPDATE、DELETE、INSERT 等）前，会自动给涉及的表加写锁，这个过程并不需要用户干预
-当一个线程获得对一个表的写锁后， 只有持有锁的线程可以对表进行更新操作。 其他线程的读、 写操作都会等待，直到锁被释放为止。
+**死锁：**
+![avatar](/Pictures/mysql/lock.png)
+
+事务 A 在等待事务 B 释放 id=2 的行锁，而事务 B 在等待事务 A 释放 id=1 的行锁。互相等待对方的资源释放，就进入了死锁状态。当出现死锁以后，有两种策略：
+
+- 一：进入等待，直到超时。超时时间参数 `innodb_lock_wait_timeout`
+
+- 二：发起死锁检测，发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 `innodb_deadlock_detect` 设置为 `on`。但是它有额外负担的。每当一个事务被锁的时候，就要看看它所依赖的线程有没有被别人锁住，如此循环，最后判断是否出现了循环等待，也就是死锁
+
+**MyISAM:**
+MyISAM 不支持行锁，在执行查询语句（SELECT、UPDATE、DELETE、INSERT 等）前，会自动给涉及的表加读锁，这个过程并不需要用户干预
+
+当线程获得一个表的写锁后， 只有持有锁的线程可以对表进行更新操作。 其他线程的读、 写操作都会等待，直到锁被释放为止。
 
 默认情况下，写锁比读锁具有更高的优先级：当一个锁释放时，这个锁会优先给写锁队列中等候的获取锁请求，然后再给读锁队列中等候的获取锁请求。
 
@@ -1547,12 +1568,15 @@ InnoDB 采用`WAL`(Write-Ahead Logging). 事务提交时先修改日志,再修�
 日志格式：
 
 - redo log(重做日志) 物理日志:存储了数据被修改后的值.
+
 - binlog 逻辑日志:记录数据库所有更改操作. 不包括 select，show
-  ![avatar](/Pictures/mysql/log.png)
 
-查看日志缓冲区，更大的日志缓冲区可以节省磁盘 I / O
+![avatar](/Pictures/mysql/log.png)
 
-```默认是 16M
+查看日志缓冲区大小，更大的日志缓冲区可以节省磁盘 `I / O`:
+
+```sql
+# 默认是 16M
 show variables like 'innodb_log_buffer_size';
 +------------------------+----------+
 | Variable_name          | Value    |
@@ -1563,8 +1587,8 @@ show variables like 'innodb_log_buffer_size';
 
 ### REDO LOG (重做日志)
 
-- redo log 以 **块(block)** 为单位进行存储的，每个块的大小为\*_512_ Bytes
-- redo log 文件的组合大小 = (innodb_log_file_size \* innodb_log_files_in_group)
+- redo log 以 **块(block)** 为单位进行存储的，每个块的大小为 **512** Bytes
+- redo log 文件的组合大小 = (`innodb_log_file_size` \* `innodb_log_files_in_group`)
 
 ```sql
 # redo log文件大小
@@ -1627,6 +1651,7 @@ select * from INNODB_SYS_TABLES;
 
 ![avatar](/Pictures/mysql/sys_tables.png)
 
+<span id="transaction"></span>
 ### TRANSACTION (事务)
 
 事务的基本要素（ACID）
@@ -1658,6 +1683,15 @@ Query OK, 0 rows affected, 1 warning (0.00 sec)
 commit;
 ```
 
+如果有两个会话,一个开启了事务,修改了数据.另一个会话同步数据要执行 `flush table 表名`
+
+```sql
+# 把 clone表 存放在缓冲区里的修改操作写入磁盘
+flush table clone
+```
+![avatar](/Pictures/mysql/flush.png)
+![avatar](/Pictures/mysql/flush1.png)
+
 ---
 
 - `SAVEPOINT savepoint_name;` 声明一个事务保存点
@@ -1681,7 +1715,7 @@ rollback to abc;
 
 `autocommit = 0` 则必须使用 COMMIT 来提交事务，或使用 ROLLBACK 来回滚撤销事务
 
-- 1.如果 InnoDB 表有大量的修改操作，应设置 `autocommit=0` 因为 `ROLLBACK` 操作会浪费大量的 I/O
+- 1.如果 InnoDB 表有大量的修改操作，应设置 `autocommit = 0` 因为 `ROLLBACK` 操作会浪费大量的 I/O
 
 > **注意：**
 >
@@ -1690,14 +1724,16 @@ rollback to abc;
 >
 > ```sql
 > [mysqld]
-> autocommit=0
+> autocommit = 0
 > ```
 
-- 2.如果只是查询表,没有大量的修改，应设置 `autocommit=1`
+- 2.如果只是查询表,没有大量的修改，应设置 `autocommit = 1`
 
 ### 线程
 
 - Master Thread 负责将缓冲池中的数据异步刷新到磁盘,包括脏页的刷新(最高的线程优先)
+
+[关于日志](/mysql-log.md)
 
 # reference
 
@@ -1706,6 +1742,7 @@ rollback to abc;
 - [数据库的最简单实现](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
 - [阿里规定超过三张表禁止 join，为啥？](https://zhuanlan.zhihu.com/p/158866182)
 - [图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
+- [MySQL锁详解](https://blog.csdn.net/qq_40378034/article/details/90904573)
 
 # 优秀教程
 

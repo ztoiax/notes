@@ -16,7 +16,7 @@
 show variables like '%log%file%';
 ```
 
-`/etc/mysql/my.cnf` 文件下启用日志
+修改`/etc/mysql/my.cnf` 配置文件下启用日志
 
 开启 error log
 
@@ -203,7 +203,8 @@ mysqlsla --log-type error /var/log/mysql/mysql_error.log
 
 - 支持 docker
 
-[canal 安装](https://github.com/alibaba/canal/wiki/QuickStart)
+[canal 安装](https://github.com/alibaba/canal/wiki/QuickStart) 目前不支持jdk高版本
+
 [canal 运维工具安装](https://github.com/alibaba/canal/wiki/Canal-Admin-QuickStart)
 
 # reference
