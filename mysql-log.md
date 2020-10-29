@@ -72,12 +72,21 @@ SET GLOBAL general_log = 'ON';
 SET GLOBAL slow_query_log = 'ON';
 ```
 
-## 二进制日志
+## BINLOG (二进制日志)
 
-- binlog_do_db：此参数表示只记录指定数据库的二进制日志
-- binlog_ignore_db：此参数表示不记录指定的数据库的二进制日志
+MySQL 8.0 中的二进制日志格式与以前的 MySQL 版本不同
 
-- sync_binlog=n，n 次事务提交后，将执行一次 fsync 之类的磁盘同步指令,同时将 Binlog 文件缓存刷新到磁盘。
+只记录对数据库更改的所有操作，不包括 `select`，`show` 等这类操作不修改数据的语句
+
+启用了二进制日志记录的服务器会使性能稍微降低
+
+BINLOG 主要有两个作用：
+
+- 主从复制，主服务器要发送 binlog 给从服务器
+
+- 某些数据恢复操作需要使用 binlog 日志
+
+开启 `binary` 日志:
 
 ```sh
 [mysqld]
@@ -85,7 +94,42 @@ datadir = /var/lib/mysql/
 log-bin=bin.log
 log-bin-index=bin-log.index
 max_binlog_size=100M
+# 日志格式默认是row
 binlog_format=row
+
+# 此参数表示只记录指定数据库的二进制日志
+binlog_do_db
+
+# 此参数表示不记录指定的数据库的二进制日志
+binlog_ignore_db
+
+# n 次事务提交后，将执行一次 fsync 之类的磁盘同步指令,同时将 Binlog 文件缓存刷新到磁盘。最安全的值为 sync_binlog=1（默认值），但这也是最慢的。
+
+sync_binlog=n
+```
+
+binlog 数据格式分为：`statement` , `row` , `mixed`
+
+```sql
+# 我这里是 row 格式
+show variables like 'binlog_format';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| binlog_format | ROW   |
++---------------+-------+
+```
+
+日志有效期
+
+```sql
+# 我这里是 0
+show variables like 'expire_logs_days';
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| expire_logs_days | 0     |
++------------------+-------+
 ```
 
 ```sql
@@ -100,9 +144,6 @@ show binlog events;
 
 # 查看指定日志
 show binlog events in 'LogName';
-
-# 二进制日志有效期
-expire_logs_days = 10;
 
 # 删除所有二进制日志
 reset master;
@@ -153,6 +194,17 @@ mysqlsla --log-type slow /var/log/mysql/mysql_slow.log
 mysqlsla --log-type general /var/log/mysql/mysql_general.log
 mysqlsla --log-type error /var/log/mysql/mysql_error.log
 ```
+
+## [canal](https://github.com/alibaba/canal)
+
+- canal 模拟 slave 的方式，获取 binlog 日志数据. binlog 设置为 row 模式以后，不仅能获取到执行的每一个增删改的脚本，同时还能获取到修改前和修改后的数据.
+
+- 支持高性能,实时数据同步
+
+- 支持 docker
+
+[canal 安装](https://github.com/alibaba/canal/wiki/QuickStart)
+[canal 运维工具安装](https://github.com/alibaba/canal/wiki/Canal-Admin-QuickStart)
 
 # reference
 

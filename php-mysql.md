@@ -33,7 +33,7 @@ mysqli_close($conn);
 <?php
 $dbhost = '127.0.0.1';   // mysql服务器主机地址
 $dbuser = 'tz';          // mysql用户名
-$dbpass = '201997102'; // mysql用户名密码
+$dbpass = ''; // mysql用户名密码
 $conn = mysqli_connect($dbhost, $dbuser, $dbpass);
 if(! $conn )
 {

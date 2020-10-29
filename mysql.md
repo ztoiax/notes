@@ -32,7 +32,6 @@
         * [用户权限设置](#用户权限设置)
             * [授予权限,远程登陆](#授予权限远程登陆)
         * [配置(varibles)操作](#配置varibles操作)
-    * [事务](#事务)
     * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
         * [主从同步(Master/Slave)](#主从同步masterslave)
             * [主服务器配置](#主服务器配置)
@@ -49,10 +48,15 @@
                 * [修改密码成功后](#修改密码成功后)
                 * [如果出现以下报错(密码不满足策略安全)](#如果出现以下报错密码不满足策略安全)
                     * [修复](#修复-1)
-        * [开启日志显示 ok，但查询后并没有开启](#开启日志显示-ok但查询后并没有开启)
         * [ERROR 2013 (HY000): Lost connection to MySQL server during query(导致无法 stop slave;)](#error-2013-hy000-lost-connection-to-mysql-server-during-query导致无法-stop-slave)
         * [ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (111)(连接不了数据库)](#error-2002-hy000-cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-111连接不了数据库)
-    * [存储组件](#存储组件)
+    * [存储引擎](#存储引擎)
+        * [锁](#锁)
+    * [InnoDB](#innodb)
+        * [REDO LOG (重做日志)](#redo-log-重做日志)
+        * [TRANSACTION (事务)](#transaction-事务)
+        * [autocommit](#autocommit)
+        * [线程](#线程)
 * [reference](#reference)
 * [优秀教程](#优秀教程)
 * [reference items](#reference-items)
@@ -170,7 +174,7 @@ create database china;
 ```
 
 ```sh
-# 下载2019年中国地区表
+# 下载2019年中国地区表,一共有 783562 条数据
 git clone https://github.com/kakuilan/china_area_mysql.git
 # 如果网速太慢，使用这条国内通道
 git clone https://gitee.com/qfzya/china_area_mysql.git
@@ -939,6 +943,8 @@ CREATE INDEX merger_name_index ON cnarea_2019 (merger_name);
 ### undrop-for-innodb
 
 安装
+[MySQL · 数据恢复 · undrop-for-innodb](http://mysql.taobao.org/monthly/2017/11/01/)
+[undrop-for-innodb 实测（一）-- 表结构恢复](https://yq.aliyun.com/articles/684377)
 
 ```sh
 git clone https://github.com/twindb/undrop-for-innodb.git
@@ -950,6 +956,12 @@ sudo make install
 # 注意：目前还是在undrop-for-innodb
 # 生成pages-ibdata1目录,目录下按照每个页为一个文件
 stream_parser -f /var/lib/mysql/ibdata1
+mkdir -p dumps/default
+
+sudo mysql -uroot -p -e "create database dictionary"
+sudo mysql -uroot -p dictionary < dictionary/*.sql
+
+sudo ./sys_parser -uroot -p -d dictionary sakila/actor
 ```
 
 ## DCL
@@ -1040,21 +1052,18 @@ mysql> show variables like 'max_connect%';
 +--------------------+-------+
 2 rows in set (0.01 sec)
 
-# 修改配置(重启后失效)
+# 修改用户变量(重启后失效)
+set @root = expr;
+
+# 修改会话变量,该值将在会话内保持有效(重启后失效)
+set session sql_mode = 'TRADITIONAL';
+
+# 修改全局变量, 仅影响更改后连接的客户端的相应会话值.(重启后失效)
 set global max_connect_errors=1000;
+
 # 永久保存,要写入/etc/my.cnf
 echo "max_connect_errors=1000" >> /etc/my.cnf
 ```
-
-## 事务
-
-- `BEGIN` 开始一个事务
-- `ROLLBACK` 事务回滚
-- `COMMIT` 事务确认
-
-- `SAVEPOINT savepoint_name;` 声明一个
-- `ROLLBACK TO savepoint_name;` 回滚到
-- `RELEASE SAVEPOINT savepoint_name;` // 删除指定保留点
 
 ## mysqldump 备份和恢复
 
@@ -1250,7 +1259,7 @@ MariaDB [tz]> show slave status\G;
 
 ```sh
 # 测试能不能连接主服务器
-mysql -uroot -p201997102 -h 192.168.100.208 -P3306
+mysql -uroot -p -h 192.168.100.208 -P3306
 ```
 
 ## 高效强大的 mysql 软件
@@ -1274,7 +1283,7 @@ mysql root@localhost:(none)> SELECT DISTINCT CONCAT('User: ''',user,'''@''',host
 
 ### [mydumper](https://github.com/maxbube/mydumper)
 
-Mydumper 是 MySQL 数据库服务器备份工具，它比 MySQL 自带的 mysqldump 快很多
+Mydumper 是 MySQL 数据库服务器备份工具，它比 MySQL 自带的 mysqldump 快很多.[详细参数](https://linux.cn/article-5330-1.html)
 
 ```sh
 # 带压缩备份--compress(gz)
@@ -1454,24 +1463,6 @@ mysql> alter user 'root'@'localhost' identified by 'newpassword';
 Query OK, 0 rows affected (0.52 sec)
 ```
 
-### 开启日志显示 ok，但查询后并没有开启
-
-```sql
-# 10.5.6-MariaDB-log Arch Linux
-MariaDB [(none)]> SET GLOBAL slow_query_log = 'ON';
-Query OK, 0 rows affected (0.000 sec)
-
-MariaDB [(none)]> show variables like 'slow_query_log';
-+----------------+-------+
-| Variable_name  | Value |
-+----------------+-------+
-| slow_query_log | OFF   |
-+----------------+-------+
-1 row in set (0.001 sec)
-
-# 写入/etc/my.cnf后，重启服务后,可以启动日志(显示on)
-```
-
 ### ERROR 2013 (HY000): Lost connection to MySQL server during query(导致无法 stop slave;)
 
 **修复:**
@@ -1479,7 +1470,7 @@ MariaDB [(none)]> show variables like 'slow_query_log';
 ```sql
 show variables like 'connect_timeout';
 # 缩短连接时间
-set global connect_timeout=2;
+set connect_timeout=2;
 ```
 
 ### ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (111)(连接不了数据库)
@@ -1488,7 +1479,7 @@ set global connect_timeout=2;
 - `ps aux | grep mysql` 进程存在
 - 内存不足
 
-## 存储组件
+## 存储引擎
 
 [mysql 索引结构是在存储引擎层面实现的](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
 修改默认 engine:
@@ -1502,9 +1493,18 @@ set global connect_timeout=2;
 
   > 表锁
 
+  > 不支持事务
+
+  > 缓冲池只缓存索引文件，不缓冲数据文件
+
+  > 由 MYD 和 MYI 文件组成，MYD 用来存放数据文件，MYI 用来存放索引文件
+
 - InnoDB: 事务更好,使用 b+树索引
-  > 行锁
+
+  > 行锁,表锁
+
   > 支持事务
+
   > 自动灾难恢复
 
 ```sql
@@ -1518,12 +1518,192 @@ show variables like 'storage_engine';
 ALTER TABLE ca ENGINE = MYISAM;
 ```
 
+### 锁
+
+**语法：**
+
+> ```sql
+> # 加锁
+> LOCK TABLES 表1 WRITE, 表2 READ, ...;
+> ```
+
+> ```sql
+> # 解锁
+> UNLOCK TABLES;
+> ```
+
+MyISAM 在执行查询语句（SELECT）前，会自动给涉及的表加读锁，在执行更新操作
+（UPDATE、DELETE、INSERT 等）前，会自动给涉及的表加写锁，这个过程并不需要用户干预
+当一个线程获得对一个表的写锁后， 只有持有锁的线程可以对表进行更新操作。 其他线程的读、 写操作都会等待，直到锁被释放为止。
+
+默认情况下，写锁比读锁具有更高的优先级：当一个锁释放时，这个锁会优先给写锁队列中等候的获取锁请求，然后再给读锁队列中等候的获取锁请求。
+
+这也正是 MyISAM 表不太适合于有大量更新操作和查询操作应用的原因，因为，大量的更新操作会造成查询操作很难获得读锁，从而可能永远阻塞。
+
+## InnoDB
+
+InnoDB 采用`WAL`(Write-Ahead Logging). 事务提交时先修改日志,再修改页
+
+日志格式：
+
+- redo log(重做日志) 物理日志:存储了数据被修改后的值.
+- binlog 逻辑日志:记录数据库所有更改操作. 不包括 select，show
+  ![avatar](/Pictures/mysql/log.png)
+
+查看日志缓冲区，更大的日志缓冲区可以节省磁盘 I / O
+
+```默认是 16M
+show variables like 'innodb_log_buffer_size';
++------------------------+----------+
+| Variable_name          | Value    |
++------------------------+----------+
+| innodb_log_buffer_size | 16777216 |
++------------------------+----------+
+```
+
+### REDO LOG (重做日志)
+
+- redo log 以 **块(block)** 为单位进行存储的，每个块的大小为\*_512_ Bytes
+- redo log 文件的组合大小 = (innodb_log_file_size \* innodb_log_files_in_group)
+
+```sql
+# redo log文件大小
+show variables like 'innodb_log_file_size';
++----------------------+-----------+
+| Variable_name        | Value     |
++----------------------+-----------+
+| innodb_log_file_size | 100663296 |
++----------------------+-----------+
+
+# redo log文件数量
+show variables like 'innodb_log_files_in_group';
++---------------------------+-------+
+| Variable_name             | Value |
++---------------------------+-------+
+| innodb_log_files_in_group | 1     |
+```
+
+---
+
+查看 InnoDB 版本:
+
+```sql
+SHOW VARIABLES LIKE "innodb_version";
+```
+
+- 字典的本质是 `REDUNDANT` 行格式的 innodb 表
+- 字典用于记录 `innodb` 核心的对象信息，比如表、索引、字段等。
+
+- 字典存储在 `ibdata1` 文件
+
+- 字典表是普通的 InnoDB 表，对用户是不可见的。但是，一些版本的 MySQL 存放在 `information_schema` 数据库中
+
+```sql
+# 查看innoddb字典视图
+use information_schema -A;
+show tables where  Tables_in_information_schema like 'innodb_sys%';
++------------------------------+
+| Tables_in_information_schema |
++------------------------------+
+| INNODB_SYS_DATAFILES         |
+| INNODB_SYS_TABLESTATS        |
+| INNODB_SYS_FIELDS            |
+| INNODB_SYS_FOREIGN_COLS      |
+| INNODB_SYS_FOREIGN           |
+| INNODB_SYS_TABLES            |
+| INNODB_SYS_COLUMNS           |
+| INNODB_SYS_TABLESPACES       |
+| INNODB_SYS_VIRTUAL           |
+| INNODB_SYS_INDEXES           |
+| INNODB_SYS_SEMAPHORE_WAITS   |
++------------------------------+
+```
+
+查看使用 innodb 存储的表:
+
+```sql
+select * from INNODB_SYS_TABLES;
+```
+
+![avatar](/Pictures/mysql/sys_tables.png)
+
+### TRANSACTION (事务)
+
+事务的基本要素（ACID）
+
+- 原子性：Atomicity，整个数据库事务是不可分割的工作单位
+- 一致性：Consistency，事务将数据库从一种状态转变为下一种一致的状态
+- 隔离性：Isolation，每个读写事务的对象对其他事务的操作对象能相互分离
+- 持久性：Durability，事务一旦提交，其结果是永久性的
+
+---
+
+- `BEGIN` 开始一个事务
+- `ROLLBACK` 事务回滚
+- `COMMIT` 事务确认
+
+```sql
+# 开始事务
+begin
+
+# 插入数据
+insert into tz (id,name,date) values (1,'tz','2020-10-24');
+
+# 回滚到开始事务之前(rollback 和 commit 只能选一个)
+rollback;
+# 如果出现waring,表示该表的存储引擎不支持事务(不是innodb)
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+# 如果不回滚，使用commit确认这次事务的修改
+commit;
+```
+
+---
+
+- `SAVEPOINT savepoint_name;` 声明一个事务保存点
+- `ROLLBACK TO savepoint_name;` 回滚到事务保存点,但不会终止该事务
+- `RELEASE SAVEPOINT savepoint_name;` // 删除指定保留点
+
+```sql
+# 声明一个名叫 abc 的事务保存点
+savepoint abc;
+
+# 插入数据
+insert into tz (id,name,date) values (1,'tz','2020-10-24');
+
+# 回滚到 abc 事务保存点
+rollback to abc;
+```
+
+### autocommit
+
+`autocommit = 1` 对表的所有修改将立即生效
+
+`autocommit = 0` 则必须使用 COMMIT 来提交事务，或使用 ROLLBACK 来回滚撤销事务
+
+- 1.如果 InnoDB 表有大量的修改操作，应设置 `autocommit=0` 因为 `ROLLBACK` 操作会浪费大量的 I/O
+
+> **注意：**
+>
+> - 不要长时间打开事务会话，适当的时候要执行 COMMIT（完成更改）或 ROLLBACK（回滚撤消更改）
+> - ROLLBACK 这是一个相对昂贵的操作 请避免对大量行进行更改，然后回滚这些更改。
+>
+> ```sql
+> [mysqld]
+> autocommit=0
+> ```
+
+- 2.如果只是查询表,没有大量的修改，应设置 `autocommit=1`
+
+### 线程
+
+- Master Thread 负责将缓冲池中的数据异步刷新到磁盘,包括脏页的刷新(最高的线程优先)
+
 # reference
 
 - [厉害了，3 万字的 MySQL 精华总结 + 面试 100 问！](https://mp.weixin.qq.com/s?src=11&timestamp=1603207279&ver=2656&signature=PlP1Ta3EiPbja*mclBpkiUWyCM93jx7G0DnE4LwwlzEvW-Fd9hxgIGq1*5ctVid5AZTssRaeDRSKRPlOGOXJfLcS4VUlru*NYhh4BrhZU4k91nsfqzJueeX8kEptSmfc&new=1)
 - [21 分钟 MySQL 基础入门](https://github.com/jaywcjlove/mysql-tutorial/blob/master/21-minutes-MySQL-basic-entry.md#%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5)
 - [数据库的最简单实现](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
-- [Mydumper - MySQL 数据库备份工具](https://linux.cn/article-5330-1.html)
 - [阿里规定超过三张表禁止 join，为啥？](https://zhuanlan.zhihu.com/p/158866182)
 - [图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
 
@@ -1534,7 +1714,7 @@ ALTER TABLE ca ENGINE = MYISAM;
 - [W3cSchool SQL 教程](https://www.w3school.com.cn/sql/index.asp)
 - [MySQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
 - [138 张图带你 MySQL 入门](https://mp.weixin.qq.com/s?src=11&timestamp=1603417035&ver=2661&signature=Z-XNfjtR11GhHg29XAiBZ0RAiMHavvRavxB1ccysnXtAKChrVkXo*zx3DKFPSxDESZ9lwRM7C8-*yu1dEGmXwHgv1qe7V-WvwLUUQe7Nz7RUwEuJmLYqVRnOWtONHeL-&new=1)
-- [书写高质量 SQL 的 30 条建议](https://zhuanlan.zhihu.com/p/260536848)
+- [数据库内核月报](http://mysql.taobao.org/monthly/)
 
 # reference items
 
