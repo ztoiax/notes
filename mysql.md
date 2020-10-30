@@ -15,7 +15,6 @@
         * [JOIN (多个表显示,以行为单位)](#join-多个表显示以行为单位)
         * [SQL FUNCTION](#sql-function)
             * [加密函数](#加密函数)
-            * [自定义函数](#自定义函数)
     * [DML (增删改操作)](#dml-增删改操作)
         * [CREATE(创建)](#create创建)
         * [insert](#insert)
@@ -23,6 +22,7 @@
         * [update](#update)
         * [delete](#delete)
             * [删除重复的数据](#删除重复的数据)
+        * [CREATE PROCEDURE (自定义过程）](#create-procedure-自定义过程)
         * [ALTER](#alter)
         * [INDEX (索引)](#index-索引)
             * [索引速度测试](#索引速度测试)
@@ -585,22 +585,6 @@ select is_free_lock('lockname');
 select release_lock('lockname');
 ```
 
-#### 自定义函数
-
-**语法：**
-
-> ```sql
-> create function 函数名([参数列表]) returns 数据类型
->
-> begin
->
-> sql语句;
->
-> return 值;
->
-> end;
-> ```
-
 ## DML (增删改操作)
 
 - 有的地方把 DML 语句（增删改）和 DQL 语句（查询）统称为 DML 语句
@@ -644,6 +628,8 @@ CREATE TABLE new(
 primary key (`id`))                 # 设置主健为 id 字段(列)
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+# 这里的int(8),varchar(50),括号里的数字表示的是最大显示宽度
+
 # 查看 new 表里的字段
 desc new;
 +-------+-------------+------+-----+---------+----------------+
@@ -653,6 +639,7 @@ desc new;
 | name  | varchar(50) | NO   | UNI | NULL    |                |
 | date  | date        | YES  |     | NULL    |                |
 +-------+-------------+------+-----+---------+----------------+
+
 
 # 查看new表详细信息
 show create table new\G;
@@ -833,7 +820,125 @@ select * from clone;
 |  2 | tz1  | 2020-10-24 |
 +----+------+------------+
 ```
-[误删数据进行回滚，跳转至事务](#transaction)
+
+[误删数据进行回滚，跳转至**事务**](#transaction)
+
+### CREATE PROCEDURE (自定义过程）
+
+**语法：**
+
+> ```sql
+> delimiter #
+> create procedure 过程名([IN 参数名 数据类型,OUT 参数名 数据类型... ])
+>
+> begin
+>
+> sql语句;
+>
+> end;
+> delimiter ;
+> ```
+
+先创建表:
+
+```sql
+drop table if exists foo;
+create table foo
+(
+id int unique auto_increment,
+val int not null default 0
+);
+
+# 插入一些数据
+insert into foo (val) values (1);
+insert into foo (val) values (2);
+insert into foo (val) values (3);
+insert into foo (val) values (4);
+insert into foo (val) values (5);
+
+# 查看结果
+select * from foo;
+```
+
+![avatar](/Pictures/mysql/procedure.png)
+
+循环 5 次， val 字段设置为 0 :
+
+```sql
+# 检测过程是否存在，如存在则删除
+drop procedure if exists zero;
+
+# 过程体要包含在delimiter里
+delimiter #
+-- 创建 zero 过程，并设置传递的变量为 int 类型的 v
+-- 返回变量为 int 类型的 n
+create procedure zero(IN v INT,OUT n INT)
+begin
+
+-- 变量i 代表 id 字段的值
+declare i int default 1;
+-- 变量s 代表循环次数
+declare s int default 6;
+
+    while i < s do
+    -- 把 val 字段的值设置为 参数v
+    update foo set val = v where id = i;
+    set i = i + 1;
+    end while;
+    -- 设置返回变量 n 的值为 i
+    set n = i;
+
+end #
+delimiter ;
+
+# 设置 传递参数v 为0
+set @v = 0;
+# 执行 zero 过程
+call zero(@v,@n);
+# 查看 返回参数n 的值
+select @n;
+
+# 查看过程结果
+select * from foo;
+```
+
+![avatar](/Pictures/mysql/procedure1.png)
+
+循环 1000 次，val 字段插入随机数:
+
+```sql
+drop procedure if exists foo_rand;
+
+delimiter #
+create procedure foo_rand()
+begin
+
+-- 循环次数1000次
+declare v_max int unsigned default 1000;
+declare v_counter int unsigned default 0;
+
+-- 删除 foo表 的数据
+  truncate table foo;
+  start transaction;
+  while v_counter < v_max do
+  -- 插入随机数据
+    insert into foo (val) values ( floor(rand() * 65535) );
+    set v_counter=v_counter+1;
+  end while;
+  commit;
+end #
+
+delimiter ;
+
+call foo_rand();
+
+select * from foo order by id;
+```
+
+![avatar](/Pictures/mysql/procedure2.png)
+
+创建 10 个表
+
 ### ALTER
 
 **语法：**
@@ -1058,8 +1163,10 @@ mysql> show variables like 'max_connect%';
 +--------------------+-------+
 2 rows in set (0.01 sec)
 
-# 修改用户变量(重启后失效)
-set @root = expr;
+# 设置自定义变量(重启后失效)
+set @val = 1;
+# 查看刚才的变量
+select @val;
 
 # 修改会话变量,该值将在会话内保持有效(重启后失效)
 set session sql_mode = 'TRADITIONAL';
@@ -1538,7 +1645,9 @@ ALTER TABLE ca ENGINE = MYISAM;
 > # 解锁
 > UNLOCK TABLES;
 > ```
-通过队列查看是否有lock:
+>
+> 通过队列查看是否有 lock:
+
 ```sql
 show processlist;
 ```
@@ -1652,6 +1761,7 @@ select * from INNODB_SYS_TABLES;
 ![avatar](/Pictures/mysql/sys_tables.png)
 
 <span id="transaction"></span>
+
 ### TRANSACTION (事务)
 
 事务的基本要素（ACID）
@@ -1689,7 +1799,10 @@ commit;
 # 把 clone表 存放在缓冲区里的修改操作写入磁盘
 flush table clone
 ```
+
 ![avatar](/Pictures/mysql/flush.png)
+
+`flush table clone`后, `select` 数据同步
 ![avatar](/Pictures/mysql/flush1.png)
 
 ---
@@ -1742,7 +1855,8 @@ rollback to abc;
 - [数据库的最简单实现](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
 - [阿里规定超过三张表禁止 join，为啥？](https://zhuanlan.zhihu.com/p/158866182)
 - [图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
-- [MySQL锁详解](https://blog.csdn.net/qq_40378034/article/details/90904573)
+- [MySQL 锁详解](https://blog.csdn.net/qq_40378034/article/details/90904573)
+- [mysql 存储过程详细教程](https://www.jianshu.com/p/7b2d74701ccd)
 
 # 优秀教程
 
