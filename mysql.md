@@ -8,23 +8,26 @@
     * [DQL（查询）](#dql查询)
         * [SELECT](#select)
             * [where (条件选取)](#where-条件选取)
-            * [order by (排序)](#order-by-排序)
-            * [group by (分组)](#group-by-分组)
+            * [Order by (排序)](#order-by-排序)
+            * [Group by (分组)](#group-by-分组)
             * [regexp (正则表达式)](#regexp-正则表达式)
-        * [UNION (多个表显示,以列为单位)](#union-多个表显示以列为单位)
-        * [JOIN (多个表显示,以行为单位)](#join-多个表显示以行为单位)
+        * [UNION (多个表显示,以 行 为单位)](#union-多个表显示以-行-为单位)
+        * [JOIN (多个表显示,以 列 为单位)](#join-多个表显示以-列-为单位)
         * [SQL FUNCTION](#sql-function)
             * [加密函数](#加密函数)
     * [DML (增删改操作)](#dml-增删改操作)
         * [CREATE(创建)](#create创建)
-        * [insert](#insert)
+        * [Insert](#insert)
             * [选取另一个表的数据,导入进新表](#选取另一个表的数据导入进新表)
-        * [update](#update)
-        * [delete](#delete)
+        * [Update](#update)
+        * [Delete and Drop (删除)](#delete-and-drop-删除)
             * [删除重复的数据](#删除重复的数据)
-        * [CREATE PROCEDURE (自定义过程）](#create-procedure-自定义过程)
+    * [VIEW (视图)](#view-视图)
+    * [Stored Procedure and Function (自定义存储过程 和 函数)](#stored-procedure-and-function-自定义存储过程-和-函数)
+        * [Stored Procedure (自定义存储过程）](#stored-procedure-自定义存储过程)
         * [ALTER](#alter)
         * [INDEX (索引)](#index-索引)
+            * [explain](#explain)
             * [索引速度测试](#索引速度测试)
         * [undrop-for-innodb](#undrop-for-innodb)
     * [DCL](#dcl)
@@ -33,7 +36,7 @@
             * [授予权限,远程登陆](#授予权限远程登陆)
         * [配置(varibles)操作](#配置varibles操作)
     * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
-        * [主从同步(Master/Slave)](#主从同步masterslave)
+        * [主从同步 (Master Slave Replication )](#主从同步-master-slave-replication-)
             * [主服务器配置](#主服务器配置)
             * [从服务器配置](#从服务器配置)
     * [高效强大的 mysql 软件](#高效强大的-mysql-软件)
@@ -41,6 +44,7 @@
         * [mydumper](#mydumper)
         * [percona-toolkit 运维监控工具](#percona-toolkit-运维监控工具)
         * [innotop](#innotop)
+        * [sysbench](#sysbench)
     * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
     * [常见错误](#常见错误)
         * [登录错误](#登录错误)
@@ -312,7 +316,7 @@ select * from cnarea_2019 where id in (10,20);
 select * from ca where id is not null and id < 10;
 ```
 
-#### order by (排序)
+#### Order by (排序)
 
 **语法:**
 
@@ -338,7 +342,7 @@ select * from cnarea_2019 where id<=10 order by level desc;
 select * from cnarea_2019 where id<=10 order by level desc,id ASC;
 ```
 
-#### group by (分组)
+#### Group by (分组)
 
 ```sql
 # 以 level 进行分组
@@ -379,7 +383,7 @@ select name from cnarea_2019 where name regexp '^广州';
 select name from cnarea_2019 where name regexp '.*广州';
 ```
 
-### UNION (多个表显示,以列为单位)
+### UNION (多个表显示,以 行 为单位)
 
 **语法：**
 
@@ -418,7 +422,7 @@ select id from cnarea_2019 where id<10 union all select id from tz where id<10;
 select id,name from cnarea_2019 where name regexp '^深圳市' union select id,name from cnarea_2019 where name regexp '^北京市';
 ```
 
-### JOIN (多个表显示,以行为单位)
+### JOIN (多个表显示,以 列 为单位)
 
 从两个或更多的表中获取结果.[图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
 
@@ -641,7 +645,7 @@ desc new;
 +-------+-------------+------+-----+---------+----------------+
 
 
-# 查看new表详细信息
+# 查看 new 表详细信息
 show create table new\G;
 *************************** 1. row ***************************
        Table: new
@@ -659,7 +663,7 @@ Create Table: CREATE TABLE `new` (
 CREATE TEMPORARY TABLE temp (`id` int);
 ```
 
-### insert
+### Insert
 
 **语法**
 
@@ -736,7 +740,7 @@ select * from newcn;
 insert into newcn (id,name) select id,name from cnarea_2019 where name regexp '广州.*';
 ```
 
-### update
+### Update
 
 **语法：**
 
@@ -761,12 +765,13 @@ update cnarea_2019 set name=replace(name,'广州','北京') where name regexp '�
 update cnarea_2019 set name=replace(name,'深圳','广州'),name=replace(name,'北京','广州') where name regexp '^深圳' or name regexp '^北京';
 ```
 
-### delete
+### Delete and Drop (删除)
 
 **语法：**
 
 > ```sql
-> DELETE FROM 表名称 WHERE 列名称 = 值
+> # 删除特定的值
+> DELETE FROM 表名称 WHERE 列名称 = 值;
 > ```
 
 ```sql
@@ -783,11 +788,38 @@ delete from cnarea_2019;
 # 删除表(无法回退)
 truncate table cnarea_2019;
 # 这两者的区别简单理解就是 drop 语句删除表之后，可以通过日志进行回复，而 truncate 删除表之后永远恢复不了，所以，一般不使用 truncate 进行表的删除。
+```
 
-# 删除数据库
+**语法：**
+
+> ```sql
+> # 删除数据库，表，函数，存储过程
+> DROP 类型 名称;
+> # 或者 先判断是否存在后,再删除
+> DROP 类型 if exists 名称;
+> ```
+
+| 类型      |
+| --------- |
+| TABLE     |
+| DATABASE  |
+| FUNCTION  |
+| PROCEDURE |
+
+```sql
+# 删除 cnarea_2019 表
+drop table cnarea_2019;
+
+# 先判断 cnarea_2019 表是否存在，如存在则删除
+drop table if exists cnarea_2019;
+
+# 删除 china 数据库
 drop database china;
 
-# 记得重新恢复数据库
+# 先判断 chinaa 数据库是否存在，如存在则删除
+drop table if exists china;
+
+# 删除后，可以这样恢复数据库
 create database china;
 mysql -uroot -pYouPassward china < china_area_mysql.sql
 ```
@@ -823,7 +855,139 @@ select * from clone;
 
 [误删数据进行回滚，跳转至**事务**](#transaction)
 
-### CREATE PROCEDURE (自定义过程）
+## VIEW (视图)
+
+视图（view）是一种虚拟存在的表，是一个逻辑表，本身并不包含数据。作为一个 select 语句保存在数据字典中的。
+
+基表：用来创建视图的表叫做基表。
+
+性能：从数据库视图查询数据可能会很慢，特别是如果视图是基于其他视图创建的。
+
+表依赖关系：将根据数据库的基础表创建一个视图。每当更改与其相关联的表的结构时，都必须更改视图。
+
+**语法：**
+
+> ```sql
+> CREATE VIEW 视图名 (字段名) AS SELECT '值1' UNION SELECT '值2'...;
+> # 基表视图
+> CREATE VIEW 视图名 AS SELECT 字段名 FROM 表名...;
+> ```
+
+```sql
+# 创建视图
+create view v (day) as select '1' union select '2';
+# 查看视图
+select * from v;
++-----+
+| day |
++-----+
+| 1   |
+| 2   |
++-----+
+# 删除视图
+drop view v;
+
+# 以 clone表 为基表,创建视图名为 v
+create view v as select * from clone;
+
+# 查看视图信息
+show create view v\G;
+
+# 嵌套 v视图 名为 vv,并且 id <= 2
+create view vv as select * from v where id <= 2;
+
+# 此时如果把 id 改为 3.注意这里 v 视图 和 clone 表的数据也会被更改
+update vv set id = 3 where id = 1;
+
+# 因为 vv视图有where id <= 2的限制, 所以不满足条件的值不显示
+select * from vv;
++----+------+------------+
+| id | name | date |
++----+------+------------+
+|  2 | tz   | 2020-10-24 |
+|  2 | tz1  | 2020-10-24 |
++----+------+------------+
+
+# 对vv视图修改的值,在v视图的也被修改
+select * from v;
++----+------+------------+
+| id | name | date       |
++----+------+------------+
+|  3 | tz   | 2020-10-24 |
+|  2 | tz   | 2020-10-24 |
+|  2 | tz1  | 2020-10-24 |
++----+------+------------+
+
+# 和刚才的 vv视图 一样 这次 vvv视图 加入with check option;
+create view vvv as select * from v where id <= 2 with check option;
+
+# 此时对不满足条件的值,进行修改会报错
+update vvv set id = 3 where id = 2;
+ERROR 1369 (44000): CHECK OPTION failed `china`.`vvv`
+```
+
+可以看到 视图信息 多数为空 (**NULL**)
+
+```sql
+show table status like '名称'\G;
+```
+
+![avatar](/Pictures/mysql/view.png)
+![avatar](/Pictures/mysql/view1.png)
+
+## Stored Procedure and Function (自定义存储过程 和 函数)
+
+**区别：**
+
+| Procedure                | Function                  |
+| ------------------------ | ------------------------- |
+| 可以执行函数             | 不能执行存储过程          |
+| 不能在 select 语句下执行 | 只能在 select 语句下执行  |
+| 支持 Transactions(事务)  | 不支持 Transactions(事务) |
+| 可以不有返回值           | 必须要有返回值            |
+| 能返回多个值             | 只能返回一个值            |
+
+**Procedure:**
+
+```sql
+delimiter #
+
+CREATE PROCEDURE hello (IN s VARCHAR(50))
+BEGIN
+   SELECT CONCAT('Hello, ', s, '!');
+END #
+
+delimiter ;
+
+# 执行
+call hello('World');
+
+# 查看所有存储过程
+show procedure status;
+
+# 查看 hello 存储过程
+show create procedure hello\G;
+```
+
+**Function:**
+
+```sql
+CREATE FUNCTION hello (s VARCHAR(50))
+   RETURNS VARCHAR(50) DETERMINISTIC
+   RETURN CONCAT('Hello, ',s,'!');
+
+# 执行
+select hello('world');
+select hello(name) from ca limit 1;
+
+# 查看所有自定义函数
+show function status;
+
+# 查看 hello 函数
+show create function hello\G;
+```
+
+### Stored Procedure (自定义存储过程）
 
 **语法：**
 
@@ -1033,6 +1197,10 @@ ALTER table ca ADD INDEX name(id);
 ALTER table ca DROP INDEX name;
 ```
 
+#### explain
+
+- [全网最全 | MySQL EXPLAIN 完全解读](https://mp.weixin.qq.com/s?src=11&timestamp=1604040197&ver=2675&signature=Z8aIcWG-fnvP28oOueCvgCBE5BteW5cun0c3SfGtBHKG3cjAB9*aQ4*PZ6CgY81iT5TxRdWYHz7k5RsvNWSyXZupOOJ7YlcRUFlz8i7QVftJFbRrccNIi5o1daoS90Hk&new=1)
+
 #### 索引速度测试
 
 ```sql
@@ -1154,7 +1322,7 @@ show variables;
 # 查看字段前面包含max_connect的配置(通配符%)
 show variables like 'max_connect%';
 
-mysql> show variables like 'max_connect%';
+show variables like 'max_connect%';
 +--------------------+-------+
 | Variable_name      | Value |
 +--------------------+-------+
@@ -1171,12 +1339,24 @@ select @val;
 # 修改会话变量,该值将在会话内保持有效(重启后失效)
 set session sql_mode = 'TRADITIONAL';
 
+# 通过 select 查看
+select @@session.sql_mode;
+# 或者
+show variables like 'sql_mode';
+
 # 修改全局变量, 仅影响更改后连接的客户端的相应会话值.(重启后失效)
 set global max_connect_errors=1000;
+
+# 通过 select 查看
+select @@global.max_connect_errors;
+# 或者
+show variables like 'max_connect_errors';
 
 # 永久保存,要写入/etc/my.cnf
 echo "max_connect_errors=1000" >> /etc/my.cnf
 ```
+
+[mysql 的 sql_mode 合理设置](http://xstarcd.github.io/wiki/MySQL/MySQL-sql-mode.html)
 
 ## mysqldump 备份和恢复
 
@@ -1247,7 +1427,7 @@ mysql -uroot -pYouPassward china < china.sql
 mysql -uroot -pYouPassward < all.sql
 ```
 
-### 主从同步(Master/Slave)
+### 主从同步 (Master Slave Replication )
 
 #### 主服务器配置
 
@@ -1255,7 +1435,7 @@ mysql -uroot -pYouPassward < all.sql
 
 ```sh
 [mysqld]
-server-id=129
+server-id=129            # 默认是 1 ,这个数字必须是唯一的
 log_bin=centos7
 
 binlog-do-db=tz          # 同步指定库tz
@@ -1471,6 +1651,11 @@ cat /tmp/pt_general.log
 
 ![avatar](/Pictures/mysql/innotop.png)
 ![avatar](/Pictures/mysql/mysqlslap.png)
+
+### [sysbench](https://github.com/akopytov/sysbench)
+
+- [sysbench 安装、使用和测试](https://www.cnblogs.com/zhoujinyi/archive/2013/04/19/3029134.html)
+
 <span id="install"></span>
 
 ## Centos 7 安装 MySQL
@@ -1581,9 +1766,8 @@ Query OK, 0 rows affected (0.52 sec)
 **修复:**
 
 ```sql
-show variables like 'connect_timeout';
-# 缩短连接时间
-set connect_timeout=2;
+[mysqld]
+skip-name-resolve
 ```
 
 ### ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (111)(连接不了数据库)
@@ -1857,6 +2041,8 @@ rollback to abc;
 - [图解 SQL 里的各种 JOIN](https://zhuanlan.zhihu.com/p/29234064)
 - [MySQL 锁详解](https://blog.csdn.net/qq_40378034/article/details/90904573)
 - [mysql 存储过程详细教程](https://www.jianshu.com/p/7b2d74701ccd)
+- [Difference between stored procedure and function in MySQL](https://medium.com/@singh.umesh30/difference-between-stored-procedure-and-function-in-mysql-52f845d70b05)
+- [深入解析 MySQL 视图 VIEW](https://www.cnblogs.com/geaozhang/p/6792369.html)
 
 # 优秀教程
 
