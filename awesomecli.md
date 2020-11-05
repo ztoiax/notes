@@ -18,6 +18,8 @@
         * [highlight ls](#highlight-ls)
     * [lsd](#lsd)
         * [highlight ls and support icon](#highlight-ls-and-support-icon)
+    * [nat](#nat)
+        * [highlight ls](#highlight-ls-1)
     * [bat](#bat)
         * [highlight cat](#highlight-cat)
     * [alder](#alder)
@@ -29,6 +31,8 @@
         * [highlight git diff](#highlight-git-diff)
     * [pet](#pet)
         * [Simple command-line snippet manager](#simple-command-line-snippet-manager)
+    * [cheat](#cheat)
+        * [instead man](#instead-man)
     * [glow](#glow)
         * [markdown preview cli version](#markdown-preview-cli-version)
 * [disk](#disk)
@@ -112,6 +116,10 @@ sudo make O_NERD=1
 
 ![avatar](/Pictures/awesomecli/14.png)
 
+## [nat](https://github.com/willdoescode/nat)
+
+### highlight ls
+
 ## [bat](https://github.com/sharkdp/bat)
 
 ![avatar](/Pictures/awesomecli/9.png)
@@ -141,8 +149,13 @@ sudo make O_NERD=1
 ## [pet](https://github.com/knqyf263/pet)
 
 ![avatar](/Pictures/awesomecli/3.png)
-
 ### Simple command-line snippet manager
+
+## [cheat](https://github.com/cheat/cheat)
+
+![avatar](/Pictures/awesomecli/cheat.png)
+### instead man
+
 
 ## [glow](https://github.com/charmbracelet/glow)
 

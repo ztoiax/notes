@@ -76,7 +76,7 @@ SET GLOBAL slow_query_log = 'ON';
 
 MySQL 8.0 中的二进制日志格式与以前的 MySQL 版本不同
 
-只记录对数据库更改的所有操作，不包括 `select`，`show` 等这类操作不修改数据的语句
+Binlog 是逻辑日记，只记录对数据库更改的所有操作，不包括 `select`，`show` 等这类操作不修改数据的语句
 
 启用了二进制日志记录的服务器会使性能稍微降低
 
@@ -109,6 +109,8 @@ sync_binlog=n
 ```
 
 binlog 数据格式分为：`statement` , `row` , `mixed`
+
+![avatar](/Pictures/mysql/binlog.png)
 
 ```sql
 # 我这里是 row 格式
@@ -203,7 +205,7 @@ mysqlsla --log-type error /var/log/mysql/mysql_error.log
 
 - 支持 docker
 
-[canal 安装](https://github.com/alibaba/canal/wiki/QuickStart) 目前不支持jdk高版本
+[canal 安装](https://github.com/alibaba/canal/wiki/QuickStart) 目前不支持 jdk 高版本
 
 [canal 运维工具安装](https://github.com/alibaba/canal/wiki/Canal-Admin-QuickStart)
 
@@ -215,3 +217,4 @@ mysqlsla --log-type error /var/log/mysql/mysql_error.log
 - [PHP 性能分析（三）: 性能调优实战](https://linux.cn/article-6462-1.html)
 - [MySQL 日志分析神器之 mysqlsla](https://developer.aliyun.com/article/59260?spm=a2c6h.14164896.0.0.4b98353bhStc1B)
 - [详解 慢查询 之 mysqldumpslow](https://zhuanlan.zhihu.com/p/106405711)
+- [几年了，作为一个码农终于把 MySQL 日记看懂了！](https://zhuanlan.zhihu.com/p/267143540)

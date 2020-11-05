@@ -41,6 +41,7 @@
             * [从服务器配置](#从服务器配置)
     * [高效强大的 mysql 软件](#高效强大的-mysql-软件)
         * [mycli](#mycli)
+        * [mitzasql](#mitzasql)
         * [mydumper](#mydumper)
         * [percona-toolkit 运维监控工具](#percona-toolkit-运维监控工具)
         * [innotop](#innotop)
@@ -1572,6 +1573,13 @@ mysql root@localhost:(none)> SELECT DISTINCT CONCAT('User: ''',user,'''@''',host
 
 ![avatar](/Pictures/mysql/mycli.png)
 
+### [mitzasql](https://github.com/vladbalmos/mitzasql)
+
+- 一个使用`vim`快捷键的 `mysql-tui`
+
+![avatar](/Pictures/mysql/mysql-tui.png)
+![avatar](/Pictures/mysql/mysql-tui1.png)
+
 <span id="mydumper"></span>
 
 ### [mydumper](https://github.com/maxbube/mydumper)
@@ -1856,11 +1864,11 @@ MyISAM 不支持行锁，在执行查询语句（SELECT、UPDATE、DELETE、INSE
 
 ## InnoDB
 
-InnoDB 采用`WAL`(Write-Ahead Logging). 事务提交时先修改日志,再修改页
+InnoDB 采用`WAL`(Write-Ahead Logging). 先修改日志,再在修改数据页进 buffer(内存)。当等到有空闲线程、内存不足、Redo log 满了时再 Checkpoint(刷脏)。写 Redo log 是顺序写入，Checkpoint(刷脏)是随机写.
 
 日志格式：
 
-- redo log(重做日志) 物理日志:存储了数据被修改后的值.
+- redo log(重做日志) 物理日志:存储了数据页被修改后的值.
 
 - binlog 逻辑日志:记录数据库所有更改操作. 不包括 select，show
 
