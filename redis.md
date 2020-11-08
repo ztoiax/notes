@@ -6,9 +6,9 @@
         * [hash (哈希散列)](#hash-哈希散列)
         * [list (列表)](#list-列表)
         * [set (集合)](#set-集合)
-            * [交集，并集，补集](#交集并集补集)
+            * [交集,并集,补集](#交集并集补集)
         * [sorted set (有序集合)](#sorted-set-有序集合)
-            * [交集，并集](#交集并集)
+            * [交集,并集](#交集并集)
     * [hyper log](#hyper-log)
     * [transaction (事务)](#transaction-事务)
     * [Lua 脚本](#lua-脚本)
@@ -20,6 +20,16 @@
             * [monitor](#monitor)
             * [migrate (迁移)](#migrate-迁移)
         * [client](#client)
+        * [远程登陆](#远程登陆)
+    * [master slave (主从复制)](#master-slave-主从复制)
+    * [publish subscribe (发布和订阅)](#publish-subscribe-发布和订阅)
+        * [键空间通知](#键空间通知)
+    * [持久化 RDB AOF](#持久化-rdb-aof)
+    * [sentinel (哨兵模式)](#sentinel-哨兵模式)
+        * [开启 sentinal](#开启-sentinal)
+        * [sentinel 的命令](#sentinel-的命令)
+    * [cluster (集群)](#cluster-集群)
+* [centos7 安装 redis6.0.9](#centos7-安装-redis609)
 * [常见错误](#常见错误)
     * [vm.overcommit_memory = 1](#vmovercommit_memory--1)
     * [高效强大的第三方 redis 软件](#高效强大的第三方-redis-软件)
@@ -39,8 +49,8 @@
 
 Redis 数据库里面的每个键值对（key-value pair）都是由对象（object）组成的：
 
-- 其中， 数据库键总是一个字符串对象（string object）；
-- 而数据库键的值则可以是字符串对象、 列表对象（list object）、 哈希对象（hash object）、 集合对象（set object）、 有序集合对象（sorted set object）这五种对象中的其中一种。
+- 其中, 数据库键总是一个字符串对象（string object）；
+- 而数据库键的值则可以是字符串对象、 列表对象（list object）、 哈希对象（hash object）、 集合对象（set object）、 有序集合对象（sorted set object）这五种对象中的其中一种.
 
 | 对象         | type 命令输出 |
 | ------------ | ------------- |
@@ -62,22 +72,22 @@ Redis 数据库里面的每个键值对（key-value pair）都是由对象（obj
 | raw    | 长度>=39 的字符串:使用动态字符串（SDS）                         |
 | embstr | 长度<=39 的字符串:所需的内存分配次数从 raw 编码的两次降低为一次 |
 
-**动态字符串**（simple dynamic string，**SDS**）:
+**动态字符串**（simple dynamic string,**SDS**）:
 
-     除了用来保存数据库中的字符串值之外， SDS 还被用作缓冲区（buffer）： AOF 模块中的 AOF 缓冲区， 以及客户端状态中的输入缓冲区， 都是由 SDS 实现的
+     除了用来保存数据库中的字符串值之外, SDS 还被用作缓冲区（buffer）： AOF 模块中的 AOF 缓冲区, 以及客户端状态中的输入缓冲区, 都是由 SDS 实现的
 
-- 比起 C 字符串， SDS 具有以下优点：
-- 常数复杂度获取字符串长度。
-- 杜绝缓冲区溢出。
-- 减少修改字符串长度时所需的内存重分配次数。
-- 二进制安全。
-- 兼容部分 C 字符串函数。
+- 比起 C 字符串, SDS 具有以下优点：
+- 常数复杂度获取字符串长度.
+- 杜绝缓冲区溢出.
+- 减少修改字符串长度时所需的内存重分配次数.
+- 二进制安全.
+- 兼容部分 C 字符串函数.
 
 ```sql
-# 创建一个 key 为字符串对象， 值也为字符串对象的 key 值对
+# 创建一个 key 为字符串对象, 值也为字符串对象的 key 值对
 SET msg "hello world !!!"
 
-# 对同一个 key 设置，会覆盖值以及存活时间
+# 对同一个 key 设置,会覆盖值以及存活时间
 SET msg "hello world"
 
 # EX 设置 key 的存活时间
@@ -106,7 +116,7 @@ keys *s*
 
 # scan 搜索key .以0为游标开始搜索,默认搜索10个key.然后返回一个游标,如果游标的结果为0,那么就结束
 
-# 在开始一个新的迭代时， 游标必须为 0
+# 在开始一个新的迭代时, 游标必须为 0
 scan 0
 
 # 以0为游标开始搜索,count指定搜索100个key
@@ -118,7 +128,7 @@ scan 0 match *s* count 100
 # type 搜索不同对象的key
 scan 0 count 100 type list
 
-# renamenx 改名,如果a存在，那么改名失败
+# renamenx 改名,如果a存在,那么改名失败
 renamenx msg a
 
 # move 将当前数据库的的 key ,移动到其他数据库
@@ -142,6 +152,10 @@ flushall
 
 # shutdown 关闭redis-server,所有客户端也会被关闭
 shutdown
+
+# 导出 csv 文件
+hset n a 1 b 2 c 3
+redis-cli --csv hgetall n > stdout.csv 2> stderr.txt
 ```
 
 在 `iredis` 下的显示[跳转至 iredis 的介绍](#iredis)
@@ -151,8 +165,8 @@ shutdown
 ![avatar](/Pictures/redis/string.png)
 
 ```sql
-# setnx 如果健不存在，才创建
-# 因为msg健已经存在，所以创建失败
+# setnx 如果健不存在,才创建
+# 因为msg健已经存在,所以创建失败
 setnx msg "test exists"
 # 创建成功
 setnx test "test exists"
@@ -180,7 +194,7 @@ append msg " tz"
 # 对多个健进行赋值(我这里是a,msg)
 mset a 1 msg tz
 
-# 如果这其中有一个健是存在的，那么都不会进行赋值
+# 如果这其中有一个健是存在的,那么都不会进行赋值
 msetnx a '2' b '3' msg "tz-pc"
 
 # 查看多个健
@@ -219,10 +233,10 @@ decrby a 10
 
 哈希对象的编码: [**详情**](http://redisbook.com/preview/object/hash.html)
 
-| 编码      | 作用                                                                                      |
-| --------- | ----------------------------------------------------------------------------------------- |
-| ziplist   | 压缩列表：先添加到哈希对象中的键值对会在压缩列表的表头， 后添加对象中的键值对会在的表尾。 |
-| hashtable | 字典:字典的每个键都是一个字符串对象， 对象中保存了键值对的键和值                          |
+| 编码      | 作用                                                                                    |
+| --------- | --------------------------------------------------------------------------------------- |
+| ziplist   | 压缩列表：先添加到哈希对象中的键值对会在压缩列表的表头, 后添加对象中的键值对会在的表尾. |
+| hashtable | 字典:字典的每个键都是一个字符串对象, 对象中保存了键值对的键和值                         |
 
 只是把 set,get...命令,换成 hset,hget
 
@@ -231,7 +245,7 @@ decrby a 10
 > ```
 
 ```sql
-# 创建表名为table，并设置名为a的域(field),它的值为1
+# 创建表名为table,并设置名为a的域(field),它的值为1
 hset table a 1
 
 # 查看表table
@@ -312,18 +326,18 @@ hincrbyfloat n a -1.1
 
 ### list (列表)
 
-键值对的值是一个列表对象， 列表对象包含了 字符串对象， 字符串对象由 SDS 实现.
+键值对的值是一个列表对象, 列表对象包含了 字符串对象, 字符串对象由 SDS 实现.
 
-链表被广泛用于实现 Redis 的各种功能， 比如列表键， 发布与订阅， 慢查询， 监视器， 等等。
-integers 列表键的底层实现就是一个链表， 链表中的每个节点都保存了一个整数值。
+链表被广泛用于实现 Redis 的各种功能, 比如列表键, 发布与订阅, 慢查询, 监视器, 等等.
+integers 列表键的底层实现就是一个链表, 链表中的每个节点都保存了一个整数值.
 
 列表对象的编码: [**详情**](http://redisbook.com/preview/object/list.html)
 
-| 编码         | 作用                                                                                                                                                                                                                  |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ziplist      | 每个压缩列表节点（entry）保存了一个列表元素                                                                                                                                                                           |
-| linkedlist   | 每个双端链表节点（node）都保存了一个字符串对象，而每个字符串对象都保存了一个列表元素。                                                                                                                                |
-| 　 quickList | zipList 和 linkedList 的混合体，它将 linkedList 按段切分，每一段使用 zipList 来紧凑存储，多个 zipList 之间使用双向指针串接起来。默认的压缩深度是 0，也就是不压缩。压缩的实际深度由配置参数 list-compress-depth 决定。 |
+| 编码         | 作用                                                                                                                                                                                                           |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ziplist      | 每个压缩列表节点（entry）保存了一个列表元素                                                                                                                                                                    |
+| linkedlist   | 每个双端链表节点（node）都保存了一个字符串对象,而每个字符串对象都保存了一个列表元素.                                                                                                                           |
+| 　 quickList | zipList 和 linkedList 的混合体,它将 linkedList 按段切分,每一段使用 zipList 来紧凑存储,多个 zipList 之间使用双向指针串接起来.默认的压缩深度是 0,也就是不压缩.压缩的实际深度由配置参数 list-compress-depth 决定. |
 
 ![avatar](/Pictures/redis/list5.png)
 
@@ -399,10 +413,10 @@ lindex ll 1
 # 查看ll的最后一个值
 lindex ll -1
 
-# 在第一个a值，前面插入b值
+# 在第一个a值,前面插入b值
 linsert ll before a b
 
-# 在第一个a值，后面插入1值
+# 在第一个a值,后面插入1值
 linsert ll after a 1
 
 # 将ll的第一个值修改为hello
@@ -430,7 +444,7 @@ sort gid desc
 # 按字符排序
 sort name alpha
 
-# limit 进行筛选，倒序显示第 2 个到第 4 个
+# limit 进行筛选,倒序显示第 2 个到第 4 个
 sort gid limit 2 4 desc
 ```
 
@@ -469,7 +483,7 @@ sort uid get name* get level*
 # by 一个不存在的key(我这里是not).get的key值,不会进行排序
 sort uid by not get name* get level*
 
-# store 将结果，保存为新的列表key(注意会覆盖已经存在的列表key)
+# store 将结果,保存为新的列表key(注意会覆盖已经存在的列表key)
 sort uid get name* get level* store name-level
 ```
 
@@ -496,7 +510,7 @@ sadd s 123
 # 查看编码为intset
 object encoding s
 
-# 数字和字符都有的集合，编码为hashtable
+# 数字和字符都有的集合,编码为hashtable
 sadd s test
 
 # 再次查看编码发现已经变为hashtable
@@ -505,7 +519,7 @@ object encoding s
 
 ![avatar](/Pictures/redis/set.png)
 
-那如果一个集合,包含数和字符串,把字符串的值删除后。**编码**会变吗？
+那如果一个集合,包含数和字符串,把字符串的值删除后.**编码**会变吗？
 
 ```sql
 # 新建ss集合,包含数和字符串
@@ -521,7 +535,7 @@ srem ss test
 object encoding ss
 ```
 
-答案是没有变，还是 `hashtable`
+答案是没有变,还是 `hashtable`
 
 ![avatar](/Pictures/redis/set1.png)
 
@@ -529,13 +543,13 @@ object encoding ss
 # 查看集合个数
 scard jihe
 
-# 查看集合是否有test值。有返回1,无返回0
+# 查看集合是否有test值.有返回1,无返回0
 sismember jieh "test"
 
 # 搜索jihe包含 t 的字符
 sscan jihe *t*
 
-# 删除集合里的test，test1值
+# 删除集合里的test,test1值
 srem jihe test test1
 
 # 将jihe里的值123,移到jihe1
@@ -548,7 +562,7 @@ spop jihe
 srandmember jihe
 ```
 
-#### 交集，并集，补集
+#### 交集,并集,补集
 
 ```sql
 # 新建两个集合
@@ -566,7 +580,7 @@ sdiff sss ssss
 # sdiff 返回ssss的补集
 sdiff ssss sss
 
-# 返回交集，并集，补集的数量
+# 返回交集,并集,补集的数量
 sinterstore sss ssss
 sunionstore sss ssss
 sdiffstore sss ssss
@@ -578,17 +592,17 @@ sdiffstore sss ssss
 
 有序集合对象的编码: [**详情**](http://redisbook.com/preview/object/sorted_set.html)
 
-| 编码     | 作用                                                                                                                                                                                  |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ziplist  | 每个集合是两个节点来保存， 第一个节点保存元素的成员（member）， 而第二个元素则保存元素的分值（score）。集合按分值从小到大进行排序， 分值较小的元素放在表头， 而分值较大的元素在表尾。 |
-| skiplist | 使用 zset 结构作为底层实现， 一个 zset 结构同时包含一个字典和一个跳跃表                                                                                                               |
+| 编码     | 作用                                                                                                                                                                            |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ziplist  | 每个集合是两个节点来保存, 第一个节点保存元素的成员（member）, 而第二个元素则保存元素的分值（score）.集合按分值从小到大进行排序, 分值较小的元素放在表头, 而分值较大的元素在表尾. |
+| skiplist | 使用 zset 结构作为底层实现, 一个 zset 结构同时包含一个字典和一个跳跃表                                                                                                          |
 
 **ziplist:** (其余情况使用 skiplist)
 
-- 有序集合保存的成员(member)数量小于 128 个。
+- 有序集合保存的成员(member)数量小于 128 个.
   配置参数:(zset-max-ziplist-entries)
 
-- 成员(member)的长度都小于 64 字节。
+- 成员(member)的长度都小于 64 字节.
   配置参数:(zset-max-ziplist-value)
 
 ```sql
@@ -614,7 +628,7 @@ zrank z a
 # 倒序a值的score排名(排名以 0 为底)
 zrevrank z a
 
-# 统计a值到b值的之间个数(包含a，b值)
+# 统计a值到b值的之间个数(包含a,b值)
 zlexcount z [a [b
 
 # 对成员100的score加1000
@@ -655,7 +669,7 @@ zadd zzzz 1 a 1 b 2 c 3 d
 zremrangebylex zzzz [aaa (c
 ```
 
-#### 交集，并集
+#### 交集,并集
 
 **ZUNIONSTORE (并集)**
 
@@ -669,7 +683,7 @@ zadd z1 1 a1 2 b1 3 c1 4 d1 5 e1
 zadd z2 1 a2 2 b2 3 c2 4 d2 5 e2
 zadd z3 1 a3 3 b3 3 c3 4 d3 5 e3
 
-# 将z1，z2，z3 并集到名为 unionz 的有序集合(3表示合并3个有序集合也就是z1，z2，z3)
+# 将z1,z2,z3 并集到名为 unionz 的有序集合(3表示合并3个有序集合也就是z1,z2,z3)
 zunionstore unionz 3 z1 z2 z3
 ```
 
@@ -701,10 +715,10 @@ zunionstore unionz 3 z1 z2 z3 WEIGHTS 1 1 10
 **ZINTERSTORE (交集)**
 
 ```sql
-# 新建math(数学分数表) 小明100分，小红60分
+# 新建math(数学分数表) 小明100分,小红60分
 zadd math 100 xiaoming 60 xiaohong
 
-# 新建历史(历史分数表) 小明50分，小红90分
+# 新建历史(历史分数表) 小明50分,小红90分
 zadd history 50 xiaoming 90 xiaohong
 
 # 通过zinterstore 交集进行相加
@@ -740,13 +754,13 @@ incr t
 
 # 保存事务
 exec
-# 如果不保存，discard可以恢复事务开启前
+# 如果不保存,discard可以恢复事务开启前
 discard
 ```
 
-watch 监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断。
+watch 监视一个(或多个) key ,如果在事务执行之前这个(或这些) key 被其他命令所改动,那么事务将被打断.
 
-这里我开启了两个客户端，右边在事务过程中 `incr t` 后，被左边执行 `set t 100` 修改了 t 的值。所以右边在 `exec` 保存事务后，返回(nil)。事务对 t 值的操作被取消
+这里我开启了两个客户端,右边在事务过程中 `incr t` 后,被左边执行 `set t 100` 修改了 t 的值.所以右边在 `exec` 保存事务后,返回(nil).事务对 t 值的操作被取消
 ![avatar](/Pictures/redis/t.gif)
 
 ## Lua 脚本
@@ -780,7 +794,7 @@ auth YouPassword
 # 清除密码(要重启redis-server才会生效)
 config set requirpass ""
 
-# 将 config set 的修改写入到 redis.conf 中(不写入，重启redis-server后修改会失效)
+# 将 config set 的修改写入到 redis.conf 中(不写入,重启redis-server后修改会失效)
 config rewrite
 ```
 
@@ -790,7 +804,7 @@ config get save
 
 ![avatar](/Pictures/redis/config.png)
 
-上面 save 参数的三个值表示：以下三个条件随便满足一个，就触发一次保存操作。
+上面 save 参数的三个值表示：以下三个条件随便满足一个,就触发一次保存操作.
 
 - 3600 秒内最少有 1 个 key 被改动
 - 300 秒内最少有 100 个 key 被改动
@@ -817,8 +831,8 @@ config resetstat
 info memory
 ```
 
-- rss > used ，且两者的值相差较大时，表示存在（内部或外部的）内存碎片。
-- used > rss ，表示 Redis 的部分内存被操作系统换出到交换空间了，在这种情况下，操作可能会产生明显的延迟。
+- rss > used ,且两者的值相差较大时,表示存在（内部或外部的）内存碎片.
+- used > rss ,表示 Redis 的部分内存被操作系统换出到交换空间了,在这种情况下,操作可能会产生明显的延迟.
 
 ### 调试
 
@@ -851,7 +865,7 @@ config get slow*
 ```
 
 - `slowlog-max-len`: 最多能保存多少条日志
-- `slowlog-log-slower-than`: 执行时间大于多少微秒(microsecond，1 秒 = 1,000,000 微秒)的查询进行记录
+- `slowlog-log-slower-than`: 执行时间大于多少微秒(microsecond,1 秒 = 1,000,000 微秒)的查询进行记录
 
 ![avatar](/Pictures/redis/slow.png)
 
@@ -859,7 +873,7 @@ config get slow*
 # 查看 slowlog
 slowlog get
 
-# 查看当前 slowlog 的数量(一个是当前日志的数量，slower-max-len 是允许记录的最大日志的数量)
+# 查看当前 slowlog 的数量(一个是当前日志的数量,slower-max-len 是允许记录的最大日志的数量)
 slowlog len
 
 # 清空 slowlog
@@ -896,8 +910,260 @@ client id
 # 查看所有客户端
 client list
 
-# 关闭客户端(不过即使关闭了，一般会自动重新连接)
+# 关闭客户端(不过即使关闭了,一般会自动重新连接)
 client kill 127.0.0.1:56352
+```
+
+### 远程登陆
+
+**server (服务端)：**
+
+```sql
+# 关闭保护模式
+CONFIG SET protected-mode no
+
+# 在/etc/redis.conf文件.把bind修改为0.0.0.0 (*表示允许所有ip)
+bind 0.0.0.0
+# 也可以加入客户端的 ip
+bind 127.0.0.1 You-Client-IP
+
+# 写入 /etc/redis.conf 文件
+config set rewrite
+
+# 关闭防火墙
+iptable -F
+
+# 最后重启redis-server
+```
+
+**client (客户端)：**
+
+```sh
+# 关闭防火墙
+iptable -F
+
+# 连接服务器的 redis
+redis-cli -h You-Server-IP -p 6379
+```
+
+## master slave (主从复制)
+
+Redis 使用异步复制.新建和删除 key,以及 key 的存活时间都会同步[详情](http://redisdoc.com/topic/replication.html)
+
+复制原理：
+
+- slave 向 master 发送一个 `sync` 命令.
+
+- 接到 `sync` 命令的 master 将开始执行 `BGSAVE` , 并在保存操作执行期间, 将所有新执行的写入命令都保存到一个缓冲区里面.
+
+- 当 `BGSAVE` 执行完毕后, master 将执行保存操作所得的 .rdb 文件发送给 slave, slave 接收这个 .rdb 文件, 并将文件中的数据载入到内存中.
+
+```sql
+# 打开 主从复制 连接6379服务器
+slaveof 127.0.0.1 6379
+
+# 查看当前服务器在主从复制扮演的角色
+role
+
+# 关闭 主从复制
+slaveof no one
+```
+
+**本地**主从复制：
+
+- 左边连接的是 127.0.0.1:6379 主服务器
+- 右边连接的是 127.0.0.1:7777 从服务器
+
+![avatar](/Pictures/redis/slave.gif)
+
+**远程**主从复制：
+
+- 左边连接的是 虚拟机 192.168.100.208:6379 主服务器
+- 右边连接的是 本机 127.0.0.1:6379 从服务器
+
+![avatar](/Pictures/redis/slave1.gif)
+
+## publish subscribe (发布和订阅)
+
+只能在同一个 `redis-server` 下使用
+
+> ```sql
+> # 发布
+> pubhlish 订阅号 内容
+> ```
+
+> ```sql
+> # 订阅
+> subscribe 订阅号1 订阅号2
+> ```
+
+我这里一共三个客户端.左边为发布者;右边上订阅 rom,rom1;右边下只订阅 rom
+
+![avatar](/Pictures/redis/subscribe.gif)
+
+`psubscribe` 通过通配符,可以匹配 rom,rom1 等订阅.
+
+- psubscribe 信息类型为 `pmessage`
+- subscribe 信息类型为 `message`
+
+```sql
+psubscribe rom*
+```
+
+![avatar](/Pictures/redis/subscribe1.gif)
+
+### 键空间通知
+
+接收那些以某种方式改动了 Redis 数据集的事件。[详情](http://redisdoc.com/topic/notification.html)
+
+```sql
+# 开启键空间通知
+config set notify-keyspace-events "AKE"
+```
+
+```sql
+# 订阅监听key
+psubscribe '__key*__:*
+```
+
+![avatar](/Pictures/redis/keyspace.png)
+
+## 持久化 RDB AOF
+
+**RDB :**
+
+- 在默认情况下， Redis 将数据库快照保存在名字为 dump.rdb 的二进制文件中。
+
+- 你可能会至少 5 分钟才保存一次 RDB 文件。 在这种情况下， 一旦发生故障停机， 你就可能会丢失好几分钟的数据。
+
+**AOF (append only log):**
+
+- AOF 文件是一个只进行追加操作的日志文件(append only log), 所以随着写入命令的不断增加， AOF 文件的体积也会变得越来越大。
+
+- 每次有新命令追加到 AOF 文件时就执行一次 fsync ：非常慢，也非常安全。
+
+## sentinel (哨兵模式)
+
+Sentinel 会不断地检查你的主服务器和从服务器是否运作正常: [详情](http://redisdoc.com/topic/sentinel.html)
+
+### 开启 sentinal
+
+**sentinel** 配置文件 `/etc/sentinel.conf`加入以下代码:
+
+```sh
+# 仅仅只需要指定要监控的主节点 2在这里是指两台主机挂掉就执行故障转移
+sentinel monitor YouMasterName 127.0.0.1 6379 2
+
+# 主观下线的时间(这里为60秒)
+sentinel down-after-milliseconds YouMasterName 1000
+
+SENTINEL failover BackupName
+
+# 当主服务器失效时， 在不询问其他 Sentinel 意见的情况下， 强制开始一次自动故障迁移
+sentinel failover-timeout YouMasterName 5000
+
+# 在执行故障转移时， 最多可以有多少个从服务器同时对新的主服务器进行同步， 这个数字越小， 完成故障转移所需的时间就越长。
+sentinel parallel-syncs YouMasterName 1
+
+sentinel monitor BackupName 127.0.0.1 6380 2
+```
+
+开启 sentiel 服务器
+
+```sh
+redis-sentinel /etc/sentinel.conf
+# 或者
+redis-server /etc/sentinel.conf --sentinel
+```
+
+**sentinel** 端口为`26379`
+
+```sh
+# 连接 sentinel
+redis-cli -p 26379
+```
+
+### sentinel 的命令
+
+```sql
+# 查看监听的主机
+sentinel masters
+
+# 查看 Maseter name
+sentinel get-master-addr-by-name YouMasterName
+
+# 通过订阅进行监听
+PSUBSCRIBE *
+```
+
+我这里一共 4 个服务器:
+
+- 左上连接的是 127.0.0.1:6379 主服务器
+- 左下连接的是 127.0.0.1:6380 从服务器
+- 右上连接的是 127.0.0.1:6381 从服务器
+- 右下连接的是 127.0.0.1:26379 **sentinel**服务器
+
+  ![avatar](/Pictures/redis/sentinel.gif)
+
+## cluster (集群)
+
+Redis 集群不像单机 Redis 那样支持多数据库功能， 集群只使用默认的 0 号数据库， 并且不能使用 SELECT index 命令。
+
+```sql
+# 查看 集群 配置
+config get cluster*
+```
+
+```sql
+# 查看 rdb 配置
+config get save*
+
+# 查看 appendonly 配置
+config get append*
+```
+
+开启 **AOF：**
+
+```sql
+# 关闭rdb (也可以不关闭，两个共存)
+config set save ""
+
+# 开启aof
+config set appendonly yes
+
+# 写入 /etc/redis.conf 配置文件
+config rewrite
+```
+
+**AOF** 文件出错,可以执行:
+
+```sh
+redis-check-aof --fix /var/lib/redis/appendonly.aof
+```
+
+# centos7 安装 redis6.0.9
+
+源码安装:
+
+```sh
+# 安装依赖
+yum install gcc make -y
+
+# 官网下载
+wget https://download.redis.io/releases/redis-6.0.9.tar.gz
+
+# 国内用户可以去华为云镜像下载 https://mirrors.huaweicloud.com/redis/
+wget https://mirrors.huaweicloud.com/redis/redis-6.0.9.tar.gz
+tar xzf redis-6.0.9.tar.gz
+cd redis-6.0.9
+make
+```
+
+使用 `yum` 包管理器安装:
+
+```sh
+# epel源可以直接安装(版本为redis-3.2.12-2.el7)
+yum install redis -y
 ```
 
 # 常见错误
@@ -907,9 +1173,9 @@ client kill 127.0.0.1:56352
 内存分配策略
 /proc/sys/vm/overcommit_memory
 
-0， 表示内核将检查是否有足够的可用内存供应用进程使用；如果有足够的可用内存，内存申请允许；否则，内存申请失败，并把错误返回给应用进程。
-1， 表示内核允许分配所有的物理内存，而不管当前的内存状态如何。
-2， 表示内核允许分配超过所有物理内存和交换空间总和的内存
+0: 表示内核将检查是否有足够的可用内存供应用进程使用；如果有足够的可用内存:内存申请允许；否则:内存申请失败:并把错误返回给应用进程.
+1: 表示内核允许分配所有的物理内存:而不管当前的内存状态如何.
+2: 表示内核允许分配超过所有物理内存和交换空间总和的内存
 
 ```sh
 # 修复
@@ -927,18 +1193,20 @@ sysctl -p
 
 ![avatar](/Pictures/redis/iredis.png)
 
+[其他客户端](https://redis.io/clients#c)
+
 ### [redis-tui](https://github.com/mylxsw/redis-tui)
 
-- 更友好的补全和语法高亮,有输出，key 等多个界面的终端(tui)
+- 更友好的补全和语法高亮,有输出,key 等多个界面的终端(tui)
 
 ![avatar](/Pictures/redis/redis-tui.png)
 
 ### [redis-memory-analyzer](https://github.com/gamenet/redis-memory-analyzer)
 
-- `RMA`是一个控制台工具，用于实时扫描`Redis`关键空间，并根据关键模式聚合内存使用统计数据
+- `RMA`是一个控制台工具,用于实时扫描`Redis`关键空间,并根据关键模式聚合内存使用统计数据
 
 ```sh
-# 默认只会输出一遍，可以用 watch 进行监控(变化的部分会高亮显示)
+# 默认只会输出一遍,可以用 watch 进行监控(变化的部分会高亮显示)
 watch -d -n 2 rma
 ```
 
@@ -948,7 +1216,7 @@ watch -d -n 2 rma
 
 ### [AnotherRedisDesktopManager](https://github.com/qishibo/AnotherRedisDesktopManager)
 
-- 一个有图形界面的`Redis`的桌面客户端，其中也可以显示 刚才提到的 `rma` 的内存数据
+- 一个有图形界面的`Redis`的桌面客户端,其中也可以显示 刚才提到的 `rma` 的内存数据
 
 ![avatar](/Pictures/redis/redis-gui.png)
 
@@ -961,3 +1229,5 @@ watch -d -n 2 rma
 - [《Redis 设计与实现》部分试读](http://redisbook.com/)
 - [《Redis 使用手册》](http://redisdoc.com/)
 - [《Redis 实战》部分试读](http://redisinaction.com/)
+- [Redis 官方文档](https://redis.io/documentation)
+- [Redis 所有命令说明](https://redis.io/commands#)
