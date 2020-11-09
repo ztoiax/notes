@@ -21,14 +21,14 @@
             * [migrate (迁移)](#migrate-迁移)
         * [client](#client)
         * [远程登陆](#远程登陆)
-    * [master slave (主从复制)](#master-slave-主从复制)
-    * [publish subscribe (发布和订阅)](#publish-subscribe-发布和订阅)
-        * [键空间通知](#键空间通知)
-    * [持久化 RDB AOF](#持久化-rdb-aof)
+    * [persistence (持久化) RDB AOF](#persistence-持久化-rdb-aof)
+    * [master slave replication (主从复制)](#master-slave-replication-主从复制)
     * [sentinel (哨兵模式)](#sentinel-哨兵模式)
         * [开启 sentinal](#开启-sentinal)
         * [sentinel 的命令](#sentinel-的命令)
     * [cluster (集群)](#cluster-集群)
+    * [publish subscribe (发布和订阅)](#publish-subscribe-发布和订阅)
+        * [键空间通知](#键空间通知)
 * [centos7 安装 redis6.0.9](#centos7-安装-redis609)
 * [常见错误](#常见错误)
     * [vm.overcommit_memory = 1](#vmovercommit_memory--1)
@@ -39,11 +39,25 @@
         * [AnotherRedisDesktopManager](#anotherredisdesktopmanager)
         * [RedisLive](#redislive)
         * [redis-rdb-tools](#redis-rdb-tools)
+        * [redis-shake](#redis-shake)
+        * [dbatools](#dbatools)
 * [reference](#reference)
+* [online tool](#online-tool)
 
 <!-- vim-markdown-toc -->
 
 # Redis 入门教程
+
+Redis 的优点：
+
+- 数据保存在内存里: 因此 Redis 也常常被用作缓存数据库,实现高性能、高并发
+
+- 单进程，单线程: 减少多线程之间的切换和竞争带来的性能开销(Redis 6.0版本之前)
+- Redis 的多线程部分只是用来处理网络数据的读写和协议解析，执行命令仍然是单线程
+
+- 多路 I/O 复用: 非阻塞 I/O [具体可看这个解答](https://www.zhihu.com/question/28594409)
+
+- Redis 相比 Memcached 来说，拥有更多的数据结构，能支持更丰富的数据操作
 
 ## 值和对象
 
@@ -450,7 +464,7 @@ sort gid limit 2 4 desc
 
 `by` 通过**字符串对象的值**来对 list 进行排序:
 
-```
+```sql
 # 新建 uid 列表
 lpush uid 1 2 3
 
@@ -547,7 +561,7 @@ scard jihe
 sismember jieh "test"
 
 # 搜索jihe包含 t 的字符
-sscan jihe *t*
+sscan jihe 0 match *t*
 
 # 删除集合里的test,test1值
 srem jihe test test1
@@ -765,8 +779,92 @@ watch 监视一个(或多个) key ,如果在事务执行之前这个(或这些) 
 
 ## Lua 脚本
 
+eval 命令 执行 lua 脚本 [Lua 教程](https://www.runoob.com/lua/lua-tutorial.html)
+
 ```sql
-eval "return 0" 0
+# return 1 (0表示传递参数的数量)
+eval "return 1" 0
+
+# return 123
+eval "return {1,2,3}" 0
+
+# return key和值(这里是a和123)
+eval "return {KEYS[1],ARGV[1]}" 1 a 123
+eval "return {KEYS[1],KEYS[2],ARGV[1],ARGV[2]}" 2 a b 123 321
+```
+
+```sql
+# script load 会把脚本缓存进服务器,并返回hash(SHA1)值
+script load "return {1,2,3}"
+
+# evalsha 执行哈希值的脚本(一般情况下执行eval命令,底层会转换为执行evalsha)
+evalsha <hash> 0
+
+# 查看脚步是否在缓存
+script exists "<hash>"
+
+# 清空脚本缓存
+SCRIPT FLUSH
+
+# 杀死目前正在执行的脚本
+SCRIPT KILL
+```
+
+![avatar](/Pictures/redis/lua.png)
+
+redis.call or pcall()过程中 Redis 类型转换为 Lua 类型，然后结果再转换回 Redis 类型，结果与初始值相同
+
+```sql
+# set a 123
+eval "return redis.call('set','KEYS[1]','123')" 1 a
+
+# get a
+eval "return redis.call('get','a')" 0
+```
+
+**for 语句:**
+
+> ```lua
+> for i=1,10 do
+>   print(i)
+> end
+> ```
+
+```sql
+# 循环512次，插入列表
+EVAL "for i=1,512 do
+    redis.call('RPUSH', KEYS[1], i)
+    return 1
+end" 1 integers
+
+EVAL "for i=1,512 do
+    redis.call('ECHO', i)
+    return 1
+end"
+
+EVAL "for i=1,512 do
+    redis.call('RPUSH', KEYS[1], i)
+    redis.call('RPUSH', KEYS[2], i)
+    return 1
+end" 2 integers integers2
+```
+
+if 语句:
+
+> ```lua
+> if(布尔表达式)
+> then
+> --[ 布尔表达式为 true 时执行该语句块 --]
+> else
+> --[ 布尔表达式为 false 时执行该语句块 --]
+> end
+> ```
+
+```sql
+# 判断key1是否存在，不存在则执行循环赋值
+EVAL "if redis.call('EXISTS', KEYS[1]) == 0 then
+    for i=1,512 do redis.call('RPUSH', KEYS[1], i) end
+end" 1 integers
 ```
 
 ## 配置
@@ -797,18 +895,6 @@ config set requirpass ""
 # 将 config set 的修改写入到 redis.conf 中(不写入,重启redis-server后修改会失效)
 config rewrite
 ```
-
-```sql
-config get save
-```
-
-![avatar](/Pictures/redis/config.png)
-
-上面 save 参数的三个值表示：以下三个条件随便满足一个,就触发一次保存操作.
-
-- 3600 秒内最少有 1 个 key 被改动
-- 300 秒内最少有 100 个 key 被改动
-- 60 秒内最少有 10000 个 key 被改动
 
 ### info
 
@@ -946,17 +1032,116 @@ iptable -F
 redis-cli -h You-Server-IP -p 6379
 ```
 
-## master slave (主从复制)
+## persistence (持久化) RDB AOF
 
-Redis 使用异步复制.新建和删除 key,以及 key 的存活时间都会同步[详情](http://redisdoc.com/topic/replication.html)
+**RDB :**
+
+- 在默认情况下， Redis 将数据库快照保存在名字为 dump.rdb 的二进制文件中。
+
+- 你可能会至少 5 分钟才保存一次 RDB 文件。 在这种情况下， 一旦发生故障停机， 你就可能会丢失好几分钟的数据。RDB 适合冷备份
+
+**AOF (append only log):**
+
+- AOF 文件是一个只进行追加操作的日志文件(类似于 mysql 的 binlog),所以随着写入命令的不断增加, AOF 文件的体积也会变得越来越大
+
+- 每次有新命令追加到 AOF 文件时就执行一次 fsync ：非常慢，也非常安全
+
+- AOF 的时间是 1 秒，也就是可能会丢失 1 秒的数据. AOF 适合热备份
+
+当两种持久化共存时，Redis 会使用 **AOF** 进行数据恢复.
+
+RDB 快照:
+
+```sql
+# 主动执行保存快照rdb
+save
+
+# 查看 rdb 配置
+config get save
+```
+
+![avatar](/Pictures/redis/config.png)
+
+上面 save 参数的三个值表示：以下三个条件随便满足一个,就触发一次保存.
+
+- 3600 秒内最少有 1 个 key 被改动
+- 300 秒内最少有 100 个 key 被改动
+- 60 秒内最少有 10000 个 key 被改动
+
+```sql
+# 查看 appendonly 配置
+config get append*
+```
+
+关闭 **RDB** 开启 **AOF**
+
+```sql
+# 关闭 RDB
+config set save ""
+
+# 开启 AOF
+config set appendonly yes
+
+# 写入 /etc/redis.conf 配置文件
+config rewrite
+```
+
+通过 aof 文件恢复删除的数据
+
+```sql
+# 设置key
+set a 123
+
+# 再把它删了
+del a
+```
+
+打开 `/var/lib/redis/appendonly.aof` 文件，把和 **del** 相关的行删除
+
+![avatar](/Pictures/redis/aof.png)
+
+删除后：
+
+![avatar](/Pictures/redis/aof1.png)
+
+```sh
+# 然后使用redis-check-aof 修复 appendonly.aof 文件
+redis-check-aof --fix /var/lib/redis/appendonly.aof
+
+# 重启redis-server后，key就会恢复
+```
+
+演示:
+![avatar](/Pictures/redis/aof.gif)
+
+## master slave replication (主从复制)
+
+Redis 主从架构可实现高并发，也就是 **master (主服务器)** 负责写入，**slave (从服务器)** 读取.
+
+![avatar](/Pictures/redis/slave2.png)
 
 复制原理：
 
 - slave 向 master 发送一个 `sync` 命令.
 
-- 接到 `sync` 命令的 master 将开始执行 `BGSAVE` , 并在保存操作执行期间, 将所有新执行的写入命令都保存到一个缓冲区里面.
+- 接到 `sync` 命令的 master 将开始执行 `BGSAVE` 生成最新的rdb快照文件(因此master必须开启持久化). 在此同步期间, 所有新执行的写入命令会保存到一个缓冲区里面.
 
-- 当 `BGSAVE` 执行完毕后, master 将执行保存操作所得的 .rdb 文件发送给 slave, slave 接收这个 .rdb 文件, 并将文件中的数据载入到内存中.
+
+- 当 `BGSAVE` 执行完毕后, master 把 .rdb 文件发送给 slave. slave 接收到后, 将文件中的数据载入到内存中.
+
+- slave第一次sync会全部复制，而之后会进行部分数据复制
+
+`repl-diskless-sync` 参数:
+
+- yes 表示在内存里生成rdb后同步
+
+- no 表示写入硬盘rdb后同步
+
+![avatar](/Pictures/redis/slave.png)
+
+当 slave 与 master 连接断开后重连进行增量复制
+
+![avatar](/Pictures/redis/slave1.png)
 
 ```sql
 # 打开 主从复制 连接6379服务器
@@ -982,6 +1167,139 @@ slaveof no one
 - 右边连接的是 本机 127.0.0.1:6379 从服务器
 
 ![avatar](/Pictures/redis/slave1.gif)
+
+建议设置 slave(从服务器) **只读** `replica-read-only`:
+
+> 在复制过程(slaveof ip port),slave(从服务器)不能使用 set 等命令,避免数据不一致的情况.
+> 
+> 因为主从复制是单向复制，修改 slave 节点的数据， master 节点是感知不到的.
+
+```sql
+# 查看 replica-read-only
+config get replica-read-only
+
+# 设置 replica-read-only yes
+config set replica-read-only yes
+```
+
+以下是关闭 slave节点只读 后的演示:
+
+- 右边连接的是 127.0.0.1:6380 从服务器,在 slaveof 过程中无法使用 set 写入，执行config set replica-read-only no 后，便可以使用 set
+
+![avatar](/Pictures/redis/slave2.gif)
+
+## sentinel (哨兵模式)
+
+Sentinel 会不断地检查你的主服务器和从服务器是否运作正常: [详情](http://redisdoc.com/topic/sentinel.html)
+
+### 开启 sentinal
+
+> ```sql
+> # 命令
+> sentinel monitor <name> 127.0.0.1 6379 <quorum>
+> ```
+
+quorum = 1 一哨兵一主两从架构:[更多详情](https://github.com/doocs/advanced-java/blob/master/docs/high-concurrency/redis-sentinel.md)
+
+```
++----+         +----+
+| M1 |---------| R1 |
+| S1 |         | S2 |
++----+         +----+
+```
+
+quorum = 2 两哨兵一主三从架构:
+
+```
+       +----+
+       | M1 |
+       | S1 |
+       +----+
+          |
++----+    |    +----+
+| R2 |----+----| R3 |
+| S2 |         | S3 |
++----+         +----+
+```
+
+**sentinel** 配置文件 `/etc/sentinel.conf`加入以下代码:
+
+```sh
+#允许后台启动
+daemonize yes
+
+# 仅仅只需要指定要监控的主节点 1
+sentinel monitor YouMasterName 127.0.0.1 6379 1
+
+# 主观下线的时间(这里为60秒)
+sentinel down-after-milliseconds YouMasterName 60000
+
+# 当主服务器失效时， 在不询问其他 Sentinel 意见的情况下， 强制开始一次自动故障迁移
+sentinel failover-timeout YouMasterName 5000
+
+# 在执行故障转移时， 最多可以有多少个从服务器同时对新的主服务器进行同步， 这个数字越小， 完成故障转移所需的时间就越长。
+sentinel parallel-syncs YouMasterName 1
+```
+
+开启 sentiel 服务器
+
+```sh
+redis-sentinel /etc/sentinel.conf
+# 或者
+redis-server /etc/sentinel.conf --sentinel
+```
+
+**sentinel** 端口为`26379`
+
+```sh
+# 连接 sentinel
+redis-cli -p 26379
+```
+
+### sentinel 的命令
+
+```sql
+# 查看监听的主机
+sentinel masters
+
+# 查看 Maseter name
+sentinel get-master-addr-by-name YouMasterName
+
+# 通过订阅进行监听
+PSUBSCRIBE *
+```
+
+我这里一共 4 个服务器(**一哨兵一主两从架构**):
+
+- 左上连接的是 127.0.0.1:6379 主服务器
+- 左下连接的是 127.0.0.1:6380 从服务器
+- 右上连接的是 127.0.0.1:6381 从服务器
+- 右下连接的是 127.0.0.1:26379 哨兵服务器
+
+![avatar](/Pictures/redis/sentinel.png)
+
+```sql
+# 为了方便实验 哨兵的主观下线时间 我改为了 1 秒
+sentinel down-after-milliseconds YouMasterName 1000
+```
+
+可见把 **6379** 主服务器关闭后，6380 成为新的主服务器:
+
+![avatar](/Pictures/redis/sentinel.gif)
+
+6379 重新连接后成为 **6380** 的从服务器:
+
+![avatar](/Pictures/redis/sentinel1.gif)
+
+
+## cluster (集群)
+
+Redis 集群不像单机 Redis 那样支持多数据库功能， 集群只使用默认的 0 号数据库， 并且不能使用 SELECT index 命令。
+
+```sql
+# 查看 集群 配置
+config get cluster*
+```
 
 ## publish subscribe (发布和订阅)
 
@@ -1027,119 +1345,6 @@ psubscribe '__key*__:*
 ```
 
 ![avatar](/Pictures/redis/keyspace.png)
-
-## 持久化 RDB AOF
-
-**RDB :**
-
-- 在默认情况下， Redis 将数据库快照保存在名字为 dump.rdb 的二进制文件中。
-
-- 你可能会至少 5 分钟才保存一次 RDB 文件。 在这种情况下， 一旦发生故障停机， 你就可能会丢失好几分钟的数据。
-
-**AOF (append only log):**
-
-- AOF 文件是一个只进行追加操作的日志文件(append only log), 所以随着写入命令的不断增加， AOF 文件的体积也会变得越来越大。
-
-- 每次有新命令追加到 AOF 文件时就执行一次 fsync ：非常慢，也非常安全。
-
-## sentinel (哨兵模式)
-
-Sentinel 会不断地检查你的主服务器和从服务器是否运作正常: [详情](http://redisdoc.com/topic/sentinel.html)
-
-### 开启 sentinal
-
-**sentinel** 配置文件 `/etc/sentinel.conf`加入以下代码:
-
-```sh
-# 仅仅只需要指定要监控的主节点 2在这里是指两台主机挂掉就执行故障转移
-sentinel monitor YouMasterName 127.0.0.1 6379 2
-
-# 主观下线的时间(这里为60秒)
-sentinel down-after-milliseconds YouMasterName 1000
-
-SENTINEL failover BackupName
-
-# 当主服务器失效时， 在不询问其他 Sentinel 意见的情况下， 强制开始一次自动故障迁移
-sentinel failover-timeout YouMasterName 5000
-
-# 在执行故障转移时， 最多可以有多少个从服务器同时对新的主服务器进行同步， 这个数字越小， 完成故障转移所需的时间就越长。
-sentinel parallel-syncs YouMasterName 1
-
-sentinel monitor BackupName 127.0.0.1 6380 2
-```
-
-开启 sentiel 服务器
-
-```sh
-redis-sentinel /etc/sentinel.conf
-# 或者
-redis-server /etc/sentinel.conf --sentinel
-```
-
-**sentinel** 端口为`26379`
-
-```sh
-# 连接 sentinel
-redis-cli -p 26379
-```
-
-### sentinel 的命令
-
-```sql
-# 查看监听的主机
-sentinel masters
-
-# 查看 Maseter name
-sentinel get-master-addr-by-name YouMasterName
-
-# 通过订阅进行监听
-PSUBSCRIBE *
-```
-
-我这里一共 4 个服务器:
-
-- 左上连接的是 127.0.0.1:6379 主服务器
-- 左下连接的是 127.0.0.1:6380 从服务器
-- 右上连接的是 127.0.0.1:6381 从服务器
-- 右下连接的是 127.0.0.1:26379 **sentinel**服务器
-
-  ![avatar](/Pictures/redis/sentinel.gif)
-
-## cluster (集群)
-
-Redis 集群不像单机 Redis 那样支持多数据库功能， 集群只使用默认的 0 号数据库， 并且不能使用 SELECT index 命令。
-
-```sql
-# 查看 集群 配置
-config get cluster*
-```
-
-```sql
-# 查看 rdb 配置
-config get save*
-
-# 查看 appendonly 配置
-config get append*
-```
-
-开启 **AOF：**
-
-```sql
-# 关闭rdb (也可以不关闭，两个共存)
-config set save ""
-
-# 开启aof
-config set appendonly yes
-
-# 写入 /etc/redis.conf 配置文件
-config rewrite
-```
-
-**AOF** 文件出错,可以执行:
-
-```sh
-redis-check-aof --fix /var/lib/redis/appendonly.aof
-```
 
 # centos7 安装 redis6.0.9
 
@@ -1224,6 +1429,18 @@ watch -d -n 2 rma
 
 ### [redis-rdb-tools](https://github.com/sripathikrishnan/redis-rdb-tools)
 
+### [redis-shake](https://github.com/alibaba/RedisShake)
+
+Redis-shake 是一个用于在两个 redis 之间同步数据的工具，满足用户非常灵活的同步、迁移需求。
+
+- [中文文档](https://developer.aliyun.com/article/691794)
+
+- [第一次使用，如何进行配置？](https://github.com/alibaba/RedisShake/wiki/%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%BF%E7%94%A8%EF%BC%8C%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%85%8D%E7%BD%AE%EF%BC%9F)
+
+### [dbatools](https://github.com/xiepaup/dbatools)
+
+![avatar](/Pictures/redis/dbatools.png)
+
 # reference
 
 - [《Redis 设计与实现》部分试读](http://redisbook.com/)
@@ -1231,3 +1448,7 @@ watch -d -n 2 rma
 - [《Redis 实战》部分试读](http://redisinaction.com/)
 - [Redis 官方文档](https://redis.io/documentation)
 - [Redis 所有命令说明](https://redis.io/commands#)
+- [Redis 知识扫盲](https://github.com/doocs/advanced-java#%E7%BC%93%E5%AD%98)
+# online tool
+
+- [在线 redis](https://try.redis.io/)

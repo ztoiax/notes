@@ -46,6 +46,7 @@
         * [percona-toolkit 运维监控工具](#percona-toolkit-运维监控工具)
         * [innotop](#innotop)
         * [sysbench](#sysbench)
+        * [dbatool](#dbatool)
     * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
     * [常见错误](#常见错误)
         * [登录错误](#登录错误)
@@ -1665,6 +1666,11 @@ cat /tmp/pt_general.log
 - [sysbench 安装、使用和测试](https://www.cnblogs.com/zhoujinyi/archive/2013/04/19/3029134.html)
 
 <span id="install"></span>
+### [dbatool](https://github.com/xiepaup/dbatools)
+
+监控以及查询工具
+
+![avatar](/Pictures/mysql/dbatools.png)
 
 ## Centos 7 安装 MySQL
 

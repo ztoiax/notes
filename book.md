@@ -14,6 +14,7 @@
             * [《A Philosophy of Software Design》(软件设计的哲学)](#a-philosophy-of-software-design软件设计的哲学)
     * [其他相似项目](#其他相似项目)
         * [中文翻译 Road Map](#中文翻译-road-map)
+        * [值得一看的技术类书籍列表](#值得一看的技术类书籍列表)
 
 <!-- vim-markdown-toc -->
 
@@ -40,3 +41,4 @@
 ## 其他相似项目
 
 ### [中文翻译 Road Map](https://github.com/xx-zh/xx-zh-roadmap)
+### [值得一看的技术类书籍列表](https://github.com/doocs/technical-books#architecture)
