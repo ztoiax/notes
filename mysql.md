@@ -33,12 +33,14 @@
     * [DCL](#dcl)
         * [帮助文档](#帮助文档)
         * [用户权限设置](#用户权限设置)
+            * [revoke (撤销):](#revoke-撤销)
             * [授予权限,远程登陆](#授予权限远程登陆)
         * [配置(varibles)操作](#配置varibles操作)
     * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
         * [主从同步 (Master Slave Replication )](#主从同步-master-slave-replication-)
             * [主服务器配置](#主服务器配置)
             * [从服务器配置](#从服务器配置)
+        * [docker 主从复制](#docker-主从复制)
     * [高效强大的 mysql 软件](#高效强大的-mysql-软件)
         * [mycli](#mycli)
         * [mitzasql](#mitzasql)
@@ -47,7 +49,9 @@
         * [innotop](#innotop)
         * [sysbench](#sysbench)
         * [dbatool](#dbatool)
+* [安装 MySql](#安装-mysql)
     * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
+    * [docker install](#docker-install)
     * [常见错误](#常见错误)
         * [登录错误](#登录错误)
             * [修复](#修复)
@@ -111,7 +115,7 @@ mysql -uroot -pYouPassword -S/tmp/mysql.sock
 mysql -uroot -pYouPassword -e "show databases"
 ```
 
-[如需连接远程数据库 (可跳转至用户权限设置)](#user)
+[如需,连接远程 server 的数据库 (可跳转至用户权限设置)](#user)
 
 ### 常用 SQL 命令
 
@@ -252,14 +256,6 @@ select distinct level from cnarea_2019;
 select * from cnarea_2019 limit 100,70000;
 ```
 
-以下 where 实现结果同上.有人说这样更快.但我自己测试过,没有太大差别
-
-[测试结果](/mysql-problem.md)
-
-```sql
-select * from cnarea_2019 where id > 100 limit 70000;
-```
-
 #### where (条件选取)
 
 **语法:**
@@ -316,6 +312,15 @@ select * from cnarea_2019 where id in (10,20);
 
 # 选取 not null(非空) 和 id 小于 10 的数据
 select * from ca where id is not null and id < 10;
+```
+
+有个说法是: where 加 limit 查询比 limit 更快.但我的测试结果不是这样
+[测试结果](/mysql-problem.md)
+
+```sql
+select * from cnarea_2019 where id > 100 limit 70000;
+
+select * from cnarea_2019 limit 100,70000;
 ```
 
 #### Order by (排序)
@@ -396,32 +401,85 @@ select name from cnarea_2019 where name regexp '.*广州';
 > ```
 
 ```sql
-# 从 tz 表和 cnarea_2019 表,选取 id,name 列
-select id,name from cnarea_2019 where id<10 union select id,name from tz;
-MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,name from tz;
-+----+--------------------------+
-| id | name                     |
-+----+--------------------------+
-|  1 | 北京市                   |
-|  2 | 直辖区                   |
-|  3 | 东城区                   |
-|  4 | 东华门街道               |
-|  5 | 多福巷社区居委会         |
-|  6 | 银闸社区居委会           |
-|  7 | 东厂社区居委会           |
-|  8 | 智德社区居委会           |
-|  9 | 南池子社区居委会         |
-|  1 | tz                       |
-+----+--------------------------+
+# 创建名为 tz 的数据库作实验
+create table union_test (`id` int (8), `name` varchar(50), `date` DATE);
+# 插入 2 条数据
+insert into union_test (id,name,date) values (1,'tz','2020-10-24');
+insert into union_test (id,name,date) values (100,'tz','2020-10-24');
+
+
+# 从 union_test 表和 cnarea_2019 表,选取 id,name 列
+select id,name from cnarea_2019 where id<10
+union select id,name from union_test;
+
+MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,name from union_test;
++------+--------------------------+
+| id   | name                     |
++------+--------------------------+
+|    1 | 北京市                   |
+|    2 | 直辖区                   |
+|    3 | 东城区                   |
+|    4 | 东华门街道               |
+|    5 | 多福巷社区居委会         |
+|    6 | 银闸社区居委会           |
+|    7 | 东厂社区居委会           |
+|    8 | 智德社区居委会           |
+|    9 | 南池子社区居委会         |
+|    1 | tz                       |
+|  100 | tz                       |
++------+--------------------------+
 
 # 选取列,不包含重复数据
-select id from cnarea_2019 where id<10 union select id from tz where id<10;
+select id from cnarea_2019 where id<10 union select id from union_test;
+
++------+
+| id   |
++------+
+|    1 |
+|    2 |
+|    3 |
+|    4 |
+|    5 |
+|    6 |
+|    7 |
+|    8 |
+|    9 |
+|  100 |
++------+
 
 # 选取列,包含重复数据(all)
-select id from cnarea_2019 where id<10 union all select id from tz where id<10;
+select id from cnarea_2019 where id<10 union all select id from union_test;
+
++------+
+| id   |
++------+
+|    1 |
+|    2 |
+|    3 |
+|    4 |
+|    5 |
+|    6 |
+|    7 |
+|    8 |
+|    9 |
+|    1 |
+|  100 |
++------+
 
 # 选取以 深圳市 和 北京市 开头的数据
 select id,name from cnarea_2019 where name regexp '^深圳市' union select id,name from cnarea_2019 where name regexp '^北京市';
+
++--------+-----------------------------------------+
+| id     | name                                    |
++--------+-----------------------------------------+
+| 482024 | 深圳市                                  |
+| 482546 | 深圳市宝安国际机场                      |
+| 482547 | 深圳市宝安国际机场虚拟社区              |
+| 482884 | 深圳市大工业区                          |
+| 482885 | 深圳市大工业区虚拟社区                  |
+|      1 | 北京市                                  |
+| 150315 | 北京市双河农场                          |
++--------+-----------------------------------------+
 ```
 
 ### JOIN (多个表显示,以 列 为单位)
@@ -447,28 +505,48 @@ select id,name from cnarea_2019 where name regexp '^深圳市' union select id,n
 
 ---
 
+```sql
+# 创建表 join__test 等下实验要用
+CREATE TABLE j(
+`id` int (8),
+`name` varchar(50) NOT NULL UNIQUE,
+`date` DATE);
+
+# 插入数据
+insert into j (id,name,date) values
+(1,'tz1','2020-10-24'),
+(10,'tz2','2020-10-24'),
+(100,'tz3','2020-10-24');
+
+# 查看结果
+select * from j;
++------+------+------------+
+| id   | name | date       |
++------+------+------------+
+|    1 | tz1  | 2020-10-24 |
+|   10 | tz2  | 2020-10-24 |
+|  100 | tz3  | 2020-10-24 |
++------+------+------------+
+```
+
 **INNER JOIN**
 
 ```sql
-# 选取 new 表的 id 和 date 字段以及 cnarea_2019 表的 name 字段
-select new.id,new.date,cnarea_2019.name
-from new,cnarea_2019 where cnarea_2019.id=new.id;
+# 选取 j 表的 id,name,date 字段以及 cnarea_2019 表的 name 字段
+select j.id,j.date,cnarea_2019.name
+from j,cnarea_2019 where cnarea_2019.id=j.id;
 
 # 或者
-select new.id,new.date,cnarea_2019.name
-from new inner join cnarea_2019 on cnarea_2019.id=new.id;
+select j.id,j.name,j.date,cnarea_2019.name
+from j inner join  cnarea_2019 on cnarea_2019.id=j.id;
 
-+-----+------------+--------------------------+
-| id  | date       | name                     |
-+-----+------------+--------------------------+
-|   1 | 2020-10-24 | 北京市                   |
-|   2 | 2020-10-24 | 直辖区                   |
-|   3 | 2020-10-24 | 东城区                   |
-| 100 | 2020-10-24 | 安德路社区居委会         |
-| 102 | 2020-10-24 | 七区社区居委会           |
-| 103 | 2020-10-24 | 化工社区居委会           |
-| 104 | 2020-10-24 | 安德里社区居委会         |
-+-----+------------+--------------------------+
++------+------+------------+--------------------------+
+| id   | name | date       | name                     |
++------+------+------------+--------------------------+
+|    1 | tz1  | 2020-10-24 | 北京市                   |
+|   10 | tz2  | 2020-10-24 | 黄图岗社区居委会         |
+|  100 | tz3  | 2020-10-24 | 安德路社区居委会         |
++------+------+------------+--------------------------+
 ```
 
 ---
@@ -476,19 +554,36 @@ from new inner join cnarea_2019 on cnarea_2019.id=new.id;
 **LEFT JOIN**
 
 ```sql
-# 左连接，以左表(new)id字段个数进行选取.所以结果与inner join一样
-select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new left join cnarea_2019 on new.id=cnarea_2019.id limit 10;
-+-----+------------+--------------------------+-----------+
-| id  | date       | name                     | pinyin    |
-+-----+------------+--------------------------+-----------+
-|   1 | 2020-10-24 | 北京市                   | BeiJing   |
-|   2 | 2020-10-24 | 直辖区                   | BeiJing   |
-|   3 | 2020-10-24 | 东城区                   | DongCheng |
-| 100 | 2020-10-24 | 安德路社区居委会         | AnDeLu    |
-| 102 | 2020-10-24 | 七区社区居委会           | QiQu      |
-| 103 | 2020-10-24 | 化工社区居委会           | HuaGong   |
-| 104 | 2020-10-24 | 安德里社区居委会         | AnDeLi    |
-+-----+------------+--------------------------+-----------+
+# 左连接，以左表(j)id 字段个数进行选取.所以结果与inner join一样
+select j.id,j.name,j.date,cnarea_2019.name
+from j left join  cnarea_2019
+on  cnarea_2019.id=j.id;
+
++------+------+------------+--------------------------+
+| id   | name | date       | name                     |
++------+------+------------+--------------------------+
+|    1 | tz1  | 2020-10-24 | 北京市                   |
+|   10 | tz2  | 2020-10-24 | 黄图岗社区居委会         |
+|  100 | tz3  | 2020-10-24 | 安德路社区居委会         |
++------+------+------------+--------------------------+
+
+# 插入一条高于 cnarea_2019表id最大值 的数据
+insert into j (id,name,date) value (10000000,'tz一百万','2020-10-24');
+
+# 再次左连接，因为 cnarea_2019 没有id 10000000(一百万)的数据，所以这里显示为 null
+
+select j.id,j.name,j.date,cnarea_2019.name
+from j left join cnarea_2019
+on j.id = cnarea_2019.id;
+
++----------+-------------+------------+--------------------------+
+| id       | name        | date       | name                     |
++----------+-------------+------------+--------------------------+
+|        1 | tz1         | 2020-10-24 | 北京市                   |
+|       10 | tz2         | 2020-10-24 | 黄图岗社区居委会         |
+|      100 | tz3         | 2020-10-24 | 安德路社区居委会         |
+| 10000000 | tz一百万    | 2020-10-24 | NULL                     |
++----------+-------------+------------+--------------------------+
 ```
 
 ---
@@ -496,22 +591,25 @@ select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new left join cn
 **RIGHT JOIN**
 
 ```sql
-# 右连接，以右表(cnarea_2019)id字段个数进行选取.因左表(new)没有右表数据多,所以id,date字段为null
+# 右连接，以右表(cnarea_2019)id字段个数进行选取.左表id没有的数据为null.因为cnarea_2019表数据量太多这里limit 10
 
-select new.id,new.date,cnarea_2019.name,cnarea_2019.pinyin from new right join cnarea_2019 on new.id=cnarea_2019.id limit 10;
+select j.id,j.date,cnarea_2019.name,cnarea_2019.pinyin
+from j right join cnarea_2019
+on j.id=cnarea_2019.id limit 10;
+
 +------+------------+--------------------------+-------------+
 | id   | date       | name                     | pinyin      |
 +------+------------+--------------------------+-------------+
 |    1 | 2020-10-24 | 北京市                   | BeiJing     |
-|    2 | 2020-10-24 | 直辖区                   | BeiJing     |
-|    3 | 2020-10-24 | 东城区                   | DongCheng   |
+|   10 | 2020-10-24 | 黄图岗社区居委会         | HuangTuGang |
+|  100 | 2020-10-24 | 安德路社区居委会         | AnDeLu      |
+| NULL | NULL       | 直辖区                   | BeiJing     |
+| NULL | NULL       | 东城区                   | DongCheng   |
 | NULL | NULL       | 东华门街道               | DongHuaMen  |
 | NULL | NULL       | 多福巷社区居委会         | DuoFuXiang  |
 | NULL | NULL       | 银闸社区居委会           | YinZha      |
 | NULL | NULL       | 东厂社区居委会           | DongChang   |
 | NULL | NULL       | 智德社区居委会           | ZhiDe       |
-| NULL | NULL       | 南池子社区居委会         | NanChiZi    |
-| NULL | NULL       | 黄图岗社区居委会         | HuangTuGang |
 +------+------------+--------------------------+-------------+
 ```
 
@@ -554,6 +652,7 @@ select level, count(1) as totals from cnarea_2019 group by level;
 
 # 对不同的 level，选取 id 的平均值
 select level,avg(id) from cnarea_2019 group by level;
+
 MariaDB [china]> select level,avg(id) from cnarea_2019 group by level;
 +-------+-------------+
 | level | avg(id)     |
@@ -566,7 +665,9 @@ MariaDB [china]> select level,avg(id) from cnarea_2019 group by level;
 +-------+-------------+
 
 # 对不同的 level，选取 id 的平均值大于400000
-select level,avg(id) from cnarea_2019 group by level having avg(id) > 400000;
+select level,avg(id) from cnarea_2019
+group by level having avg(id) > 400000;
+
 MariaDB [china]> select level,avg(id) from cnarea_2019 group by level having avg(id) > 400000;
 +-------+-------------+
 | level | avg(id)     |
@@ -853,6 +954,12 @@ select * from clone;
 |  2 | tz   | 2020-10-24 |
 |  2 | tz1  | 2020-10-24 |
 +----+------+------------+
+
+# 成功后可以删除 (这是主健)
+alter table ca drop primary key;
+# 成功后可以删除 (这是unique)
+alter table clone drop index id;
+alter table clone drop index name;
 ```
 
 [误删数据进行回滚，跳转至**事务**](#transaction)
@@ -878,6 +985,7 @@ select * from clone;
 ```sql
 # 创建视图
 create view v (day) as select '1' union select '2';
+
 # 查看视图
 select * from v;
 +-----+
@@ -1263,18 +1371,98 @@ DCL (语句主要是管理数据库权限的时候使用)
 
 ### 用户权限设置
 
-```sql
-# 创建用户名为tz的用户
-create user 'tz'@'127.0.0.1' identified by 'YouPassword';
+> ```sql
+> # 创建用户
+> CREATE USER 'username'@'host' IDENTIFIED BY 'password';
+>
+> # 授权
+> GRANT privileges ON databasename.tablename TO 'username'@'host'
+>
+> # 撤销权限
+> REVOKE privileges ON databasename.tablename FROM 'username'@'host'
+> ```
 
+[更多用户权限详情](https://blog.csdn.net/lu1171901273/article/details/91635417?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~all~sobaiduend~default-1-91635417.nonecase&utm_term=mysql%20%E7%BB%99%E7%94%A8%E6%88%B7%E5%88%86%E9%85%8D%E8%A7%86%E5%9B%BE%E6%9D%83%E9%99%90&spm=1000.2123.3001.4430)
+
+create and grant (创建和授权):
+
+```sql
 # 查看所有用户
 SELECT user,host FROM mysql.user;
 
 # 详细查看所有用户
 SELECT DISTINCT CONCAT('User: ''',user,'''@''',host,''';') AS query FROM mysql.user;
 
+# 创建用户名为tz的用户
+create user 'tz'@'127.0.0.1' identified by 'YouPassword';
+
+# 当前用户修改密码的命令
+SET PASSWORD = PASSWORD("NewPassword");
+
+# 修改密码
+SET PASSWORD FOR 'tz'@'127.0.0.1' = PASSWORD('NewPassword');
+
+# grant (授权)
+# 只能 select china.cnarea_2019
+grant select on china.cnarea_2019 to 'tz'@'127.0.0.1';
+
+# 添加 insert 和 china所有表的权限
+grant select,insert on china.* to 'tz'@'127.0.0.1';
+
+# 添加所有数据库和表的权限
+grant all PRIVILEGES on *.* to 'tz'@'127.0.0.1';
+
+# 允许tz 用户授权于别的用户
+grant all on *.* to 'tz'@'127.0.0.1' with grant option;
+
+# 刷新权限
+flush privileges;
+
 # 查看用户权限
-show grants for 'tz'@'%';
+show grants for 'tz'@'127.0.0.1';
+
++-------------------------------------------------------------------+
+| Grants for tz@127.0.0.1                                           |
++-------------------------------------------------------------------+
+| GRANT ALL PRIVILEGES ON *.* TO `tz`@`127.0.0.1` WITH GRANT OPTION |
+| GRANT SELECT, INSERT ON `china`.* TO `tz`@`127.0.0.1`             |
+| GRANT SELECT ON `china`.`cnarea_2019` TO `tz`@`127.0.0.1`         |
++-------------------------------------------------------------------+
+```
+
+#### revoke (撤销):
+
+```sql
+revoke all privileges on *.* from 'tz'@'127.0.0.1';
+revoke grant option on *.* from 'tz'@'127.0.0.1';
+
++-----------------------------------------------------------+
+| Grants for tz@127.0.0.1                                   |
++-----------------------------------------------------------+
+| GRANT USAGE ON *.* TO `tz`@`127.0.0.1`                    |
+| GRANT SELECT, INSERT ON `china`.* TO `tz`@`127.0.0.1`     |
+| GRANT SELECT ON `china`.`cnarea_2019` TO `tz`@`127.0.0.1` |
++-----------------------------------------------------------+
+
+revoke select, insert on china.* from 'tz'@'127.0.0.1';
+
++-----------------------------------------------------------+
+| Grants for tz@127.0.0.1                                   |
++-----------------------------------------------------------+
+| GRANT USAGE ON *.* TO `tz`@`127.0.0.1`                    |
+| GRANT SELECT ON `china`.`cnarea_2019` TO `tz`@`127.0.0.1` |
++-----------------------------------------------------------+
+
+revoke select on china.cnarea_2019 from 'tz'@'127.0.0.1';
+
++----------------------------------------+
+| Grants for tz@127.0.0.1                |
++----------------------------------------+
+| GRANT USAGE ON *.* TO `tz`@`127.0.0.1` |
++----------------------------------------+
+
+# 刷新权限
+FLUSH PRIVILEGES;
 
 # 删除用户
 drop user 'tz'@'127.0.0.1';
@@ -1293,7 +1481,7 @@ drop user 'tz'@'127.0.0.1';
 ```sql
 
 # 允许root从'192.168.100.208'主机china库下的所有表
-grant all privileges on china.* to 'root'@'192.168.100.208' identified by 'YouPassword' WITH GRANT OPTION;
+grant all PRIVILEGES on china.* to 'root'@'192.168.100.208' identified by 'YouPassword' WITH GRANT OPTION;
 
 # 允许root从'192.168.100.208'主机china库下的cnarea_2019表
 grant all PRIVILEGES on china.cnarea_2019 to 'root'@'%'  identified by 'YouPassword' WITH GRANT OPTION;
@@ -1372,7 +1560,7 @@ create table tz (`id` int (8), `name` varchar(50), `date` DATE);
 insert into tz (id,name,date) values (1,'tz','2020-10-24');
 ```
 
-- 1.使用 `mysqlimport` 导入**(不推荐)**
+- 1.使用 `mysqlimport` 导入(不推荐)
 
   > 因为 `mysqlimport` 是把数据**导入新增**进去表里，而非恢复
 
@@ -1446,7 +1634,8 @@ binlog-ignore-db=tzblock # 忽略指定库tzblock
 
 ```sh
 # 备份
-#进入数据库后给数据库加上一把锁，阻止对数据库进行任何的写操作
+
+# 进入数据库后给数据库加上一把锁，阻止对数据库进行任何的写操作
 flush tables with read lock;
 
 # 备份tz数据库
@@ -1557,6 +1746,75 @@ MariaDB [tz]> show slave status\G;
 mysql -uroot -p -h 192.168.100.208 -P3306
 ```
 
+### docker 主从复制
+
+启动两个 mysql:
+
+```sh
+docker run -itd --name mysql-tz -p 3306:3306 -e MYSQL_ROOT_PASSWORD=YouPassword mysql
+
+docker run -itd --name mysql-slave -p 3307:3306 -e MYSQL_ROOT_PASSWORD=YouPassword mysql
+```
+
+进入 docker 修改 `my.cnf` 配置文件
+
+```sh
+docker exec -it mysql-tz /bin/bash
+echo "server-id=1" >> /etc/mysql/my.cnf
+echo "log-bin=bin.log" >> /etc/mysql/my.cnf
+echo "bind-address=0.0.0.0" >> /etc/mysql/my.cnf
+
+docker exec -it mysql-slave /bin/bash
+echo "server-id=2" >> /etc/mysql/my.cnf
+echo "log-bin=bin.log" >> /etc/mysql/my.cnf
+
+退出docker后，重启mysql
+docker container restart mysql-slave
+docker container restart mysql-tz
+```
+
+进入 master(主服务器) 创建 backup 用户，并添加权限:
+
+```sql
+mysql -uroot -pYouPassword -h 127.0.0.1 -P3306
+
+create user 'backup'@'%' identified by 'YouPassword';
+GRANT replication slave ON *.* TO 'backup'@'%';
+FLUSH PRIVILEGES;
+```
+
+查看 master 的 ip:
+
+```sh
+sudo docker exec -it mysql-tz cat '/etc/hosts'
+```
+
+(我这里为 172.17.0.2)
+
+![avatar](/Pictures/mysql/docker-replication.png)
+
+开启 slave:
+
+```sql
+# MASTER_HOST 填刚才查询的ip
+
+mysql -uroot -pYouPassword -h 127.0.0.1 -P3307
+CHANGE MASTER TO
+MASTER_HOST = '172.17.0.2',
+MASTER_USER = 'backup',
+MASTER_PASSWORD = 'YouPassword';
+start slave;
+```
+
+docker 主从复制测试:
+
+- 左为 3307 从服务器
+- 右为 3306 主服务器
+
+在主服务器新建数据库 tz,hello 表,并插入 1 条数据.可以看到从服务器可以 select hello 表;在主服务器删除 tz 数据库，从服务器也跟着删除.
+
+![avatar](/Pictures/mysql/docker-replication.gif)
+
 ## 高效强大的 mysql 软件
 
 - [MySQL 常用工具选型和建议](https://zhuanlan.zhihu.com/p/86846532)
@@ -1666,11 +1924,14 @@ cat /tmp/pt_general.log
 - [sysbench 安装、使用和测试](https://www.cnblogs.com/zhoujinyi/archive/2013/04/19/3029134.html)
 
 <span id="install"></span>
+
 ### [dbatool](https://github.com/xiepaup/dbatools)
 
 监控以及查询工具
 
 ![avatar](/Pictures/mysql/dbatools.png)
+
+# 安装 MySql
 
 ## Centos 7 安装 MySQL
 
@@ -1697,6 +1958,33 @@ yum-config-manager --enable mysql57-community
 
 # 安装
 yum install mysql-community-server
+```
+
+## [docker install](https://www.runoob.com/docker/docker-install-mysql.html)
+
+```sh
+# 下载镜像
+docker pull mysql:latest
+
+# 查看本地镜像
+docker images
+
+# -p端口映射
+docker run -itd --name mysql-tz -p 3306:3306 -e MYSQL_ROOT_PASSWORD=YouPassword mysql
+
+# 查看运行镜像
+docker ps
+
+#进入容器
+docker exec -it mysql-tz bash
+
+#登录mysql
+mysql -uroot -pYouPassword -h 127.0.0.1 -P3306
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'YouPassword';
+
+#添加远程登录用户
+CREATE USER 'tz'@'%' IDENTIFIED WITH mysql_native_password BY 'YouPassword';
+GRANT ALL PRIVILEGES ON *.* TO 'tz'@'%';
 ```
 
 ## 常见错误
@@ -1798,7 +2086,7 @@ skip-name-resolve
 
 > ```sh
 > [mysqld]
-> default_storage_engine=CSV
+> default_storage_engine=INNODB
 > ```
 
 - MyIsam: 速度更快,因为 MyISAM 内部维护了一个计数器，可以直接调取,使用 b+树索引
@@ -1843,12 +2131,11 @@ ALTER TABLE ca ENGINE = MYISAM;
 > # 解锁
 > UNLOCK TABLES;
 > ```
->
-> 通过队列查看是否有 lock:
 
-```sql
-show processlist;
-```
+> ```sql
+> # 通过队列查看是否有 lock
+> show processlist;
+> ```
 
 **死锁：**
 ![avatar](/Pictures/mysql/lock.png)
@@ -1976,6 +2263,9 @@ select * from INNODB_SYS_TABLES;
 - `COMMIT` 事务确认
 
 ```sql
+# 创建数据库
+create table tz (`id` int (8), `name` varchar(50), `date` DATE);
+
 # 开始事务
 begin
 
@@ -2010,6 +2300,9 @@ flush table clone
 - `RELEASE SAVEPOINT savepoint_name;` // 删除指定保留点
 
 ```sql
+# 创建数据库
+create table tz (`id` int (8), `name` varchar(50), `date` DATE);
+
 # 声明一个名叫 abc 的事务保存点
 savepoint abc;
 

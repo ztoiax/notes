@@ -184,6 +184,9 @@ sed -i '1anewline' FILE
 # 在每1行结尾添加newline
 sed -i '1,$anewline' FILE
 
+# 将包含123的所有行,替换成321
+sed -i "/123/c321" FILE
+
 # 将第1个a替换成b 类似vim的替换
 sed -i 's/a/b/'  FILE
 # 将文件内所有a替换成b

@@ -29,7 +29,9 @@
     * [cluster (集群)](#cluster-集群)
     * [publish subscribe (发布和订阅)](#publish-subscribe-发布和订阅)
         * [键空间通知](#键空间通知)
-* [centos7 安装 redis6.0.9](#centos7-安装-redis609)
+* [redis 安装](#redis-安装)
+    * [centos7 安装 redis6.0.9](#centos7-安装-redis609)
+    * [docker install](#docker-install)
 * [常见错误](#常见错误)
     * [vm.overcommit_memory = 1](#vmovercommit_memory--1)
     * [高效强大的第三方 redis 软件](#高效强大的第三方-redis-软件)
@@ -52,7 +54,7 @@ Redis 的优点：
 
 - 数据保存在内存里: 因此 Redis 也常常被用作缓存数据库,实现高性能、高并发
 
-- 单进程，单线程: 减少多线程之间的切换和竞争带来的性能开销(Redis 6.0版本之前)
+- 单进程，单线程: 减少多线程之间的切换和竞争带来的性能开销(Redis 6.0 版本之前)
 - Redis 的多线程部分只是用来处理网络数据的读写和协议解析，执行命令仍然是单线程
 
 - 多路 I/O 复用: 非阻塞 I/O [具体可看这个解答](https://www.zhihu.com/question/28594409)
@@ -1124,18 +1126,17 @@ Redis 主从架构可实现高并发，也就是 **master (主服务器)** 负�
 
 - slave 向 master 发送一个 `sync` 命令.
 
-- 接到 `sync` 命令的 master 将开始执行 `BGSAVE` 生成最新的rdb快照文件(因此master必须开启持久化). 在此同步期间, 所有新执行的写入命令会保存到一个缓冲区里面.
-
+- 接到 `sync` 命令的 master 将开始执行 `BGSAVE` 生成最新的 rdb 快照文件(因此 master 必须开启持久化). 在此同步期间, 所有新执行的写入命令会保存到一个缓冲区里面.
 
 - 当 `BGSAVE` 执行完毕后, master 把 .rdb 文件发送给 slave. slave 接收到后, 将文件中的数据载入到内存中.
 
-- slave第一次sync会全部复制，而之后会进行部分数据复制
+- slave 第一次 sync 会全部复制，而之后会进行部分数据复制
 
 `repl-diskless-sync` 参数:
 
-- yes 表示在内存里生成rdb后同步
+- yes 表示在内存里生成 rdb 后同步
 
-- no 表示写入硬盘rdb后同步
+- no 表示写入硬盘 rdb 后同步
 
 ![avatar](/Pictures/redis/slave.png)
 
@@ -1171,7 +1172,7 @@ slaveof no one
 建议设置 slave(从服务器) **只读** `replica-read-only`:
 
 > 在复制过程(slaveof ip port),slave(从服务器)不能使用 set 等命令,避免数据不一致的情况.
-> 
+>
 > 因为主从复制是单向复制，修改 slave 节点的数据， master 节点是感知不到的.
 
 ```sql
@@ -1182,9 +1183,9 @@ config get replica-read-only
 config set replica-read-only yes
 ```
 
-以下是关闭 slave节点只读 后的演示:
+以下是关闭 slave 节点只读 后的演示:
 
-- 右边连接的是 127.0.0.1:6380 从服务器,在 slaveof 过程中无法使用 set 写入，执行config set replica-read-only no 后，便可以使用 set
+- 右边连接的是 127.0.0.1:6380 从服务器,在 slaveof 过程中无法使用 set 写入，执行 config set replica-read-only no 后，便可以使用 set
 
 ![avatar](/Pictures/redis/slave2.gif)
 
@@ -1291,15 +1292,129 @@ sentinel down-after-milliseconds YouMasterName 1000
 
 ![avatar](/Pictures/redis/sentinel1.gif)
 
-
 ## cluster (集群)
 
-Redis 集群不像单机 Redis 那样支持多数据库功能， 集群只使用默认的 0 号数据库， 并且不能使用 SELECT index 命令。
+Redis 集群不像单机 Redis 那样支持多数据库功能， 集群只使用默认的 0 号数据库， 并且不能使用 SELECT index 命令。[详情](https://mp.weixin.qq.com/s?src=11&timestamp=1604973763&ver=2697&signature=sfP3uoHQVifP6D8FsI*YtxzMzvqbDieWDj1R8J8iT5codhR2A3LGWF46jHQ8mKJk*RZ4qXixc7DUACwbXbU2-MhaJ2P2Tr0YF-eLIVBPrKdvlX*YGM8UGtJoOR1ee3oB&new=1)
 
 ```sql
 # 查看 集群 配置
 config get cluster*
 ```
+
+配置 6 个实例,从端口 6380 到 6385:
+
+```sh
+# 这是6380
+port 6380
+daemonize yes
+pidfile "/var/run/redis-6380.pid"
+logfile "6380.log"
+dir "/var/lib/redis/6380"
+
+replica-read-only yes
+
+cluster-enabled yes
+cluster-config-file nodes.conf
+
+# 每个节点每秒会执行 10 次 ping，每次会选择 5 个最久没有通信的其它节点。当然如果发现某个节点通信延时达到了 cluster_node_timeout / 2
+cluster-node-timeout 15000
+```
+
+开启 6 个实例:
+
+```sh
+# 通过for循环,开启6个实例
+for (( i=6380; i<=6385; i=i+1 )); do
+    redis-server /var/lib/redis/$i/redis.conf
+done
+```
+
+![avatar](/Pictures/redis/cluster.png)
+
+开启集群:
+
+```sh
+redis-cli --cluster create 127.0.0.1:6380 127.0.0.1:6381 127.0.0.1:6382 127.0.0.1:6383 127.0.0.1:6384 127.0.0.1:6385 --cluster-replicas 1
+```
+
+![avatar](/Pictures/redis/cluster1.png)
+![avatar](/Pictures/redis/cluster2.png)
+
+```sh
+# -c 参数连接集群
+redis-cli -c -p 6380
+```
+
+可以看到 set name tz 是在 6381 实例，手动把 6381 kill 掉,
+
+重新连接后 get name 变成了 6384 实例
+
+![avatar](/Pictures/redis/cluster.gif)
+
+Redis 集群包含 16384 个哈希槽（hash slot),每个节点负责处理一部分哈希槽,以及一部分数据
+
+![avatar](/Pictures/redis/cluster7.png)
+
+```sql
+# 查看每个node(节点),等同于nodes.conf文件
+cluster nodes
+```
+
+我这里是:
+
+- node 6380 负责 0-5460 slots
+- node 6384 负责 5461-10922 slots
+- node 6385 负责 10923-16383 slots
+
+![avatar](/Pictures/redis/cluster3.png)
+
+```sql
+# 查看每个node(节点) 的 slots(槽)
+cluster slots
+```
+
+我这里是:
+
+- 6383 是 6380 的从节点
+- 6381 是 6384 的从节点
+- 6382 是 6385 的从节点
+
+![avatar](/Pictures/redis/cluster4.png)
+
+也可以在 shell 里执行，通过 grep 显示:
+
+```sh
+# master
+redis-cli -p 6380 cluster nodes | grep master
+
+# slave
+redis-cli -p 6380 cluster nodes | grep slave
+```
+
+![avatar](/Pictures/redis/cluster5.png)
+
+关闭主节点 6384:
+
+```sh
+# 等同于kill
+redis-cli -p 6384 debug segfault
+```
+
+可以看到原属于 6384 的从节点 6381,现在变成了主节点(master)
+
+![avatar](/Pictures/redis/cluster6.png)
+
+这时再关闭主节点 6381:
+
+```sh
+redis-cli -p 6381 debug segfault
+```
+
+因为 6381 已经没有从节点了，可以看到整个 cluster 已经 down 掉了
+
+![avatar](/Pictures/redis/cluster1.gif)
+
+重新启动 6381 或者 6384 后会恢复集群
 
 ## publish subscribe (发布和订阅)
 
@@ -1346,7 +1461,9 @@ psubscribe '__key*__:*
 
 ![avatar](/Pictures/redis/keyspace.png)
 
-# centos7 安装 redis6.0.9
+# redis 安装
+
+## centos7 安装 redis6.0.9
 
 源码安装:
 
@@ -1355,10 +1472,10 @@ psubscribe '__key*__:*
 yum install gcc make -y
 
 # 官网下载
-wget https://download.redis.io/releases/redis-6.0.9.tar.gz
+curl -LO https://download.redis.io/releases/redis-6.0.9.tar.gz
 
 # 国内用户可以去华为云镜像下载 https://mirrors.huaweicloud.com/redis/
-wget https://mirrors.huaweicloud.com/redis/redis-6.0.9.tar.gz
+curl -LO https://mirrors.huaweicloud.com/redis/redis-6.0.9.tar.gz
 tar xzf redis-6.0.9.tar.gz
 cd redis-6.0.9
 make
@@ -1369,6 +1486,29 @@ make
 ```sh
 # epel源可以直接安装(版本为redis-3.2.12-2.el7)
 yum install redis -y
+```
+
+## [docker install](https://www.runoob.com/docker/docker-install-redis.html)
+
+```sh
+# 下载镜像
+docker pull redis
+
+# 查看本地镜像
+docker images
+
+# -p端口映射
+docker run -itd --name redis-tz -p 6379:6379 redis
+
+# 查看运行镜像
+docker ps
+
+# 进入docker
+docker exec -it redis-tz /bin/bash
+
+docker container stop redis-tz
+
+docker run -d -p 6379:6379 -v $PWD/conf/redis.conf:/usr/local/etc/redis/redis.conf -v $PWD/data:/data --name docker-redis docker.io/redis redis-server /usr/local/etc/redis/redis.conf --appendonly yes
 ```
 
 # 常见错误
@@ -1449,6 +1589,7 @@ Redis-shake 是一个用于在两个 redis 之间同步数据的工具，满足�
 - [Redis 官方文档](https://redis.io/documentation)
 - [Redis 所有命令说明](https://redis.io/commands#)
 - [Redis 知识扫盲](https://github.com/doocs/advanced-java#%E7%BC%93%E5%AD%98)
+
 # online tool
 
 - [在线 redis](https://try.redis.io/)
