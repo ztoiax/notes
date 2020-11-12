@@ -29,6 +29,7 @@
     * [cluster (集群)](#cluster-集群)
     * [publish subscribe (发布和订阅)](#publish-subscribe-发布和订阅)
         * [键空间通知](#键空间通知)
+* [redis 如何做到和 mysql 数据库的同步](#redis-如何做到和-mysql-数据库的同步)
 * [redis 安装](#redis-安装)
     * [centos7 安装 redis6.0.9](#centos7-安装-redis609)
     * [docker install](#docker-install)
@@ -59,7 +60,11 @@ Redis 的优点：
 
 - 多路 I/O 复用: 非阻塞 I/O [具体可看这个解答](https://www.zhihu.com/question/28594409)
 
-- Redis 相比 Memcached 来说，拥有更多的数据结构，能支持更丰富的数据操作
+- Redis 相比 Memcached 来说，拥有更多的数据结构，能支持更丰富的数据操作,此外单个 value 的最大限制是 1GB，不像 memcached 只能保存 1MB 的数据
+
+Redis 的缺点:
+
+- 数据库容量受到物理内存的限制，不能用作海量数据的高性能读写，因此 Redis 适合的场景主要局限在较小数据量的高性能操作和运算上。
 
 ## 值和对象
 
@@ -1460,6 +1465,16 @@ psubscribe '__key*__:*
 ```
 
 ![avatar](/Pictures/redis/keyspace.png)
+
+# redis 如何做到和 mysql 数据库的同步
+
+- 1.  读: 读 redis->没有，读 mysql->把 mysql 数据写回 redi
+
+- 写: 写 mysql->成功，写 redis（捕捉所有 mysql 的修改，写入和删除事件，对 redis 进行操作）
+
+- 2.  分析 MySQL 的 binlog 文件并将数据插入 Redis
+
+- 借用已经比较成熟的 MySQL UDF，将 MySQL 数据首先放入 Gearman 中，然后通过一个自己编写的 PHP Gearman Worker，将数据同步到 Redis
 
 # redis 安装
 

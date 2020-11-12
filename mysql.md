@@ -51,7 +51,7 @@
         * [dbatool](#dbatool)
 * [安装 MySql](#安装-mysql)
     * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
-    * [docker install](#docker-install)
+    * [docker 安装](#docker-安装)
     * [常见错误](#常见错误)
         * [登录错误](#登录错误)
             * [修复](#修复)
@@ -62,11 +62,14 @@
         * [ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (111)(连接不了数据库)](#error-2002-hy000-cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-111连接不了数据库)
     * [存储引擎](#存储引擎)
         * [锁](#锁)
-    * [InnoDB](#innodb)
-        * [REDO LOG (重做日志)](#redo-log-重做日志)
-        * [TRANSACTION (事务)](#transaction-事务)
-        * [autocommit](#autocommit)
-        * [线程](#线程)
+        * [MyISAM](#myisam)
+        * [InnoDB](#innodb)
+            * [REDO LOG (重做日志)](#redo-log-重做日志)
+            * [TRANSACTION (事务)](#transaction-事务)
+            * [autocommit](#autocommit)
+            * [线程](#线程)
+            * [锁](#锁-1)
+    * [日志](#日志)
 * [reference](#reference)
 * [优秀教程](#优秀教程)
 * [reference items](#reference-items)
@@ -549,7 +552,18 @@ from j inner join  cnarea_2019 on cnarea_2019.id=j.id;
 +------+------+------------+--------------------------+
 ```
 
----
+STRAIGHT_JOIN:
+
+- 和 `inner join` 语法,结果相同,只是左表总是在右表之前读取
+
+- 因为 `Nest Loop Join` 的算法,用更小的数据表驱动更大数据表，**更快**.
+
+```sql
+# 先读取 j 再读取 cnarea_2019 或者说 驱动表是j 被驱动表是cnarea_2019.
+# 因为 j 表的数据更小所以更快
+select j.id,j.name,j.date,cnarea_2019.name
+from j straight_join cnarea_2019 on j.id=cnarea_2019.id;
+```
 
 **LEFT JOIN**
 
@@ -1058,6 +1072,10 @@ show table status like '名称'\G;
 | 能返回多个值             | 只能返回一个值            |
 
 **Procedure:**
+
+注意:procedure 是和数据库相关链接的，如果数据库被删除，procedure 也会被删除
+
+delimiter 是分隔符 默认是： `;`
 
 ```sql
 delimiter #
@@ -1748,6 +1766,8 @@ mysql -uroot -p -h 192.168.100.208 -P3306
 
 ### docker 主从复制
 
+[docker 安装 mysql 教程](#docker)
+
 启动两个 mysql:
 
 ```sh
@@ -1789,11 +1809,11 @@ FLUSH PRIVILEGES;
 sudo docker exec -it mysql-tz cat '/etc/hosts'
 ```
 
-(我这里为 172.17.0.2)
+我这里为 `172.17.0.2`
 
 ![avatar](/Pictures/mysql/docker-replication.png)
 
-开启 slave:
+开启 **slave**:
 
 ```sql
 # MASTER_HOST 填刚才查询的ip
@@ -1811,7 +1831,7 @@ docker 主从复制测试:
 - 左为 3307 从服务器
 - 右为 3306 主服务器
 
-在主服务器新建数据库 tz,hello 表,并插入 1 条数据.可以看到从服务器可以 select hello 表;在主服务器删除 tz 数据库，从服务器也跟着删除.
+在主服务器**新建数据库 tz,hello 表**,并插入 1 条数据.可以看到从服务器可以 select hello 表;在主服务器删除 tz 数据库，从服务器也跟着删除.
 
 ![avatar](/Pictures/mysql/docker-replication.gif)
 
@@ -1960,7 +1980,9 @@ yum-config-manager --enable mysql57-community
 yum install mysql-community-server
 ```
 
-## [docker install](https://www.runoob.com/docker/docker-install-mysql.html)
+<span id="docker"></span>
+
+## [docker 安装](https://www.runoob.com/docker/docker-install-mysql.html)
 
 ```sh
 # 下载镜像
@@ -1978,13 +2000,8 @@ docker ps
 #进入容器
 docker exec -it mysql-tz bash
 
-#登录mysql
+#登录 mysql
 mysql -uroot -pYouPassword -h 127.0.0.1 -P3306
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'YouPassword';
-
-#添加远程登录用户
-CREATE USER 'tz'@'%' IDENTIFIED WITH mysql_native_password BY 'YouPassword';
-GRANT ALL PRIVILEGES ON *.* TO 'tz'@'%';
 ```
 
 ## 常见错误
@@ -2114,17 +2131,40 @@ show engines;
 # 查看目前使用的存储引擎
 show variables like 'storage_engine';
 
+# 查看 cnarea_2019表 的存储引擎
+show create table cnarea_2019\G;
+
 # 修改ca表的存储引擎为MYISAM
 ALTER TABLE ca ENGINE = MYISAM;
 ```
 
 ### 锁
 
-**语法：**
+Mysql 锁分为**共享锁**和**排他锁**，也叫做 **读锁** 和 **写锁**:
+
+- 写锁: 是排他的，它会阻塞其他的写锁和读锁。从颗粒度来区分，可以分为 **表锁** 和 **行锁** 两种。
+
+- 表锁: 会锁定整张表并且阻塞其他用户对该表的所有读写操作，比如 alter 修改表结构的时候会锁表。
+
+> Innodb 默认使用的是行锁。而行锁是基于索引的，因此要想加上行锁，在加锁时必须命中索引，否则将使用表锁。
+
+**行锁分为：**
+
+- Pessimistic Locking(悲观锁): 具有**排他性**,数据处理过程中,数据处于锁定状态
+
+- Optimistic Locking(乐观锁): 记录 commit 的版本号(version)，对数据修改会改变 version,通过对比 **修改前后 的 version 是否一致**来确定是哪个事务的 commit
+
+[详情](https://zhuanlan.zhihu.com/p/222958908)
 
 > ```sql
 > # 加锁
 > LOCK TABLES 表1 WRITE, 表2 READ, ...;
+>
+> # 排他锁(写锁)
+> LOCK TABLES 表1 WRITE;
+>
+> # 共享锁(读锁)
+> LOCK TABLES 表1 READ;
 > ```
 
 > ```sql
@@ -2137,16 +2177,56 @@ ALTER TABLE ca ENGINE = MYISAM;
 > show processlist;
 > ```
 
-**死锁：**
-![avatar](/Pictures/mysql/lock.png)
+行锁创建一个表进行实验：
 
-事务 A 在等待事务 B 释放 id=2 的行锁，而事务 B 在等待事务 A 释放 id=1 的行锁。互相等待对方的资源释放，就进入了死锁状态。当出现死锁以后，有两种策略：
+```sql
+CREATE TABLE locking(
+id int (8) NOT NULL UNIQUE,
+name varchar(50),
+date DATE);
 
-- 一：进入等待，直到超时。超时时间参数 `innodb_lock_wait_timeout`
+insert into locking (id,name,date) values
+(1,'tz1','2020-10-24'),
+(10,'tz2','2020-10-24'),
+(100,'tz3','2020-10-24');
+```
 
-- 二：发起死锁检测，发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 `innodb_deadlock_detect` 设置为 `on`。但是它有额外负担的。每当一个事务被锁的时候，就要看看它所依赖的线程有没有被别人锁住，如此循环，最后判断是否出现了循环等待，也就是死锁
+悲观锁:
 
-**MyISAM:**
+```sql
+# for update 加入悲观锁
+select * from locking for update;
+```
+
+![avatar](/Pictures/mysql/innodb_lock1.gif.png)
+
+乐观锁:
+
+事务 a: 修改数据为 2
+
+```sql
+begin
+select * from locking;
+update locking set id = 2 where id = 1;
+commit;
+select * from locking;
+```
+
+事务 b: 修改数据为 3
+
+```sql
+begin
+select * from locking;
+update locking set id = 3 where id = 1;
+```
+
+最后结果 2.
+
+因为事务 a 比事务 b 先 commit,此时版本号改变，所以当事务 b 要 commit 时的版本号 与 事务 b 开始时的版本号不一致，提交失败。
+![avatar](/Pictures/mysql/innodb_lock1.gif.png)
+
+### MyISAM
+
 MyISAM 不支持行锁，在执行查询语句（SELECT、UPDATE、DELETE、INSERT 等）前，会自动给涉及的表加读锁，这个过程并不需要用户干预
 
 当线程获得一个表的写锁后， 只有持有锁的线程可以对表进行更新操作。 其他线程的读、 写操作都会等待，直到锁被释放为止。
@@ -2155,7 +2235,47 @@ MyISAM 不支持行锁，在执行查询语句（SELECT、UPDATE、DELETE、INSE
 
 这也正是 MyISAM 表不太适合于有大量更新操作和查询操作应用的原因，因为，大量的更新操作会造成查询操作很难获得读锁，从而可能永远阻塞。
 
-## InnoDB
+测试在循环 50 次 select 的过程中，MYISAM 的表的写入情况
+
+```sql
+# 创建存储过程，循环50次select
+
+delimiter #
+create procedure scn()
+begin
+declare i int default 1;
+declare s int default 50;
+
+while  i < s do
+    select * from cnarea_2019;
+    set i = i + 1;
+end while;
+
+end #
+delimiter ;
+
+# 执行scn
+call scn();
+```
+
+打开另一个客户端,对 MyISAM 表修改数据:
+
+```sql
+show processlist;
+update cnarea_2019 set name='test-lock' where id <11;
+select name from cnarea_2019 where id < 11;
+```
+
+- 左边:修改数据的客户端
+- 右边:执行 call scn();
+
+左边在等待右边的锁,可以看到我停止 **scn()**后，立马修改成功
+
+![avatar](/Pictures/mysql/myisam_lock.gif)
+
+[跳转 innodb 同样的实验](#innodb_lock)
+
+### InnoDB
 
 InnoDB 采用`WAL`(Write-Ahead Logging). 先修改日志,再在修改数据页进 buffer(内存)。当等到有空闲线程、内存不足、Redo log 满了时再 Checkpoint(刷脏)。写 Redo log 是顺序写入，Checkpoint(刷脏)是随机写.
 
@@ -2179,7 +2299,7 @@ show variables like 'innodb_log_buffer_size';
 +------------------------+----------+
 ```
 
-### REDO LOG (重做日志)
+#### REDO LOG (重做日志)
 
 - redo log 以 **块(block)** 为单位进行存储的，每个块的大小为 **512** Bytes
 - redo log 文件的组合大小 = (`innodb_log_file_size` \* `innodb_log_files_in_group`)
@@ -2247,13 +2367,13 @@ select * from INNODB_SYS_TABLES;
 
 <span id="transaction"></span>
 
-### TRANSACTION (事务)
+#### TRANSACTION (事务)
 
 事务的基本要素（ACID）
 
 - 原子性：Atomicity，整个数据库事务是不可分割的工作单位
 - 一致性：Consistency，事务将数据库从一种状态转变为下一种一致的状态
-- 隔离性：Isolation，每个读写事务的对象对其他事务的操作对象能相互分离
+- 隔离性：Isolation，每个读写事务的对象对其他事务的操作对象能相互分离,解决幻读问题
 - 持久性：Durability，事务一旦提交，其结果是永久性的
 
 ---
@@ -2263,7 +2383,7 @@ select * from INNODB_SYS_TABLES;
 - `COMMIT` 事务确认
 
 ```sql
-# 创建数据库
+# 创建表tz
 create table tz (`id` int (8), `name` varchar(50), `date` DATE);
 
 # 开始事务
@@ -2313,7 +2433,7 @@ insert into tz (id,name,date) values (1,'tz','2020-10-24');
 rollback to abc;
 ```
 
-### autocommit
+#### autocommit
 
 `autocommit = 1` 对表的所有修改将立即生效
 
@@ -2333,9 +2453,68 @@ rollback to abc;
 
 - 2.如果只是查询表,没有大量的修改，应设置 `autocommit = 1`
 
-### 线程
+#### 线程
 
 - Master Thread 负责将缓冲池中的数据异步刷新到磁盘,包括脏页的刷新(最高的线程优先)
+
+#### 锁
+
+**死锁：**
+![avatar](/Pictures/mysql/innodb_lock.png)
+
+事务 A 在等待事务 B 释放 id=2 的行锁，而事务 B 在等待事务 A 释放 id=1 的行锁。互相等待对方的资源释放，就进入了死锁状态。当出现死锁以后，有两种策略：
+
+- 一：进入等待，直到超时。超时时间参数 `innodb_lock_wait_timeout`
+
+- 二：发起死锁检测，发现死锁后，主动回滚死锁链条中的某一个事务，让其他事务得以继续执行。将参数 `innodb_deadlock_detect` 设置为 `on`。但是它有额外负担的。每当一个事务被锁的时候，就要看看它所依赖的线程有没有被别人锁住，如此循环，最后判断是否出现了循环等待，也就是死锁
+
+MVCC(多版本并发控制): 实际上就是保存了数据在某个时间节点的快照
+
+<span id="innodb_lock"></span>
+
+```sql
+# 把 cnarea_2019表 改为innodb 引擎
+alter table cnarea_2019 rename cnarea_2019_innodb;
+alter table cnarea_2019_innodb engine = innodb;
+```
+
+测试在循环 50 次 select 的过程中，innodb 的表的写入情况
+
+```sql
+# 创建存储过程，循环50次select
+delimiter #
+create procedure scn2()
+begin
+declare i int default 1;
+declare s int default 50;
+
+while  i < s do
+    select * from cnarea_2019_innodb;
+    set i = i + 1;
+end while;
+
+end #
+delimiter ;
+
+# 执行scn2
+call scn2();
+```
+
+打开另一个客户端,对 innodb 表修改数据:
+
+```sql
+update cnarea_2019_innodb set name='test-lock' where id <11;
+select name from cnarea_2019_innodb where id < 11;
+```
+
+- 左边:修改数据的客户端
+- 右边:执行 call scn2();
+
+修改数据后左边**commit**，右边也**commit**后，数据同步
+
+![avatar](/Pictures/mysql/innodb_lock.gif)
+
+## 日志
 
 [关于日志](/mysql-log.md)
 
@@ -2350,6 +2529,7 @@ rollback to abc;
 - [mysql 存储过程详细教程](https://www.jianshu.com/p/7b2d74701ccd)
 - [Difference between stored procedure and function in MySQL](https://medium.com/@singh.umesh30/difference-between-stored-procedure-and-function-in-mysql-52f845d70b05)
 - [深入解析 MySQL 视图 VIEW](https://www.cnblogs.com/geaozhang/p/6792369.html)
+- [MySQL 的 join 功能弱爆了？](https://zhuanlan.zhihu.com/p/286581170)
 
 # 优秀教程
 
