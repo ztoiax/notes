@@ -65,6 +65,7 @@
         * [MyISAM](#myisam)
         * [InnoDB](#innodb)
             * [REDO LOG (重做日志)](#redo-log-重做日志)
+            * [UNDO LOG](#undo-log)
             * [TRANSACTION (事务)](#transaction-事务)
             * [autocommit](#autocommit)
             * [线程](#线程)
@@ -955,9 +956,9 @@ insert into clone (id,name,date) values
 (2,'tz1','2020-10-24'),
 (2,'tz1','2020-10-24');
 
-# 通过加入 主健(PRIMARY KEY) 删除重复的数据
+# 通过 ALTER IGNORE 加入 主健(PRIMARY KEY) 删除重复的数据
 ALTER IGNORE TABLE clone ADD PRIMARY KEY (id, name);
-# 或者加入 唯一性索引(UNIQUE)
+# 或者 ALTER IGNORE 加入 唯一性索引(UNIQUE)
 ALTER IGNORE TABLE clone ADD UNIQUE KEY (id, name);
 
 select * from clone;
@@ -2194,13 +2195,66 @@ insert into locking (id,name,date) values
 悲观锁:
 
 ```sql
-# for update 加入悲观锁
+# 事务a 在select 最后 加入 for update 悲观锁，锁整个表
 select * from locking for update;
+
+# 事务b 执行update时，会阻塞
+update locking set id = 1 where id = 2;
+
+# 事务a commit后，事务b update id = 1 执行成功
+commit;
 ```
 
-![avatar](/Pictures/mysql/innodb_lock1.gif.png)
+![avatar](/Pictures/mysql/innodb_lock1.gif)
+
+```sql
+# 事务a 加入where 从句，只锁对应的行(我这里是id = 1)
+select * from locking where id = 1 for update;
+
+# 事务b 对 update 不同的行 成功执行
+update locking set id = 10 where id = 20;
+
+# 事务b update id = 1时，会阻塞
+update locking set id = 2 where id = 1;
+
+# 事务a commit后，事务b update id = 1 执行成功
+commit;
+```
+
+![avatar](/Pictures/mysql/innodb_lock2.gif)
+
+**事务 a** 和 **事务 b** 插入相同的数据,**事务 a** 先 **事务 b** 插入。那么**事务 b** 会被阻塞，当事务 a `commit` 后
+
+- 如果有唯一性索引或者主健那么 **事务 b** 会插入失败(幻读)
+
+- 如果没有，那么将会出现相同的两条数据
+
+**有唯一性索引或者主健:**
+
+```sql
+# 事务a 和 事务 b 插入同样的数据
+insert into locking (id,name,date) value (1000,'tz4','2020-10-24');
+```
+
+![avatar](/Pictures/mysql/innodb_lock3.gif)
+
+**没有索引:**
+
+```sql
+# 删除唯一性索引
+alter table locking drop index id;
+
+# 事务a 和 事务 b 插入同样的数据
+insert into locking (id,name,date) value (1000,'tz4','2020-10-24');
+```
+
+![avatar](/Pictures/mysql/innodb_lock4.gif)
+
+---
 
 乐观锁:
+
+修改包含：update,delete
 
 事务 a: 修改数据为 2
 
@@ -2218,12 +2272,13 @@ select * from locking;
 begin
 select * from locking;
 update locking set id = 3 where id = 1;
+commit;
 ```
 
 最后结果 2.
 
 因为事务 a 比事务 b 先 commit,此时版本号改变，所以当事务 b 要 commit 时的版本号 与 事务 b 开始时的版本号不一致，提交失败。
-![avatar](/Pictures/mysql/innodb_lock1.gif.png)
+![avatar](/Pictures/mysql/innodb_lock5.gif)
 
 ### MyISAM
 
@@ -2281,9 +2336,9 @@ InnoDB 采用`WAL`(Write-Ahead Logging). 先修改日志,再在修改数据页�
 
 日志格式：
 
-- redo log(重做日志) 物理日志:存储了数据页被修改后的值.
+- redo log(重做日志) 物理日志:事务提交成功，数据页被修改后的值,就会被永久存储了.
 
-- binlog 逻辑日志:记录数据库所有更改操作. 不包括 select，show
+- binlog 逻辑日志:事务提交成功，记录数据库所有更改操作. 不包括 select，show
 
 ![avatar](/Pictures/mysql/log.png)
 
@@ -2320,6 +2375,10 @@ show variables like 'innodb_log_files_in_group';
 +---------------------------+-------+
 | innodb_log_files_in_group | 1     |
 ```
+
+#### UNDO LOG
+
+undo log: 系统崩溃时，没 COMMIT 的事务 ，就需要借助 undo log 来进行回滚至，事务开始前的状态。
 
 ---
 
@@ -2371,9 +2430,9 @@ select * from INNODB_SYS_TABLES;
 
 事务的基本要素（ACID）
 
-- 原子性：Atomicity，整个数据库事务是不可分割的工作单位
+- 原子性：Atomicity，整个数据库事务是不可分割的工作单位(undo log 提供)
 - 一致性：Consistency，事务将数据库从一种状态转变为下一种一致的状态
-- 隔离性：Isolation，每个读写事务的对象对其他事务的操作对象能相互分离,解决幻读问题
+- 隔离性：Isolation，每个读写事务的对象对其他事务的操作对象能相互分离(mvcc 提供),解决幻读问题(事务的两次查询的结果不一样)
 - 持久性：Durability，事务一旦提交，其结果是永久性的
 
 ---

@@ -15,6 +15,7 @@
     * [配置](#配置)
         * [config](#config)
         * [info](#info)
+        * [用户密码](#用户密码)
         * [调试](#调试)
             * [slowlog](#slowlog)
             * [monitor](#monitor)
@@ -418,11 +419,25 @@ rpop ll
 ![avatar](/Pictures/redis/list3.png)
 
 ```sql
-# RPOPLPUSH 把最后一个值,放到第一位
+# RPOPLPUSH 把 l 最后一个值,放到 ll 第一位
+rpoplpush l ll
+
+# RPOPLPUSH 把自己的最后一个值,放到第一位
 rpoplpush ll ll
 ```
 
 ![avatar](/Pictures/redis/list4.png)
+
+```sql
+
+# brpop 在阻塞时间内(0表示无限等待),对空 key 移除第一个值
+# blpop 在阻塞时间内(0表示无限等待),对空 key 移除最后一个值
+# brpoplpush 是 rpoplpush 的阻塞版本
+# 在 MULTI / EXEC 块当中没有意义
+brpop l 100
+```
+
+![avatar](/Pictures/redis/list.gif)
 
 ```sql
 # 查看ll的第1个值(注意:0表示第1个值)
@@ -927,6 +942,38 @@ info memory
 - rss > used ,且两者的值相差较大时,表示存在（内部或外部的）内存碎片.
 - used > rss ,表示 Redis 的部分内存被操作系统换出到交换空间了,在这种情况下,操作可能会产生明显的延迟.
 
+### 用户密码
+
+redis 6.0 以上的版本
+
+[**ACL:**](https://redis.io/topics/acl)
+
+```sql
+# 查看用户列表
+acl list
+
+# 创建用户test
+acl setuser test
+
+# 创建用户tz,并设置密码123,授予 get 权限
+acl setuser tz on >123 ~cached:* +get
+
+# 授予 set 权限
+acl setuser tz +set
+
+# 授予 all 所有权限
+acl setuser tz +@all
+
+# 查看用户详情
+acl getuser tz
+
+# 禁用用户
+acl setuser tz off
+
+# 切换用户
+auth tz 123
+```
+
 ### 调试
 
 ```sql
@@ -1075,9 +1122,14 @@ config get save
 - 300 秒内最少有 100 个 key 被改动
 - 60 秒内最少有 10000 个 key 被改动
 
+AOF:
+
 ```sql
 # 查看 appendonly 配置
 config get append*
+
+# 主动执行 AOF 重写
+bgrewriteaof
 ```
 
 关闭 **RDB** 开启 **AOF**
@@ -1126,6 +1178,8 @@ redis-check-aof --fix /var/lib/redis/appendonly.aof
 Redis 主从架构可实现高并发，也就是 **master (主服务器)** 负责写入，**slave (从服务器)** 读取.
 
 ![avatar](/Pictures/redis/slave2.png)
+
+也可以主服务器关闭持久化，在从服务器开启持久化，当主服务器崩溃时，转换主从服务器的角色，并能同步
 
 复制原理：
 
@@ -1584,6 +1638,21 @@ watch -d -n 2 rma
 
 ### [redis-rdb-tools](https://github.com/sripathikrishnan/redis-rdb-tools)
 
+```sh
+# json格式 查看
+rdb --command json dump.rdb
+```
+
+![avatar](/Pictures/redis/rdbtool.png)
+
+```sh
+rdb -c memory dump.rdb
+# 导出 csv 格式
+rdb -c memory dump.rdb > /tmp/redis.csv
+```
+
+![avatar](/Pictures/redis/rdbtool1.png)
+
 ### [redis-shake](https://github.com/alibaba/RedisShake)
 
 Redis-shake 是一个用于在两个 redis 之间同步数据的工具，满足用户非常灵活的同步、迁移需求。
@@ -1608,3 +1677,4 @@ Redis-shake 是一个用于在两个 redis 之间同步数据的工具，满足�
 # online tool
 
 - [在线 redis](https://try.redis.io/)
+- [在线 PhpRedisAdmin](http://dubbelboer.com/phpRedisAdmin/)

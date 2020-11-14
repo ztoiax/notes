@@ -108,8 +108,6 @@ binlog_ignore_db
 sync_binlog=n
 ```
 
-binlog 数据格式分为：`statement` , `row` , `mixed`
-
 ![avatar](/Pictures/mysql/binlog.png)
 
 ```sql
