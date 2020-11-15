@@ -86,6 +86,8 @@ BINLOG 主要有两个作用：
 
 - 某些数据恢复操作需要使用 binlog 日志
 
+[再深入一点|binlog和relay-log到底长啥样？](https://zhuanlan.zhihu.com/p/232806417)
+
 开启 `binary` 日志:
 
 ```sh
@@ -120,10 +122,10 @@ show variables like 'binlog_format';
 +---------------+-------+
 ```
 
-日志有效期
+随着时间的推移日志文件会越来越多，可以设置日志有效期，自动清理
 
 ```sql
-# 我这里是 0
+# 我这里是 0 (表示永不会清理)
 show variables like 'expire_logs_days';
 +------------------+-------+
 | Variable_name    | Value |
@@ -216,3 +218,4 @@ mysqlsla --log-type error /var/log/mysql/mysql_error.log
 - [MySQL 日志分析神器之 mysqlsla](https://developer.aliyun.com/article/59260?spm=a2c6h.14164896.0.0.4b98353bhStc1B)
 - [详解 慢查询 之 mysqldumpslow](https://zhuanlan.zhihu.com/p/106405711)
 - [几年了，作为一个码农终于把 MySQL 日记看懂了！](https://zhuanlan.zhihu.com/p/267143540)
+- [再深入一点|binlog和relay-log到底长啥样？](https://zhuanlan.zhihu.com/p/232806417)

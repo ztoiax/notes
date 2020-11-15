@@ -22,57 +22,189 @@
         * [Update](#update)
         * [Delete and Drop (删除)](#delete-and-drop-删除)
             * [删除重复的数据](#删除重复的数据)
-    * [VIEW (视图)](#view-视图)
-    * [Stored Procedure and Function (自定义存储过程 和 函数)](#stored-procedure-and-function-自定义存储过程-和-函数)
-        * [Stored Procedure (自定义存储过程）](#stored-procedure-自定义存储过程)
-        * [ALTER](#alter)
-        * [INDEX (索引)](#index-索引)
-            * [explain](#explain)
-            * [索引速度测试](#索引速度测试)
-        * [undrop-for-innodb](#undrop-for-innodb)
-    * [DCL](#dcl)
-        * [帮助文档](#帮助文档)
-        * [用户权限设置](#用户权限设置)
-            * [revoke (撤销):](#revoke-撤销)
-            * [授予权限,远程登陆](#授予权限远程登陆)
-        * [配置(varibles)操作](#配置varibles操作)
-    * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
-        * [主从同步 (Master Slave Replication )](#主从同步-master-slave-replication-)
-            * [主服务器配置](#主服务器配置)
-            * [从服务器配置](#从服务器配置)
-        * [docker 主从复制](#docker-主从复制)
-    * [高效强大的 mysql 软件](#高效强大的-mysql-软件)
-        * [mycli](#mycli)
-        * [mitzasql](#mitzasql)
-        * [mydumper](#mydumper)
-        * [percona-toolkit 运维监控工具](#percona-toolkit-运维监控工具)
-        * [innotop](#innotop)
-        * [sysbench](#sysbench)
-        * [dbatool](#dbatool)
-* [安装 MySql](#安装-mysql)
-    * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
-    * [docker 安装](#docker-安装)
-    * [常见错误](#常见错误)
-        * [登录错误](#登录错误)
-            * [修复](#修复)
-                * [修改密码成功后](#修改密码成功后)
-                * [如果出现以下报错(密码不满足策略安全)](#如果出现以下报错密码不满足策略安全)
-                    * [修复](#修复-1)
-        * [ERROR 2013 (HY000): Lost connection to MySQL server during query(导致无法 stop slave;)](#error-2013-hy000-lost-connection-to-mysql-server-during-query导致无法-stop-slave)
-        * [ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (111)(连接不了数据库)](#error-2002-hy000-cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-111连接不了数据库)
-    * [存储引擎](#存储引擎)
-        * [锁](#锁)
-        * [MyISAM](#myisam)
-        * [InnoDB](#innodb)
-            * [REDO LOG (重做日志)](#redo-log-重做日志)
-            * [UNDO LOG](#undo-log)
-            * [TRANSACTION (事务)](#transaction-事务)
-            * [autocommit](#autocommit)
-            * [线程](#线程)
-            * [锁](#锁-1)
+    * [FOREIGN KEY(外键)](#foreign-key外键)
+* [因为没有权限，修改失败](#因为没有权限修改失败)
+* [删除外键](#删除外键)
+* [重新添加外键，并授予权限](#重新添加外键并授予权限)
+* [修改a 表](#修改a-表)
+* [查看结果](#查看结果)
+* [查看结果](#查看结果-1)
+* [查看CONSTRAINT](#查看constraint)
+* [创建视图](#创建视图)
+* [查看视图](#查看视图)
+* [删除视图](#删除视图)
+* [以 clone表 为基表,创建视图名为 v](#以-clone表-为基表创建视图名为-v)
+* [查看视图信息](#查看视图信息)
+* [嵌套 v视图 名为 vv,并且 id <= 2](#嵌套-v视图-名为-vv并且-id--2)
+* [此时如果把 id 改为 3.注意这里 v 视图 和 clone 表的数据也会被更改](#此时如果把-id-改为-3注意这里-v-视图-和-clone-表的数据也会被更改)
+* [因为 vv视图有where id <= 2的限制, 所以不满足条件的值不显示](#因为-vv视图有where-id--2的限制-所以不满足条件的值不显示)
+* [对vv视图修改的值,在v视图的也被修改](#对vv视图修改的值在v视图的也被修改)
+* [和刚才的 vv视图 一样 这次 vvv视图 加入with check option;](#和刚才的-vv视图-一样-这次-vvv视图-加入with-check-option)
+* [此时对不满足条件的值,进行修改会报错](#此时对不满足条件的值进行修改会报错)
+* [执行](#执行)
+* [查看所有存储过程](#查看所有存储过程)
+* [查看 hello 存储过程](#查看-hello-存储过程)
+* [执行](#执行-1)
+* [查看所有自定义函数](#查看所有自定义函数)
+* [查看 hello 函数](#查看-hello-函数)
+* [插入一些数据](#插入一些数据)
+* [查看结果](#查看结果-2)
+* [检测过程是否存在，如存在则删除](#检测过程是否存在如存在则删除)
+* [过程体要包含在delimiter里](#过程体要包含在delimiter里)
+* [设置 传递参数v 为0](#设置-传递参数v-为0)
+* [执行 zero 过程](#执行-zero-过程)
+* [查看 返回参数n 的值](#查看-返回参数n-的值)
+* [查看过程结果](#查看过程结果)
+* [重命名表](#重命名表)
+* [将列 name 改名为 mingzi ,类型改为 char(50)](#将列-name-改名为-mingzi-类型改为-char50)
+* [删除 id 列](#删除-id-列)
+* [添加 id 列](#添加-id-列)
+* [重命名 id 列为 number(bigint类型)](#重命名-id-列为-numberbigint类型)
+* [修改 city_code 列,为 char(50) 类型](#修改-city_code-列为-char50-类型)
+* [或者](#或者)
+* [修改 ca 表 id 列默认值1000](#修改-ca-表-id-列默认值1000)
+* [或者](#或者-1)
+* [添加主键，确保该主键默认不为空（NOT NULL）](#添加主键确保该主键默认不为空not-null)
+* [删除主键](#删除主键)
+* [删除唯一性索引(unique)的 id 字段](#删除唯一性索引unique的-id-字段)
+* [修改 ca 表的存储引擎](#修改-ca-表的存储引擎)
+* [显示索引](#显示索引)
+* [添加索引id](#添加索引id)
+* [添加索引id,name](#添加索引idname)
+* [添加索引降序id,name](#添加索引降序idname)
+* [删除索引](#删除索引)
+* [添加索引id](#添加索引id-1)
+* [删除索引](#删除索引-1)
+* [测试效果](#测试效果)
+* [添加索引](#添加索引)
+* [注意：目前还是在undrop-for-innodb](#注意目前还是在undrop-for-innodb)
+* [生成pages-ibdata1目录,目录下按照每个页为一个文件](#生成pages-ibdata1目录目录下按照每个页为一个文件)
+* [按照层次查询](#按照层次查询)
+* [数据类型](#数据类型)
+* [查看所有用户](#查看所有用户)
+* [详细查看所有用户](#详细查看所有用户)
+* [创建用户名为tz的用户](#创建用户名为tz的用户)
+* [当前用户修改密码的命令](#当前用户修改密码的命令)
+* [修改密码](#修改密码)
+* [grant (授权)](#grant-授权)
+* [只能 select china.cnarea_2019](#只能-select-chinacnarea_2019)
+* [添加 insert 和 china所有表的权限](#添加-insert-和-china所有表的权限)
+* [添加所有数据库和表的权限](#添加所有数据库和表的权限)
+* [允许tz 用户授权于别的用户](#允许tz-用户授权于别的用户)
+* [刷新权限](#刷新权限)
+* [查看用户权限](#查看用户权限)
+* [刷新权限](#刷新权限-1)
+* [删除用户](#删除用户)
+* [允许root从'192.168.100.208'主机china库下的所有表(WITH GRANT OPTION表示有修改权限的权限）](#允许root从192168100208主机china库下的所有表with-grant-option表示有修改权限的权限)
+* [允许root从'192.168.100.208'主机china库下的cnarea_2019表](#允许root从192168100208主机china库下的cnarea_2019表)
+* [允许所有用户连接所有库下的所有表(%:表示通配符)](#允许所有用户连接所有库下的所有表表示通配符)
+* [刷新权限](#刷新权限-2)
+* [记得在服务器里关闭防火墙](#记得在服务器里关闭防火墙)
+* [连接远程数据库(我这里是192.168.100.208)](#连接远程数据库我这里是192168100208)
+* [查看配置(变量)](#查看配置变量)
+* [查看字段前面包含max_connect的配置(通配符%)](#查看字段前面包含max_connect的配置通配符)
+* [设置自定义变量(重启后失效)](#设置自定义变量重启后失效)
+* [查看刚才的变量](#查看刚才的变量)
+* [修改会话变量,该值将在会话内保持有效(重启后失效)](#修改会话变量该值将在会话内保持有效重启后失效)
+* [通过 select 查看](#通过-select-查看)
+* [或者](#或者-2)
+* [修改全局变量, 仅影响更改后连接的客户端的相应会话值.(重启后失效)](#修改全局变量-仅影响更改后连接的客户端的相应会话值重启后失效)
+* [通过 select 查看](#通过-select-查看-1)
+* [或者](#或者-3)
+* [永久保存,要写入/etc/my.cnf](#永久保存要写入etcmycnf)
+* [导出tz表. 注意：路径要加''](#导出tz表-注意路径要加)
+* [删除表和表的数据](#删除表和表的数据)
+* [导入前要创建一个新的表](#导入前要创建一个新的表)
+* [备份 china 数据库](#备份-china-数据库)
+* [备份 china 数据库里的 tz 表](#备份-china-数据库里的-tz-表)
+* [备份所有数据库](#备份所有数据库)
+* [-d 只备份所有数据库表结构(不包含表数据)](#-d-只备份所有数据库表结构不包含表数据)
+* [恢复到 china 数据库](#恢复到-china-数据库)
+* [恢复所有数据库](#恢复所有数据库)
+* [备份](#备份)
+* [进入数据库后给数据库加上一把锁，阻止对数据库进行任何的写操作](#进入数据库后给数据库加上一把锁阻止对数据库进行任何的写操作)
+* [备份tz数据库](#备份tz数据库)
+* [对数据库解锁，恢复对主数据库的操作](#对数据库解锁恢复对主数据库的操作)
+* [启用slave权限](#启用slave权限)
+* [或者启用所有权限](#或者启用所有权限)
+* [日志目录 /var/lib/mysql/centos7.000001](#日志目录-varlibmysqlcentos7000001)
+* [复制主服务器的tz.sql备份文件](#复制主服务器的tzsql备份文件)
+* [创建tz数据库](#创建tz数据库)
+* [先创建 tz 数据库](#先创建-tz-数据库)
+* [导入](#导入)
+* [如果出现以下核对错误](#如果出现以下核对错误)
+* [通过修改编码修复](#通过修改编码修复)
+* [再次运行](#再次运行)
+* [关闭同步](#关闭同步)
+* [开启同步功能](#开启同步功能)
+* [开启同步](#开启同步)
+* [测试能不能连接主服务器](#测试能不能连接主服务器)
+* [MASTER_HOST 填刚才查询的ip](#master_host-填刚才查询的ip)
+* [带压缩备份--compress(gz)](#带压缩备份--compressgz)
+* [不带压缩备份,最后再用7z压缩](#不带压缩备份最后再用7z压缩)
+* [恢复](#恢复)
+* [分析slow log](#分析slow-log)
+* [分析general log](#分析general-log)
+* [下载](#下载)
+* [安装源](#安装源)
+* [查看安装是否成功](#查看安装是否成功)
+* [查看当前MySQL Yum Repository中所有MySQL版本（每个版本在不同的子仓库中）](#查看当前mysql-yum-repository中所有mysql版本每个版本在不同的子仓库中)
+* [切换版本](#切换版本)
+* [安装](#安装)
+* [下载镜像](#下载镜像)
+* [查看本地镜像](#查看本地镜像)
+* [-p端口映射](#-p端口映射)
+* [查看运行镜像](#查看运行镜像)
+* [进入容器](#进入容器)
+* [登录 mysql](#登录-mysql)
+* [在[mysqld]后添加skip-grant-tables（登录时跳过权限检查）](#在mysqld后添加skip-grant-tables登录时跳过权限检查)
+* [连接数据库](#连接数据库-1)
+* [刷新权限](#刷新权限-3)
+* [修改密码(8以下的版本)](#修改密码8以下的版本)
+* [修改密码(8以上的版本)](#修改密码8以上的版本)
+* [删除刚才添加skip-grant-tables](#删除刚才添加skip-grant-tables)
+* [重新连接](#重新连接)
+* [查看密码策略](#查看密码策略)
+* [设置策略为LOW](#设置策略为low)
+* [密码修改成功](#密码修改成功)
+* [要先删除 auto_incrment 属性,才能删除主健(我这里的主健是 id 字段)](#要先删除-auto_incrment-属性才能删除主健我这里的主健是-id-字段)
+* [查看支持的存储引擎](#查看支持的存储引擎)
+* [查看目前使用的存储引擎](#查看目前使用的存储引擎)
+* [查看 cnarea_2019表 的存储引擎](#查看-cnarea_2019表-的存储引擎)
+* [修改ca表的存储引擎为MYISAM](#修改ca表的存储引擎为myisam)
+* [事务a 在select 最后 加入 for update 悲观锁，锁整个表](#事务a-在select-最后-加入-for-update-悲观锁锁整个表)
+* [事务b 执行update时，会阻塞](#事务b-执行update时会阻塞)
+* [事务a commit后，事务b update id = 1 执行成功](#事务a-commit后事务b-update-id--1-执行成功)
+* [事务a 加入where 从句，只锁对应的行(我这里是id = 1)](#事务a-加入where-从句只锁对应的行我这里是id--1)
+* [事务b 对 update 不同的行 成功执行](#事务b-对-update-不同的行-成功执行)
+* [事务b update id = 1时，会阻塞](#事务b-update-id--1时会阻塞)
+* [事务a commit后，事务b update id = 1 执行成功](#事务a-commit后事务b-update-id--1-执行成功-1)
+* [事务a 和 事务 b 插入同样的数据](#事务a-和-事务-b-插入同样的数据)
+* [删除唯一性索引](#删除唯一性索引)
+* [事务a 和 事务 b 插入同样的数据](#事务a-和-事务-b-插入同样的数据-1)
+* [创建存储过程，循环50次select](#创建存储过程循环50次select)
+* [执行scn](#执行scn)
+* [默认是 16M](#默认是-16m)
+* [redo log文件大小](#redo-log文件大小)
+* [redo log文件数量](#redo-log文件数量)
+* [查看innoddb字典视图](#查看innoddb字典视图)
+* [创建表tz](#创建表tz)
+* [开始事务](#开始事务)
+* [插入数据](#插入数据)
+* [回滚到开始事务之前(rollback 和 commit 只能选一个)](#回滚到开始事务之前rollback-和-commit-只能选一个)
+* [如果出现waring,表示该表的存储引擎不支持事务(不是innodb)](#如果出现waring表示该表的存储引擎不支持事务不是innodb)
+* [如果不回滚，使用commit确认这次事务的修改](#如果不回滚使用commit确认这次事务的修改)
+* [把 clone表 存放在缓冲区里的修改操作写入磁盘](#把-clone表-存放在缓冲区里的修改操作写入磁盘)
+* [创建数据库](#创建数据库)
+* [声明一个名叫 abc 的事务保存点](#声明一个名叫-abc-的事务保存点)
+* [插入数据](#插入数据-1)
+* [回滚到 abc 事务保存点](#回滚到-abc-事务保存点)
+* [把 cnarea_2019表 改为innodb 引擎](#把-cnarea_2019表-改为innodb-引擎)
+* [创建存储过程，循环50次select](#创建存储过程循环50次select-1)
+* [执行scn2](#执行scn2)
     * [日志](#日志)
 * [reference](#reference)
-* [优秀教程](#优秀教程)
+* [优秀文章](#优秀文章)
 * [reference items](#reference-items)
 * [online tools](#online-tools)
 
@@ -239,25 +371,33 @@ alter table cnarea_2019 rename ca;
 alter table ca rename cnarea_2019;
 
 # 从表 cnarea_2019 选取所有列(*表示所有列)
-select * from cnarea_2019;
+select *
+from cnarea_2019;
 
 # 如果刚才将表改成 ca 名，就是以下命令
-select * from ca;
+select *
+from ca;
 
 # 从表 cnarea_2019 选取 name 列
-select name from cnarea_2019;
+select name
+from cnarea_2019;
 
 # 从表 cnarea_2019 选取 name 和 id 列
-select id,name from cnarea_2019;
+select id,name
+from cnarea_2019;
 
 # 选取所有列，但只显示前2行
-select * from cnarea_2019 limit 2;
+select *
+from cnarea_2019
+limit 2;
 
 # 选取 level 列,用 distinct 过滤重复的数据
-select distinct level from cnarea_2019;
+select distinct level
+from cnarea_2019;
 
 # 选取所有列，但只显示100到70000行
-select * from cnarea_2019 limit 100,70000;
+select * from cnarea_2019
+limit 100,70000;
 ```
 
 #### where (条件选取)
@@ -274,7 +414,8 @@ select * from cnarea_2019 limit 100,70000;
 
 ```sql
 # 选取 id=1 的数据
-select * from cnarea_2019 where id=1;
+select * from cnarea_2019
+where id=1;
 
 MariaDB [china]> select * from cnarea_2019 where id=1;
 +----+-------+-------------+--------------+----------+-----------+-----------+------------+-------------+---------+------------+-----------+
@@ -306,25 +447,33 @@ merger_name: 北京
 
 ```sql
 # 选取 id 小于10的数据
-select * from cnarea_2019 where id < 10;
+select * from cnarea_2019
+where id < 10;
 
 # 选取 10<=id<=30 的数据
-select * from cnarea_2019 where id<=30 and id>=10;
+select * from cnarea_2019
+where id<=30 and id>=10;
 
 # 选取 id 等于10 和 id等于20 的数据
-select * from cnarea_2019 where id in (10,20);
+select * from cnarea_2019
+where id in (10,20);
 
 # 选取 not null(非空) 和 id 小于 10 的数据
-select * from ca where id is not null and id < 10;
+select * from ca
+where id is not null
+and id < 10;
 ```
 
 有个说法是: where 加 limit 查询比 limit 更快.但我的测试结果不是这样
 [测试结果](/mysql-problem.md)
 
 ```sql
-select * from cnarea_2019 where id > 100 limit 70000;
+select * from cnarea_2019
+where id > 100
+limit 70000;
 
-select * from cnarea_2019 limit 100,70000;
+select * from cnarea_2019
+limit 100,70000;
 ```
 
 #### Order by (排序)
@@ -341,23 +490,32 @@ select * from cnarea_2019 limit 100,70000;
 
 ```sql
 # 以 level 字段进行排序
-select * from cnarea_2019 order by level;
+select * from cnarea_2019
+order by level;
 
 # 选取 id<=10 ,以 level 字段进行排序
-select * from cnarea_2019 where id<=10 order by level;
+select * from cnarea_2019
+where id<=10
+order by level;
 
 # desc 降序
-select * from cnarea_2019 where id<=10 order by level desc;
+select * from cnarea_2019
+where id<=10
+order by level desc;
 
 # level 降序,再以 id 顺序显示
-select * from cnarea_2019 where id<=10 order by level desc,id ASC;
+select * from cnarea_2019
+where id<=10
+order by level desc,
+id ASC;
 ```
 
 #### Group by (分组)
 
 ```sql
 # 以 level 进行分组
-select level from cnarea_2019 group by level;
+select level from cnarea_2019
+group by level;
 
 # 结果和select distinct level from cnarea_2019;一样
 +-------+
@@ -371,7 +529,9 @@ select level from cnarea_2019 group by level;
 +-------+
 
 # 以 level 进行分组，再以 降序 选取
-select level from cnarea_2019 group by level order by level desc;
+select level from cnarea_2019
+group by level
+order by level desc;
 
 +-------+
 | level |
@@ -388,10 +548,12 @@ select level from cnarea_2019 group by level order by level desc;
 
 ```sql
 # 选取以 '广州' 开头的 name 字段
-select name from cnarea_2019 where name regexp '^广州';
+select name from cnarea_2019
+where name regexp '^广州';
 
 # 选取包含 '广州' 的name 字段
-select name from cnarea_2019 where name regexp '.*广州';
+select name from cnarea_2019
+where name regexp '.*广州';
 ```
 
 ### UNION (多个表显示,以 行 为单位)
@@ -406,10 +568,17 @@ select name from cnarea_2019 where name regexp '.*广州';
 
 ```sql
 # 创建名为 tz 的数据库作实验
-create table union_test (`id` int (8), `name` varchar(50), `date` DATE);
+create table union_test (
+`id` int (8),
+`name` varchar(50),
+`date` DATE);
+
 # 插入 2 条数据
-insert into union_test (id,name,date) values (1,'tz','2020-10-24');
-insert into union_test (id,name,date) values (100,'tz','2020-10-24');
+insert into union_test (id,name,date) values
+(1,'tz','2020-10-24');
+
+insert into union_test (id,name,date) values
+(100,'tz','2020-10-24');
 
 
 # 从 union_test 表和 cnarea_2019 表,选取 id,name 列
@@ -434,7 +603,8 @@ MariaDB [china]> select id,name from cnarea_2019 where id<10 union select id,nam
 +------+--------------------------+
 
 # 选取列,不包含重复数据
-select id from cnarea_2019 where id<10 union select id from union_test;
+select id from cnarea_2019 where id<10
+union select id from union_test;
 
 +------+
 | id   |
@@ -452,7 +622,8 @@ select id from cnarea_2019 where id<10 union select id from union_test;
 +------+
 
 # 选取列,包含重复数据(all)
-select id from cnarea_2019 where id<10 union all select id from union_test;
+select id from cnarea_2019 where id<10
+union all select id from union_test;
 
 +------+
 | id   |
@@ -471,7 +642,10 @@ select id from cnarea_2019 where id<10 union all select id from union_test;
 +------+
 
 # 选取以 深圳市 和 北京市 开头的数据
-select id,name from cnarea_2019 where name regexp '^深圳市' union select id,name from cnarea_2019 where name regexp '^北京市';
+select id,name from cnarea_2019
+where name regexp '^深圳市'
+union select id,name from cnarea_2019
+where name regexp '^北京市';
 
 +--------+-----------------------------------------+
 | id     | name                                    |
@@ -538,11 +712,13 @@ select * from j;
 ```sql
 # 选取 j 表的 id,name,date 字段以及 cnarea_2019 表的 name 字段
 select j.id,j.date,cnarea_2019.name
-from j,cnarea_2019 where cnarea_2019.id=j.id;
+from j,cnarea_2019
+where cnarea_2019.id=j.id;
 
 # 或者
 select j.id,j.name,j.date,cnarea_2019.name
-from j inner join  cnarea_2019 on cnarea_2019.id=j.id;
+from j inner join  cnarea_2019
+on cnarea_2019.id=j.id;
 
 +------+------+------------+--------------------------+
 | id   | name | date       | name                     |
@@ -563,7 +739,8 @@ STRAIGHT_JOIN:
 # 先读取 j 再读取 cnarea_2019 或者说 驱动表是j 被驱动表是cnarea_2019.
 # 因为 j 表的数据更小所以更快
 select j.id,j.name,j.date,cnarea_2019.name
-from j straight_join cnarea_2019 on j.id=cnarea_2019.id;
+from j straight_join cnarea_2019
+on j.id=cnarea_2019.id;
 ```
 
 **LEFT JOIN**
@@ -572,7 +749,7 @@ from j straight_join cnarea_2019 on j.id=cnarea_2019.id;
 # 左连接，以左表(j)id 字段个数进行选取.所以结果与inner join一样
 select j.id,j.name,j.date,cnarea_2019.name
 from j left join  cnarea_2019
-on  cnarea_2019.id=j.id;
+on cnarea_2019.id=j.id;
 
 +------+------+------------+--------------------------+
 | id   | name | date       | name                     |
@@ -583,7 +760,8 @@ on  cnarea_2019.id=j.id;
 +------+------+------------+--------------------------+
 
 # 插入一条高于 cnarea_2019表id最大值 的数据
-insert into j (id,name,date) value (10000000,'tz一百万','2020-10-24');
+insert into j (id,name,date) value
+(10000000,'tz一百万','2020-10-24');
 
 # 再次左连接，因为 cnarea_2019 没有id 10000000(一百万)的数据，所以这里显示为 null
 
@@ -610,7 +788,8 @@ on j.id = cnarea_2019.id;
 
 select j.id,j.date,cnarea_2019.name,cnarea_2019.pinyin
 from j right join cnarea_2019
-on j.id=cnarea_2019.id limit 10;
+on j.id=cnarea_2019.id
+limit 10;
 
 +------+------------+--------------------------+-------------+
 | id   | date       | name                     | pinyin      |
@@ -663,10 +842,12 @@ select count(1) as name from cnarea_2019;
 select count(distinct level) as totals from cnarea_2019;
 
 # 对 level 重复数据的进行统计
-select level, count(1) as totals from cnarea_2019 group by level;
+select level, count(1) as totals from cnarea_2019
+group by level;
 
 # 对不同的 level，选取 id 的平均值
-select level,avg(id) from cnarea_2019 group by level;
+select level,avg(id) from cnarea_2019
+group by level;
 
 MariaDB [china]> select level,avg(id) from cnarea_2019 group by level;
 +-------+-------------+
@@ -681,7 +862,8 @@ MariaDB [china]> select level,avg(id) from cnarea_2019 group by level;
 
 # 对不同的 level，选取 id 的平均值大于400000
 select level,avg(id) from cnarea_2019
-group by level having avg(id) > 400000;
+group by level
+having avg(id) > 400000;
 
 MariaDB [china]> select level,avg(id) from cnarea_2019 group by level having avg(id) > 400000;
 +-------+-------------+
@@ -748,9 +930,14 @@ CREATE TABLE new(
 `name` varchar(50) NOT NULL UNIQUE, # NOT NULL 设置不能为空 # UNIQUE 设置唯一性索引
 `date` DATE,
 primary key (`id`))                 # 设置主健为 id 字段(列)
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+# 注意:编码要使用 utf8mb4 因为utf-8,不是真正的utf-8 显示 emoj 会报错
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+# 而不是
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-# 这里的int(8),varchar(50),括号里的数字表示的是最大显示宽度
+# 这里的int(8),varchar(50),括号里的数字,表示的是最大显示宽度
 
 # 查看 new 表里的字段
 desc new;
@@ -773,7 +960,7 @@ Create Table: CREATE TABLE `new` (
   `date` date DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 1 row in set (0.000 sec)
 
 
@@ -794,7 +981,8 @@ CREATE TEMPORARY TABLE temp (`id` int);
 ALTER TABLE new AUTO_INCREMENT=100;
 
 # 插入一条数据
-insert into new (name,date) values ('tz','2020-10-24');
+insert into new (name,date) values
+('tz','2020-10-24');
 
 # 插入多条数据
 insert into new (name,date) values
@@ -833,9 +1021,14 @@ id int(4) unique auto_increment,
 name varchar(50));
 
 # 导入 1 条数据
-insert into newcn (id,name) select id,name from cnarea_2019 where id=1;
+insert into newcn (id,name)
+select id,name from cnarea_2019
+where id=1;
+
 # 可多次导入
-insert into newcn (id,name) select id,name from cnarea_2019 where id >= 2 and id <=10 ;
+insert into newcn (id,name)
+select id,name from cnarea_2019
+where id >= 2 and id <=10 ;
 
 # 查看结果
 select * from newcn;
@@ -855,7 +1048,9 @@ select * from newcn;
 +------+--------------------------+
 
 # 插入包含 广州 的数据
-insert into newcn (id,name) select id,name from cnarea_2019 where name regexp '广州.*';
+insert into newcn (id,name)
+select id,name from cnarea_2019
+where name regexp '广州.*';
 ```
 
 ### Update
@@ -868,19 +1063,27 @@ insert into newcn (id,name) select id,name from cnarea_2019 where name regexp '�
 
 ```sql
 # 修改 id=1 的 city_code 字段为111
-update cnarea_2019 set city_code=111 where id=1;
+update cnarea_2019
+set city_code=111 where id=1;
 
 # 对每个 id-3 填回刚才删除的 id1,2,3
-update cnarea_2019 set id=(id-3) where id>2;
+update cnarea_2019
+set id=(id-3) where id>2;
 
 # 对小于level平均值进行加1
-update cnarea_2019 set level=(level+1) where level<=(select avg(level) from cnarea_2019);
+update cnarea_2019 set level=(level+1)
+where level<=(select avg(level) from cnarea_2019);
 
 # 把 广州 修改为 北京,replace() 修改列的某一部分值
-update cnarea_2019 set name=replace(name,'广州','北京') where name regexp '广州.*';
+update cnarea_2019
+set name=replace(name,'广州','北京')
+where name regexp '广州.*';
 
 # 把以 北京 和 深圳 开头的数据，修改为 广州
-update cnarea_2019 set name=replace(name,'深圳','广州'),name=replace(name,'北京','广州') where name regexp '^深圳' or name regexp '^北京';
+update cnarea_2019
+set name=replace(name,'深圳','广州'),
+name=replace(name,'北京','广州')
+where name regexp '^深圳' or name regexp '^北京';
 ```
 
 ### Delete and Drop (删除)
@@ -894,17 +1097,22 @@ update cnarea_2019 set name=replace(name,'深圳','广州'),name=replace(name,'�
 
 ```sql
 # 删除 id1
-delete from cnarea_2019 where id=1;
+delete from cnarea_2019
+where id=1;
 # 删除 id2和4
-delete from cnarea_2019 where id in (2,4);
+delete from cnarea_2019
+where id in (2,4);
 
 # 查看结果
-select level, count(*) as totals from cnarea_2019 group by level;
+select level, count(*) as totals from cnarea_2019
+group by level;
 
 # 删除表
 delete from cnarea_2019;
+
 # 删除表(无法回退)
 truncate table cnarea_2019;
+
 # 这两者的区别简单理解就是 drop 语句删除表之后，可以通过日志进行回复，而 truncate 删除表之后永远恢复不了，所以，一般不使用 truncate 进行表的删除。
 ```
 
@@ -946,7 +1154,10 @@ mysql -uroot -pYouPassward china < china_area_mysql.sql
 
 ```sql
 # 创建表
-create table clone (`id` int (8), `name` varchar(50), `date` DATE);
+create table clone (
+`id` int (8),
+`name` varchar(50),
+`date` DATE);
 
 # 插入数据
 insert into clone (id,name,date) values
@@ -957,9 +1168,11 @@ insert into clone (id,name,date) values
 (2,'tz1','2020-10-24');
 
 # 通过 ALTER IGNORE 加入 主健(PRIMARY KEY) 删除重复的数据
-ALTER IGNORE TABLE clone ADD PRIMARY KEY (id, name);
+ALTER IGNORE TABLE clone
+ADD PRIMARY KEY (id, name);
 # 或者 ALTER IGNORE 加入 唯一性索引(UNIQUE)
-ALTER IGNORE TABLE clone ADD UNIQUE KEY (id, name);
+ALTER IGNORE TABLE clone
+ADD UNIQUE KEY (id, name);
 
 select * from clone;
 +----+------+------------+
@@ -972,12 +1185,136 @@ select * from clone;
 
 # 成功后可以删除 (这是主健)
 alter table ca drop primary key;
+
 # 成功后可以删除 (这是unique)
 alter table clone drop index id;
 alter table clone drop index name;
 ```
 
 [误删数据进行回滚，跳转至**事务**](#transaction)
+
+## [FOREIGN KEY(外键)](https://www.mysqltutorial.org/mysql-foreign-key/)
+
+- 1.父表和子表必须使用相同的存储引擎
+
+- 2.外键必须建立索引
+
+- 3.外键和引用键中的对应列必须具有相似的数据类型。整数类型的大小和符号必须相同。字符串类型的长度不必相同。
+
+```sql
+# 创建 a,b 两表
+CREATE TABLE a(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+) ENGINE=INNODB;
+
+CREATE TABLE b(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    a_id INT NOT NULL,
+    CONSTRAINT fk_a
+    FOREIGN KEY (a_id)
+    REFERENCES a(id)
+) ENGINE=INNODB;
+
+# 插入a 表 id 为1
+insert into a (id,name) value
+(1,'in a');
+
+# 插入b 表 外键a_id 必须和刚才插入 a 表的 id 值一样
+insert into b (id,a_id) value
+(10,1);
+
+# 尝试插入b 表新数据
+insert into b (id,a_id) value
+(20,2);
+
+# 因为a表没有id为2的数据,所以报错
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`china`.`b`, CONSTRAINT `b_ibfk_1` FOREIGN KEY (`a_id`) REFERENCES `a` (`id`))
+```
+
+b 表:
+
+````sql
+# 尝试修改b 表的 外键a_id 值
+update b set a_id = 2
+where id = 1;
+
+虽然没有报错，但 a_id 并没有修改:
+
+![avatar](/Pictures/mysql/foreign.png)
+
+delete 也一样:
+
+```sql
+delete from b
+where id =1;
+````
+
+![avatar](/Pictures/mysql/foreign1.png)
+
+a 表:
+
+```sql
+# 因为没有权限，修改失败
+update a set id = 2 where id = 1;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`china`.`b`, CONSTRAINT `fk_a` FOREIGN KEY (`a_id`) REFERENCES `a` (`id`))
+```
+
+添加权限:
+
+```sql
+# 删除外键
+ALTER TABLE b DROP FOREIGN KEY fk_a;
+
+# 重新添加外键，并授予权限
+ALTER TABLE b
+    ADD CONSTRAINT a_id
+    FOREIGN KEY (a_id)
+    REFERENCES a (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+
+# 修改a 表
+update a set id = 2
+where id = 1;
+
+# 查看结果
+select * from b;
+```
+
+![avatar](/Pictures/mysql/foreign2.png)
+
+又或者删除 b 表后重新新建,并授予权限:
+![avatar](/Pictures/mysql/foreign3.png)
+
+删除 a 表 刚才的数据:
+
+```sql
+delete from a
+where id = 2;
+
+# 查看结果
+select * from b;
+```
+
+此时 a 表的数据删除，b 表对应的数据也会删除:
+![avatar](/Pictures/mysql/foreign4.png)
+
+如果创建外键表时，没有指定 CONSTRAINT ，系统会自动生成(我这里为 b_ibfk_1):
+
+```sql
+# 查看CONSTRAINT
+show create table b\G;
+*************************** 1. row ***************************
+       Table: b
+Create Table: CREATE TABLE `b` (
+  `id` int(11) DEFAULT NULL,
+  `a_id` int(11) DEFAULT NULL,
+  KEY `a_id_index` (`a_id`),
+  CONSTRAINT `b_ibfk_1` FOREIGN KEY (`a_id`) REFERENCES `a` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+1 row in set (0.000 sec)
+```
 
 ## VIEW (视图)
 
@@ -1410,10 +1747,12 @@ create and grant (创建和授权):
 SELECT user,host FROM mysql.user;
 
 # 详细查看所有用户
-SELECT DISTINCT CONCAT('User: ''',user,'''@''',host,''';') AS query FROM mysql.user;
+SELECT DISTINCT CONCAT('User: ''',user,'''@''',host,''';')
+AS query FROM mysql.user;
 
 # 创建用户名为tz的用户
-create user 'tz'@'127.0.0.1' identified by 'YouPassword';
+create user 'tz'@'127.0.0.1'
+identified by 'YouPassword';
 
 # 当前用户修改密码的命令
 SET PASSWORD = PASSWORD("NewPassword");
@@ -1443,8 +1782,8 @@ show grants for 'tz'@'127.0.0.1';
 +-------------------------------------------------------------------+
 | Grants for tz@127.0.0.1                                           |
 +-------------------------------------------------------------------+
-| GRANT ALL PRIVILEGES ON *.* TO `tz`@`127.0.0.1` WITH GRANT OPTION |
-| GRANT SELECT, INSERT ON `china`.* TO `tz`@`127.0.0.1`             |
+| GRANT ALL PRIVILEGES ON *.* TO `tz`@`127.0.0.1` WITH GRANT OPTION   |
+| GRANT SELECT, INSERT ON `china`.* TO `tz`@`127.0.0.1`              |
 | GRANT SELECT ON `china`.`cnarea_2019` TO `tz`@`127.0.0.1`         |
 +-------------------------------------------------------------------+
 ```
@@ -1499,14 +1838,22 @@ drop user 'tz'@'127.0.0.1';
 
 ```sql
 
-# 允许root从'192.168.100.208'主机china库下的所有表
-grant all PRIVILEGES on china.* to 'root'@'192.168.100.208' identified by 'YouPassword' WITH GRANT OPTION;
+# 允许root从'192.168.100.208'主机china库下的所有表(WITH GRANT OPTION表示有修改权限的权限）
+grant all PRIVILEGES on china.* to
+'root'@'192.168.100.208'
+identified by 'YouPassword'
+WITH GRANT OPTION;
 
 # 允许root从'192.168.100.208'主机china库下的cnarea_2019表
-grant all PRIVILEGES on china.cnarea_2019 to 'root'@'%'  identified by 'YouPassword' WITH GRANT OPTION;
+grant all PRIVILEGES on china.cnarea_2019 to
+'root'@'%'
+identified by 'YouPassword'
+WITH GRANT OPTION;
 
 # 允许所有用户连接所有库下的所有表(%:表示通配符)
-grant all PRIVILEGES on *.* to  'root'@'%' identified by 'YouPassword' WITH GRANT OPTION;
+grant all PRIVILEGES on *.* to
+'root'@'%' identified by 'YouPassword'
+WITH GRANT OPTION;
 
 # 刷新权限
 FLUSH PRIVILEGES;
@@ -2096,6 +2443,14 @@ skip-name-resolve
 - `ps aux | grep mysql` 进程存在
 - 内存不足
 
+### ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined
+
+```sql
+# 要先删除 auto_incrment 属性,才能删除主健(我这里的主健是 id 字段)
+alter table test modify id int(10);
+alter table test drop primary key;
+```
+
 ## 存储引擎
 
 [mysql 索引结构是在存储引擎层面实现的](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
@@ -2562,7 +2917,9 @@ call scn2();
 打开另一个客户端,对 innodb 表修改数据:
 
 ```sql
-update cnarea_2019_innodb set name='test-lock' where id <11;
+update cnarea_2019_innodb
+set name='test-lock' where id <11;
+
 select name from cnarea_2019_innodb where id < 11;
 ```
 
@@ -2590,14 +2947,20 @@ select name from cnarea_2019_innodb where id < 11;
 - [深入解析 MySQL 视图 VIEW](https://www.cnblogs.com/geaozhang/p/6792369.html)
 - [MySQL 的 join 功能弱爆了？](https://zhuanlan.zhihu.com/p/286581170)
 
-# 优秀教程
+# 优秀文章
 
 - [MySQL 入门教程](https://github.com/jaywcjlove/mysql-tutorial)
 - [sql 语句教程](https://www.1keydata.com/cn/sql/)
 - [W3cSchool SQL 教程](https://www.w3school.com.cn/sql/index.asp)
 - [MySQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
 - [138 张图带你 MySQL 入门](https://mp.weixin.qq.com/s?src=11&timestamp=1603417035&ver=2661&signature=Z-XNfjtR11GhHg29XAiBZ0RAiMHavvRavxB1ccysnXtAKChrVkXo*zx3DKFPSxDESZ9lwRM7C8-*yu1dEGmXwHgv1qe7V-WvwLUUQe7Nz7RUwEuJmLYqVRnOWtONHeL-&new=1)
+
 - [数据库内核月报](http://mysql.taobao.org/monthly/)
+  通过搜索引擎输入以下格式进行搜索(我这里搜索的是 binlog)
+
+  > site:mysql.taobao.org binlog
+
+- [CTO 要我把这份 MySQL 规范贴在工位上！](https://mp.weixin.qq.com/s?src=11&timestamp=1605361738&ver=2706&signature=wzhghhJTTx1Hy9Nn90P35u9hfG3eaeMGOvIoDoBGTECHdDQAmUuxFCVHAbuUqaN4*UYga9bGdXxX3f1G8kiYZ1yoA4tnocgi8GZoRe2TNQFkbbh1T2eSqyC6DcA9bTqF&new=1)
 
 # reference items
 
