@@ -108,6 +108,9 @@ lsof
 
 #列出正在被监听的端口
 lsof -i
+
+# 指定程序mysql
+lsof -c mysql
 ```
 
 ### rsync
@@ -123,13 +126,17 @@ lsof -i
 
 ```sh
 rsync -av SOURCE DESTINATION
-#远程ssh push pull
+
+# 远程ssh push pull
 rsync -av .zshrc root@192.168.100.208:/root
-#删除只存在于目标目录、不存在于源目录的文件。
+
+# 删除只存在于目标目录、不存在于源目录的文件。
 rsync -av --delete source/ destination
-#增量备份，将基准和源的变动，以硬链接的同步到target
+
+# 增量备份，将基准和源的变动，以硬链接的同步到target
 rsync -a --delete --link-dest /compare/path /source/path /target/path
-#排除txt以外所有文件
+
+# 排除txt以外所有文件
 rsync -av --include="*.txt" --exclude='*' source/ destination
 ```
 

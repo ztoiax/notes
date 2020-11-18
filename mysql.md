@@ -23,189 +23,64 @@
         * [Delete and Drop (删除)](#delete-and-drop-删除)
             * [删除重复的数据](#删除重复的数据)
     * [FOREIGN KEY(外键)](#foreign-key外键)
-* [因为没有权限，修改失败](#因为没有权限修改失败)
-* [删除外键](#删除外键)
-* [重新添加外键，并授予权限](#重新添加外键并授予权限)
-* [修改a 表](#修改a-表)
-* [查看结果](#查看结果)
-* [查看结果](#查看结果-1)
-* [查看CONSTRAINT](#查看constraint)
-* [创建视图](#创建视图)
-* [查看视图](#查看视图)
-* [删除视图](#删除视图)
-* [以 clone表 为基表,创建视图名为 v](#以-clone表-为基表创建视图名为-v)
-* [查看视图信息](#查看视图信息)
-* [嵌套 v视图 名为 vv,并且 id <= 2](#嵌套-v视图-名为-vv并且-id--2)
-* [此时如果把 id 改为 3.注意这里 v 视图 和 clone 表的数据也会被更改](#此时如果把-id-改为-3注意这里-v-视图-和-clone-表的数据也会被更改)
-* [因为 vv视图有where id <= 2的限制, 所以不满足条件的值不显示](#因为-vv视图有where-id--2的限制-所以不满足条件的值不显示)
-* [对vv视图修改的值,在v视图的也被修改](#对vv视图修改的值在v视图的也被修改)
-* [和刚才的 vv视图 一样 这次 vvv视图 加入with check option;](#和刚才的-vv视图-一样-这次-vvv视图-加入with-check-option)
-* [此时对不满足条件的值,进行修改会报错](#此时对不满足条件的值进行修改会报错)
-* [执行](#执行)
-* [查看所有存储过程](#查看所有存储过程)
-* [查看 hello 存储过程](#查看-hello-存储过程)
-* [执行](#执行-1)
-* [查看所有自定义函数](#查看所有自定义函数)
-* [查看 hello 函数](#查看-hello-函数)
-* [插入一些数据](#插入一些数据)
-* [查看结果](#查看结果-2)
-* [检测过程是否存在，如存在则删除](#检测过程是否存在如存在则删除)
-* [过程体要包含在delimiter里](#过程体要包含在delimiter里)
-* [设置 传递参数v 为0](#设置-传递参数v-为0)
-* [执行 zero 过程](#执行-zero-过程)
-* [查看 返回参数n 的值](#查看-返回参数n-的值)
-* [查看过程结果](#查看过程结果)
-* [重命名表](#重命名表)
-* [将列 name 改名为 mingzi ,类型改为 char(50)](#将列-name-改名为-mingzi-类型改为-char50)
-* [删除 id 列](#删除-id-列)
-* [添加 id 列](#添加-id-列)
-* [重命名 id 列为 number(bigint类型)](#重命名-id-列为-numberbigint类型)
-* [修改 city_code 列,为 char(50) 类型](#修改-city_code-列为-char50-类型)
-* [或者](#或者)
-* [修改 ca 表 id 列默认值1000](#修改-ca-表-id-列默认值1000)
-* [或者](#或者-1)
-* [添加主键，确保该主键默认不为空（NOT NULL）](#添加主键确保该主键默认不为空not-null)
-* [删除主键](#删除主键)
-* [删除唯一性索引(unique)的 id 字段](#删除唯一性索引unique的-id-字段)
-* [修改 ca 表的存储引擎](#修改-ca-表的存储引擎)
-* [显示索引](#显示索引)
-* [添加索引id](#添加索引id)
-* [添加索引id,name](#添加索引idname)
-* [添加索引降序id,name](#添加索引降序idname)
-* [删除索引](#删除索引)
-* [添加索引id](#添加索引id-1)
-* [删除索引](#删除索引-1)
-* [测试效果](#测试效果)
-* [添加索引](#添加索引)
-* [注意：目前还是在undrop-for-innodb](#注意目前还是在undrop-for-innodb)
-* [生成pages-ibdata1目录,目录下按照每个页为一个文件](#生成pages-ibdata1目录目录下按照每个页为一个文件)
-* [按照层次查询](#按照层次查询)
-* [数据类型](#数据类型)
-* [查看所有用户](#查看所有用户)
-* [详细查看所有用户](#详细查看所有用户)
-* [创建用户名为tz的用户](#创建用户名为tz的用户)
-* [当前用户修改密码的命令](#当前用户修改密码的命令)
-* [修改密码](#修改密码)
-* [grant (授权)](#grant-授权)
-* [只能 select china.cnarea_2019](#只能-select-chinacnarea_2019)
-* [添加 insert 和 china所有表的权限](#添加-insert-和-china所有表的权限)
-* [添加所有数据库和表的权限](#添加所有数据库和表的权限)
-* [允许tz 用户授权于别的用户](#允许tz-用户授权于别的用户)
-* [刷新权限](#刷新权限)
-* [查看用户权限](#查看用户权限)
-* [刷新权限](#刷新权限-1)
-* [删除用户](#删除用户)
-* [允许root从'192.168.100.208'主机china库下的所有表(WITH GRANT OPTION表示有修改权限的权限）](#允许root从192168100208主机china库下的所有表with-grant-option表示有修改权限的权限)
-* [允许root从'192.168.100.208'主机china库下的cnarea_2019表](#允许root从192168100208主机china库下的cnarea_2019表)
-* [允许所有用户连接所有库下的所有表(%:表示通配符)](#允许所有用户连接所有库下的所有表表示通配符)
-* [刷新权限](#刷新权限-2)
-* [记得在服务器里关闭防火墙](#记得在服务器里关闭防火墙)
-* [连接远程数据库(我这里是192.168.100.208)](#连接远程数据库我这里是192168100208)
-* [查看配置(变量)](#查看配置变量)
-* [查看字段前面包含max_connect的配置(通配符%)](#查看字段前面包含max_connect的配置通配符)
-* [设置自定义变量(重启后失效)](#设置自定义变量重启后失效)
-* [查看刚才的变量](#查看刚才的变量)
-* [修改会话变量,该值将在会话内保持有效(重启后失效)](#修改会话变量该值将在会话内保持有效重启后失效)
-* [通过 select 查看](#通过-select-查看)
-* [或者](#或者-2)
-* [修改全局变量, 仅影响更改后连接的客户端的相应会话值.(重启后失效)](#修改全局变量-仅影响更改后连接的客户端的相应会话值重启后失效)
-* [通过 select 查看](#通过-select-查看-1)
-* [或者](#或者-3)
-* [永久保存,要写入/etc/my.cnf](#永久保存要写入etcmycnf)
-* [导出tz表. 注意：路径要加''](#导出tz表-注意路径要加)
-* [删除表和表的数据](#删除表和表的数据)
-* [导入前要创建一个新的表](#导入前要创建一个新的表)
-* [备份 china 数据库](#备份-china-数据库)
-* [备份 china 数据库里的 tz 表](#备份-china-数据库里的-tz-表)
-* [备份所有数据库](#备份所有数据库)
-* [-d 只备份所有数据库表结构(不包含表数据)](#-d-只备份所有数据库表结构不包含表数据)
-* [恢复到 china 数据库](#恢复到-china-数据库)
-* [恢复所有数据库](#恢复所有数据库)
-* [备份](#备份)
-* [进入数据库后给数据库加上一把锁，阻止对数据库进行任何的写操作](#进入数据库后给数据库加上一把锁阻止对数据库进行任何的写操作)
-* [备份tz数据库](#备份tz数据库)
-* [对数据库解锁，恢复对主数据库的操作](#对数据库解锁恢复对主数据库的操作)
-* [启用slave权限](#启用slave权限)
-* [或者启用所有权限](#或者启用所有权限)
-* [日志目录 /var/lib/mysql/centos7.000001](#日志目录-varlibmysqlcentos7000001)
-* [复制主服务器的tz.sql备份文件](#复制主服务器的tzsql备份文件)
-* [创建tz数据库](#创建tz数据库)
-* [先创建 tz 数据库](#先创建-tz-数据库)
-* [导入](#导入)
-* [如果出现以下核对错误](#如果出现以下核对错误)
-* [通过修改编码修复](#通过修改编码修复)
-* [再次运行](#再次运行)
-* [关闭同步](#关闭同步)
-* [开启同步功能](#开启同步功能)
-* [开启同步](#开启同步)
-* [测试能不能连接主服务器](#测试能不能连接主服务器)
-* [MASTER_HOST 填刚才查询的ip](#master_host-填刚才查询的ip)
-* [带压缩备份--compress(gz)](#带压缩备份--compressgz)
-* [不带压缩备份,最后再用7z压缩](#不带压缩备份最后再用7z压缩)
-* [恢复](#恢复)
-* [分析slow log](#分析slow-log)
-* [分析general log](#分析general-log)
-* [下载](#下载)
-* [安装源](#安装源)
-* [查看安装是否成功](#查看安装是否成功)
-* [查看当前MySQL Yum Repository中所有MySQL版本（每个版本在不同的子仓库中）](#查看当前mysql-yum-repository中所有mysql版本每个版本在不同的子仓库中)
-* [切换版本](#切换版本)
-* [安装](#安装)
-* [下载镜像](#下载镜像)
-* [查看本地镜像](#查看本地镜像)
-* [-p端口映射](#-p端口映射)
-* [查看运行镜像](#查看运行镜像)
-* [进入容器](#进入容器)
-* [登录 mysql](#登录-mysql)
-* [在[mysqld]后添加skip-grant-tables（登录时跳过权限检查）](#在mysqld后添加skip-grant-tables登录时跳过权限检查)
-* [连接数据库](#连接数据库-1)
-* [刷新权限](#刷新权限-3)
-* [修改密码(8以下的版本)](#修改密码8以下的版本)
-* [修改密码(8以上的版本)](#修改密码8以上的版本)
-* [删除刚才添加skip-grant-tables](#删除刚才添加skip-grant-tables)
-* [重新连接](#重新连接)
-* [查看密码策略](#查看密码策略)
-* [设置策略为LOW](#设置策略为low)
-* [密码修改成功](#密码修改成功)
-* [要先删除 auto_incrment 属性,才能删除主健(我这里的主健是 id 字段)](#要先删除-auto_incrment-属性才能删除主健我这里的主健是-id-字段)
-* [查看支持的存储引擎](#查看支持的存储引擎)
-* [查看目前使用的存储引擎](#查看目前使用的存储引擎)
-* [查看 cnarea_2019表 的存储引擎](#查看-cnarea_2019表-的存储引擎)
-* [修改ca表的存储引擎为MYISAM](#修改ca表的存储引擎为myisam)
-* [事务a 在select 最后 加入 for update 悲观锁，锁整个表](#事务a-在select-最后-加入-for-update-悲观锁锁整个表)
-* [事务b 执行update时，会阻塞](#事务b-执行update时会阻塞)
-* [事务a commit后，事务b update id = 1 执行成功](#事务a-commit后事务b-update-id--1-执行成功)
-* [事务a 加入where 从句，只锁对应的行(我这里是id = 1)](#事务a-加入where-从句只锁对应的行我这里是id--1)
-* [事务b 对 update 不同的行 成功执行](#事务b-对-update-不同的行-成功执行)
-* [事务b update id = 1时，会阻塞](#事务b-update-id--1时会阻塞)
-* [事务a commit后，事务b update id = 1 执行成功](#事务a-commit后事务b-update-id--1-执行成功-1)
-* [事务a 和 事务 b 插入同样的数据](#事务a-和-事务-b-插入同样的数据)
-* [删除唯一性索引](#删除唯一性索引)
-* [事务a 和 事务 b 插入同样的数据](#事务a-和-事务-b-插入同样的数据-1)
-* [创建存储过程，循环50次select](#创建存储过程循环50次select)
-* [执行scn](#执行scn)
-* [默认是 16M](#默认是-16m)
-* [redo log文件大小](#redo-log文件大小)
-* [redo log文件数量](#redo-log文件数量)
-* [查看innoddb字典视图](#查看innoddb字典视图)
-* [创建表tz](#创建表tz)
-* [开始事务](#开始事务)
-* [插入数据](#插入数据)
-* [回滚到开始事务之前(rollback 和 commit 只能选一个)](#回滚到开始事务之前rollback-和-commit-只能选一个)
-* [如果出现waring,表示该表的存储引擎不支持事务(不是innodb)](#如果出现waring表示该表的存储引擎不支持事务不是innodb)
-* [如果不回滚，使用commit确认这次事务的修改](#如果不回滚使用commit确认这次事务的修改)
-* [把 clone表 存放在缓冲区里的修改操作写入磁盘](#把-clone表-存放在缓冲区里的修改操作写入磁盘)
-* [创建数据库](#创建数据库)
-* [声明一个名叫 abc 的事务保存点](#声明一个名叫-abc-的事务保存点)
-* [插入数据](#插入数据-1)
-* [回滚到 abc 事务保存点](#回滚到-abc-事务保存点)
-* [把 cnarea_2019表 改为innodb 引擎](#把-cnarea_2019表-改为innodb-引擎)
-* [创建存储过程，循环50次select](#创建存储过程循环50次select-1)
-* [执行scn2](#执行scn2)
+    * [VIEW (视图)](#view-视图)
+    * [Stored Procedure and Function (自定义存储过程 和 函数)](#stored-procedure-and-function-自定义存储过程-和-函数)
+        * [Stored Procedure (自定义存储过程）](#stored-procedure-自定义存储过程)
+        * [ALTER](#alter)
+    * [Multiple-Column Indexes (多行索引)](#multiple-column-indexes-多行索引)
+        * [B-tree](#b-tree)
+        * [explain](#explain)
+        * [索引速度测试](#索引速度测试)
+    * [DCL](#dcl)
+        * [帮助文档](#帮助文档)
+        * [用户权限设置](#用户权限设置)
+            * [revoke (撤销):](#revoke-撤销)
+            * [授予权限,远程登陆](#授予权限远程登陆)
+        * [配置(varibles)操作](#配置varibles操作)
+    * [mysqldump 备份和恢复](#mysqldump-备份和恢复)
+        * [主从同步 (Master Slave Replication )](#主从同步-master-slave-replication-)
+            * [主服务器配置](#主服务器配置)
+            * [从服务器配置](#从服务器配置)
+        * [docker 主从复制](#docker-主从复制)
+    * [高效强大的 mysql 软件](#高效强大的-mysql-软件)
+        * [mycli](#mycli)
+        * [mitzasql](#mitzasql)
+        * [mydumper](#mydumper)
+        * [percona-toolkit 运维监控工具](#percona-toolkit-运维监控工具)
+        * [innotop](#innotop)
+        * [sysbench](#sysbench)
+        * [dbatool](#dbatool)
+        * [undrop-for-innodb(\*数据恢复)](#undrop-for-innodb数据恢复)
+* [安装 MySql](#安装-mysql)
+    * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
+    * [docker 安装](#docker-安装)
+    * [常见错误](#常见错误)
+        * [登录错误](#登录错误)
+            * [修复](#修复)
+                * [修改密码成功后](#修改密码成功后)
+                * [如果出现以下报错(密码不满足策略安全)](#如果出现以下报错密码不满足策略安全)
+                    * [修复](#修复-1)
+        * [ERROR 2013 (HY000): Lost connection to MySQL server during query(导致无法 stop slave;)](#error-2013-hy000-lost-connection-to-mysql-server-during-query导致无法-stop-slave)
+        * [ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (111)(连接不了数据库)](#error-2002-hy000-cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-111连接不了数据库)
+        * [ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined](#error-1075-42000-incorrect-table-definition-there-can-be-only-one-auto-column-and-it-must-be-defined)
+    * [Storage Engine (存储引擎)](#storage-engine-存储引擎)
+        * [锁](#锁)
+        * [MyISAM](#myisam)
+        * [InnoDB](#innodb)
+            * [REDO LOG (重做日志)](#redo-log-重做日志)
+            * [UNDO LOG](#undo-log)
+            * [TRANSACTION (事务)](#transaction-事务)
+            * [autocommit](#autocommit)
+            * [线程](#线程)
+            * [锁](#锁-1)
+        * [dictionary(字典)](#dictionary字典)
+            * [informantion_schema](#informantion_schema)
+            * [performance_schema](#performance_schema)
+    * [极限值测试](#极限值测试)
     * [日志](#日志)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
-* [reference items](#reference-items)
+* [新闻资源](#新闻资源)
 * [online tools](#online-tools)
 
 <!-- vim-markdown-toc -->
@@ -277,6 +152,28 @@ use tz;
 # 查看tz数据库里的表
 show tables;
 
+# 查看 information_scema 数据库里的表
+show tables from information_scema;
+
+# 查看数据库状态
+show status;
+
+# 查看mysql的插入次数;
+show status like "com_insert%";
+
+# 查看mysql的删除次数;
+show status like "com_delete%";
+
+# 查看mysql的查询次数;
+show status like "com_select%";
+
+# 查看mysql服务器运行时间
+show status like "uptime";
+
+# 查看mysql连接次数
+show status like 'connections';
+
+# 查看数据库队列
 # 查看数据库状态
 show status;
 
@@ -919,9 +816,32 @@ select release_lock('lockname');
   >
   > - 主键一定是唯一性索引，唯一性索引并不一定就是主键。
   >
-  > - 一个表中可以有多个唯一性索引，但只能有一个主键。
-  >
   > - 主键列不允许空值，而唯一性索引列允许空值。
+- 拓展知识: [Clusered Index](https://dev.mysql.com/doc/refman/8.0/en/innodb-index-types.html) and [Secondary Indexes](https://dev.mysql.com/doc/refman/8.0/en/glossary.html#glos_secondary_index)
+  > - 主健在 InnoDB 中也叫做 **Clusered Index**(聚焦索引) 除了它以外的主健索引叫 Secondary Indexes(二级索引 或 辅助索引)
+  >
+  > - 如果表没有 Primary key 或 Unique，InnoDB 会在包含行 ID 值的合成列上生成 GEN_CLUST_INDEX 的隐藏聚集索引
+  >
+  > - Clusered Index 搜索非常的快，指向包含所有行数据的 Page(页)，如果表非常大，会分为多个 Page 页
+  >
+  > - Secondary Indexes 可以有 0 个或多个，只满足索引列中的值的查询
+- 拓展知识 2:[Fast Index Creation](https://dev.mysql.com/doc/refman/8.0/en/glossary.html#glos_fast_index_creation) 它通过避免完全重写表来加速 Secondary Indexes 的创建和删除
+
+  > [先创建 Clustered Index 表,然后在创建 Secondary Indexes:](https://docs.huihoo.com/mysql/innodb-plugin-1.0-en/innodb-create-index.html)
+  >
+  > ```sql
+  > CREATE TABLE T1(A INT PRIMARY KEY, B INT, C CHAR(1));
+  > INSERT INTO T1 VALUES
+  > (1,2,'a'), (2,3,'b'), (3,2,'c'), (4,3,'d'), (5,2,'e');
+  > COMMIT;
+  > ALTER TABLE T1 ADD INDEX (B), ADD UNIQUE INDEX (C);
+  > ```
+  >
+  > 而不是直接创建 Clustered Index 和 Secondary Indexes 表:
+  >
+  > ```sql
+  > CREATE TABLE T1(A INT PRIMARY KEY, B INT unique, C CHAR(1) unique);
+  > ```
 
 ```sql
 # 创建 new 数据库设置 id 为主键,不能为空,自动增量
@@ -963,6 +883,7 @@ Create Table: CREATE TABLE `new` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 1 row in set (0.000 sec)
 
+![avatar](/Pictures/mysql/MySQL-Data-Types.jpg)
 
 # 创建临时表(断开与数据库的连接后，临时表就会自动销毁)
 CREATE TEMPORARY TABLE temp (`id` int);
@@ -1234,10 +1155,11 @@ ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint f
 
 b 表:
 
-````sql
+```sql
 # 尝试修改b 表的 外键a_id 值
 update b set a_id = 2
 where id = 1;
+```
 
 虽然没有报错，但 a_id 并没有修改:
 
@@ -1248,7 +1170,7 @@ delete 也一样:
 ```sql
 delete from b
 where id =1;
-````
+```
 
 ![avatar](/Pictures/mysql/foreign1.png)
 
@@ -1335,6 +1257,9 @@ Create Table: CREATE TABLE `b` (
 > ```
 
 ```sql
+# 查看当前数据下的视图
+show full tables where table_type = 'view';
+
 # 创建视图
 create view v (day) as select '1' union select '2';
 
@@ -1629,7 +1554,13 @@ ALTER TABLE ca ENGINE = MYISAM;
 
 <span id="index"></span>
 
-### INDEX (索引)
+## [Multiple-Column Indexes (多行索引)](https://dev.mysql.com/doc/refman/8.0/en/multiple-column-indexes.html)
+
+- Multiple-Column Indexes 最多可以**16**个列
+
+- 如果 col1 和 col2 上有单独的单列索引，那么优化器将尝试使用[索引合并优化](https://dev.mysql.com/doc/refman/8.0/en/index-merge-optimization.html)
+
+- 如果表有多列索引，则索引搜索只包含最左边的列。例如，索引 3 列(col1、col2、col3)，那么在(col1)、(col1、col2)和(col1、col2、col3)上就有索引搜索功能, 而(col2) and (col2, col3)是没有索引搜索的。
 
 **语法：**
 
@@ -1663,11 +1594,54 @@ ALTER table ca ADD INDEX name(id);
 ALTER table ca DROP INDEX name;
 ```
 
-#### explain
+[handler_read:](https://dev.mysql.com/doc/refman/8.0/en/server-status-variables.html#statvar_Handler_read_next)
+
+```sql
+# 清空缓存和状态
+flush tables;
+flush status;
+# 清空后全是0
+SHOW STATUS LIKE 'handler_read%';
+```
+
+![avatar](/Pictures/mysql/handler_read.png)
+
+此时 name 字段,还没有索引:
+
+```sql
+select name from cnarea_2019_innodb;
+SHOW STATUS LIKE 'handler_read%';
+```
+
+![avatar](/Pictures/mysql/handler_read1.png)
+建立索引后在查询:
+
+```sql
+create index idx_name on cnarea_2019_innodb(name);
+flush tables;
+flush status;
+
+select name from cnarea_2019_innodb;
+SHOW STATUS LIKE 'handler_read%';
+```
+
+![avatar](/Pictures/mysql/handler_read2.png)
+
+### B-tree
+
+```sql
+应该这样:
+SELECT * FROM tbl_name WHERE key_col LIKE 'Patrick%';
+
+不应该这样:
+SELECT * FROM tbl_name WHERE key_col LIKE '%Patrick%';
+```
+
+### explain
 
 - [全网最全 | MySQL EXPLAIN 完全解读](https://mp.weixin.qq.com/s?src=11&timestamp=1604040197&ver=2675&signature=Z8aIcWG-fnvP28oOueCvgCBE5BteW5cun0c3SfGtBHKG3cjAB9*aQ4*PZ6CgY81iT5TxRdWYHz7k5RsvNWSyXZupOOJ7YlcRUFlz8i7QVftJFbRrccNIi5o1daoS90Hk&new=1)
 
-#### 索引速度测试
+### 索引速度测试
 
 ```sql
 # 测试效果
@@ -1684,30 +1658,6 @@ CREATE INDEX merger_name_index ON cnarea_2019 (merger_name);
 ```
 
 > **结果:** `783562 rows in set (0.223 sec)`
-
-### undrop-for-innodb
-
-安装
-[MySQL · 数据恢复 · undrop-for-innodb](http://mysql.taobao.org/monthly/2017/11/01/)
-[undrop-for-innodb 实测（一）-- 表结构恢复](https://yq.aliyun.com/articles/684377)
-
-```sh
-git clone https://github.com/twindb/undrop-for-innodb.git
-cd undrop-for-innodb
-sudo make install
-```
-
-```sh
-# 注意：目前还是在undrop-for-innodb
-# 生成pages-ibdata1目录,目录下按照每个页为一个文件
-stream_parser -f /var/lib/mysql/ibdata1
-mkdir -p dumps/default
-
-sudo mysql -uroot -p -e "create database dictionary"
-sudo mysql -uroot -p dictionary < dictionary/*.sql
-
-sudo ./sys_parser -uroot -p -d dictionary sakila/actor
-```
 
 ## DCL
 
@@ -2255,7 +2205,7 @@ myloader \
 --verbose=3
 ```
 
-### percona-toolkit 运维监控工具
+### [percona-toolkit 运维监控工具](https://www.percona.com/doc/percona-toolkit/LATEST/index.html)
 
 [percona-toolkit 工具的使用](https://www.cnblogs.com/chenpingzhao/p/4850420.html)
 
@@ -2298,6 +2248,30 @@ cat /tmp/pt_general.log
 监控以及查询工具
 
 ![avatar](/Pictures/mysql/dbatools.png)
+
+### undrop-for-innodb(\*数据恢复)
+
+安装
+[MySQL · 数据恢复 · undrop-for-innodb](http://mysql.taobao.org/monthly/2017/11/01/)
+[undrop-for-innodb 实测（一）-- 表结构恢复](https://yq.aliyun.com/articles/684377)
+
+```sh
+git clone https://github.com/twindb/undrop-for-innodb.git
+cd undrop-for-innodb
+sudo make install
+```
+
+```sh
+# 注意：目前还是在undrop-for-innodb
+# 生成pages-ibdata1目录,目录下按照每个页为一个文件
+stream_parser -f /var/lib/mysql/ibdata1
+mkdir -p dumps/default
+
+sudo mysql -uroot -p -e "create database dictionary"
+sudo mysql -uroot -p dictionary < dictionary/*.sql
+
+sudo ./sys_parser -uroot -p -d dictionary sakila/actor
+```
 
 # 安装 MySql
 
@@ -2451,7 +2425,7 @@ alter table test modify id int(10);
 alter table test drop primary key;
 ```
 
-## 存储引擎
+## Storage Engine (存储引擎)
 
 [mysql 索引结构是在存储引擎层面实现的](http://www.ruanyifeng.com/blog/2014/07/database_implementation.html)
 
@@ -2637,6 +2611,16 @@ commit;
 
 ### MyISAM
 
+在 Mysql 保存目录下:
+
+- frm: 表格式
+
+- MYD: 数据文件
+
+- MYI: 索引文件
+
+![avatar](/Pictures/mysql/myisam.png)
+
 MyISAM 不支持行锁，在执行查询语句（SELECT、UPDATE、DELETE、INSERT 等）前，会自动给涉及的表加读锁，这个过程并不需要用户干预
 
 当线程获得一个表的写锁后， 只有持有锁的线程可以对表进行更新操作。 其他线程的读、 写操作都会等待，直到锁被释放为止。
@@ -2685,17 +2669,62 @@ select name from cnarea_2019 where id < 11;
 
 [跳转 innodb 同样的实验](#innodb_lock)
 
-### InnoDB
+### [InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-storage-engine.html)
+
+注意:在 MariaDB 10.3.7 以上的版本，InnoDB 版本不再与 MySQL 发布版本相关联
+[InnoDB and XtraDB](https://mariadb.com/kb/en/innodb/)
+
+在 Mysql 保存目录下:
+
+- frm: 表格式
+
+- ibd: 索引和数据文件
+
+![avatar](/Pictures/mysql/innodb.png)
+![avatar](/Pictures/mysql/innodb1.png)
+
+行格式:
+
+- Compact
+
+- Redundant
+
+![avatar](/Pictures/mysql/innodb2.png)
+
+tablespace (表空间):
+
+- segment (包括段)
+- extent (区)
+- page (页)
+
+![avatar](/Pictures/mysql/innodb3.png)
 
 InnoDB 采用`WAL`(Write-Ahead Logging). 先修改日志,再在修改数据页进 buffer(内存)。当等到有空闲线程、内存不足、Redo log 满了时再 Checkpoint(刷脏)。写 Redo log 是顺序写入，Checkpoint(刷脏)是随机写.
 
 日志格式：
 
-- redo log(重做日志) 物理日志:事务提交成功，数据页被修改后的值,就会被永久存储了.
+- redo log(重做日志) 物理日志:事务提交成功，数据页被修改后的值,就会被永久存储了.文件名`ib_logfile*`
 
 - binlog 逻辑日志:事务提交成功，记录数据库所有更改操作. 不包括 select，show
 
 ![avatar](/Pictures/mysql/log.png)
+
+redo log 参数:`innodb_flush_log_at_trx_commit`.在导入数据时可以临时调整为 `0` 提高性能.
+
+| 参数 | 操作                                       | 安全性               |
+| ---- | ------------------------------------------ | -------------------- |
+| 0    | log buffer 每 1 秒写日志，写数据           | 最快，有数据丢失风险 |
+| 1    | log buffer commit 后,写日志，写数据        | 最安全               |
+| 2    | log buffer commit 后,写日志，每 1 秒写数据 | 较快，有数据丢失风险 |
+
+binlog 参数:`sync_binlog`.
+
+| 参数 | 操作                                                   |
+| ---- | ------------------------------------------------------ |
+| 0    | 由参数`binlog_group_commit_sync_delay`指定延迟写入日志 |
+| n    | 延迟等于 commit n 次后,再写入日志                      |
+
+最安全:把`innodb_flush_log_at_trx_commit` 和 `sync_binlog` 设置为 `1`
 
 查看日志缓冲区大小，更大的日志缓冲区可以节省磁盘 `I / O`:
 
@@ -2707,6 +2736,9 @@ show variables like 'innodb_log_buffer_size';
 +------------------------+----------+
 | innodb_log_buffer_size | 16777216 |
 +------------------------+----------+
+
+# 查看 InnoDB 版本:
+SHOW VARIABLES LIKE "innodb_version";
 ```
 
 #### REDO LOG (重做日志)
@@ -2735,50 +2767,6 @@ show variables like 'innodb_log_files_in_group';
 
 undo log: 系统崩溃时，没 COMMIT 的事务 ，就需要借助 undo log 来进行回滚至，事务开始前的状态。
 
----
-
-查看 InnoDB 版本:
-
-```sql
-SHOW VARIABLES LIKE "innodb_version";
-```
-
-- 字典的本质是 `REDUNDANT` 行格式的 innodb 表
-- 字典用于记录 `innodb` 核心的对象信息，比如表、索引、字段等。
-
-- 字典存储在 `ibdata1` 文件
-
-- 字典表是普通的 InnoDB 表，对用户是不可见的。但是，一些版本的 MySQL 存放在 `information_schema` 数据库中
-
-```sql
-# 查看innoddb字典视图
-use information_schema -A;
-show tables where  Tables_in_information_schema like 'innodb_sys%';
-+------------------------------+
-| Tables_in_information_schema |
-+------------------------------+
-| INNODB_SYS_DATAFILES         |
-| INNODB_SYS_TABLESTATS        |
-| INNODB_SYS_FIELDS            |
-| INNODB_SYS_FOREIGN_COLS      |
-| INNODB_SYS_FOREIGN           |
-| INNODB_SYS_TABLES            |
-| INNODB_SYS_COLUMNS           |
-| INNODB_SYS_TABLESPACES       |
-| INNODB_SYS_VIRTUAL           |
-| INNODB_SYS_INDEXES           |
-| INNODB_SYS_SEMAPHORE_WAITS   |
-+------------------------------+
-```
-
-查看使用 innodb 存储的表:
-
-```sql
-select * from INNODB_SYS_TABLES;
-```
-
-![avatar](/Pictures/mysql/sys_tables.png)
-
 <span id="transaction"></span>
 
 #### TRANSACTION (事务)
@@ -2786,8 +2774,11 @@ select * from INNODB_SYS_TABLES;
 事务的基本要素（ACID）
 
 - 原子性：Atomicity，整个数据库事务是不可分割的工作单位(undo log 提供)
+
 - 一致性：Consistency，事务将数据库从一种状态转变为下一种一致的状态
+
 - 隔离性：Isolation，每个读写事务的对象对其他事务的操作对象能相互分离(mvcc 提供),解决幻读问题(事务的两次查询的结果不一样)
+
 - 持久性：Durability，事务一旦提交，其结果是永久性的
 
 ---
@@ -2918,7 +2909,7 @@ call scn2();
 
 ```sql
 update cnarea_2019_innodb
-set name='test-lock' where id <11;
+set name='test-lock' where id < 11;
 
 select name from cnarea_2019_innodb where id < 11;
 ```
@@ -2929,6 +2920,130 @@ select name from cnarea_2019_innodb where id < 11;
 修改数据后左边**commit**，右边也**commit**后，数据同步
 
 ![avatar](/Pictures/mysql/innodb_lock.gif)
+
+### dictionary(字典)
+
+#### informantion_schema
+
+- row_format(行格式)是 `redundant` ,存储在 `ibdata1`, `ibdata2` 文件
+
+- 记录 `innodb` 核心的对象信息，比如表、索引、字段等
+
+- 表一般是大写
+
+**informantion_schema** 的表一般有多种 **engine**(存储引擎):
+
+- **Memory**(内存)
+  ![avatar](/Pictures/mysql/dictionary.png)
+- **MariaDB** 数据库: **Aria**(类似 MyISAM)
+  ![avatar](/Pictures/mysql/dictionary1.png)
+- **Mysql** 数据库: **Innodb**
+  ![avatar](/Pictures/mysql/dictionary2.png)
+
+```sql
+# 查看innoddb字典
+use information_schema;
+show tables like '%INNODB_SYS%';
++------------------------------+
+| Tables_in_information_schema |
++------------------------------+
+| INNODB_SYS_DATAFILES         |
+| INNODB_SYS_TABLESTATS        |
+| INNODB_SYS_FIELDS            |
+| INNODB_SYS_FOREIGN_COLS      |
+| INNODB_SYS_FOREIGN           |
+| INNODB_SYS_TABLES            |
+| INNODB_SYS_COLUMNS           |
+| INNODB_SYS_TABLESPACES       |
+| INNODB_SYS_VIRTUAL           |
+| INNODB_SYS_INDEXES           |
+| INNODB_SYS_SEMAPHORE_WAITS   |
++------------------------------+
+```
+
+查看使用 innodb 存储的表:
+
+```sql
+select * from INNODB_SYS_TABLES;
+```
+
+![avatar](/Pictures/mysql/dictionary3.png)
+
+**InnoDB Buffer Pool** 储数据和索引,减少磁盘 I/O,是一种特殊的 mitpoint LRU 算法
+[查看 INNODB_BUFFER 表](https://mariadb.com/kb/en/information-schema-innodb_buffer_pool_stats-table/)
+
+```sql
+select * from INNODB_BUFFER
+# 或者 隔几秒就会有变化
+show global status like '%buffer%';
+
+# innodb 页是16k
+
+# 一共 8057页
+POOL_SIZE: 8057
+
+# 空闲页
+FREE_BUFFERS: 6024
+
+# 已使用页
+DATABASE_PAGES: 2033
+```
+
+![avatar](/Pictures/mysql/dictionary5.png)
+
+**innodb_buffer_pool_size** 越大，初始化时间就越长
+
+```sql
+show variables like 'innodb%buffer%';
+```
+
+![avatar](/Pictures/mysql/dictionary6.png)
+
+#### performance_schema
+
+独立的内存存储引擎:
+
+![avatar](/Pictures/mysql/dictionary4.png)
+
+## 极限值测试
+看看一个表最多是不是1017列:
+
+```sh
+# 通过脚本快速生成1017.sql
+echo 'drop table if exists test_1017;' > /tmp/1017.sql
+
+echo 'CREATE TABLE test_1017(' >> /tmp/1017.sql
+
+for i in $(seq 1 1016);do
+    echo "id_$i int," >> /tmp/1017.sql
+done
+echo "id_1017 int" >> /tmp/1017.sql
+
+echo ");" >> /tmp/1017.sql
+
+# 执行
+sudo mysql -uroot -pYouPassword YouDatabase < /tmp/1017.sql
+```
+![avatar](/Pictures/mysql/1017.png)
+
+改为1018:
+```sh
+# 通过脚本快速生成1018.sql
+echo 'drop table if exists test_1018;' > /tmp/1018.sql
+
+echo 'CREATE TABLE test_1018(' >> /tmp/1018.sql
+
+for i in $(seq 1 1017);do
+    echo "id_$i int," >> /tmp/1018.sql
+done
+echo "id_1018 int" >> /tmp/1018.sql
+
+echo ");" >> /tmp/1018.sql
+
+# 执行
+sudo mysql -uroot -pYouPassword YouDatabase < /tmp/1018.sql
+```
+![avatar](/Pictures/mysql/1018.png)
 
 ## 日志
 
@@ -2946,6 +3061,11 @@ select name from cnarea_2019_innodb where id < 11;
 - [Difference between stored procedure and function in MySQL](https://medium.com/@singh.umesh30/difference-between-stored-procedure-and-function-in-mysql-52f845d70b05)
 - [深入解析 MySQL 视图 VIEW](https://www.cnblogs.com/geaozhang/p/6792369.html)
 - [MySQL 的 join 功能弱爆了？](https://zhuanlan.zhihu.com/p/286581170)
+- [数据库表连接的简单解释](http://www.ruanyifeng.com/blog/2019/01/table-join.html?utm_source=tuicool&utm_medium=referral)
+- [MySQL 资源大全中文版](https://github.com/jobbole/awesome-mysql-cn)
+- [MySQL Tutorial](https://www.mysqltutorial.org/)
+
+- [『浅入浅出』MySQL 和 InnoDB](https://draveness.me/mysql-innodb/)
 
 # 优秀文章
 
@@ -2954,18 +3074,20 @@ select name from cnarea_2019_innodb where id < 11;
 - [W3cSchool SQL 教程](https://www.w3school.com.cn/sql/index.asp)
 - [MySQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
 - [138 张图带你 MySQL 入门](https://mp.weixin.qq.com/s?src=11&timestamp=1603417035&ver=2661&signature=Z-XNfjtR11GhHg29XAiBZ0RAiMHavvRavxB1ccysnXtAKChrVkXo*zx3DKFPSxDESZ9lwRM7C8-*yu1dEGmXwHgv1qe7V-WvwLUUQe7Nz7RUwEuJmLYqVRnOWtONHeL-&new=1)
+- [CTO 要我把这份 MySQL 规范贴在工位上！](https://mp.weixin.qq.com/s?src=11&timestamp=1605361738&ver=2706&signature=wzhghhJTTx1Hy9Nn90P35u9hfG3eaeMGOvIoDoBGTECHdDQAmUuxFCVHAbuUqaN4*UYga9bGdXxX3f1G8kiYZ1yoA4tnocgi8GZoRe2TNQFkbbh1T2eSqyC6DcA9bTqF&new=1)
+
+# 新闻资源
+
+- [MariaDB KnowLedge](https://mariadb.com/kb/en/)
+
+- [MySQL Server Blog](http://mysqlserverteam.com/)
+
+- [DB-Engines](https://db-engines.com/en/)
 
 - [数据库内核月报](http://mysql.taobao.org/monthly/)
   通过搜索引擎输入以下格式进行搜索(我这里搜索的是 binlog)
 
   > site:mysql.taobao.org binlog
-
-- [CTO 要我把这份 MySQL 规范贴在工位上！](https://mp.weixin.qq.com/s?src=11&timestamp=1605361738&ver=2706&signature=wzhghhJTTx1Hy9Nn90P35u9hfG3eaeMGOvIoDoBGTECHdDQAmUuxFCVHAbuUqaN4*UYga9bGdXxX3f1G8kiYZ1yoA4tnocgi8GZoRe2TNQFkbbh1T2eSqyC6DcA9bTqF&new=1)
-
-# reference items
-
-- [数据库表连接的简单解释](http://www.ruanyifeng.com/blog/2019/01/table-join.html?utm_source=tuicool&utm_medium=referral)
-- [MySQL 资源大全中文版](https://github.com/jobbole/awesome-mysql-cn)
 
 # online tools
 

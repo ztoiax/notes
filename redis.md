@@ -1598,6 +1598,7 @@ sysctl -p
 ```
 
 ## 高效强大的第三方 redis 软件
+[一键安装脚本](https://github.com/ztoiax/userfulscripts/blob/master/awesome-redis.sh)
 
 <span id="iredis"></span>
 
