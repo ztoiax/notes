@@ -42,10 +42,15 @@
             * [主服务器配置](#主服务器配置)
             * [从服务器配置](#从服务器配置)
         * [docker 主从复制](#docker-主从复制)
+    * [mysqlbinlog](#mysqlbinlog)
+        * [--flashback 闪回还原](#--flashback-闪回还原)
+    * [导出不同文件格式](#导出不同文件格式)
     * [高效强大的 mysql 软件](#高效强大的-mysql-软件)
         * [mycli](#mycli)
         * [mitzasql](#mitzasql)
         * [mydumper](#mydumper)
+        * [XtraBackup](#xtrabackup)
+        * [binlog2sql](#binlog2sql)
         * [percona-toolkit 运维监控工具](#percona-toolkit-运维监控工具)
         * [innotop](#innotop)
         * [sysbench](#sysbench)
@@ -466,9 +471,16 @@ where name regexp '.*广州';
 ```sql
 # 创建名为 tz 的数据库作实验
 create table union_test (
-`id` int (8),
-`name` varchar(50),
-`date` DATE);
+    `id` int (8),
+    `name` varchar(50),
+    `date` DATE
+);
+# 或者
+create table union_test (
+    id   int (8),
+    name varchar(50),
+    date DATE
+);
 
 # 插入 2 条数据
 insert into union_test (id,name,date) values
@@ -583,9 +595,10 @@ where name regexp '^北京市';
 ```sql
 # 创建表 join__test 等下实验要用
 CREATE TABLE j(
-`id` int (8),
-`name` varchar(50) NOT NULL UNIQUE,
-`date` DATE);
+    id   int (8),
+    name varchar(50) NOT NULL UNIQUE,
+    date DATE
+);
 
 # 插入数据
 insert into j (id,name,date) values
@@ -938,8 +951,9 @@ MariaDB [china]> select * from new;
 
 # 创建名为 newcn 数据库
 create table newcn (
-id int(4) unique auto_increment,
-name varchar(50));
+    id int(4) unique auto_increment,
+    name varchar(50)
+);
 
 # 导入 1 条数据
 insert into newcn (id,name)
@@ -1076,9 +1090,10 @@ mysql -uroot -pYouPassward china < china_area_mysql.sql
 ```sql
 # 创建表
 create table clone (
-`id` int (8),
-`name` varchar(50),
-`date` DATE);
+    `id` int (8),
+    `name` varchar(50),
+    `date` DATE
+);
 
 # 插入数据
 insert into clone (id,name,date) values
@@ -1398,10 +1413,9 @@ show create function hello\G;
 
 ```sql
 drop table if exists foo;
-create table foo
-(
-id int unique auto_increment,
-val int not null default 0
+create table foo (
+    id int unique auto_increment,
+    val int not null default 0
 );
 
 # 插入一些数据
@@ -1872,8 +1886,14 @@ echo "max_connect_errors=1000" >> /etc/my.cnf
 
 ```sql
 use china;
-create table tz (`id` int (8), `name` varchar(50), `date` DATE);
-insert into tz (id,name,date) values (1,'tz','2020-10-24');
+create table tz (
+    id   int (8),
+    name varchar(50),
+    date DATE
+);
+
+insert into tz (id,name,date) values
+(1,'tz','2020-10-24');
 ```
 
 - 1.使用 `mysqlimport` 导入(不推荐)
@@ -1888,21 +1908,17 @@ SELECT * FROM tz INTO OUTFILE '/tmp/tz.txt';
 drop table tz;
 
 # 导入前要创建一个新的表
-create table tz (`id` int (8), `name` varchar(50), `date` DATE);
+create table tz (
+    id int (8),
+    name varchar(50),
+    date DATE
+);
 ```
 
 回到终端使用 `mysqlimport` 进行数据导入:
 
 ```sh
 mysqlimport china /tmp/tz.txt
-```
-
-导出 tz 表 `csv` 格式,但**不能使用**`mysqlimport` 进行导入
-
-```sql
-SELECT * FROM tz INTO OUTFILE '/tmp/tz.csv'
-FIELDS TERMINATED BY ',' ENCLOSED BY '"'
-LINES TERMINATED BY '\r\n';
 ```
 
 - 2.使用 `mysqldump` 备份
@@ -2133,6 +2149,128 @@ docker 主从复制测试:
 
 ![avatar](/Pictures/mysql/docker-replication.gif)
 
+## mysqlbinlog
+
+### [--flashback 闪回还原](https://mariadb.com/kb/en/flashback/)
+
+日志格式必须设置为:
+
+- binlog_format=ROW
+- binlog_row_image=FULL
+
+创建测试表，并插入数据:
+
+```sql
+drop table if exists test;
+
+CREATE TABLE test(
+    id int (8),
+    name varchar(50),
+    date DATE
+);
+
+insert into test (id,name,date) values
+(1,'tz1','2020-10-24'),
+(10,'tz2','2020-10-24'),
+(100,'tz3','2020-10-24');
+
+commit;
+```
+
+有两种闪回还原的方法:
+
+- 通过 `pos` 还原:
+
+```sql
+# 记下日志名 和 pos 等下还原需要:
+
+# 查看日志名，我这里为(bin.000016)
+show master status;
++------------+----------+--------------+------------------+
+| File       | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++------------+----------+--------------+------------------+
+| bin.000016 |     9074 |              |                  |
++------------+----------+--------------+------------------+
+
+# 查看日志，找到删除修改数据前提交的pos(如下图:我这里是7144)
+show binlog events in 'bin.000016'\G;
+```
+
+![avatar](/Pictures/mysql/mysqlbinlog.png)
+
+- 通过 `start-datetime` 还原:
+
+```sql
+# 记下删除修改数据前最后一次的时间
+
+# 查看时间
+select current_timestamp();
++---------------------+
+| current_timestamp() |
++---------------------+
+| 2020-11-19 16:50:19 |
++---------------------+
+```
+
+删除,修改,添加数据:
+
+```sql
+delete from test
+where id = 1;
+
+update test set id = 20
+where id = 10;
+
+insert into test (id,name,date) values
+(1000,'tz4','2020-10-24');
+
+commit;
+
+select * from test;
+```
+
+通过 `--start-position` 进行还原:
+
+```sh
+mysqlbinlog /var/lib/mysql/bin.000016 -vv -d china -T test \
+   --start-position="7144" --flashback > /tmp/flashback.sql
+
+sudo mysql -uroot -p china < /tmp/flashback.sql
+```
+
+![avatar](/Pictures/mysql/mysqlbinlog.gif)
+
+通过 `--start-datetime` 进行还原:
+
+```sh
+mysqlbinlog /var/lib/mysql/bin.000016 -vv -d china -T test \
+   --start-datetime="2020-11-19 16:50:19" --flashback > /tmp/flashback.sql
+
+sudo mysql -uroot -p china < /tmp/flashback.sql
+```
+
+![avatar](/Pictures/mysql/mysqlbinlog1.gif)
+
+## 导出不同文件格式
+
+```sh
+# \G格式导出数据
+mysql -uroot -p --vertical --execute="select * from cnarea_2019;" china > /tmp/cnarea_2019.html
+
+# html
+mysql -uroot -p --html --execute="select * from cnarea_2019;" china > /tmp/cnarea_2019.html
+
+# xml
+mysql -uroot -p --xml --execute="select * from cnarea_2019;" china > /tmp/cnarea_2019.html
+```
+
+```sql
+# csv
+SELECT * FROM cnarea_2019 INTO OUTFILE '/tmp/cnarea_2019.csv'
+FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+LINES TERMINATED BY '\r\n';
+```
+
 ## 高效强大的 mysql 软件
 
 - [MySQL 常用工具选型和建议](https://zhuanlan.zhihu.com/p/86846532)
@@ -2205,9 +2343,87 @@ myloader \
 --verbose=3
 ```
 
+### [XtraBackup]()
+
+```sh
+xtrabackup --backup --target-dir=/var/lib/mysql/backups
+```
+
+### [binlog2sql](https://github.com/danfengcao/binlog2sql)
+
+```sql
+drop table if exists test;
+
+CREATE TABLE test(
+    id int (8),
+    name varchar(50),
+    date DATE
+);
+
+insert into test (id,name,date) values
+(1,'tz1','2020-10-24'),
+(10,'tz2','2020-10-24'),
+(100,'tz3','2020-10-24');
+
+commit;
+
+select current_timestamp();
++---------------------+
+| current_timestamp() |
++---------------------+
+| 2020-11-19 01:59:05 |
++---------------------+
+
+delete from test
+where id = 1;
+
+update test set id = 20
+where id = 10;
+
+insert into test (id,name,date) values
+(1000,'tz4','2020-10-24');
+
+commit;
+
+select * from test;
+
+show master status;
++------------+----------+--------------+------------------+
+| File       | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++------------+----------+--------------+------------------+
+| bin.000014 |     6337 |              |                  |
++------------+----------+--------------+------------------+
+
+select current_timestamp();
++---------------------+
+| current_timestamp() |
++---------------------+
+| 2020-11-19 01:59:34 |
++---------------------+
+```
+
+```sh
+mysqlbinlog --no-defaults -v --start-datetime="2020-11-19 01:59:05" --stop-datetime="2020-11-19 01:59:34" /var/lib/mysql/bin.000014 --result-file=/tmp/result.sql
+
+python binlog2sql/binlog2sql.py -uroot -p -dtest --start-file='bin.000014' --start-datetime="2020-11-19 01:59:05" --stop-datetime="2020-11-19 01:59:34" > /tmp/tmp.log
+
+python binlog2sql/binlog2sql.py -uroot -p -dtest --flashback --start-file='bin.000014' --start-datetime="2020-11-19 01:59:05" --stop-datetime="2020-11-19 01:59:34" > /tmp/tmp.log
+# 失败
+```
+
 ### [percona-toolkit 运维监控工具](https://www.percona.com/doc/percona-toolkit/LATEST/index.html)
 
 [percona-toolkit 工具的使用](https://www.cnblogs.com/chenpingzhao/p/4850420.html)
+
+```sh
+pt-query-digest /var/log/mysql/mysql_slow.log
+
+pt-query-digest               \
+    --group-by fingerprint    \
+    --order-by Query_time:sum \
+    --limit 10                \
+    /var/log/mysql/mysql_slow.log
+```
 
 > centos7 安装:
 >
@@ -2511,9 +2727,10 @@ Mysql 锁分为**共享锁**和**排他锁**，也叫做 **读锁** 和 **写锁
 
 ```sql
 CREATE TABLE locking(
-id int (8) NOT NULL UNIQUE,
-name varchar(50),
-date DATE);
+    id int (8) NOT NULL UNIQUE,
+    name varchar(50),
+    date DATE
+);
 
 insert into locking (id,name,date) values
 (1,'tz1','2020-10-24'),
@@ -2765,7 +2982,7 @@ show variables like 'innodb_log_files_in_group';
 
 #### UNDO LOG
 
-undo log: 系统崩溃时，没 COMMIT 的事务 ，就需要借助 undo log 来进行回滚至，事务开始前的状态。
+undo log: 系统崩溃时，没 COMMIT 的事务 ，就需要借助 undo log 来进行回滚至，事务开始前的状态。保存在`ibdata*`
 
 <span id="transaction"></span>
 
@@ -2789,7 +3006,11 @@ undo log: 系统崩溃时，没 COMMIT 的事务 ，就需要借助 undo log 来
 
 ```sql
 # 创建表tz
-create table tz (`id` int (8), `name` varchar(50), `date` DATE);
+create table tz (
+    id int (8),
+    name varchar(50),
+    date DATE
+);
 
 # 开始事务
 begin
@@ -2826,7 +3047,11 @@ flush table clone
 
 ```sql
 # 创建数据库
-create table tz (`id` int (8), `name` varchar(50), `date` DATE);
+create table tz (
+    id int (8),
+    name varchar(50),
+    date DATE
+);
 
 # 声明一个名叫 abc 的事务保存点
 savepoint abc;
@@ -3006,7 +3231,8 @@ show variables like 'innodb%buffer%';
 ![avatar](/Pictures/mysql/dictionary4.png)
 
 ## 极限值测试
-看看一个表最多是不是1017列:
+
+看看一个表最多是不是 1017 列:
 
 ```sh
 # 通过脚本快速生成1017.sql
@@ -3024,9 +3250,11 @@ echo ");" >> /tmp/1017.sql
 # 执行
 sudo mysql -uroot -pYouPassword YouDatabase < /tmp/1017.sql
 ```
+
 ![avatar](/Pictures/mysql/1017.png)
 
-改为1018:
+改为 1018:
+
 ```sh
 # 通过脚本快速生成1018.sql
 echo 'drop table if exists test_1018;' > /tmp/1018.sql
@@ -3043,6 +3271,7 @@ echo ");" >> /tmp/1018.sql
 # 执行
 sudo mysql -uroot -pYouPassword YouDatabase < /tmp/1018.sql
 ```
+
 ![avatar](/Pictures/mysql/1018.png)
 
 ## 日志

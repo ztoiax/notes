@@ -160,6 +160,12 @@ pugre master logs before '2020-10-25 00:00:00'
 pugre master logs before current_date - interval 1 day;
 ```
 
+### mysqlbinlog 日志分析
+
+```sh
+mysqlbinlog /var/lib/mysql/bin.000001
+```
+
 ## 慢查询优化
 
 ```sql
