@@ -75,6 +75,9 @@
             * [REDO LOG (重做日志)](#redo-log-重做日志)
             * [UNDO LOG](#undo-log)
             * [TRANSACTION (事务)](#transaction-事务)
+                * [设置事务隔离性为不可重复读](#设置事务隔离性为不可重复读)
+                    * [read uncommitted(读未提交) , dirty read (脏读)](#read-uncommitted读未提交--dirty-read-脏读)
+                    * [read committed(读已提交) , phantom read (幻读):](#read-committed读已提交--phantom-read-幻读)
             * [autocommit](#autocommit)
             * [线程](#线程)
             * [锁](#锁-1)
@@ -329,7 +332,8 @@ MariaDB [china]> select * from cnarea_2019 where id=1;
 
 ```sql
 # 结尾处加入 \G 以列的方式显示
-select * from cnarea_2019 where id=1\G;
+select * from cnarea_2019
+where id=1\G;
 
 MariaDB [china]> select * from cnarea_2019 where id=1\G;
 *************************** 1. row ***************************
@@ -999,14 +1003,17 @@ where name regexp '广州.*';
 ```sql
 # 修改 id=1 的 city_code 字段为111
 update cnarea_2019
-set city_code=111 where id=1;
+set city_code=111
+where id=1;
 
 # 对每个 id-3 填回刚才删除的 id1,2,3
 update cnarea_2019
-set id=(id-3) where id>2;
+set id=(id-3)
+where id>2;
 
 # 对小于level平均值进行加1
-update cnarea_2019 set level=(level+1)
+update cnarea_2019
+set level=(level+1)
 where level<=(select avg(level) from cnarea_2019);
 
 # 把 广州 修改为 北京,replace() 修改列的某一部分值
@@ -1172,7 +1179,8 @@ b 表:
 
 ```sql
 # 尝试修改b 表的 外键a_id 值
-update b set a_id = 2
+update b
+set a_id = 2
 where id = 1;
 ```
 
@@ -1212,7 +1220,8 @@ ALTER TABLE b
     ON DELETE CASCADE;
 
 # 修改a 表
-update a set id = 2
+update a
+set id = 2
 where id = 1;
 
 # 查看结果
@@ -1273,7 +1282,8 @@ Create Table: CREATE TABLE `b` (
 
 ```sql
 # 查看当前数据下的视图
-show full tables where table_type = 'view';
+show full tables
+where table_type = 'view';
 
 # 创建视图
 create view v (day) as select '1' union select '2';
@@ -1296,10 +1306,13 @@ create view v as select * from clone;
 show create view v\G;
 
 # 嵌套 v视图 名为 vv,并且 id <= 2
-create view vv as select * from v where id <= 2;
+create view vv as select * from v
+where id <= 2;
 
 # 此时如果把 id 改为 3.注意这里 v 视图 和 clone 表的数据也会被更改
-update vv set id = 3 where id = 1;
+update vv
+set id = 3
+where id = 1;
 
 # 因为 vv视图有where id <= 2的限制, 所以不满足条件的值不显示
 select * from vv;
@@ -1321,7 +1334,9 @@ select * from v;
 +----+------+------------+
 
 # 和刚才的 vv视图 一样 这次 vvv视图 加入with check option;
-create view vvv as select * from v where id <= 2 with check option;
+create view vvv as select * from v
+where id <= 2
+with check option;
 
 # 此时对不满足条件的值,进行修改会报错
 update vvv set id = 3 where id = 2;
@@ -2218,7 +2233,8 @@ select current_timestamp();
 delete from test
 where id = 1;
 
-update test set id = 20
+update test
+set id = 20
 where id = 10;
 
 insert into test (id,name,date) values
@@ -2377,7 +2393,8 @@ select current_timestamp();
 delete from test
 where id = 1;
 
-update test set id = 20
+update test
+set id = 20
 where id = 10;
 
 insert into test (id,name,date) values
@@ -2738,14 +2755,45 @@ insert into locking (id,name,date) values
 (100,'tz3','2020-10-24');
 ```
 
-悲观锁:
+共享锁:只能加入读取锁
+
+事务 a 对表 locking 加入共享锁:
+
+```sql
+begin;
+select * from locking
+lock in share mode;
+```
+
+事务 b 也能对表 locking 加入共享锁:
+
+```sql
+begin;
+select * from locking
+lock in share mode;
+
+update locking set id = 20 where id = 10;
+
+# 加入非读取锁(悲观锁) 或者 使用update语句，会阻塞
+select * from locking
+for update;
+```
+
+![avatar](/Pictures/mysql/innodb_lock6.gif)
+
+悲观锁:不能加入其他锁
 
 ```sql
 # 事务a 在select 最后 加入 for update 悲观锁，锁整个表
-select * from locking for update;
+begin;
+select * from locking
+for update;
 
-# 事务b 执行update时，会阻塞
-update locking set id = 1 where id = 2;
+# 事务b 执行update时 或者 加入其他锁，会阻塞
+begin;
+update locking
+set id = 1
+where id = 2;
 
 # 事务a commit后，事务b update id = 1 执行成功
 commit;
@@ -2755,13 +2803,19 @@ commit;
 
 ```sql
 # 事务a 加入where 从句，只锁对应的行(我这里是id = 1)
-select * from locking where id = 1 for update;
+select * from locking
+where id = 1
+for update;
 
 # 事务b 对 update 不同的行 成功执行
-update locking set id = 10 where id = 20;
+update locking
+set id = 10
+where id = 20;
 
 # 事务b update id = 1时，会阻塞
-update locking set id = 2 where id = 1;
+update locking
+set id = 2
+where id = 1;
 
 # 事务a commit后，事务b update id = 1 执行成功
 commit;
@@ -2788,10 +2842,12 @@ insert into locking (id,name,date) value (1000,'tz4','2020-10-24');
 
 ```sql
 # 删除唯一性索引
-alter table locking drop index id;
+alter table locking
+drop index id;
 
 # 事务a 和 事务 b 插入同样的数据
-insert into locking (id,name,date) value (1000,'tz4','2020-10-24');
+insert into locking (id,name,date) value
+(1000,'tz4','2020-10-24');
 ```
 
 ![avatar](/Pictures/mysql/innodb_lock4.gif)
@@ -2805,9 +2861,13 @@ insert into locking (id,name,date) value (1000,'tz4','2020-10-24');
 事务 a: 修改数据为 2
 
 ```sql
-begin
+begin;
 select * from locking;
-update locking set id = 2 where id = 1;
+
+update locking
+set id = 2
+where id = 1;
+
 commit;
 select * from locking;
 ```
@@ -2817,11 +2877,15 @@ select * from locking;
 ```sql
 begin
 select * from locking;
-update locking set id = 3 where id = 1;
+
+update locking
+set id = 3
+where id = 1;
+
 commit;
 ```
 
-最后结果 2.
+最后结果 **2**.
 
 因为事务 a 比事务 b 先 commit,此时版本号改变，所以当事务 b 要 commit 时的版本号 与 事务 b 开始时的版本号不一致，提交失败。
 ![avatar](/Pictures/mysql/innodb_lock5.gif)
@@ -2873,8 +2937,13 @@ call scn();
 
 ```sql
 show processlist;
-update cnarea_2019 set name='test-lock' where id <11;
-select name from cnarea_2019 where id < 11;
+
+update cnarea_2019
+set name='test-lock'
+where id <11;
+
+select name from cnarea_2019
+where id < 11;
 ```
 
 - 左边:修改数据的客户端
@@ -2982,13 +3051,13 @@ show variables like 'innodb_log_files_in_group';
 
 #### UNDO LOG
 
-undo log: 系统崩溃时，没 COMMIT 的事务 ，就需要借助 undo log 来进行回滚至，事务开始前的状态。保存在`ibdata*`
+undo log 逻辑日志:事务未提交的时候，修改数据存到日志里.系统崩溃时，没 COMMIT 的事务 ，就需要借助 undo log 来进行回滚至，事务开始前的状态。保存在`ibdata*`
 
 <span id="transaction"></span>
 
 #### TRANSACTION (事务)
 
-事务的基本要素（ACID）
+[事务的基本要素（ACID）](https://mp.weixin.qq.com/s?src=11&timestamp=1605864322&ver=2718&signature=yj-1WmxuB0tL32v9OCfARl9LKeAqALuoFdmMgiJdyKjkgqeFwvGgJT10hOWiPj0Vn3qalU3-5AEsaoiHI8TTg3GL3s8rPmC7rXZkbu22VZcFcV48aa7sPiqw*Y3yAaC5&new=1)
 
 - 原子性：Atomicity，整个数据库事务是不可分割的工作单位(undo log 提供)
 
@@ -3013,10 +3082,11 @@ create table tz (
 );
 
 # 开始事务
-begin
+begin;
 
 # 插入数据
-insert into tz (id,name,date) values (1,'tz','2020-10-24');
+insert into tz (id,name,date) values
+(1,'tz','2020-10-24');
 
 # 回滚到开始事务之前(rollback 和 commit 只能选一个)
 rollback;
@@ -3057,11 +3127,110 @@ create table tz (
 savepoint abc;
 
 # 插入数据
-insert into tz (id,name,date) values (1,'tz','2020-10-24');
+insert into tz (id,name,date) values
+(1,'tz','2020-10-24');
 
 # 回滚到 abc 事务保存点
 rollback to abc;
 ```
+
+##### [设置事务隔离性为不可重复读](https://mariadb.com/kb/en/set-transaction/)
+
+查看事务隔离性:
+
+```sql
+SELECT @@GLOBAL.tx_isolation, @@tx_isolation;
+```
+
+创建测试表，并插入数据:
+
+```sql
+drop table if exists test;
+
+CREATE TABLE test(
+    id int (8),
+    name varchar(50),
+    date DATE
+);
+
+insert into test (id,name,date) values
+(1,'tz1','2020-10-24'),
+(10,'tz2','2020-10-24'),
+(100,'tz3','2020-10-24');
+
+commit;
+```
+
+###### read uncommitted(读未提交) , dirty read (脏读)
+
+开启事务 a:
+
+```sql
+# 设置事务a read uncommitted
+set session transaction isolation level read uncommitted;
+begin;
+select * from test;
+```
+
+开启事务 b,并修改数据,不需要提交:
+
+```sql
+begin;
+select *from test;
+
+update test
+set id = 20
+where id = 10;
+```
+
+事务 a 就能读取:
+
+```sql
+select * from test;
+```
+
+- 右边为事务 a
+- 左边为事务 b
+  ![avatar](/Pictures/mysql/uncommitted.gif)
+
+注意:如果事务 b,没有 `commit` 就退出.那么事务 b 的修改将失效
+
+![avatar](/Pictures/mysql/uncommitted1.gif)
+
+###### read committed(读已提交) , phantom read (幻读):
+
+开启事务 a:
+
+```sql
+# 设置事务a read committed
+set session transaction isolation level read committed;
+begin;
+select * from test;
+```
+
+开启事务 b,并修改数据后,提交:
+
+```sql
+begin;
+select *from test;
+
+update test
+set id = 20
+where id = 10;
+
+# 区别于 read uncommitted
+commit;
+```
+
+事务 a 就能读取:
+
+```sql
+select * from test;
+```
+
+- 右边为事务 a
+- 左边为事务 b
+  ![avatar](/Pictures/mysql/committed.gif)
 
 #### autocommit
 
@@ -3134,9 +3303,11 @@ call scn2();
 
 ```sql
 update cnarea_2019_innodb
-set name='test-lock' where id < 11;
+set name='test-lock'
+where id < 11;
 
-select name from cnarea_2019_innodb where id < 11;
+select name from cnarea_2019_innodb
+where id < 11;
 ```
 
 - 左边:修改数据的客户端
@@ -3295,6 +3466,8 @@ sudo mysql -uroot -pYouPassword YouDatabase < /tmp/1018.sql
 - [MySQL Tutorial](https://www.mysqltutorial.org/)
 
 - [『浅入浅出』MySQL 和 InnoDB](https://draveness.me/mysql-innodb/)
+
+- [一文彻底读懂 MySQL 事务的四大隔离级别](https://mp.weixin.qq.com/s?src=11&timestamp=1605864322&ver=2718&signature=yj-1WmxuB0tL32v9OCfARl9LKeAqALuoFdmMgiJdyKjkgqeFwvGgJT10hOWiPj0Vn3qalU3-5AEsaoiHI8TTg3GL3s8rPmC7rXZkbu22VZcFcV48aa7sPiqw*Y3yAaC5&new=1)
 
 # 优秀文章
 
