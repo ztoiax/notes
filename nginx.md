@@ -2,9 +2,15 @@
 
 * [LNMP](#lnmp)
 * [nginx](#nginx)
-    * [基本配置](#基本配置)
     * [基本命令](#基本命令)
-    * [日志](#日志)
+    * [基本配置](#基本配置)
+        * [Static Server (静态页面)](#static-server-静态页面)
+        * [Proxy Server (代理服务器)](#proxy-server-代理服务器)
+        * [fastcgi](#fastcgi)
+        * [echo 模块](#echo-模块)
+    * [log (日志)](#log-日志)
+        * [access log:](#access-log)
+        * [open_log_file_cache 日志缓存](#open_log_file_cache-日志缓存)
     * [用户密码认证](#用户密码认证)
     * [只允许特定 ip 访问](#只允许特定-ip-访问)
     * [对 ua 进行限制](#对-ua-进行限制)
@@ -12,6 +18,15 @@
     * [负载均衡](#负载均衡)
         * [upstream](#upstream)
         * [echo 变量](#echo-变量)
+    * [pcre 正则表达式](#pcre-正则表达式)
+    * [njs](#njs)
+    * [Modules (模块)](#modules-模块)
+    * [NSM 管理 kubernetes 容器流量](#nsm-管理-kubernetes-容器流量)
+    * [install 安装](#install-安装)
+    * [reference](#reference)
+    * [第三方高效软件](#第三方高效软件)
+    * [书籍 or 教程](#书籍-or-教程)
+    * [项目资源](#项目资源)
 * [TOMCAT](#tomcat)
     * [基本命令](#基本命令-1)
     * [zrlog](#zrlog)
@@ -22,52 +37,298 @@
     * [php-fpm.conf](#php-fpmconf)
     * [php-fpm 进程池](#php-fpm-进程池)
     * [php.ini](#phpini)
-* [reference](#reference)
-* [其它文章](#其它文章)
+* [reference](#reference-1)
 
 <!-- vim-markdown-toc -->
 
 # LNMP
 
-# nginx
+- [LNMP 一键安装包](https://github.com/licess/lnmp)
 
-## 基本配置
+- [DNMP(docker) 一键安装包](https://github.com/yeszao/dnmp)
 
-```sh
-# cpu核心数
-worker_processes  1;
+- [不同 web 服务器份额](https://news.netcraft.com/archives/2020/10/21/october-2020-web-server-survey.html)
+
+# [nginx](http://nginx.org/en/docs/)
+
+由 一个`main` 和 多个`worker` 进程，通过事件驱动和操作系统机制进行分配
+
+- main: 读取检查 conf 配置文件,管理 worker 进程
+
+- [worker](http://nginx.org/en/docs/ngx_core_module.html#worker_processes): 处理实际请求,数量由 CPU 核心数决定
+
+```nginx
+# 在配置文件,可以设置为auto (默认为1)
+worker_processes auto;
 ```
 
 ## 基本命令
 
 ```sh
-# 启动关闭重载
-nginx -s reload
-nginx -s start
+# -s 发送signal (类似于systemctl)
+# 关闭(快速关闭不管连接)
 nginx -s stop
+# 退出(关闭前完成连接)
+nginx -s quit
+# 重新加载配置文件
+nginx -s reload
+# 重新打开日志文件
+nginx -s reopen
 
-# 检查配置是否正确
+# -t 检查配置是否正确
 nginx -t
 
-# 指定加载配置文件
+# -c 指定加载配置文件
 nginx -c  /etc/nginx/nginx.conf
 
-# 查看模块安装
+# -v 查看版本
+nginx -v
+
+# -V 查看模块安装
 nginx -V
 ```
 
-## 日志
+## 基本配置
 
-`log_format` 是访问日志的格式
+配置文件:
+[官方教程(英文)](http://nginx.org/en/docs/beginners_guide.html);
+[中文](https://github.com/DocsHome/nginx-docs/blob/master/%E4%BB%8B%E7%BB%8D/%E5%88%9D%E5%AD%A6%E8%80%85%E6%8C%87%E5%8D%97.md)
+
+- directives(指令)模块可以是一个指令,指令以 `;` 结尾
+
+- block directives(块指令)`{}` 将一组指令包起来
+
+- `#` 可注释指令
+
+- block directives 括号内有其他指令,则称为 context(上下文),如 events, http, server, and location
+
+### Static Server (静态页面)
+
+配置文件: nginx 安装路径下的 **conf** 目录(/usr/local/nginx/conf/nginx.conf)
+
+```nginx
+# 静态页面的配置
+server {
+    listen       80;
+    server_name  localhost;
+    # 省略...
+    location / {
+        root   html;
+        index  index.html index.htm;
+    }
+    # 省略...
+}
+```
+
+[**nginx** 使用的正则表达式与 **Perl** 编程语言 `PCRE` 使用的正则表达式**兼容**](https://github.com/DocsHome/nginx-docs/blob/master/%E4%BB%8B%E7%BB%8D/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%90%8D%E7%A7%B0.md)
+
+- server_name: 定义服务器名称，确定使用哪个 `server 块` 进行请求
+
+- location: 表示匹配的请求, `/` 表示匹配所有
+
+- root: 表示路径 (这里为 nginx 安装路径 的相对目录 **html** `/usr/local/nginx/html/`)
+
+- 以上综合来说就是: 在 `localhost(127.0.0.1)` 的 `80` 端口下匹配`/usr/local/nginx/html/`目录下的 `index.html` 和 `index.htm` 文件
+
+我们把 html 目录下的 **index.html** 的标题改为 **tz-pc** 进行测试:
+
+```html
+<h1>Welcome to tz-pc!</h1>
+```
+
+- 1.测试: 在浏览器里输入 `localhost` 或者 `127.0.0.1`
+
+  (等同于 `localhost/index.html`)
+
+  (等同于 `127.0.0.1/index.html`)
+
+  ![avatar](/Pictures/nginx/static.png)
+
+- 2.测试: `curl` 命令
 
 ```sh
-在server下加入这行
-server
-{
-        #log setting
-        access_log /var/log/nginx/tz-access.log;
-        error_log  /var/log/nginx/tz-error.log;
+curl localhost
+# 或者
+curl 127.0.0.1
+```
+
+设置图片的目录(通过正则表达式匹配 gif,png,jpg):
+
+```nginx
+location / {
+    root   html;
+    index  index.html index.htm;
 }
+
+# 添加如下配置,我这里的目录为(/home/tz/Pictures/)
+location ~\.(gif|png|jpg)$ {
+    root   /home/tz/Pictures/;
+}
+```
+
+修改后重新加载配置:
+
+```sh
+sudo nginx -s reload
+```
+
+- 1.测试: 在浏览器里输入`127.0.0.1/YouPictureName`
+  ![avatar](/Pictures/nginx/static1.png)
+
+- 2.测试: curl 后通过重定向下载
+
+```sh
+curl 127.0.0.1/YouPictureName > /tmp/YouPictureName.png
+```
+
+### Proxy Server (代理服务器)
+
+proxy_pass 指令: 让 **80** 端口代理 **8080** 端口的流量
+
+添加一个新的 **server** 块，监听 **8080** 端口:
+
+```nginx
+    server {
+        listen 8080;
+        server_name  localhost;
+
+        location / {
+        # 设置代理为 80 端口
+            proxy_pass http://localhost:80/;
+        }
+    }
+```
+
+- 1.静态主页测试: 在浏览器里输入`127.0.0.1:8080`:
+  ![avatar](/Pictures/nginx/proxy.png)
+
+- 2.图片测试: 在浏览器里输入`127.0.0.1:8080/YouPictureName.png`:
+  ![avatar](/Pictures/nginx/proxy1.png)
+
+### fastcgi
+
+```nginx
+location /\.php$ {
+    fastcgi_pass  localhost:9000;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param QUERY_STRING    $query_string;
+}
+
+$document_root 与 root 指令的值是一样的，变量 $fastcgi_script_name 的值为请求URI，即 /index.php。
+```
+
+### echo 模块
+
+[跳转至 echo 模块安装](#echo)
+
+在 80 端口的 server 下加入:
+
+```nginx
+location /echo {
+    set $a 'tz';
+    set $b 'i\'m $a';
+    echo "$b";
+    echo "Here is $a nginx tutorial";
+}
+```
+
+测试:
+http://127.0.0.1/echo
+
+因为刚才设置了代理，所以 8080 也是可以的:
+http://127.0.0.1:8080/echo
+
+## log (日志)
+
+- [ngx_http_log_module 模块指定日志格式等](https://github.com/DocsHome/nginx-docs/blob/master/%E6%A8%A1%E5%9D%97%E5%8F%82%E8%80%83/http/ngx_http_log_module.md)
+
+### access log:
+
+```sh
+# 新建 access 目录
+mkdir /usr/local/nginx/logs/access
+```
+
+添加 3 个 access 日志:
+
+- **http:** access.log
+
+- **server 80:** 80.access.log
+
+- **server 8080:** 8080.access.log
+
+```nginx
+http {
+    # 省略...
+
+    # 添加 access.log 日志
+    access_log  logs/access/access.log;
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        # 省略...
+
+        # 添加 80.access.log 日志
+        access_log  logs/access/80.access.log;
+
+        location / {
+        # 省略...
+        }
+    }
+    server {
+        listen 8080;
+        server_name  localhost;
+
+        # 添加 8080.access.log 日志
+        access_log  logs/access/8080.access.log;
+
+        location / {
+            proxy_pass http://localhost:80/;
+        # 省略...
+        }
+    }
+}
+```
+
+- 第 1 行: 浏览器访问 主页
+- 第 2 行: 浏览器访问 tz.png 图片
+- 第 3 行: curl 访问 主页
+- 第 4 行: curl 访问 tz.png 图片
+  ![avatar](/Pictures/nginx/access_log.png)
+
+使用 `gzip` 压缩日志，日志将会是**二进制格式**
+
+```nginx
+access_log  logs/access/80.access.log combined gzip flush=5m;
+```
+
+重启日志:
+
+```sh
+sudo nginx -s reload
+sudo nginx -s reopen
+```
+
+![avatar](/Pictures/nginx/access_log1.png)
+可通过 `zcat` 查看
+
+```sh
+zcat 80.access.log
+```
+
+### open_log_file_cache 日志缓存
+
+| 参数     | 内容                   |
+| -------- | ---------------------- |
+| max      | 最大字节数量           |
+| inactive | 设置时间 默认是 10s    |
+| min_uses | 日志写入指定次数后压缩 |
+| valid    | 设置检查频率，默认 60s |
+
+```sh
+open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;
 ```
 
 ## 用户密码认证
@@ -184,10 +445,13 @@ server
 
 - 1:轮询
   轮询是 upstream 的默认分配方式，即每个请求按照时间顺序轮流分配到不同的后端服务器，如果某个后端服务器 down 掉后，能自动剔除。
+
 - 2:weight（权重）
   轮询的加强版，既可以指定轮询比率，weight 和访问几率成正比，主要应用于后端服务器异质的场景下。
+
 - 3:ip_hash
   每个请求按照访问 Ip（即 Nginx 的前置服务器或客户端 IP）的 hash 结果分配，这样每个访客会固定访问一个后端服务器，可以解决 session 一致问题。
+
 - 4:fair
   fair 顾名思义，公平地按照后端服务器的响应时间（rt）来分配请求，响应时间（rt）小的后端服务器优先分配请求。
 - 5:url_hash
@@ -233,6 +497,124 @@ location /test {
 # 测试
 curl 127.0.0.1:80/test
 ```
+
+## pcre 正则表达式
+
+## [njs](http://nginx.org/en/docs/njs/)
+
+njs 是 JavaScript 语言的一个子集，它允许扩展 nginx 的功能
+
+## [Modules (模块)](http://nginx.org/en/docs/http/ngx_http_core_module.html#keepalive_timeout)
+
+## [NSM 管理 kubernetes 容器流量](https://www.nginx.com/blog/introducing-nginx-service-mesh/)
+
+## [install 安装](http://nginx.org/en/linux_packages.html)
+
+- [菜鸟教程](https://www.runoob.com/linux/nginx-install-setup.html)
+
+- [源码下载(搜狗镜像)](http://mirrors.sohu.com/nginx/?C=M&O=D)
+
+[安装配置](http://nginx.org/en/docs/configure.html):
+
+<span id="echo"></span>
+
+```sh
+# 下载最新的稳定版1.18(使用搜狗镜像)
+wget http://mirrors.sohu.com/nginx/nginx-1.18.0.tar.gz
+tar xvzf nginx-1.18.0.tar.gz
+cd nginx-1.18.0
+
+# 新建一个module目录
+mkdir module
+cd module
+
+# 安装echo模块(由国人章亦春开发)
+git clone https://github.com/openresty/echo-nginx-module.git module/echo-nginx-module
+# 国内下载地址
+git clone https://gitee.com/mirrors/echo-nginx-module.git module/echo-nginx-module
+
+# 设置安装目录 和 安装模块
+./configure --prefix=/usr/local/nginx \
+    --add-module=./module/echo-nginx-module
+
+# 编译
+sudo make && sudo make install
+
+# 设置硬连接到 /bin 目录
+sudo ln /usr/local/nginx/sbin/nginx /bin/nginx
+
+# 启动nginx
+sudo nginx
+```
+
+## reference
+
+- [Nginx 安装 SSL 配置 HTTPS 超详细完整教程全过程](https://developer.aliyun.com/article/766958)
+
+- [Nginx 教程的连载计划](https://developer.aliyun.com/article/244524?spm=a2c6h.14164896.0.0.32ff7f61TT5mAL)
+
+- [Dropbox 正在用 Envoy 替换 Nginx，这还是我第一次看到讨论 Nginx 作为 Web 服务器的缺点 --ruanyif](https://dropbox.tech/infrastructure/how-we-migrated-dropbox-from-nginx-to-envoy)
+
+## 第三方高效软件
+
+- [ngxtop 日志监控](https://github.com/lebinh/ngxtop)
+
+```sh
+sudo ngxtop -l /usr/local/nginx/logs/access/80.access.log
+```
+
+![avatar](/Pictures/nginx/ngxtop.gif)
+
+统计客户端 ip 访问次数:
+
+```sh
+ngxtop top remote_addr -l /usr/local/nginx/logs/access/80.access.log
+```
+
+![avatar](/Pictures/nginx/ngxtop1.gif)
+
+- [goaccess 日志监控](https://goaccess.io/)
+
+cli(命令行监控):
+
+```sh
+sudo goaccess /usr/local/nginx/logs/access/80.access.log
+```
+
+![avatar](/Pictures/nginx/goaccess.gif)
+
+输出 静态 html 页面:
+
+```sh
+sudo goaccess /usr/local/nginx/logs/access/80.access.log  -o /tmp/report.html --log-format=COMBINED
+
+# 打开html
+chrome /tmp/report.html
+```
+
+![avatar](/Pictures/nginx/goaccess.png)
+
+输出 实时 html 页面:
+
+```sh
+sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --log-format=COMBINED --real-time-html
+```
+
+![avatar](/Pictures/nginx/goaccess1.gif)
+
+## 书籍 or 教程
+
+- [官方教程中文](https://github.com/DocsHome/nginx-docs/blob/master/SUMMARY.md)
+
+- [Nginx 开发从入门到精通(淘宝内部的书)](http://tengine.taobao.org/book/index.html)
+
+- [nginx books](http://nginx.org/en/books.html)
+
+- [章亦春又名春哥 nginx 教程](http://openresty.org/download/agentzh-nginx-tutorials-zhcn.html)
+
+## 项目资源
+
+- [自动生成 nginx.conf](https://www.digitalocean.com/community/tools/nginx)
 
 # TOMCAT
 
@@ -404,15 +786,7 @@ touch /var/log/php-fpm/php_errors.log
 
 # reference
 
-- [Nginx 安装 SSL 配置 HTTPS 超详细完整教程全过程](https://developer.aliyun.com/article/766958)
-- [Nginx 教程的连载计划](https://developer.aliyun.com/article/244524?spm=a2c6h.14164896.0.0.32ff7f61TT5mAL)
 - [tomcat 与 nginx，apache 的区别是什么？](https://www.zhihu.com/question/32212996/answer/87524617)
 - [你还记得 Tomcat 的工作原理么](https://zhuanlan.zhihu.com/p/248426114)
 - [CentOS 安装 MySQL 详解](https://juejin.im/post/6844903870053761037)
 - [Tomcat 基础架构——jdk、java、zrlog](https://my.oschina.net/u/3851633/blog/1858422)
-
-# 其它文章
-
-- [Dropbox 正在用 Envoy 替换 Nginx，这还是我第一次看到讨论 Nginx 作为 Web 服务器的缺点 --ruanyif](https://dropbox.tech/infrastructure/how-we-migrated-dropbox-from-nginx-to-envoy)
-
-- [LNMP 一键安装包](https://github.com/licess/lnmp)

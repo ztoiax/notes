@@ -4,6 +4,7 @@
     * [ab](#ab)
     * [httperf](#httperf)
 * [Net](#net)
+    * [mtr](#mtr)
     * [nethogs](#nethogs)
     * [bmon](#bmon)
     * [speedometer](#speedometer)
@@ -84,6 +85,10 @@ httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,1
 
 # Net
 
+## [mtr](https://mp.weixin.qq.com/s?__biz=MzAxODI5ODMwOA==&mid=2666545753&idx=1&sn=2bf5b7f1c814371335a5f1b51798f3c7&chksm=80dc86f2b7ab0fe4cb14bdc1d1285ddff878c3a1355a1f469a21c3a7148b24d1f0b608bbd148&scene=21#wechat_redirect)
+
+![avatar](/Pictures/benchmark/mtr.png)
+
 ## nethogs
 
 ![avatar](/Pictures/benchmark/1.png)
@@ -107,20 +112,19 @@ httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,1
 
 ## sar(sysstat)
 
-| 参数 | 操作   |
-| ---- | ------ |
-| -u   | 使用率 |
-| -P   | 核心   |
-| -b   | IO   |
-| -B   | 内存速率   |
+| 参数 | 操作           |
+| ---- | -------------- |
+| -u   | 使用率         |
+| -P   | 核心           |
+| -b   | IO             |
+| -B   | 内存速率       |
 | -W   | 交换分区速率   |
-| -r   | 内存和交换分区   |
+| -r   | 内存和交换分区 |
 | -d   | 硬盘(块设备)   |
-| -I   | 中断   |
-| -n   | 网络   |
-| -x   | 进程(pid)   |
-| -q   | 进程负载   |
-
+| -I   | 中断           |
+| -n   | 网络           |
+| -x   | 进程(pid)      |
+| -q   | 进程负载       |
 
 - 1 间隔时间
 - 10 次数
@@ -146,6 +150,7 @@ sar -P ALL 1 | tail -n+3 | awk '$NF<10 {print $0}'
 # 打印所有中断的统计数据
 sar -I ALL 1 10
 ```
+
 ## dstat
 
 | 参数   | 操作         |
@@ -161,16 +166,18 @@ dstat -c 2 5
 
 # CPU
 
-
 ## 获取保留两位小数的 CPU 占用率：
 
 top -b -n1 | grep ^%Cpu | awk '{printf("Current CPU Utilization is : %.2f%"), 100-\$8}'
 
 ## perf
+
 # memory
+
 ps -aux | sort -k4nr | head -K
 ps aux --sort -rss | head
 top -c -b -o +%MEM | head -n 20 | tail -15
+
 # IO
 
 ```sh
@@ -251,4 +258,5 @@ sudo bootchartd
 - [LinuxCast.net 每日播客](https://study.163.com/course/courseMain.htm?courseId=221001)
 - [又一波你可能不知道的 Linux 命令行网络监控工具](https://linux.cn/article-5461-1.html)
 - [Linux 性能优化：CPU 篇](https://zhuanlan.zhihu.com/p/180402964)
+- [Linux 统计/监控工具 SAR 详细介绍](https://www.jianshu.com/p/08cc9a39a265)
 - [Linux统计/监控工具SAR详细介绍](https://www.jianshu.com/p/08cc9a39a265)

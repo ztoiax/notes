@@ -2833,7 +2833,8 @@ commit;
 
 ```sql
 # 事务a 和 事务 b 插入同样的数据
-insert into locking (id,name,date) value (1000,'tz4','2020-10-24');
+insert into locking (id,name,date) value
+(1000,'tz4','2020-10-24');
 ```
 
 ![avatar](/Pictures/mysql/innodb_lock3.gif)
@@ -2987,7 +2988,7 @@ tablespace (表空间):
 
 InnoDB 采用`WAL`(Write-Ahead Logging). 先修改日志,再在修改数据页进 buffer(内存)。当等到有空闲线程、内存不足、Redo log 满了时再 Checkpoint(刷脏)。写 Redo log 是顺序写入，Checkpoint(刷脏)是随机写.
 
-日志格式：
+[日志格式：](https://mp.weixin.qq.com/s?__biz=MzA5ODM5MDU3MA==&mid=2650869018&idx=1&sn=7723368c861231e310666dc4dd749141&chksm=8b67ea5fbc10634958da77475d084241aef457631bab8cd26a91816f7e450626b36978f61477&scene=21#wechat_redirect)
 
 - redo log(重做日志) 物理日志:事务提交成功，数据页被修改后的值,就会被永久存储了.文件名`ib_logfile*`
 

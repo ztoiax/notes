@@ -194,6 +194,7 @@ git pull <REMOTE> <BRANCH>
 - [这才是真正的 Git——Git 实用技巧](https://zhuanlan.zhihu.com/p/192961725)
 - [常用 Git 命令清单](https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html)
 - [git 命令思维导图](https://www.processon.com/view/link/5c6e2755e4b03334b523ffc3#map)
+- [7000+ 字带你全面搞懂 Git 命令+原理！](https://mp.weixin.qq.com/s?__biz=MzA5ODM5MDU3MA==&mid=2650869124&idx=1&sn=f6c108e0be81e5ebfb9552005a602f32&chksm=8b67eac1bc1063d7024dc027e1d38ae9e7492bb6f7b27a6ef396f5cfc4e04f43a43928eab4f4&mpshare=1&scene=1&srcid=1121PpPXDPojYdulbYJvL1Do&sharer_sharetime=1605967603882&sharer_shareid=5dbb730cd6722d0343328086d9ad7dce#rd)
 
 # 优秀文章
 

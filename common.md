@@ -1,7 +1,7 @@
 <!-- vim-markdown-toc GFM -->
 
 * [常用命令](#常用命令)
-    * [文件操作](#文件操作)
+    * [file (文件操作)](#file-文件操作)
         * [create file](#create-file)
         * [diff,patch 使用](#diffpatch-使用)
         * [make](#make)
@@ -9,7 +9,8 @@
             * [Note: 需要注意的是，每行命令在一个单独的 shell 中执行。这些 Shell 之间没有继承关系。(make var-lost），取不到 foo 的值。因为两行命令在两个不同的进程执行。一个解决办法是将两行命令写在一行，中间用分号分隔。](#note-需要注意的是每行命令在一个单独的-shell-中执行这些-shell-之间没有继承关系make-var-lost取不到-foo-的值因为两行命令在两个不同的进程执行一个解决办法是将两行命令写在一行中间用分号分隔)
         * [lsof](#lsof)
         * [rsync](#rsync)
-    * [字符串操作](#字符串操作)
+        * [split](#split)
+    * [char (字符串操作)](#char-字符串操作)
         * [tr](#tr)
         * [sed](#sed)
         * [awk](#awk)
@@ -30,7 +31,7 @@
 
 # 常用命令
 
-## 文件操作
+## file (文件操作)
 
 ### create file
 
@@ -140,7 +141,18 @@ rsync -a --delete --link-dest /compare/path /source/path /target/path
 rsync -av --include="*.txt" --exclude='*' source/ destination
 ```
 
-## 字符串操作
+### split
+
+```sh
+# -b 二进制文件,按100M 进行拆分
+split -b 100M <file>
+
+# -C 文本文件,按100M 进行拆分
+split -C 100M <file>
+```
+
+
+## char (字符串操作)
 
 ### tr
 
