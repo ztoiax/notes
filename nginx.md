@@ -8,8 +8,10 @@
         * [Proxy Server (代理服务器)](#proxy-server-代理服务器)
         * [fastcgi](#fastcgi)
         * [echo 模块](#echo-模块)
+        * [allow deny limit_except](#allow-deny-limit_except)
     * [log (日志)](#log-日志)
         * [access log:](#access-log)
+        * [error log](#error-log)
         * [open_log_file_cache 日志缓存](#open_log_file_cache-日志缓存)
     * [用户密码认证](#用户密码认证)
     * [只允许特定 ip 访问](#只允许特定-ip-访问)
@@ -18,11 +20,21 @@
     * [负载均衡](#负载均衡)
         * [upstream](#upstream)
         * [echo 变量](#echo-变量)
+    * [更多配置](#更多配置)
+        * [性能相关的配置](#性能相关的配置)
+        * [网络相关的配置](#网络相关的配置)
     * [pcre 正则表达式](#pcre-正则表达式)
     * [njs](#njs)
-    * [Modules (模块)](#modules-模块)
     * [NSM 管理 kubernetes 容器流量](#nsm-管理-kubernetes-容器流量)
     * [install 安装](#install-安装)
+* [下载最新的稳定版1.18(使用搜狗镜像)](#下载最新的稳定版118使用搜狗镜像)
+* [新建一个module目录](#新建一个module目录)
+* [安装echo模块(由国人章亦春开发)](#安装echo模块由国人章亦春开发)
+* [国内下载地址](#国内下载地址)
+* [设置安装目录 和 安装模块](#设置安装目录-和-安装模块)
+* [编译](#编译)
+* [设置硬连接到 /bin 目录](#设置硬连接到-bin-目录)
+* [启动nginx](#启动nginx)
     * [reference](#reference)
     * [第三方高效软件](#第三方高效软件)
     * [书籍 or 教程](#书籍-or-教程)
@@ -55,26 +67,20 @@
 
 - main: 读取检查 conf 配置文件,管理 worker 进程
 
-- [worker](http://nginx.org/en/docs/ngx_core_module.html#worker_processes): 处理实际请求,数量由 CPU 核心数决定
+- [worker](http://nginx.org/en/docs/ngx_core_module.html#worker_processes): 处理实际请求,数量由 CPU 核心数决定.worker 进程之间共享内存,原子操作等.几乎不会进入睡眠状态,请求数却决于内存大小
 
 ```nginx
 # 在配置文件,可以设置为auto (默认为1)
 worker_processes auto;
+
+# 也可以指定数量和对应的cpu
+worker_processes 4;
+worker_cpu_affinity 1000 0100 0010 0001;
 ```
 
 ## 基本命令
 
 ```sh
-# -s 发送signal (类似于systemctl)
-# 关闭(快速关闭不管连接)
-nginx -s stop
-# 退出(关闭前完成连接)
-nginx -s quit
-# 重新加载配置文件
-nginx -s reload
-# 重新打开日志文件
-nginx -s reopen
-
 # -t 检查配置是否正确
 nginx -t
 
@@ -86,6 +92,33 @@ nginx -v
 
 # -V 查看模块安装
 nginx -V
+
+# -s 发送signal (类似于systemctl)
+
+# 关闭(立即退出)
+nginx -s stop
+kill -s SIGINT <nginx master pid>
+kill -s SIGTERM <nginx master pid>
+
+# 退出(完成当前连接,关闭监听端口,停止接受新连接后退出)
+nginx -s quit
+kill -s SIGQUIT <nginx master pid>
+
+# 重新加载配置文件
+nginx -s reload
+kill -s SIGHUP <nginx master pid>
+
+# 重新打开日志文件
+nginx -s reopen
+kill -s SIGUSR1 <nginx master pid>
+
+# 关闭某个 worker 进程
+kill -s SIGWINCH <nginx worker pid>
+
+# 新编译的 nginx, 替换旧 nginx(生成/usr/local/nginx/logs/nginx.pid.oldbin)
+kill -s SIGUSR2 <nginx master pid>
+# ps 查看 新旧两个版本的 nginx 都在运行 (kill掉旧版本)
+kill -s SIGQUIT <nginx master old pid>
 ```
 
 ## 基本配置
@@ -101,6 +134,8 @@ nginx -V
 - `#` 可注释指令
 
 - block directives 括号内有其他指令,则称为 context(上下文),如 events, http, server, and location
+
+- 内层块会继承外层块的设置，如果有冲突以内层块为主， **http 块** 设置 `gzip on` 而 **location 块** 设置 `gzip off` 结果为 **off**
 
 ### Static Server (静态页面)
 
@@ -163,6 +198,9 @@ location / {
 # 添加如下配置,我这里的目录为(/home/tz/Pictures/)
 location ~\.(gif|png|jpg)$ {
     root   /home/tz/Pictures/;
+
+    # 假设找不到对应的文件则返回/home/tz/Pictures/404.png
+    error_page 404 = /404.png;
 }
 ```
 
@@ -237,6 +275,34 @@ http://127.0.0.1/echo
 
 因为刚才设置了代理，所以 8080 也是可以的:
 http://127.0.0.1:8080/echo
+
+### allow deny limit_except
+
+limit_except: http 方法限制
+
+| http 方法 |
+|-----------|
+| GET       |
+| HEAD      |
+| POST      |
+| PUT       |
+| DELETE    |
+| MKCOL     |
+| COPY      |
+| MOVE      |
+| OPTIONS   |
+| PROPFIND  |
+| PROPPATCH |
+| LOCK      |
+| UNLOCK    |
+| PATCH     |
+
+只允许 192.168.1.0/32 使用`get` (get 包含`head`方法);
+```nginx
+limit_except GET {
+    allow 192.168.1.0/32;
+}
+```
 
 ## log (日志)
 
@@ -316,6 +382,41 @@ sudo nginx -s reopen
 
 ```sh
 zcat 80.access.log
+```
+
+### error log
+
+高等级会输出包含比自己低等级的日志:
+
+| 日志等级 |
+| -------- |
+| debug    |
+| info     |
+| notice   |
+| warn     |
+| error    |
+| crit     |
+| alert    |
+| emerg    |
+
+默认是 error:
+
+> error_log logs/error.log error;
+
+设置为 debug 会输出所有日志:
+
+```nginx
+error_log  logs/error.log debug;
+```
+
+`debug_connection` 指定客户端输出 debug 等级:
+
+```nginx
+events {
+    # 只有192.168.100.1 和 192.168.100.0/24 客户端才会输出debug等级
+    debug_connection 192.168.100.1;
+    debug_connection 192.168.100.0/24;
+}
 ```
 
 ### open_log_file_cache 日志缓存
@@ -498,13 +599,65 @@ location /test {
 curl 127.0.0.1:80/test
 ```
 
+## 更多配置
+
+- [ngx_http_core_module模块参数](http://nginx.org/en/docs/http/ngx_http_core_module.html)
+### 性能相关的配置
+
+```nginx
+# ssl硬件加速卡，可通过(openssl engine -t查看)
+ssl_engine device;
+
+# 设置 worker 进程的静态优先级-20 ~ +19(默认是0)
+worker_priority 0;
+
+# http头 超过 1k 时，才写入磁盘
+client_header_buffer_size 1k;
+
+# http头 超过 4k,8k 时，行超过返回414,头超过返回400
+large_client_header_buffers 4 8k;
+
+# http头 超过 4k,8k 时，返回414,400
+large_client_header_buffers 4 8k;
+
+# http包体 超过 8k,16k 时，才写入磁盘
+client_body_buffer_size 8k 16k;
+
+# http的头部Content_Length 超过 1m 时返回413
+client_max_body_size 1m;
+```
+
+### 网络相关的配置
+
+```nginx
+# 连接超时后 发送 RST 直接重置连接，避免4次挥手的 TCP 连接
+reset_timeout_connection off
+
+# 开启 lingering_close 并超过 client_max_body_size 大小返回413后, 客户端仍再发送时，超过 30s 后关闭连接
+lingering_time 30s
+```
+
 ## pcre 正则表达式
 
 ## [njs](http://nginx.org/en/docs/njs/)
 
 njs 是 JavaScript 语言的一个子集，它允许扩展 nginx 的功能
 
-## [Modules (模块)](http://nginx.org/en/docs/http/ngx_http_core_module.html#keepalive_timeout)
+## [NSM 管理 kubernetes 容器流量](https://www.nginx.com/blog/introducing-nginx-service-mesh/)
+
+## [install 安装](http://nginx.org/en/linux_packages.html)
+
+- [菜鸟教程](https://www.runoob.com/linux/nginx-install-setup.html)
+
+- [源码下载(搜狗镜像)](http://mirrors.sohu.com/nginx/?C=M&O=D)
+
+````
+
+## pcre 正则表达式
+
+## [njs](http://nginx.org/en/docs/njs/)
+
+njs 是 JavaScript 语言的一个子集，它允许扩展 nginx 的功能
 
 ## [NSM 管理 kubernetes 容器流量](https://www.nginx.com/blog/introducing-nginx-service-mesh/)
 
@@ -535,7 +688,8 @@ git clone https://gitee.com/mirrors/echo-nginx-module.git module/echo-nginx-modu
 
 # 设置安装目录 和 安装模块
 ./configure --prefix=/usr/local/nginx \
-    --add-module=./module/echo-nginx-module
+    --add-module=./module/echo-nginx-module \
+    --with-debug
 
 # 编译
 sudo make && sudo make install
@@ -545,7 +699,10 @@ sudo ln /usr/local/nginx/sbin/nginx /bin/nginx
 
 # 启动nginx
 sudo nginx
+````
 ```
+
+生成的 `ngx_modules.c` 文件里的 `mgx_modules` 数组表示 nginx 每个模块的优先级,对于`HTTP过滤模块`则相反，越后越优先
 
 ## reference
 

@@ -19,6 +19,7 @@
     * [其他相似项目](#其他相似项目)
         * [中文翻译 Road Map](#中文翻译-road-map)
         * [值得一看的技术类书籍列表](#值得一看的技术类书籍列表)
+        * [统计开发者的免费服务的列表](#统计开发者的免费服务的列表)
 
 <!-- vim-markdown-toc -->
 
@@ -59,3 +60,6 @@
 ### [中文翻译 Road Map](https://github.com/xx-zh/xx-zh-roadmap)
 
 ### [值得一看的技术类书籍列表](https://github.com/doocs/technical-books#architecture)
+
+### [统计开发者的免费服务的列表](https://github.com/ripienaar/free-for-dev)
+
