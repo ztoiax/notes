@@ -14,7 +14,6 @@
         * [error log](#error-log)
         * [open_log_file_cache 日志缓存](#open_log_file_cache-日志缓存)
     * [用户密码认证](#用户密码认证)
-    * [只允许特定 ip 访问](#只允许特定-ip-访问)
     * [对 ua 进行限制](#对-ua-进行限制)
     * [ssl](#ssl)
     * [负载均衡](#负载均衡)
@@ -23,18 +22,15 @@
     * [更多配置](#更多配置)
         * [性能相关的配置](#性能相关的配置)
         * [网络相关的配置](#网络相关的配置)
+        * [文件相关的配置](#文件相关的配置)
     * [pcre 正则表达式](#pcre-正则表达式)
     * [njs](#njs)
     * [NSM 管理 kubernetes 容器流量](#nsm-管理-kubernetes-容器流量)
     * [install 安装](#install-安装)
-* [下载最新的稳定版1.18(使用搜狗镜像)](#下载最新的稳定版118使用搜狗镜像)
-* [新建一个module目录](#新建一个module目录)
-* [安装echo模块(由国人章亦春开发)](#安装echo模块由国人章亦春开发)
-* [国内下载地址](#国内下载地址)
-* [设置安装目录 和 安装模块](#设置安装目录-和-安装模块)
-* [编译](#编译)
-* [设置硬连接到 /bin 目录](#设置硬连接到-bin-目录)
-* [启动nginx](#启动nginx)
+    * [pcre 正则表达式](#pcre-正则表达式-1)
+    * [njs](#njs-1)
+    * [NSM 管理 kubernetes 容器流量](#nsm-管理-kubernetes-容器流量-1)
+    * [install 安装](#install-安装-1)
     * [reference](#reference)
     * [第三方高效软件](#第三方高效软件)
     * [书籍 or 教程](#书籍-or-教程)
@@ -126,6 +122,8 @@ kill -s SIGQUIT <nginx master old pid>
 配置文件:
 [官方教程(英文)](http://nginx.org/en/docs/beginners_guide.html);
 [中文](https://github.com/DocsHome/nginx-docs/blob/master/%E4%BB%8B%E7%BB%8D/%E5%88%9D%E5%AD%A6%E8%80%85%E6%8C%87%E5%8D%97.md)
+
+[官方配置例子](https://www.nginx.com/resources/wiki/start/topics/examples/full/)
 
 - directives(指令)模块可以是一个指令,指令以 `;` 结尾
 
@@ -278,29 +276,32 @@ http://127.0.0.1:8080/echo
 
 ### allow deny limit_except
 
-limit_except: http 方法限制
+limit_except: http request methods (请求方法)限制
 
-| http 方法 |
-|-----------|
-| GET       |
-| HEAD      |
-| POST      |
-| PUT       |
-| DELETE    |
-| MKCOL     |
-| COPY      |
-| MOVE      |
-| OPTIONS   |
-| PROPFIND  |
-| PROPPATCH |
-| LOCK      |
-| UNLOCK    |
-| PATCH     |
+| http request methods | 内容                                                  |
+|----------------------|-------------------------------------------------------|
+| GET                  | 请求资源，返回实体                                    |
+| HEAD                 | 请求获取响应头，但不返回实体                          |
+| POST                 | 用于提交数据请求处理，数据包含在请求体内              |
+| PUT                  | 请求上传数据                                          |
+| DELETE               | 请求删除指定资源                                      |
+| MKCOL                |                                                       |
+| COPY                 |                                                       |
+| MOVE                 |                                                       |
+| OPTIONS              | 请求返回该资源所支持的所有HTTP请求方法                |
+| PROPFIND             |                                                       |
+| PROPPATCH            |                                                       |
+| LOCK                 |                                                       |
+| UNLOCK               |                                                       |
+| PATCH                | 类似PUT,用于部分更新,当资源不存在，会创建一个新的资源 |
 
-只允许 192.168.1.0/32 使用`get` (get 包含`head`方法);
+除了 192.168.1.0/24 **以外** ，其他只能使用 `get` 和 `head` (get 包含 head) 方法:
+
 ```nginx
+# in location
 limit_except GET {
-    allow 192.168.1.0/32;
+    allow 192.168.1.0/24;
+    deny all;
 }
 ```
 
@@ -452,20 +453,6 @@ htpasswd -c /etc/nginx/htpasswd tz # 用户tz
 
 # 使用curl进行测试
 curl -u 'tz:12345' 127.0.0.1:80    # 密码12345
-```
-
-## 只允许特定 ip 访问
-
-```sh
-server
-{
-    location / {
-        #ip setting
-        allow 127.0.0.1;
-        allow 192.168.0.1;
-        deny all;
-    }
-}
 ```
 
 ## 对 ua 进行限制
@@ -637,6 +624,25 @@ reset_timeout_connection off
 lingering_time 30s
 ```
 
+### 文件相关的配置
+
+```nginx
+# 直接在内核态复制文件，减少内核态和用户态的切换
+sendfile off
+
+# 在sendfile on后 将响应包头放到一个 TCP 包中发送
+tcp_nopush off
+
+# aio (异步I/O) 和 sendfile 互诉
+aio off
+
+# 使用 O_DIRECT 读取文件 和 sendfile 互诉
+directio_aligment size
+
+# 文件缓存(默认off)
+open_file_cache max=1000 inactive=20s
+```
+
 ## pcre 正则表达式
 
 ## [njs](http://nginx.org/en/docs/njs/)
@@ -650,8 +656,6 @@ njs 是 JavaScript 语言的一个子集，它允许扩展 nginx 的功能
 - [菜鸟教程](https://www.runoob.com/linux/nginx-install-setup.html)
 
 - [源码下载(搜狗镜像)](http://mirrors.sohu.com/nginx/?C=M&O=D)
-
-````
 
 ## pcre 正则表达式
 
@@ -699,7 +703,6 @@ sudo ln /usr/local/nginx/sbin/nginx /bin/nginx
 
 # 启动nginx
 sudo nginx
-````
 ```
 
 生成的 `ngx_modules.c` 文件里的 `mgx_modules` 数组表示 nginx 每个模块的优先级,对于`HTTP过滤模块`则相反，越后越优先

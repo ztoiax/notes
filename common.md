@@ -151,7 +151,6 @@ split -b 100M <file>
 split -C 100M <file>
 ```
 
-
 ## char (字符串操作)
 
 ### tr
@@ -210,6 +209,9 @@ sed -i "/123/c321" FILE
 sed -i 's/a/b/'  FILE
 # 将文件内所有a替换成b
 sed -i 's/a/b/g'  FILE
+
+# 打印第一行和匹配 nginx
+ps aux | sed '1p;/nginx/!d'
 ```
 
 ### awk
@@ -253,6 +255,12 @@ awk '{ print $2"="$1}' test
 
 # 打印行号加所有行(类似于cat -n)
 awk '{ print NR" "$0}' test
+
+# 打印第一行和匹配 nginx
+ps aux | awk 'NR==1 || /nginx/'
+
+# 打印第一行和匹配 从 nginx 到 vim
+ps aux | awk '/nginx/,/vim/'
 ```
 
 ## other

@@ -10,6 +10,7 @@
     * [speedometer](#speedometer)
     * [httpstat](#httpstat)
 * [综合](#综合)
+    * [perf-tool](#perf-tool)
     * [sar(sysstat)](#sarsysstat)
     * [dstat](#dstat)
         * [每 2 秒(默认是 1 秒)输出 cpu 信息,一共 5 次](#每-2-秒默认是-1-秒输出-cpu-信息一共-5-次)
@@ -109,6 +110,7 @@ httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,1
 ![avatar](/Pictures/benchmark/httpstat.png)
 
 # 综合
+## [perf-tool](http://www.brendangregg.com/dtrace.html)
 
 ## sar(sysstat)
 
@@ -260,3 +262,4 @@ sudo bootchartd
 - [Linux 性能优化：CPU 篇](https://zhuanlan.zhihu.com/p/180402964)
 - [Linux 统计/监控工具 SAR 详细介绍](https://www.jianshu.com/p/08cc9a39a265)
 - [Linux统计/监控工具SAR详细介绍](https://www.jianshu.com/p/08cc9a39a265)
+
