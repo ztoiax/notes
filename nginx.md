@@ -278,29 +278,29 @@ http://127.0.0.1:8080/echo
 
 limit_except: http request methods (请求方法)限制
 
-| http request methods | 内容                                                  |
-|----------------------|-------------------------------------------------------|
-| GET                  | 请求资源，返回实体                                    |
-| HEAD                 | 请求获取响应头，但不返回实体                          |
-| POST                 | 用于提交数据请求处理，数据包含在请求体内              |
-| PUT                  | 请求上传数据                                          |
-| DELETE               | 请求删除指定资源                                      |
-| MKCOL                |                                                       |
-| COPY                 |                                                       |
-| MOVE                 |                                                       |
-| OPTIONS              | 请求返回该资源所支持的所有HTTP请求方法                |
-| PROPFIND             |                                                       |
-| PROPPATCH            |                                                       |
-| LOCK                 |                                                       |
-| UNLOCK               |                                                       |
-| PATCH                | 类似PUT,用于部分更新,当资源不存在，会创建一个新的资源 |
+| http request methods | 内容                                                   |
+| -------------------- | ------------------------------------------------------ |
+| GET                  | 请求资源，返回实体                                     |
+| HEAD                 | 请求获取响应头，但不返回实体                           |
+| POST                 | 用于提交数据请求处理，数据包含在请求体内               |
+| PUT                  | 请求上传数据                                           |
+| DELETE               | 请求删除指定资源                                       |
+| MKCOL                |                                                        |
+| COPY                 |                                                        |
+| MOVE                 |                                                        |
+| OPTIONS              | 请求返回该资源所支持的所有 HTTP 请求方法               |
+| PROPFIND             |                                                        |
+| PROPPATCH            |                                                        |
+| LOCK                 |                                                        |
+| UNLOCK               |                                                        |
+| PATCH                | 类似 PUT,用于部分更新,当资源不存在，会创建一个新的资源 |
 
-除了 192.168.1.0/24 **以外** ，其他只能使用 `get` 和 `head` (get 包含 head) 方法:
+除了 192.168.100.0/24 **以外** ，其他只能使用 `get` 和 `head` (get 包含 head) 方法:
 
 ```nginx
 # in location
 limit_except GET {
-    allow 192.168.1.0/24;
+    allow 192.168.100.0/24;
     deny all;
 }
 ```
@@ -588,7 +588,8 @@ curl 127.0.0.1:80/test
 
 ## 更多配置
 
-- [ngx_http_core_module模块参数](http://nginx.org/en/docs/http/ngx_http_core_module.html)
+- [ngx_http_core_module 模块参数](http://nginx.org/en/docs/http/ngx_http_core_module.html)
+
 ### 性能相关的配置
 
 ```nginx

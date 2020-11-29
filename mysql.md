@@ -68,6 +68,7 @@
         * [ERROR 2013 (HY000): Lost connection to MySQL server during query(导致无法 stop slave;)](#error-2013-hy000-lost-connection-to-mysql-server-during-query导致无法-stop-slave)
         * [ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (111)(连接不了数据库)](#error-2002-hy000-cant-connect-to-local-mysql-server-through-socket-varrunmysqldmysqldsock-111连接不了数据库)
         * [ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined](#error-1075-42000-incorrect-table-definition-there-can-be-only-one-auto-column-and-it-must-be-defined)
+        * [启动错误](#启动错误)
     * [Storage Engine (存储引擎)](#storage-engine-存储引擎)
         * [锁](#锁)
         * [MyISAM](#myisam)
@@ -2656,6 +2657,30 @@ skip-name-resolve
 # 要先删除 auto_incrment 属性,才能删除主健(我这里的主健是 id 字段)
 alter table test modify id int(10);
 alter table test drop primary key;
+```
+
+### 启动错误
+
+```sh
+● mariadb.service - MariaDB 10.5.8 database server
+     Loaded: loaded (/usr/lib/systemd/system/mariadb.service; enabled; vendor preset: disabled)
+     Active: failed (Result: exit-code) since Sun 2020-11-29 10:05:15 CST; 10min ago
+       Docs: man:mariadbd(8)
+             https://mariadb.com/kb/en/library/systemd/
+    Process: 11236 ExecStartPre=/bin/sh -c systemctl unset-environment _WSREP_START_POSITION (code=exited, status=0/SUCCESS)
+    Process: 11237 ExecStartPre=/bin/sh -c [ ! -e /usr/bin/galera_recovery ] && VAR= ||   VAR=`cd /usr/bin/..; /usr/bin/galera_recovery`; [ $? -eq 0 ]   && systemctl set-environment _WSREP_START_POSITION=$VAR || exit 1 (code=exited, status=0/SUCCESS)
+    Process: 11246 ExecStart=/usr/bin/mariadbd $MYSQLD_OPTS $_WSREP_NEW_CLUSTER $_WSREP_START_POSITION (code=exited, status=1/FAILURE)
+   Main PID: 11246 (code=exited, status=1/FAILURE)
+     Status: "MariaDB server is down"
+```
+
+解决:
+
+```sh
+# 先删除目录
+mv /var/lib/mysql /tmp
+# 初始化
+mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 ```
 
 ## Storage Engine (存储引擎)

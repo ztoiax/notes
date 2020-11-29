@@ -15,6 +15,7 @@
         * [sed](#sed)
         * [awk](#awk)
     * [other](#other)
+        * [date](#date)
         * [fuser](#fuser)
         * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
     * [cron](#cron)
@@ -264,6 +265,26 @@ ps aux | awk '/nginx/,/vim/'
 ```
 
 ## other
+
+### date
+
+```bash
+# 年月日
+date +%Y-%m-%d
+# 2020-11-27
+
+# 时分秒
+date +%H:%M:%S
+# 11:50:47
+
+# 年月日 时分秒
+date +"%Y-%m-%d %H:%M:%S"
+# 2020-11-27 11:50:04
+
+#or
+date +"%Y年%m月%d日 %H时%M分%S秒"
+# 2020年11月27日 11时51分56秒
+```
 
 ### fuser
 

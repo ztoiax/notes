@@ -1,5 +1,40 @@
 # shell script
 
+## cheatsheet
+
+```sh
+# - 返回上一个目录
+cd -
+
+# 等同于 mv test test.bak
+mv test{,.bak}
+```
+
+获取使用最多的命令:
+
+```sh
+history | awk 'BEGIN {FS="[ \t]+|\\|"} {print $3}' | sort | uniq -c | sort -nr | head
+```
+
+`CDPATH` 能在任何路径下通过 `cd` 进入`CDPATH` 变量下的目录，
+
+```sh
+export CDPATH='/home/tz:/home/tz/.config:/etc'
+```
+
+`$_` 和 `!$` 获取上一个命令的最后参数:
+
+```sh
+echo $_
+echo !$
+```
+
+重定向:
+
+```sh
+strace -e open ls 2>&1 | grep ^n
+```
+
 ## if
 
 字符串变量 **不为空**,则执行:
@@ -78,7 +113,15 @@ for (( i=1; i<=5; i=i+2 )); do
 done
 ```
 
-in file row:
+get file on dir
+
+```sh
+for file in ./*;do
+    echo $file
+done
+```
+
+get file row:
 
 ```sh
 echo a > /tmp/test
@@ -112,3 +155,5 @@ EOF
 chmod 755 /tmp/for.sh
 /tmp/for.sh /tmp/test
 ```
+
+- [good bash 脚本集合](https://github.com/alexanderepstein/Bash-Snippets)

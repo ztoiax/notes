@@ -9,10 +9,13 @@
     * [mc](#mc)
     * [fd](#fd)
         * [instead find](#instead-find)
+* [git](#git)
     * [lazygit](#lazygit)
         * [git tui](#git-tui)
     * [bit](#bit)
         * [instead git](#instead-git)
+    * [tig](#tig)
+        * [git log](#git-log)
 * [char](#char)
     * [exa](#exa)
         * [highlight ls](#highlight-ls)
@@ -58,11 +61,11 @@
 ## [advcpmv](https://github.com/jarun/advcpmv)
 
 ### instead cp,mv
+
 ```sh
 alias mv="advmv -g"
 alias cp="advcp -g"
 ```
-
 
 ## [ranger](https://github.com/ranger/ranger)
 
@@ -73,6 +76,7 @@ alias cp="advcp -g"
 ![avatar](/Pictures/awesomecli/1.gif)
 
 ## [nnn](https://github.com/jarun/nnn)
+
 ```sh
 git clone https://github.com/jarun/nnn.git
 cd nnn
@@ -81,7 +85,6 @@ sudo cp nnn /bin/
 sudo make O_NERD=1
 
 ```
-
 
 ![avatar](/Pictures/awesomecli/4.png)
 
@@ -94,14 +97,25 @@ sudo make O_NERD=1
 
 ### instead find
 
+# git
+
 ## [lazygit](https://github.com/jesseduffield/lazygit)
 
 ### git tui
 
+![avatar](/Pictures/awesomecli/lazygit.png)
+
 ## [bit](https://github.com/chriswalz/bit)
 
 ### instead git
+
 ![avatar](/Pictures/awesomecli/15.png)
+
+## [tig](https://github.com/jonas/tig)
+
+### git log
+
+![avatar](/Pictures/awesomecli/tig.png)
 
 # char
 
@@ -110,6 +124,7 @@ sudo make O_NERD=1
 ### highlight ls
 
 ![avatar](/Pictures/awesomecli/11.png)
+
 ## [lsd](https://github.com/Peltoche/lsd)
 
 ### highlight ls and support icon
@@ -149,13 +164,14 @@ sudo make O_NERD=1
 ## [pet](https://github.com/knqyf263/pet)
 
 ![avatar](/Pictures/awesomecli/3.png)
+
 ### Simple command-line snippet manager
 
 ## [cheat](https://github.com/cheat/cheat)
 
 ![avatar](/Pictures/awesomecli/cheat.png)
-### instead man
 
+### instead man
 
 ## [glow](https://github.com/charmbracelet/glow)
 
@@ -182,11 +198,15 @@ sudo make O_NERD=1
 ![avatar](/Pictures/awesomecli/2.png)
 
 ## [ncdu](https://github.com/rofl0r/ncdu)
+
 ![avatar](/Pictures/awesomecli/ncdu.png)
+
 # net
+
 ## [prettyping](https://github.com/denilsonsa/prettyping)
 
 ![avatar](/Pictures/awesomecli/ping.png)
+
 # other
 
 ## [Termshark](https://github.com/gcla/termshark)

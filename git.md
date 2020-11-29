@@ -185,6 +185,8 @@ git merge --abort
 git pull <REMOTE> <BRANCH>
 ```
 
+[更多 git 的第三方优秀软件](https://github.com/ztoiax/notes/awesomecli#git)
+
 # git-extras
 
 - [git-extras](https://github.com/tj/git-extras/blob/master/Commands.md#git-alias)
