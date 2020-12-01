@@ -116,7 +116,12 @@ done
 get file on dir
 
 ```sh
-for file in ./*;do
+for file in *;do
+    echo $file
+done
+
+# get first char is 'd'
+for file in d*;do
     echo $file
 done
 ```

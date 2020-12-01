@@ -20,6 +20,8 @@
         * [不解析地址(提高速度)](#不解析地址提高速度)
         * [显示所有 LISTEM 状态 tcp,udp 进程](#显示所有-listem-状态-tcpudp-进程)
         * [统计本地 tcp 链接数量](#统计本地-tcp-链接数量)
+    * [ss (iproute2)](#ss-iproute2)
+    * [nc](#nc)
     * [nmap](#nmap)
         * [基本命令](#基本命令-1)
         * [显示本机网络，路由信息](#显示本机网络路由信息)
@@ -218,6 +220,8 @@ arpwatch -i enp27s0 -f arpwatch.log
 
 ## netstat
 
+建议使用 `ss` 参数差不多,更快,信息更全
+
 | 参数 | 操作                 |
 | ---- | -------------------- |
 | -a   | 所有                 |
@@ -256,6 +260,33 @@ netstat -tunlp
 
 ```sh
 netstat -tn | awk '{print $4}' | awk -F ":" '{print $1}' | sort | uniq -c
+```
+
+## ss (iproute2)
+
+```bash
+ss -tlp
+ss -tlpa
+```
+
+## nc
+
+服务端开启 1234 端口传送文件:
+
+```bash
+nc -l 1234 > file
+```
+
+客户端接受文件
+
+```bash
+nc <server ip> 1234 < file
+```
+
+```bash
+while true;do
+    date | nc -l 1234
+done
 ```
 
 ## nmap

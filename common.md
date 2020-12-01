@@ -10,6 +10,8 @@
         * [lsof](#lsof)
         * [rsync](#rsync)
         * [split](#split)
+        * [dd](#dd)
+        * [fsarchiver](#fsarchiver)
     * [char (字符串操作)](#char-字符串操作)
         * [tr](#tr)
         * [sed](#sed)
@@ -117,6 +119,8 @@ lsof -c mysql
 
 ### rsync
 
+[RSYNC 的核心算法](https://coolshell.cn/articles/7425.html)
+
 - `-r` 递归
 - `-a` 可代替-r，并且同步修改时间，权限等
 - `-n` 模拟结果
@@ -135,12 +139,25 @@ rsync -av .zshrc root@192.168.100.208:/root
 # 删除只存在于目标目录、不存在于源目录的文件。
 rsync -av --delete source/ destination
 
-# 增量备份，将基准和源的变动，以硬链接的同步到target
-rsync -a --delete --link-dest /compare/path /source/path /target/path
-
 # 排除txt以外所有文件
 rsync -av --include="*.txt" --exclude='*' source/ destination
 ```
+
+增量备份，对比基准和源，差异的文件同步到 target，相同的文件以**硬链接**的同步到 target
+`rsync -a --delete --link-dest /compare /source /target`
+
+```sh
+# 先同步
+rsync -av /source /target
+
+# 增量备份
+rsync -a --delete --link-dest /compare /source /target
+
+# 查找硬链接
+find / -samefile /target/file
+```
+
+- [rsync+inotify-tools](https://github.com/wsgzao/sersync)
 
 ### split
 
@@ -150,6 +167,27 @@ split -b 100M <file>
 
 # -C 文本文件,按100M 进行拆分
 split -C 100M <file>
+```
+
+### dd
+
+```bash
+# 备份/dev/nvme0n1p5,包含日期年月日的文件名
+dd if=/dev/nvme0n1p5 of=/tmp/centos8-$(date +"%Y-%m-%d").gz
+
+# 通过 pv 命令显示速度
+dd if=/dev/nvme0n1p5 | pv | dd of=/tmp/centos8-$(date +"%Y-%m-%d").gz
+
+# gzip压缩
+dd if=/dev/nvme0n1p5 | gzip > /tmp/centos8.gz
+# 还原
+gzip -dc /tmp/centos8.gz | dd of=/dev/nvme0n1p5
+```
+
+### fsarchiver
+
+```bash
+fsarchiver savefs -z1 -j12 -v /path/to/backup_image.fsa /dev/sda1
 ```
 
 ## char (字符串操作)
