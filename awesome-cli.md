@@ -16,6 +16,8 @@
         * [instead git](#instead-git)
     * [tig](#tig)
         * [git log](#git-log)
+    * [hub](#hub)
+    * [forgit](#forgit)
 * [char](#char)
     * [exa](#exa)
         * [highlight ls](#highlight-ls)
@@ -42,6 +44,8 @@
         * [instead man](#instead-man)
     * [glow](#glow)
         * [markdown preview cli version](#markdown-preview-cli-version)
+    * [fx](#fx)
+        * [Command-line JSON processing tool](#command-line-json-processing-tool)
 * [disk](#disk)
     * [dfc](#dfc)
         * [instead df](#instead-df)
@@ -56,6 +60,10 @@
         * [wireshark cli version](#wireshark-cli-version)
     * [baidupcs](#baidupcs)
         * [The terminal utility for Baidu Network Disk.](#the-terminal-utility-for-baidu-network-disk)
+    * [bypy](#bypy)
+        * [百度网盘 Python 客户端](#百度网盘-python-客户端)
+    * [haxor-news](#haxor-news)
+        * [Browse Hacker News](#browse-hacker-news)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -120,6 +128,12 @@ sudo make O_NERD=1
 ### git log
 
 ![avatar](/Pictures/awesomecli/tig.png)
+
+## [hub](https://hub.github.com/)
+
+## [forgit](https://github.com/wfxr/forgit)
+
+![avatar](/Pictures/awesomecli/forgit.png)
 
 # char
 
@@ -191,6 +205,10 @@ sudo make O_NERD=1
 
 ![avatar](/Pictures/awesomecli/16.png)
 
+## [fx](https://github.com/antonmedv/fx)
+
+### Command-line JSON processing tool
+
 # disk
 
 ## [dfc](https://github.com/Rolinh/dfc)
@@ -230,6 +248,14 @@ sudo make O_NERD=1
 ## [baidupcs](https://github.com/GangZhuo/BaiduPCS)
 
 ### The terminal utility for Baidu Network Disk.
+
+## [bypy](https://github.com/houtianze/bypy)
+
+### 百度网盘 Python 客户端
+
+## [haxor-news](https://github.com/donnemartin/haxor-news)
+
+### Browse Hacker News
 
 # reference
 

@@ -56,6 +56,8 @@
         * [sysbench](#sysbench)
         * [dbatool](#dbatool)
         * [undrop-for-innodb(\*数据恢复)](#undrop-for-innodb数据恢复)
+        * [osqueryi](#osqueryi)
+        * [mytop](#mytop)
 * [安装 MySql](#安装-mysql)
     * [Centos 7 安装 MySQL](#centos-7-安装-mysql)
     * [docker 安装](#docker-安装)
@@ -2506,6 +2508,10 @@ sudo mysql -uroot -p dictionary < dictionary/*.sql
 
 sudo ./sys_parser -uroot -p -d dictionary sakila/actor
 ```
+
+### [osqueryi](https://github.com/osquery/osquery)
+
+### [mytop](https://github.com/jzawodn/mytop)
 
 # 安装 MySql
 

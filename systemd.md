@@ -2,30 +2,30 @@
 
 <!-- vim-markdown-toc GFM -->
 
-* [systemd](#systemd)
-    * [查看启动时间](#查看启动时间)
-    * [列出每个 units 启动时间](#列出每个-units-启动时间)
-    * [查看瀑布状的启动过程流](#查看瀑布状的启动过程流)
-    * [可视化每个 units 的启动时间](#可视化每个-units-的启动时间)
-    * [管理开机启动脚本](#管理开机启动脚本)
-* [systemctl](#systemctl)
-    * [查看 `units`](#查看-units)
-    * [查看不同类型](#查看不同类型)
-    * [查看 `units的所有状态`](#查看-units的所有状态)
-    * [查看 `依赖关系`](#查看-依赖关系)
-    * [查看`cgroup树` (units 执行的脚本或文件)](#查看cgroup树-units-执行的脚本或文件)
-    * [重新加载配置文件](#重新加载配置文件)
-    * [重启所有的守护进程](#重启所有的守护进程)
-    * [查看是不是引导启动](#查看是不是引导启动)
-    * [unmask](#unmask)
-* [journalctl](#journalctl)
-    * [读取日志](#读取日志)
-    * [读取实时日志](#读取实时日志)
-    * [读取实时错误日志](#读取实时错误日志)
-    * [读取日志 size](#读取日志-size)
-* [实战调试](#实战调试)
-    * [查看错误](#查看错误)
-    * [解决办法](#解决办法)
+    * [systemd](#systemd)
+        * [查看启动时间](#查看启动时间)
+        * [列出每个 units 启动时间](#列出每个-units-启动时间)
+        * [查看瀑布状的启动过程流](#查看瀑布状的启动过程流)
+        * [可视化每个 units 的启动时间](#可视化每个-units-的启动时间)
+        * [管理开机启动脚本](#管理开机启动脚本)
+    * [systemctl](#systemctl)
+        * [查看 `units`](#查看-units)
+        * [查看不同类型](#查看不同类型)
+        * [查看 `units的所有状态`](#查看-units的所有状态)
+        * [查看 `依赖关系`](#查看-依赖关系)
+        * [查看`cgroup树` (units 执行的脚本或文件)](#查看cgroup树-units-执行的脚本或文件)
+        * [重新加载配置文件](#重新加载配置文件)
+        * [重启所有的守护进程](#重启所有的守护进程)
+        * [查看是不是引导启动](#查看是不是引导启动)
+        * [unmask](#unmask)
+    * [journalctl](#journalctl)
+        * [读取日志](#读取日志)
+        * [读取实时日志](#读取实时日志)
+        * [读取实时错误日志](#读取实时错误日志)
+        * [读取日志 size](#读取日志-size)
+        * [实战调试](#实战调试)
+            * [查看错误](#查看错误)
+            * [解决办法](#解决办法)
 * [referece](#referece)
 
 <!-- vim-markdown-toc -->
@@ -274,9 +274,9 @@ sudo journalctl --disk-usage
 
 ```
 
-## 实战调试
+### 实战调试
 
-### 查看错误
+#### 查看错误
 
 输入`journalctl -fp err`
 
@@ -297,16 +297,17 @@ Aug 18 14:12:06 tz-pc libvirtd[522]: 内部错误：自动启动化存储池 'kv
 Aug 18 14:39:08 tz-pc libvirtd[76205]: 操作失败: 池 ‘default’ 已存在 uuid 57c3df65-c90a-45a0-999d-5c5d4f02ccbd
 ```
 
-### 解决办法
+#### 解决办法
 
-```sh
+```bash
+# 缺少内核v4l2loopback模块
 #Aug 18 09:33:17 tz-pc systemd-modules-load[311]: Failed to find module 'v4l2loopback-dc'
-#这里显示找不到模块loopback，但我用ifconfig却能显示loopback接口。不知道是什么原因
-#安装后就不会报错了
+
+# 以dkms(动态加载内核的方式)安装v4l2loopback
 sudo pacman -S v4l2loopback-dkms
 ```
 
-```sh
+```bash
 #Aug 18 09:33:17 tz-pc kernel: sp5100-tco sp5100-tco: Watchdog hardware is disabled
 #上网查了一下这是所有amd处理器的问题
 #直接屏蔽这个模块
@@ -316,7 +317,7 @@ sudo echo "blacklist sp5100_tco" > /etc/modprobe.d/sp5100_tco.conf
 kvm 是因为存储池里有之前临时挂载 vm，现在没有挂载也就读取错误
 解决办法取消存储池错误的 vm 即可
 
-## referece
+# referece
 
 - [ruanyif](http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html)
 - [linux china](https://linux.cn/article-4505-1.html)

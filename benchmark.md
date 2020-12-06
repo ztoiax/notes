@@ -5,14 +5,18 @@
     * [vmstat](#vmstat)
     * [dstat](#dstat)
     * [sar(sysstat)](#sarsysstat)
+    * [nmon](#nmon)
 * [CPU](#cpu)
     * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
     * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
 * [memory](#memory)
+    * [base](#base)
+    * [slabtop](#slabtop)
 * [File](#file)
     * [inotify-tools](#inotify-tools)
 * [Net](#net)
     * [iperf3](#iperf3)
+    * [iftop](#iftop)
     * [mtr](#mtr)
     * [nethogs](#nethogs)
     * [bmon](#bmon)
@@ -33,6 +37,12 @@
     * [proc](#proc)
     * [sys](#sys)
         * [查看 `cpu` 的缓存](#查看-cpu-的缓存)
+        * [查看 `I/O Scheduler(调度器)` 的缓存](#查看-io-scheduler调度器-的缓存)
+* [GPU](#gpu)
+    * [nvidia-smi](#nvidia-smi)
+    * [nvtop](#nvtop)
+    * [gpustat](#gpustat)
+    * [gmonitor](#gmonitor)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -139,6 +149,8 @@ sar -P ALL 1 | tail -n+3 | awk '$NF<10 {print $0}'
 sar -I ALL 1 10
 ```
 
+## nmon
+
 # CPU
 
 ## 获取保留两位小数的 CPU 占用率：
@@ -174,9 +186,15 @@ echo <pid> > tasks
 
 # memory
 
+## base
+
+```bash
 ps -aux | sort -k4nr | head -K
 ps aux --sort -rss | head
 top -c -b -o +%MEM | head -n 20 | tail -15
+```
+
+## slabtop
 
 # File
 
@@ -186,7 +204,7 @@ top -c -b -o +%MEM | head -n 20 | tail -15
 
 ```bash
 sudo inotifywait -mrq --timefmt '%Y/%m/%d-%H:%M:%S' --format '%T %w %f' \
- -e modify,delete,create,move,attrib /tmp/
+ -e modify,delete,create,move,attrib .
 ```
 
 # Net
@@ -204,6 +222,10 @@ iperf3 -s
 ```bash
 iperf3 -c
 ```
+
+## iftop
+
+![avatar](/Pictures/benchmark/iftop.png)
 
 ## [mtr](https://mp.weixin.qq.com/s?__biz=MzAxODI5ODMwOA==&mid=2666545753&idx=1&sn=2bf5b7f1c814371335a5f1b51798f3c7&chksm=80dc86f2b7ab0fe4cb14bdc1d1285ddff878c3a1355a1f469a21c3a7148b24d1f0b608bbd148&scene=21#wechat_redirect)
 
@@ -387,6 +409,39 @@ grep . /sys/devices/system/cpu/cpu0/cache/index*/level
 grep . /sys/devices/system/cpu/cpu0/cache/index*/size
 ```
 
+### 查看 `I/O Scheduler(调度器)` 的缓存
+
+```bash
+cat /sys/block/sda/queue/scheduler
+
+# 获取可用的调度器
+grep "" /sys/block/*/queue/scheduler
+
+# 修改调度器
+echo bfq > /sys/block/sda/queue/scheduler
+```
+
+# GPU
+
+## [nvidia-smi]()
+
+```bash
+# monitor process gpu usage
+nvidia-smi pmon -i 0 -s u -o T
+```
+
+## [nvtop](https://github.com/Syllo/nvtop)
+
+![avatar](/Pictures/benchmark/nvtop.png)
+
+## [gpustat](https://github.com/wookayin/gpustat)
+
+![avatar](/Pictures/benchmark/gpustat.png)
+
+## [gmonitor](https://github.com/mountassir/gmonitor)
+
+![avatar](/Pictures/benchmark/gmonitor.png)
+
 # reference
 
 - [当 Linux 内核遭遇鲨鱼—kernelshark](https://mp.weixin.qq.com/s?__biz=MzI3NzA5MzUxNA==&mid=2664608433&idx=1&sn=e19f0b6e311e12c4cbfda284c35b04c4&chksm=f04d9f54c73a1642b557617f2048fc74c924c53f633d735b4f89fa68013bcceb1f1fac02f30c&mpshare=1&scene=1&srcid=10093X7r15gdQX99G0DTR42o&sharer_sharetime=1602206243755&sharer_shareid=5dbb730cd6722d0343328086d9ad7dce#rd)
@@ -395,3 +450,5 @@ grep . /sys/devices/system/cpu/cpu0/cache/index*/size
 - [Linux 性能优化：CPU 篇](https://zhuanlan.zhihu.com/p/180402964)
 - [Linux 统计/监控工具 SAR 详细介绍](https://www.jianshu.com/p/08cc9a39a265)
 - [Linux 统计/监控工具 SAR 详细介绍](https://www.jianshu.com/p/08cc9a39a265)
+
+- [Unix System Monitoring and Diagnostic CLI Tools](https://monadical.com/posts/system-monitoring-tools.html)
