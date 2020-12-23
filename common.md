@@ -3,6 +3,7 @@
 * [常用命令](#常用命令)
     * [file (文件操作)](#file-文件操作)
         * [create file](#create-file)
+        * [paste(合并文件列)](#paste合并文件列)
         * [diff,patch 使用](#diffpatch-使用)
         * [make](#make)
             * [Note: 每行命令之前必须有一个 tab 键,不然会报错](#note-每行命令之前必须有一个-tab-键不然会报错)
@@ -10,10 +11,11 @@
         * [lsof](#lsof)
         * [rsync](#rsync)
         * [split](#split)
-        * [dd](#dd)
         * [fsarchiver](#fsarchiver)
     * [char (字符串操作)](#char-字符串操作)
+        * [column](#column)
         * [tr](#tr)
+        * [cut](#cut)
         * [sed](#sed)
         * [awk](#awk)
     * [other](#other)
@@ -43,6 +45,25 @@
 cat > FILE << "EOF"
 # 内容
 EOF
+```
+
+### paste(合并文件列)
+
+```bash
+cat file
+A
+A1
+A2
+
+cat file1
+B
+B1
+B2
+
+paste file file1
+A B
+A1 B1
+A2 B2
 ```
 
 ### diff,patch 使用
@@ -169,21 +190,6 @@ split -b 100M <file>
 split -C 100M <file>
 ```
 
-### dd
-
-```bash
-# 备份/dev/nvme0n1p5,包含日期年月日的文件名
-dd if=/dev/nvme0n1p5 of=/tmp/centos8-$(date +"%Y-%m-%d").gz
-
-# 通过 pv 命令显示速度
-dd if=/dev/nvme0n1p5 | pv | dd of=/tmp/centos8-$(date +"%Y-%m-%d").gz
-
-# gzip压缩
-dd if=/dev/nvme0n1p5 | gzip > /tmp/centos8.gz
-# 还原
-gzip -dc /tmp/centos8.gz | dd of=/dev/nvme0n1p5
-```
-
 ### fsarchiver
 
 ```bash
@@ -191,6 +197,10 @@ fsarchiver savefs -z1 -j12 -v /path/to/backup_image.fsa /dev/sda1
 ```
 
 ## char (字符串操作)
+
+### column
+
+网格排版
 
 ### tr
 
@@ -202,6 +212,19 @@ cat FILE | tr -d '\n'
 
 # 换成大写
 cat FILE | tr '[a-z]' '[A-Z]'
+```
+
+### cut
+
+```bash
+# 保留前5个字符
+cut -c -5 file
+
+# 保留前5个字符和7到10个字符
+cut -c -5,7-10 file
+
+# 不保留第6和11个字符
+cut -c -5,7-10,12- file
 ```
 
 ### sed
@@ -300,6 +323,12 @@ ps aux | awk 'NR==1 || /nginx/'
 
 # 打印第一行和匹配 从 nginx 到 vim
 ps aux | awk '/nginx/,/vim/'
+
+# 显示第一列,不等于0的值
+awk '$1 != 0' file
+
+# 将第一列的值相加
+awk '{sum += $1} END {print sum}' file
 ```
 
 ## other
@@ -343,6 +372,8 @@ du -cha --max-depth=1 . | grep -E "M|G" | sort -h
 
 ## cron
 
+- [在线计算工具](https://tool.lu/crontab/)
+
 ```sh
 # .---------------- 分 (0 - 59)
 # |  .------------- 时 (0 - 23)
@@ -353,6 +384,7 @@ du -cha --max-depth=1 . | grep -E "M|G" | sort -h
 # *  *  *  *  * 执行的命令
 ```
 
+- `sudo crontab -e` #编辑 root 的任务
 - `crontab -e` #编辑当前用户的任务
 - `crontab -l` #显示任务
 - `crontab -r` #删除所有任务
@@ -360,9 +392,17 @@ du -cha --max-depth=1 . | grep -E "M|G" | sort -h
 ```sh
 * * * * * COMMAND      # 每分钟
 */5 * * * * COMMAND    # 每5分钟
+
+0 * * * * COMMAND      # 每小时
 0,5,10 * * * * COMMAND # 每小时运行三次，分别在第 0、 5 和 10 分钟运行
+
+0 0 * * * COMMAND      # 每日凌晨0点执行
 0 3 * * * COMMAND      # 每日凌晨3点执行
-0 3 1-10 * * COMMAND   # 1日到10日凌晨3点执行
+
+0 0 1 * * COMMAND      # 每月1号0点执行
+0 3 1-10 * * COMMAND   # 每月1日到10日凌晨3点执行
+
+0 0 * * 1 COMMAND      # 每周一0点执行
 
 # 开启服务
 systemctl restart cronie.service

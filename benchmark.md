@@ -1,21 +1,35 @@
 <!-- vim-markdown-toc GFM -->
 
+* [基本说明](#基本说明)
 * [all-have 综合](#all-have-综合)
+    * [bcc](#bcc)
+        * [stackcount](#stackcount)
     * [perf-tool](#perf-tool)
+        * [perf list](#perf-list)
+        * [perf stat](#perf-stat)
+        * [perf record](#perf-record)
+        * [perf sched](#perf-sched)
+    * [enhance pstree (进程树)](#enhance-pstree-进程树)
     * [vmstat](#vmstat)
     * [dstat](#dstat)
     * [sar(sysstat)](#sarsysstat)
     * [nmon](#nmon)
 * [CPU](#cpu)
+    * [cpu info](#cpu-info)
+    * [strace](#strace)
+    * [mpstat(sysstat)](#mpstatsysstat)
     * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
     * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
-* [memory](#memory)
+* [Memory](#memory)
     * [base](#base)
     * [slabtop](#slabtop)
-* [File](#file)
-    * [inotify-tools](#inotify-tools)
 * [Net](#net)
+    * [TCP/UDP](#tcpudp)
+        * [tplist(bcc)](#tplistbcc)
+    * [IP](#ip)
+        * [nstat(iproute2)](#nstatiproute2)
     * [iperf3](#iperf3)
+    * [masscan](#masscan)
     * [iftop](#iftop)
     * [mtr](#mtr)
     * [nethogs](#nethogs)
@@ -25,17 +39,34 @@
 * [Web](#web)
     * [ab](#ab)
     * [httperf](#httperf)
-* [IO](#io)
+* [File](#file)
+    * [VFS](#vfs)
+        * [cache](#cache)
+            * [cachetop(bcc)](#cachetopbcc)
+            * [cachestat(bcc)](#cachestatbcc)
+            * [pcstat](#pcstat)
+            * [hcache](#hcache)
+        * [opensnoop(bcc)](#opensnoopbcc)
+        * [fileslower(bcc)](#fileslowerbcc)
+    * [File system](#file-system)
+    * [Block devices interface](#block-devices-interface)
+        * [iostat(sysstat)](#iostatsysstat)
+        * [biosnoop(bcc)](#biosnoopbcc)
+* [Disk](#disk)
+    * [inotify-tools](#inotify-tools)
+    * [blktrace](#blktrace)
     * [dd](#dd)
     * [hdparm](#hdparm)
-* [disk](#disk)
     * [agedu](#agedu)
         * [只统计.conf 文件](#只统计conf-文件)
+* [Process](#process)
+    * [pidstat](#pidstat)
 * [开机](#开机)
     * [bootchart](#bootchart)
-* [FileSystem (文件)](#filesystem-文件)
+* [Special file system](#special-file-system)
     * [proc](#proc)
     * [sys](#sys)
+        * [debugfs](#debugfs)
         * [查看 `cpu` 的缓存](#查看-cpu-的缓存)
         * [查看 `I/O Scheduler(调度器)` 的缓存](#查看-io-scheduler调度器-的缓存)
 * [GPU](#gpu)
@@ -47,9 +78,282 @@
 
 <!-- vim-markdown-toc -->
 
+# 基本说明
+
+image from brendangregg:
+![avatar](/Pictures/benchmark/benchmark-base.png)
+
+data from brendangregg book: [Systems Performance](http://www.brendangregg.com/systems-performance-2nd-edition-book.html)
+
+| 事件                        | 延时     | 相对时间比例 1s |
+| --------------------------- | -------- | --------------- |
+| 1 个 CPU 周期               | 0.3ns    | 1s              |
+| L1 缓存访问                 | 0.9ns    | 3s              |
+| L2 缓存访问                 | 2.8ns    | 9s              |
+| L3 缓存访问                 | 12.9ns   | 43s             |
+| 主存访问（从 CPU 访问 DRAM) | 120ns    | 6 分            |
+| 固态硬盘 I/O（闪存）        | 50-150μs | 2-6 天          |
+| 旋转磁盘 V/0                | 1-10ms   | 1-12 月         |
+| 互联网：从旧金山到纽约      | 40ms     | 4 年            |
+| 互联网：从旧金山到英国      | 81ms     | 8 年            |
+| 互联网：从旧金山到澳大利亚  | 183ms    | 19 年           |
+| TCP 包重传                  | 1-3s     | 105-317 年      |
+| OS 虚拟化系统重启           | 4s       | 423 年          |
+| SCSI 命令超时               | 30s      | 3 千年          |
+| 硬件處担化系统典鞋！        | 40s      | 4 千年          |
+| 物理系统重启                | 5m       | 32 千年         |
+
+以下表示: sar 命令是 `sysstat` 包,biosnoop 是 `bcc` 包
+
+- sar(sysstat)
+- biosnoop(bcc)
+
 # all-have 综合
 
-## [perf-tool](http://www.brendangregg.com/dtrace.html)
+## [bcc](https://github.com/iovisor/bcc)
+
+- [BPF-tools](https://github.com/brendangregg/BPF-tools)
+
+- 配合[FlameGraph](http://www.brendangregg.com/flamegraphs.html)
+
+通过 `cpu stack(堆栈)` 可生成:
+
+- 冰柱图
+- 火焰图
+- 太阳图
+
+- `eBRF` 和 `perf` 都是 linux kernel 代码的一部分,
+
+- `eBPF` 比 `perf` 更容易地在内核执行,效率更高,开销更低
+
+![avatar](/Pictures/benchmark/perf_vs_brf.png)
+
+bcc 安装后加入`$PATH`:
+
+```bash
+export PATH="/usr/share/bcc/tools:$PATH"
+```
+
+### stackcount
+
+追踪 nvim 的使用 ` malloc()` 的次数:
+
+```bash
+# -U 只跟踪用户层堆栈
+stackcount -p $(pgrep -of nvim) -U c:malloc > out.stacks
+
+# 使用flame graph工具,输出火焰图
+stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
+    --title="malloc() Flame Graph" --countname="calls" > out.svg
+```
+
+追踪 `page falut(缺页)`:
+
+```bash
+stackcount 't:exceptions:page_fault_*' > out.stacks
+
+# 使用flame graph工具,输出火焰图
+stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
+    --title="malloc() Flame Graph" --countname="calls" > out.svg
+```
+
+![avatar](/Pictures/benchmark/stackcount.gif)
+
+**reference:**
+
+- [Memory Leak (and Growth) Flame Graphs](http://www.brendangregg.com/FlameGraphs/memoryflamegraphs.html)
+
+## [perf-tool](http://www.brendangregg.com/perf.html)
+
+查看追踪点(image from brendangregg):
+![avatar](/Pictures/benchmark/perf_events_map.png)
+
+### perf list
+
+```bash
+# 网络追踪
+perf list 'tcp:*' 'sock:inet*'
+
+# sched
+perf list 'sched:*'
+
+# 硬件追踪
+perf list | grep -i hardware
+
+# 软件追踪
+perf list | grep -i "software event"
+```
+
+### perf stat
+
+> CPU 性能计数器
+
+- 性能开销比 perf record 小
+
+| 参数  | 操作                    |
+| ----- | ----------------------- |
+| -h    | 显示参数内容            |
+| -d    | 详细信息                |
+| -a    | 追踪整个系统            |
+| -p    | 追踪指定 pid            |
+| -e    | 追踪指定事件`perf list` |
+| sleep | 持续时间                |
+
+```bash
+# 追踪 ls 命令
+perf stat ls
+
+# 追踪 ls 命令,详细信息
+perf stat -d ls
+
+# 追踪 nvim 进程
+perf stat -p $(pgrep -of nvim)
+
+# 追踪整个系统 5 秒
+perf stat -a sleep 5
+
+# 只追踪 ls 命令,L1缓存相关的事件
+perf stat -e L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores ls
+
+# 只追踪整个系统的 ext4 事件,持续10秒
+perf stat -e 'ext4:*' -a sleep 10
+
+# 追踪并统计 ls 的syscall(性能比strace -c ls 要好)
+perf stat -e 'syscalls:sys_enter_*' ls 2>&1 | awk '$1 != 0'
+```
+
+### perf record
+
+- 性能开销取决于追踪的事件
+
+参数和以上`perf stat`基本相同,以下列出不同的部分:
+
+| 参数               | 操作                                                                     |
+| ------------------ | ------------------------------------------------------------------------ |
+| -F                 | 指定频率收集                                                             |
+| -a                 | 追踪所有 cpu                                                             |
+| -b                 | 追踪 cpu 分支                                                            |
+| -o                 | 指定输出文件                                                             |
+| -c                 | 每过多少次事件,才收集 1 次 stack                                         |
+| --call-graph dwarf | 使用 dwarf:解决用户堆栈中缺少帧指针(软件编译缺少帧指针,symbols 会不完整) |
+| --call-graph lbr   | 使用 lbr(cpu 处理器硬件特性):解决 symbols 不完整                         |
+
+record 会保存为 `perf.data` 文件, 使用 perf report 命令显示:
+
+```bash
+perf record -F 99 ls
+perf report
+# 树形文本显示
+perf report --stdio
+```
+
+配合[FlameGraph](http://www.brendangregg.com/flamegraphs.html) 可生成火焰图.以下的 record 同理:
+
+```bash
+perf record -F 99 ls
+# 生成火焰图
+perf script | stackcollapse-perf.pl | flamegraph.pl > perf.svg
+```
+
+```bash
+# 指定 99hz 频率收集,运行的 ls 命令
+# 选择99赫兹，而不是100赫兹，是为了避免周期性产生偏差的结果
+perf record -F 99 ls
+
+# 指定 99hz 频率收集,运行的 nvim,持续10秒
+perf record -F 99 -p $(pgrep -of nvim) sleep 10
+
+# 收集 CPU 内核指令,持续5秒
+perf record -e cycles:k -a -- sleep 5
+
+# 收集 CPU 用户指令,持续5秒
+perf record -e cycles:u -a -- sleep 5
+
+# 指定 49hz 频率实时显示
+perf top -F 49 -ns comm,dso
+```
+
+```bash
+# 指定 99hz 频率,使用 dwarf 收集整个系统
+perf record -F 99 -a --call-graph dwarf
+
+# 指定 99hz 频率,使用 lbr 收集整个系统
+perf record -F 99 -a --call-graph lbr
+```
+
+静态追踪:
+
+```bash
+# page-faults(缺页)
+perf record -e page-faults -p $(pgrep -of nvim) -g -- sleep 120
+
+# context-switches(上下文切换)
+perf record -e context-switches -p $(pgrep -of nvim) -g -- sleep 5
+
+# 追踪谁发出了磁盘I/O(sync reads & writes)
+perf record -e block:block_rq_insert -ag -- sleep 60
+
+# 追踪 minor faults (RSS growth)
+perf record -e minor-faults -ag
+
+# 追踪统计新启动的进程
+perf record -e sched:sched_process_exec -a
+
+# 追踪统计进程启动的网络连接
+perf record -e syscalls:sys_enter_connect -ag
+perf report --stdio
+```
+
+动态追踪:
+
+> 动态追踪使用不稳定的 kernel api,应优先使用静态追踪
+
+```bash
+# 显示当前动态追踪
+perf probe -l
+
+# 添加tcp_sendmsg追踪点
+perf probe --add tcp_sendmsg
+
+# 追踪tcp_sendmsg
+perf record -e probe:tcp_sendmsg
+
+# 删除tcp_sendmsg追踪点
+perf probe -d tcp_sendmsg
+```
+
+```bash
+# malloc
+perf probe -x /lib/x86_64-linux-gnu/libc-2.15.so --add malloc
+perf record -e probe_libc:malloc -a
+```
+
+### perf sched
+
+统计进程在 cpu 上的调度:
+
+```bash
+perf sched record -- sleep 1
+perf script --header
+
+# 显示延迟
+perf sched latency
+
+# 显示每个的cpu的当前执行和上下文切换
+perf sched map
+
+# 显示等待时间,唤醒后的调度延迟(sch delay)
+perf sched timehist
+
+# 显示cpu可视化等
+perf sched timehist -MVw
+```
+
+## enhance pstree (进程树)
+
+![avatar](/Pictures/benchmark/pstree.png)
+
+- [Colony Graphs: Visualizing the Cloud](http://www.brendangregg.com/ColonyGraphs/cloud.html#Implementation)
 
 ## vmstat
 
@@ -99,7 +403,7 @@ dstat -cdn --top-cpu --top-mem --float
 # 每 2 秒(默认是 1 秒)输出, 一共 5 次
 dstat -cdn --top-cpu --top-mem --float 2 5
 
-# 显示5次time,load,保存为 csv 文件
+# 显示 5 次,输出time,load,保存为 csv 文件
 dstat --time --load --output report.csv 1 5
 ```
 
@@ -109,6 +413,9 @@ dstat -d -D sda1
 ```
 
 ## sar(sysstat)
+
+image from brendangregg:
+![avatar](/Pictures/benchmark/benchmark-sar.png)
 
 | 参数 | 操作           |
 | ---- | -------------- |
@@ -153,6 +460,49 @@ sar -I ALL 1 10
 
 # CPU
 
+## cpu info
+
+| 系统自带命令       | 操作内容            |
+| ------------------ | ------------------- |
+| more /proc/cpuinfo | 查看每个 cpu 的信息 |
+| lscpu              | 查看简短 cpu 信息   |
+| numactl --hardware | 查看 numa 信息      |
+
+| 第三方命令 | 操作内容        |
+| ---------- | --------------- |
+| cpuid      | 查看 cpu 指令集 |
+| x86info -a | 查看寄存器      |
+| lstopo     | 如下图          |
+
+lstopo:
+![avatar](/Pictures/benchmark/lstopo.png)
+
+## strace
+
+> 连接程序,在系统调用是暂停,类似调试器,开销大
+
+## mpstat(sysstat)
+
+| 参数    | 内容                               |
+| ------- | ---------------------------------- |
+| %usr    | 用户态时间                         |
+| %sys    | 系统态时间（内核）                 |
+| %nice   | 以 nice 优先级运行的进程用户态时间 |
+| %iowait | I/O 等待                           |
+| %irq    | 硬件中断 CPU 用量                  |
+| %soft   | 软件中断 CPU 用量                  |
+| %steal  | 耗费在服务其他租户的时间           |
+| %guest  | 花在访客虚拟机的时间               |
+| %idle   | 空闲                               |
+
+```bash
+# 每秒显示1次
+mpstat 1
+
+# 每秒显示1次,只显示10次
+mpstat 1 10
+```
+
 ## 获取保留两位小数的 CPU 占用率：
 
 top -b -n1 | grep ^%Cpu | awk '{printf("Current CPU Utilization is : %.2f%"), 100-\$8}'
@@ -184,7 +534,17 @@ echo 1 > cpu exclusive
 echo <pid> > tasks
 ```
 
-# memory
+# Memory
+
+- [内存的基本知识](https://blog.heroix.com/blog/linux-memory-use)
+
+| 概念                    | 内容                                                               |
+| ----------------------- | ------------------------------------------------------------------ |
+| major fault             | 要从磁盘载入内存页面(可能是由于读取已写入交换文件的内存页而导致的) |
+| minor fault             | 不需要从磁盘读取其他数据到内存(可能是在多个进程之间共享内存页)     |
+| VSZ(虚拟内存)           | 包括共享内存,交换分区                                              |
+| RSS(常驻内存)           | 不包括共享内存,交换分区                                            |
+| copy-on-write(写时复制) | 当其中一个进程需要修改共享内存页时，复制页并分配该进程             |
 
 ## base
 
@@ -196,18 +556,40 @@ top -c -b -o +%MEM | head -n 20 | tail -15
 
 ## slabtop
 
-# File
+# Net
 
-## [inotify-tools](https://github.com/inotify-tools/inotify-tools)
+## TCP/UDP
 
-监控 `/tmp` 目录下的文件操作
+### tplist(bcc)
 
 ```bash
-sudo inotifywait -mrq --timefmt '%Y/%m/%d-%H:%M:%S' --format '%T %w %f' \
- -e modify,delete,create,move,attrib .
+# 显示tcp tracepoints(追踪点)
+tplist -v 'tcp*' | grep ^tcp
 ```
 
-# Net
+| tracepoints               | 操作                                                              |
+| ------------------------- | ----------------------------------------------------------------- |
+| tcp:tcp_retransmit_skb    | 追踪重传                                                          |
+| tcp:tcp_retransmit_synack | 追踪 SYN 和 SYN/ACK 重传,可以显示服务器饱和(listen backlog drops) |
+| tcp:tcp_destroy_sock      | 追踪 TCP session,可以知道 session 什么时候关闭                    |
+| tcp:tcp_send_reset        | 追踪在 socket 期间的 RST send(重置发送)                           |
+| tcp:tcp_receive_reset     | 追踪 RST receive(重置接受)                                        |
+| tcp:tcp_probe             | 追踪 TCP 窗口拥塞                                                 |
+| sock:inet_sock_set_state  | 可以做很多时,比如实现 tcplife,tcpconnect,tcpaccept,这些 bcc 功能  |
+
+reference:
+
+- [tcp-tracepoints](http://www.brendangregg.com/blog/2018-03-22/tcp-tracepoints.html)
+
+## IP
+
+### nstat(iproute2)
+
+```bash
+nstat -a
+# 所有包括值为0的
+nstat -a --zero
+```
 
 ## iperf3
 
@@ -221,6 +603,19 @@ iperf3 -s
 
 ```bash
 iperf3 -c
+```
+
+## [masscan](https://github.com/robertdavidgraham/masscan)
+
+- [1.4 万 Star！迄今为止速度最快的端口扫描器](https://mp.weixin.qq.com/s?src=11&timestamp=1607576697&ver=2757&signature=EZccuiVphxpLvYprZNgS7xjfuXqW2kgBwRLM35AWvstT-obGhkL-6e9aFmxHBdGU3oE5R7WyeVEgUfHY1jQqO6v0xsfDna4fqFrbyK1VxRgBX4zD60M5wB6hAZm6EV*B&new=1)
+
+```bash
+masscan 0.0.0.0/4 -p80 --rate 100000000 --router-mac 66-55-44-33-22-11
+
+# 保存文件
+masscan -p80,8000-8100 192.168.1.0/24 --echo > /tmp/xxx.conf
+# 执行文件
+masscan -c /tmp/xxx.conf --rate 1000
 ```
 
 ## iftop
@@ -304,14 +699,137 @@ web 压力测试
 httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,10,0.1
 ```
 
-# IO
+# File
+
+用户在用户空间中处理的内容，不会直接写入磁盘。它们首先写入 VFS 页缓存，从中有各种 I/O 调度程序，设备驱动程序将与磁盘交互以写入数据。
+
+## VFS
+
+### cache
+
+#### cachetop(bcc)
+
+#### cachestat(bcc)
+
+#### [pcstat](https://github.com/tobert/pcstat)
+
+```bash
+pcstat *
+```
+
+#### [hcache](https://github.com/silenceshell/hcache)
+
+```bash
+hcache --top 10
+```
+
+### opensnoop(bcc)
+
+FD:
+| FD | 操作 |
+|------|------|
+| 0x3 | 读取 |
+| 0x1b | 写入 |
+
+```bash
+opensnoop -p $(pgrep -of nvim)
+```
+
+### fileslower(bcc)
+
+检查 page fault
+
+```bash
+# 延迟大于 1 ms(毫秒)的文件
+fileslower 1
+```
+
+## File system
+
+## Block devices interface
+
+### iostat(sysstat)
+
+**局限性:**
+
+- 没有显示进程
+
+```bash
+# -p 指定刷新秒数，每秒刷新
+iostat -p 1
+
+# 每秒刷新,一共刷新5次
+iostat -p 1 5
+
+# -p 指定 sda 分区,每秒刷新
+iostat -p sda 1
+
+# -x 更多参数
+iostat -x -p sda 1
+```
+
+### biosnoop(bcc)
+
+查看进程 I/O 延迟
+
+```bash
+# -Q 显示包括队列的时间
+biosnoop -Q
+```
+
+# Disk
+
+## [inotify-tools](https://github.com/inotify-tools/inotify-tools)
+
+监控 `/tmp` 目录下的文件操作
+
+```bash
+sudo inotifywait -mrq --timefmt '%Y/%m/%d-%H:%M:%S' --format '%T %w %f' \
+ -e modify,delete,create,move,attrib .
+```
+
+## blktrace
+
+```bash
+blktrace /dev/sda
+
+blktrace -d /dev/sda -o -|blkparse -i -
+
+# 统计30秒每个cpu的io事件
+blktrace -w 30 -d /dev/sda -o io-debugging
+# 查看io-debugging.blktrace.0文件的事件
+blkparse io-debugging.blktrace.0
+# seekwatcher 图形化
+seekwatcher -t io-debugging.blktrace.0 -o seek.png
+seekwatcher -t io-debugging.blktrace.0 -o seekmoving.mpg --movie
+```
+
+## dd
+
+```bash
+# iflag=direct oflag=direct绕过内核缓存并显著提高性能
+
+# 备份/dev/nvme0n1p5,包含日期年月日的文件名
+dd if=/dev/nvme0n1p5 of=/tmp/centos8-$(date +"%Y-%m-%d").gz
+
+# 通过 pv 命令显示速度
+dd if=/dev/nvme0n1p5 | pv | dd of=/tmp/centos8-$(date +"%Y-%m-%d").gz
+
+# gzip压缩
+dd if=/dev/nvme0n1p5 | gzip > /tmp/centos8.gz
+# 还原
+gzip -dc /tmp/centos8.gz | dd of=/dev/nvme0n1p5
+
+# xz压缩
+dd if=/dev/nvme0n1p5 | xz > /tmp/centos8.xz
+# 还原
+xz -dc /tmp/centos8.xz | dd of=/dev/nvme0n1p5
+```
 
 ```bash
 # 可以清离缓存后，多次运行dd测试
 echo 3 > /proc/sys/vm/drop_caches
 ```
-
-## dd
 
 - `conv=fdatasync` 保证写入硬盘
 
@@ -347,8 +865,6 @@ hdparm -T /dev/sda
 > Timing cached reads:   17800 MB in  2.00 seconds = 8912.51 MB/sec
 > ```
 
-# disk
-
 ## agedu
 
 ```bash
@@ -357,6 +873,9 @@ agedu -s /
 
 # 对刚才扫描的结果,在网页显示
 agedu -w
+
+# 只查看过去12个月或更长时间内未被访问的旧文件。
+agedu -t /home/tz -a 12m
 ```
 
 ### 只统计.conf 文件
@@ -368,6 +887,84 @@ agedu -w
 
 ![avatar](/Pictures/benchmark/2.png)
 
+# Process
+
+## pidstat
+
+> 监控单个进程的 CPU,MEM,I/O,上下文切换
+
+```bash
+# 每秒输出
+pidstat 1
+
+# 每秒输出十次
+pidstat 1 10
+
+# --human 自动转换单位
+pidstat --human 1
+
+# -C 指定程序名
+pidstat -C nvim 1
+
+# -t 显示线程
+pidstat -t -C nvim 1
+
+# -l show command line
+pidstat -l -C nvim  1
+
+# -p 指定pid
+pidstat -p 1234 1
+
+# 监控CPU,MEM,I/O,上下文切换
+pidstat --human -udrw -C nvim 1
+```
+
+`-u` cpu(default option):
+
+```bash
+# %usr    - 用户的百分比
+# %system - 内核的百分比
+# %guest  - 虚拟程序的百分比
+# %wait   - 等待的CPU百分比
+# %CPU    - 总CPU用时
+# CPU     - 程序运行具体的CPU number*
+```
+
+`-d` I/O:
+
+```bash
+# kB_rd/s - 任务从硬盘上的读取速度（kb）
+# kB_wr/s - 任务向硬盘中的写入速度（kb）
+# kB_ccwr/s - 任务写入磁盘被取消的速率（kb）
+
+# 监控指定程序I/O
+pidstat -d -C nvim 1
+# 或者
+pidstat -d -p $(pgrep nvim) 1
+```
+
+`-r` memory:
+
+```bash
+# minflt/s - 每秒minor的缺页,不需要从磁盘读取其他数据到内存(可能是在多个进程之间共享内存页)
+# majflt/s - 每秒major的缺页,要从磁盘载入内存页面(可能是由于读取已写入交换文件的内存页而导致的)
+# VSZ - 虚拟内存:包括共享内存,交换分区
+# RSS - 常驻内存:不包括共享内存,交换分区
+
+# 监控指定程序mem
+pidstat -r -C nvim 1
+```
+
+`-w` 上下文切换:
+
+```bash
+# cswch/s   - 每秒自愿的上下文切换
+# nvcswch/s - 每秒非自愿的上下文切换
+
+# 监控指定程序switch
+pidstat -w -C nvim 1
+```
+
 # 开机
 
 ## bootchart
@@ -378,7 +975,7 @@ sudo bootchartd
 
 ![avatar](/Pictures/benchmark/5.png)
 
-# FileSystem (文件)
+# Special file system
 
 ## proc
 
@@ -400,6 +997,14 @@ echo 3 > /proc/sys/vm/drop_caches
 ```
 
 ## sys
+
+### debugfs
+
+内核开发人员向用户空间提供信息的一种方法
+
+```bash
+mount -t debugfs debugfs /sys/kernel/debug
+```
 
 ### 查看 `cpu` 的缓存
 

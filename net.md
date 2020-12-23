@@ -232,6 +232,7 @@ arpwatch -i enp27s0 -f arpwatch.log
 | -p   | 进程                 |
 | -c   | 实时监控             |
 | -l   | LISTEN               |
+| -s   | 查看 TCP/UDP 状态    |
 
 ### 统计 tcp 数量
 

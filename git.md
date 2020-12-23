@@ -73,6 +73,12 @@ git mv <FILE>
 
 # 提交
 git commit -m "commit name"
+
+# 查看提交数量
+git rev-list --count master
+
+# 查看git跟踪的文件
+git ls-files
 ```
 
 ## 分支

@@ -771,7 +771,8 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 
 - [nginx books](http://nginx.org/en/books.html)
 
-- [章亦春又名春哥 nginx 教程](http://openresty.org/download/agentzh-nginx-tutorials-zhcn.html)
+- [章亦春又名春哥的 nginx 教程](http://openresty.org/download/agentzh-nginx-tutorials-zhcn.html);
+  [章亦春 nginx core 的 memleak(内存泄漏)火焰图](http://agentzh.org/misc/flamegraph/nginx-memleak-2013-08-05.svg)
 
 ## 项目资源
 

@@ -64,6 +64,8 @@
         * [百度网盘 Python 客户端](#百度网盘-python-客户端)
     * [haxor-news](#haxor-news)
         * [Browse Hacker News](#browse-hacker-news)
+    * [imgdiff](#imgdiff)
+        * [pixel-by-pixel image difference tool.](#pixel-by-pixel-image-difference-tool)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -256,6 +258,10 @@ sudo make O_NERD=1
 ## [haxor-news](https://github.com/donnemartin/haxor-news)
 
 ### Browse Hacker News
+
+## [imgdiff](https://github.com/n7olkachev/imgdiff)
+
+### pixel-by-pixel image difference tool.
 
 # reference
 
