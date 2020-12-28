@@ -6,6 +6,7 @@
     * [ranger](#ranger)
     * [broot](#broot)
     * [nnn](#nnn)
+    * [lf](#lf)
     * [mc](#mc)
     * [fd](#fd)
         * [instead find](#instead-find)
@@ -64,8 +65,12 @@
         * [百度网盘 Python 客户端](#百度网盘-python-客户端)
     * [haxor-news](#haxor-news)
         * [Browse Hacker News](#browse-hacker-news)
+    * [fim](#fim)
+        * [在终端下查看图片](#在终端下查看图片)
     * [imgdiff](#imgdiff)
         * [pixel-by-pixel image difference tool.](#pixel-by-pixel-image-difference-tool)
+    * [onedrive](#onedrive)
+        * [本地同步 onedrive](#本地同步-onedrive)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -90,6 +95,8 @@ alias cp="advcp -g"
 ![avatar](/Pictures/awesomecli/1.gif)
 
 ## [nnn](https://github.com/jarun/nnn)
+
+## [lf](https://github.com/gokcehan/lf)
 
 ```sh
 git clone https://github.com/jarun/nnn.git
@@ -259,9 +266,17 @@ sudo make O_NERD=1
 
 ### Browse Hacker News
 
+## fim
+
+### 在终端下查看图片
+
 ## [imgdiff](https://github.com/n7olkachev/imgdiff)
 
 ### pixel-by-pixel image difference tool.
+
+## [onedrive](https://github.com/skilion/onedrive)
+
+### 本地同步 onedrive
 
 # reference
 

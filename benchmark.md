@@ -9,7 +9,9 @@
         * [perf stat](#perf-stat)
         * [perf record](#perf-record)
         * [perf sched](#perf-sched)
+        * [perf other](#perf-other)
     * [enhance pstree (进程树)](#enhance-pstree-进程树)
+    * [sysbench](#sysbench)
     * [vmstat](#vmstat)
     * [dstat](#dstat)
     * [sar(sysstat)](#sarsysstat)
@@ -108,6 +110,20 @@ data from brendangregg book: [Systems Performance](http://www.brendangregg.com/s
 - sar(sysstat)
 - biosnoop(bcc)
 
+计数器:几乎没有开销,在内核默认就是开启的,一般在 `/proc` 上进行读取
+
+- sar
+- vmstat
+- iostat
+- netstat
+
+追踪:类似调试器,开销大
+
+- perf
+- bcc
+- tcpdump
+- strace
+
 # all-have 综合
 
 ## [bcc](https://github.com/iovisor/bcc)
@@ -168,6 +184,26 @@ stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
 查看追踪点(image from brendangregg):
 ![avatar](/Pictures/benchmark/perf_events_map.png)
 
+from brendangregg:
+
+| 子命令    | 操作                                                                       |
+| --------- | -------------------------------------------------------------------------- |
+| annotate  | 描述读取 perf.data（由 perfrecord 创建）并显示注释过的代码                 |
+| diff      | 读取两个 perf.data 文件并显示两份剖析信息之间的差异                        |
+| evlist    | 列出一个 perf.data 文件里的事件名称                                        |
+| inject    | 过滤以加强事件流，在其中加入额外的信息                                     |
+| kmem      | 跟踪/测量内核内存（slab）属性的工具 kvm 跟踪/测量 kvm 客户机操作系统的工具 |
+| list      | 列出所有的符号事件类型                                                     |
+| lock      | 分析锁事件                                                                 |
+| probe     | 定义新的动态跟踪点                                                         |
+| record    | 运行一个命令，并把剖析信息记录在 perf.data 中                              |
+| report    | 读取 perf.data（由 perf record 创建）并显示剖析信息                        |
+| sched     | 跟踪/测量调度器属性（延时）的工具                                          |
+| script    | 读取 perf.data（由 perf record 创建）并显示跟踪输出                        |
+| stat      | 运行一个命令并收集性能计数器统计信息                                       |
+| timechart | 可视化某一个负载期间系统总体性能的工具                                     |
+| top       | 系统剖析工具下面演示了如何使用一些关键命令                                 |
+
 ### perf list
 
 ```bash
@@ -198,6 +234,8 @@ perf list | grep -i "software event"
 | -p    | 追踪指定 pid            |
 | -e    | 追踪指定事件`perf list` |
 | sleep | 持续时间                |
+
+- [linux syscall list](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md#x86_64-64_bit)
 
 ```bash
 # 追踪 ls 命令
@@ -249,10 +287,18 @@ perf report --stdio
 
 配合[FlameGraph](http://www.brendangregg.com/flamegraphs.html) 可生成火焰图.以下的 record 同理:
 
+from brendangregg:
+
 ```bash
 perf record -F 99 ls
 # 生成火焰图
 perf script | stackcollapse-perf.pl | flamegraph.pl > perf.svg
+
+# grep过滤后,生成火焰图
+perf script | stackcollapse-perf.pl > out.perf-folded
+grep -v cpu_idle out.perf-folded | flamegraph.pl > nonidle.svg
+grep ext4 out.perf-folded | flamegraph.pl > ext4internals.svg
+egrep 'system_call.*sys_(read|write)' out.perf-folded | flamegraph.pl > rw.svg
 ```
 
 ```bash
@@ -268,6 +314,12 @@ perf record -e cycles:k -a -- sleep 5
 
 # 收集 CPU 用户指令,持续5秒
 perf record -e cycles:u -a -- sleep 5
+
+# 收集 sched 调度器
+perf sched record
+
+# 收集 lock 锁
+perf lock record
 
 # 指定 49hz 频率实时显示
 perf top -F 49 -ns comm,dso
@@ -349,11 +401,28 @@ perf sched timehist
 perf sched timehist -MVw
 ```
 
+### perf other
+
+perf trace 使用 buffer tracing 性能比`strace`好:
+
+```bash
+perf trace ls
+```
+
 ## enhance pstree (进程树)
 
 ![avatar](/Pictures/benchmark/pstree.png)
 
 - [Colony Graphs: Visualizing the Cloud](http://www.brendangregg.com/ColonyGraphs/cloud.html#Implementation)
+
+## sysbench
+
+cpu:
+
+```bash
+# 设置10个线程,计算1000000个质数
+sysbench --num-threads=10 --test=cpu --cpu-max-prime=10000 run
+```
 
 ## vmstat
 
@@ -501,6 +570,12 @@ mpstat 1
 
 # 每秒显示1次,只显示10次
 mpstat 1 10
+
+# 指定显示的cpu0,cpu1
+mpstat -P 0,1 1
+
+# 显示的所有cpu0
+mpstat -P ALL 1
 ```
 
 ## 获取保留两位小数的 CPU 占用率：
@@ -542,9 +617,20 @@ echo <pid> > tasks
 | ----------------------- | ------------------------------------------------------------------ |
 | major fault             | 要从磁盘载入内存页面(可能是由于读取已写入交换文件的内存页而导致的) |
 | minor fault             | 不需要从磁盘读取其他数据到内存(可能是在多个进程之间共享内存页)     |
-| VSZ(虚拟内存)           | 包括共享内存,交换分区                                              |
-| RSS(常驻内存)           | 不包括共享内存,交换分区                                            |
-| copy-on-write(写时复制) | 当其中一个进程需要修改共享内存页时，复制页并分配该进程             |
+| VSZ(虚拟内存)           | 不是真实内存,(包括共享内存,交换分区)                               |
+| RSS(常驻内存)           | 真实内存,当前映射到进程中的页面总数(包含共享内存,不包含交换内存)   |
+| PSS(比例内存)           | 进程内共享内存占总内存的比例                                       |
+| USS(独占内存)           | 进程独自占用的物理内存（不包含共享库占用的内存）                   |
+| 匿名内存                | 无系统数据,文件路径名的内存                                        |
+| copy-on-write(写时复制) | 当其中一个进程需要修改共享内存页时，再单独为该进程创建内存页副本   |
+
+查看进程内存的文件 `/proc/pid/smaps`
+
+统计程序的 `RSS`:
+
+```bash
+awk '/Rss:/{ sum += $2 } END { print sum " KB" }' /proc/pid/smaps
+```
 
 ## base
 
@@ -946,11 +1032,6 @@ pidstat -d -p $(pgrep nvim) 1
 `-r` memory:
 
 ```bash
-# minflt/s - 每秒minor的缺页,不需要从磁盘读取其他数据到内存(可能是在多个进程之间共享内存页)
-# majflt/s - 每秒major的缺页,要从磁盘载入内存页面(可能是由于读取已写入交换文件的内存页而导致的)
-# VSZ - 虚拟内存:包括共享内存,交换分区
-# RSS - 常驻内存:不包括共享内存,交换分区
-
 # 监控指定程序mem
 pidstat -r -C nvim 1
 ```
@@ -979,17 +1060,19 @@ sudo bootchartd
 
 ## proc
 
-| 目录      | 内容                                          |
-| --------- | --------------------------------------------- |
-| limits    | 实际的资源限制                                |
-| maps      | 映射的内存区域                                |
-| sched     | CPU 调度器的各种统计                          |
-| schedstat | CPU 运行时间、延时和时间分片                  |
-| smaps     | 映射内存区域的使用统计                        |
-| stat      | 进程状态和统计，包括总的 CPU 和内存的使用情况 |
-| statm     | 以页为单位的内存使用总结                      |
-| status    | stat 和 statm 的信息，用户可读                |
-| task      | 每个任务的统计目录                            |
+- [linux proc 文档](https://mjmwired.net/kernel/Documentation/filesystems/proc.txt)
+
+  | 目录      | 内容                                          |
+  | --------- | --------------------------------------------- |
+  | limits    | 实际的资源限制                                |
+  | maps      | 映射的内存区域                                |
+  | sched     | CPU 调度器的各种统计                          |
+  | schedstat | CPU 运行时间、延时和时间分片                  |
+  | smaps     | 映射内存区域的使用统计                        |
+  | stat      | 进程状态和统计，包括总的 CPU 和内存的使用情况 |
+  | statm     | 以页为单位的内存使用总结                      |
+  | status    | stat 和 statm 的信息，用户可读                |
+  | task      | 每个任务的统计目录                            |
 
 ```bash
 # 可以清离缓存后，多次运行dd测试
