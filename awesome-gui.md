@@ -15,17 +15,17 @@
 
 ## [filelight](https://kde.org/applications/en/filelight)
 
-![avatar](/Pictures/awesomegui/filelight.png)
+![image](./Pictures/awesomegui/filelight.png)
 
 ## [bleachbit](https://www.bleachbit.org/)
 
 ### Clean Your System and Free Disk Space
 
-![avatar](/Pictures/awesomegui/bleachbit.png)
+![image](./Pictures/awesomegui/bleachbit.png)
 
 ## [stacer](https://github.com/oguzhaninan/Stacer)
 
-![avatar](/Pictures/awesomegui/stacer.png)
+![image](./Pictures/awesomegui/stacer.png)
 
 ## [timeshif](https://github.com/teejee2008/timeshift.png)
 
@@ -33,4 +33,4 @@
 
 ## [typora](https://www.typora.io/)
 
-![avatar](/Pictures/awesomegui/typora.png)
+![image](./Pictures/awesomegui/typora.png)

@@ -210,6 +210,9 @@ fsarchiver savefs -z1 -j12 -v /path/to/backup_image.fsa /dev/sda1
 # 删除换行符
 cat FILE | tr -d '\n'
 
+# 空格换成换行符
+cat FILE |tr '\040' '\n'
+
 # 换成大写
 cat FILE | tr '[a-z]' '[A-Z]'
 ```
@@ -324,11 +327,14 @@ ps aux | awk 'NR==1 || /nginx/'
 # 打印第一行和匹配 从 nginx 到 vim
 ps aux | awk '/nginx/,/vim/'
 
-# 显示第一列,不等于0的值
+# 打印第一列,不等于0的值
 awk '$1 != 0' file
 
 # 将第一列的值相加
 awk '{sum += $1} END {print sum}' file
+
+# 只打印第一列的值等于100
+awk '$1=="100" {print $0}'
 ```
 
 ## other

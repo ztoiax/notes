@@ -24,6 +24,7 @@
     * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
 * [Memory](#memory)
     * [base](#base)
+    * [pmap](#pmap)
     * [slabtop](#slabtop)
 * [Net](#net)
     * [TCP/UDP](#tcpudp)
@@ -83,7 +84,7 @@
 # 基本说明
 
 image from brendangregg:
-![avatar](/Pictures/benchmark/benchmark-base.png)
+![image](./Pictures/benchmark/benchmark-base.png)
 
 data from brendangregg book: [Systems Performance](http://www.brendangregg.com/systems-performance-2nd-edition-book.html)
 
@@ -142,7 +143,7 @@ data from brendangregg book: [Systems Performance](http://www.brendangregg.com/s
 
 - `eBPF` 比 `perf` 更容易地在内核执行,效率更高,开销更低
 
-![avatar](/Pictures/benchmark/perf_vs_brf.png)
+![image](./Pictures/benchmark/perf_vs_brf.png)
 
 bcc 安装后加入`$PATH`:
 
@@ -173,7 +174,7 @@ stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
     --title="malloc() Flame Graph" --countname="calls" > out.svg
 ```
 
-![avatar](/Pictures/benchmark/stackcount.gif)
+![image](./Pictures/benchmark/stackcount.gif)
 
 **reference:**
 
@@ -182,7 +183,7 @@ stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
 ## [perf-tool](http://www.brendangregg.com/perf.html)
 
 查看追踪点(image from brendangregg):
-![avatar](/Pictures/benchmark/perf_events_map.png)
+![image](./Pictures/benchmark/perf_events_map.png)
 
 from brendangregg:
 
@@ -411,7 +412,7 @@ perf trace ls
 
 ## enhance pstree (进程树)
 
-![avatar](/Pictures/benchmark/pstree.png)
+![image](./Pictures/benchmark/pstree.png)
 
 - [Colony Graphs: Visualizing the Cloud](http://www.brendangregg.com/ColonyGraphs/cloud.html#Implementation)
 
@@ -427,6 +428,13 @@ sysbench --num-threads=10 --test=cpu --cpu-max-prime=10000 run
 ## vmstat
 
 建议使用 `dstat`
+
+| 选项 | 操作                     |
+| ---- | ------------------------ |
+| si   | 匿名页换入内存           |
+| so   | 匿名页换出交换设备       |
+| pi   | 所有类型的页换入内存     |
+| po   | 所有类型的页换出交换设备 |
 
 ```bash
 vmstat 1
@@ -484,7 +492,7 @@ dstat -d -D sda1
 ## sar(sysstat)
 
 image from brendangregg:
-![avatar](/Pictures/benchmark/benchmark-sar.png)
+![image](./Pictures/benchmark/benchmark-sar.png)
 
 | 参数 | 操作           |
 | ---- | -------------- |
@@ -499,6 +507,38 @@ image from brendangregg:
 | -n   | 网络           |
 | -x   | 进程(pid)      |
 | -q   | 进程负载       |
+
+from brendangregg:
+
+| 参数 | 统计内容  | 描述                                                                                   | 单位      |
+| ---- | --------- | -------------------------------------------------------------------------------------- | --------- |
+| -B   | pgpgin/s  | 页面换入单位                                                                           | 千字节/秒 |
+| -B   | pgpgout/s | 页面换出                                                                               | 千字节/秒 |
+| -B   | fault/s   | 严重及轻微缺页                                                                         | 次数/秒   |
+| -B   | majflt/s  | 严重缺页                                                                               | 次数/秒   |
+| -B   | pgfree/s  | 页面加入空闲链表                                                                       | 次数/秒   |
+| -B   | pgscank/s | 被后台页面换出守护进程扫描过的页面（kswapd）                                           | 次数/秒   |
+| -B   | pgscand/s | 直接页面扫描                                                                           | 次数/秒   |
+| -B   | pgsteal/s | 页面及交换高速缓存回收                                                                 | 次数/秒   |
+| -B   | %vmeff    | 页面盗取/页面扫描比率，显示页面回收的效率                                              | 百分比    |
+| -H   | hbhugfree | 空闲巨型页面存储器（大页面尺寸）                                                       | 千字节    |
+| -H   | hbhugused | 占用的巨型页面存储器                                                                   | 千字节    |
+| -r   | kbmemfree | 空闲存储器                                                                             | 千字节    |
+| -r   | kbmemused | 占用存储器（不包括内核）                                                               | 千字节    |
+| -r   | kbbuffers | 缓冲高速缓存尺寸                                                                       | 千字节    |
+| -r   | kbcached  | 页面高速缓存尺寸                                                                       | 千字节    |
+| -r   | kbcommit  | 提交的主存储器：服务当前工作负载需要量的估计                                           | 千字节    |
+| -r   | %commit   | 为当前工作负载提交的主存储器，估计值                                                   | 百分比    |
+| -r   | kbactive  | 活动列表存储器尺寸                                                                     | 千字节    |
+| -r   | kbinact   | 非活动列表存储器尺寸                                                                   | 千字节    |
+| -R   | frpg/s    | 释放的存储器页面，负值表明分配                                                         | 页面/秒   |
+| -R   | bufpg/s   | 缓冲高速缓存增加值（增长）                                                             | 页面/秒   |
+| -R   | campg/    | 页面 高速缓存增加值（增长）                                                            | 页面/秒   |
+| -S   | kbswpfree | 释放交换空间                                                                           | 千字节    |
+| -S   | kbswpused | 占用交换空间                                                                           | 千字节    |
+| -S   | kbswpcad  | 高速缓存的交换空间：它同时保存在主存储器和交换设备中，因此不需要磁盘 VO 就能被页面换出 | 千字节    |
+| -W   | pswpin/s  | 页面换人（Linux 换人）                                                                 | 页面/秒   |
+| -W   | pswpout/s | 页面换出（Linux 换出）                                                                 | 页面/秒   |
 
 - 1 间隔时间
 - 10 次数
@@ -537,14 +577,15 @@ sar -I ALL 1 10
 | lscpu              | 查看简短 cpu 信息   |
 | numactl --hardware | 查看 numa 信息      |
 
-| 第三方命令 | 操作内容        |
-| ---------- | --------------- |
-| cpuid      | 查看 cpu 指令集 |
-| x86info -a | 查看寄存器      |
-| lstopo     | 如下图          |
+| 第三方命令   | 操作内容          |
+| ------------ | ----------------- |
+| cpuid        | 查看 cpu 指令集   |
+| x86info -a   | 查看寄存器        |
+| cpupower-gui | 查看设置 cpu 频率 |
+| lstopo       | 如下图            |
 
 lstopo:
-![avatar](/Pictures/benchmark/lstopo.png)
+![image](./Pictures/benchmark/lstopo.png)
 
 ## strace
 
@@ -638,6 +679,17 @@ awk '/Rss:/{ sum += $2 } END { print sum " KB" }' /proc/pid/smaps
 ps -aux | sort -k4nr | head -K
 ps aux --sort -rss | head
 top -c -b -o +%MEM | head -n 20 | tail -15
+
+# 创建巨页文件系统
+mkdir /mnt/huge
+mount -t hugetlbfs none /mnt/huge -o pagesize=2048K
+```
+
+## pmap
+
+```bash
+# 查看 nvim 的内存映射
+pmap -x $(pgrep -of nvim)
 ```
 
 ## slabtop
@@ -706,30 +758,30 @@ masscan -c /tmp/xxx.conf --rate 1000
 
 ## iftop
 
-![avatar](/Pictures/benchmark/iftop.png)
+![image](./Pictures/benchmark/iftop.png)
 
 ## [mtr](https://mp.weixin.qq.com/s?__biz=MzAxODI5ODMwOA==&mid=2666545753&idx=1&sn=2bf5b7f1c814371335a5f1b51798f3c7&chksm=80dc86f2b7ab0fe4cb14bdc1d1285ddff878c3a1355a1f469a21c3a7148b24d1f0b608bbd148&scene=21#wechat_redirect)
 
-![avatar](/Pictures/benchmark/mtr.png)
+![image](./Pictures/benchmark/mtr.png)
 
 ## nethogs
 
-![avatar](/Pictures/benchmark/1.png)
+![image](./Pictures/benchmark/1.png)
 
 ## bmon
 
-![avatar](/Pictures/benchmark/3.png)
+![image](./Pictures/benchmark/3.png)
 
 ## speedometer
 
 **useage** `speedometer -rx eth0`
-![avatar](/Pictures/benchmark/4.png)
+![image](./Pictures/benchmark/4.png)
 
 ## [httpstat](https://github.com/reorx/httpstat)
 
 [使用教程](https://linux.cn/article-8039-1.html)
 
-![avatar](/Pictures/benchmark/httpstat.png)
+![image](./Pictures/benchmark/httpstat.png)
 
 # Web
 
@@ -971,7 +1023,7 @@ sudo agedu -s / --exclude "*" --include "*.conf"
 agedu -w
 ```
 
-![avatar](/Pictures/benchmark/2.png)
+![image](./Pictures/benchmark/2.png)
 
 # Process
 
@@ -1054,7 +1106,7 @@ pidstat -w -C nvim 1
 sudo bootchartd
 ```
 
-![avatar](/Pictures/benchmark/5.png)
+![image](./Pictures/benchmark/5.png)
 
 # Special file system
 
@@ -1120,15 +1172,15 @@ nvidia-smi pmon -i 0 -s u -o T
 
 ## [nvtop](https://github.com/Syllo/nvtop)
 
-![avatar](/Pictures/benchmark/nvtop.png)
+![image](./Pictures/benchmark/nvtop.png)
 
 ## [gpustat](https://github.com/wookayin/gpustat)
 
-![avatar](/Pictures/benchmark/gpustat.png)
+![image](./Pictures/benchmark/gpustat.png)
 
 ## [gmonitor](https://github.com/mountassir/gmonitor)
 
-![avatar](/Pictures/benchmark/gmonitor.png)
+![image](./Pictures/benchmark/gmonitor.png)
 
 # reference
 

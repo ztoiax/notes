@@ -88,11 +88,11 @@ alias cp="advcp -g"
 
 ## [ranger](https://github.com/ranger/ranger)
 
-![avatar](/Pictures/awesomecli/5.png)
+![image](./Pictures/awesomecli/5.png)
 
 ## [broot](https://github.com/Canop/broot)
 
-![avatar](/Pictures/awesomecli/1.gif)
+![image](./Pictures/awesomecli/1.gif)
 
 ## [nnn](https://github.com/jarun/nnn)
 
@@ -107,12 +107,12 @@ sudo make O_NERD=1
 
 ```
 
-![avatar](/Pictures/awesomecli/4.png)
+![image](./Pictures/awesomecli/4.png)
 
 ## [mc](https://github.com/MidnightCommander/mc)
 
 支持鼠标操作
-![avatar](/Pictures/awesomecli/13.png)
+![image](./Pictures/awesomecli/13.png)
 
 ## [fd](https://github.com/sharkdp/fd)
 
@@ -124,25 +124,25 @@ sudo make O_NERD=1
 
 ### git tui
 
-![avatar](/Pictures/awesomecli/lazygit.png)
+![image](./Pictures/awesomecli/lazygit.png)
 
 ## [bit](https://github.com/chriswalz/bit)
 
 ### instead git
 
-![avatar](/Pictures/awesomecli/15.png)
+![image](./Pictures/awesomecli/15.png)
 
 ## [tig](https://github.com/jonas/tig)
 
 ### git log
 
-![avatar](/Pictures/awesomecli/tig.png)
+![image](./Pictures/awesomecli/tig.png)
 
 ## [hub](https://hub.github.com/)
 
 ## [forgit](https://github.com/wfxr/forgit)
 
-![avatar](/Pictures/awesomecli/forgit.png)
+![image](./Pictures/awesomecli/forgit.png)
 
 # char
 
@@ -150,13 +150,13 @@ sudo make O_NERD=1
 
 ### highlight ls
 
-![avatar](/Pictures/awesomecli/11.png)
+![image](./Pictures/awesomecli/11.png)
 
 ## [lsd](https://github.com/Peltoche/lsd)
 
 ### highlight ls and support icon
 
-![avatar](/Pictures/awesomecli/14.png)
+![image](./Pictures/awesomecli/14.png)
 
 ## [nat](https://github.com/willdoescode/nat)
 
@@ -164,7 +164,7 @@ sudo make O_NERD=1
 
 ## [bat](https://github.com/sharkdp/bat)
 
-![avatar](/Pictures/awesomecli/9.png)
+![image](./Pictures/awesomecli/9.png)
 
 ### highlight cat
 
@@ -172,7 +172,7 @@ sudo make O_NERD=1
 
 ### highlight tree
 
-![avatar](/Pictures/awesomecli/14.png)
+![image](./Pictures/awesomecli/14.png)
 
 ## ag
 
@@ -180,11 +180,11 @@ sudo make O_NERD=1
 
 ## [fzf](https://github.com/junegunn/fzf)
 
-![avatar](/Pictures/awesomecli/8.png)
+![image](./Pictures/awesomecli/8.png)
 
 ## [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy)
 
-![avatar](/Pictures/awesomecli/10.png)
+![image](./Pictures/awesomecli/10.png)
 
 ### highlight git diff
 
@@ -194,7 +194,7 @@ sudo make O_NERD=1
 
 ## [pet](https://github.com/knqyf263/pet)
 
-![avatar](/Pictures/awesomecli/3.png)
+![image](./Pictures/awesomecli/3.png)
 
 ### Simple command-line snippet manager
 
@@ -204,7 +204,7 @@ sudo make O_NERD=1
 
 ## [cheat](https://github.com/cheat/cheat)
 
-![avatar](/Pictures/awesomecli/cheat.png)
+![image](./Pictures/awesomecli/cheat.png)
 
 ### instead man
 
@@ -212,7 +212,7 @@ sudo make O_NERD=1
 
 ### markdown preview cli version
 
-![avatar](/Pictures/awesomecli/16.png)
+![image](./Pictures/awesomecli/16.png)
 
 ## [fx](https://github.com/antonmedv/fx)
 
@@ -222,7 +222,7 @@ sudo make O_NERD=1
 
 ## [dfc](https://github.com/Rolinh/dfc)
 
-![avatar](/Pictures/awesomecli/6.png)
+![image](./Pictures/awesomecli/6.png)
 
 ### instead df
 
@@ -230,21 +230,21 @@ sudo make O_NERD=1
 
 ### instead fdisk
 
-![avatar](/Pictures/awesomecli/7.png)
+![image](./Pictures/awesomecli/7.png)
 
 ## [duf](https://github.com/muesli/duf)
 
-![avatar](/Pictures/awesomecli/2.png)
+![image](./Pictures/awesomecli/2.png)
 
 ## [ncdu](https://github.com/rofl0r/ncdu)
 
-![avatar](/Pictures/awesomecli/ncdu.png)
+![image](./Pictures/awesomecli/ncdu.png)
 
 # net
 
 ## [prettyping](https://github.com/denilsonsa/prettyping)
 
-![avatar](/Pictures/awesomecli/ping.png)
+![image](./Pictures/awesomecli/ping.png)
 
 # other
 
@@ -252,7 +252,7 @@ sudo make O_NERD=1
 
 ### wireshark cli version
 
-![avatar](/Pictures/awesomecli/1.png)
+![image](./Pictures/awesomecli/1.png)
 
 ## [baidupcs](https://github.com/GangZhuo/BaiduPCS)
 

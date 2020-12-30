@@ -39,7 +39,7 @@ www.123.123/12312 adfasdf
 egrep '((http|https)://|www\.)' lstest #your file name
 ```
 
-![avatar](/Pictures/dmenu/1.png)
+![image](./Pictures/dmenu/1.png)
 
 ### Get url tail
 
@@ -47,7 +47,7 @@ egrep '((http|https)://|www\.)' lstest #your file name
 egrep '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 ```
 
-![avatar](/Pictures/dmenu/2.png)
+![image](./Pictures/dmenu/2.png)
 
 ### -o cut
 
@@ -55,7 +55,7 @@ egrep '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 egrep -o '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 ```
 
-![avatar](/Pictures/dmenu/3.png)
+![image](./Pictures/dmenu/3.png)
 
 ### 获取上一条命令所输出的网址,并用浏览器打开
 
@@ -71,7 +71,7 @@ zle -N searchurl
 bindkey "^[u" searchurl
 ```
 
-![avatar](/Pictures/dmenu/4.gif)
+![image](./Pictures/dmenu/4.gif)
 
 ### For dir regux
 
@@ -80,7 +80,7 @@ dir="bin|boot|dev|etc|home|lib|lib64|lost+found|mnt|opt|proc|root|run|sbin|srv|s
 egrep -o "/($dir)/[a-zA-Z0-9/.]*" lstest
 ```
 
-![avatar](/Pictures/dmenu/5.png)
+![image](./Pictures/dmenu/5.png)
 
 ### Copy the path in the same way
 
@@ -92,7 +92,7 @@ function cpdir {
 }
 ```
 
-![avatar](/Pictures/dmenu/6.gif)
+![image](./Pictures/dmenu/6.gif)
 
 ### 当然也以行为单位，复制命令的输出
 
@@ -108,7 +108,7 @@ function cpcommand {
 }
 ```
 
-![avatar](/Pictures/dmenu/9.gif)
+![image](./Pictures/dmenu/9.gif)
 
 ## 通过 dmenu menu 二级菜单，可快速获取并复制文件内容，代替 grep
 
@@ -132,10 +132,10 @@ function checkfile {
 }
 ```
 
-![avatar](/Pictures/dmenu/7.gif)
+![image](./Pictures/dmenu/7.gif)
 
 ## 建一个搜索引擎合集脚本，配合 dmenu 使用
 
 This is a [script code link](https://github.com/ztoiax/userfulscripts/blob/master/dmenu-search.sh "With a Title").
 
-![avatar](/Pictures/dmenu/8.gif)
+![image](./Pictures/dmenu/8.gif)

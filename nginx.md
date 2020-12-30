@@ -175,7 +175,7 @@ server {
 
   (等同于 `127.0.0.1/index.html`)
 
-  ![avatar](/Pictures/nginx/static.png)
+  ![image](./Pictures/nginx/static.png)
 
 - 2.测试: `curl` 命令
 
@@ -193,11 +193,11 @@ location / {
     index  index.html index.htm;
 }
 
-# 添加如下配置,我这里的目录为(/home/tz/Pictures/)
+# 添加如下配置,我这里的目录为(/home/tz./Pictures/)
 location ~\.(gif|png|jpg)$ {
-    root   /home/tz/Pictures/;
+    root   /home/tz./Pictures/;
 
-    # 假设找不到对应的文件则返回/home/tz/Pictures/404.png
+    # 假设找不到对应的文件则返回/home/tz./Pictures/404.png
     error_page 404 = /404.png;
 }
 ```
@@ -209,7 +209,7 @@ sudo nginx -s reload
 ```
 
 - 1.测试: 在浏览器里输入`127.0.0.1/YouPictureName`
-  ![avatar](/Pictures/nginx/static1.png)
+  ![image](./Pictures/nginx/static1.png)
 
 - 2.测试: curl 后通过重定向下载
 
@@ -236,10 +236,10 @@ proxy_pass 指令: 让 **80** 端口代理 **8080** 端口的流量
 ```
 
 - 1.静态主页测试: 在浏览器里输入`127.0.0.1:8080`:
-  ![avatar](/Pictures/nginx/proxy.png)
+  ![image](./Pictures/nginx/proxy.png)
 
 - 2.图片测试: 在浏览器里输入`127.0.0.1:8080/YouPictureName.png`:
-  ![avatar](/Pictures/nginx/proxy1.png)
+  ![image](./Pictures/nginx/proxy1.png)
 
 ### fastcgi
 
@@ -363,7 +363,7 @@ http {
 - 第 2 行: 浏览器访问 tz.png 图片
 - 第 3 行: curl 访问 主页
 - 第 4 行: curl 访问 tz.png 图片
-  ![avatar](/Pictures/nginx/access_log.png)
+  ![image](./Pictures/nginx/access_log.png)
 
 使用 `gzip` 压缩日志，日志将会是**二进制格式**
 
@@ -378,7 +378,7 @@ sudo nginx -s reload
 sudo nginx -s reopen
 ```
 
-![avatar](/Pictures/nginx/access_log1.png)
+![image](./Pictures/nginx/access_log1.png)
 可通过 `zcat` 查看
 
 ```sh
@@ -724,7 +724,7 @@ sudo nginx
 sudo ngxtop -l /usr/local/nginx/logs/access/80.access.log
 ```
 
-![avatar](/Pictures/nginx/ngxtop.gif)
+![image](./Pictures/nginx/ngxtop.gif)
 
 统计客户端 ip 访问次数:
 
@@ -732,7 +732,7 @@ sudo ngxtop -l /usr/local/nginx/logs/access/80.access.log
 ngxtop top remote_addr -l /usr/local/nginx/logs/access/80.access.log
 ```
 
-![avatar](/Pictures/nginx/ngxtop1.gif)
+![image](./Pictures/nginx/ngxtop1.gif)
 
 - [goaccess 日志监控](https://goaccess.io/)
 
@@ -742,7 +742,7 @@ cli(命令行监控):
 sudo goaccess /usr/local/nginx/logs/access/80.access.log
 ```
 
-![avatar](/Pictures/nginx/goaccess.gif)
+![image](./Pictures/nginx/goaccess.gif)
 
 输出 静态 html 页面:
 
@@ -753,7 +753,7 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log  -o /tmp/report.html --
 chrome /tmp/report.html
 ```
 
-![avatar](/Pictures/nginx/goaccess.png)
+![image](./Pictures/nginx/goaccess.png)
 
 输出 实时 html 页面:
 
@@ -761,7 +761,7 @@ chrome /tmp/report.html
 sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --log-format=COMBINED --real-time-html
 ```
 
-![avatar](/Pictures/nginx/goaccess1.gif)
+![image](./Pictures/nginx/goaccess1.gif)
 
 ## 书籍 or 教程
 
@@ -785,7 +785,7 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 - 负载均衡，当业务压力增大时，可能一个 Tomcat 的实例不足以处理，那么这时可以启动多个 Tomcat 实例进行水平扩展，而 Nginx 的负载均衡功能可以把请求通过算法分发到各个不同的实例进行处理
 
 其实 `Tomcat` 只是一个中间件，真正起作用的是已经安装的 `jdk`。
-![avatar](/Pictures/nginx/1.png)
+![image](./Pictures/nginx/1.png)
 `tomcat`的配置文件是`xml` 格式
 
 ## 基本命令
@@ -838,7 +838,7 @@ wget http://dl.zrlog.com/release/zrlog.war /usr/share/tomcat7/webapps
 http://127.0.0.1:8080/zrlog/install
 ```
 
-![avatar](/Pictures/nginx/2.png)
+![image](./Pictures/nginx/2.png)
 
 ## mysql zrlog
 
@@ -860,7 +860,7 @@ show databases;
 quit
 ```
 
-![avatar](/Pictures/nginx/3.png)
+![image](./Pictures/nginx/3.png)
 
 ### nginx 反向代理 tomcat
 

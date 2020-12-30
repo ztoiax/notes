@@ -102,11 +102,11 @@
 
 - MariaDB
 
-![avatar](/Pictures/mysql/mariadb.png)
+![image](./Pictures/mysql/mariadb.png)
 
 - Mysql
 
-![avatar](/Pictures/mysql/mysql.png)
+![image](./Pictures/mysql/mysql.png)
 
 [Centos7 安装 Mysql](#install)
 
@@ -585,9 +585,9 @@ where name regexp '^北京市';
 - 返回匹配的记录，以及表 B 多余的记录，这叫右连接（right join）。
 - 返回匹配的记录，以及表 A 和表 B 各自的多余记录，这叫全连接（full join）。
 
-![avatar](/Pictures/mysql/join.png)
+![image](./Pictures/mysql/join.png)
 
-![avatar](/Pictures/mysql/join1.png)
+![image](./Pictures/mysql/join1.png)
 **语法：**
 
 > ```sql
@@ -903,7 +903,7 @@ Create Table: CREATE TABLE `new` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 1 row in set (0.000 sec)
 
-![avatar](/Pictures/mysql/MySQL-Data-Types.jpg)
+![image](./Pictures/mysql/MySQL-Data-Types.jpg)
 
 # 创建临时表(断开与数据库的连接后，临时表就会自动销毁)
 CREATE TEMPORARY TABLE temp (`id` int);
@@ -1189,7 +1189,7 @@ where id = 1;
 
 虽然没有报错，但 a_id 并没有修改:
 
-![avatar](/Pictures/mysql/foreign.png)
+![image](./Pictures/mysql/foreign.png)
 
 delete 也一样:
 
@@ -1198,7 +1198,7 @@ delete from b
 where id =1;
 ```
 
-![avatar](/Pictures/mysql/foreign1.png)
+![image](./Pictures/mysql/foreign1.png)
 
 a 表:
 
@@ -1231,10 +1231,10 @@ where id = 1;
 select * from b;
 ```
 
-![avatar](/Pictures/mysql/foreign2.png)
+![image](./Pictures/mysql/foreign2.png)
 
 又或者删除 b 表后重新新建,并授予权限:
-![avatar](/Pictures/mysql/foreign3.png)
+![image](./Pictures/mysql/foreign3.png)
 
 删除 a 表 刚才的数据:
 
@@ -1247,7 +1247,7 @@ select * from b;
 ```
 
 此时 a 表的数据删除，b 表对应的数据也会删除:
-![avatar](/Pictures/mysql/foreign4.png)
+![image](./Pictures/mysql/foreign4.png)
 
 如果创建外键表时，没有指定 CONSTRAINT ，系统会自动生成(我这里为 b_ibfk_1):
 
@@ -1352,8 +1352,8 @@ ERROR 1369 (44000): CHECK OPTION failed `china`.`vvv`
 show table status like '名称'\G;
 ```
 
-![avatar](/Pictures/mysql/view.png)
-![avatar](/Pictures/mysql/view1.png)
+![image](./Pictures/mysql/view.png)
+![image](./Pictures/mysql/view1.png)
 
 ## Stored Procedure and Function (自定义存储过程 和 函数)
 
@@ -1447,7 +1447,7 @@ insert into foo (val) values (5);
 select * from foo;
 ```
 
-![avatar](/Pictures/mysql/procedure.png)
+![image](./Pictures/mysql/procedure.png)
 
 循环 5 次， val 字段设置为 0 :
 
@@ -1489,7 +1489,7 @@ select @n;
 select * from foo;
 ```
 
-![avatar](/Pictures/mysql/procedure1.png)
+![image](./Pictures/mysql/procedure1.png)
 
 循环 1000 次，val 字段插入随机数:
 
@@ -1522,7 +1522,7 @@ call foo_rand();
 select * from foo order by id;
 ```
 
-![avatar](/Pictures/mysql/procedure2.png)
+![image](./Pictures/mysql/procedure2.png)
 
 创建 10 个表
 
@@ -1636,7 +1636,7 @@ flush status;
 SHOW STATUS LIKE 'handler_read%';
 ```
 
-![avatar](/Pictures/mysql/handler_read.png)
+![image](./Pictures/mysql/handler_read.png)
 
 此时 name 字段,还没有索引:
 
@@ -1645,7 +1645,7 @@ select name from cnarea_2019_innodb;
 SHOW STATUS LIKE 'handler_read%';
 ```
 
-![avatar](/Pictures/mysql/handler_read1.png)
+![image](./Pictures/mysql/handler_read1.png)
 建立索引后在查询:
 
 ```sql
@@ -1657,7 +1657,7 @@ select name from cnarea_2019_innodb;
 SHOW STATUS LIKE 'handler_read%';
 ```
 
-![avatar](/Pictures/mysql/handler_read2.png)
+![image](./Pictures/mysql/handler_read2.png)
 
 ### B-tree
 
@@ -2143,7 +2143,7 @@ sudo docker exec -it mysql-tz cat '/etc/hosts'
 
 我这里为 `172.17.0.2`
 
-![avatar](/Pictures/mysql/docker-replication.png)
+![image](./Pictures/mysql/docker-replication.png)
 
 开启 **slave**:
 
@@ -2165,7 +2165,7 @@ docker 主从复制测试:
 
 在主服务器**新建数据库 tz,hello 表**,并插入 1 条数据.可以看到从服务器可以 select hello 表;在主服务器删除 tz 数据库，从服务器也跟着删除.
 
-![avatar](/Pictures/mysql/docker-replication.gif)
+![image](./Pictures/mysql/docker-replication.gif)
 
 ## mysqlbinlog
 
@@ -2214,7 +2214,7 @@ show master status;
 show binlog events in 'bin.000016'\G;
 ```
 
-![avatar](/Pictures/mysql/mysqlbinlog.png)
+![image](./Pictures/mysql/mysqlbinlog.png)
 
 - 通过 `start-datetime` 还原:
 
@@ -2257,7 +2257,7 @@ mysqlbinlog /var/lib/mysql/bin.000016 -vv -d china -T test \
 sudo mysql -uroot -p china < /tmp/flashback.sql
 ```
 
-![avatar](/Pictures/mysql/mysqlbinlog.gif)
+![image](./Pictures/mysql/mysqlbinlog.gif)
 
 通过 `--start-datetime` 进行还原:
 
@@ -2268,7 +2268,7 @@ mysqlbinlog /var/lib/mysql/bin.000016 -vv -d china -T test \
 sudo mysql -uroot -p china < /tmp/flashback.sql
 ```
 
-![avatar](/Pictures/mysql/mysqlbinlog1.gif)
+![image](./Pictures/mysql/mysqlbinlog1.gif)
 
 ## 导出不同文件格式
 
@@ -2305,14 +2305,14 @@ mysql root@localhost:(none)> SELECT DISTINCT CONCAT('User: ''',user,'''@''',host
 (1142, "SELECT command denied to user 'root'@'localhost' for table 'user'")
 ```
 
-![avatar](/Pictures/mysql/mycli.png)
+![image](./Pictures/mysql/mycli.png)
 
 ### [mitzasql](https://github.com/vladbalmos/mitzasql)
 
 - 一个使用`vim`快捷键的 `mysql-tui`
 
-![avatar](/Pictures/mysql/mysql-tui.png)
-![avatar](/Pictures/mysql/mysql-tui1.png)
+![image](./Pictures/mysql/mysql-tui.png)
+![image](./Pictures/mysql/mysql-tui1.png)
 
 <span id="mydumper"></span>
 
@@ -2334,7 +2334,7 @@ mydumper \
 --compress-protocol
 ```
 
-![avatar](/Pictures/mysql/du.png)
+![image](./Pictures/mysql/du.png)
 
 ```sh
 # 不带压缩备份,最后再用7z压缩
@@ -2349,7 +2349,7 @@ mydumper \
 --compress-protocol
 ```
 
-![avatar](/Pictures/mysql/du1.png)
+![image](./Pictures/mysql/du1.png)
 
 ```sh
 # 恢复
@@ -2470,8 +2470,8 @@ cat /tmp/pt_general.log
 
 这是在用 `mysqlslap` 进行压力测试下的监控
 
-![avatar](/Pictures/mysql/innotop.png)
-![avatar](/Pictures/mysql/mysqlslap.png)
+![image](./Pictures/mysql/innotop.png)
+![image](./Pictures/mysql/mysqlslap.png)
 
 ### [sysbench](https://github.com/akopytov/sysbench)
 
@@ -2483,7 +2483,7 @@ cat /tmp/pt_general.log
 
 监控以及查询工具
 
-![avatar](/Pictures/mysql/dbatools.png)
+![image](./Pictures/mysql/dbatools.png)
 
 ### undrop-for-innodb(\*数据恢复)
 
@@ -2810,7 +2810,7 @@ select * from locking
 for update;
 ```
 
-![avatar](/Pictures/mysql/innodb_lock6.gif)
+![image](./Pictures/mysql/innodb_lock6.gif)
 
 悲观锁:不能加入其他锁
 
@@ -2830,7 +2830,7 @@ where id = 2;
 commit;
 ```
 
-![avatar](/Pictures/mysql/innodb_lock1.gif)
+![image](./Pictures/mysql/innodb_lock1.gif)
 
 ```sql
 # 事务a 加入where 从句，只锁对应的行(我这里是id = 1)
@@ -2852,7 +2852,7 @@ where id = 1;
 commit;
 ```
 
-![avatar](/Pictures/mysql/innodb_lock2.gif)
+![image](./Pictures/mysql/innodb_lock2.gif)
 
 **事务 a** 和 **事务 b** 插入相同的数据,**事务 a** 先 **事务 b** 插入。那么**事务 b** 会被阻塞，当事务 a `commit` 后
 
@@ -2868,7 +2868,7 @@ insert into locking (id,name,date) value
 (1000,'tz4','2020-10-24');
 ```
 
-![avatar](/Pictures/mysql/innodb_lock3.gif)
+![image](./Pictures/mysql/innodb_lock3.gif)
 
 **没有索引:**
 
@@ -2882,7 +2882,7 @@ insert into locking (id,name,date) value
 (1000,'tz4','2020-10-24');
 ```
 
-![avatar](/Pictures/mysql/innodb_lock4.gif)
+![image](./Pictures/mysql/innodb_lock4.gif)
 
 ---
 
@@ -2920,7 +2920,7 @@ commit;
 最后结果 **2**.
 
 因为事务 a 比事务 b 先 commit,此时版本号改变，所以当事务 b 要 commit 时的版本号 与 事务 b 开始时的版本号不一致，提交失败。
-![avatar](/Pictures/mysql/innodb_lock5.gif)
+![image](./Pictures/mysql/innodb_lock5.gif)
 
 ### MyISAM
 
@@ -2932,7 +2932,7 @@ commit;
 
 - MYI: 索引文件
 
-![avatar](/Pictures/mysql/myisam.png)
+![image](./Pictures/mysql/myisam.png)
 
 MyISAM 不支持行锁，在执行查询语句（SELECT、UPDATE、DELETE、INSERT 等）前，会自动给涉及的表加读锁，这个过程并不需要用户干预
 
@@ -2983,7 +2983,7 @@ where id < 11;
 
 左边在等待右边的锁,可以看到我停止 **scn()**后，立马修改成功
 
-![avatar](/Pictures/mysql/myisam_lock.gif)
+![image](./Pictures/mysql/myisam_lock.gif)
 
 [跳转 innodb 同样的实验](#innodb_lock)
 
@@ -2998,8 +2998,8 @@ where id < 11;
 
 - ibd: 索引和数据文件
 
-![avatar](/Pictures/mysql/innodb.png)
-![avatar](/Pictures/mysql/innodb1.png)
+![image](./Pictures/mysql/innodb.png)
+![image](./Pictures/mysql/innodb1.png)
 
 行格式:
 
@@ -3007,7 +3007,7 @@ where id < 11;
 
 - Redundant
 
-![avatar](/Pictures/mysql/innodb2.png)
+![image](./Pictures/mysql/innodb2.png)
 
 tablespace (表空间):
 
@@ -3015,7 +3015,7 @@ tablespace (表空间):
 - extent (区)
 - page (页)
 
-![avatar](/Pictures/mysql/innodb3.png)
+![image](./Pictures/mysql/innodb3.png)
 
 InnoDB 采用`WAL`(Write-Ahead Logging). 先修改日志,再在修改数据页进 buffer(内存)。当等到有空闲线程、内存不足、Redo log 满了时再 Checkpoint(刷脏)。写 Redo log 是顺序写入，Checkpoint(刷脏)是随机写.
 
@@ -3025,7 +3025,7 @@ InnoDB 采用`WAL`(Write-Ahead Logging). 先修改日志,再在修改数据页�
 
 - binlog 逻辑日志:事务提交成功，记录数据库所有更改操作. 不包括 select，show
 
-![avatar](/Pictures/mysql/log.png)
+![image](./Pictures/mysql/log.png)
 
 redo log 参数:`innodb_flush_log_at_trx_commit`.在导入数据时可以临时调整为 `0` 提高性能.
 
@@ -3136,10 +3136,10 @@ commit;
 flush table clone
 ```
 
-![avatar](/Pictures/mysql/flush.png)
+![image](./Pictures/mysql/flush.png)
 
 `flush table clone`后, `select` 数据同步
-![avatar](/Pictures/mysql/flush1.png)
+![image](./Pictures/mysql/flush1.png)
 
 ---
 
@@ -3223,11 +3223,11 @@ select * from test;
 
 - 右边为事务 a
 - 左边为事务 b
-  ![avatar](/Pictures/mysql/uncommitted.gif)
+  ![image](./Pictures/mysql/uncommitted.gif)
 
 注意:如果事务 b,没有 `commit` 就退出.那么事务 b 的修改将失效
 
-![avatar](/Pictures/mysql/uncommitted1.gif)
+![image](./Pictures/mysql/uncommitted1.gif)
 
 ###### read committed(读已提交) , phantom read (幻读):
 
@@ -3262,7 +3262,7 @@ select * from test;
 
 - 右边为事务 a
 - 左边为事务 b
-  ![avatar](/Pictures/mysql/committed.gif)
+  ![image](./Pictures/mysql/committed.gif)
 
 #### autocommit
 
@@ -3291,7 +3291,7 @@ select * from test;
 #### 锁
 
 **死锁：**
-![avatar](/Pictures/mysql/innodb_lock.png)
+![image](./Pictures/mysql/innodb_lock.png)
 
 事务 A 在等待事务 B 释放 id=2 的行锁，而事务 B 在等待事务 A 释放 id=1 的行锁。互相等待对方的资源释放，就进入了死锁状态。当出现死锁以后，有两种策略：
 
@@ -3347,7 +3347,7 @@ where id < 11;
 
 修改数据后左边**commit**，右边也**commit**后，数据同步
 
-![avatar](/Pictures/mysql/innodb_lock.gif)
+![image](./Pictures/mysql/innodb_lock.gif)
 
 ### dictionary(字典)
 
@@ -3362,11 +3362,11 @@ where id < 11;
 **informantion_schema** 的表一般有多种 **engine**(存储引擎):
 
 - **Memory**(内存)
-  ![avatar](/Pictures/mysql/dictionary.png)
+  ![image](./Pictures/mysql/dictionary.png)
 - **MariaDB** 数据库: **Aria**(类似 MyISAM)
-  ![avatar](/Pictures/mysql/dictionary1.png)
+  ![image](./Pictures/mysql/dictionary1.png)
 - **Mysql** 数据库: **Innodb**
-  ![avatar](/Pictures/mysql/dictionary2.png)
+  ![image](./Pictures/mysql/dictionary2.png)
 
 ```sql
 # 查看innoddb字典
@@ -3395,7 +3395,7 @@ show tables like '%INNODB_SYS%';
 select * from INNODB_SYS_TABLES;
 ```
 
-![avatar](/Pictures/mysql/dictionary3.png)
+![image](./Pictures/mysql/dictionary3.png)
 
 **InnoDB Buffer Pool** 储数据和索引,减少磁盘 I/O,是一种特殊的 mitpoint LRU 算法
 [查看 INNODB_BUFFER 表](https://mariadb.com/kb/en/information-schema-innodb_buffer_pool_stats-table/)
@@ -3417,7 +3417,7 @@ FREE_BUFFERS: 6024
 DATABASE_PAGES: 2033
 ```
 
-![avatar](/Pictures/mysql/dictionary5.png)
+![image](./Pictures/mysql/dictionary5.png)
 
 **innodb_buffer_pool_size** 越大，初始化时间就越长
 
@@ -3425,13 +3425,13 @@ DATABASE_PAGES: 2033
 show variables like 'innodb%buffer%';
 ```
 
-![avatar](/Pictures/mysql/dictionary6.png)
+![image](./Pictures/mysql/dictionary6.png)
 
 #### performance_schema
 
 独立的内存存储引擎:
 
-![avatar](/Pictures/mysql/dictionary4.png)
+![image](./Pictures/mysql/dictionary4.png)
 
 ## 极限值测试
 
@@ -3454,7 +3454,7 @@ echo ");" >> /tmp/1017.sql
 sudo mysql -uroot -pYouPassword YouDatabase < /tmp/1017.sql
 ```
 
-![avatar](/Pictures/mysql/1017.png)
+![image](./Pictures/mysql/1017.png)
 
 改为 1018:
 
@@ -3475,7 +3475,7 @@ echo ");" >> /tmp/1018.sql
 sudo mysql -uroot -pYouPassword YouDatabase < /tmp/1018.sql
 ```
 
-![avatar](/Pictures/mysql/1018.png)
+![image](./Pictures/mysql/1018.png)
 
 ## 日志
 

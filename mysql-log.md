@@ -110,7 +110,7 @@ binlog_ignore_db
 sync_binlog=n
 ```
 
-![avatar](/Pictures/mysql/binlog.png)
+![image](./Pictures/mysql/binlog.png)
 
 ```sql
 # 我这里是 row 格式
