@@ -58,12 +58,15 @@
 * [Disk](#disk)
     * [inotify-tools](#inotify-tools)
     * [blktrace](#blktrace)
+    * [btrace](#btrace)
     * [dd](#dd)
     * [hdparm](#hdparm)
     * [agedu](#agedu)
         * [只统计.conf 文件](#只统计conf-文件)
 * [Process](#process)
     * [pidstat](#pidstat)
+    * [htop](#htop)
+    * [bpytop](#bpytop)
 * [开机](#开机)
     * [bootchart](#bootchart)
 * [Special file system](#special-file-system)
@@ -890,7 +893,7 @@ fileslower 1
 
 **局限性:**
 
-- 没有显示进程
+- 错误 I/O
 
 ```bash
 # -p 指定刷新秒数，每秒刷新
@@ -901,10 +904,37 @@ iostat -p 1 5
 
 # -p 指定 sda 分区,每秒刷新
 iostat -p sda 1
+```
 
+| 列                   | 操作                          |
+| -------------------- | ----------------------------- |
+| tps                  | 每秒事务数（IOPS）            |
+| kB_read/s、kB-wztn/s | 每秒读取 KB 数,每秒写入 KB 数 |
+| kBread、kB-wrtn      | 总共读取和写入的 KB 数        |
+
+```bash
 # -x 更多参数
 iostat -x -p sda 1
+
+# -z 不显示0值
+iostat -xkdz -p sda 1
 ```
+
+| 列       | 操作                                                               |
+| -------- | ------------------------------------------------------------------ |
+| rrqm/s   | 每秒合并放入驱动请求队列的读请求数                                 |
+| wrqm/s   | 每秒合并放入驱动请求队列的写请求数                                 |
+| r/s      | 每秒发给磁盘设备的读请求数                                         |
+| w/s      | 每秒发给磁盘设备的写请求数                                         |
+| rkB/s    | 每秒从磁盘设备读取的 KB 数                                         |
+| wkB/s    | 每秒向磁盘设备写人的 KB 数                                         |
+| avgrq-sz | 平均请求大小，单位为扇区（512B）                                   |
+| avgqu-sz | 在驱动请求队列和在设备中活跃的平均请求数                           |
+| await    | 平均 I/O 响应时间,包括在驱动请求队列里等待和设备的 IO 响应时间(ms) |
+| r_await  | 和 await 一样，不过只针对读（ms）                                  |
+| w_await  | 和 await 一样，不过只针对写（ms）                                  |
+| svctm    | （推断）磁盘设备的 IO 平均响应时间（ms）                           |
+| %util    | 设备忙处理 I/O 请求的百分比（使用率）                              |
 
 ### biosnoop(bcc)
 
@@ -940,6 +970,43 @@ blkparse io-debugging.blktrace.0
 # seekwatcher 图形化
 seekwatcher -t io-debugging.blktrace.0 -o seek.png
 seekwatcher -t io-debugging.blktrace.0 -o seekmoving.mpg --movie
+```
+
+## btrace
+
+| 列  | 操作                                                                              |
+| --- | --------------------------------------------------------------------------------- |
+| 1   | 设备主要、次要编号                                                                |
+| 2   | CPU ID                                                                            |
+| 3   | 序号                                                                              |
+| 4   | 活动时间,以秒为单位                                                               |
+| 5   | 进程 ID                                                                           |
+| 6   | 活动标识符(见下)                                                                  |
+| 7   | RWBS 描述:可能包括了 R(读)、W(写)、D(块丢弃)、B(屏障操作)、s(同步)                |
+| 8   | 184773879+8[cksum]意味着一个位于块地址 184773879 大小为 8(扇区)、cksum 进程的 I/O |
+
+| 第 6 列标识符 | 操作                                  |
+| ------------- | ------------------------------------- |
+| A             | Io was remapped to a different device |
+| B             | IO bounced                            |
+| C             | IO completion                         |
+| D             | IO issued to driver                   |
+| F             | IO front merged with request on queue |
+| G             | Get request                           |
+| I             | IO inserted onto request queue        |
+| M             | IO back merged with request on queue  |
+| P             | Plug request                          |
+| Q             | IO handled by request queue code      |
+| S             | Sleep request                         |
+| T             | Unplug due to timeout                 |
+| U             | Unplug request                        |
+| X             | Split                                 |
+
+```bash
+btrace /dev/nvme0n1
+
+# 只追踪issue事件,第 6 列标识符为D
+btrace -a issue /dev/nvme0n1p5
 ```
 
 ## dd
@@ -1030,6 +1097,16 @@ agedu -w
 ## pidstat
 
 > 监控单个进程的 CPU,MEM,I/O,上下文切换
+
+## [htop](https://github.com/hishamhm/htop)
+
+![image](./Pictures/benchmark/htop.png)
+
+## [bpytop](https://github.com/aristocratos/bpytop)
+
+> instead bashtop
+
+![image](./Pictures/benchmark/bpytop.png)
 
 ```bash
 # 每秒输出

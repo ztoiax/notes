@@ -18,6 +18,7 @@
         * [cut](#cut)
         * [sed](#sed)
         * [awk](#awk)
+        * [perl](#perl)
     * [other](#other)
         * [date](#date)
         * [fuser](#fuser)
@@ -105,7 +106,7 @@ make 默认根据`makefile`文件,进行构建
 
 #### Note: 每行命令之前必须有一个 tab 键,不然会报错
 
-```sh
+```bash
 make source.txt
 # output
 makefile:4: *** 缺失分隔符。 停止。
@@ -115,7 +116,7 @@ makefile:4: *** 缺失分隔符。 停止。
 
 #### Note: 需要注意的是，每行命令在一个单独的 shell 中执行。这些 Shell 之间没有继承关系。(make var-lost），取不到 foo 的值。因为两行命令在两个不同的进程执行。一个解决办法是将两行命令写在一行，中间用分号分隔。
 
-```sh
+```bash
 # 使用">"代替<tab>健
 .RECIPEPREFIX = >
 all:
@@ -151,7 +152,7 @@ lsof -c mysql
 - `--include` 只同步指定文件，往往与--exclude 结合使用
 - `--link-dest` 增量备份
 
-```sh
+```bash
 rsync -av SOURCE DESTINATION
 
 # 远程ssh push pull
@@ -167,7 +168,7 @@ rsync -av --include="*.txt" --exclude='*' source/ destination
 增量备份，对比基准和源，差异的文件同步到 target，相同的文件以**硬链接**的同步到 target
 `rsync -a --delete --link-dest /compare /source /target`
 
-```sh
+```bash
 # 先同步
 rsync -av /source /target
 
@@ -182,7 +183,7 @@ find / -samefile /target/file
 
 ### split
 
-```sh
+```bash
 # -b 二进制文件,按100M 进行拆分
 split -b 100M <file>
 
@@ -206,7 +207,7 @@ fsarchiver savefs -z1 -j12 -v /path/to/backup_image.fsa /dev/sda1
 
 所有操作，以**字符**为单位
 
-```sh
+```bash
 # 删除换行符
 cat FILE | tr -d '\n'
 
@@ -232,6 +233,8 @@ cut -c -5,7-10,12- file
 
 ### sed
 
+[regex 在线工具](https://regex101.com/)
+
 所有操作，以**行**为单位
 | 参数 | 操作 |
 | ---- | ---- |
@@ -241,7 +244,7 @@ cut -c -5,7-10,12- file
 | i | 插入 |
 | c | 替换 |
 
-```sh
+```bash
 # 打印1到5行
 sed -n '1,5p' FILE
 # 打印从5行到结尾
@@ -281,6 +284,8 @@ ps aux | sed '1p;/nginx/!d'
 
 ### awk
 
+> 可以代替 grep,sed
+
 - `$NF` 最后 1 列
 - `$NR` 行数
 - `$0` 所有行
@@ -288,38 +293,56 @@ ps aux | sed '1p;/nginx/!d'
 
 `print` 内的操作为**列**
 
-```sh
-ll > test
+```bash
+ll > FILE
 
 # 打印行数(类似于wc -l)
-awk 'END { print NR;}' test
+awk 'END { print NR;}' FILE
+
+# 在开头显示行数(类似于cat -n)
+awk '$0 = NR" "$0' FILE
+
+# 在开头复制第一列
+awk '$0 = $1" "$0' FILE
 
 # 打印第1列
-awk '{print $1}' test
+awk '{print $1}' FILE
 
 # 打印第1,5,和最后1列
-awk '{print $1,$5,$NF}' test
+awk '{print $1,$5,$NF}' FILE
 
 # 打印前五行
-awk 'NR <= 5' test
+awk 'NR <= 5' FILE
 
 # 打印第5行的,第1,5,和最后1列
-awk 'NR == 5 {print $1,$5,$NF}' test
+awk 'NR == 5 {print $1,$5,$NF}' FILE
+
+# 打印基数行
+awk 'NR%2' FILE
+
+# 打印偶数行
+awk 'NR%2 == 0' FILE
+
+# 打印,除了最后一列
+awk 'NF--' FILE
+
+# 不打印重复行
+awk '!a[$0]++'
 
 # 以:为分隔符，打印第3列大于1000的行
 awk -F ":" '$3 >= 1000' /etc/passwd
 
 # 打印有apk的行的第二列(增强版grep)
-awk '/apk/ { print $2}' test
+awk '/apk/ { print $2}' FILE
 
 # 打印有apk的行的倒数第3行和最后一行
-awk '/apk/ {print $(NF-4),$NF}' test
+awk '/apk/ {print $(NF-4),$NF}' FILE
 
 # 第一列与第一列交换
-awk '{ print $2"="$1}' test
+awk '{ print $2"="$1}' FILE
 
 # 打印行号加所有行(类似于cat -n)
-awk '{ print NR" "$0}' test
+awk '{ print NR" "$0}' FILE
 
 # 打印第一行和匹配 nginx
 ps aux | awk 'NR==1 || /nginx/'
@@ -328,13 +351,45 @@ ps aux | awk 'NR==1 || /nginx/'
 ps aux | awk '/nginx/,/vim/'
 
 # 打印第一列,不等于0的值
-awk '$1 != 0' file
+awk '$1 != 0' FILE
 
 # 将第一列的值相加
-awk '{sum += $1} END {print sum}' file
+awk '{sum += $1} END {print sum}' FILE
 
 # 只打印第一列的值等于100
-awk '$1=="100" {print $0}'
+awk '$1=="100" {print $0}' FILE
+
+# 匹配第一列的值等于100,匹配第二列以a开头e结尾的行,然后只打印第三列
+awk '$1=="100" && $2 ~ /^a.*e$/ {print $3}' FILE
+
+# root替换tz(类似sed),只是打印,并不会修改文件
+awk '{sub(/root/,"tz")}1' FILE
+
+# 所有字符都余2
+awk 'ORS=NR%2' FILE
+```
+
+[awk 教程](https://backreference.org/2010/02/10/idiomatic-awk/)
+
+### perl
+
+```bash
+ll > test
+
+# grep tz test
+perl -ne 'print if /tz/' test
+
+# sed 's/root/tz/g' test
+perl -pe 's/root/tz/g' test
+
+# sed -i 's/root/tz/g' test
+perl -pie 's/root/tz/g' test
+
+# awk '{print $2}' test
+perl -lane 'print $F[1]' test
+
+# awk '{print $1,$3,$4,$5,$6}' test
+perl -lane 'print @F[0,2..5]' test
 ```
 
 ## other
@@ -380,7 +435,7 @@ du -cha --max-depth=1 . | grep -E "M|G" | sort -h
 
 - [在线计算工具](https://tool.lu/crontab/)
 
-```sh
+```bash
 # .---------------- 分 (0 - 59)
 # |  .------------- 时 (0 - 23)
 # |  |  .---------- 日 (1 - 31)
@@ -395,7 +450,7 @@ du -cha --max-depth=1 . | grep -E "M|G" | sort -h
 - `crontab -l` #显示任务
 - `crontab -r` #删除所有任务
 
-```sh
+```bash
 * * * * * COMMAND      # 每分钟
 */5 * * * * COMMAND    # 每5分钟
 
@@ -427,25 +482,25 @@ systemctl restart cronie.service
 
 ### 创建 RAID5
 
-```sh
+```bash
 mdadm -C /dev/md0 -a yes -l 5 -n 3 /dev/sdb /dev/sdc /dev/sdd
 ```
 
 ### 创建 RAID5,并设置备份磁盘
 
-```sh
+```bash
 mdadm -C /dev/md0 -a yes -l 5 -n 3 -x 1 /dev/sdb /dev/sdc /dev/sdd /dev/sde
 ```
 
 ### 保存配置文件
 
-```sh
+```bash
 mdadm -D --scan > /etc/mdadm.conf
 ```
 
 ### 性能测试
 
-```sh
+```bash
 root@localhost ~# hdparm -t /dev/md0
 /dev/md0:
  Timing buffered disk reads: 1418 MB in  3.01 seconds = 471.61 MB/sec
@@ -460,7 +515,7 @@ root@localhost ~# hdparm -t /dev/sda
 
 ### 硬盘装载
 
-```sh
+```bash
 # 把sdb设置为故障
 mdadm /dev/md0 -f /dev/sdb
 
@@ -473,7 +528,7 @@ mdadm /dev/md0 -a /dev/sdb
 
 ### 卸载 RAID
 
-```sh
+```bash
 umount /dev/md0
 mdadm -S /dev/md0
 mdadm --zero-superblock /dev/sdb
