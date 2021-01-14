@@ -46,7 +46,7 @@
 
 `ip addr add 1.1.1.1/24 dev eth0 label eth0:0` 新增 ip 为`1.1.1.1` 的子接口
 
-```sh
+```bash
 # 永久修改
 cat > /etc/sysconfig/network-scripts/ifcfg-eth0:0 << 'EOF'
 DEVICE=eth0:0
@@ -65,7 +65,7 @@ EOF
 
 ## nmcli
 
-```sh
+```bash
 # 显示连接
 nmcli connection show
 
@@ -95,7 +95,7 @@ nmcli device show
 
 ### 交互模式
 
-```sh
+```bash
 # 进入交互模式
 nmcli connection edit eth0
 
@@ -154,7 +154,7 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 
 ### 基本命令
 
-```sh
+```bash
 # 捕抓 192.168.1.1 的包
 sudo tcpdump -vv host 192.168.1.1
 
@@ -179,7 +179,7 @@ sudo tcpdump -n not port 443 and portrange 1-1024 and greater 1000
 
 ### 捕抓 TCP SYN，ACK 和 FIN 包
 
-```sh
+```bash
 # 只捕抓TCP syn包：
 tcpdump -i eth0 "tcp[tcpflags] & (tcp-syn) != 0"
 
@@ -201,7 +201,7 @@ tcpdump -i ens3 not port 22 and not port 80 and "tcp[tcpflags] & (tcp-syn|tcp-ac
 
 ## arp
 
-```sh
+```bash
 arp -a
 
 # 不解析域名
@@ -215,7 +215,7 @@ arp -d 192.168.1.1
 
 监听网络上 ARP 的记录
 
-```sh
+```bash
 arpwatch -i enp27s0 -f arpwatch.log
 ```
 
@@ -223,44 +223,45 @@ arpwatch -i enp27s0 -f arpwatch.log
 
 建议使用 `ss` 参数差不多,更快,信息更全
 
-| 参数 | 操作                 |
-| ---- | -------------------- |
-| -a   | 所有                 |
-| -t   | tcp                  |
-| -u   | udp                  |
-| -n   | 不解析域名(提高速度) |
-| -p   | 进程                 |
-| -c   | 实时监控             |
-| -l   | LISTEN               |
-| -s   | 查看 TCP/UDP 状态    |
+| 参数 | 操作                  |
+| ---- | --------------------- |
+| -a   | 所有                  |
+| -t   | tcp                   |
+| -u   | udp                   |
+| -n   | 不解析域名(提高速度)  |
+| -p   | 进程                  |
+| -c   | 实时监控              |
+| -l   | LISTEN                |
+| -s   | 查看 TCP/UDP 状态     |
+| -i   | 查看 每个接口的包统计 |
 
 ### 统计 tcp 数量
 
-```sh
+```bash
 netstat -t | wc -l
 ```
 
 ### 显示 LISTEM 状态 tcp
 
-```sh
+```bash
 netstat -lt
 ```
 
 ### 不解析地址(提高速度)
 
-```sh
+```bash
 netstat -lnt
 ```
 
 ### 显示所有 LISTEM 状态 tcp,udp 进程
 
-```sh
+```bash
 netstat -tunlp
 ```
 
 ### 统计本地 tcp 链接数量
 
-```sh
+```bash
 netstat -tn | awk '{print $4}' | awk -F ":" '{print $1}' | sort | uniq -c
 ```
 
@@ -304,7 +305,7 @@ done
 
 ### 基本命令
 
-```sh
+```bash
 # 扫描指定ip端口
 nmap 127.0.0.1
 
@@ -334,13 +335,13 @@ nmap -p 80 127.0.0.1
 
 ### 显示本机网络，路由信息
 
-```sh
+```bash
 nmap --iflist
 ```
 
 ### 扫描文件内的 ip 地址
 
-```sh
+```bash
 cat > nmapfile << 'EOF'
 127.0.0.1
 192.168.1.1
@@ -372,7 +373,7 @@ nmap -PA 192.168.1.1
 
 注意 url 目录后要有`/`
 
-```sh
+```bash
 # 错误
 curl http://tzlog.com:8081/zrlog
 
@@ -380,7 +381,7 @@ curl http://tzlog.com:8081/zrlog
 curl http://tzlog.com:8081/zrlog/
 ```
 
-```sh
+```bash
 # 查看请求过程
 curl -v www.baidu.com
 
@@ -395,6 +396,13 @@ curl -x socks5://james:cats@myproxy.com:8080 https://www.example.com
 
 # 下载回应文件(类似于wget)
 curl -O https://st.suckless.org/patches/font2/st-font2-20190416-ba72400.diff
+
+# 查看 TTFB(首字节延迟)
+curl -o /dev/null \
+     -H 'Cache-Control: no-cache' \
+     -s \
+     -w "Connect: %{time_connect} TTFB: %{time_starttransfer} Total time: %{time_total} \n" \
+     https://www.baidu.com
 ```
 
 # reference
@@ -405,3 +413,5 @@ curl -O https://st.suckless.org/patches/font2/st-font2-20190416-ba72400.diff
 - [如何使用 tcpdump 来捕获 TCP SYN，ACK 和 FIN 包](https://linux.cn/article-3967-1.html)
 - [给 Linux 系统/网络管理员的 nmap 的 29 个实用例子](https://linux.cn/article-2561-3.html?pr)
 - [curl 的用法指南](http://www.ruanyifeng.com/blog/2019/09/curl-reference.html)
+
+- [nping](https://netbeez.net/blog/how-to-use-nping/)

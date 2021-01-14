@@ -4,6 +4,10 @@
 
 ## sysctl
 
+- [linux sysctl 每个字段文档](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt)
+
+- [linux net.netfilter 文档](https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
+
 sysctl 在运行时检查和更改内核参数的工具,在`procfs文件系统`(也就是`/proc`路径)中实现的
 
 - `sysctl net.foo=bar` 等于 `echo bar > /proc/sys/net/foo` ，重启后失效，如需持久化需配置 `/etc/sysctl.conf`
@@ -59,7 +63,7 @@ net.core.somaxconn = 4096
 
 - 一种 TCP 连接的机制
 
-- 在空闲时，TCP 向对方发送空数据的 keepalive 探测包，如果没有响应，socket 关闭。
+- 在空闲时，TCP 向对方发送空数据的 ack keepalive 探测包，如果没有响应，socket 关闭。
 
 - TCP keepalive 进程在发送第一个 keepalive 之前要等待两个小时（默认值 7200 秒），然后每隔 75 秒重新发送一次。只要 TCP/IP socket 通信正在进行并处于活动状态，就不需要 keepalive。
 
@@ -200,3 +204,14 @@ net.ipv4.tcp_keepalive_probes = 6
 
 - [What is TCP Fast Open?](https://www.keycdn.com/support/tcp-fast-open)
 - [网络参数详情](https://trello.com/b/CqjvMapu/best-practices)
+
+- [MTU](https://netbeez.net/blog/troubleshooting-mtu-issues/)
+- [MTU and TCP MSS](https://www.imperva.com/blog/mtu-mss-explained/)
+
+- [traceroute and ttl](https://netbeez.net/blog/traceroute/)
+
+- [tcp 三次握手,四次挥手详解](https://github.com/zqjflash/tcp-ip-protocol)
+
+- [http2 详解](https://github.com/zqjflash/http2-protocol)
+
+- [详解的 tcp 连接,丢包后的处理,keepalive,tcp window probes 丢包](https://blog.cloudflare.com/when-tcp-sockets-refuse-to-die/)

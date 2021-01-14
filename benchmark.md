@@ -570,6 +570,8 @@ sar -I ALL 1 10
 
 ## nmon
 
+![image](./Pictures/benchmark/nmon.png)
+
 # CPU
 
 ## cpu info

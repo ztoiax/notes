@@ -20,10 +20,12 @@
         * [awk](#awk)
         * [perl](#perl)
     * [other](#other)
+        * [xargs](#xargs)
         * [date](#date)
         * [fuser](#fuser)
         * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
     * [cron](#cron)
+    * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
         * [创建 RAID5](#创建-raid5)
         * [创建 RAID5,并设置备份磁盘](#创建-raid5并设置备份磁盘)
@@ -216,6 +218,12 @@ cat FILE |tr '\040' '\n'
 
 # 换成大写
 cat FILE | tr '[a-z]' '[A-Z]'
+
+# 只保留小写
+cat FILE | tr -dc a-z
+
+# 只保留英文和数字
+cat < /dev/urandom | tr -dc a-zA-Z0-9
 ```
 
 ### cut
@@ -394,6 +402,16 @@ perl -lane 'print @F[0,2..5]' test
 
 ## other
 
+### xargs
+
+```bash
+# -Iz 执行10次echo 1,可以换成其他命令
+seq 10 | xargs -Iz echo 1
+
+# -n 分段
+seq 10 | xargs -n 1
+```
+
 ### date
 
 ```bash
@@ -467,6 +485,21 @@ du -cha --max-depth=1 . | grep -E "M|G" | sort -h
 
 # 开启服务
 systemctl restart cronie.service
+```
+
+## 调整分区大小
+
+将 `sda1` 文件系统调整为 30G
+
+```bash
+e2fsck -f /dev/sda1
+resize2fs /dev/sda1 30G
+```
+
+最后再调整 `sda1` 的分区大小
+
+```bash
+fdisk /dev/sda
 ```
 
 ## mdadm(RAID)
