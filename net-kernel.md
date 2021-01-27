@@ -4,8 +4,8 @@
 
 ## sysctl
 
-- [linux sysctl 每个字段文档](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt)
-
+- [linux sysctl net 字段 文档](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt)
+- [linux sysctl 每个字段文档](https://sysctl-explorer.net/)
 - [linux net.netfilter 文档](https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
 
 sysctl 在运行时检查和更改内核参数的工具,在`procfs文件系统`(也就是`/proc`路径)中实现的
@@ -196,6 +196,16 @@ net.ipv4.tcp_keepalive_intvl = 10
 net.ipv4.tcp_keepalive_probes = 6
 ```
 
+关闭 tcp 慢启动:
+
+- 因为 http1.1 采用多连接和域名分片,当一些连接闲置时,连接的网速会下降
+
+- 以及 web 服务器的流量是间歇性
+
+```bash
+net.ipv4.tcp_slow_start_after_idle = 0
+```
+
 # reference
 
 - [Linux 网络调优：内核网络栈参数篇(这篇文章非常好，可语文表达不太清晰)](https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/#Linux_ingress)
@@ -205,12 +215,14 @@ net.ipv4.tcp_keepalive_probes = 6
 - [What is TCP Fast Open?](https://www.keycdn.com/support/tcp-fast-open)
 - [网络参数详情](https://trello.com/b/CqjvMapu/best-practices)
 
+- [7 层网络完整介绍](https://codeburst.io/understanding-tcp-internals-step-by-step-for-software-engineers-system-designers-part-1-df0c10b86449)
 - [MTU](https://netbeez.net/blog/troubleshooting-mtu-issues/)
 - [MTU and TCP MSS](https://www.imperva.com/blog/mtu-mss-explained/)
 
 - [traceroute and ttl](https://netbeez.net/blog/traceroute/)
 
-- [tcp 三次握手,四次挥手详解](https://github.com/zqjflash/tcp-ip-protocol)
+- [tcp 带图详解](https://www.ictshore.com/free-ccna-course/transmission-control-protocol-advanced/)
+- [tcp 三次握手,四次挥手 in wireshark](https://github.com/zqjflash/tcp-ip-protocol)
 
 - [http2 详解](https://github.com/zqjflash/http2-protocol)
 

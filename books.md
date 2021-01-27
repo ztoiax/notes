@@ -17,6 +17,7 @@
             * [和我一步步部署 kubernetes 集群](#和我一步步部署-kubernetes-集群)
             * [Docker + Kubernetes 微服务容器化实践](#docker--kubernetes-微服务容器化实践)
     * [其他相似项目](#其他相似项目)
+        * [free-programming-books](#free-programming-books)
         * [中文翻译 Road Map](#中文翻译-road-map)
         * [值得一看的技术类书籍列表](#值得一看的技术类书籍列表)
         * [统计开发者的免费服务的列表](#统计开发者的免费服务的列表)
@@ -57,9 +58,10 @@
 
 ## 其他相似项目
 
+### [free-programming-books](https://github.com/EbookFoundation/free-programming-books)
+
 ### [中文翻译 Road Map](https://github.com/xx-zh/xx-zh-roadmap)
 
 ### [值得一看的技术类书籍列表](https://github.com/doocs/technical-books#architecture)
 
 ### [统计开发者的免费服务的列表](https://github.com/ripienaar/free-for-dev)
-

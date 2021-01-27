@@ -58,7 +58,7 @@
     * [prettyping](#prettyping)
 * [other](#other)
     * [Termshark](#termshark)
-        * [wireshark cli version](#wireshark-cli-version)
+        * [wireshark cli version with vim keybinds](#wireshark-cli-version-with-vim-keybinds)
     * [baidupcs](#baidupcs)
         * [The terminal utility for Baidu Network Disk.](#the-terminal-utility-for-baidu-network-disk)
     * [bypy](#bypy)
@@ -250,7 +250,7 @@ sudo make O_NERD=1
 
 ## [Termshark](https://github.com/gcla/termshark)
 
-### wireshark cli version
+### wireshark cli version with vim keybinds
 
 ![image](./Pictures/awesomecli/1.png)
 

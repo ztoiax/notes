@@ -1,13 +1,13 @@
 <!-- vim-markdown-toc GFM -->
 
 * [Net](#net)
-    * [ip](#ip)
-        * [ip 别名(创建子接口)](#ip-别名创建子接口)
+    * [ip(iproute2)](#ipiproute2)
     * [ethtool](#ethtool)
     * [nmcli](#nmcli)
         * [交互模式](#交互模式)
     * [traceroute](#traceroute)
     * [tcptraceroute](#tcptraceroute)
+    * [nping](#nping)
     * [mtr](#mtr)
     * [tcpdump](#tcpdump)
         * [基本命令](#基本命令)
@@ -19,6 +19,7 @@
         * [显示 LISTEM 状态 tcp](#显示-listem-状态-tcp)
         * [不解析地址(提高速度)](#不解析地址提高速度)
         * [显示所有 LISTEM 状态 tcp,udp 进程](#显示所有-listem-状态-tcpudp-进程)
+        * [显示所有 tcp,udp 进程](#显示所有-tcpudp-进程)
         * [统计本地 tcp 链接数量](#统计本地-tcp-链接数量)
     * [ss (iproute2)](#ss-iproute2)
     * [nc](#nc)
@@ -27,27 +28,133 @@
         * [显示本机网络，路由信息](#显示本机网络路由信息)
         * [扫描文件内的 ip 地址](#扫描文件内的-ip-地址)
         * [使用 tmp 扫描](#使用-tmp-扫描)
+    * [ngrep](#ngrep)
     * [curl](#curl)
         * [基本命令](#基本命令-2)
+    * [nghttp](#nghttp)
+    * [h2spec](#h2spec)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
 
 # Net
 
-## ip
+- [ ] net-tools
 
-- `ip a` 查看 interface
-- `ip route show` 查看默认路由
-- `sudo ip link set eth1 up` 开启`eth0`接口
-- `sudo ip link set eth1 down` 关闭`eth0`接口
+  > 使用 `ioctl` 系统调用,和通过 `/proc` 目录读取数据
 
-### ip 别名(创建子接口)
+- [x] iproute2(推荐)
+  > 使用 `netlink` 内核接口获取数据,比 `ioctl` 要好
 
-`ip addr add 1.1.1.1/24 dev eth0 label eth0:0` 新增 ip 为`1.1.1.1` 的子接口
+| net-tools        | iproute2                |
+| ---------------- | ----------------------- |
+| ifconfig         | ip addr, ip link, ip -s |
+| route            | ip route                |
+| arp              | ip neigh                |
+| iptunnel         | ip tunnel               |
+| nameif, ifrename | ip link set name        |
+| ipmaddr          | ip maddr                |
+| netstat          | ip -s, ss, ip route     |
+| brctl            | bridge                  |
+
+## ip(iproute2)
+
+| 参数    | 简写 |
+| ------- | ---- |
+| link    | l    |
+| address | a    |
+| route   | r    |
+| neigh   | n    |
 
 ```bash
-# 永久修改
+# 只查看ip地址
+ip -brief -c address
+
+# 只查看mac地址
+ip -br -c link
+```
+
+- ip address
+
+```bash
+# 查看 interface
+ip address
+# 或者
+ip a
+
+# 查看eth0
+ip a show dev eth0
+
+# -s 查看详细信息,类似ifconfig
+ip -s a
+
+# watch命令每秒监控
+watch -d -n 1 ip -s a
+
+# 新增 ip 为 1.1.1.1
+ip a add 1.1.1.1/24 dev eth0
+
+# 新增 ip 为 2.2.2.2 并添加标签eth0:0
+ip a add 2.2.2.2/24 dev eth0 label eth0:0
+
+# 删除刚才新增的ip
+ip a del 1.1.1.1/24 dev enp27s0
+ip a del 2.2.2.2/24 dev enp27s0
+```
+
+- ip route
+
+```bash
+# 查看默认路由
+ip route
+
+# 新增路由
+ip route add 1.1.1.0/24 via 192.168.1.1
+
+# 新增 eth0设备的路由
+ip route add 1.1.1.0/24 via 192.168.1.1 dev eth0
+
+# 新增 eth0设备的默认路由
+ip route add default via 192.168.1.1 dev eth0
+
+# 删除路由
+ip route del 1.1.1.0/24
+
+# 删除默认路由
+ip route del default
+```
+
+- ip link
+
+```bash
+# 开启 eth0 接口
+ip link set eth0 up
+
+# 关闭 eth0 接口
+ip link set eth0 down
+
+# 修改 mtu 为9000
+ip link set mtu 9000 dev eth0
+```
+
+- ip neigh(arp 表)
+
+```bash
+# 可以先用 nmap 扫描网段,在执行
+ip neigh
+
+# -s 详细信息
+ip -s neigh
+
+# flush删除192.168.1.101的arp条目
+ip -s -s neigh flush 192.168.1.101
+# 或者
+ip -s -s n f 192.168.1.101
+```
+
+永久修改 ip
+
+```bash
 cat > /etc/sysconfig/network-scripts/ifcfg-eth0:0 << 'EOF'
 DEVICE=eth0:0
 IPADDR=1.1.1.1
@@ -112,6 +219,32 @@ save
 ## tcptraceroute
 
 tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过最常见的防火墙的过滤。正如该命令的手册页所述，tcptraceroute 发送 TCP SYN 数据包而不是 UDP 或 ICMP ECHO 数据包，所以其不易被阻塞。
+
+## nping
+
+- 代替 ping
+
+| 参数 | 操作       |
+| ---- | ---------- |
+| -c   | 发送多少次 |
+
+```bash
+# icmp echo request(等同于ping)
+nping --icmp -c 3 www.baidu.com
+
+# tcp连接(三次握手)
+nping --tcp-connect -c 3 -p 80,443 baidu.com
+
+# tcp syn
+nping --tcp -c 2 --flags syn -p 80 baidu.com
+
+# --ttl 设置ttl
+nping --tcp -c 2 --flags syn --ttl 10 -p 80 baidu.com
+
+# --win指定tcp窗口大小
+nping --tcp -c 2 --win 1600 -p 80 baidu.com
+
+```
 
 ## mtr
 
@@ -221,7 +354,8 @@ arpwatch -i enp27s0 -f arpwatch.log
 
 ## netstat
 
-建议使用 `ss` 参数差不多,更快,信息更全
+- 建议使用 `ss` 参数差不多,更快,信息更全
+- 建议开启 `sudo` 不然不会显示端口对应的程序命令
 
 | 参数 | 操作                  |
 | ---- | --------------------- |
@@ -255,8 +389,18 @@ netstat -lnt
 
 ### 显示所有 LISTEM 状态 tcp,udp 进程
 
+进程显示 `-` 表示该连接为内核处理
+
 ```bash
 netstat -tunlp
+```
+
+### 显示所有 tcp,udp 进程
+
+```bash
+netstat -tunap
+#or
+netstat -ap | grep -v unix
 ```
 
 ### 统计本地 tcp 链接数量
@@ -267,9 +411,14 @@ netstat -tn | awk '{print $4}' | awk -F ":" '{print $1}' | sort | uniq -c
 
 ## ss (iproute2)
 
+> 基本等同于 `netstat` 工作在 `socket` 层,没有 `-n` 选项,因此不能显示域名
+
 ```bash
-ss -tlp
-ss -tlpa
+# 显示所有 LISTEM 状态 tcp,udp 进程
+ss -tulp
+
+# 显示所有 tcp,udp 进程
+ss -tuap
 ```
 
 ## nc
@@ -367,6 +516,34 @@ nmap -sU 192.168.1.1
 nmap -PA 192.168.1.1
 ```
 
+## ngrep
+
+```bash
+# icmp(ping)包
+ngrep -q '.' 'icmp'
+
+# 包含百度的
+ngrep -q '.' 'host www.baidu.com'
+
+# http1.0 or 1.1
+ngrep -q 'HTTP/1.[01]'
+
+# http1.0 or 1.1的get请求
+ngrep -q '^GET .* HTTP/1.[01]'
+
+# 22端口
+ngrep port 22
+
+# 在80端口,任何包含"error"信息
+ngrep -d any 'error' port 80
+
+# -W byline 文本友好显示
+ngrep -W byline port 80
+
+# -t 显示时间
+ngrep -t -W byline port 80
+```
+
 ## curl
 
 ### 基本命令
@@ -382,6 +559,12 @@ curl http://tzlog.com:8081/zrlog/
 ```
 
 ```bash
+# 包含响应头部
+curl -i www.baidu.com
+
+# 只显示响应头部
+curl -I www.baidu.com
+
 # 查看请求过程
 curl -v www.baidu.com
 
@@ -403,6 +586,29 @@ curl -o /dev/null \
      -s \
      -w "Connect: %{time_connect} TTFB: %{time_starttransfer} Total time: %{time_total} \n" \
      https://www.baidu.com
+
+# 查看 包含tls的请求过程,和是否支持http2
+curl -vso /dev/null --http2 https://www.bilibili.com
+```
+
+## nghttp
+
+> 测试网站是否支持 http2
+
+在线测试网站:
+
+- [ssltest](https://www.ssllabs.com/ssltest/)
+
+```bash
+nghttp -nva www.bilibili.com
+```
+
+## [h2spec](https://github.com/summerwind/h2spec)
+
+测试服务器 http2 一致性
+
+```bash
+h2spec -t -S -h www.bilibili.com -p 443
 ```
 
 # reference

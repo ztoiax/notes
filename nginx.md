@@ -691,9 +691,20 @@ git clone https://github.com/openresty/echo-nginx-module.git module/echo-nginx-m
 # 国内下载地址
 git clone https://gitee.com/mirrors/echo-nginx-module.git module/echo-nginx-module
 
+# 模块
+# ssl
+--with-http_ssl_module
+# regex正则表达式
+--with-pcre
+# 状态页面
+--with-http_stub_status_module
+
 # 设置安装目录 和 安装模块
 ./configure --prefix=/usr/local/nginx \
     --add-module=./module/echo-nginx-module \
+    --with-http_ssl_module \
+    --with-pcre \
+    --with-http_stub_status_module \
     --with-debug
 
 # 编译
@@ -952,3 +963,5 @@ touch /var/log/php-fpm/php_errors.log
 - [你还记得 Tomcat 的工作原理么](https://zhuanlan.zhihu.com/p/248426114)
 - [CentOS 安装 MySQL 详解](https://juejin.im/post/6844903870053761037)
 - [Tomcat 基础架构——jdk、java、zrlog](https://my.oschina.net/u/3851633/blog/1858422)
+- [nginx ssl 配置](https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1d&guideline=5.6)
+- [测试网站是否支持 http2 和 alpn](https://tools.keycdn.com/http2-test)

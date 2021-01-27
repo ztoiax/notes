@@ -283,7 +283,7 @@ perf stat -e 'syscalls:sys_enter_*' ls 2>&1 | awk '$1 != 0'
 record 会保存为 `perf.data` 文件, 使用 perf report 命令显示:
 
 ```bash
-perf record -F 99 ls
+perf record -g ls
 perf report
 # 树形文本显示
 perf report --stdio
@@ -294,7 +294,7 @@ perf report --stdio
 from brendangregg:
 
 ```bash
-perf record -F 99 ls
+perf record -F 99 -g ls
 # 生成火焰图
 perf script | stackcollapse-perf.pl | flamegraph.pl > perf.svg
 

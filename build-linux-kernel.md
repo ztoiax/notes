@@ -24,7 +24,7 @@ make nconfig
 make menuconfig
 
 # 编译
-make -j$(nproc)
+sudo make -j$(nproc)
 sudo make modules_install
 
 # 将内核,复制到boot分区

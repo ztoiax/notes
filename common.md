@@ -292,6 +292,8 @@ ps aux | sed '1p;/nginx/!d'
 
 ### awk
 
+- [awk 中文指南](https://awk.readthedocs.io/en/latest/index.html)
+
 > 可以代替 grep,sed
 
 - `$NF` 最后 1 列
