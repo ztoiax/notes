@@ -28,6 +28,7 @@
         * [显示本机网络，路由信息](#显示本机网络路由信息)
         * [扫描文件内的 ip 地址](#扫描文件内的-ip-地址)
         * [使用 tmp 扫描](#使用-tmp-扫描)
+    * [socat](#socat)
     * [ngrep](#ngrep)
     * [curl](#curl)
         * [基本命令](#基本命令-2)
@@ -59,12 +60,13 @@
 
 ## ip(iproute2)
 
-| 参数    | 简写 |
-| ------- | ---- |
-| link    | l    |
-| address | a    |
-| route   | r    |
-| neigh   | n    |
+| 参数    | 简写 | 内容     |
+| ------- | ---- | -------- |
+| link    | l    | 接口     |
+| address | a    | 地址     |
+| route   | r    | 路由     |
+| neigh   | n    | arp      |
+| netns   |      | 命名空间 |
 
 ```bash
 # 只查看ip地址
@@ -150,6 +152,18 @@ ip -s neigh
 ip -s -s neigh flush 192.168.1.101
 # 或者
 ip -s -s n f 192.168.1.101
+```
+
+- ip netns(命名空间)
+
+path: `/var/run/netns`
+
+```bash
+# 新建enp1
+ip netns add enp1
+
+# 查看命名空间
+ip netns list
 ```
 
 永久修改 ip
@@ -514,6 +528,18 @@ nmap -sU 192.168.1.1
 
 # TCP ACK
 nmap -PA 192.168.1.1
+```
+
+## socat
+
+```bash
+# 文件传输
+socat /etc/fstab TCP4-LISTEN:55,reuseaddr
+# -u 单次连接
+socat -u /etc/fstab TCP4-LISTEN:55,reuseaddr
+
+# 端口转发
+socat TCP4-LISTEN:81,fork TCP4:127.0.0.1:80
 ```
 
 ## ngrep

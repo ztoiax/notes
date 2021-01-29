@@ -5,6 +5,7 @@
         * [Program Language](#program-language)
             * [《Mastering GO》(玩转 GO)](#mastering-go玩转-go)
             * [《现代 C++ 教程：高速上手 C++11/14/17/20》](#现代-c-教程高速上手-c11141720)
+            * [《Scheme 入门教程》](#scheme-入门教程)
         * [数据库](#数据库)
             * [《Redis 使用手册》](#redis-使用手册)
             * [《Redis 设计与实现》部分试读](#redis-设计与实现部分试读)
@@ -33,6 +34,8 @@
 #### [《Mastering GO》(玩转 GO)](https://wskdsgcf.gitbook.io/mastering-go-zh-cn/)
 
 #### [《现代 C++ 教程：高速上手 C++11/14/17/20》](https://changkun.de/modern-cpp/zh-cn/00-preface/)
+
+#### [《Scheme 入门教程》](https://github.com/DeathKing/yast-cn)
 
 ### 数据库
 

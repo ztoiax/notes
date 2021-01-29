@@ -71,6 +71,8 @@
         * [pixel-by-pixel image difference tool.](#pixel-by-pixel-image-difference-tool)
     * [onedrive](#onedrive)
         * [本地同步 onedrive](#本地同步-onedrive)
+    * [xonsh](#xonsh)
+        * [python shell](#python-shell)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -277,6 +279,12 @@ sudo make O_NERD=1
 ## [onedrive](https://github.com/skilion/onedrive)
 
 ### 本地同步 onedrive
+
+## [xonsh](https://github.com/xonsh/xonsh)
+
+![image](./Pictures/awesomecli/xonsh.png)
+
+### python shell
 
 # reference
 
