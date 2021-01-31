@@ -15,6 +15,9 @@ docker info
 # 查看容器运行信息
 docker inspect CONTAINER_ID
 
+# 查看容器写入层的diff(类似git diff)
+docker diff CONTAINER_ID
+
 # 查看容器镜像信息
 docker history IMAGE_ID
 
@@ -46,80 +49,95 @@ docker serch opensuse
 docker rename CONTAINER_ID New_name
 ```
 
-| 参数            | 操作                   |
-| --------------- | ---------------------- |
-| -i              | 开启 STDIN             |
-| -t              | 分配一个伪 tty         |
-| -v              | 卷挂载(目录映射)       |
-| --volumes-from= | 加入其它容器的卷       |
-| -d              | daemon 后台运行        |
-| -p              | 端口映射               |
-| -P              | 随机端口               |
-| --name          | 自定义命名             |
-| --net=          | 指定网卡               |
-| `--net=host`    | 与本地网络同一命名空间 |
-| `--net=none`    | 不指定网络             |
-| -m              | 限制内存               |
-| -c              | 限制 cpu 使用率        |
-| --cpuset-cpus   | 指定 cpu               |
-| --device        | 运行访问指定设备       |
-| --privileged    | 运行访问所有设备       |
-| --read-only     | 只读                   |
-| --pid=host      | 与本地进程同一命名空间 |
+## docker run
+
+- [docker run 官方文档](https://docs.docker.com/engine/reference/commandline/run/)
+
+| 参数           | 简写           | 操作               |
+| -------------- | -------------- | ------------------ |
+| --interactive  | -i             | 开启 STDIN         |
+| --tty          | -t             | 分配一个伪 tty     |
+| --detach       | -d             | daemon 后台运行    |
+| -v             | -v             | 卷挂载(目录映射)   |
+| --volumes-from | --volumes-from | 加入其它容器的卷   |
+| --publish      | -p             | 端口映射           |
+| --publish-all  | -P             | 随机端口           |
+| --hostname     | -h             | 设置容器 hostname  |
+| --link         | --link         | 连接其他容器       |
+| --rm           | --rm           | 退出时自动删除容器 |
+| --expose       | --expose       | 暴露端口           |
+
+---
 
 ```bash
 # 运行容器opensuse,并命名为opensuse_1
 docker run --name opensuse_1 \
     -it opensuse /bin/bash
+
 # -it 默认是/bin/bash
 docker run --name opensuse_1 \
     -it opensuse
 
+# --rm 退出后自动删除容器
+docker run --rm \
+    --name opensuse_1 \
+    -it opensuse
+
 # -v 创建数据卷(如果目录不存在,会自动创建)
-docker run -v /tmp/test\
-    --name opensuse_1 -it opensuse
+docker run -v /tmp/test \
+    --rm --name opensuse_1 -it opensuse
 # 目录映射
-docker run-v /tmp/test:/tmp/test\
-    --name opensuse_1  -it opensuse
+docker run -v /tmp/test:/tmp/test \
+    --rm --name opensuse_1  -it opensuse
 
-# -m 限制内存
-docker run -m 300M \
-    -it opensuse
-
-# -c 限制cpu使用率,100%是1024(这里是限制50%)
-docker run -c 512 \
-    -it opensuse
-
-# --cpuset-cpus 指定cpu
-docker run --cpuset-cpus=0,4,6 \
-    -it opensuse
-
-# --device 运行访问指定设备
-docker run --device=/dev/sda1 \
-    -it opensuse
-
-# --privileged 运行访问所有设备
-docker run --privileged \
-    -it opensuse
+# 容器内只读
+docker run -v /tmp/test:/tmp/test:ro \
+    --rm --name opensuse_1  -it opensuse
 
 # -p 端口映射
-docker run -p 8080:80\
-    -it nginx
+docker run -p 8080:80 \
+    --rm -it nginx
 
 # 指定回环ip(默认是0.0.0.0)
-docker run -p 127.0.0.1:8080:80\
-    -it nginx
+docker run -p 127.0.0.1:8080:80 \
+    --rm -it nginx
 
 # 指定回环ip,但本地端口随机分配
-docker run -p 127.0.0.1::80\
-    -it nginx
+docker run -p 127.0.0.1::80 \
+    --rm -it nginx
+```
 
-# --pid=host 与本地同一命名空间
-docker run --pid=host\
-    -it opensuse
+`--link` 连接容器
 
+**注意:**
+
+- 1.link 是不能递归连接容器的
+
+  - a->b->c
+
+  - 以上 b 容器 link c, 但 a 容器只会 link b,
+
+- 2.link 是根据 ip 地址,进行连接
+
+  - 连接容器 ip 的改变,会使连接失效
+
+- 3.link 只能 link,运行的容器
+
+  - 假设容器 stop,连接失效
+
+```bash
+# 启动redis数据库容器
+docker run --name data
+    -itd redis
+
+# 连接redis
+docker run --link data:db \
+    -it centos
+```
+
+```bash
 # -d 后台运行命令
-docker exec -d opensuse_1\
+docker exec -d opensuse_1 \
     touch /tmp/test
 
 # 创建一个新的 bash 会话
@@ -127,6 +145,7 @@ docker exec opensuse_1 -it bash
 
 # 在容器里,查看环境变量
 cat /etc/hosts
+env
 
 # 附着opensuse_1,(注意附着退出后,容器也会退出)
 docker attach opensuse_1
@@ -141,13 +160,126 @@ docker run --log-driver="syslog"\
     --name opensuse_1 -it opensuse /bin/bash
 ```
 
+### cgroup(资源限制)
+
+| cgroup 相关参数 | 简写          | 操作             |
+| --------------- | ------------- | ---------------- |
+| --memory        | -m            | 限制内存         |
+| --cpu-shares    | -c            | 限制 cpu 使用率  |
+| --name          | --name        | 自定义命名       |
+| --cpuset-cpus   | --cpuset-cpus | 指定 cpu         |
+| --read-only     | --read-only   | 只读             |
+| --device        | --device      | 运行访问指定设备 |
+| --privileged    | --privileged  | 运行访问所有设备 |
+
+---
+
+`-c` 代表相对权限(限制 cpu 使用率)
+
+- 1.刚才开始权限为 0
+
+- 2.此时开启 opensuse 容器
+
+  - 总权限为 512
+
+  - 而 opensuse 容器的 cpu 使用率 100%
+
+```bash
+docker run -c 512 \
+    --rm -it opensuse
+```
+
+- 3.再次开启一个 1024 相对权限的 centos 容器
+
+  - 总权限为 1024+512
+
+  - 那么 opensuse 使用率为 33%
+
+  - 而 centos 为 66%
+
+```bash
+docker run -c 1024 \
+    --rm -it centos
+```
+
+- 4.注意:相对权限是在负载的情况下生效
+  - 假设 centos 没有负载,那么 opensuse 使用率可达 100%
+
+```bash
+# --cpuset-cpus 指定cpu(减少上下文切换的开销)
+docker run --cpuset-cpus=0,4,6 \
+    --rm -it opensuse
+
+# -m 限制内存
+docker run -m 300M \
+    --rm -it opensuse
+
+# --device 运行访问指定设备
+docker run --device=/dev/sda1 \
+    --rm -it opensuse
+
+# --privileged 运行访问所有设备
+docker run --privileged \
+    --rm -it opensuse
+```
+
+### namespace(命名空间)
+
+| 命名空间相关参数 | 操作         |
+| ---------------- | ------------ |
+| --net            | 指定网卡     |
+| `--net=none`     | 不指定网卡   |
+| --pid            | pid          |
+| --user           | 指定用户和组 |
+
+---
+
+`host` 表示与本地主机同一命名空间
+
+```bash
+docker run --pid=host \
+    --rm -it opensuse
+
+docker run --net=host \
+    --rm -it opensuse
+
+# 绕过部分sysctls
+docker run --ipc=host \
+    --rm -it opensuse
+```
+
+设置同一 `ipc` ,方便共享内存
+
+```bash
+docker run --name opensuse_c1 \
+    --rm -it opensuse
+
+docker run --ipc=container:opensuse_c1 \
+    --name centos_c1 \
+    --rm -it centos
+```
+
+指定 user
+
+```bash
+docker run -u=1000 \
+    --rm -it centos
+```
+
+Capability:
+
+```bash
+docker run --cap-add=ALL --cap-drop=MKNOD \
+    --rm -it opensuse
+```
+
 ## 容器导入导出
 
 **导出:**
 
 ```bash
-docker run --name centos_export\
-    -it centos
+docker run --name centos_export \
+    --rm -it centos
 
 # 导出
 docker export centos_export > centos_export.tar
@@ -207,6 +339,20 @@ docker run -v /data \
 docker run --volumes-from=centos_data \
     -v $(pwd)/backup:/backup \
     busybox tar xvzf /backup/backup.tar.gz -C /data
+```
+
+## 容器自定义 ip
+
+```bash
+# 创建新网络test
+docker network create --subnet=172.18.0.0/16 test
+
+# 查看
+docker network ls
+
+# 指定ip
+docker run --net test --ip "172.18.0.10" \
+    --rm -it centos
 ```
 
 ## 容器之间的网络隔离

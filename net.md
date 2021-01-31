@@ -532,14 +532,46 @@ nmap -PA 192.168.1.1
 
 ## socat
 
-```bash
-# 文件传输
-socat /etc/fstab TCP4-LISTEN:55,reuseaddr
-# -u 单次连接
-socat -u /etc/fstab TCP4-LISTEN:55,reuseaddr
+- [韦一笑](https://www.zhihu.com/people/tzxiao)
 
-# 端口转发
-socat TCP4-LISTEN:81,fork TCP4:127.0.0.1:80
+```bash
+# 测试两台机器的tcp连接
+socat - TCP-LISTEN:8080    # server listen
+socat - TCP:localhost:8080 # client connect
+
+# 允许多条连接
+socat - TCP-LISTEN:8080,fork,reuseaddr
+
+# 连接后执行命令
+socat TCP-LISTEN:8081,fork,reuseaddr  EXEC:/usr/bin/ls
+socat TCP-LISTEN:8080,fork,reuseaddr  EXEC:/usr/bin/bash
+
+# 远程登陆
+socat TCP-LISTEN:8080,fork,reuseaddr  EXEC:/usr/bin/bash,pty,stderr # server
+socat file:`tty`,raw,echo=0 TCP:localhost:8080 # client
+
+# 8080端口转发到80
+socat TCP-LISTEN:8080,fork,reuseaddr  TCP:127.0.0.1:80
+
+# sock代理,将1234流量,通过127.0.0.1:10808,连接到google.com:80
+socat TCP-LISTEN:1234,fork SOCKS4A:127.0.0.1:google.com:80,socksport=10808
+# http代理
+socat TCP-LISTEN:1234,fork PROXY:127.0.0.1:google.com:80,socksport=10808
+
+# 文件下载
+socat /etc/fstab TCP4-LISTEN:8080,reuseaddr
+# fork允许多条连接
+socat /etc/fstab TCP4-LISTEN:8080,fork,reuseaddr
+
+# 服务端接收文件
+socat -u TCP-LISTEN:8080 open:FILE_NAME,create
+# 客户端发送文件
+socat -u open:FILE_NAME TCP:localhost:8080
+
+# 测试两台机器的udp连接
+socat - UDP-LISTEN:8080
+socat - UDP:localhost:8080
+socat - UDP-LISTEN:8080,fork,reuseaddr
 ```
 
 ## ngrep
