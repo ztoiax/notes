@@ -32,6 +32,7 @@
     * [ngrep](#ngrep)
     * [curl](#curl)
         * [基本命令](#基本命令-2)
+    * [testssl](#testssl)
     * [nghttp](#nghttp)
     * [h2spec](#h2spec)
 * [reference](#reference)
@@ -649,6 +650,14 @@ curl -o /dev/null \
 curl -vso /dev/null --http2 https://www.bilibili.com
 ```
 
+## testssl
+
+> 测试网站的 tls
+
+```bash
+testssl --parallel https://www.tsinghua.edu.cn/
+```
+
 ## nghttp
 
 > 测试网站是否支持 http2
@@ -658,7 +667,10 @@ curl -vso /dev/null --http2 https://www.bilibili.com
 - [ssltest](https://www.ssllabs.com/ssltest/)
 
 ```bash
-nghttp -nva www.bilibili.com
+nghttp -nva https://www.bilibili.com
+
+# -t timeout
+nghttp -nva -t 1 https://www.bilibili.com
 ```
 
 ## [h2spec](https://github.com/summerwind/h2spec)

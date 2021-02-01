@@ -4,6 +4,22 @@
 
 - volumes 保存在`/var/lib/docker/volumes`
 
+普通用户使用 docker,出现以下权限错误
+`Got permission denied ... /var/run/docker.sock: connect: permission denied`
+
+修复:
+
+```bash
+# 将用户添加到docker组
+sudo usermod -aG docker $USER
+
+# 重启docker
+sudo systemctl restart docker
+
+# 重新登陆
+logout
+```
+
 ## 基本命令
 
 ![image](./Pictures/kubernetes-docker/cmd_logic.png)
@@ -18,7 +34,7 @@ docker inspect CONTAINER_ID
 # 查看容器写入层的diff(类似git diff)
 docker diff CONTAINER_ID
 
-# 查看容器镜像信息
+# 查看容器镜像构建信息
 docker history IMAGE_ID
 
 # 查看端口映射
@@ -61,11 +77,12 @@ docker rename CONTAINER_ID New_name
 | -v             | -v             | 卷挂载(目录映射)   |
 | --volumes-from | --volumes-from | 加入其它容器的卷   |
 | --publish      | -p             | 端口映射           |
-| --publish-all  | -P             | 随机端口           |
+| --publish-all  | -P             | 所有端口           |
 | --hostname     | -h             | 设置容器 hostname  |
 | --link         | --link         | 连接其他容器       |
 | --rm           | --rm           | 退出时自动删除容器 |
 | --expose       | --expose       | 暴露端口           |
+| --workdir      | -w             | 修改工作目录       |
 
 ---
 
@@ -170,7 +187,7 @@ docker run --log-driver="syslog"\
 | --cpuset-cpus   | --cpuset-cpus | 指定 cpu         |
 | --read-only     | --read-only   | 只读             |
 | --device        | --device      | 运行访问指定设备 |
-| --privileged    | --privileged  | 运行访问所有设备 |
+| --privileged    | --privileged  | root 身份        |
 
 ---
 
@@ -409,12 +426,86 @@ ip netns exec $v1 ip route add 10.1.1.2/32 dev e1
 ip netns exec $v2 ip route add 10.1.1.1/32 dev e2
 ```
 
-## 创建容器
+## Dockerfile 创建容器镜像
+
+通过 commit,修改过的容器,创建新的镜像(**不推荐**)
 
 ```bash
-# 创建修改过的容器tz/opensuse
 docker commit CONTAINER_ID tz/opensuse
 ```
+
+Dockerfile:
+
+| 命令       | 操作     | 能否被覆盖       |
+| ---------- | -------- | ---------------- |
+| ENV        | 环境变量 | run --env        |
+| ENTRYPOINT | 入口命令 | run --entrypoint |
+| WORKDIR    | 工作目录 | run -w           |
+| USER       | 用户     | run -u           |
+
+- 注意:
+
+  - ADD, COPY 路径是以 Dockerfile 下的目录开始
+
+  - ADD 命令可以通过 url 进行远程复制
+
+  - ADD 命令复制 tar 文件时,会自动解压
+
+  - 尽可能用 COPY
+
+在容器里的 linux 使用变量
+
+```docker
+FROM alpine
+
+RUN  a="$(date)"
+RUN  echo "$a"
+```
+
+- 构建属于自己的 centos 容器:
+
+  - 更换 ali 源
+
+  - 安装基本软件
+
+步骤:
+
+- 1.将以下内容保存为`dockerfile`
+
+```docker
+FROM centos
+
+ARG pkg=yum
+ENV install="$pkg install -y"
+
+# 安装epel源,并修改为ali源
+COPY source.sh /root
+
+RUN chmod 755 /root/source.sh && \
+    /root/source.sh $pkg
+
+# 安装基本软件
+RUN $install fish neovim
+```
+
+- 2.下载[更换源脚本](https://github.com/ztoiax/userfulscripts/blob/master/source.sh) 到 dockerfile 文件的目录
+
+```bash
+curl -LO https://github.com/ztoiax/userfulscripts/blob/master/source.sh
+```
+
+- 3.构建
+
+```bash
+docker build -t tz/centos .
+
+# 查看镜像构建信息
+docker history tz/centos
+```
+
+[docker hub 基于 github 自动构建](https://docs.docker.com/docker-hub/builds/link-source/)
+
+## registry
 
 创建本地 `registry`
 
