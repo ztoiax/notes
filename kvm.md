@@ -130,3 +130,15 @@ virsh net-undefine SOURCEname
 ```
 
 And then do it again
+
+# 第三方软件资源
+
+## [kvmtop](https://github.com/cha87de/kvmtop)
+
+## [kvm management with wei ui](https://github.com/kimchi-project/kimchi)
+
+# 优秀文章
+
+## [QEMU KVM 学习笔记](https://yifengyou.gitbooks.io/learn-kvm/content/)
+
+## [learn-kvm](https://github.com/yifengyou/learn-kvm)

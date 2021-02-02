@@ -17,6 +17,7 @@
             * [[Kubernetes 中文指南/云原生应用架构实践手册(https://jimmysong.io/kubernetes-handbook/)](#kubernetes-中文指南云原生应用架构实践手册httpsjimmysongiokubernetes-handbook)
             * [和我一步步部署 kubernetes 集群](#和我一步步部署-kubernetes-集群)
             * [Docker + Kubernetes 微服务容器化实践](#docker--kubernetes-微服务容器化实践)
+            * [QEMU KVM 学习笔记](#qemu-kvm-学习笔记)
     * [其他相似项目](#其他相似项目)
         * [free-programming-books](#free-programming-books)
         * [中文翻译 Road Map](#中文翻译-road-map)
@@ -58,6 +59,8 @@
 #### [和我一步步部署 kubernetes 集群](https://k8s-install.opsnull.com/)
 
 #### [Docker + Kubernetes 微服务容器化实践](https://github.com/liuyi01/kubernetes-starter)
+
+#### [QEMU KVM 学习笔记](https://yifengyou.gitbooks.io/learn-kvm/content/)
 
 ## 其他相似项目
 
