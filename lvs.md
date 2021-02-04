@@ -330,11 +330,11 @@ track_script {
 
   - 虚拟 ip 也移动到 centos
 
-    <figure class="video_container">
-        <video controls="true" allowfullscreen="true" poster="./Pictures/lvs/config1.webm">
-            <source src="./Pictures/lvs/config1.webm" type="video/webm">
-        </video>
-    </figure>
+<figure class="video_container">
+    <video controls="true" allowfullscreen="true" poster="./Pictures/lvs/config1.webm">
+        <source src="./Pictures/lvs/config1.webm" type="video/webm">
+    </video>
+</figure>
 
     ![image](./Pictures/lvs/config1.webm)
 
