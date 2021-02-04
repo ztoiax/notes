@@ -6,6 +6,9 @@
     * [DNS](#dns)
         * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
     * [rkhunter(rookit 检查)](#rkhunterrookit-检查)
+    * [nfs](#nfs)
+    * [cron](#cron)
+    * [anacron](#anacron)
 
 <!-- vim-markdown-toc -->
 
@@ -116,4 +119,99 @@ ngrep port 853
 
 ```bash
 sudo rkhunter --check
+```
+
+## nfs
+
+两端安装 nfs
+
+```bash
+yum install -y nfs-utils
+```
+
+- server:
+
+只允许 `192.168.100.0/24` 访问
+
+```bash
+cat >> /etc/exports <<'EOF'
+root/test      192.168.100.0/24(rw,sync)
+EOF
+
+# 更新
+exportfs -arv
+
+# 更新nfs
+systemctl reload nfs
+```
+
+- clinent:
+
+```bash
+mount 192.168.100.208:/root/test test
+```
+
+## cron
+
+开启服务
+
+```bash
+systemctl start cronie.service
+```
+
+- [在线计算工具](https://tool.lu/crontab/)
+
+```bash
+# .---------------- 分 (0 - 59)
+# |  .------------- 时 (0 - 23)
+# |  |  .---------- 日 (1 - 31)
+# |  |  |  .------- 月 (1 - 12)
+# |  |  |  |  .---- 星期 (0 - 7) (星期日可为0或7)
+# |  |  |  |  |
+# *  *  *  *  * 执行的命令
+```
+
+- `sudo crontab -e` #编辑 root 的任务
+- `crontab -e` #编辑当前用户的任务
+- `crontab -l` #显示任务
+- `crontab -r` #删除所有任务
+
+```
+* * * * * COMMAND      # 每分钟
+*/5 * * * * COMMAND    # 每5分钟
+
+0 * * * * COMMAND      # 每小时
+0,5,10 * * * * COMMAND # 每小时运行三次，分别在第 0、 5 和 10 分钟运行
+
+0 0 * * * COMMAND      # 每日凌晨0点执行
+0 3 * * * COMMAND      # 每日凌晨3点执行
+
+0 0 1 * * COMMAND      # 每月1号0点执行
+0 3 1-10 * * COMMAND   # 每月1日到10日凌晨3点执行
+
+0 0 * * 1 COMMAND      # 每周一0点执行
+```
+
+## anacron
+
+- 配置文件: `/etc/anacrontab`
+
+| cron                         | anacron                                                              |
+| ---------------------------- | -------------------------------------------------------------------- |
+| 它是守护进程                 | 它不是守护进程                                                       |
+| 适合服务器                   | 适合桌面/笔记本电脑                                                  |
+| 可以让你以分钟级运行计划任务 | 只能让你以天为基础来运行计划任务                                     |
+| 关机时不会执行计划任务       | 如果计划任务到期，机器是关机的，那么它会在机器下次开机后执行计划任务 |
+| 普通用户和 root 用户         | 只有 root 用户可以使用（使用特定的配置启动普通任务）                 |
+
+```
+7	5	cron.weekly	/bin/bash /home/tz/.mybin/logs.sh
+```
+
+```bash
+# 测试配置
+anacron -T
+
+# 启动
+anacron -d
 ```

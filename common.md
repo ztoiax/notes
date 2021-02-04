@@ -24,7 +24,6 @@
         * [date](#date)
         * [fuser](#fuser)
         * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
-    * [cron](#cron)
     * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
         * [创建 RAID5](#创建-raid5)
@@ -300,6 +299,7 @@ ps aux | sed '1p;/nginx/!d'
 - `$NR` 行数
 - `$0` 所有行
 - `-F":"` 设置分隔符,默认是空格
+- `-v` 定义变量
 
 `print` 内的操作为**列**
 
@@ -377,6 +377,8 @@ awk '{sub(/root/,"tz")}1' FILE
 
 # 所有字符都余2
 awk 'ORS=NR%2' FILE
+
+awk -v a="$var1" -v b="$var2" 'BEGIN {print a,b}'
 ```
 
 [awk 教程](https://backreference.org/2010/02/10/idiomatic-awk/)
@@ -449,44 +451,6 @@ fuser -n tcp -v  10808
 
 ```bash
 du -cha --max-depth=1 . | grep -E "M|G" | sort -h
-```
-
-## cron
-
-- [在线计算工具](https://tool.lu/crontab/)
-
-```bash
-# .---------------- 分 (0 - 59)
-# |  .------------- 时 (0 - 23)
-# |  |  .---------- 日 (1 - 31)
-# |  |  |  .------- 月 (1 - 12)
-# |  |  |  |  .---- 星期 (0 - 7) (星期日可为0或7)
-# |  |  |  |  |
-# *  *  *  *  * 执行的命令
-```
-
-- `sudo crontab -e` #编辑 root 的任务
-- `crontab -e` #编辑当前用户的任务
-- `crontab -l` #显示任务
-- `crontab -r` #删除所有任务
-
-```bash
-* * * * * COMMAND      # 每分钟
-*/5 * * * * COMMAND    # 每5分钟
-
-0 * * * * COMMAND      # 每小时
-0,5,10 * * * * COMMAND # 每小时运行三次，分别在第 0、 5 和 10 分钟运行
-
-0 0 * * * COMMAND      # 每日凌晨0点执行
-0 3 * * * COMMAND      # 每日凌晨3点执行
-
-0 0 1 * * COMMAND      # 每月1号0点执行
-0 3 1-10 * * COMMAND   # 每月1日到10日凌晨3点执行
-
-0 0 * * 1 COMMAND      # 每周一0点执行
-
-# 开启服务
-systemctl restart cronie.service
 ```
 
 ## 调整分区大小
