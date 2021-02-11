@@ -6,7 +6,7 @@
 zcat /proc/config.gz
 ```
 
-下载并安装 `kernel`
+- 1.下载 `kernel`
 
 ```bash
 # 下载内核
@@ -21,7 +21,11 @@ tar -I pixz -xvkf linux-5.10.6.tar.xz
 
 # 设置config
 cd linux-5.10.6
+```
 
+- 2.编译安装
+
+```bash
 # 查看make
 make help
 
@@ -29,6 +33,10 @@ make help
 make nconfig
 # 或者
 make menuconfig
+
+# 注意如果配置成M(模块),日后需要用命令加载
+morprobe <module_name>
+lsmod | grep -i <module_name>
 
 # 编译
 sudo make -j$(nproc)
@@ -38,7 +46,7 @@ sudo make modules_install
 sudo make install
 ```
 
-或者手动复制到 boot 分区:
+或者手动复制到 boot 分区(等同于 sudo make install):
 
 ```bash
 # 将内核,复制到boot分区
@@ -55,7 +63,7 @@ sudo sed -i 's/linux/linux5.10.6/g' /etc/mkinitcpio.d/linux5.10.6.preset
 sudo mkinitcpio -p linux5.10.6
 ```
 
-最后
+- 3.最后
 
 ```bash
 # 重新配置grub引导

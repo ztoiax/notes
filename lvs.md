@@ -330,12 +330,6 @@ track_script {
 
   - 虚拟 ip 也移动到 centos
 
-    <figure class="video_container">
-        <video controls="true" allowfullscreen="true" poster="./Pictures/lvs/config1.webm">
-            <source src="./Pictures/lvs/config1.webm" type="video/webm">
-        </video>
-    </figure>
-
     ![image](./Pictures/lvs/config1.webm)
 
 - 4.当 archlinux 再次,启动 keepalived(以上视频并未录制,请看以下图片)

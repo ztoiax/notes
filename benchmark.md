@@ -23,6 +23,8 @@
     * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
     * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
 * [Memory](#memory)
+    * [hugepage(巨型页)](#hugepage巨型页)
+    * [KSM](#ksm)
     * [base](#base)
     * [pmap](#pmap)
     * [slabtop](#slabtop)
@@ -72,6 +74,7 @@
 * [Special file system](#special-file-system)
     * [proc](#proc)
     * [sys](#sys)
+        * [cgroup(进程组资源限制)](#cgroup进程组资源限制)
         * [debugfs](#debugfs)
         * [查看 `cpu` 的缓存](#查看-cpu-的缓存)
         * [查看 `I/O Scheduler(调度器)` 的缓存](#查看-io-scheduler调度器-的缓存)
@@ -592,6 +595,19 @@ sar -I ALL 1 10
 lstopo:
 ![image](./Pictures/benchmark/lstopo.png)
 
+| 硬件技术 | 内容                                                                                                     |
+| -------- | -------------------------------------------------------------------------------------------------------- |
+| NX       | 对内存里的指令存储和数据存储,进行标志区分(可防止缓冲区溢出攻击)                                          |
+| SMEP     | CR3 寄存器 20 位(第 21 位)为 1 表示开启.cpl < 3 的程序不能访问用户模式(cpl=3)的内存指令,否则会发生 fault |
+| SMAP     | SMEP 是禁止执行,SMAP 进一步补充,禁止读写                                                                 |
+| AVX      | simd 单指令多数据                                                                                        |
+| XSAVE    | guest 虚拟机动态迁移时,保存 AVX 寄存器的状态                                                             |
+
+```bash
+# 查看是否支持某项技术(这里列举nx,其他技术同理)
+grep nx /proc/cpuinfo
+```
+
 ## strace
 
 > 连接程序,在系统调用是暂停,类似调试器,开销大
@@ -659,16 +675,17 @@ echo <pid> > tasks
 
 - [内存的基本知识](https://blog.heroix.com/blog/linux-memory-use)
 
-| 概念                    | 内容                                                               |
-| ----------------------- | ------------------------------------------------------------------ |
-| major fault             | 要从磁盘载入内存页面(可能是由于读取已写入交换文件的内存页而导致的) |
-| minor fault             | 不需要从磁盘读取其他数据到内存(可能是在多个进程之间共享内存页)     |
-| VSZ(虚拟内存)           | 不是真实内存,(包括共享内存,交换分区)                               |
-| RSS(常驻内存)           | 真实内存,当前映射到进程中的页面总数(包含共享内存,不包含交换内存)   |
-| PSS(比例内存)           | 进程内共享内存占总内存的比例                                       |
-| USS(独占内存)           | 进程独自占用的物理内存（不包含共享库占用的内存）                   |
-| 匿名内存                | 无系统数据,文件路径名的内存                                        |
-| copy-on-write(写时复制) | 当其中一个进程需要修改共享内存页时，再单独为该进程创建内存页副本   |
+| 概念                    | 内容                                                                               |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| major fault             | 要从磁盘载入内存页面(可能是由于读取已写入交换文件的内存页而导致的)                 |
+| minor fault             | 不需要从磁盘读取其他数据到内存(可能是在多个进程之间共享内存页)                     |
+| VSZ(虚拟内存)           | 不是真实内存,(包括共享内存,交换分区)                                               |
+| RSS(常驻内存)           | 真实内存,当前映射到进程中的页面总数(包含共享内存,不包含交换内存)                   |
+| PSS(比例内存)           | 进程内共享内存占总内存的比例                                                       |
+| USS(独占内存)           | 进程独自占用的物理内存（不包含共享库占用的内存）                                   |
+| 匿名内存                | 没有系统数据,文件路径名的内存                                                      |
+| copy-on-write(写时复制) | 子进程被创建后,会共享父进程的全部内存,当子进程想要修改的时候,再单独分配一块新内存  |
+| KSM(内存同页合并)       | ksmd 守护进程扫描内存,将相同的内存页合并为一页,当进程想要修改时,进行 copy-on-write |
 
 查看进程内存的文件 `/proc/pid/smaps`
 
@@ -678,16 +695,94 @@ echo <pid> > tasks
 awk '/Rss:/{ sum += $2 } END { print sum " KB" }' /proc/pid/smaps
 ```
 
+## hugepage(巨型页)
+
+- 配置 `/sys/kernel/mm/hugepages/`
+
+- 缺点:
+
+  - 未分配的巨型页,会占用内存
+
+  - 不能被 swap out
+
+- 透明巨页
+
+  - 优点:
+
+    - 对于所有程序都是透明
+
+    - 可以 swap out,会分割为普通的 4k 页
+
+  - 缺点:
+    - 只支持匿名内存
+
+```bash
+查看巨型页 分配
+grep -i huge /proc/meminfo
+
+# 查看巨型页 大小
+ls /sys/kernel/mm/hugepages
+
+# 查看巨型页 pool(池)
+cat /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+
+# 查看巨型页 空闲pool(池)
+cat /sys/kernel/mm/hugepages/hugepages-2048kB/free_hugepages
+```
+
+THP(透明巨型页)
+
+```bash
+grep -i AnonHugePages /proc/meminfo
+```
+
+创建巨型页挂载点(我这里是 2M,1G 也是一样)
+
+```bash
+# 分配池后会立即减少内存
+echo 1000 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+
+# 挂载
+mkdir /mnt/2M-hugepage
+mount -t hugetlbfs -o pagesize=2M,size=2G,min_size=1G nodv /mnt/2M-hugepage
+
+# 查看未分配的(总数减去刚才min_size)的pool
+cat /sys/kernel/mm/hugepages/hugepages-2048kB/resv_hugepages
+```
+
+## KSM
+
+- 配置 `/sys/kernel/mm/ksm/`
+  - `pages_sharing`的值越大越好
+
+```bash
+# 激活ksmd
+echo 1 > /sys/kernel/mm/ksm/run
+
+# 修改每次扫描内存页的数量
+echo 1200 > /sys/kernel/mm/ksm/pages_to_scan
+
+# ksmd扫描的时间间隔
+echo 10 > /sys/kernel/mm/ksm/sleep_millisecs
+```
+
+`ksmtuned` 动态调整 ksm 的后台服务
+
+- 配置文件 /etc/ksmtuned.conf
+
+```bash
+yum install ksmtuned
+
+systemctl enable ksmtuned.service
+systemctl start ksmtuned.service
+```
+
 ## base
 
 ```bash
 ps -aux | sort -k4nr | head -K
 ps aux --sort -rss | head
 top -c -b -o +%MEM | head -n 20 | tail -15
-
-# 创建巨页文件系统
-mkdir /mnt/huge
-mount -t hugetlbfs none /mnt/huge -o pagesize=2048K
 ```
 
 ## pmap
@@ -1211,6 +1306,31 @@ echo 3 > /proc/sys/vm/drop_caches
 ```
 
 ## sys
+
+### cgroup(进程组资源限制)
+
+```bash
+# 查看cgroup
+mount -t cgroup
+
+cd /sys/fs/cgroup/blkio
+# 创建不同 I/O 优先级
+mkdir high_prio
+mkdir low_prio
+
+# 查看
+ls high_prio/
+
+# 分配weight(权重),取值100-1000
+echo 1000 > high_prio/blkio.bfq.weight
+echo 100 > low_prio/blkio.bfq.weight
+
+# 分配进程
+echo $(pgrep -of nvim) > high_prio/cgroup.procs
+
+# 查看cgroup的进程
+cat high_prio/tasks
+```
 
 ### debugfs
 

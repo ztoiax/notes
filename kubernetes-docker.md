@@ -1,10 +1,95 @@
 # docker
 
-- path `/var/lib/docker`
+- 容器和其它进程的不同之处在于,容器使用 namespace,cgroup 等技术,为进程创造出资源隔离,限制的环境
 
-- volumes 保存在`/var/lib/docker/volumes`
+  > 容器和进程是共享 host(宿主机)内核
 
-普通用户使用 docker,出现以下权限错误
+  > 也就是在 windows,macos 上的 docker,无法使用 centos,opensuse 这些依赖 linux 内核的容器
+
+  ![image](./Pictures/kubernetes-docker/docker.png)
+
+- 通过 `namespace` 实现资源**隔离**(isolate)
+
+  - 我们所熟知的 `chroot` 命令,就是切换挂载点,实现文件系统的隔离
+
+  - namespace 有 8 项隔离
+    | namespace | 内容 |
+    | -------- | ------------------------------------ |
+    | Cgroup | Cgroup root directory |
+    | IPC | System V IPC, POSIX message queues,Shared memory |
+    | Network | Network devices, stacks, ports, etc. |
+    | Mount | Mount points |
+    | PID | Process IDs |
+    | Time | Boot and monotonic, clocks |
+    | User | User and group IDs |
+    | UTS | Hostname and NIS, domain name |
+
+  - `/proc/pid/ns` 目录下查看不同的 namespace(以编号区分)
+
+  - `lsns` 命令查看所有 namespace
+
+  - `pgrep --ns 4026532713 -a ` 命令,传递 namespace 编号,查看此 namespace 下的进程
+
+    ![image](./Pictures/kubernetes-docker/namespace.png)
+
+- 通过 `cgroup` 实现资源**限制**(limit) 和 监控容器的统计信息
+
+  - `mount -t cgroup` 查看 cgroup 子系统
+
+    ![image](./Pictures/kubernetes-docker/cgroup.png)
+
+  - docker 在每个 cgroup 子系统目录下,都有自己的控制组
+
+    - 每个控制组下有对应的容器`/sys/fs/cgroup/cpu/docker/<container-id>`
+
+      ![image](./Pictures/kubernetes-docker/cgroup1.png)
+      ![image](./Pictures/kubernetes-docker/cgroup2.png)
+
+- docker 采用 `client/server` 结构进行通信交互 [官方文档](https://docs.docker.com/get-started/overview/#docker-architecture)
+
+  > docker(cli)/dockerd(daemon). 它们都是 docker engine(docker 开源容器技术) 的组成部分
+
+  - client 使用 `REST API` 通过 `unix socket` 与 daemon 进行通信
+
+    - REST API 最简单的例子是浏览器:通过 url 使用不同的动作(get,push)请求资源(可以是图片,文字,视频),而服务器会对请求返回不同的状态(200,404)
+
+      ![image](./Pictures/kubernetes-docker/cs1.jpg)
+      ![image](./Pictures/kubernetes-docker/cs.svg)
+
+- docker 镜像使用分层的文件系统(union fs),联合挂载(union mount)会进行整合,让我们看上去为一层
+
+  - 修改容器内的某个文件时,会在最顶层记录修改的内容,不会覆盖下层的内容(类似于 git diff),以此实现共享镜像层
+
+    ![image](./Pictures/kubernetes-docker/fs.png)
+
+- 多个容器运行时,如果未修改镜像内容,会**共享镜像层**(layer)
+
+  - 容器启动时,在只读的镜像层上添加 自己的**可写覆盖层**
+
+  - 容器运行过程中修改镜像时,会将修改的内容写入 可写覆盖层(copy on wirte)
+    ![image](./Pictures/kubernetes-docker/fs1.png)
+
+- 配置文件 `/var/lib/docker`
+
+  | 内容    | 目录                    |
+  | ------- | ----------------------- |
+  | volumes | /var/lib/docker/volumes |
+
+  | image                                                | /var/lib/docker/image/overlay2 |
+  | ---------------------------------------------------- | ------------------------------ |
+  | 仓库(镜像名和 hash 值)                               | repositories.json              |
+  | 镜像元数据(docker 版本,创建时间)                     | imagedb                        |
+  | 容器层 元数据                                        | layerdb/mounts                 |
+  | 镜像层(layer) 元数据(没有 parent 的镜像层为子镜像层) | layerdb/sha256                 |
+
+  | container         | /var/lib/docker/containers    |
+  | ----------------- | ----------------------------- |
+  | volume 的具体情况 | <container_id>/config.v2.json |
+
+## without sudo
+
+> 普通用户使用 docker,出现以下权限错误
+
 `Got permission denied ... /var/run/docker.sock: connect: permission denied`
 
 修复:
@@ -144,12 +229,33 @@ docker run -p 127.0.0.1::80 \
 
 ```bash
 # 启动redis数据库容器
-docker run --name data
+docker run --name data \
     -itd redis
 
 # 连接redis
 docker run --link data:db \
     -it centos
+```
+
+新的网络模型的 `link` 不需要启动源容器,也能 link
+
+- 并不会在/etc/hosts 下,查找到 link 容器的信息
+
+- 实现容器相互 link
+
+```bash
+# 创建网络
+docker network create test
+
+docker run --net test \
+    -it --rm --name=new_link \
+    --link container:c1 busybox
+
+docker run --net test \
+    -itd --rm --name=container busybox
+
+# 在new_link容器里,ping c1进行通信测试
+ping c1
 ```
 
 ```bash
@@ -240,6 +346,26 @@ docker run --privileged \
     --rm -it opensuse
 ```
 
+### 其他资源限制
+
+| 相关参数      | 功能实现        | 操作     |
+| ------------- | --------------- | -------- |
+| --storage-opt | filesystem 实现 | 磁盘配额 |
+| --ulimit      | UID 实现        | 进程限制 |
+
+```bash
+# --storage-opt 磁盘配额
+docker run --storage-opt size=10G \
+    -it opensuse
+
+# --ulimit 对docker_limit用户,进行进程限制
+docker run -u docker_limit --ulimit nproc=3 \
+    -it opensuse
+
+docker run -u tz --ulimit nproc=3 \
+    -it busybox top
+```
+
 ### namespace(命名空间)
 
 | 命名空间相关参数 | 操作         |
@@ -290,7 +416,21 @@ docker run --cap-add=ALL --cap-drop=MKNOD \
     --rm -it opensuse
 ```
 
-## 容器导入导出
+## import/export
+
+### 镜像导入导出
+
+```bash
+# 导出
+docker save centos > centos.tar
+docker save centos | gzip > centos.tar.gz
+
+# 导入
+docker load < centos.tar
+docker load < centos.tar.gz
+```
+
+### 容器导入导出
 
 **导出:**
 
@@ -314,14 +454,14 @@ cat centos_export.tar | sudo docker import - centos_import
 zcat centos_export.tar.gz | sudo docker import - centos_import
 ```
 
-## 容器之间的备份恢复
+### 容器数据卷之间的备份恢复
 
 - 1.将 opensuse 容器备份到 centos 容器
   > opensuse -> centos
 - 2.先用 `busybox` 备份到本地
 - 3.再用 `busybox` 恢复到 centos
 
-### 备份
+**备份:**
 
 创建 opensuse 的容器,并包含/data 数据卷(假设重要数据保存在 data)
 
@@ -338,7 +478,7 @@ docker run --volumes-from=opensuse_data \
     busybox tar -zcpvf /backup/backup.tar.gz /data
 ```
 
-### 恢复
+**恢复:**
 
 - 注意本地`backup`目录下的权限,不然`tar`会显示找不到 `/backup/backup.tar.gz`
 
@@ -358,21 +498,79 @@ docker run --volumes-from=centos_data \
     busybox tar xvzf /backup/backup.tar.gz -C /data
 ```
 
-## 容器自定义 ip
+## network
+
+### cnm model(容器网络模型)
+
+- sandbox(沙盒),通过 namespace 实现
+
+  - 一个 sandbox 可以有多个 endpoint 和 网络
+
+- endpoint(端点),通过 veth 实现
+
+- 网络,通过 brictl,vlan 实现
+
+  - 一个网络可以有多个端点
+
+下图 3 个容器的连通性:
+
+- 左边和右边能和中间 ping 通
+
+- 左边与右边不通
+
+![image](./Pictures/kubernetes-docker/cnm-model.png)
 
 ```bash
-# 创建新网络test
-docker network create --subnet=172.18.0.0/16 test
+# 创建两个btrctl网络
+docker network create backend
+docker network create frontend
 
-# 查看
+# 也可以指定网段
+docker network create --subnet=172.18.0.0/16 backend
+
+# 查看网络
 docker network ls
-
-# 指定ip
-docker run --net test --ip "172.18.0.10" \
-    --rm -it centos
 ```
 
-## 容器之间的网络隔离
+通过 `ip a` 命令,查看刚才创建的网络的 ip 地址
+![image](./Pictures/kubernetes-docker/cnm.png)
+
+```bash
+# 启动3个容器,并配置图片上的网络
+
+docker run --net backend \
+ -h backend1 --name backend1 --rm -it centos
+
+docker run --net frontend \
+ -h frontend1 --name frontend1 --rm -it centos
+
+docker run --net backend \
+ -h middle --name middle --rm -it centos
+
+# 将容器 middle 加入到 frontend
+docker network connect frontend middle
+
+# 也可以指定ip
+docker run --net backend --ip "172.18.0.10" \
+ -h backend1 --name backend1 --rm -it centos
+```
+
+此时再次通过 `ip a` 命令查看
+
+发现一共多出 4 个 `veth` 的网络接口
+
+- veth 是 namespace 之间的互联的虚拟网络设备,会**成对的出现**,宿主机一个,namespace 一个
+
+- btrctl 相当与交换机,而 veth 设备 相当于交换机的端口
+
+- veth 设备工作在第二层,因此没有 ip 地址
+
+- 当一方 down 后,链接关闭
+
+  下图为 `ip link | grep veth` 命令的结果,比 `ip a` 更直观
+  ![image](./Pictures/kubernetes-docker/cnm1.png)
+
+### 容器之间的网络隔离
 
 - 1.当多个启动了容器
 
@@ -382,7 +580,7 @@ docker run --net test --ip "172.18.0.10" \
 
 - 1.分别为两容器设置命名空间
 
-- 2.用 `veth` 使两命名空间想连接(当一方 down 后,链接关闭)
+- 2.用 `veth` 使两命名空间想连接
 
 ```bash
 # 创建 enp1 网络命名空间
@@ -391,6 +589,15 @@ ip netns add enp1
 # 查看
 ip netns list
 
+# 尝试使用enp1启动bash
+ip netns exec enp1 bash
+
+# 查看 ip
+ip a
+
+# 退出
+exit
+
 # 启动两个容器,网络设置none
 docker run --net=none \
     -it --name net1 centos bash
@@ -398,32 +605,139 @@ docker run --net=none \
 docker run --net=none \
     -it --name net2 centos bash
 
-# 设置v1,v2,分别为两容器的pid
-v1=$(docker inspect -f '{{.State.Pid}}' net1)
-v2=$(docker inspect -f '{{.State.Pid}}' net2)
+# 设置变量,分别为两容器的pid
+pid1=$(docker inspect -f '{{.State.Pid}}' net1)
+pid2=$(docker inspect -f '{{.State.Pid}}' net2)
 
 # 创建软连接到netns(命名空间)
-ln -s /proc/$v1/ns/net /var/run/netns/$v1
-ln -s /proc/$v2/ns/net /var/run/netns/$v2
+ln -s /proc/$pid1/ns/net /var/run/netns/$pid1
+ln -s /proc/$pid2/ns/net /var/run/netns/$pid2
 
 # 创建veth
-ip link add e1 type veth peer name e2
+ip link add veth1 type veth peer name veth2
 
-# 将e1放入容器1,e2放入容器2
-ip link set e1 netns $v1
-ip link set e2 netns $v2
+# 将veth1放入容器1,veth2放入容器2
+ip link set veth1 netns $pid1
+ip link set veth2 netns $pid2
 
 # 设置ip(此时在容器内,可用ip a查看)
-ip netns exec $v1 ip addr add 10.1.1.1/32 dev e1
-ip netns exec $v2 ip addr add 10.1.1.2/32 dev e2
+ip netns exec $pid1 ip addr add 10.1.1.1/32 dev veth1
+ip netns exec $pid2 ip addr add 10.1.1.2/32 dev veth2
 
 # 启动
-ip netns exec $v1 ip link set e1 up
-ip netns exec $v2 ip link set e2 up
+ip netns exec $pid1 ip link set veth1 up
+ip netns exec $pid2 ip link set veth2 up
 
 # 设置路由
-ip netns exec $v1 ip route add 10.1.1.2/32 dev e1
-ip netns exec $v2 ip route add 10.1.1.1/32 dev e2
+ip netns exec $pid1 ip route add 10.1.1.2/32 dev veth1
+ip netns exec $pid2 ip route add 10.1.1.1/32 dev veth2
+```
+
+### 容器与宿主机同一网段
+
+- 宿主机 ip 为: `192.168.1.221/24`
+
+- 网关 ip 为: `192.168.1.1/24`
+
+- 设置容器 ip 为: `192.168.1.233/24`
+
+#### 方法 1: 使用第三方工具 [pipework](https://github.com/jpetazzo/pipework)
+
+- 注意:此方法重启后失效
+
+```bash
+# 启动none网络容器
+docker run --net=none \
+    --name ip_test \
+    --rm -it centos
+
+# 下载pipework
+git clone https://github.com/jpetazzo/pipework.git
+cd pipework
+
+# 创建网桥使用veth进行通信
+./pipework br0 ip_test 192.168.1.233/24@192.168.1.1/24
+```
+
+在 eth0 上,创建虚拟网卡,不使用 veth 通信:
+
+```bash
+# 自定义ip
+./pipework eth0 ip_test 192.168.1.233/24@192.168.1.1/24
+
+# 使用dhcp(主机需要安装dhcp客户端)
+./pipework eth0 ip_test dhcp
+```
+
+#### 方法 2: 手动设置
+
+- 注意:此方法重启后失效
+
+**网络拓扑:**
+
+- 将主机和容器的网卡,连接到虚拟网桥 br0(类似于交换机)
+
+  - eth0 为主机 -> 外网的接口
+
+  - veth1 为主机 -> 容器的接口
+
+  - veth2 为容器 -> 主机的接口
+
+> **步骤:**
+
+- 1.容器设置
+
+```bash
+# 启动none网络容器
+docker run --net=none \
+    --name ip_test \
+    --rm -it centos
+
+# 将容器添加到namespace
+pid=$(docker inspect --format '{{ .State.Pid }}' ip_test)
+ln -s /proc/$pid/ns/net /var/run/netns/$pid
+```
+
+- 2.创建虚拟网桥 br0
+
+  - 将主机的 eth0 桥接到 br0
+
+```bash
+# 创建虚拟网桥br0
+brctl addbr br0
+ip link set br0 up
+
+# 将eth0的设备,ip桥接到br0(此时网络会断开)
+ip addr add 192.168.1.221/24 dev br0
+ip addr del 192.168.1.221/24 dev eth0
+
+brctl addif br0 eth0
+ip route del default
+ip route add default via 192.168.1.1 dev br0
+```
+
+- 3.创建 一对 veth
+
+  - 将 veth1 添加到网桥 br0
+
+  - 将容器加入到 veth2 中,并自定义 ip,route
+
+```bash
+# 创建veth
+ip link add veth1 type veth peer name veth2
+
+# 将veth1 添加到br0
+brctl addif br0 veth1
+ip link set veth1 up
+
+# 将veth2放到容器的namespace,并重命名为eth0
+ip link set veth2 netns $pid
+ip netns exec $pid ip link set dev veth2 name eth0
+ip netns exec $pid ip link set eth0 up
+
+# 设置ip,route
+ip netns exec $pid ip addr add 192.168.1.233/24 dev eth0
+ip netns exec $pid ip route add default via 192.168.1.1
 ```
 
 ## Dockerfile 创建容器镜像
@@ -537,11 +851,15 @@ docker container start opensuse_1
 docker container exec -it opensuse_1 bash
 ```
 
-## 第三方软件资源
+## other item(第三方项目)
 
 - [awesome-docker](https://github.com/veggiemonk/awesome-docker)
 
   > 包含 docker 相关的文档资源和项目
+
+- [pipework](https://github.com/jpetazzo/pipework)
+
+  > 容器自定义网络工具
 
 - [自动更新 docker 镜像](https://github.com/containrrr/watchtower)
 
@@ -586,7 +904,7 @@ docker run --rm -ti \
 - [lazydocker](https://github.com/jesseduffield/lazydocker)
   ![image](./Pictures/kubernetes-docker/lazydocker.png)
 
-## 优秀文章
+## reference article(优秀文章)
 
 - [docker 官方文档](https://docs.docker.com/engine/reference/run/)
 
@@ -610,3 +928,7 @@ docker run --rm -ti \
 ## 优秀文章
 
 - [图解儿童 Kubernetes 指南](https://www.cncf.io/the-childrens-illustrated-guide-to-kubernetes/)
+
+```
+
+```

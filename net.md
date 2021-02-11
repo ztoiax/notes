@@ -28,6 +28,7 @@
         * [显示本机网络，路由信息](#显示本机网络路由信息)
         * [扫描文件内的 ip 地址](#扫描文件内的-ip-地址)
         * [使用 tmp 扫描](#使用-tmp-扫描)
+    * [tc(traffic control)](#tctraffic-control)
     * [socat](#socat)
     * [ngrep](#ngrep)
     * [curl](#curl)
@@ -58,6 +59,7 @@
 | ipmaddr          | ip maddr                |
 | netstat          | ip -s, ss, ip route     |
 | brctl            | bridge                  |
+|                  | tc(qos)                 |
 
 ## ip(iproute2)
 
@@ -101,8 +103,8 @@ ip a add 1.1.1.1/24 dev eth0
 ip a add 2.2.2.2/24 dev eth0 label eth0:0
 
 # 删除刚才新增的ip
-ip a del 1.1.1.1/24 dev enp27s0
-ip a del 2.2.2.2/24 dev enp27s0
+ip a del 2.2.2.2/24 dev eth0:0
+ip a del 1.1.1.1/24 dev eth0
 ```
 
 - ip route
@@ -130,11 +132,17 @@ ip route del default
 - ip link
 
 ```bash
-# 开启 eth0 接口
+# 开启/关闭接口
 ip link set eth0 up
-
-# 关闭 eth0 接口
 ip link set eth0 down
+
+# 开启/关闭组播
+ip link set dev eth0 multicast on
+ip link set dev eth0 multicast off
+
+# 开启/关闭arp解析
+ip link set dev eth0 arp on
+ip link set dev eth0 arp off
 
 # 修改 mtu 为9000
 ip link set mtu 9000 dev eth0
@@ -529,6 +537,44 @@ nmap -sU 192.168.1.1
 
 # TCP ACK
 nmap -PA 192.168.1.1
+```
+
+## tc(traffic control)
+
+qdisc:
+
+```bash
+# 查看队列
+tc -d qdisc
+
+# 查看队列流量
+tc -s qdisc
+
+# 设置根队列 1000 MBit/s
+tc qdisc add dev ens3 root handle 1: \
+    cbq avpkt 1000 bandwidth 1000Mbit
+
+# 分别设置3类,1M,10M,100M
+tc class add dev ens3 parent 1: classid 1:1 \
+    cbq rate 1Mbit allot 1500 bounded
+
+tc class add dev ens3 parent 1: classid 1:2 \
+    cbq rate 10Mbit allot 1500 bounded
+
+tc class add dev ens3 parent 1: classid 1:3 \
+    cbq rate 100Mbit allot 1500 bounded
+
+# 过滤5001目标端口
+tc filter add dev ens3 parent 1: \
+    protocol ip u32 match ip dport 5001 0xffff flowid 1:1
+
+tc filter add dev ens3 parent 1: \
+    protocol ip u32 match ip protocol 6 0xff \
+    match ip dport 5001 0xffff flowid 1:2
+
+tc filter add dev ens3 parent 1: \
+    protocol ipv6 u32 match ip6 protocol 6 0xff \
+    match ip6 dport 5001 0xffff flowid 1:3
 ```
 
 ## socat

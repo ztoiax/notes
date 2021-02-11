@@ -1,19 +1,44 @@
 # kvm
 
-guest(虚拟机) 运行在`guest mode`
+- guest(虚拟机) 运行在 `guest mode`
 
-![image](./Pictures/kvm/guest.jpeg)
+- 一般异常/中断指令会触发`VM-EXIT`
 
-查看是否开启硬件虚拟化:
+  - 一次 `VM-EXIT` 代价大(成百上千周期)
+
+    ![image](./Pictures/kvm/guest.jpeg)
+
+- EPT: GVA(guest 虚拟地址) -> GPA(guest 物理地址) -> HPA(host 物理地址)
+
+  - GVA 通过 CR3 -> GPA 通过 EPT -> HPA
+
+  - 在 guest 虚拟机中的 `CR3` 寄存器,只是虚拟机的物理地址,并不是 host 的物理地址
+    ![image](./Pictures/kvm/ept.png)
+
+- SR-IOV: PF(单个设备)派生 VF(多个设备),使 I/O 数据传输,绕过 hypervistor
+  ![image](./Pictures/kvm/sr-iov.png)
+  ![image](./Pictures/kvm/sr-iov1.png)
+
+  查看虚拟化硬件技术的支持:
 
 ```bash
+# 查看是否开启硬件虚拟化
 egrep '(vmx|svm)' /proc/cpuinfo
+
+# 查看是否支持SR-IOV(pci虚拟化)
+lspci -s 03:00.0 -vvv | grep -i sr-iov
+
+# 查看是否开启kvm-clock
+dmesg | grep kvm-clock
 ```
+
+- kvm-clock
+  ![image](./Pictures/kvm/kvm-clock.png)
 
 ## install(安装)
 
 ```bash
-yum install -y qemu kvm libvirt virt-install virt-viewer libguestfs
+yum install -y qemu kvm libvirt virt-install virt-viewer libguestfs virt-manager
 ```
 
 ## qemu
@@ -55,11 +80,14 @@ qemu-img info file.qcow2
 qemu-img convert -O raw file.qcow file.img
 qemu-img convert -O qcow2 file.vmdk file.qcow2
 
+# 加密现有镜像
+qemu-img convert -o encryption -O qcow2 file.qcow2 file_encryption.qcow2
+
 # 查看快照
 qemu-img snapshot -l centos7.0.qcow2
 ```
 
-- 1.创建镜像:
+创建镜像:
 
 ```bash
 # 随着使用逐渐增大
@@ -67,19 +95,25 @@ qemu-img create -f qcow2 arch.qcow2 10G
 
 # -o preallocation=full 一开始便占用10G
 qemu-img create -f qcow2 -o preallocation=full arch.qcow2 10G
+
+# encryption加密
+qemu-img create -f qcow2 -o encryption arch.qcow2 1G
 ```
 
-- 2.安装虚拟机
+### qemu-system-x86_64
 
-  | 参数           | 操作               |
-  | -------------- | ------------------ |
-  | -m             | 内存               |
-  | -smp           | cpu                |
-  | -maxcpus=      | 最多,多少个 cpu    |
-  | -boot once=d   | 首次启动顺序为光驱 |
-  | -cdrom         | 分配 guest 光驱    |
-  | -enable-kvm    | 开启 kvm 硬件加速  |
-  | -ballon virtio | 分配 virtio 驱动   |
+| 参数              | 操作                  |
+| ----------------- | --------------------- |
+| -m                | 内存                  |
+| -smp              | cpu                   |
+| -daemonize        | 后台运行              |
+| -maxcpus=         | 最多,多少个 cpu       |
+| -boot once=d      | 首次启动顺序为光驱    |
+| -cdrom            | 分配 guest 光驱       |
+| -enable-kvm       | 开启 kvm 硬件加速     |
+| -usb              | 分配 usb 总线         |
+| -gdb tcp::1234 -S | 调试                  |
+| -d                | 保存日志/tmp/qemu.log |
 
 ```bash
 # 安装虚拟机.2G内存,4个cpu,首次启动顺序为光驱
@@ -87,15 +121,13 @@ qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -boot once=d -cdrom archlinux-2020.1
 
 # -smp 4,maxcpus=$(nproc) 分配4个cpu,最多能有所有cpu
 qemu-system-x86_64 -enable-kvm -m 2G -smp 4,maxcpus=$(nproc) -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2
-
-qemu-system-x86_64 arch.qcow2 -net nic,model=virtio,addr=08 -net user
 ```
 
 guest:
 
 ```bash
 # 查看cpu模型
-cat /proc/cpuinfo | grep 'model name'
+grep 'model name' /proc/cpuinfo
 ```
 
 - <kbd>ctrl + alt + 2</kbd> 可切换 `qemu monitor` 模式(qemu)
@@ -112,6 +144,98 @@ info cpus
 
 # 查看网络
 info network
+
+# 查看寄存器
+info registers
+
+# 查看设备
+info qtree
+```
+
+#### virtio
+
+- 在 guest 上安装前端驱动,提升性能
+
+  - 允许多条队列
+
+- host 上为后端驱动,两者之间有个 virtio-ring(环形缓冲区)
+
+  - virtio-ring 保存前端的多次请求,再提交给后端处理
+
+- guest 知道自己运行在虚拟环境当中(半虚拟化)
+  - 配合 kvm 的全虚拟化,实现混合虚拟化
+
+| virtio 参数                                       | 操作                                                                   |
+| ------------------------------------------------- | ---------------------------------------------------------------------- |
+| -ballon virtio(失败)                              | 分配 virtio balloon(控制 guest 的内存)                                 |
+| -net nic,model=virtio                             | 分配 virtio_net                                                        |
+| file=path.qcow2,format=qcow2,if=virtio,media=disk | 分配 virtio_blk                                                        |
+| -netdevtap,id=vnet0,vhost=on,queues=2             | vhost_net 后端内核处理程序,网卡多队列                                  |
+| -cpu host                                         | vhost-user 一种用户态的协议,建立两个进程的共享虚拟队列,减少上下文切换, |
+
+```bash
+# 分配virtio_net网卡
+qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2 -net nic,model=virtio
+
+# 分配virtio_blk快设备i/o
+qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso -drive file=/mnt/Z/kvm/arch.qcow2,format=qcow2,if=virtio,media=disk
+
+# vhost-user
+qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2 -cpu host
+
+# -balloon virtio(失败)
+qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2 -balloon virtio
+
+# 分配vhost后端,队列为2(失败)
+qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -net nic,model=virtio -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2 -netdevtap,id=vnet0,vhost=on,queues=2
+```
+
+**host:**
+
+```bash
+# 查看内核是否安装virtio
+find /lib/modules/5.10.6/ -name "virtio*.ko"
+
+# 查看是否支持kvm_clock(更精确的中断)
+grep constant_tsc /proc/cpuinfo
+```
+
+**guest:**
+
+```bash
+# 查看是否加载virtio模块
+lsmod | grep virtio
+
+# 查看virtio设备
+lspci | grep -i virtio
+
+# 查看设备详情
+lspci -s <设备地址> -vvv
+
+# 查看网卡是否为virtio_net
+ethtool -i ens3
+
+# 查看是否存在vda,表示加载virtio_blk
+fdisk -l
+```
+
+- virtio_net
+  ![image](./Pictures/kvm/virtio_net.png)
+- virtio_blk
+  ![image](./Pictures/kvm/virtio_blk.png)
+
+#### hugepage
+
+[开启 hugepage](https://github.com/ztoiax/notes/blob/master/benchmark.md#hugepage)
+
+| virtio 参数   | 操作                                   |
+| ------------- | -------------------------------------- |
+| -mem-path     | 指定内存路径                           |
+| -mem-prealloc | 预先分配所有内存,必须有`-mem-path`参数 |
+
+```bash
+# -m 的大小必须小于巨型页的分区大小
+qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2 -mem-path /mnt/2M-hugepage -mem-prealloc
 ```
 
 ## libvirt

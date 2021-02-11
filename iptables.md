@@ -258,7 +258,6 @@ iptables-save -t filter > filter.bak
 
 # 重新加载配置文件
 iptables-restore < /etc/iptables/iptables.bak
-systemctl reload iptables
 ```
 
 ### 最近一次启动后所记录的数据包
