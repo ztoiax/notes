@@ -1332,6 +1332,11 @@ echo $(pgrep -of nvim) > high_prio/cgroup.procs
 cat high_prio/tasks
 ```
 
+```bash
+查看资源使用情况
+systemd-cgtop
+```
+
 ### debugfs
 
 内核开发人员向用户空间提供信息的一种方法

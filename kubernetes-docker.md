@@ -1,4 +1,4 @@
-# docker
+# [docker](https://github.com/moby/moby)
 
 - 容器和其它进程的不同之处在于,容器使用 namespace,cgroup 等技术,为进程创造出资源隔离,限制的环境
 
@@ -44,6 +44,13 @@
 
       ![image](./Pictures/kubernetes-docker/cgroup1.png)
       ![image](./Pictures/kubernetes-docker/cgroup2.png)
+
+- Capability 对 root 权限,分成多个子权限 [详细文档](https://man7.org/linux/man-pages/man7/capabilities.7.html)
+
+  - 对容器授予某些子权限,而不是整个 root 权限,以此实现安全
+
+  - 通过 `capsh --print` 命令查看权限
+    ![image](./Pictures/kubernetes-docker/capability.png)
 
 - docker 采用 `client/server` 结构进行通信交互 [官方文档](https://docs.docker.com/get-started/overview/#docker-architecture)
 
@@ -140,6 +147,9 @@ docker network connect NETWORK_NAME CONTAINER_ID
 # 性能监控
 docker stats
 
+# 调用stats API监控
+echo -e "GET /containers/<container_name>/stats HTTP/1.0\r\n" | nc -U /var/run/docker.sock
+
 # 查看容器里的程序(pid是以本地命名空间)
 docker top CONTAINER_ID
 
@@ -209,7 +219,72 @@ docker run -p 127.0.0.1::80 \
     --rm -it nginx
 ```
 
-`--link` 连接容器
+```bash
+# -d 后台运行命令
+docker exec -d opensuse_1 \
+    touch /tmp/test
+
+# 创建一个新的 bash 会话
+docker exec opensuse_1 -it bash
+
+# 在容器里,查看环境变量
+cat /etc/hosts
+env
+
+# 附着opensuse_1,(注意附着退出后,容器也会退出)
+docker attach opensuse_1
+
+# 查看attach后的命令输出
+docker logs opensuse_1
+# -f 跟踪
+docker logs -f opensuse_1
+
+# 使用syslog,代替docker log
+docker run --log-driver="syslog"\
+    --name opensuse_1 -it opensuse /bin/bash
+```
+
+### --volumes-from 会递归容器引用的数据卷
+
+opensuse_data2(data2) -> opensuse_data1(data1) -> opensuse_data(data)
+
+```bash
+docker run -v /data \
+    --name opensuse_data \
+    -itd opensuse
+
+docker run --volumes-from=opensuse_data \
+    -v /data1 --name opensuse_data1 \
+    -itd opensuse
+
+docker run --volumes-from=opensuse_data1 \
+    -v /data2 --name opensuse_data2 \
+    -it opensuse
+```
+
+![image](./Pictures/kubernetes-docker/volumes-from.png)
+
+- 1.此时如果 `rm -v` 删除 `opensuse_data1` 容器
+
+  - 数据卷 `data1` 并不会删除
+
+- 2.而如果在重新创建 opensuse_data1
+
+  ```bash
+  docker run --volumes-from=opensuse_data \
+      -v /data1 --name opensuse_data1 \
+      -itd opensuse
+  ```
+
+  - 容器数据卷名字虽然也是 data1,但并不是原来的数据卷
+
+    - 左边为新创建的 `opensuse_data1`
+
+    - 右边为 `opensuse_data2`
+
+      ![image](./Pictures/kubernetes-docker/volumes-from1.png)
+
+### --link 连接容器
 
 **注意:**
 
@@ -256,31 +331,6 @@ docker run --net test \
 
 # 在new_link容器里,ping c1进行通信测试
 ping c1
-```
-
-```bash
-# -d 后台运行命令
-docker exec -d opensuse_1 \
-    touch /tmp/test
-
-# 创建一个新的 bash 会话
-docker exec opensuse_1 -it bash
-
-# 在容器里,查看环境变量
-cat /etc/hosts
-env
-
-# 附着opensuse_1,(注意附着退出后,容器也会退出)
-docker attach opensuse_1
-
-# 查看attach后的命令输出
-docker logs opensuse_1
-# -f 跟踪
-docker logs -f opensuse_1
-
-# 使用syslog,代替docker log
-docker run --log-driver="syslog"\
-    --name opensuse_1 -it opensuse /bin/bash
 ```
 
 ### cgroup(资源限制)
@@ -409,7 +459,7 @@ docker run -u=1000 \
     --rm -it centos
 ```
 
-Capability:
+## Capability
 
 ```bash
 docker run --cap-add=ALL --cap-drop=MKNOD \
@@ -424,7 +474,19 @@ docker run --cap-add=ALL --cap-drop=MKNOD \
 # 导出
 docker save centos > centos.tar
 docker save centos | gzip > centos.tar.gz
+```
 
+镜像内:
+![image](./Pictures/kubernetes-docker/save.png)
+
+- 其中`layer.tar` 为镜像根目录的打包,可以使用以下命令直接获取
+
+```bash
+mkdir centos
+docker export $(docker create centos) | tar -C centos -xvf -
+```
+
+```
 # 导入
 docker load < centos.tar
 docker load < centos.tar.gz
@@ -497,6 +559,69 @@ docker run --volumes-from=centos_data \
     -v $(pwd)/backup:/backup \
     busybox tar xvzf /backup/backup.tar.gz -C /data
 ```
+
+## containerd
+
+已被分离出 docker,能独立运行 [ctr containerd 的命令行工具](https://github.com/projectatomic/containerd/blob/master/docs/cli.md)
+
+> 容器中间层,runc 之上,cli 客户端之下
+
+![image](./Pictures/kubernetes-docker/containerd.png)
+
+![image](./Pictures/kubernetes-docker/containerd1.png)
+
+- 管理容器的生命周期
+
+  - start
+
+  - stop
+
+  - delete
+
+- 管理容器的分发
+
+  - pull
+
+  - push
+
+## runc
+
+- dockercli 通过 runc 管理容器
+
+  - runc 是 `libcontainer`的一层的壳
+
+  - 真正管理容器的是 libcontainer
+
+  - 也就是说 dockercli 是 runc 的抽象,runc 是 libcontainer 的抽象
+
+- [深入理解 DOCKER 容器引擎 RUNC 执行框架](http://www.sel.zju.edu.cn/blog/2018/05/10/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3docker%E5%AE%B9%E5%99%A8%E5%BC%95%E6%93%8Erunc%E6%89%A7%E8%A1%8C%E6%A1%86%E6%9E%B6/)
+  创建 busybox 容器
+
+```bash
+mkdir rootfs
+
+# 导出busybox的根目录
+docker export $(docker create busybox) | tar -C rootfs -xvf -\n
+
+# 创建config.json配置文件
+sudo runc spec
+
+# 运行busybox容器
+sudo runc run rootfs
+
+# 查看容器列表
+sudo runc list
+```
+
+- `runc run`命令包含
+
+  - `runc create`创建
+
+  - `runc start`启动
+
+  - `runc delete`退出后删除
+
+![image](./Pictures/kubernetes-docker/runc.png)
 
 ## network
 
@@ -572,9 +697,7 @@ docker run --net backend --ip "172.18.0.10" \
 
 ### 容器之间的网络隔离
 
-- 1.当多个启动了容器
-
-- 2.要设置两个容器之间可以通信,但与其它容器隔离
+- 要设置两个容器之间可以通信,但与其它容器隔离
 
 **步骤:**
 
@@ -750,6 +873,10 @@ docker commit CONTAINER_ID tz/opensuse
 
 Dockerfile:
 
+- 为了有效利用缓存,尽量将文件相关的命令放在前面
+
+- RUN 命令会让镜像分层,不要担心层数过多,而将命令放在一个 RUN 下
+
 | 命令       | 操作     | 能否被覆盖       |
 | ---------- | -------- | ---------------- |
 | ENV        | 环境变量 | run --env        |
@@ -757,7 +884,7 @@ Dockerfile:
 | WORKDIR    | 工作目录 | run -w           |
 | USER       | 用户     | run -u           |
 
-- 注意:
+- ADD, COPY 的区别
 
   - ADD, COPY 路径是以 Dockerfile 下的目录开始
 
@@ -766,6 +893,16 @@ Dockerfile:
   - ADD 命令复制 tar 文件时,会自动解压
 
   - 尽可能用 COPY
+
+- CMD, ENTRYPOINT 的区别
+
+  - ENTRYPOINT 只有在最后一条命令有效
+
+  - CMD 可以为 ENTRYPOINT 提供参数
+    ```
+    ENTRYPOINT [“echo”, “Hello”]
+    CMD [“World”]
+    ```
 
 在容器里的 linux 使用变量
 
@@ -861,6 +998,10 @@ docker container exec -it opensuse_1 bash
 
   > 容器自定义网络工具
 
+- [hub-tool](https://github.com/docker/hub-tool)
+
+  > 管理 docker hub 的 cli 工具
+
 - [自动更新 docker 镜像](https://github.com/containrrr/watchtower)
 
 ```bash
@@ -868,6 +1009,24 @@ docker run -d \
     --name watchtower \
     -v /var/run/docker.sock:/var/run/docker.sock \
     containrrr/watchtower
+```
+
+- [cAdvisor](https://github.com/google/cadvisor)
+  ![image](./Pictures/kubernetes-docker/cadvisor.png)
+
+```bash
+docker run \
+ --volume=/:/rootfs:ro \
+ --volume=/var/run:/var/run:ro \
+ --volume=/sys:/sys:ro \
+ --volume=/var/lib/docker/:/var/lib/docker:ro \
+ --volume=/dev/disk/:/dev/disk:ro \
+ --publish=5002:8080 \
+ --detach=true \
+ --name=cadvisor \
+ --privileged \
+ --device=/dev/kmsg \
+ google/cadvisor:latest
 ```
 
 - [k3s-rancher](https://github.com/rancher/rancher)
@@ -914,6 +1073,8 @@ docker run --rm -ti \
 
 - [Dockerfile 安全最佳实践](https://cloudberry.engineering/article/dockerfile-security-best-practices/)
 
+- [gvistor 对比普通容器和 aliuk](https://mp.weixin.qq.com/s?src=11&timestamp=1613134736&ver=2886&signature=6e*T4ylvJCA--fGa-tb*ttJq3JArF7z-Wzs5eAPzlY813SG154AK1YyEgLv2MQSiIgP-pWSXHI2l*Fwri21PvvVMnlRoFkCEoiew-uvj8AFuYyM*dD5l83dQ2G5TriVb&new=1)
+
 # Kubernetes 是希腊语中的船长(captain)
 
 ## 第三方软件资源
@@ -928,7 +1089,12 @@ docker run --rm -ti \
 ## 优秀文章
 
 - [图解儿童 Kubernetes 指南](https://www.cncf.io/the-childrens-illustrated-guide-to-kubernetes/)
+- [关于 kubernetes 失败的故事](https://k8s.af/)
 
-```
+# [Unikernel(VM 容器融合技术),或许是下一代云技术](https://zhuanlan.zhihu.com/p/29053035)
 
-```
+- 目前可以使用 linuxkit 进行构建
+
+- [mirageos](https://mirage.io/)
+
+- [gvistor](https://mp.weixin.qq.com/s?src=11&timestamp=1613136113&ver=2886&signature=6e*T4ylvJCA--fGa-tb*ttJq3JArF7z-Wzs5eAPzlY813SG154AK1YyEgLv2MQSi7BUW8muQyHQnOl3arAu2m9qK8bCk2fgGLOv4-VYvAyWDfMUcBrvB8oZ9csaoQ-aI&new=1)
