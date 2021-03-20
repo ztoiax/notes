@@ -774,6 +774,8 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 
 ![image](./Pictures/nginx/goaccess1.gif)
 
+- [rhit:A nginx log explorer](https://github.com/Canop/rhit)
+
 ## 书籍 or 教程
 
 - [官方教程中文](https://github.com/DocsHome/nginx-docs/blob/master/SUMMARY.md)

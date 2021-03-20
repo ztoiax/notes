@@ -162,3 +162,4 @@ chmod 755 /tmp/for.sh
 ```
 
 - [good bash 脚本集合](https://github.com/alexanderepstein/Bash-Snippets)
+- [shellcheck](https://www.shellcheck.net/)

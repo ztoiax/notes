@@ -286,6 +286,8 @@ sudo make O_NERD=1
 
 ### python shell
 
+- [xonsh 插件](https://xon.sh/xontribs.html)
+
 # reference
 
 - [命令行基础工具的更佳替代品](https://linux.cn/article-4042-1.html)

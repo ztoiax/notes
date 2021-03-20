@@ -88,6 +88,7 @@
             * [informantion_schema](#informantion_schema)
             * [performance_schema](#performance_schema)
     * [极限值测试](#极限值测试)
+    * [benchmark](#benchmark)
     * [日志](#日志)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
@@ -183,10 +184,6 @@ show status like "uptime";
 
 # 查看mysql连接次数
 show status like 'connections';
-
-# 查看数据库队列
-# 查看数据库状态
-show status;
 
 # 查看mysql的插入次数;
 show status like "com_insert%";
@@ -862,6 +859,48 @@ select release_lock('lockname');
   > ```sql
   > CREATE TABLE T1(A INT PRIMARY KEY, B INT unique, C CHAR(1) unique);
   > ```
+
+**数据类型:**
+
+> 如何选择数据类型
+
+> 不同的存储引擎,有不同的实现
+
+- 选择存储最小的数据类型
+
+  - 注意 INT(1) 和 INT(20) 的存储和计算是一样的
+
+    - 但更长的列会消耗更多内存
+
+  - 整型比字符串的 CPU 操作更低
+
+  - TIMEMESTAMP 比 DATATIME 的存储小一半
+
+    - TIMEMESTAMP 和 unix 时间相同,从 1970 - 2038 年
+
+    - DATATIME 从 1001 - 9999 年
+
+- 指定列 NOT NULL
+
+  - NULL 值 很难优化
+
+- VARCHAR
+
+  - 可变长度,需要额外记录长度
+
+    - 当长度 <= 255 时,需要 1 个字节
+
+    - 当长度 > 255 时,需要 2 个字节
+
+    - varchar(1),需要 2 个字节
+
+    - varchar(256),需要 258 个字节
+
+- CHAR
+
+  - 定长字符串,不容易产生碎片
+
+    - 适合存储 MD5 这些定长值
 
 ```sql
 # 创建 new 数据库设置 id 为主键,不能为空,自动增量
@@ -3476,6 +3515,14 @@ sudo mysql -uroot -pYouPassword YouDatabase < /tmp/1018.sql
 ```
 
 ![image](./Pictures/mysql/1018.png)
+
+## benchmark
+
+```sql
+set @input := 'hello world';
+select benchmark(10000, MD5(@input));
+select benchmark(10000, SHA1(@input));
+```
 
 ## 日志
 

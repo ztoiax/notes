@@ -205,21 +205,21 @@ nmcli connection show --active
 # 添加eth2新连接
 nmcli connection add type ethernet ifname eth2
 
-# 开启，关闭
-nmcli connection up eth0
-nmcli connection down eth0
+# 开启，关闭 "Wired Connection"为 device name
+nmcli connection down "Wired Connection"
+nmcli connection up "Wired Connection"
 
-# 修改ip
-nmcli connection modify eth0 ipv4.method manual
-nmcli connection modify eth0 ipv4.address 192.168.100.2/24
+# 修改ip 需要重启网卡.电脑重启依然生效
+nmcli connection modify "Wired Connection" ipv4.method manual
+nmcli connection modify "Wired Connection" ipv4.address 192.168.100.2/24
 
 # 修改为dhcp
-nmcli connection modify eth0 ipv4.method auto
+nmcli connection modify "Wired Connection" ipv4.method auto
 
 # 修改dns
 nmcli connection modify "Wired Connection" ipv4.dns "114.114.114.114 223.5.5.5"
 
-#
+# 查看网卡配置
 nmcli device show
 ```
 
