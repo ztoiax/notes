@@ -11,6 +11,8 @@
     * [fd](#fd)
         * [instead find](#instead-find)
 * [git](#git)
+    * [gh](#gh)
+        * [github-cli官方文档](#github-cli官方文档)
     * [lazygit](#lazygit)
         * [git tui](#git-tui)
     * [bit](#bit)
@@ -73,6 +75,8 @@
         * [本地同步 onedrive](#本地同步-onedrive)
     * [xonsh](#xonsh)
         * [python shell](#python-shell)
+        * [ytfzf](#ytfzf)
+        * [ix](#ix)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -121,6 +125,10 @@ sudo make O_NERD=1
 ### instead find
 
 # git
+
+## [gh](https://github.com/cli/cli)
+
+### github-cli[官方文档](https://cli.github.com/manual/)
 
 ## [lazygit](https://github.com/jesseduffield/lazygit)
 
@@ -287,6 +295,20 @@ sudo make O_NERD=1
 ### python shell
 
 - [xonsh 插件](https://xon.sh/xontribs.html)
+
+### ytfzf
+
+- [fzf搜索,播放youtube](https://github.com/pystardust/ytfzf)
+
+### ix
+
+- [pastbin](http://ix.io/)
+
+    - [bpa:一个在线网页版](https://bpa.st/)
+
+```sh
+cat test.py | curl -F 'f:1=<-' ix.io
+```
 
 # reference
 

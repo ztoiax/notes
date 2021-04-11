@@ -19,6 +19,9 @@
             * [Docker + Kubernetes 微服务容器化实践](#docker--kubernetes-微服务容器化实践)
             * [QEMU KVM 学习笔记](#qemu-kvm-学习笔记)
     * [其他相似项目](#其他相似项目)
+        * [CS-Notes](#cs-notes)
+        * [新版 1000 多本计算机电子书免费下载](#新版-1000-多本计算机电子书免费下载)
+        * [free-books](#free-books)
         * [free-programming-books](#free-programming-books)
         * [中文翻译 Road Map](#中文翻译-road-map)
         * [值得一看的技术类书籍列表](#值得一看的技术类书籍列表)
@@ -65,6 +68,12 @@
 
 ## 其他相似项目
 
+### [CS-Notes](https://github.com/CyC2018/CS-Notes)
+
+### [新版 1000 多本计算机电子书免费下载](https://github.com/itdevbooks/pdf)
+
+### [free-books](https://github.com/ruanyf/free-books)
+
 ### [free-programming-books](https://github.com/EbookFoundation/free-programming-books)
 
 ### [中文翻译 Road Map](https://github.com/xx-zh/xx-zh-roadmap)
@@ -73,4 +82,4 @@
 
 ### [统计开发者的免费服务的列表](https://github.com/ripienaar/free-for-dev)
 
-### [1000 多本计算机电子书免费下载](1000多本计算机电子书免费下载)
+### [1000 多本计算机电子书免费下载](https://github.com/itdevbooks/pdf)

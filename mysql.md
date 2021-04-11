@@ -88,10 +88,12 @@
             * [informantion_schema](#informantion_schema)
             * [performance_schema](#performance_schema)
     * [极限值测试](#极限值测试)
+    * [python](#python)
     * [benchmark](#benchmark)
     * [日志](#日志)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
+* [第三方资源](#第三方资源)
 * [新闻资源](#新闻资源)
 * [online tools](#online-tools)
 
@@ -3516,6 +3518,12 @@ sudo mysql -uroot -pYouPassword YouDatabase < /tmp/1018.sql
 
 ![image](./Pictures/mysql/1018.png)
 
+## python
+
+```py
+
+```
+
 ## benchmark
 
 ```sql
@@ -3556,6 +3564,9 @@ select benchmark(10000, SHA1(@input));
 - [MySQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
 - [138 张图带你 MySQL 入门](https://mp.weixin.qq.com/s?src=11&timestamp=1603417035&ver=2661&signature=Z-XNfjtR11GhHg29XAiBZ0RAiMHavvRavxB1ccysnXtAKChrVkXo*zx3DKFPSxDESZ9lwRM7C8-*yu1dEGmXwHgv1qe7V-WvwLUUQe7Nz7RUwEuJmLYqVRnOWtONHeL-&new=1)
 - [CTO 要我把这份 MySQL 规范贴在工位上！](https://mp.weixin.qq.com/s?src=11&timestamp=1605361738&ver=2706&signature=wzhghhJTTx1Hy9Nn90P35u9hfG3eaeMGOvIoDoBGTECHdDQAmUuxFCVHAbuUqaN4*UYga9bGdXxX3f1G8kiYZ1yoA4tnocgi8GZoRe2TNQFkbbh1T2eSqyC6DcA9bTqF&new=1)
+# 第三方资源
+
+- [awesome-mysql](http://shlomi-noach.github.io/awesome-mysql/)
 
 # 新闻资源
 

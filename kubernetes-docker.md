@@ -1079,7 +1079,11 @@ docker run --rm -ti \
 
 ## 第三方软件资源
 
+- [kube-shell](https://github.com/cloudnativelabs/kube-shell)
+
 - [lazykube](https://github.com/TNK-Studio/lazykube)
+
+- [lazykube替换墙外镜像的下载地址](https://github.com/joyme123/lazykube)
 
 - [helm 包管理器](https://github.com/helm/helm)
 

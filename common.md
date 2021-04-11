@@ -12,6 +12,7 @@
         * [rsync](#rsync)
         * [split](#split)
         * [fsarchiver](#fsarchiver)
+        * [find](#find)
     * [char (字符串操作)](#char-字符串操作)
         * [column](#column)
         * [tr](#tr)
@@ -175,9 +176,6 @@ rsync -av /source /target
 
 # 增量备份
 rsync -a --delete --link-dest /compare /source /target
-
-# 查找硬链接
-find / -samefile /target/file
 ```
 
 - [rsync+inotify-tools](https://github.com/wsgzao/sersync)
@@ -196,6 +194,26 @@ split -C 100M <file>
 
 ```bash
 fsarchiver savefs -z1 -j12 -v /path/to/backup_image.fsa /dev/sda1
+```
+
+### find
+
+```bash
+# 将BBB目录,改为AAA目录
+for file in $(find . -type d -name "BBB"); do
+    mv $file $(echo "$file" | sed "s/BBB/AAA/");
+done
+
+# 将AAA目录,改为BBB目录
+for file in $(find . -type d -name "AAA"); do
+    mv $file $(dirname $file)/BBB
+done
+
+# 或者
+find . -type d -name AAA -exec sh -c 'mv "$0" $(dirname "$0")/BBB' {} \;
+
+# 查找硬链接
+find / -samefile /target/file
 ```
 
 ## char (字符串操作)
@@ -392,6 +410,7 @@ awk '$1 != 0' FILE
 # 将第一列的值相加
 awk '{sum += $1} END {print sum}' FILE
 
+awk -v a="$i" 'NR == a  {sub(/hello/,"tz")}1' test |head
 # 只打印第一列的值等于100
 awk '$1=="100" {print $0}' FILE
 
@@ -400,6 +419,10 @@ awk '$1=="100" && $2 ~ /^a.*e$/ {print $3}' FILE
 
 # root替换tz(类似sed),只是打印,并不会修改文件
 awk '{sub(/root/,"tz")}1' FILE
+
+# 通过变量指定行,再进行替换
+i=2
+awk -v a="$i" 'NR == a  {sub(/root/,"tz")}1' FILE
 
 # 所有字符都余2
 awk 'ORS=NR%2' FILE

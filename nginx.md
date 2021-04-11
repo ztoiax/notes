@@ -219,6 +219,14 @@ curl 127.0.0.1/YouPictureName > /tmp/YouPictureName.png
 
 ### Proxy Server (代理服务器)
 
+- 正向代理:用户可以察觉.(360,火绒等防火墙)
+
+  ![image](./Pictures/nginx/proxy2.png)
+
+- 反向代理:一般在内网无法察觉(类似于中介)
+
+  ![image](./Pictures/nginx/proxy3.png)
+
 proxy_pass 指令: 让 **80** 端口代理 **8080** 端口的流量
 
 添加一个新的 **server** 块，监听 **8080** 端口:
@@ -280,9 +288,9 @@ limit_except: http request methods (请求方法)限制
 
 | http request methods | 内容                                                   |
 | -------------------- | ------------------------------------------------------ |
-| GET                  | 请求资源，返回实体                                     |
+| GET                  | 请求资源，返回实体,不会改变服务器状态(额外参数在url内),因此比post安全                    |
 | HEAD                 | 请求获取响应头，但不返回实体                           |
-| POST                 | 用于提交数据请求处理，数据包含在请求体内               |
+| POST                 | 用于提交数据请求处理，(额外参数在请求体内),会改变服务器状态             |
 | PUT                  | 请求上传数据                                           |
 | DELETE               | 请求删除指定资源                                       |
 | MKCOL                |                                                        |
@@ -960,7 +968,7 @@ touch /var/log/php-fpm/php_errors.log
 ```
 
 # reference
-
+- [http的基本知识](https://github.com/CyC2018/CS-Notes/blob/master/notes/HTTP.md#3xx-%E9%87%8D%E5%AE%9A%E5%90%91)
 - [tomcat 与 nginx，apache 的区别是什么？](https://www.zhihu.com/question/32212996/answer/87524617)
 - [你还记得 Tomcat 的工作原理么](https://zhuanlan.zhihu.com/p/248426114)
 - [CentOS 安装 MySQL 详解](https://juejin.im/post/6844903870053761037)

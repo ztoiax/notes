@@ -60,6 +60,7 @@ ln -sf /boot/System.map-vmlinuz-linux5.10.6 /boot/System.map
 sudo cp /etc/mkinitcpio.d/linux.preset /etc/mkinitcpio.d/linux5.10.6.preset
 sudo sed -i 's/linux/linux5.10.6/g' /etc/mkinitcpio.d/linux5.10.6.preset
 
+# 不同发行版命令不一样,我这里是archlinux
 sudo mkinitcpio -p linux5.10.6
 ```
 

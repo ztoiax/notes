@@ -12,6 +12,7 @@
     * [hyper log](#hyper-log)
     * [transaction (事务)](#transaction-事务)
     * [Lua 脚本](#lua-脚本)
+    * [python](#python)
     * [配置](#配置)
         * [config](#config)
         * [info](#info)
@@ -887,6 +888,38 @@ if 语句:
 EVAL "if redis.call('EXISTS', KEYS[1]) == 0 then
     for i=1,512 do redis.call('RPUSH', KEYS[1], i) end
 end" 1 integers
+```
+
+## python
+
+- [官方文档](https://pypi.org/project/redis/)
+
+- `hash`类型对应python的`dict字典`类型
+
+```py
+import redis
+r = redis.Redis()
+
+# 防止redis连接失败,在r = redis.Redis()后,可以try: r.client()
+try:
+    r.client()
+except redis.exceptions.ConnectionError:
+    r.close()
+    return 1
+
+# set
+r.mset({'1': 'google', '2': 'baidu'})
+r.get('1')
+
+# pipe缓冲区队列.当execute()才会执行
+pipe = r.pipeline()
+# 关闭事务
+pipe = r.pipeline(transaction=False)
+pipe.set('foo', 'bar')
+pipe.get('foo')
+pipe.execute()
+# 或者
+pipe.set('foo', 'bar').get('foo').execute()
 ```
 
 ## 配置
