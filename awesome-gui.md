@@ -8,6 +8,8 @@
     * [timeshif](#timeshif)
         * [backup](#backup)
     * [typora](#typora)
+    * [qimgv(图片查看器)](#qimgv图片查看器)
+    * [pcmanfm(文件管理器)](#pcmanfm文件管理器)
 
 <!-- vim-markdown-toc -->
 
@@ -34,3 +36,8 @@
 ## [typora](https://www.typora.io/)
 
 ![image](./Pictures/awesomegui/typora.png)
+
+## [qimgv(图片查看器)](https://github.com/easymodo/qimgv)
+
+## pcmanfm(文件管理器)
+

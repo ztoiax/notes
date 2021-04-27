@@ -1,6 +1,10 @@
 <!-- vim-markdown-toc GFM -->
 
 * [server(服务配置)](#server服务配置)
+    * [openssh](#openssh)
+        * [基本配置](#基本配置)
+        * [使用ssh-agent 管理私钥, 自动进行远程连接](#使用ssh-agent-管理私钥-自动进行远程连接)
+        * [快速连接](#快速连接)
     * [pdsh(ssh 并行管理)](#pdshssh-并行管理)
     * [pssh](#pssh)
     * [DNS](#dns)
@@ -13,6 +17,72 @@
 <!-- vim-markdown-toc -->
 
 # server(服务配置)
+
+## openssh
+
+> 默认为22端口, 安全起见可更改为其它端口.如8022
+
+### 基本配置
+
+- 服务器公钥保存路径: `~/.ssh/authorized_keys`
+
+- 注意:服务端`authorized_keys`和客户端`私钥文件`权限必须是**600**
+
+```sh
+# 生成密钥
+ssh-keygen -t rsa
+
+# 添加公钥到远程服务器
+ssh user@ip 'mkdir -p .ssh && cat >> .ssh/authorized_keys' < ~/.ssh/id_rsa.pub
+# or 使用ssh-copy-id -i
+sudo ssh-copy-id -i ~/.ssh/id_rsa.pub ip
+```
+
+### 使用ssh-agent 管理私钥, 自动进行远程连接
+
+```sh
+# 启动ssh-agent
+eval `ssh-agent -s`
+
+# 添加私钥
+ssh-add /tmp/id_rsa
+
+# 查看私钥
+ssh-add -L
+```
+
+### 快速连接
+
+- 配置`~/.ssh/config`文件:
+
+| ssh option   | 内容                       |
+|--------------|----------------------------|
+| IdentityFile | 私钥路径                   |
+| Compression  | 启动压缩(会对性能产生影响) |
+
+```sh
+Host centos7
+  HostName 192.168.100.208
+  User root
+  Port 22
+  IdentityFile ~/.ssh/id_rsa
+  Compression yes
+
+Host opensuse
+  HostName 192.168.100.71
+  User root
+  Port 22
+  IdentityFile ~/.ssh/id_rsa
+  Compression yes
+```
+
+- 配置好后,即可`ssh Host`连接:
+
+```sh
+ssh centos7
+ssh opensuse
+```
+
 
 ## [pdsh(ssh 并行管理)](https://github.com/chaos/pdsh)
 

@@ -10,6 +10,11 @@
     * [mc](#mc)
     * [fd](#fd)
         * [instead find](#instead-find)
+    * [tmsu](#tmsu)
+        * [taging file and mount tag file](#taging-file-and-mount-tag-file)
+    * [massren](#massren)
+        * [using editor rename file](#using-editor-rename-file)
+    * [fselect: sql语句的ls](#fselect-sql语句的ls)
 * [git](#git)
     * [gh](#gh)
         * [github-cli官方文档](#github-cli官方文档)
@@ -49,6 +54,7 @@
         * [markdown preview cli version](#markdown-preview-cli-version)
     * [fx](#fx)
         * [Command-line JSON processing tool](#command-line-json-processing-tool)
+    * [navi: fzf command bookmark](#navi-fzf-command-bookmark)
 * [disk](#disk)
     * [dfc](#dfc)
         * [instead df](#instead-df)
@@ -58,6 +64,19 @@
     * [ncdu](#ncdu)
 * [net](#net)
     * [prettyping](#prettyping)
+* [好看的字符](#好看的字符)
+    * [neofetch](#neofetch)
+    * [cpufetch](#cpufetch)
+    * [figlet](#figlet)
+    * [cmatrix](#cmatrix)
+    * [lolcat](#lolcat)
+    * [colorscript](#colorscript)
+* [Social media](#social-media)
+    * [googler(google)](#googlergoogle)
+    * [ddgr(DuckDuckGo)](#ddgrduckduckgo)
+    * [rtv(reddit cli)](#rtvreddit-cli)
+    * [rainbowstream(twitter)](#rainbowstreamtwitter)
+    * [haxor-news(hacknew)](#haxor-newshacknew)
 * [other](#other)
     * [Termshark](#termshark)
         * [wireshark cli version with vim keybinds](#wireshark-cli-version-with-vim-keybinds)
@@ -77,6 +96,7 @@
         * [python shell](#python-shell)
         * [ytfzf](#ytfzf)
         * [ix](#ix)
+        * [cloc(统计代码)](#cloc统计代码)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -124,9 +144,48 @@ sudo make O_NERD=1
 
 ### instead find
 
+## [tmsu](https://github.com/oniony/TMSU)
+
+### taging file and mount tag file
+
+## [massren](https://github.com/laurent22/massren)
+
+### using editor rename file
+
+## [fselect: sql语句的ls](https://github.com/jhspetersson/fselect)
+
 # git
 
 ## [gh](https://github.com/cli/cli)
+
+```sh
+# 登陆
+gh auth login
+
+# 查看登陆
+gh auth status
+
+# 创建仓库
+gh repo create gh-test
+
+# 查看所有仓库
+gh repo list
+
+# 查看指定仓库
+gh repo view https://github.com/ztoiax/nvim
+
+# 创建issue
+gh issue create
+
+# 查看issue
+gh issue list
+
+# 创建release
+gh release create r1
+
+# 查看release
+gh release list
+```
 
 ### github-cli[官方文档](https://cli.github.com/manual/)
 
@@ -228,6 +287,8 @@ sudo make O_NERD=1
 
 ### Command-line JSON processing tool
 
+## [navi: fzf command bookmark](https://github.com/denisidoro/navi)
+
 # disk
 
 ## [dfc](https://github.com/Rolinh/dfc)
@@ -256,6 +317,42 @@ sudo make O_NERD=1
 
 ![image](./Pictures/awesomecli/ping.png)
 
+# 好看的字符
+
+## [neofetch](https://github.com/dylanaraps/neofetch)
+
+![image](./Pictures/awesomecli/neofetch.png)
+
+## [cpufetch](https://github.com/Dr-Noob/cpufetch)
+
+![image](./Pictures/awesomecli/cpufetch.png)
+
+## [figlet](https://github.com/cmatsuoka/figlet)
+
+![image](./Pictures/awesomecli/figlet.png)
+
+## [cmatrix](https://github.com/abishekvashok/cmatrix)
+
+![image](./Pictures/awesomecli/cmatrix.png)
+
+## [lolcat](https://github.com/busyloop/lolcat)
+
+![image](./Pictures/awesomecli/lolcat.png)
+
+## [colorscript](https://gitlab.com/dwt1/shell-color-scripts)
+
+![image](./Pictures/awesomecli/colorscript.png)
+
+# Social media
+
+## [googler(google)](https://github.com/jarun/googler)
+## [ddgr(DuckDuckGo)](https://github.com/jarun/ddgr)
+
+## [rtv(reddit cli)](https://github.com/michael-lazar/rtv)
+## [rainbowstream(twitter)](https://github.com/orakaro/rainbowstream)
+![image](./Pictures/awesomecli/rtv.png)
+
+## [haxor-news(hacknew)](https://github.com/donnemartin/haxor-news)
 # other
 
 ## [Termshark](https://github.com/gcla/termshark)
@@ -309,6 +406,10 @@ sudo make O_NERD=1
 ```sh
 cat test.py | curl -F 'f:1=<-' ix.io
 ```
+
+### [cloc(统计代码)](https://github.com/AlDanial/cloc)
+
+![image](./Pictures/awesomecli/cloc.png)
 
 # reference
 

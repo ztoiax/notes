@@ -13,6 +13,7 @@
         * [split](#split)
         * [fsarchiver](#fsarchiver)
         * [find](#find)
+        * [fselect: sql语句的ls](#fselect-sql语句的ls)
     * [char (字符串操作)](#char-字符串操作)
         * [column](#column)
         * [tr](#tr)
@@ -214,6 +215,123 @@ find . -type d -name AAA -exec sh -c 'mv "$0" $(dirname "$0")/BBB' {} \;
 
 # 查找硬链接
 find / -samefile /target/file
+
+# -regex正则表达式(不支持pcre)
+find . -regex ".*python.*"
+```
+
+### [fselect: sql语句的ls](https://github.com/jhspetersson/fselect)
+
+> 实现以列为单位的ls(面向对象)
+
+- 默认会递归目录
+
+```sh
+# 显示当前目录文件的size, path
+fselect size, path from .
+
+# 显示当前目录文件和/tmp目录
+fselect size, path from ., /tmp
+
+# 显示压缩文件内的文件
+fselect size, path from . archives
+
+# 递归软连接
+fselect size, path from . symlinks
+
+# 搜索长宽相等的图片
+fselect path from . where width = height
+
+# 只显示前10个
+fselect size, path from . limit 10
+
+# 不递归目录
+fselect size, path from . depth 1
+
+# 只显示目录深度2到5的文件
+fselect size, path from . mindepth 2 depth 5
+
+# order by 排序
+fselect size, path from . order by size
+fselect size, path from . order by size desc
+
+fselect modified, fsize, path from . order by 1 desc, 3
+
+
+# 统计size
+fselect "MIN(size), MAX(size), AVG(size), SUM(size), COUNT(*) from ."
+```
+
+- 输出文件
+
+```sh
+fselect size, path from . into json
+fselect size, path from . into html
+fselect size, path from . into csv
+```
+
+- where
+
+```sh
+# size 大于1M的文件
+fselect size, path from . where size gt 1M
+
+# hsize 自动转换单位, 查找大于1M的png文件
+fselect hsize, path from . where name = '*.png' and size gt 1M
+
+# 查找大于1M的png文件, 小于1M的jpg文件
+fselect "hsize, path from . where (name = '*.png' and size gt 1M) or (name = '*.jpg' and size lt 1M)"
+
+# =~ 正则表达式(支持pcre), 查找路径包含python的文件.
+# 类似于find . -regex ".*python.*"
+fselect name from . where path =~ '.*python.*'
+```
+
+- 文件类型:
+
+    - `is_archive`
+    - `is_audio`
+    - `is_book`
+    - `is_doc`
+    - `is_image`
+    - `is_video`
+
+- 特殊文件:
+
+    - `suid`
+    - `is_pipe`
+    - `is_socket`
+
+```sh
+# 只搜索图片
+fselect path from . where is_image = true
+```
+
+- 权限:
+
+    - `other_all`
+    - `other_read`
+    - `other_write`
+    - `other_exec`
+
+```sh
+# 搜索权限包含w, x的文件
+fselect mode, path from . where other_write = true or other_exec = true
+```
+
+- 时间相关
+
+```py
+# 今天创建的文件
+fselect path from . where created = today
+
+# 昨天访问过的文件
+fselect path from . where accessed = yesterday
+
+# 2021-04-20以来修改过的文件.时分秒
+fselect path from . where modified gt 2021-04-20
+fselect path from . where modified gt '2021-04-20 18:10'
+fselect path from . where modified gt '2021-04-20 18:10:30'
 ```
 
 ## char (字符串操作)

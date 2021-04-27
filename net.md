@@ -36,6 +36,8 @@
     * [testssl](#testssl)
     * [nghttp](#nghttp)
     * [h2spec](#h2spec)
+    * [dnspeep](#dnspeep)
+    * [lighthouse](#lighthouse)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -338,6 +340,9 @@ sudo tcpdump -n not port 443 and portrange 1-1024 and greater 1000
 ```bash
 # 只捕抓TCP syn包：
 tcpdump -i eth0 "tcp[tcpflags] & (tcp-syn) != 0"
+
+# 只捕抓目标是百度的TCP syn包：
+tcpdump -ni eth0 dst www.baidu.com and "tcp[tcpflags] & (tcp-syn) != 0"
 
 # 只捕抓TCP ack包：
 tcpdump -i eth0 "tcp[tcpflags] & (tcp-ack) != 0"
@@ -726,6 +731,13 @@ nghttp -nva -t 1 https://www.bilibili.com
 ```bash
 h2spec -t -S -h www.bilibili.com -p 443
 ```
+## [dnspeep](https://github.com/jvns/dnspeep)
+
+> 记录程序的dns请求,响应
+
+## [lighthouse](https://github.com/GoogleChrome/lighthouse)
+
+> chrome 网页性能测试
 
 # reference
 

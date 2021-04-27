@@ -27,6 +27,7 @@
         * [值得一看的技术类书籍列表](#值得一看的技术类书籍列表)
         * [统计开发者的免费服务的列表](#统计开发者的免费服务的列表)
         * [1000 多本计算机电子书免费下载](#1000-多本计算机电子书免费下载)
+        * [free-python-books](#free-python-books)
 
 <!-- vim-markdown-toc -->
 
@@ -83,3 +84,5 @@
 ### [统计开发者的免费服务的列表](https://github.com/ripienaar/free-for-dev)
 
 ### [1000 多本计算机电子书免费下载](https://github.com/itdevbooks/pdf)
+
+### [free-python-books](https://github.com/pamoroso/free-python-books)

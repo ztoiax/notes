@@ -2,15 +2,6 @@
 
 * [基本说明](#基本说明)
 * [all-have 综合](#all-have-综合)
-    * [bcc](#bcc)
-        * [stackcount](#stackcount)
-    * [perf-tool](#perf-tool)
-        * [perf list](#perf-list)
-        * [perf stat](#perf-stat)
-        * [perf record](#perf-record)
-        * [perf sched](#perf-sched)
-        * [perf other](#perf-other)
-    * [enhance pstree (进程树)](#enhance-pstree-进程树)
     * [sysbench](#sysbench)
     * [vmstat](#vmstat)
     * [dstat](#dstat)
@@ -20,7 +11,6 @@
     * [sysbench](#sysbench-1)
 * [CPU](#cpu)
     * [cpu info](#cpu-info)
-    * [strace](#strace)
     * [mpstat(sysstat)](#mpstatsysstat)
     * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
     * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
@@ -87,6 +77,17 @@
     * [nvtop](#nvtop)
     * [gpustat](#gpustat)
     * [gmonitor](#gmonitor)
+* [Debug](#debug)
+    * [strace](#strace)
+    * [bcc](#bcc)
+        * [stackcount](#stackcount)
+    * [perf-tool](#perf-tool)
+        * [perf list](#perf-list)
+        * [perf stat](#perf-stat)
+        * [perf record](#perf-record)
+        * [perf sched](#perf-sched)
+        * [perf other](#perf-other)
+    * [enhance pstree (进程树)](#enhance-pstree-进程树)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -136,295 +137,6 @@ data from brendangregg book: [Systems Performance](http://www.brendangregg.com/s
 - strace
 
 # all-have 综合
-
-## [bcc](https://github.com/iovisor/bcc)
-
-- [BPF-tools](https://github.com/brendangregg/BPF-tools)
-
-- 配合[FlameGraph](http://www.brendangregg.com/flamegraphs.html)
-
-通过 `cpu stack(堆栈)` 可生成:
-
-- 冰柱图
-- 火焰图
-- 太阳图
-
-- `eBRF` 和 `perf` 都是 linux kernel 代码的一部分,
-
-- `eBPF` 比 `perf` 更容易地在内核执行,效率更高,开销更低
-
-![image](./Pictures/benchmark/perf_vs_brf.png)
-
-bcc 安装后加入`$PATH`:
-
-```bash
-export PATH="/usr/share/bcc/tools:$PATH"
-```
-
-### stackcount
-
-追踪 nvim 的使用 ` malloc()` 的次数:
-
-```bash
-# -U 只跟踪用户层堆栈
-stackcount -p $(pgrep -of nvim) -U c:malloc > out.stacks
-
-# 使用flame graph工具,输出火焰图
-stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
-    --title="malloc() Flame Graph" --countname="calls" > out.svg
-```
-
-追踪 `page falut(缺页)`:
-
-```bash
-stackcount 't:exceptions:page_fault_*' > out.stacks
-
-# 使用flame graph工具,输出火焰图
-stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
-    --title="malloc() Flame Graph" --countname="calls" > out.svg
-```
-
-![image](./Pictures/benchmark/stackcount.gif)
-
-**reference:**
-
-- [Memory Leak (and Growth) Flame Graphs](http://www.brendangregg.com/FlameGraphs/memoryflamegraphs.html)
-
-## [perf-tool](http://www.brendangregg.com/perf.html)
-
-查看追踪点(image from brendangregg):
-![image](./Pictures/benchmark/perf_events_map.png)
-
-from brendangregg:
-
-| 子命令    | 操作                                                                       |
-| --------- | -------------------------------------------------------------------------- |
-| annotate  | 描述读取 perf.data（由 perfrecord 创建）并显示注释过的代码                 |
-| diff      | 读取两个 perf.data 文件并显示两份剖析信息之间的差异                        |
-| evlist    | 列出一个 perf.data 文件里的事件名称                                        |
-| inject    | 过滤以加强事件流，在其中加入额外的信息                                     |
-| kmem      | 跟踪/测量内核内存（slab）属性的工具 kvm 跟踪/测量 kvm 客户机操作系统的工具 |
-| list      | 列出所有的符号事件类型                                                     |
-| lock      | 分析锁事件                                                                 |
-| probe     | 定义新的动态跟踪点                                                         |
-| record    | 运行一个命令，并把剖析信息记录在 perf.data 中                              |
-| report    | 读取 perf.data（由 perf record 创建）并显示剖析信息                        |
-| sched     | 跟踪/测量调度器属性（延时）的工具                                          |
-| script    | 读取 perf.data（由 perf record 创建）并显示跟踪输出                        |
-| stat      | 运行一个命令并收集性能计数器统计信息                                       |
-| timechart | 可视化某一个负载期间系统总体性能的工具                                     |
-| top       | 系统剖析工具下面演示了如何使用一些关键命令                                 |
-
-### perf list
-
-```bash
-# 网络追踪
-perf list 'tcp:*' 'sock:inet*'
-
-# sched
-perf list 'sched:*'
-
-# 硬件追踪
-perf list | grep -i hardware
-
-# 软件追踪
-perf list | grep -i "software event"
-```
-
-### perf stat
-
-> CPU 性能计数器
-
-- 性能开销比 perf record 小
-
-| 参数  | 操作                    |
-| ----- | ----------------------- |
-| -h    | 显示参数内容            |
-| -d    | 详细信息                |
-| -a    | 追踪整个系统            |
-| -p    | 追踪指定 pid            |
-| -e    | 追踪指定事件`perf list` |
-| sleep | 持续时间                |
-
-- [linux syscall list](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md#x86_64-64_bit)
-
-```bash
-# 追踪 ls 命令
-perf stat ls
-
-# 追踪 ls 命令,详细信息
-perf stat -d ls
-
-# 追踪 nvim 进程
-perf stat -p $(pgrep -of nvim)
-
-# 追踪整个系统 5 秒
-perf stat -a sleep 5
-
-# 只追踪 ls 命令,L1缓存相关的事件
-perf stat -e L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores ls
-
-# 只追踪整个系统的 ext4 事件,持续10秒
-perf stat -e 'ext4:*' -a sleep 10
-
-# 追踪并统计 ls 的syscall(性能比strace -c ls 要好)
-perf stat -e 'syscalls:sys_enter_*' ls 2>&1 | awk '$1 != 0'
-```
-
-### perf record
-
-- 性能开销取决于追踪的事件
-
-参数和以上`perf stat`基本相同,以下列出不同的部分:
-
-| 参数               | 操作                                                                     |
-| ------------------ | ------------------------------------------------------------------------ |
-| -F                 | 指定频率收集                                                             |
-| -a                 | 追踪所有 cpu                                                             |
-| -b                 | 追踪 cpu 分支                                                            |
-| -o                 | 指定输出文件                                                             |
-| -c                 | 每过多少次事件,才收集 1 次 stack                                         |
-| --call-graph dwarf | 使用 dwarf:解决用户堆栈中缺少帧指针(软件编译缺少帧指针,symbols 会不完整) |
-| --call-graph lbr   | 使用 lbr(cpu 处理器硬件特性):解决 symbols 不完整                         |
-
-record 会保存为 `perf.data` 文件, 使用 perf report 命令显示:
-
-```bash
-perf record -g ls
-perf report
-# 树形文本显示
-perf report --stdio
-```
-
-配合[FlameGraph](http://www.brendangregg.com/flamegraphs.html) 可生成火焰图.以下的 record 同理:
-
-from brendangregg:
-
-```bash
-perf record -F 99 -g ls
-# 生成火焰图
-perf script | stackcollapse-perf.pl | flamegraph.pl > perf.svg
-
-# grep过滤后,生成火焰图
-perf script | stackcollapse-perf.pl > out.perf-folded
-grep -v cpu_idle out.perf-folded | flamegraph.pl > nonidle.svg
-grep ext4 out.perf-folded | flamegraph.pl > ext4internals.svg
-egrep 'system_call.*sys_(read|write)' out.perf-folded | flamegraph.pl > rw.svg
-```
-
-```bash
-# 指定 99hz 频率收集,运行的 ls 命令
-# 选择99赫兹，而不是100赫兹，是为了避免周期性产生偏差的结果
-perf record -F 99 ls
-
-# 指定 99hz 频率收集,运行的 nvim,持续10秒
-perf record -F 99 -p $(pgrep -of nvim) sleep 10
-
-# 收集 CPU 内核指令,持续5秒
-perf record -e cycles:k -a -- sleep 5
-
-# 收集 CPU 用户指令,持续5秒
-perf record -e cycles:u -a -- sleep 5
-
-# 收集 sched 调度器
-perf sched record
-
-# 收集 lock 锁
-perf lock record
-
-# 指定 49hz 频率实时显示
-perf top -F 49 -ns comm,dso
-```
-
-```bash
-# 指定 99hz 频率,使用 dwarf 收集整个系统
-perf record -F 99 -a --call-graph dwarf
-
-# 指定 99hz 频率,使用 lbr 收集整个系统
-perf record -F 99 -a --call-graph lbr
-```
-
-静态追踪:
-
-```bash
-# page-faults(缺页)
-perf record -e page-faults -p $(pgrep -of nvim) -g -- sleep 120
-
-# context-switches(上下文切换)
-perf record -e context-switches -p $(pgrep -of nvim) -g -- sleep 5
-
-# 追踪谁发出了磁盘I/O(sync reads & writes)
-perf record -e block:block_rq_insert -ag -- sleep 60
-
-# 追踪 minor faults (RSS growth)
-perf record -e minor-faults -ag
-
-# 追踪统计新启动的进程
-perf record -e sched:sched_process_exec -a
-
-# 追踪统计进程启动的网络连接
-perf record -e syscalls:sys_enter_connect -ag
-perf report --stdio
-```
-
-动态追踪:
-
-> 动态追踪使用不稳定的 kernel api,应优先使用静态追踪
-
-```bash
-# 显示当前动态追踪
-perf probe -l
-
-# 添加tcp_sendmsg追踪点
-perf probe --add tcp_sendmsg
-
-# 追踪tcp_sendmsg
-perf record -e probe:tcp_sendmsg
-
-# 删除tcp_sendmsg追踪点
-perf probe -d tcp_sendmsg
-```
-
-```bash
-# malloc
-perf probe -x /lib/x86_64-linux-gnu/libc-2.15.so --add malloc
-perf record -e probe_libc:malloc -a
-```
-
-### perf sched
-
-统计进程在 cpu 上的调度:
-
-```bash
-perf sched record -- sleep 1
-perf script --header
-
-# 显示延迟
-perf sched latency
-
-# 显示每个的cpu的当前执行和上下文切换
-perf sched map
-
-# 显示等待时间,唤醒后的调度延迟(sch delay)
-perf sched timehist
-
-# 显示cpu可视化等
-perf sched timehist -MVw
-```
-
-### perf other
-
-perf trace 使用 buffer tracing 性能比`strace`好:
-
-```bash
-perf trace ls
-```
-
-## enhance pstree (进程树)
-
-![image](./Pictures/benchmark/pstree.png)
-
-- [Colony Graphs: Visualizing the Cloud](http://www.brendangregg.com/ColonyGraphs/cloud.html#Implementation)
 
 ## sysbench
 
@@ -632,10 +344,6 @@ lstopo:
 # 查看是否支持某项技术(这里列举nx,其他技术同理)
 grep nx /proc/cpuinfo
 ```
-
-## strace
-
-> 连接程序,在系统调用是暂停,类似调试器,开销大
 
 ## mpstat(sysstat)
 
@@ -1201,6 +909,9 @@ agedu -s /
 # 对刚才扫描的结果,在网页显示
 agedu -w
 
+# 指定文件,在网页显示
+agedu -w -f 2021-04-17:19:21:44-agedu.dat
+
 # 只查看过去12个月或更长时间内未被访问的旧文件。
 agedu -t /home/tz -a 12m
 ```
@@ -1418,6 +1129,353 @@ nvidia-smi pmon -i 0 -s u -o T
 ## [gmonitor](https://github.com/mountassir/gmonitor)
 
 ![image](./Pictures/benchmark/gmonitor.png)
+
+# Debug
+
+- 进程卡死分析:如果是用户态cpu使用率会很高,如果是内核态io使用率会很高
+
+- 如果是内核态:
+
+```sh
+# 查看阻塞的内核函数
+sudo cat /proc/pid/wchan
+
+# 查看当前系统调用, 第一列是系统调用id,其它则是参数
+sudo cat /proc/24067/syscall
+# 再查看系统调用id的信息
+grep syscall_id /usr/include/asm/unistd_64.h
+
+# man查看系统调用信息的网站
+https://man7.org/linux/man-pages/dir_section_2.html
+
+# 查看在内核的系统调用
+sudo cat /proc/pid/stack
+```
+
+## strace
+
+> 连接程序,在系统调用是暂停,类似调试器,开销大
+
+```sh
+# 查看系统调用
+strace ls
+
+# grep需要使用2>&1重定向
+strace ls 2>&1 | grep ioctl
+
+# -e 指定系统调用(我这里是ioctl)
+strace -e ioctl ls
+
+# -t 记录发起时间
+strace -t ls
+
+# -tt 显示微妙
+strace -tt ls
+
+# -r 记录系统调用之间的时间
+strace -r ls
+
+# -c 统计系统调用的次数, 时间, 报错
+strace -c ls
+
+# -p 指定程序
+strace -p pid
+
+# -p 配合 -c
+strace -cp pid
+
+# -o 输出至文件
+strace -o file ls
+```
+
+## [bcc](https://github.com/iovisor/bcc)
+
+- [BPF-tools](https://github.com/brendangregg/BPF-tools)
+
+- 配合[FlameGraph](http://www.brendangregg.com/flamegraphs.html)
+
+通过 `cpu stack(堆栈)` 可生成:
+
+- 冰柱图
+- 火焰图
+- 太阳图
+
+- `eBRF` 和 `perf` 都是 linux kernel 代码的一部分,
+
+- `eBPF` 比 `perf` 更容易地在内核执行,效率更高,开销更低
+
+![image](./Pictures/benchmark/perf_vs_brf.png)
+
+bcc 安装后加入`$PATH`:
+
+```bash
+export PATH="/usr/share/bcc/tools:$PATH"
+```
+
+### stackcount
+
+追踪 nvim 的使用 ` malloc()` 的次数:
+
+```bash
+# -U 只跟踪用户层堆栈
+stackcount -p $(pgrep -of nvim) -U c:malloc > out.stacks
+
+# 使用flame graph工具,输出火焰图
+stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
+    --title="malloc() Flame Graph" --countname="calls" > out.svg
+```
+
+追踪 `page falut(缺页)`:
+
+```bash
+stackcount 't:exceptions:page_fault_*' > out.stacks
+
+# 使用flame graph工具,输出火焰图
+stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
+    --title="malloc() Flame Graph" --countname="calls" > out.svg
+```
+
+![image](./Pictures/benchmark/stackcount.gif)
+
+**reference:**
+
+- [Memory Leak (and Growth) Flame Graphs](http://www.brendangregg.com/FlameGraphs/memoryflamegraphs.html)
+
+## [perf-tool](http://www.brendangregg.com/perf.html)
+
+查看追踪点(image from brendangregg):
+![image](./Pictures/benchmark/perf_events_map.png)
+
+from brendangregg:
+
+| 子命令    | 操作                                                                       |
+| --------- | -------------------------------------------------------------------------- |
+| annotate  | 描述读取 perf.data（由 perfrecord 创建）并显示注释过的代码                 |
+| diff      | 读取两个 perf.data 文件并显示两份剖析信息之间的差异                        |
+| evlist    | 列出一个 perf.data 文件里的事件名称                                        |
+| inject    | 过滤以加强事件流，在其中加入额外的信息                                     |
+| kmem      | 跟踪/测量内核内存（slab）属性的工具 kvm 跟踪/测量 kvm 客户机操作系统的工具 |
+| list      | 列出所有的符号事件类型                                                     |
+| lock      | 分析锁事件                                                                 |
+| probe     | 定义新的动态跟踪点                                                         |
+| record    | 运行一个命令，并把剖析信息记录在 perf.data 中                              |
+| report    | 读取 perf.data（由 perf record 创建）并显示剖析信息                        |
+| sched     | 跟踪/测量调度器属性（延时）的工具                                          |
+| script    | 读取 perf.data（由 perf record 创建）并显示跟踪输出                        |
+| stat      | 运行一个命令并收集性能计数器统计信息                                       |
+| timechart | 可视化某一个负载期间系统总体性能的工具                                     |
+| top       | 系统剖析工具下面演示了如何使用一些关键命令                                 |
+
+### perf list
+
+```bash
+# 网络追踪
+perf list 'tcp:*' 'sock:inet*'
+
+# sched
+perf list 'sched:*'
+
+# 硬件追踪
+perf list | grep -i hardware
+
+# 软件追踪
+perf list | grep -i "software event"
+```
+
+### perf stat
+
+> CPU 性能计数器
+
+- 性能开销比 perf record 小
+
+| 参数  | 操作                    |
+| ----- | ----------------------- |
+| -h    | 显示参数内容            |
+| -d    | 详细信息                |
+| -a    | 追踪整个系统            |
+| -p    | 追踪指定 pid            |
+| -e    | 追踪指定事件`perf list` |
+| sleep | 持续时间                |
+
+- [linux syscall list](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md#x86_64-64_bit)
+
+```bash
+# 追踪 ls 命令
+perf stat ls
+
+# 追踪 ls 命令,详细信息
+perf stat -d ls
+
+# 追踪 nvim 进程
+perf stat -p $(pgrep -of nvim)
+
+# 追踪整个系统 5 秒
+perf stat -a sleep 5
+
+# 只追踪 ls 命令,L1缓存相关的事件
+perf stat -e L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores ls
+
+# 只追踪整个系统的 ext4 事件,持续10秒
+perf stat -e 'ext4:*' -a sleep 10
+
+# 追踪并统计 ls 的syscall(性能比strace -c ls 要好)
+perf stat -e 'syscalls:sys_enter_*' ls 2>&1 | awk '$1 != 0'
+```
+
+### perf record
+
+- 性能开销取决于追踪的事件
+
+参数和以上`perf stat`基本相同,以下列出不同的部分:
+
+| 参数               | 操作                                                                     |
+| ------------------ | ------------------------------------------------------------------------ |
+| -F                 | 指定频率收集                                                             |
+| -a                 | 追踪所有 cpu                                                             |
+| -b                 | 追踪 cpu 分支                                                            |
+| -o                 | 指定输出文件                                                             |
+| -c                 | 每过多少次事件,才收集 1 次 stack                                         |
+| --call-graph dwarf | 使用 dwarf:解决用户堆栈中缺少帧指针(软件编译缺少帧指针,symbols 会不完整) |
+| --call-graph lbr   | 使用 lbr(cpu 处理器硬件特性):解决 symbols 不完整                         |
+
+record 会保存为 `perf.data` 文件, 使用 perf report 命令显示:
+
+```bash
+perf record -g ls
+perf report
+# 树形文本显示
+perf report --stdio
+```
+
+配合[FlameGraph](http://www.brendangregg.com/flamegraphs.html) 可生成火焰图.以下的 record 同理:
+
+from brendangregg:
+
+```bash
+perf record -F 99 -g ls
+# 生成火焰图
+perf script | stackcollapse-perf.pl | flamegraph.pl > perf.svg
+
+# grep过滤后,生成火焰图
+perf script | stackcollapse-perf.pl > out.perf-folded
+grep -v cpu_idle out.perf-folded | flamegraph.pl > nonidle.svg
+grep ext4 out.perf-folded | flamegraph.pl > ext4internals.svg
+egrep 'system_call.*sys_(read|write)' out.perf-folded | flamegraph.pl > rw.svg
+```
+
+```bash
+# 指定 99hz 频率收集,运行的 ls 命令
+# 选择99赫兹，而不是100赫兹，是为了避免周期性产生偏差的结果
+perf record -F 99 ls
+
+# 指定 99hz 频率收集,运行的 nvim,持续10秒
+perf record -F 99 -p $(pgrep -of nvim) sleep 10
+
+# 收集 CPU 内核指令,持续5秒
+perf record -e cycles:k -a -- sleep 5
+
+# 收集 CPU 用户指令,持续5秒
+perf record -e cycles:u -a -- sleep 5
+
+# 收集 sched 调度器
+perf sched record
+
+# 收集 lock 锁
+perf lock record
+
+# 指定 49hz 频率实时显示
+perf top -F 49 -ns comm,dso
+```
+
+```bash
+# 指定 99hz 频率,使用 dwarf 收集整个系统
+perf record -F 99 -a --call-graph dwarf
+
+# 指定 99hz 频率,使用 lbr 收集整个系统
+perf record -F 99 -a --call-graph lbr
+```
+
+静态追踪:
+
+```bash
+# page-faults(缺页)
+perf record -e page-faults -p $(pgrep -of nvim) -g -- sleep 120
+
+# context-switches(上下文切换)
+perf record -e context-switches -p $(pgrep -of nvim) -g -- sleep 5
+
+# 追踪谁发出了磁盘I/O(sync reads & writes)
+perf record -e block:block_rq_insert -ag -- sleep 60
+
+# 追踪 minor faults (RSS growth)
+perf record -e minor-faults -ag
+
+# 追踪统计新启动的进程
+perf record -e sched:sched_process_exec -a
+
+# 追踪统计进程启动的网络连接
+perf record -e syscalls:sys_enter_connect -ag
+perf report --stdio
+```
+
+动态追踪:
+
+> 动态追踪使用不稳定的 kernel api,应优先使用静态追踪
+
+```bash
+# 显示当前动态追踪
+perf probe -l
+
+# 添加tcp_sendmsg追踪点
+perf probe --add tcp_sendmsg
+
+# 追踪tcp_sendmsg
+perf record -e probe:tcp_sendmsg
+
+# 删除tcp_sendmsg追踪点
+perf probe -d tcp_sendmsg
+```
+
+```bash
+# malloc
+perf probe -x /lib/x86_64-linux-gnu/libc-2.15.so --add malloc
+perf record -e probe_libc:malloc -a
+```
+
+### perf sched
+
+统计进程在 cpu 上的调度:
+
+```bash
+perf sched record -- sleep 1
+perf script --header
+
+# 显示延迟
+perf sched latency
+
+# 显示每个的cpu的当前执行和上下文切换
+perf sched map
+
+# 显示等待时间,唤醒后的调度延迟(sch delay)
+perf sched timehist
+
+# 显示cpu可视化等
+perf sched timehist -MVw
+```
+
+### perf other
+
+perf trace 使用 buffer tracing 性能比`strace`好:
+
+```bash
+perf trace ls
+```
+
+## enhance pstree (进程树)
+
+![image](./Pictures/benchmark/pstree.png)
+
+- [Colony Graphs: Visualizing the Cloud](http://www.brendangregg.com/ColonyGraphs/cloud.html#Implementation)
 
 # reference
 

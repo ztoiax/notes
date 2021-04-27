@@ -140,23 +140,32 @@ units 文件存放在这两个目录
 - /etc/systemd/system/
 - /usr/lib/systemd/system/
 
-```
-vim /etc/systemd/system/fcitx.service
-
-[Unit]
-Description=Run a Custom Script at Startup
-After=default.target
-[Service]
-ExecStart=/home/tz/.mybin/fcitx5.sh
-[Install]
-WantedBy=default.target
-```
-
-更新 systemd 配置文件并启用服务
+- 随机mac地址
 
 ```sh
-systemctl daemon-reload
-systemctl enable fcitx.service
+cat > /etc/systemd/system/macspoof.service << 'EOF'
+[Unit]
+Description=Custom mac address
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/macchanger -e enp27s0
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+- 设置开机启用服务:
+
+```sh
+systemctl enable macspoof.service
+```
+
+- 如果开机失败,就需要启动其它linux系统`chroot`后执行:
+
+```sh
+systemctl disable macspoof.service
 ```
 
 ## systemctl
