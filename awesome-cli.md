@@ -15,6 +15,7 @@
     * [massren](#massren)
         * [using editor rename file](#using-editor-rename-file)
     * [fselect: sql语句的ls](#fselect-sql语句的ls)
+    * [jql: json查看器](#jql-json查看器)
 * [git](#git)
     * [gh](#gh)
         * [github-cli官方文档](#github-cli官方文档)
@@ -97,6 +98,8 @@
         * [ytfzf](#ytfzf)
         * [ix](#ix)
         * [cloc(统计代码)](#cloc统计代码)
+        * [openrefine: json, csv...网页操作](#openrefine-json-csv网页操作)
+        * [npkill: 查找和清理node_module](#npkill-查找和清理node_module)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -153,6 +156,10 @@ sudo make O_NERD=1
 ### using editor rename file
 
 ## [fselect: sql语句的ls](https://github.com/jhspetersson/fselect)
+
+## [jql: json查看器](https://github.com/cube2222/jql)
+
+![image](./Pictures/awesomecli/jql.png)
 
 # git
 
@@ -250,6 +257,13 @@ gh release list
 ## [fzf](https://github.com/junegunn/fzf)
 
 ![image](./Pictures/awesomecli/8.png)
+```sh
+# 模糊搜索
+fzf
+
+# -e 取消模糊搜索
+fzf -e
+```
 
 ## [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy)
 
@@ -410,6 +424,14 @@ cat test.py | curl -F 'f:1=<-' ix.io
 ### [cloc(统计代码)](https://github.com/AlDanial/cloc)
 
 ![image](./Pictures/awesomecli/cloc.png)
+
+### [openrefine: json, csv...网页操作](https://github.com/OpenRefine/OpenRefine)
+
+![image](./Pictures/awesomecli/openrefine.png)
+
+### [npkill: 查找和清理node_module](https://github.com/voidcosmos/npkill)
+
+![image](./Pictures/awesomecli/npkill.png)
 
 # reference
 

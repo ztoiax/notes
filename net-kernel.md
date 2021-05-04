@@ -1,3 +1,16 @@
+# OSI 7层
+
+> 本文采用自顶向下的讲解
+
+## HTTP
+
+- HTTP1.1 : 文本传输, 多TCP连接
+
+- HTTP2   : 二进制传输, 单TCP连接
+
+- HTTP3   : 采用quic(定制的UDP协议)取代TCP的HTTP2
+
+
 # 内核网络协议栈
 
 - TCP 相关配置在 `/proc/sys/net/ipv4/` ，但 Linux 的 TCP 协议栈不分 IPV4/IPV6，所有 ipv4.tcp 的设置将同时影响 V6 的 TCP 连接

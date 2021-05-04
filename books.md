@@ -3,6 +3,7 @@
 * [免费的 IT 类在线书籍](#免费的-it-类在线书籍)
     * [中文](#中文)
         * [Program Language](#program-language)
+            * [《Python并行编程》](#python并行编程)
             * [《Mastering GO》(玩转 GO)](#mastering-go玩转-go)
             * [《现代 C++ 教程：高速上手 C++11/14/17/20》](#现代-c-教程高速上手-c11141720)
             * [《Scheme 入门教程》](#scheme-入门教程)
@@ -18,6 +19,9 @@
             * [和我一步步部署 kubernetes 集群](#和我一步步部署-kubernetes-集群)
             * [Docker + Kubernetes 微服务容器化实践](#docker--kubernetes-微服务容器化实践)
             * [QEMU KVM 学习笔记](#qemu-kvm-学习笔记)
+            * [sdn](#sdn)
+        * [操作系统](#操作系统)
+            * [《一个64位操作系统的设计与实现》学习笔记](#一个64位操作系统的设计与实现学习笔记)
     * [其他相似项目](#其他相似项目)
         * [CS-Notes](#cs-notes)
         * [新版 1000 多本计算机电子书免费下载](#新版-1000-多本计算机电子书免费下载)
@@ -36,6 +40,9 @@
 ## 中文
 
 ### Program Language
+
+#### [《Python并行编程》](https://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/index.html)
+
 
 #### [《Mastering GO》(玩转 GO)](https://wskdsgcf.gitbook.io/mastering-go-zh-cn/)
 
@@ -66,6 +73,12 @@
 #### [Docker + Kubernetes 微服务容器化实践](https://github.com/liuyi01/kubernetes-starter)
 
 #### [QEMU KVM 学习笔记](https://yifengyou.gitbooks.io/learn-kvm/content/)
+
+#### [sdn](https://sdn.feisky.xyz/)
+
+### 操作系统
+
+#### [《一个64位操作系统的设计与实现》学习笔记](https://yifengyou.gitbooks.io/the-design-and-implementation-of-a-64-bit-os/content/)
 
 ## 其他相似项目
 

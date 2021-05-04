@@ -2,9 +2,9 @@
 
 要深入了解各种概念推荐看《数据库系统概论》
 
-## 数据库模型
+- SQL(关系性数据库)
 
-- 关系性数据库
+  - SQL语句并不区分大小写
 
   - 关系模型在逻辑层和视图层描述数据,不必关注数据存储的底层细节
 
@@ -66,7 +66,9 @@
 
     - 缺乏事务支持,因此也没有 ACID
 
-## MySQL
+## SQL
+
+### MySQL
 
 Port:3306
 
@@ -95,9 +97,23 @@ Port:3306
 - [十款常见的开源数据库学习资料大汇总](https://linux.cn/article-3758-1.html)
 - [深入理解 InnoDB -- 架构篇](https://mp.weixin.qq.com/s?__biz=MzI2MDQzMTU2MA==&mid=2247483850&idx=1&sn=4611d9744b70a00d411eb4c91246eb7d&chksm=ea688a6ddd1f037bd6bc592bd13feb76abb36c3ea0aeb13e3fb355753d1a64f20f1521f2e1df&token=1896344902&lang=zh_CN#rd)
 
-mariadb10 主要是基于 mysql5.6 的原型
+### [MariaDB](https://mariadb.org/documentation/)
 
-## sqlite
+> Oracle收购mysql后, 独立出来. 使用GPLv2许可证, 是自由软件
+
+- Mariadb10 主要是基于 mysql5.6 的原型
+
+- 很多linux发行版, 默认的mysql安装命令, 实际上是安装Mariadb
+
+### [PostgreSQL](https://www.postgresql.org/about/)
+
+数据类型丰富，可以自定义类型的关系型数据库:
+
+- 提供外围数据库的接口连接
+
+- [PostgreSQL 详细配置参数](https://postgresqlco.nf/en/doc/param/)
+
+### sqlite
 
 - 关系性数据库
 
@@ -143,38 +159,15 @@ mariadb10 主要是基于 mysql5.6 的原型
 
         - `client/server` 架构的数据库,每条sql语句都需要应用程序与数据库之间来回往返
 
+## NOSQL
 
-## Redis
+### Redis
 
 Port:6379
 
 有多种数据结构的键值数据库系统(key/value).简称 kv 系统
 
-## memcached
-
-Port:11211
-
-多线程 key/value 数据库，扮演的是 cache(缓存)角色,和 LNMP 一起使用时被称为 LNMMP
-
-## MonogoDB
-
-Port:27017
-
-面向文档的数据库系统(Document Stores)
-
-## HBase
-
-- 列数据库,Google BigTable 的开源版本
-
-## [PostgreSQL](https://www.postgresql.org/about/)
-
-数据类型丰富，可以自定义类型的关系型数据库:
-
-- 提供外围数据库的接口连接
-
-- [PostgreSQL 详细配置参数](https://postgresqlco.nf/en/doc/param/)
-
-## [leveldb](https://github.com/google/leveldb)
+### [leveldb](https://github.com/google/leveldb)
 
 - 类似Redis 的kv数据库, 但它基于内存 + SSD
 
@@ -182,9 +175,26 @@ Port:27017
 
 - LevelDB 只是一个 C/C++ 编程语言的库, 不包含网络服务封装, 所以无法像一般意义的存储服务器(如 MySQL)那样, 用客户端来连接它. LevelDB 自己也声明, 使用者应该封装自己的网络服务器.
 
-## [dolt:git 命令的数据库](https://github.com/dolthub/dolt)
+### memcached
+
+Port:11211
+
+多线程 key/value 数据库，扮演的是 cache(缓存)角色,和 LNMP 一起使用时被称为 LNMMP
+
+### MonogoDB
+
+Port:27017
+
+面向文档的数据库系统(Document Stores)
+
+### HBase
+
+- 列数据库,Google BigTable 的开源版本
+
+### [dolt:git 命令的数据库](https://github.com/dolthub/dolt)
 
 # reference
 
-- [System Properties Comparison MongoDB vs. MySQL vs. Redis
-  ](https://db-engines.com/en/system/MongoDB%3BMySQL%3BRedis)
+- [awesome-db](https://github.com/numetriclabz/awesome-db#readme)
+
+- [System Properties Comparison MongoDB vs. MySQL vs. Redis](https://db-engines.com/en/system/MongoDB%3BMySQL%3BRedis)

@@ -16,14 +16,16 @@
 
 # sqlite
 
-- 语法类似 `mysql`
-
 ## 基本命令
+
+- 终端:
 
 ```sh
 # 创建并连接数据库文件test.db
 sqlite3 test.db
 ```
+
+- 数据库:
 
 ```sql
 # 查看数据库
@@ -69,7 +71,7 @@ sqlite3 test.db
 
 ## Dynamic type(动态类型)
 
-- 声明类型是指:列的类型.而不是指列property(字段)的类型
+- 声明类型:列的类型.而不是指列property(字段)的类型
 
     - 列的字段可以存储任何类型
 
@@ -81,10 +83,10 @@ sqlite3 test.db
 | BLOB    | 无限制          |
 | NULL    | NULL            |
 
-- 查询类型: `select typeof()`
+- 查询类型: `SELECT typeof()`
 
 ```sql
-select typeof(100),
+SELECT typeof(100),
        typeof(100.0),
        typeof('100'),
        typeof(x'0100'),
@@ -113,18 +115,6 @@ select typeof(100),
 
 ### datetime(日期和时间)
 
-- 类型为`INT`:
-
-    ![image](./Pictures/sqlite/datetime_int.png)
-
-- 类型为`TEXT`:
-
-    ![image](./Pictures/sqlite/datetime_text.png)
-
-- 类型为`REAL`:
-
-    ![image](./Pictures/sqlite/datetime_real.png)
-
 ```sql
 # 查询日期
 SELECT date();
@@ -134,14 +124,32 @@ SELECT time();
 
 # 查询当前日期时间
 SELECT datetime();
-
-# 创建int类型进行测试, 可以是其他类型
-CREATE TABLE datetime_int (d1 int);
-
-# 插入当前日期时间
-INSERT INTO datetime_int (d1)
-VALUES(datetime());
 ```
+
+- `INT` 类型的日期时间:
+
+    ```sql
+    # 创建int类型进行测试. 其它类型同理
+    CREATE TABLE datetime_int (d1 int);
+
+    # 插入当前日期时间
+    INSERT INTO datetime_int (d1)
+    VALUES(datetime());
+
+    # 查询
+    SELECT d1, typeof(d1)
+    FROM datetime_int;
+    ```
+
+    ![image](./Pictures/sqlite/datetime_int.png)
+
+- `TEXT` 类型的日期时间:
+
+    ![image](./Pictures/sqlite/datetime_text.png)
+
+- `REAL` 类型的日期时间:
+
+    ![image](./Pictures/sqlite/datetime_real.png)
 
 
 ## CREATE(创建)
@@ -167,18 +175,67 @@ VALUES(datetime());
 
     - 临时数据库
 
-- `WITHOUT ROWID` 去除隐藏列
+        - 创建不需要声明类型
 
-    - 默认会有隐藏列`rowid`, 表的唯一值
+        ```sql
+        # 创建临时数据库
+        CREATE TABLE temp.test
+        (col, col1);
+
+        # 插入数据
+        INSERT INTO temp.test
+        values (1, 2)
+
+        SELECT * from temp.test
+        ```
+
+        ![image](./Pictures/sqlite/table_temp.png)
+
+- `WITHOUT ROWID` 去除隐藏列ROWID. 适合非整型,非长字符, blob的主键的表.[官网介绍](https://www.sqlite.org/withoutrowid.html)
+
+    - 隐藏列 `ROWID` 是真正的主键, 而`PRIMARY KEY`只是ROWID的别名
+
+    - ROWID使用64位符号整数, 唯一的标识表中的行
+
+    - ROWID是sqlite独有的,是早期的简化实现.在优秀的系统中不应该有ROWID, 但为了向后兼容不得已保留下来, 所以提供`WITHOUT ROWID`
+
+    - 优点:
+
+        - 提升速度, 减少磁盘空间
+
+        - 只有1张B-tree, 存储1次, 只有1次二进制搜索
+
+            - 默认声明PRIMARY KEY的表, 加上ROWID会有2张B-tree, index字段会存储2次. 搜索时先找index提取rowid后再找表, 因此有2次二进制搜索
+
+    - 缺点:
+        - `AUTOINCREMENT` 选项无法使用
+
+        - `sqlite3_last_insert_rowid()` 函数无法使用
+
+        - `incremental blob I/O ` 机制无法使用, 因此无法创建sqlite3_blob 对象
+
+        - `sqlite3_update_hook() ` 表更改时不会调用此hook
+
+    ```sql
+    # 查看rowid
+    SELECT rowid, * FROM test
+    ```
+
+    ```sql
+    # 创建WITHOUT ROWID的表, 必须有一个主键, 并且最好是非整型, 不然可能还不如rowid表
+    CREATE TABLE test
+    (d1 REAL PRIMARY KEY)
+    WITHOUT ROWID;
+    ```
 
 > ```sql
 > CREATE TABLE test(
 >    id INTEGER,
 >    group_id INTEGER,
 >    PRIMARY KEY (id),
->    FOREIGN KEY (id) 
->       REFERENCES contacts (id) 
->          ON DELETE CASCADE 
+>    FOREIGN KEY (id)
+>       REFERENCES contacts (id)
+>          ON DELETE CASCADE
 >          ON UPDATE NO ACTION,
 > );
 > ```

@@ -33,9 +33,12 @@
     * [ngrep](#ngrep)
     * [curl](#curl)
         * [基本命令](#基本命令-2)
+    * [httpie](#httpie)
     * [testssl](#testssl)
     * [nghttp](#nghttp)
     * [h2spec](#h2spec)
+    * [wrk: http benchmark](#wrk-http-benchmark)
+    * [wrk2: wrp的变种](#wrk2-wrp的变种)
     * [dnspeep](#dnspeep)
     * [lighthouse](#lighthouse)
 * [reference](#reference)
@@ -701,6 +704,13 @@ curl -o /dev/null \
 curl -vso /dev/null --http2 https://www.bilibili.com
 ```
 
+## httpie
+
+```sh
+# 获取头部
+http --header www.baidu.com
+```
+
 ## testssl
 
 > 测试网站的 tls
@@ -731,6 +741,11 @@ nghttp -nva -t 1 https://www.bilibili.com
 ```bash
 h2spec -t -S -h www.bilibili.com -p 443
 ```
+
+## [wrk: http benchmark](https://github.com/wg/wrk)
+
+## [wrk2: wrp的变种](https://github.com/giltene/wrk2)
+
 ## [dnspeep](https://github.com/jvns/dnspeep)
 
 > 记录程序的dns请求,响应

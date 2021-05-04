@@ -20,7 +20,10 @@
         * [cut](#cut)
         * [sed](#sed)
         * [awk](#awk)
-        * [perl](#perl)
+        * [perl5](#perl5)
+        * [perl6(Raku)](#perl6raku)
+            * [module](#module)
+            * [个人觉得perl6中有趣的设计](#个人觉得perl6中有趣的设计)
     * [other](#other)
         * [xargs](#xargs)
         * [date](#date)
@@ -550,7 +553,9 @@ awk -v a="$var1" -v b="$var2" 'BEGIN {print a,b}'
 
 [awk 教程](https://backreference.org/2010/02/10/idiomatic-awk/)
 
-### perl
+### perl5
+
+- [learn_perl_oneliners](https://learnbyexample.github.io/learn_perl_oneliners/cover.html)
 
 | 参数 | 操作             |
 | ---- | ---------------- |
@@ -578,16 +583,207 @@ perl -lane 'print $F[1]' test
 perl -lane 'print @F[0,2..5]' test
 ```
 
+### perl6(Raku)
+
+
+- [Raku 入门](https://raku.guide/zh/)
+
+- [Perl6-One-Liners](https://github.com/dnmfarrell/Perl6-One-Liners)
+
+| 参数 | 操作               |
+|------|--------------------|
+| -e   | 执行               |
+| -n   | 行操作             |
+| -p   | -n参数并自动打印$_ |
+| -M   | 加载模块           |
+
+- `$_` 默认变量
+
+- `.say`($_.say) 打印
+
+- `.uc` 转换大写
+
+
+```sh
+ll > test
+
+cat > /tmp/file << 'EOF'
+1 2 3 4
+
+3 2
+1
+EOF
+```
+
+```sh
+# .uc 转换大写
+perl6 -ne 'say .uc' test
+perl6 -ne '.uc.say' test
+perl6 -pe '$_ = $_.uc' test
+perl6 -pe '.=uc' test
+perl6 -pe .=uc test
+
+# 首字符大写
+perl6 -pe .=wordcase test
+
+# 统计每行字符数量
+perl6 -pe .=chars.say test
+
+# 翻转行
+perl6 -pe .=flip /tmp/test
+```
+
+- 添加修改字符
+
+```sh
+# say 复制每行
+perl6 -pe 'say $_' test
+
+# 插入新一行字符
+perl6 -pe 'say next line' test
+
+# 插入尾部字符
+perl6 -pe '$_ ~= " end line"' test
+
+# 添加4个换行符
+perl6 -pe '$_ ~= "\n" x 4' test
+
+# sed 's/root/tz/g' test
+perl6 -pe 's:g/root/tz/' test
+
+# 替换开头字符是d的
+perl6 -pe 's:g/root/tz/ if /^d/' test
+
+# sed -i 's/root/tz/g' test
+```
+- 过滤筛选
+
+```sh
+# 只要第2行
+perl6 -ne '.print if ++$ == 2' test
+# 不要第2行
+perl6 -pe 'next if ++$ == 2' test
+
+# 单数行
+perl6 -ne '.say if ++$ !%% 2' test
+# 双数行
+perl6 -ne '.say if ++$ %% 2' test
+
+# 去除重复行
+perl6 -ne 'state %l;.say if ++%l{$_}==1'
+
+# grep root test
+perl6 -ne '.say if /root/' test
+
+# awk '{print $1}' test
+perl6 -ne '.words[0].say' test
+
+perl6 -ne '.words[0..5].say' test
+```
+
+- 运算
+
+```sh
+# 统计带有root的行
+perl6 -e 'say lines.grep(/root/).elems' test
+
+# 乘法
+perl6 -e 'say [*] 1..5'
+
+# 行相加
+perl6 -ne'say [+] .split(" ")' file
+```
+
+- 生成器
+
+```sh
+# a-z
+perl6 -e '.say for "a".."z"'
+
+# aa - zz
+perl6 -e '.say for "a".."zz"'
+
+# a-z 一行
+perl6 -e 'print  "a".."z"'
+
+# 随机10个a-z字符 一行
+perl6 -e 'print roll 10, "a".."z"'
+
+# 运算符
+perl6 -e 'print "a" x 50'
+```
+
+#### module
+
+- [URI-Encode](https://github.com/raku-community-modules/URI-Encode)
+    > 转换为uri字符
+
+```sh
+perl6 -M URI::Encode -e 'say encode_uri("/10 ways to crush it with Perl 6")'
+```
+#### 个人觉得perl6中有趣的设计
+
+- 函数管道
+
+```perl6
+my @array = <7 8 9 0 1 2 4 3 5 6>;
+@array ==> unique()
+       ==> sort()
+       ==> reverse()
+       ==> my @final-array;
+say @final-array;
+```
+
+- 归约运算符
+
+```perl6
+[+] 0,1,2,3,4,5
+
+[+] 0..5
+
+[+] ^6
+```
+
 ## other
 
 ### xargs
+
+- `xargs` 默认为 `xrags echo`
 
 ```bash
 # -Iz 执行10次echo 1,可以换成其他命令
 seq 10 | xargs -Iz echo 1
 
 # -n 分段
-seq 10 | xargs -n 1
+seq 10 | xargs -n 3
+
+# ls -l 查看当前所有目录
+find . -type d | xargs ls -l
+
+# 打包压缩当前所有目录
+find . -type d | xargs tar cjf test.tar.gz
+find . -type d | xargs tar cjf {}.tar.gz
+
+# 创建a,b,c目录(注意这里c为c\n)
+echo 'a b c' | xargs mkdir
+
+# -d 分隔符
+echo 'axbxc' | xargs -d 'x' mkdir
+
+# -t 一行参数(rm -d a b c)
+echo 'a b c ' | xargs -t rm -d
+
+# -L 指定参数数量
+echo www.baidu.com > ip
+echo www.qq.com >> ip
+cat ip | xargs -L 1 ping -c 1
+
+# --max-procs 表示进程数量. 如果是0, 则不限制进程
+cat ip | xargs --max-procs 2 -L 1 ping -c 1
+cat ip | xargs --max-procs 0 -L 1 ping -c 1
+
+# -I 设置变量, 再传递shell
+cat ip | xargs -I host sh -c "ping -c 1 host; curl host"
 ```
 
 ### date

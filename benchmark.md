@@ -777,6 +777,10 @@ biosnoop -Q
 
 # Disk
 
+- [smartmontools: 查看硬盘信息](https://wiki.archlinux.org/index.php/S.M.A.R.T.)
+
+    - `gsmartcontrol`: gui版
+
 ## [inotify-tools](https://github.com/inotify-tools/inotify-tools)
 
 监控 `/tmp` 目录下的文件操作
