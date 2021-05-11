@@ -117,7 +117,7 @@ Port:3306
 
 - 关系性数据库
 
-- 不采用 `client/server` 架构
+- 使用`serverless`, 也就是不采用 `client/server` 架构
 
 - 没有任何配置
 
@@ -127,9 +127,21 @@ Port:3306
 
 - 动态类型
 
+    - 列的字段即使声明了数据类型, 也可以存储其它类型
+
+    - 创建数据库时, 列字段可以选择不声明数据类型
+
+    - 没有`BOOLEAN`(布尔), `DATETIME` 类型
+
+    - 默认关闭 `Foreign Key`(外键)
+
+    - ` PRIMARY KEY` 支持 `NULL`, `INTEGER PRIMARY KEY`(是`ROWID`列的别名)和`WITHOUT ROWID`的表除外.
+
 - 文件保存格式像版本控制系统
 
     - 性能:比文件系统的fread(), fwrite()快35%
+
+        - 给sqlite的内存分配越大, 速度越快
 
     - sqlite打包所有blob,而open(),close()对单个文件的每个blob,都要调用一次
 
@@ -147,6 +159,12 @@ Port:3306
 
         ![image](./Pictures/database_concept/benchmark_write.png)
 
+    - 对100M大小的文件, 分割成不同大小的块, 进行性能对比
+
+        - 大于1的: 文件系统更快, 小于1: 数据库更快
+
+        ![image](./Pictures/database_concept/benchmark_blob.png)
+
 - 使用N + 1, 但没有传统N + 1的问题(因此可以使用大量查询)
 
     - 第一组查询是从`Fossil数据库` 的`config`, `global_config`中提取
@@ -158,6 +176,8 @@ Port:3306
     - 查询只是函数调用,而不是消息往返
 
         - `client/server` 架构的数据库,每条sql语句都需要应用程序与数据库之间来回往返
+
+#### [sqlite个人笔记](./sqlite.md)
 
 ## NOSQL
 

@@ -100,6 +100,10 @@
         * [cloc(统计代码)](#cloc统计代码)
         * [openrefine: json, csv...网页操作](#openrefine-json-csv网页操作)
         * [npkill: 查找和清理node_module](#npkill-查找和清理node_module)
+        * [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](#zx-更优秀的shell编程google用nodejs写的一个shell包装器)
+        * [syncthing: 同步文件](#syncthing-同步文件)
+        * [croc: 文件传输](#croc-文件传输)
+        * [slidev: markdown写ppt](#slidev-markdown写ppt)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -432,6 +436,14 @@ cat test.py | curl -F 'f:1=<-' ix.io
 ### [npkill: 查找和清理node_module](https://github.com/voidcosmos/npkill)
 
 ![image](./Pictures/awesomecli/npkill.png)
+
+### [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](https://github.com/google/zx)
+
+### [syncthing: 同步文件](https://github.com/syncthing/syncthing)
+
+### [croc: 文件传输](https://github.com/schollz/croc)
+
+### [slidev: markdown写ppt](https://github.com/slidevjs/slidev)
 
 # reference
 

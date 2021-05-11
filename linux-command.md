@@ -29,6 +29,7 @@
         * [date](#date)
         * [fuser](#fuser)
         * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
+        * [openssl](#openssl)
     * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
         * [创建 RAID5](#创建-raid5)
@@ -821,6 +822,31 @@ fuser -n tcp -v  10808
 
 ```bash
 du -cha --max-depth=1 . | grep -E "M|G" | sort -h
+```
+
+### openssl
+
+```bash
+# 生成pem私钥(需要输入密码)
+openssl genrsa -aes128 -out private.pem 1024
+
+# 查看私钥信息(需要输入密码)
+openssl rsa -in private.pem -noout -text
+
+# 提取公钥(需要输入密码)
+openssl rsa -in private.pem -pubout > public.pem
+
+# 查看公钥信息
+openssl rsa -in public.pem -pubin -noout -text
+
+# 生成文本
+echo 123 > file
+
+# 使用公钥加密文本
+openssl rsautl -encrypt -inkey public.pem -pubin -in file -out file.enc
+
+# 使用私钥解密文本(需要输入密码)
+openssl rsautl -decrypt -inkey private.pem -in file.enc > file
 ```
 
 ## 调整分区大小
