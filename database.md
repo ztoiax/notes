@@ -123,9 +123,21 @@ Port:3306
 
 - self-contained(少量的外部库)
 
-- 支持Transactional(事务),符合ACID
+- 支持Transactional(事务),符合ACID:
 
-- 动态类型
+    - Atomic(原子性): 事务是不可分割的最小单位. 要么成功, 要么失败
+
+    - Consistent(一致性): 事务必须确保将数据库从一个有效状态更改为另一个有效状态
+        - 当事物开启后每一条修改数据库的语句, 会使数据库不一致, 因此事务提交或回滚时, 必须保持数据库一致性
+
+    - Isolation(隔离性): 多个事务会话相互隔离
+        - 使用 `INSERT`  `UPDATE` 修改数据时只影响当前会话, 对其它事务会话不可见
+
+    - Durable(持久性): 事务一旦提交, 对数据库的修改是永久性的, 即使被强制关机
+
+- 数据类型:
+
+    - 动态类型
 
     - 列的字段即使声明了数据类型, 也可以存储其它类型
 
@@ -135,9 +147,9 @@ Port:3306
 
     - 默认关闭 `Foreign Key`(外键)
 
-    - ` PRIMARY KEY` 支持 `NULL`, `INTEGER PRIMARY KEY`(是`ROWID`列的别名)和`WITHOUT ROWID`的表除外.
+    - `PRIMARY KEY` 支持 `NULL`, `INTEGER PRIMARY KEY`(是`ROWID`列的别名)和`WITHOUT ROWID`的表除外.
 
-- 文件保存格式像版本控制系统
+- 文件保存格式像版本控制系统:
 
     - 性能:比文件系统的fread(), fwrite()快35%
 
@@ -165,7 +177,7 @@ Port:3306
 
         ![image](./Pictures/database_concept/benchmark_blob.png)
 
-- 使用N + 1, 但没有传统N + 1的问题(因此可以使用大量查询)
+- 使用N + 1, 但没有传统N + 1的问题(因此可以使用大量查询):
 
     - 第一组查询是从`Fossil数据库` 的`config`, `global_config`中提取
 

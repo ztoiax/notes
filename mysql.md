@@ -3132,13 +3132,13 @@ undo log 逻辑日志:事务未提交的时候，修改数据存到日志里.系
 
 [事务的基本要素（ACID）](https://mp.weixin.qq.com/s?src=11&timestamp=1605864322&ver=2718&signature=yj-1WmxuB0tL32v9OCfARl9LKeAqALuoFdmMgiJdyKjkgqeFwvGgJT10hOWiPj0Vn3qalU3-5AEsaoiHI8TTg3GL3s8rPmC7rXZkbu22VZcFcV48aa7sPiqw*Y3yAaC5&new=1)
 
-- 原子性：Atomicity，整个数据库事务是不可分割的工作单位(undo log 提供)
+- 原子性：Atomicity，事务是不可分割的最小单位. 要么成功, 要么失败(undo log 提供)
 
 - 一致性：Consistency，事务将数据库从一种状态转变为下一种一致的状态
 
 - 隔离性：Isolation，每个读写事务的对象对其他事务的操作对象能相互分离(mvcc 提供),解决幻读问题(事务的两次查询的结果不一样)
 
-- 持久性：Durability，事务一旦提交，其结果是永久性的
+- 持久性：Durability，事务一旦提交, 对数据库的修改是永久性的, 即使被强制关机
 
 ---
 

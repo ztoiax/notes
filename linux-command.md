@@ -849,6 +849,12 @@ openssl rsautl -encrypt -inkey public.pem -pubin -in file -out file.enc
 openssl rsautl -decrypt -inkey private.pem -in file.enc > file
 ```
 
+- 连接加密端口
+
+```sh
+openssl s_client -connect www.baidu.com:443
+```
+
 ## 调整分区大小
 
 将 `sda1` 文件系统调整为 30G
