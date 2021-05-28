@@ -35,6 +35,7 @@
     * [第三方高效软件](#第三方高效软件)
     * [书籍 or 教程](#书籍-or-教程)
     * [项目资源](#项目资源)
+        * [cgit](#cgit)
 * [TOMCAT](#tomcat)
     * [基本命令](#基本命令-1)
     * [zrlog](#zrlog)
@@ -798,6 +799,57 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 ## 项目资源
 
 - [自动生成 nginx.conf](https://www.digitalocean.com/community/tools/nginx)
+
+### cgit
+- [arch文档](https://wiki.archlinux.org/title/Cgit)
+- 使用fcgiwrap
+```sh
+# 安装并启动fcgiwrap
+systemctl restart fcgiwrap.socket
+```
+
+```nginx
+  server {
+    listen                8086;
+    server_name           localhost;
+    root                  /usr/share/webapps/cgit;
+    try_files             $uri @cgit;
+
+    location @cgit {
+      include             fastcgi_params;
+      fastcgi_param       SCRIPT_FILENAME $document_root/cgit.cgi;
+      fastcgi_param       PATH_INFO       $uri;
+      fastcgi_param       QUERY_STRING    $args;
+      fastcgi_param       HTTP_HOST       $server_name;
+      fastcgi_pass        unix:/run/fcgiwrap.sock;
+    }
+  }
+```
+
+- 使用uwsgi
+
+```nginx
+server {
+  listen                8086;
+  server_name           localhost;
+  root /usr/share/webapps/cgit;
+
+  # Serve static files with nginx
+  location ~* ^.+(cgit.(css|png)|favicon.ico|robots.txt) {
+    root /usr/share/webapps/cgit;
+    expires 30d;
+  }
+  location / {
+    try_files $uri @cgit;
+  }
+  location @cgit {
+    gzip off;
+    include uwsgi_params;
+    uwsgi_modifier1 9;
+    uwsgi_pass unix:/run/uwsgi/cgit.sock;
+  }
+}
+```
 
 # TOMCAT
 

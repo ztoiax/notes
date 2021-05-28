@@ -6,7 +6,8 @@
     * [ranger](#ranger)
     * [broot](#broot)
     * [nnn](#nnn)
-    * [lf](#lf)
+    * [lf: go ranger](#lf-go-ranger)
+    * [joshuto: rust ranger](#joshuto-rust-ranger)
     * [mc](#mc)
     * [fd](#fd)
         * [instead find](#instead-find)
@@ -129,19 +130,17 @@ alias cp="advcp -g"
 
 ## [nnn](https://github.com/jarun/nnn)
 
-## [lf](https://github.com/gokcehan/lf)
-
 ```sh
 git clone https://github.com/jarun/nnn.git
 cd nnn
 sudo cp nnn /bin/
 # 显示图标
 sudo make O_NERD=1
-
 ```
-
 ![image](./Pictures/awesomecli/4.png)
 
+## [lf: go ranger](https://github.com/gokcehan/lf)
+## [joshuto: rust ranger](https://github.com/kamiyaa/joshuto)
 ## [mc](https://github.com/MidnightCommander/mc)
 
 支持鼠标操作

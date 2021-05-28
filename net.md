@@ -629,6 +629,14 @@ socat - UDP:localhost:8080
 socat - UDP-LISTEN:8080,fork,reuseaddr
 ```
 
+- socket 抓包
+
+```sh
+# 抓mysql
+sudo mv /run/mysqld/mysqld.sock /run/mysqld/mysqld.sock.original
+sudo socat -t100 -x -v UNIX-LISTEN:/run/mysqld/mysqld.sock,mode=777,reuseaddr,fork UNIX-CONNECT:mysqld.sock.original
+```
+
 ## ngrep
 
 ```bash
