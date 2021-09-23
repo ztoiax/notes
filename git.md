@@ -114,6 +114,9 @@ git log
 # 显示commit和hash的历史，以及每次commit发生变更的文件
 git log --stat
 
+# 将操作合并到最新一次commit
+git commit --amend -m <hash>
+
 # 显示commit相关的操作历史
 git reflog
 ```
@@ -131,6 +134,9 @@ git reset --hard <HASD>
 
 # 撤销到hash值所代表的commit(保留文件)
 git reset --soft <HASD>
+
+# reset会丢失记录, 而revert是创建新的记录, 达到撤销的效果
+git revert -n <HASD>
 
 # 回退后强制push远程分支
 git push -u origin +master
@@ -212,6 +218,7 @@ git pull <REMOTE> <BRANCH>
 - [这才是真正的 Git——分支合并](https://zhuanlan.zhihu.com/p/192972614)
 - [这才是真正的 Git——Git 实用技巧](https://zhuanlan.zhihu.com/p/192961725)
 - [详解 Git 大文件存储（Git LFS）](https://zhuanlan.zhihu.com/p/146683392)
+- [Git 代码回滚与找回的艺术](https://mp.weixin.qq.com/s?src=11&timestamp=1624210292&ver=3142&signature=ZLIi9TNMCsGrxtjb0rb9Nqwhl6vUnbN1N2wG7h2wRs7WYeo-Z86Jypn35AJqJSfTV5XP51jr8VP3ueE6QOcBK29dmGPx3K*g2PrOonMMg62y0yIFVhVjQi-JYR18z4b1&new=1)
 
 # 关于 Git 的书
 

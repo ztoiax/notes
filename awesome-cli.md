@@ -46,6 +46,8 @@
         * [highlight git diff](#highlight-git-diff)
     * [icdiff](#icdiff)
         * [instead diff](#instead-diff)
+    * [git-split-diffs: github style diff](#git-split-diffs-github-style-diff)
+        * [instead git diff](#instead-git-diff)
     * [pet](#pet)
         * [Simple command-line snippet manager](#simple-command-line-snippet-manager)
     * [multitail](#multitail)
@@ -64,8 +66,17 @@
         * [instead fdisk](#instead-fdisk)
     * [duf](#duf)
     * [ncdu](#ncdu)
+    * [dust](#dust)
+        * [instead du](#instead-du)
+* [process](#process)
+    * [procs](#procs)
+        * [instead ps](#instead-ps)
 * [net](#net)
     * [prettyping](#prettyping)
+    * [curlie](#curlie)
+        * [instead curl](#instead-curl)
+    * [dog](#dog)
+        * [instead dig](#instead-dig)
 * [好看的字符](#好看的字符)
     * [neofetch](#neofetch)
     * [cpufetch](#cpufetch)
@@ -95,16 +106,17 @@
     * [onedrive](#onedrive)
         * [本地同步 onedrive](#本地同步-onedrive)
     * [xonsh](#xonsh)
-        * [python shell](#python-shell)
-        * [ytfzf](#ytfzf)
-        * [ix](#ix)
-        * [cloc(统计代码)](#cloc统计代码)
-        * [openrefine: json, csv...网页操作](#openrefine-json-csv网页操作)
-        * [npkill: 查找和清理node_module](#npkill-查找和清理node_module)
-        * [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](#zx-更优秀的shell编程google用nodejs写的一个shell包装器)
-        * [syncthing: 同步文件](#syncthing-同步文件)
-        * [croc: 文件传输](#croc-文件传输)
-        * [slidev: markdown写ppt](#slidev-markdown写ppt)
+    * [python shell](#python-shell)
+    * [ytfzf](#ytfzf)
+    * [ix](#ix)
+    * [cloc(统计代码)](#cloc统计代码)
+    * [openrefine: json, csv...网页操作](#openrefine-json-csv网页操作)
+    * [npkill: 查找和清理node_module](#npkill-查找和清理node_module)
+    * [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](#zx-更优秀的shell编程google用nodejs写的一个shell包装器)
+    * [syncthing: 同步文件](#syncthing-同步文件)
+    * [croc: 文件传输](#croc-文件传输)
+    * [slidev: markdown写ppt](#slidev-markdown写ppt)
+    * [q: sql语法查询文件](#q-sql语法查询文件)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -278,6 +290,10 @@ fzf -e
 
 ### instead diff
 
+## [git-split-diffs: github style diff](https://github.com/banga/git-split-diffs)
+
+### instead git diff
+
 ## [pet](https://github.com/knqyf263/pet)
 
 ![image](./Pictures/awesomecli/3.png)
@@ -328,11 +344,35 @@ fzf -e
 
 ![image](./Pictures/awesomecli/ncdu.png)
 
+## [dust](https://github.com/bootandy/dust)
+
+### instead du
+
+![image](./Pictures/awesomecli/dust.png)
+
+# process
+
+## [procs](https://github.com/dalance/procs)
+
+### instead ps
+
+![image](./Pictures/awesomecli/procs.png)
+
 # net
 
 ## [prettyping](https://github.com/denilsonsa/prettyping)
 
-![image](./Pictures/awesomecli/ping.png)
+## [curlie](https://github.com/rs/curlie)
+
+### instead curl
+
+![image](./Pictures/awesomecli/curlie.png)
+
+## [dog](https://github.com/ogham/dog)
+
+### instead dig
+
+![image](./Pictures/awesomecli/dog.png)
 
 # 好看的字符
 
@@ -406,15 +446,15 @@ fzf -e
 
 ![image](./Pictures/awesomecli/xonsh.png)
 
-### python shell
+## python shell
 
 - [xonsh 插件](https://xon.sh/xontribs.html)
 
-### ytfzf
+## ytfzf
 
 - [fzf搜索,播放youtube](https://github.com/pystardust/ytfzf)
 
-### ix
+## ix
 
 - [pastbin](http://ix.io/)
 
@@ -424,27 +464,43 @@ fzf -e
 cat test.py | curl -F 'f:1=<-' ix.io
 ```
 
-### [cloc(统计代码)](https://github.com/AlDanial/cloc)
+## [cloc(统计代码)](https://github.com/AlDanial/cloc)
 
 ![image](./Pictures/awesomecli/cloc.png)
 
-### [openrefine: json, csv...网页操作](https://github.com/OpenRefine/OpenRefine)
+## [openrefine: json, csv...网页操作](https://github.com/OpenRefine/OpenRefine)
 
 ![image](./Pictures/awesomecli/openrefine.png)
 
-### [npkill: 查找和清理node_module](https://github.com/voidcosmos/npkill)
+## [npkill: 查找和清理node_module](https://github.com/voidcosmos/npkill)
 
 ![image](./Pictures/awesomecli/npkill.png)
 
-### [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](https://github.com/google/zx)
+## [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](https://github.com/google/zx)
 
-### [syncthing: 同步文件](https://github.com/syncthing/syncthing)
+## [syncthing: 同步文件](https://github.com/syncthing/syncthing)
 
-### [croc: 文件传输](https://github.com/schollz/croc)
+## [croc: 文件传输](https://github.com/schollz/croc)
 
-### [slidev: markdown写ppt](https://github.com/slidevjs/slidev)
+## [slidev: markdown写ppt](https://github.com/slidevjs/slidev)
+
+## [q: sql语法查询文件](https://github.com/harelba/q)
+```sh
+q "SELECT * FROM mysql_slow.log"
+
+# 只显示前两列
+q "SELECT c1, c2 FROM mysql_slow.log"
+
+# 只显示前两列, 并且第一列包含COUNT
+q "SELECT c1, c2 FROM mysql_slow.log WHERE c1 LIKE '%COUNT%'"
+
+ps -ef | q -H "select count(UID) from - where UID='root'"
+```
 
 # reference
 
+- [类似项目](https://github.com/ibraheemdev/modern-unix)
+
 - [命令行基础工具的更佳替代品](https://linux.cn/article-4042-1.html)
+
 - [命令行：增强版](https://linux.cn/article-10171-1.html)

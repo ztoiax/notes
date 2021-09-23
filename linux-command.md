@@ -30,6 +30,7 @@
         * [fuser](#fuser)
         * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
         * [openssl](#openssl)
+        * [gnuplot](#gnuplot)
     * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
         * [创建 RAID5](#创建-raid5)
@@ -805,6 +806,9 @@ date +"%Y-%m-%d %H:%M:%S"
 #or
 date +"%Y年%m月%d日 %H时%M分%S秒"
 # 2020年11月27日 11时51分56秒
+
+# timestamp
+date +%s
 ```
 
 ### fuser
@@ -853,6 +857,13 @@ openssl rsautl -decrypt -inkey private.pem -in file.enc > file
 
 ```sh
 openssl s_client -connect www.baidu.com:443
+```
+
+### gnuplot
+
+```sh
+# 对文件第一列进行绘图
+plot "filename" using 1 w lines
 ```
 
 ## 调整分区大小

@@ -23,6 +23,7 @@
         * [操作系统](#操作系统)
             * [《一个64位操作系统的设计与实现》学习笔记](#一个64位操作系统的设计与实现学习笔记)
     * [其他相似项目](#其他相似项目)
+        * [trackawesomelist:不单单是book, 还有编程语言, nginx, docker等项目](#trackawesomelist不单单是book-还有编程语言-nginx-docker等项目)
         * [CS-Notes](#cs-notes)
         * [新版 1000 多本计算机电子书免费下载](#新版-1000-多本计算机电子书免费下载)
         * [free-books](#free-books)
@@ -33,6 +34,8 @@
         * [1000 多本计算机电子书免费下载](#1000-多本计算机电子书免费下载)
         * [free-python-books](#free-python-books)
         * [能在线交互式运行代码的书籍网站](#能在线交互式运行代码的书籍网站)
+    * [笔记](#笔记)
+        * [中文思维导图: Psyduck](#中文思维导图-psyduck)
 
 <!-- vim-markdown-toc -->
 
@@ -83,6 +86,8 @@
 
 ## 其他相似项目
 
+### [trackawesomelist:不单单是book, 还有编程语言, nginx, docker等项目](https://www.trackawesomelist.com/EbookFoundation/free-programming-books/)
+
 ### [CS-Notes](https://github.com/CyC2018/CS-Notes)
 
 ### [新版 1000 多本计算机电子书免费下载](https://github.com/itdevbooks/pdf)
@@ -102,3 +107,8 @@
 ### [free-python-books](https://github.com/pamoroso/free-python-books)
 
 ### [能在线交互式运行代码的书籍网站](https://runestone.academy/runestone/books/)
+
+## 笔记
+
+### [中文思维导图: Psyduck](https://github.com/SmartKeyerror/Psyduck)
+
