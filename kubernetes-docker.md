@@ -178,6 +178,7 @@ docker rename CONTAINER_ID New_name
 | --rm           | --rm           | 退出时自动删除容器 |
 | --expose       | --expose       | 暴露端口           |
 | --workdir      | -w             | 修改工作目录       |
+| --name         |                | 设置容器名字       |
 
 ---
 
@@ -925,6 +926,8 @@ RUN  echo "$a"
 
 ```docker
 FROM centos
+# opensuse
+# FROM opensuse
 
 ARG pkg=yum
 ENV install="$pkg install -y"
@@ -1079,11 +1082,17 @@ docker run --rm -ti \
 
 ## 第三方软件资源
 
+- [minikube 单机运行k8s集群](https://github.com/kubernetes/minikube)
+
+- [pixie 性能监控](https://github.com/pixie-io/pixie)
+
+- [kubesphere](https://github.com/kubesphere/kubesphere)
+
 - [kube-shell](https://github.com/cloudnativelabs/kube-shell)
 
 - [lazykube](https://github.com/TNK-Studio/lazykube)
 
-- [lazykube替换墙外镜像的下载地址](https://github.com/joyme123/lazykube)
+- [lazykube 替换墙外镜像的下载地址](https://github.com/joyme123/lazykube)
 
 - [helm 包管理器](https://github.com/helm/helm)
 
@@ -1095,10 +1104,13 @@ docker run --rm -ti \
 - [图解儿童 Kubernetes 指南](https://www.cncf.io/the-childrens-illustrated-guide-to-kubernetes/)
 - [关于 kubernetes 失败的故事](https://k8s.af/)
 
-# [Unikernel(VM 容器融合技术),或许是下一代云技术](https://zhuanlan.zhihu.com/p/29053035)
+- [Unikernel(VM 容器融合技术),或许是下一代云技术](https://zhuanlan.zhihu.com/p/29053035)
 
 - 目前可以使用 linuxkit 进行构建
 
 - [mirageos](https://mirage.io/)
 
 - [gvistor](https://mp.weixin.qq.com/s?src=11&timestamp=1613136113&ver=2886&signature=6e*T4ylvJCA--fGa-tb*ttJq3JArF7z-Wzs5eAPzlY813SG154AK1YyEgLv2MQSi7BUW8muQyHQnOl3arAu2m9qK8bCk2fgGLOv4-VYvAyWDfMUcBrvB8oZ9csaoQ-aI&new=1)
+
+# [rust重写的云原生的项目](https://rust-cloud-native.github.io/)
+

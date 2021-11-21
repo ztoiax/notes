@@ -9,6 +9,7 @@
     * [sadf(sysstat)](#sadfsysstat)
     * [nmon](#nmon)
     * [sysbench](#sysbench-1)
+    * [below](#below)
 * [CPU](#cpu)
     * [cpu info](#cpu-info)
     * [mpstat(sysstat)](#mpstatsysstat)
@@ -20,6 +21,7 @@
     * [base](#base)
     * [pmap](#pmap)
     * [slabtop](#slabtop)
+    * [bytehound](#bytehound)
 * [Net](#net)
     * [TCP/UDP](#tcpudp)
         * [tplist(bcc)](#tplistbcc)
@@ -60,6 +62,7 @@
 * [Process](#process)
     * [htop](#htop)
     * [bpytop](#bpytop)
+    * [btop](#btop)
     * [Procmon](#procmon)
     * [SysMonTask](#sysmontask)
     * [pidstat](#pidstat)
@@ -79,8 +82,9 @@
     * [gmonitor](#gmonitor)
 * [Debug](#debug)
     * [strace](#strace)
-    * [bcc](#bcc)
-        * [stackcount](#stackcount)
+    * [eBPF](#ebpf)
+        * [bcc](#bcc)
+            * [stackcount](#stackcount)
     * [perf-tool](#perf-tool)
         * [perf list](#perf-list)
         * [perf stat](#perf-stat)
@@ -88,6 +92,7 @@
         * [perf sched](#perf-sched)
         * [perf other](#perf-other)
     * [enhance pstree (进程树)](#enhance-pstree-进程树)
+    * [trace-cmd](#trace-cmd)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -312,6 +317,10 @@ sysbench --test=cpu --cpu-max-prime=20000 run
 sysbench --test=fileio --file-total-size=5G prepare
 ```
 
+## [below](https://github.com/facebookincubator/below)
+
+![image](./Pictures/benchmark/below.png)
+
 # CPU
 
 ## cpu info
@@ -526,6 +535,8 @@ pmap -x $(pgrep -of nvim)
 ```
 
 ## slabtop
+
+## [bytehound](https://github.com/koute/bytehound)
 
 # Net
 
@@ -939,6 +950,10 @@ agedu -w
 
 > instead bashtop
 
+## [btop](https://github.com/aristocratos/btop)
+
+> c++ version of bpytop
+
 ## [Procmon](https://github.com/Sysinternals/ProcMon-for-Linux)
 
 > Sysinternals Process Monitor cli for Linux
@@ -1192,7 +1207,17 @@ strace -cp pid
 strace -o file ls
 ```
 
-## [bcc](https://github.com/iovisor/bcc)
+## eBPF
+
+- [官方文档](https://ebpf.io/)
+
+- `eBPF` 和 `perf` 都是 linux kernel 代码的一部分,
+
+- `eBPF` 比 `perf` 更容易地在内核执行,效率更高,开销更低
+
+- `eBPF` 可以在不修改内核代码,和不加载内核模块的情况下, 在内核运行sandbox程序
+
+### [bcc](https://github.com/iovisor/bcc)
 
 - [BPF-tools](https://github.com/brendangregg/BPF-tools)
 
@@ -1204,11 +1229,7 @@ strace -o file ls
 - 火焰图
 - 太阳图
 
-- `eBRF` 和 `perf` 都是 linux kernel 代码的一部分,
-
-- `eBPF` 比 `perf` 更容易地在内核执行,效率更高,开销更低
-
-![image](./Pictures/benchmark/perf_vs_brf.png)
+![image](./Pictures/benchmark/perf_vs_bpf.png)
 
 bcc 安装后加入`$PATH`:
 
@@ -1216,7 +1237,7 @@ bcc 安装后加入`$PATH`:
 export PATH="/usr/share/bcc/tools:$PATH"
 ```
 
-### stackcount
+#### stackcount
 
 追踪 nvim 的使用 ` malloc()` 的次数:
 
@@ -1480,6 +1501,42 @@ perf trace ls
 ![image](./Pictures/benchmark/pstree.png)
 
 - [Colony Graphs: Visualizing the Cloud](http://www.brendangregg.com/ColonyGraphs/cloud.html#Implementation)
+
+## trace-cmd
+```sh
+# 查看追踪器
+trace-cmd list -t
+
+# 启动function追踪器
+trace-cmd start -p function
+
+# 查看追踪器的输出
+trace-cmd show | head -n 50
+
+# 停止追踪器
+trace-cmd stop
+
+# 清楚缓冲区
+trace-cmd clear
+
+# 设置函数调用的深度
+trace-cmd start -p function_graph --max-graph-depth 5
+
+# 查看内核模块
+lsmod | grep ext4
+
+# 查看可以追踪的内核函数
+trace-cmd list -f | grep ext4
+
+# 追踪内核函数
+trace-cmd record -l "ext4_*" -p function_graph
+
+# 查看追踪记录
+trace-cmd report | head -20
+
+# 追踪指定进程(echo $$表示当前shell进程)
+trace-cmd record -P $(echo $$) -p function_graph
+```
 
 # reference
 

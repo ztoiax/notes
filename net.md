@@ -33,6 +33,7 @@
     * [ngrep](#ngrep)
     * [curl](#curl)
         * [基本命令](#基本命令-2)
+        * [webhook](#webhook)
     * [httpie](#httpie)
     * [testssl](#testssl)
     * [nghttp](#nghttp)
@@ -42,6 +43,7 @@
     * [dnspeep](#dnspeep)
     * [lighthouse](#lighthouse)
 * [reference](#reference)
+* [在线工具](#在线工具)
 
 <!-- vim-markdown-toc -->
 
@@ -65,6 +67,12 @@
 | netstat          | ip -s, ss, ip route     |
 | brctl            | bridge                  |
 |                  | tc(qos)                 |
+
+- 重启网卡
+
+```sh
+systemctl restart NetworkManager.service
+```
 
 ## ip(iproute2)
 
@@ -97,6 +105,12 @@ ip a show dev eth0
 
 # -s 查看详细信息,类似ifconfig
 ip -s a
+
+# 以json格式显示
+ip --json addr show
+
+# jq命令过滤, 查看ip地址
+ip --json addr show | jq '.[].addr_info[].local'
 
 # watch命令每秒监控
 watch -d -n 1 ip -s a
@@ -712,6 +726,51 @@ curl -o /dev/null \
 curl -vso /dev/null --http2 https://www.bilibili.com
 ```
 
+- [可以curl的在线服务](https://github.com/chubin/awesome-console-services)
+
+```py
+# 查看ip
+curl l2.io/ip
+
+# 查看定位
+curl ip-api.com
+
+# 查看新冠疫情
+curl https://corona-stats.online
+```
+
+### webhook
+[企业微信群机器人配置说明](https://work.weixin.qq.com/api/doc/90000/90136/91770)
+
+```sh
+curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=693axxx6-7aoc-4bc4-97a0-0ec2sifa5aaa' \
+   -H 'Content-Type: application/json' \
+   -d '
+   {
+        "msgtype": "text",
+        "text": {
+            "content": "此消息由达哥发送"
+        }
+   }'
+
+# markdown格式
+curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=841b95e2-12d6-4bff-af35-4a67c3c8ca59' \
+   -H 'Content-Type: application/json' \
+   -d '
+{
+    "msgtype": "markdown",
+    "markdown": {
+        "content": "# 标题1
+        ## 标题2
+        > 引用
+
+        - 圆点
+        **粗体**, `代码段（暂不支持跨行）`,
+        [连接](https://work.weixin.qq.com/api/doc/90000/90136/91770)"
+    }
+}'
+```
+
 ## httpie
 
 ```sh
@@ -772,3 +831,7 @@ h2spec -t -S -h www.bilibili.com -p 443
 - [curl 的用法指南](http://www.ruanyifeng.com/blog/2019/09/curl-reference.html)
 
 - [nping](https://netbeez.net/blog/how-to-use-nping/)
+
+# 在线工具
+
+- [可以画网络拓扑图](https://www.cloudcraft.co/)

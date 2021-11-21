@@ -4,6 +4,7 @@
     * [advcpmv](#advcpmv)
         * [instead cp,mv](#instead-cpmv)
     * [ranger](#ranger)
+    * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
     * [broot](#broot)
     * [nnn](#nnn)
     * [lf: go ranger](#lf-go-ranger)
@@ -17,11 +18,13 @@
         * [using editor rename file](#using-editor-rename-file)
     * [fselect: sql语句的ls](#fselect-sql语句的ls)
     * [jql: json查看器](#jql-json查看器)
+    * [htmlq](#htmlq)
 * [git](#git)
     * [gh](#gh)
         * [github-cli官方文档](#github-cli官方文档)
     * [lazygit](#lazygit)
         * [git tui](#git-tui)
+    * [gitui](#gitui)
     * [bit](#bit)
         * [instead git](#instead-git)
     * [tig](#tig)
@@ -117,6 +120,10 @@
     * [croc: 文件传输](#croc-文件传输)
     * [slidev: markdown写ppt](#slidev-markdown写ppt)
     * [q: sql语法查询文件](#q-sql语法查询文件)
+    * [sunloginclient-cli(向日葵运程控制cli版)](#sunloginclient-cli向日葵运程控制cli版)
+    * [fanyi(翻译)](#fanyi翻译)
+    * [cheat.sh: 更好的man](#cheatsh-更好的man)
+    * [tokei(统计编程语言占比)](#tokei统计编程语言占比)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -135,6 +142,10 @@ alias cp="advcp -g"
 ## [ranger](https://github.com/ranger/ranger)
 
 ![image](./Pictures/awesomecli/5.png)
+
+## [visidata: 支持查看sqlite的文件管理器](https://github.com/saulpw/visidata)
+
+![image](./Pictures/awesomecli/visidata.png)
 
 ## [broot](https://github.com/Canop/broot)
 
@@ -176,6 +187,8 @@ sudo make O_NERD=1
 
 ![image](./Pictures/awesomecli/jql.png)
 
+## [htmlq](https://github.com/mgdm/htmlq)
+
 # git
 
 ## [gh](https://github.com/cli/cli)
@@ -216,6 +229,10 @@ gh release list
 ### git tui
 
 ![image](./Pictures/awesomecli/lazygit.png)
+
+## [gitui](https://github.com/extrawurst/gitui)
+
+![image](./Pictures/awesomecli/gitui.png)
 
 ## [bit](https://github.com/chriswalz/bit)
 
@@ -496,10 +513,39 @@ q "SELECT c1, c2 FROM mysql_slow.log WHERE c1 LIKE '%COUNT%'"
 
 ps -ef | q -H "select count(UID) from - where UID='root'"
 ```
+## [sunloginclient-cli(向日葵运程控制cli版)](https://sunlogin.oray.com/download)
+
+## [fanyi(翻译)](https://github.com/afc163/fanyi)
+```sh
+# 需要安装festival
+pacman -S festival
+```
+
+## [cheat.sh: 更好的man](https://github.com/chubin/cheat.sh#usage)
+- 1.使用curl获取(未安装的使用方法):
+    ```sh
+    # 获取rsync命令
+    curl https://cheat.sh/rsync
+
+    # 获取python requests
+    curl https://cheat.sh/python/requests
+
+    # 获取python requests get
+    curl https://cheat.sh/python/requests+get
+    ```
+- 2.安装后的用法:
+    ```sh
+    cht.sh rsync
+    cht.sh python requests
+    cht.sh python requests get
+    ```
+
+## tokei(统计编程语言占比)
 
 # reference
 
-- [类似项目](https://github.com/ibraheemdev/modern-unix)
+
+- [modern-unix: 类似项目](https://github.com/ibraheemdev/modern-unix)
 
 - [命令行基础工具的更佳替代品](https://linux.cn/article-4042-1.html)
 

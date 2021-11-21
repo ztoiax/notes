@@ -20,6 +20,8 @@
         * [cut](#cut)
         * [sed](#sed)
         * [awk](#awk)
+        * [tac(反转行)](#tac反转行)
+        * [paste](#paste)
         * [perl5](#perl5)
         * [perl6(Raku)](#perl6raku)
             * [module](#module)
@@ -31,6 +33,7 @@
         * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
         * [openssl](#openssl)
         * [gnuplot](#gnuplot)
+        * [shellcheck](#shellcheck)
     * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
         * [创建 RAID5](#创建-raid5)
@@ -384,7 +387,7 @@ cut -d: -f2
 
 ### sed
 
-[regex 在线工具](https://regex101.com/)
+- [useful-sed](https://github.com/adrianscheff/useful-sed)
 
 所有操作，以**行**为单位
 | 参数 | 操作 |
@@ -553,7 +556,27 @@ awk 'ORS=NR%2' FILE
 awk -v a="$var1" -v b="$var2" 'BEGIN {print a,b}'
 ```
 
-[awk 教程](https://backreference.org/2010/02/10/idiomatic-awk/)
+- [Understanding AWK](https://earthly.dev/blog/awk-examples/)
+
+- [awk 教程](https://backreference.org/2010/02/10/idiomatic-awk/)
+
+### tac(反转行)
+
+```sh
+ls | tac
+```
+
+### paste
+
+- 分成多少列
+
+```sh
+# 分成两列
+ls | paste - -
+
+# 分成三列, 以此类推
+ls | paste - - -
+```
 
 ### perl5
 
@@ -864,6 +887,12 @@ openssl s_client -connect www.baidu.com:443
 ```sh
 # 对文件第一列进行绘图
 plot "filename" using 1 w lines
+```
+
+### [shellcheck](https://github.com/koalaman/shellcheck)
+```sh
+# 测试有没有问题
+shellcheck --format=gcc test.sh
 ```
 
 ## 调整分区大小

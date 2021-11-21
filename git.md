@@ -9,9 +9,10 @@
             * [基本命令](#基本命令-1)
             * [合并 3 次分支(保留文件)](#合并-3-次分支保留文件)
             * [回退单个文件](#回退单个文件)
-            * [恢复干净的工作区](#恢复干净的工作区)
+            * [stash(暂存)](#stash暂存)
     * [remote](#remote)
 * [git-extras](#git-extras)
+* [pre-commit](#pre-commit)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
 * [关于 Git 的书](#关于-git-的书)
@@ -114,6 +115,9 @@ git log
 # 显示commit和hash的历史，以及每次commit发生变更的文件
 git log --stat
 
+# 显示远程仓库的commit和hash的历史
+git log --oneline
+
 # 将操作合并到最新一次commit
 git commit --amend -m <hash>
 
@@ -165,14 +169,24 @@ git reset <commit_id> <file_path>
 git checkout .
 ```
 
-#### 恢复干净的工作区
+#### stash(暂存)
 
+- 可以在不同的分支上使用
 ```sh
-# 可代替`git reset --hard <HASD>`
+# 暂存最新的修改
 git stash push -u
 
-# 执行后，又想撤销
+# 查看暂存列表
+git stash list
+
+# 查看某一条暂存
+git stash show stash@{0}
+
+# 返回暂存
 git stash pop
+
+# 不要暂存
+git stash clear
 ```
 
 ## remote
@@ -199,9 +213,41 @@ git pull <REMOTE> <BRANCH>
 
 [更多 git 的第三方优秀软件](https://github.com/ztoiax/notes/awesomecli#git)
 
-# git-extras
+# [git-extras](https://github.com/tj/git-extras/blob/master/Commands.md#git-alias)
 
-- [git-extras](https://github.com/tj/git-extras/blob/master/Commands.md#git-alias)
+# [pre-commit](https://github.com/pre-commit/pre-commit)
+
+- [官方文档](https://pre-commit.com/)
+
+- 保存为`.pre-commit-config.yaml` 文件
+
+```yml
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+-   repo: https://github.com/psf/black
+    rev: 19.3b0
+    hooks:
+    -   id: black
+```
+
+- 基本使用
+
+```sh
+# 生成./git/hooks/pre-commit
+pre-commit install
+
+# 手动运行
+pre-commit run --all-files
+
+# 或者commit会自动运行
+git commit -m "..."
+```
+
 
 # reference
 
@@ -219,6 +265,7 @@ git pull <REMOTE> <BRANCH>
 - [这才是真正的 Git——Git 实用技巧](https://zhuanlan.zhihu.com/p/192961725)
 - [详解 Git 大文件存储（Git LFS）](https://zhuanlan.zhihu.com/p/146683392)
 - [Git 代码回滚与找回的艺术](https://mp.weixin.qq.com/s?src=11&timestamp=1624210292&ver=3142&signature=ZLIi9TNMCsGrxtjb0rb9Nqwhl6vUnbN1N2wG7h2wRs7WYeo-Z86Jypn35AJqJSfTV5XP51jr8VP3ueE6QOcBK29dmGPx3K*g2PrOonMMg62y0yIFVhVjQi-JYR18z4b1&new=1)
+- [收集各种 Git 操作出现问题后的应对措施](https://github.com/k88hudson/git-flight-rules/blob/master/README_zh-CN.md)
 
 # 关于 Git 的书
 
