@@ -15,6 +15,7 @@
     * [mpstat(sysstat)](#mpstatsysstat)
     * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
     * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
+    * [hyperfine: 高级time命令](#hyperfine-高级time命令)
 * [Memory](#memory)
     * [hugepage(巨型页)](#hugepage巨型页)
     * [KSM](#ksm)
@@ -412,6 +413,8 @@ echo 1 > cpu exclusive
 # 分配进程
 echo <pid> > tasks
 ```
+
+## [hyperfine: 高级time命令](https://github.com/sharkdp/hyperfine)
 
 # Memory
 
