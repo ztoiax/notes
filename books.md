@@ -4,6 +4,7 @@
     * [Program Language(编程语言)](#program-language编程语言)
         * [C/C++](#cc)
             * [《现代 C++ 教程：高速上手 C++11/14/17/20》](#现代-c-教程高速上手-c11141720)
+            * [ruanyif: C 语言教程](#ruanyif-c-语言教程)
         * [Java](#java)
             * [Java 编程思想 第四版](#java-编程思想-第四版)
         * [Go](#go)
@@ -102,6 +103,8 @@
 ### C/C++
 
 #### [《现代 C++ 教程：高速上手 C++11/14/17/20》](https://changkun.de/modern-cpp/zh-cn/00-preface/)
+
+#### [ruanyif: C 语言教程](https://wangdoc.com/clang/intro.html)
 
 ### Java
 

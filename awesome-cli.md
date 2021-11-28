@@ -124,6 +124,7 @@
     * [fanyi(翻译)](#fanyi翻译)
     * [cheat.sh: 更好的man](#cheatsh-更好的man)
     * [tokei(统计编程语言占比)](#tokei统计编程语言占比)
+    * [termpair: 网页操作终端](#termpair-网页操作终端)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -542,8 +543,9 @@ pacman -S festival
 
 ## tokei(统计编程语言占比)
 
-# reference
+## [termpair: 网页操作终端](https://github.com/cs01/termpair)
 
+# reference
 
 - [modern-unix: 类似项目](https://github.com/ibraheemdev/modern-unix)
 
