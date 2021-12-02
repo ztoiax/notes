@@ -55,7 +55,7 @@ yum install -y qemu kvm libvirt virt-install virt-viewer libguestfs virt-manager
 
 - 配置文件`/etc/libvirt/qemu/`
 
-### qemu-img
+### qemu-img(查看镜像信息)
 
 | 镜像格式                                         | 内容                          |
 | ------------------------------------------------ | ----------------------------- |
@@ -68,11 +68,17 @@ yum install -y qemu kvm libvirt virt-install virt-viewer libguestfs virt-manager
 
 ![image](./Pictures/kvm/sheepdog.png)
 
+- `qemu-img` 命令不能查看已启动的镜像, 以下为报错信息: 无法获取共享锁
+    ```
+    qemu-img: Could not open 'centos7.0.qcow2': Failed to get shared "write" lock
+    Is another process using the image [centos7.0.qcow2]?
+    ```
+
 ```bash
-# 查看是否有错误(不能查看已启动的镜像)
+# 查看是否有错误
 qemu-img check file.img
 
-# 查看镜像信息(不能查看已启动的镜像)
+# 查看镜像信息(包含快照信息)
 qemu-img info file.img
 qemu-img info file.qcow2
 
@@ -87,7 +93,7 @@ qemu-img convert -o encryption -O qcow2 file.qcow2 file_encryption.qcow2
 qemu-img snapshot -l centos7.0.qcow2
 ```
 
-创建镜像:
+-f 创建镜像:
 
 ```bash
 # 随着使用逐渐增大
@@ -98,9 +104,12 @@ qemu-img create -f qcow2 -o preallocation=full arch.qcow2 10G
 
 # encryption加密
 qemu-img create -f qcow2 -o encryption arch.qcow2 1G
+
+# 增加10G
+qemu-img resize arch.qcow2 +10G
 ```
 
-### qemu-system-x86_64
+### qemu-system-x86_64 安装
 
 | 参数              | 操作                  |
 | ----------------- | --------------------- |
@@ -123,12 +132,27 @@ qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -boot once=d -cdrom archlinux-2020.1
 qemu-system-x86_64 -enable-kvm -m 2G -smp 4,maxcpus=$(nproc) -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2
 ```
 
+```sh
+# 启动虚拟机
+qemu-system-x86_64 /mnt/Z/kvm/arch.qcow2
+
+# 启动虚拟机, 并设置ssh端口转发60022
+qemu-system-x86_64 arch.qcow2 -nic user,hostfwd=tcp::60022-:22
+# ssh连接虚拟机
+ssh root@127.0.0.1 -p 60022
+
+# 设置samba共享目录, samba配置文件/tmp/qemu-smb.VAEJD1/smb.conf
+qemu-system-x86_64 -nic user,id=nic0,smb=./share_qemu arch.qcow2
+```
+
 guest:
 
 ```bash
 # 查看cpu模型
 grep 'model name' /proc/cpuinfo
 ```
+
+### qemu monitor
 
 - <kbd>ctrl + alt + 2</kbd> 可切换 `qemu monitor` 模式(qemu)
 
@@ -137,6 +161,14 @@ grep 'model name' /proc/cpuinfo
 - <kbd>ctrl + alt + g</kbd> guest 和 host 之间的切换
 
   ![image](./Pictures/kvm/qemu-monitor.png)
+
+```sh
+# 开启monitor
+qemu-system-x86_64 -monitor unix:/tmp/monitor.sock,server,nowait
+
+# 连接
+socat - UNIX-CONNECT:/tmp/monitor.sock
+```
 
 ```qemu
 # 查看cpu
@@ -345,6 +377,36 @@ virsh -c qemu:///system
 virt-manager -c qemu:///system
 ```
 
+### vnc打开虚拟机
+
+- virt-manager在虚拟机后, 按open无法显示画面, 并出现以下错误
+
+> Error connecting to graphical console:
+could not get a reference to type class
+
+![image](./Pictures/kvm/vnc.png)
+
+- 默认的显示协议是spice协议, 我们可以改为vnc(需要关闭虚拟机)
+
+    - 在图形界面修改
+
+    ![image](./Pictures/kvm/vnc1.png)
+
+    - 也可以修改`/etc/libvirt/qemu/`目录下对应的虚拟机xml文件(两者一样)
+    ```xml
+    <graphics type='vnc' port='5900' autoport='no'>
+      <listen type='address'/>
+    </graphics>
+    ```
+
+```py
+# 安装vnc客户端(我这里是archlinux下的tigervnc)
+pacman -S tigervnc
+
+# 连接刚才设置的vnc端口
+vncviewer 127.0.0.1:5900
+```
+
 ## virsh
 
 ```bash
@@ -414,6 +476,15 @@ virsh net-update default add ip-dhcp-host \
       "<host mac='52:54:00:3d:62:04' \
        name='bob' ip='192.168.100.72' />" \
        --live --config
+```
+
+## KSM(Kernel Samepage Merging)
+
+- 通过共享多个虚拟机的页面, 从而减少内存
+
+```sh
+systemctl enable ksmtuned
+systemctl start ksmtuned
 ```
 
 ## correct way to move kvm vm

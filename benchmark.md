@@ -880,6 +880,14 @@ xz -dc /tmp/centos8.xz | dd of=/dev/nvme0n1p5
 ```
 
 ```bash
+# pigz多线程压缩, bs=64可以让解压速度快10倍
+dd if=/dev/nvme0n1p5  conv=sync,noerror status=progress bs=64K | pigz > $backup/arch-$(date +"%Y-%m-%d:%H:%M:%S").gz
+
+# 还原
+pigz -dc /mnt/Z/linux/arch.gz | pv | dd of=/dev/nvme0n1p5 status=progress bs=64K
+```
+
+```bash
 # 可以清离缓存后，多次运行dd测试
 echo 3 > /proc/sys/vm/drop_caches
 ```

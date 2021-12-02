@@ -18,6 +18,7 @@
         * [Lisp](#lisp)
             * [《Scheme 入门教程》](#scheme-入门教程)
             * [《On Lisp 》](#on-lisp-)
+                * [《On Lisp 》(中文)](#on-lisp-中文)
         * [Haskell](#haskell)
             * [Real World Haskell (中文)](#real-world-haskell-中文)
         * [Javascript](#javascript)
@@ -31,8 +32,8 @@
             * [Python最佳实践指南](#python最佳实践指南)
             * [CPython-Internals](#cpython-internals)
             * [Python Cookbook 第三版](#python-cookbook-第三版)
-            * [Problem Solving with Algorithms and Data Structures using Python¶(中文)](#problem-solving-with-algorithms-and-data-structures-using-python中文)
             * [Problem Solving with Algorithms and Data Structures using Python¶](#problem-solving-with-algorithms-and-data-structures-using-python)
+                * [Problem Solving with Algorithms and Data Structures using Python¶(中文)](#problem-solving-with-algorithms-and-data-structures-using-python中文)
             * [Cracking Codes with Python (英文)](#cracking-codes-with-python-英文)
             * [Python编程快速上手 --让繁琐工作自动化(英文)](#python编程快速上手---让繁琐工作自动化英文)
             * [flask/sanic/asyncio/bottle/webpy 源码阅读注释合集](#flasksanicasynciobottlewebpy-源码阅读注释合集)
@@ -45,6 +46,8 @@
         * [《Redis 设计与实现 第一版》](#redis-设计与实现-第一版)
             * [github: redis-3.0-annotated](#github-redis-30-annotated)
         * [《Redis 实战》部分试读](#redis-实战部分试读)
+        * [分布式](#分布式)
+            * [《分布式系统模式》](#分布式系统模式)
     * [软件开发](#软件开发)
         * [《A Philosophy of Software Design》(软件设计的哲学)](#a-philosophy-of-software-design软件设计的哲学)
         * [图说设计模式](#图说设计模式)
@@ -131,6 +134,7 @@
 #### [《Scheme 入门教程》](http://deathking.github.io/yast-cn/)
 
 #### [《On Lisp 》](http://www.paulgraham.com/onlisptext.html)
+##### [《On Lisp 》(中文)](https://www.kancloud.cn/ituring/on-lisp/56218)
 
 ### Haskell
 
@@ -158,9 +162,8 @@
 
 #### [Python Cookbook 第三版](https://python3-cookbook.readthedocs.io/zh_CN/latest/)
 
-#### [Problem Solving with Algorithms and Data Structures using Python¶(中文)](https://github.com/facert/python-data-structure-cn)
-
 #### [Problem Solving with Algorithms and Data Structures using Python¶](https://runestone.academy/runestone/books/published/pythonds3/index.html)
+##### [Problem Solving with Algorithms and Data Structures using Python¶(中文)](https://github.com/facert/python-data-structure-cn)
 
 #### [Cracking Codes with Python (英文)](https://inventwithpython.com/cracking/)
 
@@ -185,6 +188,10 @@
 #### [github: redis-3.0-annotated](https://github.com/huangz1990/redis-3.0-annotated)
 
 ### [《Redis 实战》部分试读](http://redisinaction.com/)
+
+### 分布式
+
+#### [《分布式系统模式》](https://github.com/dreamhead/patterns-of-distributed-systems)
 
 ## 软件开发
 
@@ -283,4 +290,3 @@
 # 笔记
 
 ## [中文思维导图: Psyduck](https://github.com/SmartKeyerror/Psyduck)
-

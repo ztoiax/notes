@@ -5,6 +5,7 @@
     * [ethtool](#ethtool)
     * [nmcli](#nmcli)
         * [交互模式](#交互模式)
+    * [ssh](#ssh)
     * [traceroute](#traceroute)
     * [tcptraceroute](#tcptraceroute)
     * [nping](#nping)
@@ -253,6 +254,64 @@ goto ipv4
 set ipv4.address 192.168.100.2/24
 save
 ```
+
+## ssh
+
+- [arch文档](https://wiki.archlinux.org/title/OpenSSH#Forwarding_other_ports)
+
+- 配置文件:
+
+ | 文件内容     | 路径                 |
+ |--------------|----------------------|
+ | 配置文件     | /etc/ssh/sshd_config |
+ | 存放公钥私钥 | /etc/ssh             |
+
+ - 关闭密码登陆, 强制密钥登陆
+ ```
+ PasswordAuthentication no
+ AuthenticationMethods publickey
+ ```
+
+ - 运行root用户登陆(默认是关闭)
+ ```
+ PermitRootLogin yes
+ ```
+
+ - 大多数情况下关闭root用户登陆, 但有些命令需要root权限. 可以在`/root/.ssh/authorized_keys` 文件的密钥前面加入
+ ```
+ command="/usr/lib/rsync/rrsync -ro /" ssh-rsa …
+ ```
+ - 配置文件
+ ```
+ PermitRootLogin forced-commands-only
+ ```
+
+ - 对root用户执行的命令, 都需要密钥验证(相比上一条方案, 限制低一些)
+ ```
+ PermitRootLogin prohibit-password
+ ```
+
+ - 开启gzip压缩(默认是关闭)
+ ```
+ Compression yes
+ ```
+
+```sh
+# 查看连接会话
+netstat -tnpa | grep sshd
+# or
+ps aux | grep sshd
+```
+
+```sh
+# -L 端口转发. 将9900转发到5900(vnc端口), 实现更安全的vnc连接
+ssh 127.0.0.1 -L 9900:127.0.0.1:5900
+
+# -f 连接后, 执行命令
+ssh -f 127.0.0.1 ls
+```
+
+- `sshguard` 软件可以防止暴力破解
 
 ## traceroute
 
