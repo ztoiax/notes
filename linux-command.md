@@ -34,6 +34,7 @@
         * [openssl](#openssl)
         * [gnuplot](#gnuplot)
         * [shellcheck](#shellcheck)
+        * [pandoc 文档转换](#pandoc-文档转换)
     * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
         * [创建 RAID5](#创建-raid5)
@@ -226,6 +227,12 @@ find / -samefile /target/file
 
 # -regex正则表达式(不支持pcre)
 find . -regex ".*python.*"
+
+# \! -name 排除.gz的文件
+find . \! -name "*.gz"
+
+# -print0 删除换行符, 将字符串连在一起
+find . -print0
 ```
 
 ### [fselect: sql语句的ls](https://github.com/jhspetersson/fselect)
@@ -811,6 +818,14 @@ cat ip | xargs --max-procs 0 -L 1 ping -c 1
 cat ip | xargs -I host sh -c "ping -c 1 host; curl host"
 ```
 
+- 并发
+```sh
+# -P 12个核心
+find . -name '*' | xargs -P 12 file
+# -n 每个核的处理10个任务
+find . -name '*' | xargs -P 12 -n 10 file
+```
+
 ### date
 
 ```bash
@@ -894,6 +909,29 @@ plot "filename" using 1 w lines
 # 测试有没有问题
 shellcheck --format=gcc test.sh
 ```
+
+### [pandoc 文档转换](https://github.com/jgm/pandoc)
+
+```sh
+# 列出支持的文档格式
+pandoc --list-output-formats
+
+# md转word
+pandoc README.md -o README.docx
+
+# md转html
+pandoc README.md -o README.html
+
+# md转ppt
+pandoc README.md -o README.html -t revealjs -s
+
+# md转ppt 指定主题
+pandoc Resume.md -o README.html -t revealjs -s -V theme=beige
+
+# 输入不一定是文件, 可以输入url, 将html文件转换mardown
+pandoc -f html -t markdown https://www.sogou.com > sogou.md
+```
+
 
 ## 调整分区大小
 

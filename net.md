@@ -29,6 +29,7 @@
         * [显示本机网络，路由信息](#显示本机网络路由信息)
         * [扫描文件内的 ip 地址](#扫描文件内的-ip-地址)
         * [使用 tmp 扫描](#使用-tmp-扫描)
+    * [zmap](#zmap)
     * [tc(traffic control)](#tctraffic-control)
     * [socat](#socat)
     * [ngrep](#ngrep)
@@ -619,6 +620,10 @@ nmap -sU 192.168.1.1
 # TCP ACK
 nmap -PA 192.168.1.1
 ```
+
+## [zmap](https://github.com/zmap/zmap)
+
+- 比nmap速度要快 [ZMap 为什么能在一个小时内就扫描整个互联网？](https://www.zhihu.com/question/21505586/answer/18443313)
 
 ## tc(traffic control)
 

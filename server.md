@@ -11,6 +11,7 @@
         * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
     * [rkhunter(rookit 检查)](#rkhunterrookit-检查)
     * [nfs](#nfs)
+    * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
     * [cron](#cron)
     * [anacron](#anacron)
 
@@ -219,6 +220,18 @@ systemctl reload nfs
 
 ```bash
 mount 192.168.100.208:/root/test test
+```
+
+## cockpit(系统监控的webui)
+
+- port: 9090
+
+```sh
+systemctl enable cockpit.socket
+systemctl start cockpit.socket
+
+# 防火墙设置
+firewall-cmd --add-service=cockpit --permanent
 ```
 
 ## cron

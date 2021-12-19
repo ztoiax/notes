@@ -98,6 +98,8 @@
         * [wireshark cli version with vim keybinds](#wireshark-cli-version-with-vim-keybinds)
     * [baidupcs](#baidupcs)
         * [The terminal utility for Baidu Network Disk.](#the-terminal-utility-for-baidu-network-disk)
+    * [aliyunpan](#aliyunpan)
+        * [阿里网盘 go 客户端](#阿里网盘-go-客户端)
     * [bypy](#bypy)
         * [百度网盘 Python 客户端](#百度网盘-python-客户端)
     * [haxor-news](#haxor-news)
@@ -125,6 +127,7 @@
     * [cheat.sh: 更好的man](#cheatsh-更好的man)
     * [tokei(统计编程语言占比)](#tokei统计编程语言占比)
     * [termpair: 网页操作终端](#termpair-网页操作终端)
+    * [markdown写ppt](#markdown写ppt)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -440,6 +443,10 @@ fzf -e
 
 ### The terminal utility for Baidu Network Disk.
 
+## [aliyunpan](https://github.com/tickstep/aliyunpan#linux--macos)
+
+### 阿里网盘 go 客户端
+
 ## [bypy](https://github.com/houtianze/bypy)
 
 ### 百度网盘 Python 客户端
@@ -544,6 +551,8 @@ pacman -S festival
 ## tokei(统计编程语言占比)
 
 ## [termpair: 网页操作终端](https://github.com/cs01/termpair)
+
+## [markdown写ppt](https://github.com/webpro/reveal-md/)
 
 # reference
 
