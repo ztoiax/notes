@@ -29,7 +29,7 @@
 
 《!-- vim-markdown-toc --》
 
-# 免费的 IT 类在线书籍
+# 免费在线书籍
 
 ## Program Language(编程语言)
 
@@ -68,6 +68,10 @@
 - [《On Lisp 》](http://www.paulgraham.com/onlisptext.html)
     - [《On Lisp 》(中文)](https://www.kancloud.cn/ituring/on-lisp/56218)
 
+- [《Practical Common Lisp》](https://gigamonkeys.com/book/)
+
+- [《SICP Clojure 描述》](http://www.sicpdistilled.com/)
+
 ### Haskell
 
 - [《Real World Haskell》 (中文)](http://cnhaskell.com/)
@@ -76,11 +80,16 @@
 
 - [《ES6 入门教程》](https://es6.ruanyifeng.com/)
 
+- [《SICP JavaScript 描述》](https://sicp-js.apachecn.org/#/)
+
 ### Python
+
+- [《Python 3标准库》(英文)](https://pymotw.com/3/)
 
 - [《笨办法学Python》](https://flyouting.gitbooks.io/learn-python-the-hard-way-cn/content/)
 
-- [《SICP Python 描述》](https://wizardforcel.gitbooks.io/sicp-py/content/)
+- [《SICP Python 描述》(英文)](https://wizardforcel.gitbooks.io/sicp-in-python/content/)
+    - [《SICP Python 描述》(中文)](https://wizardforcel.gitbooks.io/sicp-py/content/)
 
 - [《Python并行编程》](https://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/index.html)
 
@@ -107,6 +116,10 @@
 
 - [PegasusWang: Python/Golang Web 入坑指南](https://python-web-guide.readthedocs.io/zh/latest/index.html)
 
+### Lua
+
+- [《Programming in Lua (fourth edition)》(英文)](https://www.moys.gov.iq/upload/common/Programming_in_Lua%2C_4th_ed._%282017%29_.pdf)
+
 ## algorithm(算法)
 
 - [《算法新解》](https://github.com/liuxinyu95/AlgoXY)
@@ -121,6 +134,10 @@
 
 
 ## database(数据库)
+
+- [《Readings in Database Systems》 第五版](http://www.redbook.io/)
+
+- [《数据库系统概念第7版》课件(英文)](https://www.db-book.com/slides-dir/index.html)
 
 - [《Redis 使用手册》](http://redisdoc.com/)
 
@@ -143,6 +160,8 @@
 
 - [《A Philosophy of Software Design》(软件设计的哲学)](http://gdut_yy.gitee.io/doc-aposd/)
 
+- [《UNIX编程艺术》(英文)](http://www.catb.org/~esr/writings/taoup/html/)
+
 - [图说设计模式](https://design-patterns.readthedocs.io/zh_CN/latest/index.html#)
 
 ## Operating System(操作系统)
@@ -153,11 +172,17 @@
 
 - [理解Linux进程](https://tobegit3hub1.gitbooks.io/understanding-linux-processes/content/)
 
+- [品读 Linux 0.11 核心代码](https://github.com/sunym1993/flash-linux0.11-talk)
+
+- [Linux 内核揭秘](https://xinqiu.gitbooks.io/linux-insides-cn/content/index.html)
+
 ## architecture(体系结构)
 
 - [《计算机体系结构基础 第3版(龙芯)》](https://foxsen.github.io/archbase/)
 
 ## compile(编译)
+
+- [编译原理（紫龙书）第2版习题答案](https://github.com/fool2fish/dragon-book-exercise-answers)
 
 - [从头开发一个迷你 Go 语言](https://chai2010.cn/ugo-compiler-book/ch1-basic/index.html)
 
@@ -165,8 +190,11 @@
 
 - [《计算机网络：系统方法》(英文)](https://github.com/SystemsApproach/book)
 
+- [Computer Networking : Principles,Protocols and Practice](https://www.computer-networking.info/#)
+
 ## 运维
 
+- [《The AWK Programming Language》](https://github.com/wuzhouhui/awk)
 - [运维实践指南](https://billwang139967.gitbooks.io/op_practice_book/content/)
 
 - [《微服务：从设计到部署》](https://docshome.gitbook.io/microservices/)
@@ -182,6 +210,8 @@
 - [Nginx开发从入门到精通](http://tengine.taobao.org/book/index.html)
 
 - [Nginx 源码注释](https://github.com/chronolaw/annotated_nginx)
+
+- [ruanyf: Bash脚本教程](https://wangdoc.com/bash/intro.html)
 
 ### cloud
 
@@ -205,13 +235,24 @@
 
 - [Dora项目](https://cloud.google.com/architecture/devops/technical)
 
-> 使用行为科学来定义, 开发和交付软件的最有效率的方法
+    - 使用行为科学来定义, 开发和交付软件的最有效率的方法
 
 - [google-sre-ebook](https://github.com/captn3m0/google-sre-ebook)
 
+## 数学
+
+- [《几何原本》 (英文)](https://www.c82.net/euclid/)
+
+- [线性代数笔记](https://github.com/zlotus/notes-linear-algebra)
+
 # 其他相似项目
 
+- [The Architecture of Open Source Applications](http://aosabook.org/en/)
+    - 介绍开源软件的结构, 以及一些教程
+
 - [Technically-oriented PDF Collection (Papers, Specs, Decks, Manuals, etc)](https://github.com/tpn/pdfs)
+
+- [Books-Free-Books](https://github.com/lTbgykio/Books-Free-Books)
 
 - [Some-Many-Books个人收藏书籍列表](https://github.com/Dujltqzv/Some-Many-Books)
 

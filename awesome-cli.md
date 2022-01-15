@@ -45,6 +45,8 @@
     * [ag](#ag)
         * [instead grep](#instead-grep)
     * [fzf](#fzf)
+    * [skim](#skim)
+        * [rust 版fzf](#rust-版fzf)
     * [diff-so-fancy](#diff-so-fancy)
         * [highlight git diff](#highlight-git-diff)
     * [icdiff](#icdiff)
@@ -62,6 +64,8 @@
     * [fx](#fx)
         * [Command-line JSON processing tool](#command-line-json-processing-tool)
     * [navi: fzf command bookmark](#navi-fzf-command-bookmark)
+    * [trash-cli](#trash-cli)
+        * [回收站](#回收站)
 * [disk](#disk)
     * [dfc](#dfc)
         * [instead df](#instead-df)
@@ -300,6 +304,9 @@ fzf
 # -e 取消模糊搜索
 fzf -e
 ```
+## [skim](https://github.com/lotabout/skim)
+
+### rust 版fzf
 
 ## [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy)
 
@@ -342,6 +349,10 @@ fzf -e
 ### Command-line JSON processing tool
 
 ## [navi: fzf command bookmark](https://github.com/denisidoro/navi)
+
+## [trash-cli](https://github.com/andreafrancia/trash-cli)
+
+### 回收站
 
 # disk
 

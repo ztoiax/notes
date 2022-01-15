@@ -1,4 +1,32 @@
-# kvm
+<!-- vim-markdown-toc GFM -->
+
+* [虚拟化](#虚拟化)
+    * [kvm: 内核模块](#kvm-内核模块)
+    * [qemu: 硬件模拟器](#qemu-硬件模拟器)
+        * [qemu-img(查看镜像信息)](#qemu-img查看镜像信息)
+        * [qemu-system-x86_64 安装](#qemu-system-x86_64-安装)
+        * [qemu monitor](#qemu-monitor)
+            * [virtio](#virtio)
+            * [hugepage](#hugepage)
+    * [libvirt: 虚拟机管理接口](#libvirt-虚拟机管理接口)
+        * [普通用户连接 qemu:///system](#普通用户连接-qemusystem)
+        * [vnc打开虚拟机](#vnc打开虚拟机)
+        * [virsh](#virsh)
+        * [克隆虚拟机](#克隆虚拟机)
+    * [KSM(Kernel Samepage Merging)](#ksmkernel-samepage-merging)
+    * [correct way to move kvm vm](#correct-way-to-move-kvm-vm)
+        * [dump](#dump)
+        * [for net](#for-net)
+* [第三方软件资源](#第三方软件资源)
+    * [kvmtop](#kvmtop)
+    * [kvm management with wei ui](#kvm-management-with-wei-ui)
+* [优秀文章](#优秀文章)
+    * [QEMU KVM 学习笔记](#qemu-kvm-学习笔记)
+    * [learn-kvm](#learn-kvm)
+
+<!-- vim-markdown-toc -->
+
+# 虚拟化
 
 - guest(虚拟机) 运行在 `guest mode`
 
@@ -35,17 +63,21 @@ dmesg | grep kvm-clock
 - kvm-clock
   ![image](./Pictures/kvm/kvm-clock.png)
 
-## install(安装)
+- install(安装)
 
 ```bash
 yum install -y qemu kvm libvirt virt-install virt-viewer libguestfs virt-manager
 ```
 
-## qemu
+## kvm: 内核模块
+
+- 初始化cpu, 内存
+
+## qemu: 硬件模拟器
 
 - [qemu 详细文档](https://qemu.readthedocs.io/en/latest/index.html)
 
-- 提供 cpu,鼠标,键盘,设备等模拟
+- 模拟硬件设备: 网卡, 显卡, 声卡, 显卡, 键盘...
 
 - 每个 guest 都是 qemu 的进程
 
@@ -270,7 +302,13 @@ fdisk -l
 qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2 -mem-path /mnt/2M-hugepage -mem-prealloc
 ```
 
-## libvirt
+## libvirt: 虚拟机管理接口
+
+- libvirt是虚拟机管理接口
+
+    - 实现:创建, 暂停, 迁移等; cpu, 内存, 网卡等设备的热添加
+
+    - 使用libvirt进行管理的软件有: virsh, openstack, cloudstack, opennebula
 
 - `libvirt` 为用户提供 api, 对 `qemu` 和 `kvm` 的操作
 
@@ -407,7 +445,7 @@ pacman -S tigervnc
 vncviewer 127.0.0.1:5900
 ```
 
-## virsh
+### virsh
 
 ```bash
 # 查看虚拟机状态

@@ -745,6 +745,8 @@ ngrep -t -W byline port 80
 
 ## curl
 
+- [curl book](https://everything.curl.dev/)
+
 ### 基本命令
 
 注意 url 目录后要有`/`

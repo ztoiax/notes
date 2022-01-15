@@ -35,6 +35,8 @@
         * [gnuplot](#gnuplot)
         * [shellcheck](#shellcheck)
         * [pandoc 文档转换](#pandoc-文档转换)
+        * [ffmpeg](#ffmpeg)
+        * [jobs, fg, bg, disown, reptyr](#jobs-fg-bg-disown-reptyr)
     * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
         * [创建 RAID5](#创建-raid5)
@@ -932,6 +934,84 @@ pandoc Resume.md -o README.html -t revealjs -s -V theme=beige
 pandoc -f html -t markdown https://www.sogou.com > sogou.md
 ```
 
+### ffmpeg
+
+- 剪切:
+```sh
+file=old.mp4
+outfile=new.mp4
+
+# 开始时间
+start=00:00:00
+# 结束时间
+end=00:01:00
+
+ffmpeg -i $file -ss $start -t $end -c copy $outfile
+```
+
+- 合并:
+- `file.txt` 文件
+```txt
+file 'file1.mp4'
+file 'file2.mp4'
+```
+
+```sh
+outfile=new.mp4
+# 合并file.txt下的视频
+ffmpeg -f concat -safe 0 -i file.txt -c copy $outfile
+```
+
+### jobs, fg, bg, disown, reptyr
+- 教程参考: [bilibili: [高效搬砖] ssh上进程跑一半，发现忘开 tmux 了，又需要断开连接？场面一度很尴尬！reptyr来打救你](https://www.bilibili.com/video/BV1pT4y1w7kc?from=search&seid=17793808854272221660&spm_id_from=333.337.0.0)
+
+- test.sh
+```sh
+#!/bin/sh
+# 每隔1秒输出当前时间
+while true;do
+    echo $(date)
+    sleep 1
+done
+```
+
+- 后台运行
+```sh
+# 执行test.sh
+./test.sh
+
+# 按ctrl-z, 进入后台
+<c-z>
+
+# 进入后台会停止运行, 使用bg命令让test.sh在后台继续运行
+bg
+```
+
+- 查看test.sh的pid
+```sh
+ps aux | grep test.sh
+
+# pid为112908
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+tz        112908  0.0  0.0  10480  3764 pts/2    S<   10:37   0:00 /bin/sh ./test.sh
+```
+
+- disown
+```sh
+# 如果退出shell, 那么后台任务test.sh也会退出. 使用disown 让即使退出shell, 后台任务也能继续运行
+disown 112908
+```
+
+- reptyr
+```sh
+# 在开启新的shell, 捕抓test.sh标准输入, 输出. 旧的shell不能关闭, 不然会失败
+sudo reptyr -T 112908
+```
+
+- kill命令, 终止test.sh
+```sh
+kill -9 112908
+```
 
 ## 调整分区大小
 

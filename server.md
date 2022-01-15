@@ -1,6 +1,9 @@
 <!-- vim-markdown-toc GFM -->
 
 * [server(服务配置)](#server服务配置)
+    * [系统优化](#系统优化)
+        * [trim(统一文件系统与ssd删除)](#trim统一文件系统与ssd删除)
+        * [irqbalance(中断分配多cpu)](#irqbalance中断分配多cpu)
     * [openssh](#openssh)
         * [基本配置](#基本配置)
         * [使用ssh-agent 管理私钥, 自动进行远程连接](#使用ssh-agent-管理私钥-自动进行远程连接)
@@ -14,10 +17,41 @@
     * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
     * [cron](#cron)
     * [anacron](#anacron)
+    * [jenkins](#jenkins)
+        * [jenkins-cli](#jenkins-cli)
+        * [插件](#插件)
 
 <!-- vim-markdown-toc -->
 
 # server(服务配置)
+
+## 系统优化
+
+### trim(统一文件系统与ssd删除)
+
+- 方法1: 修改`/etc/fstab`
+```sh
+# 在<options>, 加入discard
+UUID=3453g54-6628-2346-8123435f  /home  xfs  defaults,discard   0 0
+```
+
+- 方法2: systemctl启动fstrim服务. 如果之前使用了方法1, 记得删除discard
+
+```sh
+# 每周一0点, 清理一次
+systemctl enable fstrim.timer
+systemctl start fstrim.timer
+```
+
+### irqbalance(中断分配多cpu)
+
+- centos的默认中断分配服务
+
+- 会根据系统的负载情况, 将中断分配到不同的cpu
+
+```sh
+systemctl status irqbalance
+```
 
 ## openssh
 
@@ -288,7 +322,7 @@ systemctl start cronie.service
 | 普通用户和 root 用户         | 只有 root 用户可以使用（使用特定的配置启动普通任务）                 |
 
 ```
-7	5	cron.weekly	/bin/bash /home/tz/.mybin/logs.sh
+7	5	cron.weekly	/bin/bash /home/user/.mybin/logs.sh
 ```
 
 ```bash
@@ -298,3 +332,29 @@ anacron -T
 # 启动
 anacron -d
 ```
+
+## jenkins
+
+- 默认端口: `http://127.0.0.1:8090/`
+
+- 项目路径: `/var/lib/jenkins/workspace/项目名`
+
+### jenkins-cli
+
+```sh
+# 下载jenkins-cli.jar
+curl -LO http://127.0.0.1:8090/jnlpJars/jenkins-cli.jar
+
+# 执行help命令
+java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd help
+
+# 启动名为test的任务
+java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd enable-job test
+
+# 获取test任务的xml
+java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd get-job test
+```
+
+### 插件
+
+- [插件搜索](https://plugins.jenkins.io/)

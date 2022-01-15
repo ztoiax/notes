@@ -13,6 +13,7 @@
     * [remote](#remote)
 * [git-extras](#git-extras)
 * [pre-commit](#pre-commit)
+* [github](#github)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
 * [关于 Git 的书](#关于-git-的书)
@@ -47,6 +48,11 @@ ssh-keygen -t rsa -C <userid> #your userid
 ## 基本命令
 
 ```sh
+# 克隆仓库
+git clone
+# 把github.com改为以下域名, 解决国内github访问慢的问题
+git clone https://hub.fastgit.org/
+
 # 初始化仓库
 git init
 
@@ -248,6 +254,15 @@ pre-commit run --all-files
 git commit -m "..."
 ```
 
+# github
+
+- [github新认证token背后的故事](https://github.blog/2021-04-05-behind-githubs-new-authentication-token-formats/)
+    - token 前缀:
+        - ghp for GitHub personal access tokens
+        - gho for OAuth access tokens
+        - ghu for GitHub user-to-server tokens
+        - ghs for GitHub server-to-server tokens
+        - ghr for refresh tokens
 
 # reference
 
