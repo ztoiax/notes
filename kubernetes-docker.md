@@ -158,6 +158,9 @@ docker serch opensuse
 
 # 搜索容器
 docker rename CONTAINER_ID New_name
+
+# 查看容器ip
+docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' CONTAINER_ID
 ```
 
 ## docker run
@@ -1100,6 +1103,8 @@ docker run --rm -ti \
   > k0s 是一个包含所有功能的单一二进制 Kubernetes 发行版，它预先配置了所有所需的 bell 和 whistle，使构建 Kubernetes 集群只需将可执行文件复制到每个主机并运行它即可。
 
 ## 优秀文章
+
+- [Kubernetes纪录片](https://www.bilibili.com/video/BV13q4y1h7QR)
 
 - [图解儿童 Kubernetes 指南](https://www.cncf.io/the-childrens-illustrated-guide-to-kubernetes/)
 - [关于 kubernetes 失败的故事](https://k8s.af/)

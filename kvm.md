@@ -12,11 +12,9 @@
         * [普通用户连接 qemu:///system](#普通用户连接-qemusystem)
         * [vnc打开虚拟机](#vnc打开虚拟机)
         * [virsh](#virsh)
+        * [for net](#for-net)
         * [克隆虚拟机](#克隆虚拟机)
     * [KSM(Kernel Samepage Merging)](#ksmkernel-samepage-merging)
-    * [correct way to move kvm vm](#correct-way-to-move-kvm-vm)
-        * [dump](#dump)
-        * [for net](#for-net)
 * [第三方软件资源](#第三方软件资源)
     * [kvmtop](#kvmtop)
     * [kvm management with wei ui](#kvm-management-with-wei-ui)
@@ -447,6 +445,15 @@ vncviewer 127.0.0.1:5900
 
 ### virsh
 
+```sh
+# 非ssh连接虚拟机
+virsh console centos7
+
+# 需要开启serial console
+systemctl enable serial-getty@ttyS0.service
+systemctl start serial-getty@ttyS0.service
+```
+
 ```bash
 # 查看虚拟机状态
 virsh list --all
@@ -454,6 +461,12 @@ virsh list --all
 # 开启/关闭
 virsh start opensuse15.2
 virsh shutdown opensuse15.2
+
+# 强制关闭电源
+virsh destroy opensuse15.2
+
+# 开机自启
+virsh autostart opensuse15.2
 
 # 暂停/恢复
 virsh suspend opensuse15.2
@@ -476,7 +489,43 @@ virsh net-update default add ip-dhcp-host \
       "<host mac='52:54:00:7f:81:df' \
        name='bob' ip='192.168.100.71' />" \
        --live --config
+
+# 编辑xml配置文件
+virsh edit centos7
+
+# 备份xml文件
+virsh dumpxml centos7 > centos7-bak.xml
+
+# 删除虚拟机(只是删除配置文件, 并没有删除磁盘文件)
+virsh undefine centos7.xml
+
+# 重新添加虚拟机
+mv centos7-bak.xml centos7.xml
+virsh define centos7.xml
 ```
+
+### for net
+
+**source** host run
+
+```sh
+virsh net-dumpxml NETNAME > netxml.xml
+```
+
+**destination** host run
+
+```sh
+virsh net-define netxml.xml && virsh net-start NETNAME & virsh net-autostart NETNAME
+```
+
+If the output is error
+
+```sh
+virsh net-destroy SOURCEname
+virsh net-undefine SOURCEname
+```
+
+And then do it again
 
 ### 克隆虚拟机
 
@@ -524,45 +573,6 @@ virsh net-update default add ip-dhcp-host \
 systemctl enable ksmtuned
 systemctl start ksmtuned
 ```
-
-## correct way to move kvm vm
-
-### dump
-
-**source** host run
-
-```sh
-virsh dumpxml VMNAME > domxml.xml
-```
-
-**destination** host run
-
-```sh
-virsh define domxml.xml
-```
-
-### for net
-
-**source** host run
-
-```sh
-virsh net-dumpxml NETNAME > netxml.xml
-```
-
-**destination** host run
-
-```sh
-virsh net-define netxml.xml && virsh net-start NETNAME & virsh net-autostart NETNAME
-```
-
-If the output is error
-
-```sh
-virsh net-destroy SOURCEname
-virsh net-undefine SOURCEname
-```
-
-And then do it again
 
 # 第三方软件资源
 

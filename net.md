@@ -6,6 +6,13 @@
     * [nmcli](#nmcli)
         * [交互模式](#交互模式)
     * [ssh](#ssh)
+        * [代理(agent)](#代理agent)
+    * [frp: 反向代理(内网穿透)](#frp-反向代理内网穿透)
+        * [端口](#端口)
+        * [sock](#sock)
+        * [文件服务器](#文件服务器)
+        * [http转https](#http转https)
+        * [tls](#tls)
     * [traceroute](#traceroute)
     * [tcptraceroute](#tcptraceroute)
     * [nping](#nping)
@@ -22,6 +29,7 @@
         * [显示所有 LISTEM 状态 tcp,udp 进程](#显示所有-listem-状态-tcpudp-进程)
         * [显示所有 tcp,udp 进程](#显示所有-tcpudp-进程)
         * [统计本地 tcp 链接数量](#统计本地-tcp-链接数量)
+        * [查看本地unix socket的连接](#查看本地unix-socket的连接)
     * [ss (iproute2)](#ss-iproute2)
     * [nc](#nc)
     * [nmap](#nmap)
@@ -45,6 +53,7 @@
     * [dnspeep](#dnspeep)
     * [lighthouse](#lighthouse)
 * [reference](#reference)
+* [优秀文章](#优秀文章)
 * [在线工具](#在线工具)
 
 <!-- vim-markdown-toc -->
@@ -305,14 +314,212 @@ ps aux | grep sshd
 ```
 
 ```sh
-# -L 端口转发. 将9900转发到5900(vnc端口), 实现更安全的vnc连接
-ssh 127.0.0.1 -L 9900:127.0.0.1:5900
-
 # -f 连接后, 执行命令
 ssh -f 127.0.0.1 ls
 ```
 
 - `sshguard` 软件可以防止暴力破解
+
+### 代理(agent)
+- [韦易笑: SSH 命令的三种代理功能（-L/-R/-D）](https://www.skywind.me/blog/archives/2546#more-2546)
+
+| 参数 | 操作       |
+|------|------------|
+| -L   | 正向代理   |
+| -R   | 反向代理   |
+| -D   | socks5代理 |
+
+```sh
+# -L 端口转发. 将9900转发到5900(vnc端口), 实现更安全的vnc连接
+ssh 127.0.0.1 -L 9900:127.0.0.1:5900
+
+# 正向代理. 将9900转发到5900(vnc端口), 实现更安全的vnc连接
+ssh 127.0.0.1 -L 8080:192.168.100.208:80 root@192.168.100.208
+ssh -L 127.0.0.1:8080:192.168.100.208:80 root@192.168.100.208
+```
+
+## [frp: 反向代理(内网穿透)](https://github.com/fatedier/frp/blob/dev/README_zh.md)
+
+
+- web monitor
+
+```ini
+# frps.ini
+[common]
+bind_port = 7000
+
+dashboard_port = 7500
+# dashboard's username and password are both optional
+dashboard_user = admin
+dashboard_pwd = admin
+```
+
+
+- 开启加密和压缩
+```ini
+# frpc.ini
+[ssh]
+type = tcp
+local_port = 22
+remote_port = 6000
+
+use_encryption = true
+use_compression = true
+```
+
+### 端口
+
+- 将8081的流量, 通过服务器的7000端口, 转发到8080
+
+- server
+```ini
+# frps.ini
+[common]
+bind_port = 7000
+```
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[web]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 8080
+remote_port = 8081
+```
+
+```sh
+# 启动server
+frps -c frps.ini
+
+# 启动client
+frpc -c frpc.ini
+```
+
+### sock
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[unix_domain_socket]
+type = tcp
+remote_port = 8081
+plugin = unix_domain_socket
+plugin_unix_path = /var/run/docker.sock
+```
+
+```sh
+curl http://127.0.0.1:8081/version
+```
+
+### 文件服务器
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[test_static_file]
+type = tcp
+remote_port = 8081
+plugin = static_file
+plugin_local_path = /tmp/dir
+plugin_strip_prefix = dir
+plugin_http_user = abc
+plugin_http_passwd = abc
+```
+
+```sh
+xdg-open http://127.0.0.1:8081/dir/
+```
+
+### http转https
+
+- 生成ssl证书
+
+```sh
+openssl req -newkey rsa:4096 \
+            -x509 \
+            -sha256 \
+            -days 3650 \
+            -nodes \
+            -out server.crt \
+            -keyout server.key
+```
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[web]
+type = tcp
+local_ip = 127.0.0.1
+remote_port = 8081
+
+plugin = https2http
+plugin_local_addr = 127.0.0.1:8080
+plugin_crt_path = ./server.crt
+plugin_key_path = ./server.key
+plugin_host_header_rewrite = 127.0.0.1
+plugin_header_X-From-Where = frp
+```
+
+```sh
+curl https://127.0.0.1:8081
+```
+
+### tls
+
+- [生成tls密钥](https://github.com/fatedier/frp#tls)
+
+- server
+```ini
+# frps.ini
+[common]
+bind_port = 7000
+
+tls_only = true
+tls_enable = true
+tls_cert_file = server.crt
+tls_key_file = server.key
+tls_trusted_ca_file = ca.crt
+```
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+tls_enable = true
+tls_cert_file = client.crt
+tls_key_file = client.key
+tls_trusted_ca_file = ca.crt
+
+[web]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 8080
+remote_port = 8081
+```
+
+```sh
+xdg-open http://127.0.0.1:8081/dir/
+```
 
 ## traceroute
 
@@ -462,17 +669,18 @@ arpwatch -i enp27s0 -f arpwatch.log
 - 建议使用 `ss` 参数差不多,更快,信息更全
 - 建议开启 `sudo` 不然不会显示端口对应的程序命令
 
-| 参数 | 操作                  |
-| ---- | --------------------- |
-| -a   | 所有                  |
-| -t   | tcp                   |
-| -u   | udp                   |
-| -n   | 不解析域名(提高速度)  |
-| -p   | 进程                  |
-| -c   | 实时监控              |
-| -l   | LISTEN                |
-| -s   | 查看 TCP/UDP 状态     |
-| -i   | 查看 每个接口的包统计 |
+| 参数   | 操作                  |
+| ----   | --------------------- |
+| -a     | 所有                  |
+| -t     | tcp                   |
+| -u     | udp                   |
+| -n     | 不解析域名(提高速度)  |
+| -p     | 进程                  |
+| -c     | 实时监控              |
+| -l     | LISTEN                |
+| -s     | 查看 TCP/UDP 状态     |
+| -i     | 查看 每个接口的包统计 |
+| --unix | unix sockets          |
 
 ### 统计 tcp 数量
 
@@ -512,6 +720,12 @@ netstat -ap | grep -v unix
 
 ```bash
 netstat -tn | awk '{print $4}' | awk -F ":" '{print $1}' | sort | uniq -c
+```
+
+### 查看本地unix socket的连接
+
+```sh
+netstat -a -p --unix
 ```
 
 ## ss (iproute2)
@@ -897,6 +1111,12 @@ h2spec -t -S -h www.bilibili.com -p 443
 - [curl 的用法指南](http://www.ruanyifeng.com/blog/2019/09/curl-reference.html)
 
 - [nping](https://netbeez.net/blog/how-to-use-nping/)
+
+# 优秀文章
+
+- [unix domain sockets vs. internet sockets](https://lists.freebsd.org/pipermail/freebsd-performance/2005-February/001143.html)
+
+    > unix socket is better
 
 # 在线工具
 

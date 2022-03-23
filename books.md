@@ -39,6 +39,12 @@
 
 - [ruanyif: C 语言教程](https://wangdoc.com/clang/intro.html)
 
+- [360写的C/C++安全代码规范](https://github.com/Qihoo360/safe-rules)
+
+- [数据结构(C语言)](https://lookcos.cn/archives/1120.html)
+
+- [linux命令的介绍和实现](http://www.maizure.org/projects/decoded-gnu-coreutils/index.html)
+
 ### Java
 
 - [《Java 编程思想》 第四版](https://wizardforcel.gitbooks.io/thinking-in-java/content/)
@@ -59,11 +65,17 @@
 
 - [《Rust 程序设计语言》](https://kaisery.github.io/trpl-zh-cn/)
 
+- [Rust语言圣经](https://book.rust.team/)
+
+- [《数据结构与算法Rust语言描述》](https://github.com/QMHTMY/RustBook/tree/main/books) 
+
 ### Lisp
+
+- [《Structure and Interpretation of Computer Programs(SICP)》(英文)](http://sarabander.github.io/sicp/html/index.xhtml)
 
 - [《Scheme 入门教程》](http://deathking.github.io/yast-cn/)
 
-- [《How to Design Programs, Second Edition》 sicp: Racket方言版](https://htdp.org/2018-01-06/Book/index.html)
+- [《How to Design Programs, Second Edition》美国面对入门中学生写的Racket方言](https://htdp.org/2018-01-06/Book/index.html)
 
 - [《On Lisp 》](http://www.paulgraham.com/onlisptext.html)
     - [《On Lisp 》(中文)](https://www.kancloud.cn/ituring/on-lisp/56218)
@@ -116,6 +128,8 @@
 
 - [PegasusWang: Python/Golang Web 入坑指南](https://python-web-guide.readthedocs.io/zh/latest/index.html)
 
+- [free-python-books](https://github.com/pamoroso/free-python-books)
+
 ### Lua
 
 - [《Programming in Lua (fourth edition)》(英文)](https://www.moys.gov.iq/upload/common/Programming_in_Lua%2C_4th_ed._%282017%29_.pdf)
@@ -137,15 +151,18 @@
 
 - [《Readings in Database Systems》 第五版](http://www.redbook.io/)
 
+- [《设计数据密集型应用》](https://github.com/Vonng/ddia)
+
 - [《数据库系统概念第7版》课件(英文)](https://www.db-book.com/slides-dir/index.html)
 
 - [《Redis 使用手册》](http://redisdoc.com/)
 
-- [《Redis 设计与实现 第一版》](http://origin.redisbook.com/)
+- [《Redis 设计与实现》部分试读](http://redisbook.com/)
 
 - [《Redis 实战》部分试读](http://redisinaction.com/)
 
-- [github: redis-3.0-annotated](https://github.com/huangz1990/redis-3.0-annotated)
+- [《Redis核心原理与实践》部分试读](https://www.yuque.com/binecy/redis)
+    > redis6.0源代码分析
 
 ### 分布式
 
@@ -166,9 +183,13 @@
 
 ## Operating System(操作系统)
 
+- [《深入理解计算机系统》(CSAPP)](https://hansimov.gitbook.io/csapp/)
+
 - [《linux-0.12 内核完全剖析》读书笔记及linux-0.12注释源码](https://github.com/yifengyou/linux-0.12)
 
 - [《一个64位操作系统的设计与实现》学习笔记](https://yifengyou.gitbooks.io/the-design-and-implementation-of-a-64-bit-os/content/)
+
+- [osdev: 操作系统相关知识的wiki](https://wiki.osdev.org/Main_Page)
 
 - [理解Linux进程](https://tobegit3hub1.gitbooks.io/understanding-linux-processes/content/)
 
@@ -176,9 +197,21 @@
 
 - [Linux 内核揭秘](https://xinqiu.gitbooks.io/linux-insides-cn/content/index.html)
 
+- [腾讯技术工程: 一文掌握 Linux 内存管理](https://cloud.tencent.com/developer/article/1823228)
+
+- [腾讯技术工程: 深入剖析虚拟内存工作原理](https://cloud.tencent.com/developer/article/1821336)
+
+- [腾讯技术工程: Linux I/O 那些事儿](https://cloud.tencent.com/developer/article/1902659)
+
+- [腾讯技术工程: Linux I/O 原理和 Zero-copy 技术全面揭秘](https://segmentfault.com/a/1190000038700641)
+
 ## architecture(体系结构)
 
 - [《计算机体系结构基础 第3版(龙芯)》](https://foxsen.github.io/archbase/)
+
+- [【译】CPU 高速缓存原理和应用](https://segmentfault.com/a/1190000022785358)
+
+- [程序员需要知道的延迟](https://colin-scott.github.io/personal_website/research/interactive_latency.html)
 
 ## compile(编译)
 
@@ -191,6 +224,12 @@
 - [《计算机网络：系统方法》(英文)](https://github.com/SystemsApproach/book)
 
 - [Computer Networking : Principles,Protocols and Practice](https://www.computer-networking.info/#)
+
+- [dns查询过程](https://jvns.ca/blog/2022/01/11/how-to-find-a-domain-s-authoritative-nameserver/)
+
+## web
+
+- [css教程](https://github.com/pengfeiw/css-tutorial/tree/master/chapters)
 
 ## 运维
 
@@ -239,46 +278,44 @@
 
 - [google-sre-ebook](https://github.com/captn3m0/google-sre-ebook)
 
+- [Serverless 开发速查手册](https://developer.aliyun.com/ebook/7490)
+
+## 文档
+
+- [YAML 语言教程](https://www.ruanyifeng.com/blog/2016/07/yaml.html)
+
+## 编码
+
+- [浮点数二进制表示](https://devtool.tech/double-type)
+
+- [Base64](https://devtool.tech/base64)
+
 ## 数学
 
 - [《几何原本》 (英文)](https://www.c82.net/euclid/)
 
 - [线性代数笔记](https://github.com/zlotus/notes-linear-algebra)
 
+## 写作
+
+- [中文技术文档写作风格指南](https://zh-style-guide.readthedocs.io/zh_CN/latest/index.html)
+
 # 其他相似项目
+
+- [CS自学指南](https://csdiy.wiki/)
+
+- [Developer Books](https://github.com/7-sevens/Developer-Books)
 
 - [The Architecture of Open Source Applications](http://aosabook.org/en/)
     - 介绍开源软件的结构, 以及一些教程
 
 - [Technically-oriented PDF Collection (Papers, Specs, Decks, Manuals, etc)](https://github.com/tpn/pdfs)
 
-- [Books-Free-Books](https://github.com/lTbgykio/Books-Free-Books)
-
-- [Some-Many-Books个人收藏书籍列表](https://github.com/Dujltqzv/Some-Many-Books)
-
 - [trackawesomelist:不单单是book, 还有编程语言, nginx, docker等项目](https://www.trackawesomelist.com/EbookFoundation/free-programming-books/)
-
-- [CS-Notes](https://github.com/CyC2018/CS-Notes)
-
-- [新版 1000 多本计算机电子书免费下载](https://github.com/itdevbooks/pdf)
-
-- [free-books](https://github.com/ruanyf/free-books)
 
 - [free-programming-books](https://github.com/EbookFoundation/free-programming-books)
 
-- [中文翻译 Road Map](https://github.com/xx-zh/xx-zh-roadmap)
-
-- [值得一看的技术类书籍列表](https://github.com/doocs/technical-books#architecture)
-
 - [统计开发者的免费服务的列表](https://github.com/ripienaar/free-for-dev)
-
-- [1000 多本计算机电子书免费下载](https://github.com/itdevbooks/pdf)
-
-- [free-python-books](https://github.com/pamoroso/free-python-books)
-
-- [能在线交互式运行代码的书籍网站](https://runestone.academy/runestone/books/)
-
-- [编程开发相关书籍整理分享，持续更新...](https://github.com/7-sevens/Developer-Books)
 
 # 免费在线书籍阅读
 
@@ -289,6 +326,8 @@
 - [中文思维导图: Psyduck](https://github.com/SmartKeyerror/Psyduck)
 
 # 大学课程
+
+- [Computer Science courses](https://github.com/Developer-Y/cs-video-courses)
 
 - [awesome-courses](https://github.com/prakhar1989/awesome-courses)
 

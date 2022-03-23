@@ -1,5 +1,9 @@
 <!-- vim-markdown-toc GFM -->
 
+* [terminal simulator (终端模拟器)](#terminal-simulator-终端模拟器)
+    * [alacritty](#alacritty)
+    * [tabby](#tabby)
+    * [ttyd: 浏览器terminal](#ttyd-浏览器terminal)
 * [File](#file)
     * [advcpmv](#advcpmv)
         * [instead cp,mv](#instead-cpmv)
@@ -18,7 +22,10 @@
         * [using editor rename file](#using-editor-rename-file)
     * [fselect: sql语句的ls](#fselect-sql语句的ls)
     * [jql: json查看器](#jql-json查看器)
+    * [dsq: sql语句查看json, csv, nginxlog](#dsq-sql语句查看json-csv-nginxlog)
     * [htmlq](#htmlq)
+    * [OctoSQL: sql语句查看文件](#octosql-sql语句查看文件)
+    * [termscp: tui文件传输](#termscp-tui文件传输)
 * [git](#git)
     * [gh](#gh)
         * [github-cli官方文档](#github-cli官方文档)
@@ -66,6 +73,7 @@
     * [navi: fzf command bookmark](#navi-fzf-command-bookmark)
     * [trash-cli](#trash-cli)
         * [回收站](#回收站)
+    * [choose: instead od](#choose-instead-od)
 * [disk](#disk)
     * [dfc](#dfc)
         * [instead df](#instead-df)
@@ -97,6 +105,8 @@
     * [rtv(reddit cli)](#rtvreddit-cli)
     * [rainbowstream(twitter)](#rainbowstreamtwitter)
     * [haxor-news(hacknew)](#haxor-newshacknew)
+* [压缩](#压缩)
+    * [svgo: svg压缩](#svgo-svg压缩)
 * [other](#other)
     * [Termshark](#termshark)
         * [wireshark cli version with vim keybinds](#wireshark-cli-version-with-vim-keybinds)
@@ -108,8 +118,8 @@
         * [百度网盘 Python 客户端](#百度网盘-python-客户端)
     * [haxor-news](#haxor-news)
         * [Browse Hacker News](#browse-hacker-news)
-    * [fim](#fim)
-        * [在终端下查看图片](#在终端下查看图片)
+    * [fim: 图片浏览器](#fim-图片浏览器)
+    * [timg: 在终端下查看图片和视频](#timg-在终端下查看图片和视频)
     * [imgdiff](#imgdiff)
         * [pixel-by-pixel image difference tool.](#pixel-by-pixel-image-difference-tool)
     * [onedrive](#onedrive)
@@ -135,6 +145,23 @@
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
+
+# terminal simulator (终端模拟器)
+
+## [alacritty](https://github.com/alacritty/alacritty)
+
+- [滚动性能对比](https://jwilm.io/blog/alacritty-lands-scrollback/)
+
+- 缺点:
+
+    - [启动速度慢](https://github.com/alacritty/alacritty/issues/782)
+    ```sh
+     sudo perf stat -r 10 -d alacritty -e false
+    ```
+
+## [tabby](https://github.com/Eugeny/tabby)
+
+## [ttyd: 浏览器terminal](https://github.com/tsl0922/ttyd)
 
 # File
 
@@ -195,7 +222,18 @@ sudo make O_NERD=1
 
 ![image](./Pictures/awesomecli/jql.png)
 
+## [dsq: sql语句查看json, csv, nginxlog](https://github.com/multiprocessio/dsq)
+
+```sh
+# 查看mac地址
+ip --json addr show | dsq -s json "SELECT address FROM {}"
+```
+
 ## [htmlq](https://github.com/mgdm/htmlq)
+
+## [OctoSQL: sql语句查看文件](https://github.com/cube2222/octosql)
+
+## [termscp: tui文件传输](https://github.com/veeso/termscp)
 
 # git
 
@@ -354,6 +392,25 @@ fzf -e
 
 ### 回收站
 
+## [choose: instead od](https://github.com/theryangeary/choose)
+
+```sh
+# 选取第1列
+echo '1 2 3' | choose 0
+
+# 选取最后第1列
+echo '1 2 3' | choose -1
+
+# 选取第2到3列
+echo '1 2 3' | choose 1:2
+
+# 选取第2到最后一列
+echo '1 2 3' | choose 1:
+
+# -f 设置分隔符
+cat /etc/passwd | choose -f ':' -1
+```
+
 # disk
 
 ## [dfc](https://github.com/Rolinh/dfc)
@@ -442,6 +499,14 @@ fzf -e
 ![image](./Pictures/awesomecli/rtv.png)
 
 ## [haxor-news(hacknew)](https://github.com/donnemartin/haxor-news)
+
+# 压缩
+
+## [svgo: svg压缩](https://github.com/svg/svgo)
+```sh
+svgo file.svg -o newfile.svg
+```
+
 # other
 
 ## [Termshark](https://github.com/gcla/termshark)
@@ -466,9 +531,17 @@ fzf -e
 
 ### Browse Hacker News
 
-## fim
+## fim: 图片浏览器
 
-### 在终端下查看图片
+## [timg: 在终端下查看图片和视频](https://github.com/hzeller/timg)
+
+```sh
+# 在kitty终端模拟器可以全像素显示
+timg filename.jpeg -p kitty
+
+# --loops循环
+timg --loops=3 filename.gif
+```
 
 ## [imgdiff](https://github.com/n7olkachev/imgdiff)
 

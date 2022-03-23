@@ -17,6 +17,7 @@
     * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
     * [hyperfine: 高级time命令](#hyperfine-高级time命令)
 * [Memory](#memory)
+    * [smem](#smem)
     * [hugepage(巨型页)](#hugepage巨型页)
     * [KSM](#ksm)
     * [base](#base)
@@ -36,6 +37,7 @@
     * [bmon](#bmon)
     * [speedometer](#speedometer)
     * [httpstat](#httpstat)
+    * [bandwhich: tui](#bandwhich-tui)
 * [Web](#web)
     * [ab](#ab)
     * [httperf](#httperf)
@@ -57,6 +59,7 @@
     * [blktrace](#blktrace)
     * [btrace](#btrace)
     * [dd](#dd)
+        * [WoeUSB-ng: 安装windows iso](#woeusb-ng-安装windows-iso)
     * [hdparm](#hdparm)
     * [agedu](#agedu)
         * [只统计.conf 文件](#只统计conf-文件)
@@ -440,6 +443,19 @@ echo <pid> > tasks
 awk '/Rss:/{ sum += $2 } END { print sum " KB" }' /proc/pid/smaps
 ```
 
+## smem
+
+```sh
+# 程序的百分比占用
+smem -p
+
+# 指定程序
+smem -k -P nginx
+
+# 用户占用
+smem -u
+```
+
 ## hugepage(巨型页)
 
 - 配置 `/sys/kernel/mm/hugepages/`
@@ -629,6 +645,16 @@ masscan -c /tmp/xxx.conf --rate 1000
 [使用教程](https://linux.cn/article-8039-1.html)
 
 ![image](./Pictures/benchmark/httpstat.png)
+
+## [bandwhich: tui](https://github.com/imsnif/bandwhich)
+
+```sh
+# 提供永久权限, 不需要每次启动bandwhich都需要加sudo
+sudo setcap cap_sys_ptrace,cap_dac_read_search,cap_net_raw,cap_net_admin+ep `which bandwhich`
+
+# 只查看firefox的网络流量
+bandwhich --raw | grep firefox
+```
 
 # Web
 
@@ -904,6 +930,14 @@ echo 3 > /proc/sys/vm/drop_caches
 > 记录了1024+0 的写出
 > 1073741824字节（1.1 GB，1.0 GiB）已复制，0.433301 s，2.5 GB/s
 > ```
+
+### WoeUSB-ng: 安装windows iso
+
+> 由于dd 命令安装的windows iso没法启动, 可以使用WoeUSB-ng
+
+```sh
+woeusb --device windows.iso /dev/sdb
+```
 
 ## hdparm
 
@@ -1331,6 +1365,7 @@ perf list | grep -i "software event"
 | -a    | 追踪整个系统            |
 | -p    | 追踪指定 pid            |
 | -e    | 追踪指定事件`perf list` |
+| -r    | 运行次数                |
 | sleep | 持续时间                |
 
 - [linux syscall list](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md#x86_64-64_bit)
@@ -1341,6 +1376,9 @@ perf stat ls
 
 # 追踪 ls 命令,详细信息
 perf stat -d ls
+
+# -r 运行10次
+perf stat -r 10 -d ls
 
 # 追踪 nvim 进程
 perf stat -p $(pgrep -of nvim)
@@ -1398,6 +1436,18 @@ grep -v cpu_idle out.perf-folded | flamegraph.pl > nonidle.svg
 grep ext4 out.perf-folded | flamegraph.pl > ext4internals.svg
 egrep 'system_call.*sys_(read|write)' out.perf-folded | flamegraph.pl > rw.svg
 ```
+
+- 写个函数, 方便日后使用
+```sh
+function flamegraph(){
+    # 生成堆栈火焰图
+    perf record -F 99 -g $@
+    perf script | stackcollapse-perf.pl | flamegraph.pl > /tmp/$1.svg
+    xdg-open /tmp/$1.svg
+    rm perf.data
+}
+```
+
 
 ```bash
 # 指定 99hz 频率收集,运行的 ls 命令

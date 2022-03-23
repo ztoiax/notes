@@ -6,6 +6,7 @@
         * [`\1` 反向引用,等同于前一个字符序列(结果和上面的 the 一样)](#1-反向引用等同于前一个字符序列结果和上面的-the-一样)
         * [`?` `*` `+` 表示前面的元素的数量(包含 `()` `[]` )](#---表示前面的元素的数量包含---)
     * [pcre(perl 正则表达式)](#pcreperl-正则表达式)
+* [reference](#reference)
 
 <!-- vim-markdown-toc -->
 
@@ -164,3 +165,7 @@ ip a | rga -o '\b((1[\d][\d]|2[0-5][0-5]|[\d][\d]|[\d])\.){3}(1[\d][\d]|2[0-5][0
 ```
 
 ![image](./Pictures/regex/ip.png)
+
+# reference
+
+- [完美匹配url的正则表达式](https://mathiasbynens.be/demo/url-regex)

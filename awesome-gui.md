@@ -8,7 +8,7 @@
     * [timeshif](#timeshif)
         * [backup](#backup)
     * [typora](#typora)
-    * [qimgv(图片查看器)](#qimgv图片查看器)
+    * [nomacs(图片查看器)](#nomacs图片查看器)
     * [pcmanfm(文件管理器)](#pcmanfm文件管理器)
     * [aliyunpan(阿里云盘)](#aliyunpan阿里云盘)
 * [other](#other)
@@ -43,7 +43,7 @@
 
 ![image](./Pictures/awesomegui/typora.png)
 
-## [qimgv(图片查看器)](https://github.com/easymodo/qimgv)
+## [nomacs(图片查看器)](https://github.com/nomacs/nomacs)
 
 ## pcmanfm(文件管理器)
 

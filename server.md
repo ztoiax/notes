@@ -4,22 +4,40 @@
     * [系统优化](#系统优化)
         * [trim(统一文件系统与ssd删除)](#trim统一文件系统与ssd删除)
         * [irqbalance(中断分配多cpu)](#irqbalance中断分配多cpu)
+        * [关闭按Control-Alt-Delete就重启](#关闭按control-alt-delete就重启)
+    * [su, sudo](#su-sudo)
     * [openssh](#openssh)
         * [基本配置](#基本配置)
         * [使用ssh-agent 管理私钥, 自动进行远程连接](#使用ssh-agent-管理私钥-自动进行远程连接)
         * [快速连接](#快速连接)
-    * [pdsh(ssh 并行管理)](#pdshssh-并行管理)
-    * [pssh](#pssh)
-    * [DNS](#dns)
-        * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
-    * [rkhunter(rookit 检查)](#rkhunterrookit-检查)
-    * [nfs](#nfs)
-    * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
-    * [cron](#cron)
-    * [anacron](#anacron)
-    * [jenkins](#jenkins)
-        * [jenkins-cli](#jenkins-cli)
-        * [插件](#插件)
+        * [用户管理](#用户管理)
+        * [pdsh(ssh 并行管理)](#pdshssh-并行管理)
+        * [pssh](#pssh)
+    * [服务(server)](#服务server)
+        * [DNS](#dns)
+            * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
+        * [nfs](#nfs)
+    * [安全(security)](#安全security)
+        * [思路](#思路)
+            * [以redis为例的服务检查](#以redis为例的服务检查)
+            * [ssh](#ssh)
+            * [重要文件加锁chattr -i](#重要文件加锁chattr--i)
+            * [ntp(同步时间服务)](#ntp同步时间服务)
+        * [selinux](#selinux)
+        * [tcp_wrappers: 第二层防火墙](#tcp_wrappers-第二层防火墙)
+        * [metasploit](#metasploit)
+        * [rkhunter: 检查 rookit](#rkhunter-检查-rookit)
+        * [clamav: 病毒扫描](#clamav-病毒扫描)
+        * [sqlmap: sql注入](#sqlmap-sql注入)
+        * [beef: web渗透测试](#beef-web渗透测试)
+    * [系统监控](#系统监控)
+        * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
+    * [自动化任务](#自动化任务)
+        * [cron](#cron)
+        * [anacron](#anacron)
+        * [jenkins](#jenkins)
+            * [jenkins-cli](#jenkins-cli)
+            * [插件](#插件)
 
 <!-- vim-markdown-toc -->
 
@@ -51,6 +69,28 @@ systemctl start fstrim.timer
 
 ```sh
 systemctl status irqbalance
+```
+
+### 关闭按Control-Alt-Delete就重启
+
+```sh
+# 删除以下文件
+rm /usr/lib/systemd/system/ctrl-alt-del.target
+
+# 重新加载配置文件
+init q
+```
+
+## su, sudo
+
+- `/etc/sudoers` 
+
+```
+# sudo无需输入密码
+tz ALL = NOPASSWD: ALL
+
+# sudo cat /etc/shadow 此命令无需输入密码
+tz ALL = NOPASSWD: /bin/cat /etc/shadow
 ```
 
 ## openssh
@@ -118,8 +158,15 @@ ssh centos7
 ssh opensuse
 ```
 
+### 用户管理
 
-## [pdsh(ssh 并行管理)](https://github.com/chaos/pdsh)
+- 配置`/etc/ssh/sshd_config`文件:
+
+```
+AllowUsers user1 user2
+```
+
+### [pdsh(ssh 并行管理)](https://github.com/chaos/pdsh)
 
 - 支持正则表达式
 
@@ -157,7 +204,7 @@ pdsh -w "root@192.168.100.[1-254]" "uptime"
 pdsh -R ssh -w $centos7
 ```
 
-## [pssh](https://github.com/robinbowes/pssh)
+### [pssh](https://github.com/robinbowes/pssh)
 
 - 需要将 ssh 主机写入文件,才能并行执行命令
 
@@ -189,9 +236,11 @@ pslurp -h /etc/pssh/hosts -r -L ~ \
 pnuke -h /etc/pssh/hosts nginx
 ```
 
-## DNS
+## 服务(server)
 
-### systemd-resolved (DNS over tls,cache server,LLMNR)
+### DNS
+
+#### systemd-resolved (DNS over tls,cache server,LLMNR)
 
 - [arch wiki](https://wiki.archlinux.org/index.php/Systemd-resolved)
 
@@ -218,15 +267,7 @@ systemd-resolve --statistics
 ngrep port 853
 ```
 
-## rkhunter(rookit 检查)
-
-- [archwiki](https://wiki.archlinux.org/index.php/Rkhunter)
-
-```bash
-sudo rkhunter --check
-```
-
-## nfs
+### nfs
 
 两端安装 nfs
 
@@ -256,7 +297,196 @@ systemctl reload nfs
 mount 192.168.100.208:/root/test test
 ```
 
-## cockpit(系统监控的webui)
+## 安全(security)
+
+### 思路
+
+#### 以redis为例的服务检查
+
+- 检查端口是否有暴露
+
+```sh
+# 查看本不应该对外暴露的服务redis, 是否监听0.0.0.0
+netstat -antlp
+# 查看INPUT链是否有暴露端口
+iptables -L -n
+
+# 扫描redis端口6379
+nmap -A -p 6379 -script redis-info 127.0.0.1
+```
+
+- 使用普通用户, 而不是root启动redis
+
+- redis配置文件加入密码验证
+
+    ```
+    # redis.conf
+    requirepass password
+    ```
+
+#### ssh
+
+- 修改密钥权限
+```sh
+# 设置为只读
+chmod 400 ~/.ssh/authorized_keys
+
+# 加入i特殊权限, 即使是root用户也无法修改和删除
+chattr +i ~/.ssh/authorized_keys
+```
+
+- 修改`/etc/ssh/sshd_config`
+```
+# 修改默认端口
+Port 22221
+
+# 禁止root登陆
+PermitRootLogin no
+
+# 不使用dns反查, 提高ssh连接速度
+UseDNS no
+```
+
+#### 重要文件加锁chattr -i
+
+- `chattr -i` 不能修改和删除文件
+```sh
+chattr -i /etc/sudoers
+chattr -i /etc/shadow
+chattr -i /etc/passwd
+chattr -i /etc/grub.conf
+```
+
+- `chattr -a` 只能添加内容
+```sh
+# 适用于日志
+chattr -i /var/log/lastlog
+```
+
+#### ntp(同步时间服务)
+
+- 如果超过100台服务器, 建议搭建一台ntp服务器
+
+- 如果少则可以, 通过cron计划任务同步
+    ```sh
+    # 每小时同步1次. 写入日志, 并将系统时间同步到硬件时间
+    10 * * * * /usr/sbin/ntpdate ntp1.aliyun.com >> /var/log/ntp.log 2>&1; /sbin/hwclock -w
+    ```
+
+### selinux
+
+- 三种状态:
+    - enforcing: 开启
+    - permissive: 提醒
+    - disabled: 关闭
+
+```sh
+# 查看selinux状态
+sestatus
+
+# 临时关闭selinux
+setenforce 0
+```
+
+- 永久关闭selinux 修改配置文件`/etc/selinux/config`
+
+```
+SELINUX=disabled
+```
+
+### tcp_wrappers: 第二层防火墙
+
+> tcp_wrappers 为第二层防火墙, iptables 为第一层防火墙
+
+- 两个配置文件 `/etc/hosts.allow` `/etc/hosts.deny` 
+
+
+    - 先检查`/etc/hosts.allow`如果条件满足, 就不会去检查`/etc/hosts.deny`
+
+```
+# sshd服务允许/拒绝192.168.1.1
+sshd: 192.168.1.1
+
+# sshd服务允许/拒绝所有主机
+sshd: ALL
+
+# ALL表示所有服务
+ALL: 192.168.1.1
+
+# ALL EXCEPT表示除了192.168.1.1之外
+ALL:ALL EXCEPT 192.168.1.1
+```
+
+- 可以配置好`/etc/hosts.allow`后, 配置`/etc/hosts.deny`
+    ```
+    # /etc/hosts.deny
+    sshd:ALL
+    ```
+
+
+### [metasploit](https://github.com/rapid7/metasploit-framework)
+
+```sh
+# 启动控制台
+msfconsole
+
+# 查看模块
+show exploits
+
+# 查看辅助模块
+show auxiliary
+
+# 搜索kvm模块
+search kvm
+
+# 查看当前模块负载
+show payloads
+```
+
+### rkhunter: 检查 rookit
+
+> 检测基本的文件, 文件的权限, 内核模块等
+
+- [archwiki](https://wiki.archlinux.org/index.php/Rkhunter)
+
+- rookit
+
+    - 1.文件级别rookit:
+
+        - 通过软件漏洞, 从而替换命令文件. 比方说/bin/login命令, 每个用户登陆都会执行该命令, 替换后从而获取密码
+
+    - 2.内核级别rookit:
+
+        - 可以修改内核, 从而劫持api, 使本是执行a程序, 变为执行b程序
+
+```bash
+# 更新数据库
+sudo rkhunter --update
+
+# 检查
+sudo rkhunter --check
+```
+
+### clamav: 病毒扫描
+
+```sh
+# 更新病毒库
+sudo freshclam
+
+# 扫描根目录, 发现病毒就响动
+clamscan -r --bell -i /
+
+# 扫描根目录, 并删除感染文件
+clamscan -r --remove /
+```
+
+### [sqlmap: sql注入](https://github.com/sqlmapproject/sqlmap)
+
+### [beef: web渗透测试](https://github.com/beefproject/beef)
+
+## 系统监控
+
+### cockpit(系统监控的webui)
 
 - port: 9090
 
@@ -268,11 +498,18 @@ systemctl start cockpit.socket
 firewall-cmd --add-service=cockpit --permanent
 ```
 
-## cron
+## 自动化任务
 
-开启服务
+### cron
+
+- 查看任务
+
+```sh
+sudo cat /var/spool/cron/root
+```
 
 ```bash
+# 开启服务
 systemctl start cronie.service
 ```
 
@@ -309,7 +546,7 @@ systemctl start cronie.service
 0 0 * * 1 COMMAND      # 每周一0点执行
 ```
 
-## anacron
+### anacron
 
 - 配置文件: `/etc/anacrontab`
 
@@ -333,13 +570,13 @@ anacron -T
 anacron -d
 ```
 
-## jenkins
+### jenkins
 
 - 默认端口: `http://127.0.0.1:8090/`
 
 - 项目路径: `/var/lib/jenkins/workspace/项目名`
 
-### jenkins-cli
+#### jenkins-cli
 
 ```sh
 # 下载jenkins-cli.jar
@@ -355,6 +592,6 @@ java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd
 java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd get-job test
 ```
 
-### 插件
+#### 插件
 
 - [插件搜索](https://plugins.jenkins.io/)

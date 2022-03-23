@@ -3,13 +3,16 @@
 * [Git](#git)
     * [初次运行 Git 前的配置](#初次运行-git-前的配置)
     * [基本命令](#基本命令)
-    * [分支](#分支)
+    * [branch(分支)](#branch分支)
+        * [merge(分支合并)](#merge分支合并)
+        * [worktree](#worktree)
     * [commit](#commit)
         * [撤销](#撤销)
             * [基本命令](#基本命令-1)
             * [合并 3 次分支(保留文件)](#合并-3-次分支保留文件)
             * [回退单个文件](#回退单个文件)
             * [stash(暂存)](#stash暂存)
+    * [rebase](#rebase)
     * [remote](#remote)
 * [git-extras](#git-extras)
 * [pre-commit](#pre-commit)
@@ -86,9 +89,19 @@ git rev-list --count master
 
 # 查看git跟踪的文件
 git ls-files
+
+# 查看未跟踪的文件
+git ls-files --others
+
+# 对未跟踪的文件打包压缩
+git ls-files --others --exclude-standard -z |\
+xargs -0 tar rvf ~/backup-untracked.zip
+
+# 垃圾回收, 删除孤立(orphaned)的git对象
+git gc --prune=now --aggressive
 ```
 
-## 分支
+## branch(分支)
 
 - [Learn Git Branching](https://learngitbranching.js.org/?demo=&locale=zh_CN)
 
@@ -107,9 +120,44 @@ git checkout <BRANCH>
 
 # 切换上一个分支
 git checkout -
+```
 
-# 选择一个commit，合并进当前分支(只新增这个commit的内容，并不会新增这个commit之前的commit)
-git cherry-pick <COMMIT>
+### merge(分支合并)
+
+```sh
+# 设置默认的mergetool为nvimdiff
+git config merge.tool nvimdiff
+
+# 合并分支
+git merge branch2
+
+# 合并单个或多个分支的commit hash
+git cherry-pick <hash> <hash>
+
+# 分支冲突, 解决后.会保留一个显示diff的file.orig
+git mergetool
+
+# -t 指定mergetool为diffmerge(一款gui工具)
+git mergetool -t diffmerge
+```
+
+### worktree
+
+- 创建新分支, 并且创建子目录. 新分支的修改在子目录下进行, 从而隔离
+
+```sh
+# 新建worktree1分支, 子目录名为dirname
+git worktree add -b worktree1 dirname
+
+# 查看worktree
+git worktree list
+
+# 合并worktree分支
+git merge worktree1
+
+# 先删除worktree1目录, 再删除分支
+git worktree remove /home/tz/gittest/dirname
+git branch -d worktree1
 ```
 
 ## commit
@@ -121,8 +169,12 @@ git log
 # 显示commit和hash的历史，以及每次commit发生变更的文件
 git log --stat
 
+# 显示commit和hash的历史，以及每次commit发生变更的文件
+git whatchanged
+
 # 显示远程仓库的commit和hash的历史
 git log --oneline
+
 
 # 将操作合并到最新一次commit
 git commit --amend -m <hash>
@@ -188,11 +240,32 @@ git stash list
 # 查看某一条暂存
 git stash show stash@{0}
 
+# --patch显示更多细节
+git stash show stash@{0} --patch
+
 # 返回暂存
 git stash pop
 
-# 不要暂存
+# 指定返回暂存stash@{1}
+git stash pop stash@{1}
+
+# 将暂存保存为新分支, 可以解决暂存冲突
+git stash branch newbranch stash@{0}
+
+# 删除指定暂存stash@{0}
+git stash drop stash@{0}
+
+# 删除所有暂存
 git stash clear
+```
+
+## rebase
+
+```sh
+git rebase -i <hash>
+
+# 取消rebase
+git rebase --abort
 ```
 
 ## remote
@@ -216,8 +289,6 @@ git merge --abort
 # 取回远程仓库的变化，并与本地分支合并
 git pull <REMOTE> <BRANCH>
 ```
-
-[更多 git 的第三方优秀软件](https://github.com/ztoiax/notes/awesomecli#git)
 
 # [git-extras](https://github.com/tj/git-extras/blob/master/Commands.md#git-alias)
 
@@ -271,6 +342,8 @@ git commit -m "..."
 - [git 命令思维导图](https://www.processon.com/view/link/5c6e2755e4b03334b523ffc3#map)
 - [7000+ 字带你全面搞懂 Git 命令+原理！](https://mp.weixin.qq.com/s?__biz=MzA5ODM5MDU3MA==&mid=2650869124&idx=1&sn=f6c108e0be81e5ebfb9552005a602f32&chksm=8b67eac1bc1063d7024dc027e1d38ae9e7492bb6f7b27a6ef396f5cfc4e04f43a43928eab4f4&mpshare=1&scene=1&srcid=1121PpPXDPojYdulbYJvL1Do&sharer_sharetime=1605967603882&sharer_shareid=5dbb730cd6722d0343328086d9ad7dce#rd)
 
+- [opensource.com: 5 commands to level-up your Git game](https://opensource.com/article/21/4/git-commands)
+
 # 优秀文章
 
 - [图解 Git](https://marklodato.github.io/visual-git-guide/index-zh-cn.html)
@@ -286,7 +359,7 @@ git commit -m "..."
 
 - [git book 官方教材](https://git-scm.com/book/zh/v2)
 - [git magic](http://www-cs-students.stanford.edu/~blynn/gitmagic/intl/zh_cn/index.html#_%E8%87%B4%E8%B0%A2)
-
+asd
 # online tools
 
 - [Learn Git Branching](https://learngitbranching.js.org/?demo=&locale=zh_CN)

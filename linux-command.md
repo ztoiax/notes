@@ -784,6 +784,8 @@ say @final-array;
 
 - `xargs` 默认为 `xrags echo`
 
+- `xargs` 不能运行内置命令(shell builtin)如cd命令
+
 ```bash
 # -Iz 执行10次echo 1,可以换成其他命令
 seq 10 | xargs -Iz echo 1
@@ -799,6 +801,9 @@ find . -type d | xargs tar cjf test.tar.gz
 find . -type d | xargs tar cjf {}.tar.gz
 
 # 创建a,b,c目录(注意这里c为c\n)
+echo 'a b c' | xargs mkdir
+
+# -p 创建a,b,c目录, 需要确认y or n
 echo 'a b c' | xargs mkdir
 
 # -d 分隔符

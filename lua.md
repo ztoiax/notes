@@ -142,3 +142,4 @@ file.close()
 ```
 
 ## [函数式编程库](https://github.com/luafun/luafun)
+## [OOP库](https://github.com/kikito/middleclass)
