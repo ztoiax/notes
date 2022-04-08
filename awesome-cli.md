@@ -26,6 +26,7 @@
     * [htmlq](#htmlq)
     * [OctoSQL: sql语句查看文件](#octosql-sql语句查看文件)
     * [termscp: tui文件传输](#termscp-tui文件传输)
+    * [fq: 二进制查看器](#fq-二进制查看器)
 * [git](#git)
     * [gh](#gh)
         * [github-cli官方文档](#github-cli官方文档)
@@ -234,6 +235,8 @@ ip --json addr show | dsq -s json "SELECT address FROM {}"
 ## [OctoSQL: sql语句查看文件](https://github.com/cube2222/octosql)
 
 ## [termscp: tui文件传输](https://github.com/veeso/termscp)
+
+## [fq: 二进制查看器](https://github.com/wader/fq)
 
 # git
 

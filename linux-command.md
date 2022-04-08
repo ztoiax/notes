@@ -151,6 +151,9 @@ lsof -i
 
 # 指定程序mysql
 lsof -c mysql
+
+# 指定pid
+lsof -p 7148
 ```
 
 ### rsync
@@ -235,6 +238,12 @@ find . \! -name "*.gz"
 
 # -print0 删除换行符, 将字符串连在一起
 find . -print0
+
+# 通过inode查找文件
+# 很慢
+sudo find -inum 1183045
+# 上一条命令快
+sudo debugfs -R 'ncheck 1183045' /dev/nvme0n1p3
 ```
 
 ### [fselect: sql语句的ls](https://github.com/jhspetersson/fselect)

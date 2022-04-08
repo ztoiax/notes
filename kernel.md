@@ -13,6 +13,7 @@
     * [lsmod](#lsmod)
     * [modinfo](#modinfo)
     * [reference](#reference-1)
+* [fs(文件系统)](#fs文件系统)
 
 <!-- vim-markdown-toc -->
 
@@ -179,3 +180,11 @@ lsmod | wc -l
 ## reference
 
 - [如何装载/卸载 Linux 内核模块](https://linux.cn/article-9750-1.html)
+
+- [kernel官方文档](https://www.kernel.org/doc/html/latest/index.html)
+
+# fs(文件系统)
+
+- [Linux debugfs Hack: Undelete Files](https://www.cyberciti.biz/tips/linux-ext3-ext4-deleted-files-recovery-howto.html)
+
+   - 按照教程, 但失败了??

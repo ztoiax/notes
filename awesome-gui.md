@@ -1,60 +1,45 @@
 <!-- vim-markdown-toc GFM -->
 
 * [file](#file)
-    * [filelight](#filelight)
-    * [bleachbit](#bleachbit)
-        * [Clean Your System and Free Disk Space](#clean-your-system-and-free-disk-space)
-    * [stacer](#stacer)
-    * [timeshif](#timeshif)
-        * [backup](#backup)
-    * [typora](#typora)
-    * [nomacs(图片查看器)](#nomacs图片查看器)
-    * [pcmanfm(文件管理器)](#pcmanfm文件管理器)
-    * [aliyunpan(阿里云盘)](#aliyunpan阿里云盘)
 * [other](#other)
-    * [ToDesk(手机电脑投屏幕)](#todesk手机电脑投屏幕)
-    * [sunloginclient(向日葵运程控制gui版)](#sunloginclient向日葵运程控制gui版)
 * [其他项目](#其他项目)
-    * [linux 下的惬意生活](#linux-下的惬意生活)
 
 <!-- vim-markdown-toc -->
 
 # file
 
-## [filelight](https://kde.org/applications/en/filelight)
+- [filelight](https://kde.org/applications/en/filelight)
 
-![image](./Pictures/awesomegui/filelight.png)
+    ![image](./Pictures/awesomegui/filelight.png)
 
-## [bleachbit](https://www.bleachbit.org/)
+- [bleachbit: 清理工具](https://www.bleachbit.org/)
 
-### Clean Your System and Free Disk Space
+    ![image](./Pictures/awesomegui/bleachbit.png)
 
-![image](./Pictures/awesomegui/bleachbit.png)
+- [stacer](https://github.com/oguzhaninan/Stacer)
 
-## [stacer](https://github.com/oguzhaninan/Stacer)
+    ![image](./Pictures/awesomegui/stacer.png)
 
-![image](./Pictures/awesomegui/stacer.png)
+- [timeshif: backup](https://github.com/teejee2008/timeshift.png)
 
-## [timeshif](https://github.com/teejee2008/timeshift.png)
+- [typora](https://www.typora.io/)
 
-### backup
+    ![image](./Pictures/awesomegui/typora.png)
 
-## [typora](https://www.typora.io/)
+- [nomacs(图片查看器)](https://github.com/nomacs/nomacs)
 
-![image](./Pictures/awesomegui/typora.png)
+- pcmanfm(文件管理器)
 
-## [nomacs(图片查看器)](https://github.com/nomacs/nomacs)
-
-## pcmanfm(文件管理器)
-
-## [aliyunpan(阿里云盘)](https://github.com/liupan1890/aliyunpan)
+- [aliyunpan(阿里云盘)](https://github.com/liupan1890/aliyunpan)
 
 # other
 
-## [ToDesk(手机电脑投屏幕)](https://github.com/ji4ozhu/ToDesk)
+- [noti: 任务完成后通知](https://github.com/variadico/noti)
 
-## [sunloginclient(向日葵运程控制gui版)](https://sunlogin.oray.com/download)
+- [ToDesk(手机电脑投屏幕)](https://github.com/ji4ozhu/ToDesk)
+
+- [sunloginclient(向日葵运程控制gui版)](https://sunlogin.oray.com/download)
 
 # 其他项目
 
-## [linux 下的惬意生活](https://github.com/yangyangwithgnu/the_new_world_linux#%E7%9B%AE%E5%BD%95)
+- [linux 下的惬意生活](https://github.com/yangyangwithgnu/the_new_world_linux#%E7%9B%AE%E5%BD%95)

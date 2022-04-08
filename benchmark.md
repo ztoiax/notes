@@ -10,6 +10,7 @@
     * [nmon](#nmon)
     * [sysbench](#sysbench-1)
     * [below](#below)
+    * [tiptop](#tiptop)
 * [CPU](#cpu)
     * [cpu info](#cpu-info)
     * [mpstat(sysstat)](#mpstatsysstat)
@@ -74,6 +75,10 @@
     * [bootchart](#bootchart)
 * [Special file system](#special-file-system)
     * [proc](#proc)
+        * [`/proc/stats`](#procstats)
+        * [`/proc/<pid>/syscall`(系统调用)](#procpidsyscall系统调用)
+        * [`proc/locks`(当前被锁的文件)](#proclocks当前被锁的文件)
+        * [`/proc/zoneinfo`(内存碎片)](#proczoneinfo内存碎片)
     * [sys](#sys)
         * [cgroup(进程组资源限制)](#cgroup进程组资源限制)
         * [debugfs](#debugfs)
@@ -324,6 +329,8 @@ sysbench --test=fileio --file-total-size=5G prepare
 ## [below](https://github.com/facebookincubator/below)
 
 ![image](./Pictures/benchmark/below.png)
+
+## [tiptop](https://github.com/nschloe/tiptop)
 
 # CPU
 
@@ -1094,7 +1101,9 @@ sudo bootchartd
 
 ## proc
 
-- [linux proc 文档](https://mjmwired.net/kernel/Documentation/filesystems/proc.txt)
+- [官方文档](https://www.kernel.org/doc/html/latest/filesystems/proc.html)
+
+- [arch文档](https://man.archlinux.org/man/proc.5.en)
 
   | 目录      | 内容                                          |
   | --------- | --------------------------------------------- |
@@ -1112,6 +1121,54 @@ sudo bootchartd
 # 可以清离缓存后，多次运行dd测试
 echo 3 > /proc/sys/vm/drop_caches
 ```
+
+### `/proc/stats` 
+
+> cpu运行的统计
+
+### `/proc/<pid>/syscall`(系统调用)
+
+- [syscalls number(系统调用编号文档)](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md)
+
+| 系统调用编号| 参数寄存器|stack pointer(堆栈指针)|  pc(程序计数器)|
+
+### `proc/locks`(当前被锁的文件)
+
+### `/proc/zoneinfo`(内存碎片)
+
+- [Linux 不分 Swap 直接开启 zRam，这样做是否合理？](https://www.zhihu.com/question/24264611)
+
+```
+Node 0, zone   Normal
+  pages free     12273184   # 空闲内存页数，此处大概空闲 46GB
+        min      16053      # 最小水位线，大概为 62MB
+        low      1482421    # 低水位线，大概为 5.6GB
+        high     2948789    # 高水位线，大概为 11.2GB
+...
+      nr_free_pages 12273184         # 同 free pages
+      nr_zone_inactive_anon 1005909  # 不活跃的匿名页
+      nr_zone_active_anon 60938      # 活跃的匿名页
+      nr_zone_inactive_file 878902   # 不活跃的文件页
+      nr_zone_active_file 206589     # 活跃的文件页
+      nr_zone_unevictable 0          # 不可回收页
+...
+
+```
+
+| 状态                                | 内存压力                                                                                                                       |
+|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| pages free > pages high             | 小                                                                                                                             |
+| pages low < pages free < pages high | 中                                                                                                                             |
+| pages min < pages free < pages low  | 大                                                                                                                             |
+| pages free < pages low              | 过大. 表现为系统卡死,分配内存被阻塞,开始尝试碎片整理,内存压缩,如果都不奏效. 则开始执行 OOM Killer,直到pages free大于pages high |
+
+- `/etc/sysctl.conf`文件下的参数 `vm.swappiness=60`
+
+| `vm.swappiness` | 操作                 |
+|-----------------|----------------------|
+| 60(默认)        | 优先回收文件页       |
+| 100             | 平等回收文件, 匿名页 |
+| 大于100         | 优先回收匿名页       |
 
 ## sys
 

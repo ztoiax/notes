@@ -31,6 +31,10 @@
 
 # 免费在线书籍
 
+## 定律
+
+- [对开发人员有用的定律、理论、原则和模式](https://github.com/nusr/hacker-laws-zh)
+
 ## Program Language(编程语言)
 
 ### C/C++
@@ -51,6 +55,8 @@
 
 ### Go
 
+- [《Golang学习资源大全-只有Go语言才能改变世界》](https://github.com/LearnGolang/LearnGolang)
+
 - [《Go 入门指南》](https://github.com/unknwon/the-way-to-go_ZH_CN/blob/master/eBook/directory.md)
 
 - [《Go语言高级编程》](https://chai2010.cn/advanced-go-programming-book/)
@@ -67,7 +73,7 @@
 
 - [Rust语言圣经](https://book.rust.team/)
 
-- [《数据结构与算法Rust语言描述》](https://github.com/QMHTMY/RustBook/tree/main/books) 
+- [《数据结构与算法Rust语言描述》](https://github.com/QMHTMY/RustBook/tree/main/books)
 
 ### Lisp
 
@@ -133,6 +139,10 @@
 ### Lua
 
 - [《Programming in Lua (fourth edition)》(英文)](https://www.moys.gov.iq/upload/common/Programming_in_Lua%2C_4th_ed._%282017%29_.pdf)
+
+### php
+
+- [《PHP 之道》](https://learnku.com/docs/php-the-right-way/PHP8.0)
 
 ## algorithm(算法)
 
@@ -258,6 +268,8 @@
 
 - [《凤凰架构 构建可靠的大型分布式系统》](https://icyfenix.cn/)
 
+- [《前端架构：从入门到微前端》](https://github.com/phodal/microfrontends)
+
 - [《Istio 服务网格进阶实战》](https://www.servicemesher.com/istio-handbook/)
 
 - [Kubernetes 指南](https://kubernetes.feisky.xyz/)
@@ -279,6 +291,12 @@
 - [google-sre-ebook](https://github.com/captn3m0/google-sre-ebook)
 
 - [Serverless 开发速查手册](https://developer.aliyun.com/ebook/7490)
+
+## AI(人工智能)
+
+- [《TensorFlow深度学习》](https://github.com/dragen1860/Deep-Learning-with-TensorFlow-book)
+
+- [Markov Chains(马尔可夫链)](https://setosa.io/blog/2014/07/26/markov-chains/)
 
 ## 文档
 
@@ -316,6 +334,10 @@
 - [free-programming-books](https://github.com/EbookFoundation/free-programming-books)
 
 - [统计开发者的免费服务的列表](https://github.com/ripienaar/free-for-dev)
+
+- [study-is-wonderful: 公开课视频](https://github.com/xioacd99/study-is-wonderful)
+
+- [优秀软件合集](https://asmcn.icopy.site/)
 
 # 免费在线书籍阅读
 

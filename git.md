@@ -163,6 +163,27 @@ git branch -d worktree1
 ## commit
 
 ```sh
+# 以编辑器的形式修改commit的文件和信息
+git commit --amend --only -m 'new commit message'
+
+# 以编辑器的形式修改commit的文件和信息
+git commit --amend --only
+```
+
+- 从commit删除某个文件的修改
+```sh
+git checkout HEAD^ file
+git add -A
+git commit --amend
+```
+
+- log
+```sh
+# 显示上一次commit的diff
+git show
+# or
+git log -n1 -p
+
 # 显示commit和hash的历史
 git log
 

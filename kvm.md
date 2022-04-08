@@ -16,11 +16,7 @@
         * [克隆虚拟机](#克隆虚拟机)
     * [KSM(Kernel Samepage Merging)](#ksmkernel-samepage-merging)
 * [第三方软件资源](#第三方软件资源)
-    * [kvmtop](#kvmtop)
-    * [kvm management with wei ui](#kvm-management-with-wei-ui)
 * [优秀文章](#优秀文章)
-    * [QEMU KVM 学习笔记](#qemu-kvm-学习笔记)
-    * [learn-kvm](#learn-kvm)
 
 <!-- vim-markdown-toc -->
 
@@ -576,12 +572,14 @@ systemctl start ksmtuned
 
 # 第三方软件资源
 
-## [kvmtop](https://github.com/cha87de/kvmtop)
+- [kvmtop](https://github.com/cha87de/kvmtop)
 
-## [kvm management with wei ui](https://github.com/kimchi-project/kimchi)
+- [kvm management with wei ui](https://github.com/kimchi-project/kimchi)
 
 # 优秀文章
 
-## [QEMU KVM 学习笔记](https://yifengyou.gitbooks.io/learn-kvm/content/)
+- [博客](http://terenceli.github.io/)
 
-## [learn-kvm](https://github.com/yifengyou/learn-kvm)
+- [QEMU KVM 学习笔记](https://yifengyou.gitbooks.io/learn-kvm/content/)
+
+- [learn-kvm](https://github.com/yifengyou/learn-kvm)
