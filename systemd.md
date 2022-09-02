@@ -18,6 +18,7 @@
         * [重启所有的守护进程](#重启所有的守护进程)
         * [查看是不是引导启动](#查看是不是引导启动)
         * [unmask](#unmask)
+        * [判断状态，执行命令脚本](#判断状态执行命令脚本)
     * [journalctl](#journalctl)
         * [读取日志](#读取日志)
         * [读取实时日志](#读取实时日志)
@@ -246,6 +247,11 @@ systemd 支持 mask 操作，如果一个服务被 mask 了，那么它无法被
 
 ```sh
 systemctl unmask httpd.service
+```
+
+### 判断状态，执行命令脚本
+```sh
+systemctl is-active --quiet name.service && sudo systemctl stop name.service
 ```
 
 ## journalctl

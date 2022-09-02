@@ -2,6 +2,7 @@
 
 * [Net](#net)
     * [ip(iproute2)](#ipiproute2)
+    * [ipcalc(ip二进制显示)](#ipcalcip二进制显示)
     * [ethtool](#ethtool)
     * [nmcli](#nmcli)
         * [交互模式](#交互模式)
@@ -15,7 +16,8 @@
         * [tls](#tls)
     * [traceroute](#traceroute)
     * [tcptraceroute](#tcptraceroute)
-    * [nping](#nping)
+    * [nping(代替 ping)](#nping代替-ping)
+    * [hping](#hping)
     * [mtr](#mtr)
     * [tcpdump](#tcpdump)
         * [基本命令](#基本命令)
@@ -41,6 +43,7 @@
     * [tc(traffic control)](#tctraffic-control)
     * [socat](#socat)
     * [ngrep](#ngrep)
+    * [whois(查看域名注册信息)](#whois查看域名注册信息)
     * [curl](#curl)
         * [基本命令](#基本命令-2)
         * [webhook](#webhook)
@@ -51,7 +54,9 @@
     * [wrk: http benchmark](#wrk-http-benchmark)
     * [wrk2: wrp的变种](#wrk2-wrp的变种)
     * [dnspeep](#dnspeep)
-    * [lighthouse](#lighthouse)
+    * [lighthouse(chrome 网页性能测试)](#lighthousechrome-网页性能测试)
+    * [mitmproxy(代理http, 并抓包)](#mitmproxy代理http-并抓包)
+    * [nali(ip地址离线数据库)](#naliip地址离线数据库)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
 * [在线工具](#在线工具)
@@ -215,6 +220,10 @@ PREFIX=24
 ONPARENT=yes
 EOF
 ```
+
+## ipcalc(ip二进制显示)
+
+- [教程](https://www.linux.com/topic/networking/how-calculate-network-addresses-ipcalc/)
 
 ## ethtool
 
@@ -529,9 +538,7 @@ xdg-open http://127.0.0.1:8081/dir/
 
 tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过最常见的防火墙的过滤。正如该命令的手册页所述，tcptraceroute 发送 TCP SYN 数据包而不是 UDP 或 ICMP ECHO 数据包，所以其不易被阻塞。
 
-## nping
-
-- 代替 ping
+## nping(代替 ping)
 
 | 参数 | 操作       |
 | ---- | ---------- |
@@ -552,7 +559,51 @@ nping --tcp -c 2 --flags syn --ttl 10 -p 80 baidu.com
 
 # --win指定tcp窗口大小
 nping --tcp -c 2 --win 1600 -p 80 baidu.com
+```
 
+## [hping](http://www.hping.org/)
+
+- [Hping Tips and Tricks](https://iphelix.medium.com/hping-tips-and-tricks-85698751179f)
+
+
+- tcp
+
+| tcp flag | 操作              |
+|----------|-------------------|
+| -S       | syn flags=s SYN   |
+| -A       | ack flags=a ACK   |
+| -R       | rst flags=r RST   |
+| -F       | fin flags=f FIN   |
+| -P       | push flags=p PUSH |
+| -U       | urg flags=u URG   |
+| -X       | xmas flags=x Xmas |
+| -Y       | ymas flags=y Tmas |
+
+
+```sh
+# -c 表示只发送一次syn.返回的flags=SA, 即包含syn,ack
+hping3 -S www.baidu.com -p 80 -c 1
+
+# 从50端口开始递增，每个端口都发送(扫描)
+hping3 -S www.baidu.com -p ++50
+```
+
+- udp
+
+```sh
+hping3 -2 127.0.0.1 -p 80 -c 1
+```
+
+- 扫描网段
+```sh
+hping3 -1 192.168.1.x --rand-dest -I enp27s0
+```
+
+- icmp ping
+
+```sh
+# -1 icmp模式
+hping3 --traceroute -V -1 www.baidu.com
 ```
 
 ## mtr
@@ -762,6 +813,8 @@ done
 
 ## nmap
 
+- zenmap(gui版nmap)
+
 端口状态:
 
 | STATE      | 内容         |
@@ -957,6 +1010,8 @@ ngrep -W byline port 80
 ngrep -t -W byline port 80
 ```
 
+## whois(查看域名注册信息)
+
 ## curl
 
 - [curl book](https://everything.curl.dev/)
@@ -1097,9 +1152,35 @@ h2spec -t -S -h www.bilibili.com -p 443
 
 > 记录程序的dns请求,响应
 
-## [lighthouse](https://github.com/GoogleChrome/lighthouse)
+## [lighthouse(chrome 网页性能测试)](https://github.com/GoogleChrome/lighthouse)
 
-> chrome 网页性能测试
+## [mitmproxy(代理http, 并抓包)](https://docs.mitmproxy.org/stable/overview-getting-started/)
+
+```sh
+# 启动mitmproxy(默认为8080端口)
+mitmproxy
+# 以socks5代理, 启动mitmproxy(默认为8080端口)
+mitmproxy --mode socks5
+
+# 使用8080代理访问百度
+curl --proxy http://127.0.0.1:8080 www.baidu.com
+# socks5
+curl --proxy socks5://127.0.0.1:8080 www.baidu.com
+
+# ~/.mitmproxy目录下有虚拟的CA证书
+curl --proxy http://127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem www.baidu.com
+```
+
+## [nali(ip地址离线数据库)](https://github.com/zu1k/nali)
+
+```sh
+# 查询ip
+nali 8.8.8.8
+nali 8.8.8.8 114.114.114.114
+
+# 更新数据库
+nali update
+```
 
 # reference
 

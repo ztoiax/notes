@@ -17,6 +17,10 @@
         * [DNS](#dns)
             * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
         * [nfs](#nfs)
+        * [proxy(代理)服务器](#proxy代理服务器)
+            * [squid](#squid)
+            * [stunnel](#stunnel)
+        * [openvpn](#openvpn)
     * [安全(security)](#安全security)
         * [思路](#思路)
             * [以redis为例的服务检查](#以redis为例的服务检查)
@@ -236,6 +240,8 @@ pslurp -h /etc/pssh/hosts -r -L ~ \
 pnuke -h /etc/pssh/hosts nginx
 ```
 
+- [wishlist: tui](https://github.com/charmbracelet/wishlist)
+
 ## 服务(server)
 
 ### DNS
@@ -295,6 +301,121 @@ systemctl reload nfs
 
 ```bash
 mount 192.168.100.208:/root/test test
+```
+
+### proxy(代理)服务器
+
+#### squid
+
+- [教程文档](https://phoenixnap.com/kb/setup-install-squid-proxy-server-ubuntu)
+
+- 配置文件：`/etc/squid/squid.conf`
+
+```
+# 设置代理端口8080
+http_port 8080
+```
+
+- 启动squid服务
+```sh
+systemctl start squid
+```
+
+- 测试
+```sh
+curl --proxy http://127.0.0.1:8080 www.baidu.com
+```
+
+#### stunnel
+
+- [教程文档](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-ssl-tunnel-using-stunnel-on-ubuntu)
+
+- server端配置文件:`/etc/stunnel/stunnel.conf`
+
+```
+# client = no并非必要，只是stunnel默认为server模式
+client = no
+
+# ssl证书路径
+cert = /etc/stunnel/stunnel.pem
+
+[squid]
+# 监听端口
+accept = 8888
+
+# squid端口
+connect = 127.0.0.1:8081
+```
+
+- client端配置文件:`/etc/stunnel/stunnel-client.conf`
+
+```
+client = yes
+
+# ssl证书路径
+cert = /etc/stunnel/stunnel.pem
+
+[squid]
+# stunnel client监听端口
+accept = 127.0.0.1:1234
+
+# stunnel server端口
+connect = 127.0.0.1:8888
+```
+
+- 生成ssl证书
+```sh
+# 创建私钥
+openssl genrsa -out key.pem 2048
+
+# 使用私钥生成证书
+openssl req -new -x509 -key key.pem -out cert.pem -days 1095
+
+# 合并私钥和证书为stunnel.pem
+cat key.pem cert.pem >> /etc/stunnel/stunnel.pem
+```
+
+- 测试
+```sh
+# 启动stunnel server
+systemctl start stunnel
+
+# 启动 squid
+systemctl start squid
+
+# 启动stunnel client
+stunnel /etc/stunnel/stunnel-client.conf
+
+# 测试
+curl --proxy http://127.0.0.1:1234 www.baidu.com
+```
+
+### openvpn
+
+```sh
+cp /usr/share/openvpn/examples/server.conf /etc/openvpn/server/server.conf
+```
+
+- 安装easyrsa
+```sh
+pacman -S easy-rsa
+
+# 初始化pki
+easyrsa init-pki
+
+# 生成ca
+easyrsa build-ca
+cp pki/ca.crt /etc/openvpn/server
+
+# 生成servername.req servername.key
+easyrsa gen-req servername nopass
+cp pki/private/servername.key /etc/openvpn/server
+
+# 生成Diffie-Hellman（DH）参数文件
+openssl dhparam -out /etc/openvpn/server/dh.pem 2048
+
+# 生成HMAC(哈希消息认证码)密钥
+openvpn --genkey secret /etc/openvpn/server/ta.key
 ```
 
 ## 安全(security)
@@ -372,6 +493,10 @@ chattr -i /var/log/lastlog
     # 每小时同步1次. 写入日志, 并将系统时间同步到硬件时间
     10 * * * * /usr/sbin/ntpdate ntp1.aliyun.com >> /var/log/ntp.log 2>&1; /sbin/hwclock -w
     ```
+
+```sh
+systemctl enable ntpd
+```
 
 ### selinux
 

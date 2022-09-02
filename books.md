@@ -1,5 +1,3 @@
-《!-- vim-markdown-toc GFM --》
-
 * [免费的 IT 类在线书籍](#免费的-it-类在线书籍)
     * [Program Language(编程语言)](#program-language编程语言)
         * [C/C++](#cc)
@@ -27,8 +25,6 @@
 * [大学课程](#大学课程)
 * [论文](#论文)
 
-《!-- vim-markdown-toc --》
-
 # 免费在线书籍
 
 ## 定律
@@ -37,9 +33,17 @@
 
 ## Program Language(编程语言)
 
+### 汇编
+
+- [《the art of assembly language programming》](http://www.phatcode.net/res/223/files/html/toc.html)
+
 ### C/C++
 
+- [《Effective Modern C++ 》(中文)](https://github.com/CnTransGroup/EffectiveModernCppChinese)
+
 - [《现代 C++ 教程：高速上手 C++11/14/17/20》](https://changkun.de/modern-cpp/zh-cn/00-preface/)
+
+- [C++ Core Guidelines(C++之父写的指南)](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 
 - [ruanyif: C 语言教程](https://wangdoc.com/clang/intro.html)
 
@@ -49,9 +53,13 @@
 
 - [linux命令的介绍和实现](http://www.maizure.org/projects/decoded-gnu-coreutils/index.html)
 
+- [《TCP/IP网络编程》学习笔记](https://github.com/riba2534/TCP-IP-NetworkNote)
+
 ### Java
 
 - [《Java 编程思想》 第四版](https://wizardforcel.gitbooks.io/thinking-in-java/content/)
+
+- [JavaGuide](https://javaguide.cn/)
 
 ### Go
 
@@ -63,9 +71,12 @@
 
 - [《Mastering GO》(玩转 GO)](https://wskdsgcf.gitbook.io/mastering-go-zh-cn/)
 
+- [《learn GO with Tests》(中文)](https://studygolang.gitbook.io/learn-go-with-tests)
 - [Go语言101](https://gfw.go101.org/article/101.html)
 
 - [grpc 源码解读](https://github.com/lubanproj/grpc-read)
+
+- [Go 语言实战: 编写可维护 Go 语言代码建议](https://github.com/llitfkitfk/go-best-practice)
 
 ### Rust
 
@@ -74,6 +85,8 @@
 - [Rust语言圣经](https://book.rust.team/)
 
 - [《数据结构与算法Rust语言描述》](https://github.com/QMHTMY/RustBook/tree/main/books)
+
+- [rust-course:中文课程](https://github.com/sunface/rust-course)
 
 ### Lisp
 
@@ -96,9 +109,9 @@
 
 ### Javascript
 
-- [《ES6 入门教程》](https://es6.ruanyifeng.com/)
-
 - [《SICP JavaScript 描述》](https://sicp-js.apachecn.org/#/)
+
+- [我零基础独立开发一个 Web/Hybrid 项目的经历](https://imf.ms/web/2022/07/05/my-first-web-hybird-project-experience/)
 
 ### Python
 
@@ -136,6 +149,8 @@
 
 - [free-python-books](https://github.com/pamoroso/free-python-books)
 
+- [Python Design Patterns](https://python-patterns.guide/)
+
 ### Lua
 
 - [《Programming in Lua (fourth edition)》(英文)](https://www.moys.gov.iq/upload/common/Programming_in_Lua%2C_4th_ed._%282017%29_.pdf)
@@ -143,6 +158,10 @@
 ### php
 
 - [《PHP 之道》](https://learnku.com/docs/php-the-right-way/PHP8.0)
+
+### vim
+
+- [Learn-Vim](https://github.com/iggredible/Learn-Vim)
 
 ## algorithm(算法)
 
@@ -174,6 +193,8 @@
 - [《Redis核心原理与实践》部分试读](https://www.yuque.com/binecy/redis)
     > redis6.0源代码分析
 
+- [《postgresql 14 internals》](https://postgrespro.com/community/books/internals)
+
 ### 分布式
 
 - [《分布式系统模式》](https://github.com/dreamhead/patterns-of-distributed-systems)
@@ -182,6 +203,8 @@
 
 - [hadoop illuminated(英文)](http://hadoopilluminated.com/hadoop_illuminated/)
 
+- [Raft一致性算法论文的中文翻译](https://github.com/maemual/raft-zh_cn)
+
 
 ## 软件开发
 
@@ -189,7 +212,15 @@
 
 - [《UNIX编程艺术》(英文)](http://www.catb.org/~esr/writings/taoup/html/)
 
+- [设计模式](https://github.com/karanpratapsingh/system-design)
+
+- [设计模式,图解+代码](https://refactoringguru.cn/design-patterns)
+
 - [图说设计模式](https://design-patterns.readthedocs.io/zh_CN/latest/index.html#)
+
+## 软件工程
+
+- [《Software Engineering at Google》(谷歌软件工程)(中文)](https://qiangmzsx.github.io/Software-Engineering-at-Google/#/?id=software-engineering-at-google)
 
 ## Operating System(操作系统)
 
@@ -199,11 +230,15 @@
 
 - [《一个64位操作系统的设计与实现》学习笔记](https://yifengyou.gitbooks.io/the-design-and-implementation-of-a-64-bit-os/content/)
 
+- [rCore-Tutorial-Book-v3:用 Rust 语言从零开始写一个基于 RISC-V 架构的类 Unix 内核。清华大学开源的中文教程](https://github.com/rcore-os/rCore-Tutorial-Book-v3)
+
 - [osdev: 操作系统相关知识的wiki](https://wiki.osdev.org/Main_Page)
 
 - [理解Linux进程](https://tobegit3hub1.gitbooks.io/understanding-linux-processes/content/)
 
 - [品读 Linux 0.11 核心代码](https://github.com/sunym1993/flash-linux0.11-talk)
+
+- [树莓派编程实用教程](https://github.com/wxlscm/raspberry_tutorial)
 
 - [Linux 内核揭秘](https://xinqiu.gitbooks.io/linux-insides-cn/content/index.html)
 
@@ -239,7 +274,17 @@
 
 ## web
 
+- [《ES6 入门教程》](https://es6.ruanyifeng.com/)
+
+- [《深入浅出 Webpack》](http://webpack.wuhaolin.cn/)
+
 - [css教程](https://github.com/pengfeiw/css-tutorial/tree/master/chapters)
+
+- [css技巧](https://github.com/AllThingsSmitty/css-protips)
+
+- [React技术揭秘](https://react.iamkasong.com/)
+
+- [how web works](https://github.com/vasanthk/how-web-works)
 
 ## 运维
 
@@ -292,9 +337,21 @@
 
 - [Serverless 开发速查手册](https://developer.aliyun.com/ebook/7490)
 
+## 数据科学
+
+- [《Hands-On Data Visualization》(数据可视化)](https://github.com/handsondataviz/book)
+
+## game(游戏)
+
+- [《游戏引擎浅入浅出》](https://www.thisisgame.com.cn/tutorial?book=cpp-game-engine-book&lang=zh&md=Introduction.md)
+
 ## AI(人工智能)
 
 - [《TensorFlow深度学习》](https://github.com/dragen1860/Deep-Learning-with-TensorFlow-book)
+
+- [《TensorFlow 内核剖析》(英文)](https://github.com/horance-liu/tensorflow-internals)
+
+- [《Machine Learning Yearning》(中文)](https://deeplearning-ai.github.io/machine-learning-yearning-cn/)
 
 - [Markov Chains(马尔可夫链)](https://setosa.io/blog/2014/07/26/markov-chains/)
 
@@ -308,15 +365,35 @@
 
 - [Base64](https://devtool.tech/base64)
 
+- [字符串生产二维码原理](https://www.nayuki.io/page/creating-a-qr-code-step-by-step)
+
 ## 数学
 
 - [《几何原本》 (英文)](https://www.c82.net/euclid/)
 
 - [线性代数笔记](https://github.com/zlotus/notes-linear-algebra)
 
+- [统计学习方法（第二版）习题解答](https://datawhalechina.github.io/statistical-learning-method-solutions-manual/#/)
+
+## 英语
+
+- [中国程序员容易发音错误的单词](https://github.com/shimohq/chinese-programmer-wrong-pronunciation)
+
 ## 写作
 
 - [中文技术文档写作风格指南](https://zh-style-guide.readthedocs.io/zh_CN/latest/index.html)
+
+## 健康
+
+- [人体系统调优不完全指南](https://github.com/zijie0/HumanSystemOptimization)
+
+## gps
+
+- [gps原理](https://ciechanow.ski/gps/)
+
+## 视频
+
+- [H.264 is Magic](https://sidbala.com/h-264-is-magic/)
 
 # 其他相似项目
 
@@ -364,5 +441,7 @@
 - [上海交通大学计算机课程](https://github.com/c-hj/SJTU-Courses)
 
 # 论文
+
+- [papers-we-love(计算机论文和课程)](https://github.com/papers-we-love/papers-we-love)
 
 - [1000+份计算机paper](https://github.com/0voice/computer_expert_paper)

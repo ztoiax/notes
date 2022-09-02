@@ -2,6 +2,7 @@
 
 * [terminal simulator (终端模拟器)](#terminal-simulator-终端模拟器)
     * [alacritty](#alacritty)
+    * [wezterm:用rust写, 支持gpu加速](#wezterm用rust写-支持gpu加速)
     * [tabby](#tabby)
     * [ttyd: 浏览器terminal](#ttyd-浏览器terminal)
 * [File](#file)
@@ -21,12 +22,17 @@
     * [massren](#massren)
         * [using editor rename file](#using-editor-rename-file)
     * [fselect: sql语句的ls](#fselect-sql语句的ls)
-    * [jql: json查看器](#jql-json查看器)
+    * [jql: json过滤器](#jql-json过滤器)
+    * [jless:json查看器](#jlessjson查看器)
+    * [jo:生成json对象](#jo生成json对象)
     * [dsq: sql语句查看json, csv, nginxlog](#dsq-sql语句查看json-csv-nginxlog)
-    * [htmlq](#htmlq)
+    * [htmlq:html过滤器](#htmlqhtml过滤器)
+    * [yq:yaml查看器](#yqyaml查看器)
+    * [xsv:csv查看器](#xsvcsv查看器)
     * [OctoSQL: sql语句查看文件](#octosql-sql语句查看文件)
     * [termscp: tui文件传输](#termscp-tui文件传输)
     * [fq: 二进制查看器](#fq-二进制查看器)
+    * [vidir: 编辑器批量改名](#vidir-编辑器批量改名)
 * [git](#git)
     * [gh](#gh)
         * [github-cli官方文档](#github-cli官方文档)
@@ -40,6 +46,7 @@
     * [hub](#hub)
     * [forgit](#forgit)
 * [char](#char)
+    * [viddy:instead watch](#viddyinstead-watch)
     * [exa](#exa)
         * [highlight ls](#highlight-ls)
     * [lsd](#lsd)
@@ -75,6 +82,7 @@
     * [trash-cli](#trash-cli)
         * [回收站](#回收站)
     * [choose: instead od](#choose-instead-od)
+    * [peco: 搜索过滤器](#peco-搜索过滤器)
 * [disk](#disk)
     * [dfc](#dfc)
         * [instead df](#instead-df)
@@ -87,6 +95,7 @@
 * [process](#process)
     * [procs](#procs)
         * [instead ps](#instead-ps)
+    * [pueue(任务管理)](#pueue任务管理)
 * [net](#net)
     * [prettyping](#prettyping)
     * [curlie](#curlie)
@@ -143,6 +152,8 @@
     * [tokei(统计编程语言占比)](#tokei统计编程语言占比)
     * [termpair: 网页操作终端](#termpair-网页操作终端)
     * [markdown写ppt](#markdown写ppt)
+    * [image magick: 图片的ffmpeg](#image-magick-图片的ffmpeg)
+    * [sql语句检查](#sql语句检查)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -159,6 +170,8 @@
     ```sh
      sudo perf stat -r 10 -d alacritty -e false
     ```
+
+## [wezterm:用rust写, 支持gpu加速](https://github.com/wez/wezterm)
 
 ## [tabby](https://github.com/Eugeny/tabby)
 
@@ -219,9 +232,19 @@ sudo make O_NERD=1
 
 ## [fselect: sql语句的ls](https://github.com/jhspetersson/fselect)
 
-## [jql: json查看器](https://github.com/cube2222/jql)
+## [jql: json过滤器](https://github.com/cube2222/jql)
 
 ![image](./Pictures/awesomecli/jql.png)
+
+## [jless:json查看器](https://github.com/PaulJuliusMartinez/jless)
+
+## [jo:生成json对象](https://github.com/jpmens/jo)
+
+```sh
+jo -p name=jo n=17 parser=false
+seq 1 10 | jo -a
+```
+
 
 ## [dsq: sql语句查看json, csv, nginxlog](https://github.com/multiprocessio/dsq)
 
@@ -230,13 +253,29 @@ sudo make O_NERD=1
 ip --json addr show | dsq -s json "SELECT address FROM {}"
 ```
 
-## [htmlq](https://github.com/mgdm/htmlq)
+## [htmlq:html过滤器](https://github.com/mgdm/htmlq)
+
+```sh
+# 显示a标签
+curl www.baidu.com | htmlq 'a' | bat --language html
+```
+
+## [yq:yaml查看器](https://github.com/mikefarah/yq)
+
+- [官方文档](https://mikefarah.gitbook.io/yq/)
+
+## [xsv:csv查看器](https://github.com/BurntSushi/xsv)
 
 ## [OctoSQL: sql语句查看文件](https://github.com/cube2222/octosql)
 
 ## [termscp: tui文件传输](https://github.com/veeso/termscp)
 
 ## [fq: 二进制查看器](https://github.com/wader/fq)
+
+## vidir: 编辑器批量改名
+```sh
+find . -type f | vidir -
+```
 
 # git
 
@@ -302,6 +341,8 @@ gh release list
 ![image](./Pictures/awesomecli/forgit.png)
 
 # char
+
+## [viddy:instead watch](https://github.com/sachaos/viddy)
 
 ## [exa](https://github.com/ogham/exa)
 
@@ -414,6 +455,12 @@ echo '1 2 3' | choose 1:
 cat /etc/passwd | choose -f ':' -1
 ```
 
+## [peco: 搜索过滤器](https://github.com/peco/peco)
+
+```sh
+ps aux | peco
+```
+
 # disk
 
 ## [dfc](https://github.com/Rolinh/dfc)
@@ -449,6 +496,8 @@ cat /etc/passwd | choose -f ':' -1
 ### instead ps
 
 ![image](./Pictures/awesomecli/procs.png)
+
+## [pueue(任务管理)](https://github.com/Nukesor/pueue/wiki/Get-started)
 
 # net
 
@@ -641,10 +690,12 @@ pacman -S festival
 
 ## [markdown写ppt](https://github.com/webpro/reveal-md/)
 
+## [image magick: 图片的ffmpeg](https://github.com/ImageMagick/ImageMagick)
+
+## [sql语句检查](https://github.com/sqlfluff/sqlfluff)
+
 # reference
 
+- [现代版命令行基础工具](https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/)
+
 - [modern-unix: 类似项目](https://github.com/ibraheemdev/modern-unix)
-
-- [命令行基础工具的更佳替代品](https://linux.cn/article-4042-1.html)
-
-- [命令行：增强版](https://linux.cn/article-10171-1.html)

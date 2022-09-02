@@ -14,6 +14,7 @@
         * [fsarchiver](#fsarchiver)
         * [find](#find)
         * [fselect: sql语句的ls](#fselect-sql语句的ls)
+    * [locate:定位文件](#locate定位文件)
     * [char (字符串操作)](#char-字符串操作)
         * [column](#column)
         * [tr](#tr)
@@ -159,6 +160,8 @@ lsof -p 7148
 ### rsync
 
 [RSYNC 的核心算法](https://coolshell.cn/articles/7425.html)
+
+- [How does rsync work?](https://michael.stapelberg.ch/posts/2022-06-18-rsync-overview/)
 
 - `-r` 递归
 - `-a` 可代替-r，并且同步修改时间，权限等
@@ -360,6 +363,11 @@ fselect path from . where modified gt '2021-04-20 18:10'
 fselect path from . where modified gt '2021-04-20 18:10:30'
 ```
 
+## locate:定位文件
+```sh
+sudo updatedb
+```
+
 ## char (字符串操作)
 
 ### column
@@ -376,6 +384,7 @@ cat FILE | tr -d '\n'
 
 # 空格换成换行符
 cat FILE |tr '\040' '\n'
+cat FILE |tr ' ' '\n'
 
 # 换成大写
 cat FILE | tr '[a-z]' '[A-Z]'
@@ -949,6 +958,8 @@ pandoc -f html -t markdown https://www.sogou.com > sogou.md
 ```
 
 ### ffmpeg
+
+- [交互构建常用ffmpeg命令](https://evanhahn.github.io/ffmpeg-buddy/)
 
 - 剪切:
 ```sh

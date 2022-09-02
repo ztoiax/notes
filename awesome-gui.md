@@ -26,6 +26,10 @@
 
     ![image](./Pictures/awesomegui/typora.png)
 
+- [sioyek: pdf阅读器](https://github.com/ahrm/sioyek)
+
+- [zathura: pdf, epub阅读器](https://github.com/pwmt/zathura)
+
 - [nomacs(图片查看器)](https://github.com/nomacs/nomacs)
 
 - pcmanfm(文件管理器)
