@@ -1069,6 +1069,13 @@ docker run --rm -ti \
 - [lazydocker](https://github.com/jesseduffield/lazydocker)
   ![image](./Pictures/kubernetes-docker/lazydocker.png)
 
+- [trivy容器安全检测](https://github.com/aquasecurity/trivy)
+
+```sh
+# 检测容器安全
+trivy image redislabs/redismod
+```
+
 ## reference article(优秀文章)
 
 - [docker 官方文档](https://docs.docker.com/engine/reference/run/)
@@ -1101,6 +1108,8 @@ docker run --rm -ti \
 
 - [k0s](https://github.com/k0sproject/k0s)
   > k0s 是一个包含所有功能的单一二进制 Kubernetes 发行版，它预先配置了所有所需的 bell 和 whistle，使构建 Kubernetes 集群只需将可执行文件复制到每个主机并运行它即可。
+
+- [像tcpdump那样管理](https://github.com/up9inc/mizu)
 
 ## 优秀文章
 

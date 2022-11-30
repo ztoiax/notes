@@ -2,14 +2,118 @@
 
 > 本文采用自顶向下的讲解
 
-## HTTP
+## 应用层
 
-- HTTP1.1 : 文本传输, 多TCP连接
+### HTTP
 
-- HTTP2   : 二进制传输, 单TCP连接
+- [视频：2分钟了解 HTTP Verbs](https://www.bilibili.com/video/BV1DS4y187Ux)
+    - 安全性：`GET`
+    - 幂等性：`GET`、`DELETE`
+    - 缓存性：`GET`、`POST`、`PATCH`
 
-- HTTP3   : 采用quic(定制的UDP协议)取代TCP的HTTP2
+- [腾讯技术工程：了解 HTTP 看这一篇就够](https://cloud.tencent.com/developer/article/2083715)
 
+- [《React进阶之路》作者：合并HTTP请求 vs 并行HTTP请求，到底谁更快？](https://segmentfault.com/a/1190000015665465)
+
+- [腾讯技术工程：HTTP 请求之合并与拆分技术详解](https://cloud.tencent.com/developer/article/1837260)
+
+    - 拆分的多个小请求耗时仍大于合并的请求
+
+#### HTTP2
+
+- [李银城：从Chrome源码看HTTP/2](https://zhuanlan.zhihu.com/p/34662800)
+
+#### Quic
+
+- [腾讯技术工程：HTTP/3 原理实战](https://cloud.tencent.com/developer/article/1634011)
+
+    - 讲述了QUIC的优点，比另外两篇文章要好一些[《一文读懂 HTTP/1HTTP/2HTTP/3》](https://cloud.tencent.com/developer/article/1580468)和[科普：QUIC 协议原理分析](https://cloud.tencent.com/developer/article/1017235)
+
+- [交互式解释Quic每个步骤](https://quic.xargs.org/)
+
+## WebSocket
+
+- [ruanyifeng:WebSocket 教程](https://www.ruanyifeng.com/blog/2017/05/websocket.html)
+
+    ![image](./Pictures/net-kernel/websocket.png)
+
+- 与http的区别
+
+    - 全双工：服务端可以主动向客户端发送数据；不像http客户端发送request，服务端response
+
+    - 不需要发送http header
+
+## 加密层
+
+- [ruanyifeng：数字签名是什么？](https://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html)
+
+- [李银城：https连接的前几毫秒发生了什么](https://www.rrfed.com/2017/02/03/https/)
+
+### 密钥算法
+
+- [视频：【不懂数学没关系】DH算法 | 迪菲-赫尔曼Diffie–Hellman 密钥交换](https://www.bilibili.com/video/BV1sY4y1p78s)
+
+- [视频：数学不好也能听懂的算法 - RSA加密和解密原理和过程](https://www.bilibili.com/video/BV1XP4y1A7Ui)
+
+- [视频（奇乐编程学院）：探秘公钥加密算法 RSA](https://www.bilibili.com/video/BV14y4y1272w)
+
+    > 对比上一个rsa视频，对欧拉函数有进一步介绍
+
+- [视频：公钥加密技术ECC椭圆曲线加密算法原理](https://www.bilibili.com/video/BV1BY411M74G)
+
+### tls
+
+- [交互式解释tls1.3每个步骤](https://tls13.xargs.org/)
+
+![image](./Pictures/net-kernel/tls1.2.jpg)
+
+![image](./Pictures/net-kernel/tls1.3.jpg)
+
+## TCP
+
+- [李银城：WebSocket与TCP/IP](https://www.rrfed.com/2017/05/20/websocket-and-tcp-ip/)
+
+### 拥塞算法(流量控制)
+
+- [腾讯技术工程：TCP 拥塞控制算法简介](https://cloud.tencent.com/developer/article/1401283)
+
+- [TCP 流量控制、拥塞控制](https://zhuanlan.zhihu.com/p/37379780)
+
+- [腾讯技术工程：TCP 拥塞控制详解](https://cloud.tencent.com/developer/article/1636214)
+
+## DNS
+
+- [李银城：从Chrome源码看DNS解析过程](https://www.rrfed.com/2018/01/01/chrome-dns-resolve/)
+
+## 包的拆分与合并TSO、GSO、LRO、GRO
+
+- 拆分
+
+    ![image](./Pictures/net-kernel/TSO-GSO-off.png)
+    ![image](./Pictures/net-kernel/TSO.png)
+    ![image](./Pictures/net-kernel/GSO.png)
+
+- 合并
+
+    ![image](./Pictures/net-kernel/LRO-GRO-off.png)
+    ![image](./Pictures/net-kernel/LRO.png)
+    ![image](./Pictures/net-kernel/GRO.png)
+
+```sh
+# 查看是否开启
+ethtool -k eth0
+
+tcp-segmentation-offload: on # TSO
+generic-segmentation-offload: on # GSO
+
+large-receive-offload: on # LRO
+generic-receive-offload: on # GRO
+```
+
+```sh
+# 开启TSO
+sudo ethtool -K eth0 tso on
+```
 
 # 内核网络协议栈
 
@@ -236,7 +340,5 @@ net.ipv4.tcp_slow_start_after_idle = 0
 
 - [tcp 带图详解](https://www.ictshore.com/free-ccna-course/transmission-control-protocol-advanced/)
 - [tcp 三次握手,四次挥手 in wireshark](https://github.com/zqjflash/tcp-ip-protocol)
-
-- [http2 详解](https://github.com/zqjflash/http2-protocol)
 
 - [详解的 tcp 连接,丢包后的处理,keepalive,tcp window probes 丢包](https://blog.cloudflare.com/when-tcp-sockets-refuse-to-die/)

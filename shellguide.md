@@ -35,6 +35,29 @@ echo !$
 strace -e open ls 2>&1 | grep ^n
 ```
 
+## 字符串
+
+### 字符串颜色
+
+```sh
+echo -e "\033[30m 黑色字 \033[0m"
+echo -e "\033[31m 红色字 \033[0m"
+echo -e "\033[32m 绿色字 \033[0m"
+echo -e "\033[33m 黄色字 \033[0m"
+echo -e "\033[34m 蓝色字 \033[0m"
+echo -e "\033[35m 紫色字 \033[0m"
+echo -e "\033[36m 青色字 \033[0m"
+echo -e "\033[37m 白色字 \033[0m"
+echo -e "\033[40;33m 黑底黄字 \033[0m"
+echo -e "\033[41;33m 红底黄字 \033[0m"
+echo -e "\033[42;33m 绿底黄字 \033[0m"
+echo -e "\033[43;33m 黄底黄字 \033[0m"
+echo -e "\033[44;33m 蓝底黄字 \033[0m"
+echo -e "\033[45;33m 紫底黄字 \033[0m"
+echo -e "\033[46;33m 青底黄字 \033[0m"
+echo -e "\033[47;33m 白底黄字 \033[0m"
+```
+
 ## if
 
 字符串变量 **不为空**,则执行:
@@ -76,6 +99,15 @@ if [ "$1" == "show" ]; then
     echo $1
 fi
 ```
+
+- 包含`*` 通配符
+```sh
+VAR='GNU/Linux is an operating system'
+if [[ $VAR == *"is"* ]]; then
+  echo "It's there."
+fi
+```
+
 
 文件 **存在**,执行:
 
@@ -121,20 +153,49 @@ for (( i=1; i<=5; i=i+2 )); do
 done
 ```
 
-get file on dir
+### 读取目录下的文件
 
 ```sh
 for file in *;do
     echo $file
 done
+```
 
-# get first char is 'd'
+- 读取d字符开头的文件
+
+```sh
 for file in d*;do
+    echo $file
+done
+
+# 通过参数1指定字符
+for file in $1*;do
     echo $file
 done
 ```
 
-get file row:
+- 指定目录
+
+```sh
+# 指定目录.sh
+
+# for file in "$1/*";do 加入""是错误的，这会把所有的文件拼成一串字符串，再赋值给$file
+
+for file in $1/*;do
+    echo $file
+done
+```
+
+```sh
+# 读取末尾是.mp4的文件
+for file in $1/*;do
+    if [[ $file == *".mp4" ]]; then
+        echo $file
+    fi
+done
+```
+
+### 读取指定文件的行
 
 ```sh
 echo a > /tmp/test
@@ -169,5 +230,30 @@ chmod 755 /tmp/for.sh
 /tmp/for.sh /tmp/test
 ```
 
+## 获取参数
+
+```sh
+#!/bin/bash
+# 用户可以输入任意数量的参数，利用for循环，可以读取每一个参数。
+
+for i in "$@"; do
+  echo $i
+done
+
+#2 Solution
+echo "一共输入了 $# 个参数"
+
+while [ "$1" != "" ]; do
+  echo "剩下 $# 个参数"
+  echo "参数：$1"
+  shift
+done
+```
+
+# reference
+
+- [ruanyf: Bash脚本教程](https://wangdoc.com/bash/intro.html)
+
 - [good bash 脚本集合](https://github.com/alexanderepstein/Bash-Snippets)
+
 - [shellcheck](https://www.shellcheck.net/)

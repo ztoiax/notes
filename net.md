@@ -22,6 +22,7 @@
     * [tcpdump](#tcpdump)
         * [基本命令](#基本命令)
         * [捕抓 TCP SYN，ACK 和 FIN 包](#捕抓-tcp-synack-和-fin-包)
+    * [http抓包的gui](#http抓包的gui)
     * [arp](#arp)
     * [arpwatch](#arpwatch)
     * [netstat](#netstat)
@@ -48,7 +49,7 @@
         * [基本命令](#基本命令-2)
         * [webhook](#webhook)
     * [httpie](#httpie)
-    * [testssl](#testssl)
+    * [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](#testssl测试网站是否支持ssltls以及检测漏洞)
     * [nghttp](#nghttp)
     * [h2spec](#h2spec)
     * [wrk: http benchmark](#wrk-http-benchmark)
@@ -56,6 +57,8 @@
     * [dnspeep](#dnspeep)
     * [lighthouse(chrome 网页性能测试)](#lighthousechrome-网页性能测试)
     * [mitmproxy(代理http, 并抓包)](#mitmproxy代理http-并抓包)
+    * [websocat:创建websocat](#websocat创建websocat)
+    * [websocketd:创建websocket服务执行命令](#websocketd创建websocket服务执行命令)
     * [nali(ip地址离线数据库)](#naliip地址离线数据库)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
@@ -532,7 +535,7 @@ xdg-open http://127.0.0.1:8081/dir/
 
 ## traceroute
 
-它通过在一系列数据包中设置数据包头的 TTL（生存时间）字段来捕获数据包所经过的路径，以及数据包从一跳到下一跳需要的时间。
+原理是向目的主机发送ICMP报文，发送第一个报文时，设置TTL为0，TTL即Time to Live，是报文的生存时间，由于它是0，所以下一个路由器由到这个报文后，不会再继续转发了，会给源主机发送ICMP出错的报文，就可以知道第一个路由的IP地址，同理，设置TTL为1，就可以知道第二个路由的IP地址，依次类推。
 
 ## tcptraceroute
 
@@ -694,6 +697,9 @@ tcpdump -i eth0 not port 22 and "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0"
 # 只捕抓TCP SYN或ACK包(不包含22,80端口)：
 tcpdump -i ens3 not port 22 and not port 80 and "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0"
 ```
+
+## [http抓包的gui](https://github.com/avwo/whistle)
+
 
 ## arp
 
@@ -1113,9 +1119,7 @@ curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=841b95e2-12d6-4bff-af
 http --header www.baidu.com
 ```
 
-## testssl
-
-> 测试网站的 tls
+## [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](https://github.com/drwetter/testssl.sh)
 
 ```bash
 testssl --parallel https://www.tsinghua.edu.cn/
@@ -1169,6 +1173,37 @@ curl --proxy socks5://127.0.0.1:8080 www.baidu.com
 
 # ~/.mitmproxy目录下有虚拟的CA证书
 curl --proxy http://127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem www.baidu.com
+```
+
+## [websocat:创建websocat](https://github.com/vi/websocat)
+
+```sh
+# 连接ws服务器，
+websocat ws://ws.vi-server.org/mirror
+
+# 创建客户端-服务器通信服务
+websocat -s 1234
+# 连接刚才创建的服务，输入字符服务器可以收到
+websocat ws://127.0.0.1:1234
+
+# 创建客户端-客户端通信服务
+websocat -t ws-l:127.0.0.1:1234 broadcast:mirror:
+# 客户端A、B连接服务后，可以互相通信
+websocat ws://127.0.0.1:1234
+
+# 代理
+websocat --oneshot -b ws-l:127.0.0.1:1234 tcp:127.0.0.1:22&
+websocat --oneshot -b tcp-l:127.0.0.1:1236 ws://127.0.0.1:1234/&
+```
+
+## [websocketd:创建websocket服务执行命令](https://github.com/joewalnes/websocketd)
+
+```sh
+# 创建websocket服务，客户端连接就执行ls命令
+websocketd --port=1234 ls
+
+# 使用websocat连接
+websocat ws://127.0.0.1:1234
 ```
 
 ## [nali(ip地址离线数据库)](https://github.com/zu1k/nali)

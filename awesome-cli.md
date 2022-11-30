@@ -1,163 +1,3 @@
-<!-- vim-markdown-toc GFM -->
-
-* [terminal simulator (终端模拟器)](#terminal-simulator-终端模拟器)
-    * [alacritty](#alacritty)
-    * [wezterm:用rust写, 支持gpu加速](#wezterm用rust写-支持gpu加速)
-    * [tabby](#tabby)
-    * [ttyd: 浏览器terminal](#ttyd-浏览器terminal)
-* [File](#file)
-    * [advcpmv](#advcpmv)
-        * [instead cp,mv](#instead-cpmv)
-    * [ranger](#ranger)
-    * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
-    * [broot](#broot)
-    * [nnn](#nnn)
-    * [lf: go ranger](#lf-go-ranger)
-    * [joshuto: rust ranger](#joshuto-rust-ranger)
-    * [mc](#mc)
-    * [fd](#fd)
-        * [instead find](#instead-find)
-    * [tmsu](#tmsu)
-        * [taging file and mount tag file](#taging-file-and-mount-tag-file)
-    * [massren](#massren)
-        * [using editor rename file](#using-editor-rename-file)
-    * [fselect: sql语句的ls](#fselect-sql语句的ls)
-    * [jql: json过滤器](#jql-json过滤器)
-    * [jless:json查看器](#jlessjson查看器)
-    * [jo:生成json对象](#jo生成json对象)
-    * [dsq: sql语句查看json, csv, nginxlog](#dsq-sql语句查看json-csv-nginxlog)
-    * [htmlq:html过滤器](#htmlqhtml过滤器)
-    * [yq:yaml查看器](#yqyaml查看器)
-    * [xsv:csv查看器](#xsvcsv查看器)
-    * [OctoSQL: sql语句查看文件](#octosql-sql语句查看文件)
-    * [termscp: tui文件传输](#termscp-tui文件传输)
-    * [fq: 二进制查看器](#fq-二进制查看器)
-    * [vidir: 编辑器批量改名](#vidir-编辑器批量改名)
-* [git](#git)
-    * [gh](#gh)
-        * [github-cli官方文档](#github-cli官方文档)
-    * [lazygit](#lazygit)
-        * [git tui](#git-tui)
-    * [gitui](#gitui)
-    * [bit](#bit)
-        * [instead git](#instead-git)
-    * [tig](#tig)
-        * [git log](#git-log)
-    * [hub](#hub)
-    * [forgit](#forgit)
-* [char](#char)
-    * [viddy:instead watch](#viddyinstead-watch)
-    * [exa](#exa)
-        * [highlight ls](#highlight-ls)
-    * [lsd](#lsd)
-        * [highlight ls and support icon](#highlight-ls-and-support-icon)
-    * [nat](#nat)
-        * [highlight ls](#highlight-ls-1)
-    * [bat](#bat)
-        * [highlight cat](#highlight-cat)
-    * [alder](#alder)
-        * [highlight tree](#highlight-tree)
-    * [ag](#ag)
-        * [instead grep](#instead-grep)
-    * [fzf](#fzf)
-    * [skim](#skim)
-        * [rust 版fzf](#rust-版fzf)
-    * [diff-so-fancy](#diff-so-fancy)
-        * [highlight git diff](#highlight-git-diff)
-    * [icdiff](#icdiff)
-        * [instead diff](#instead-diff)
-    * [git-split-diffs: github style diff](#git-split-diffs-github-style-diff)
-        * [instead git diff](#instead-git-diff)
-    * [pet](#pet)
-        * [Simple command-line snippet manager](#simple-command-line-snippet-manager)
-    * [multitail](#multitail)
-        * [instead tail](#instead-tail)
-    * [cheat](#cheat)
-        * [instead man](#instead-man)
-    * [glow](#glow)
-        * [markdown preview cli version](#markdown-preview-cli-version)
-    * [fx](#fx)
-        * [Command-line JSON processing tool](#command-line-json-processing-tool)
-    * [navi: fzf command bookmark](#navi-fzf-command-bookmark)
-    * [trash-cli](#trash-cli)
-        * [回收站](#回收站)
-    * [choose: instead od](#choose-instead-od)
-    * [peco: 搜索过滤器](#peco-搜索过滤器)
-* [disk](#disk)
-    * [dfc](#dfc)
-        * [instead df](#instead-df)
-    * [cfdisk](#cfdisk)
-        * [instead fdisk](#instead-fdisk)
-    * [duf](#duf)
-    * [ncdu](#ncdu)
-    * [dust](#dust)
-        * [instead du](#instead-du)
-* [process](#process)
-    * [procs](#procs)
-        * [instead ps](#instead-ps)
-    * [pueue(任务管理)](#pueue任务管理)
-* [net](#net)
-    * [prettyping](#prettyping)
-    * [curlie](#curlie)
-        * [instead curl](#instead-curl)
-    * [dog](#dog)
-        * [instead dig](#instead-dig)
-* [好看的字符](#好看的字符)
-    * [neofetch](#neofetch)
-    * [cpufetch](#cpufetch)
-    * [figlet](#figlet)
-    * [cmatrix](#cmatrix)
-    * [lolcat](#lolcat)
-    * [colorscript](#colorscript)
-* [Social media](#social-media)
-    * [googler(google)](#googlergoogle)
-    * [ddgr(DuckDuckGo)](#ddgrduckduckgo)
-    * [rtv(reddit cli)](#rtvreddit-cli)
-    * [rainbowstream(twitter)](#rainbowstreamtwitter)
-    * [haxor-news(hacknew)](#haxor-newshacknew)
-* [压缩](#压缩)
-    * [svgo: svg压缩](#svgo-svg压缩)
-* [other](#other)
-    * [Termshark](#termshark)
-        * [wireshark cli version with vim keybinds](#wireshark-cli-version-with-vim-keybinds)
-    * [baidupcs](#baidupcs)
-        * [The terminal utility for Baidu Network Disk.](#the-terminal-utility-for-baidu-network-disk)
-    * [aliyunpan](#aliyunpan)
-        * [阿里网盘 go 客户端](#阿里网盘-go-客户端)
-    * [bypy](#bypy)
-        * [百度网盘 Python 客户端](#百度网盘-python-客户端)
-    * [haxor-news](#haxor-news)
-        * [Browse Hacker News](#browse-hacker-news)
-    * [fim: 图片浏览器](#fim-图片浏览器)
-    * [timg: 在终端下查看图片和视频](#timg-在终端下查看图片和视频)
-    * [imgdiff](#imgdiff)
-        * [pixel-by-pixel image difference tool.](#pixel-by-pixel-image-difference-tool)
-    * [onedrive](#onedrive)
-        * [本地同步 onedrive](#本地同步-onedrive)
-    * [xonsh](#xonsh)
-    * [python shell](#python-shell)
-    * [ytfzf](#ytfzf)
-    * [ix](#ix)
-    * [cloc(统计代码)](#cloc统计代码)
-    * [openrefine: json, csv...网页操作](#openrefine-json-csv网页操作)
-    * [npkill: 查找和清理node_module](#npkill-查找和清理node_module)
-    * [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](#zx-更优秀的shell编程google用nodejs写的一个shell包装器)
-    * [syncthing: 同步文件](#syncthing-同步文件)
-    * [croc: 文件传输](#croc-文件传输)
-    * [slidev: markdown写ppt](#slidev-markdown写ppt)
-    * [q: sql语法查询文件](#q-sql语法查询文件)
-    * [sunloginclient-cli(向日葵运程控制cli版)](#sunloginclient-cli向日葵运程控制cli版)
-    * [fanyi(翻译)](#fanyi翻译)
-    * [cheat.sh: 更好的man](#cheatsh-更好的man)
-    * [tokei(统计编程语言占比)](#tokei统计编程语言占比)
-    * [termpair: 网页操作终端](#termpair-网页操作终端)
-    * [markdown写ppt](#markdown写ppt)
-    * [image magick: 图片的ffmpeg](#image-magick-图片的ffmpeg)
-    * [sql语句检查](#sql语句检查)
-* [reference](#reference)
-
-<!-- vim-markdown-toc -->
-
 # terminal simulator (终端模拟器)
 
 ## [alacritty](https://github.com/alacritty/alacritty)
@@ -177,16 +17,9 @@
 
 ## [ttyd: 浏览器terminal](https://github.com/tsl0922/ttyd)
 
-# File
+## [termpair: 网页操作终端](https://github.com/cs01/termpair)
 
-## [advcpmv](https://github.com/jarun/advcpmv)
-
-### instead cp,mv
-
-```sh
-alias mv="advmv -g"
-alias cp="advcp -g"
-```
+# File Browser
 
 ## [ranger](https://github.com/ranger/ranger)
 
@@ -218,17 +51,20 @@ sudo make O_NERD=1
 支持鼠标操作
 ![image](./Pictures/awesomecli/13.png)
 
-## [fd](https://github.com/sharkdp/fd)
+# File
 
-### instead find
+## [advcpmv: instead cp, my(https://github.com/jarun/advcpmv)
 
-## [tmsu](https://github.com/oniony/TMSU)
+```sh
+alias mv="advmv -g"
+alias cp="advcp -g"
+```
 
-### taging file and mount tag file
+## [fd: instead find](https://github.com/sharkdp/fd)
 
-## [massren](https://github.com/laurent22/massren)
+## [tmsu: taging file and mount tag file](https://github.com/oniony/TMSU)
 
-### using editor rename file
+## [massren: using editor rename file](https://github.com/laurent22/massren)
 
 ## [fselect: sql语句的ls](https://github.com/jhspetersson/fselect)
 
@@ -245,6 +81,20 @@ jo -p name=jo n=17 parser=false
 seq 1 10 | jo -a
 ```
 
+## [jc:以json文本输出命令](https://github.com/kellyjonbrazil/jc)
+
+```sh
+# dig命令
+jc dig example.com
+dig example.com | jc --dig
+
+# arp命令 -p 加入换行符，显示更直观
+jc -p arp
+arp | jc --arp -p
+
+# df命令
+jc -p df
+```
 
 ## [dsq: sql语句查看json, csv, nginxlog](https://github.com/multiprocessio/dsq)
 
@@ -253,7 +103,7 @@ seq 1 10 | jo -a
 ip --json addr show | dsq -s json "SELECT address FROM {}"
 ```
 
-## [htmlq:html过滤器](https://github.com/mgdm/htmlq)
+## [htmlq:html版jq](https://github.com/mgdm/htmlq)
 
 ```sh
 # 显示a标签
@@ -501,19 +351,19 @@ ps aux | peco
 
 # net
 
-## [prettyping](https://github.com/denilsonsa/prettyping)
+## [prettyping: instead ping](https://github.com/denilsonsa/prettyping)
 
-## [curlie](https://github.com/rs/curlie)
-
-### instead curl
+## [curlie: instead curl](https://github.com/rs/curlie)
 
 ![image](./Pictures/awesomecli/curlie.png)
 
-## [dog](https://github.com/ogham/dog)
-
-### instead dig
+## [dog: instead dig](https://github.com/ogham/dog)
 
 ![image](./Pictures/awesomecli/dog.png)
+
+## [Termshark: wireshark cli](https://github.com/gcla/termshark)
+
+![image](./Pictures/awesomecli/1.png)
 
 # 好看的字符
 
@@ -559,29 +409,85 @@ ps aux | peco
 svgo file.svg -o newfile.svg
 ```
 
-# other
+# 图片工具
 
-## [Termshark](https://github.com/gcla/termshark)
+## [image magick: 图片的ffmpeg](https://github.com/ImageMagick/ImageMagick)
 
-### wireshark cli version with vim keybinds
+- [官方文档](https://legacy.imagemagick.org/Usage/)
 
-![image](./Pictures/awesomecli/1.png)
+- `identify`
 
-## [baidupcs](https://github.com/GangZhuo/BaiduPCS)
+```sh
+# 查看支持的格式
+identify -list format
 
-### The terminal utility for Baidu Network Disk.
+# 查看图片的信息
+identify -verbose file.png
+```
 
-## [aliyunpan](https://github.com/tickstep/aliyunpan#linux--macos)
+- `display`
 
-### 阿里网盘 go 客户端
+```sh
+# 显示图片
+display file.png
+display *.png
 
-## [bypy](https://github.com/houtianze/bypy)
+# 缩小50%
+display -resize 50% file.png
 
-### 百度网盘 Python 客户端
+# 黑白显示
+display -monochrome file.png
+display -charcoal 1.2 file.png
 
-## [haxor-news](https://github.com/donnemartin/haxor-news)
+# 只显示8种颜色
+display -colors 8 TSO.png
+```
 
-### Browse Hacker News
+- `convert`
+
+```sh
+# 转换编码
+convert file.png file.webp
+convert file.png file.avif
+
+# 转换为黑白图片
+convert -monochrome file.png file.avif
+# 转换为黑白图片，再把黑白反过来
+convert  -canny 0x1 TSO.png TSO.avif
+```
+
+- 压缩图片
+```sh
+# 转换为avif
+magick -quality 75 file.png file.avif 
+
+# 压缩效果比上一条要好，但处理更慢
+magick -define heic:speed=2 file.png file.avif 
+```
+
+- `compare`
+
+```sh
+# 对比
+compare file.png file.png x:
+```
+
+- `montage`(蒙太奇)
+
+```sh
+montage -label %f wallhaven-1.jpg wallhaven-2.jpg -geometry +10 -shadow -title 'charcoal demo' charcoal_demo.jpg
+```
+
+## [squoosh:Google开发的图片压缩](https://github.com/GoogleChromeLabs/squoosh)
+
+```sh
+# 安装
+npm i @squoosh/cli
+
+# 转换为avif
+squoosh-cli --avif '{speed: 2}' file.jpg
+```
+
 
 ## fim: 图片浏览器
 
@@ -595,21 +501,36 @@ timg filename.jpeg -p kitty
 timg --loops=3 filename.gif
 ```
 
-## [imgdiff](https://github.com/n7olkachev/imgdiff)
+## [imgdiff:图片对比](https://github.com/n7olkachev/imgdiff)
 
-### pixel-by-pixel image difference tool.
+# downloader
+
+## [lux: 视频下载器](https://github.com/iawia002/lux)
+
+```sh
+# -i 查看清晰度
+lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
+```
+
+# 网盘客户端
+
+## [baidupcs: 百度网盘客户端](https://github.com/GangZhuo/BaiduPCS)
+
+## [aliyunpan:阿里网盘go客户端](https://github.com/tickstep/aliyunpan#linux--macos)
+
+## [bypy: 百度网盘python客户端](https://github.com/houtianze/bypy)
 
 ## [onedrive](https://github.com/skilion/onedrive)
 
-### 本地同步 onedrive
+# other
 
-## [xonsh](https://github.com/xonsh/xonsh)
+## [haxor-news: hacker new](https://github.com/donnemartin/haxor-news)
 
-![image](./Pictures/awesomecli/xonsh.png)
+## [xonsh: python shell](https://github.com/xonsh/xonsh)
 
-## python shell
+    ![image](./Pictures/awesomecli/xonsh.png)
 
-- [xonsh 插件](https://xon.sh/xontribs.html)
+    - [xonsh 插件](https://xon.sh/xontribs.html)
 
 ## ytfzf
 
@@ -686,13 +607,38 @@ pacman -S festival
 
 ## tokei(统计编程语言占比)
 
-## [termpair: 网页操作终端](https://github.com/cs01/termpair)
-
 ## [markdown写ppt](https://github.com/webpro/reveal-md/)
 
-## [image magick: 图片的ffmpeg](https://github.com/ImageMagick/ImageMagick)
-
 ## [sql语句检查](https://github.com/sqlfluff/sqlfluff)
+
+## [ocrmypdf: pdf图片转文字](https://github.com/ocrmypdf/OCRmyPDF)
+
+```sh
+# 安装程序
+pip install ocrmypdf
+
+# 安装中文简体、英文语言包
+pacman -S tesseract-data-chi_sim tesseract-data-eng
+
+# -l选择语言包
+ocrmypdf -l chi_sim file.pdf new_file.pdf
+```
+
+## [osquery: sql语句查询系统配置和参数](https://github.com/osquery/osquery)
+
+- [官方文档](https://osquery.readthedocs.io/en/stable/introduction/sql/)
+
+```sh
+# 进入osquery数据库
+osqueryi
+
+# 查询用户
+SELECT * FROM users;
+
+# 查询进程
+SELECT * FROM processes;
+```
+
 
 # reference
 

@@ -1,1 +1,0 @@
-- [我做系统架构的一些原则](https://coolshell.cn/articles/21672.html)

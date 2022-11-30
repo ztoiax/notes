@@ -33,6 +33,8 @@
 
 ## Program Language(编程语言)
 
+- [cheat sheet](https://wangchujiang.com/reference/)
+
 ### 汇编
 
 - [《the art of assembly language programming》](http://www.phatcode.net/res/223/files/html/toc.html)
@@ -87,6 +89,8 @@
 - [《数据结构与算法Rust语言描述》](https://github.com/QMHTMY/RustBook/tree/main/books)
 
 - [rust-course:中文课程](https://github.com/sunface/rust-course)
+
+- [并发编程](https://github.com/smallnest/concurrency-programming-via-rust)
 
 ### Lisp
 
@@ -143,11 +147,17 @@
 
 - [flask/sanic/asyncio/bottle/webpy 源码阅读注释合集](https://github.com/hhstore/annotated-py-projects)
 
+- [The Flask Mega-Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+
 - [Annotated Algorithms in Python (3.8)(英文)](https://github.com/mdipierro/nlib)
 
 - [PegasusWang: Python/Golang Web 入坑指南](https://python-web-guide.readthedocs.io/zh/latest/index.html)
 
 - [free-python-books](https://github.com/pamoroso/free-python-books)
+
+- [Python Design Patterns](https://python-patterns.guide/)
+
+- [《Think DSP: Digital Signal Processing in Python》](https://greenteapress.com/thinkdsp/html/index.html)
 
 - [Python Design Patterns](https://python-patterns.guide/)
 
@@ -175,6 +185,17 @@
 
 - [coding-interview-university(中文)](https://github.com/kevingo/coding-interview-university-zh-tw/blob/master/translations/README-cn.md)
 
+- [腾讯技术工程：服务器开发设计之算法宝典](https://cloud.tencent.com/developer/article/1926511)
+
+- [腾讯技术工程：唯一ID生成算法剖析](https://cloud.tencent.com/developer/article/1519554)
+
+- [腾讯技术工程：hash 算法原理及应用漫谈](https://cloud.tencent.com/developer/article/1539930)
+
+    - [腾讯技术工程：一致性 Hash 算法原理总结](https://cloud.tencent.com/developer/article/1955794)
+
+### 图形学
+
+- [腾讯技术工程：十种图像模糊算法的总结与实现](https://cloud.tencent.com/developer/article/1614858)
 
 ## database(数据库)
 
@@ -222,6 +243,8 @@
 
 - [《Software Engineering at Google》(谷歌软件工程)(中文)](https://qiangmzsx.github.io/Software-Engineering-at-Google/#/?id=software-engineering-at-google)
 
+- [我做系统架构的一些原则](https://coolshell.cn/articles/21672.html)
+
 ## Operating System(操作系统)
 
 - [《深入理解计算机系统》(CSAPP)](https://hansimov.gitbook.io/csapp/)
@@ -260,9 +283,13 @@
 
 ## compile(编译)
 
+- [《Parsing Techniques》（《解析技术》）](http://parsing-techniques.duguying.net/)
+
 - [编译原理（紫龙书）第2版习题答案](https://github.com/fool2fish/dragon-book-exercise-answers)
 
 - [从头开发一个迷你 Go 语言](https://chai2010.cn/ugo-compiler-book/ch1-basic/index.html)
+
+- [手写一个解释器](https://github.com/munificent/craftinginterpreters)
 
 ## network(网络)
 
@@ -367,11 +394,15 @@
 
 - [字符串生产二维码原理](https://www.nayuki.io/page/creating-a-qr-code-step-by-step)
 
+- [李银城：文字编码的那些事](https://www.rrfed.com/2017/11/11/text-encode/)
+
 ## 数学
 
 - [《几何原本》 (英文)](https://www.c82.net/euclid/)
 
 - [线性代数笔记](https://github.com/zlotus/notes-linear-algebra)
+
+- [线性代数课程](https://github.com/kenjihiranabe/The-Art-of-Linear-Algebra)
 
 - [统计学习方法（第二版）习题解答](https://datawhalechina.github.io/statistical-learning-method-solutions-manual/#/)
 
@@ -379,9 +410,11 @@
 
 - [中国程序员容易发音错误的单词](https://github.com/shimohq/chinese-programmer-wrong-pronunciation)
 
-## 写作
+## 文档
 
 - [中文技术文档写作风格指南](https://zh-style-guide.readthedocs.io/zh_CN/latest/index.html)
+
+- [How Google, Twitter, and Spotify built a culture of documentation](https://blog.doctave.com/2021/09/07/how-google-twitter-and-spotify-build-culture-of-documentation.html)
 
 ## 健康
 

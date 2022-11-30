@@ -8,6 +8,7 @@
         * [make](#make)
             * [Note: 每行命令之前必须有一个 tab 键,不然会报错](#note-每行命令之前必须有一个-tab-键不然会报错)
             * [Note: 需要注意的是，每行命令在一个单独的 shell 中执行。这些 Shell 之间没有继承关系。(make var-lost），取不到 foo 的值。因为两行命令在两个不同的进程执行。一个解决办法是将两行命令写在一行，中间用分号分隔。](#note-需要注意的是每行命令在一个单独的-shell-中执行这些-shell-之间没有继承关系make-var-lost取不到-foo-的值因为两行命令在两个不同的进程执行一个解决办法是将两行命令写在一行中间用分号分隔)
+            * [checkmake检查makefile](#checkmake检查makefile)
         * [lsof](#lsof)
         * [rsync](#rsync)
         * [split](#split)
@@ -36,7 +37,6 @@
         * [gnuplot](#gnuplot)
         * [shellcheck](#shellcheck)
         * [pandoc 文档转换](#pandoc-文档转换)
-        * [ffmpeg](#ffmpeg)
         * [jobs, fg, bg, disown, reptyr](#jobs-fg-bg-disown-reptyr)
     * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
@@ -46,6 +46,18 @@
         * [性能测试](#性能测试)
         * [硬盘装载](#硬盘装载)
         * [卸载 RAID](#卸载-raid)
+    * [视频/图片](#视频图片)
+        * [ffmpeg](#ffmpeg)
+            * [-vf视频过滤器](#-vf视频过滤器)
+            * [音频操作](#音频操作)
+            * [图片操作](#图片操作)
+            * [录屏](#录屏)
+            * [plotbitrate](#plotbitrate)
+        * [gif](#gif)
+            * [gifview](#gifview)
+            * [gifdiff](#gifdiff)
+            * [convert(gif制作)](#convertgif制作)
+            * [gifsicle:gif工具支持压缩、合并、编辑帧、减少帧](#gifsiclegif工具支持压缩合并编辑帧减少帧)
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
@@ -139,6 +151,8 @@ all:
 var-kept:
     export foo=bar; echo "foo=[$$foo]"
 ```
+
+#### [checkmake检查makefile](https://github.com/mrtazz/checkmake)
 
 ### lsof
 
@@ -461,6 +475,9 @@ sed -i 's/a/b/g'  FILE
 
 # 打印第一行和匹配 nginx
 ps aux | sed '1p;/nginx/!d'
+
+# pm和am替换为中文
+date +%H:%M:%S:%P | sed -e 's/pm/下午/g' -e's/am/上午/g'
 ```
 
 ### awk
@@ -866,6 +883,9 @@ date +%H:%M:%S
 date +"%Y-%m-%d %H:%M:%S"
 # 2020-11-27 11:50:04
 
+# pm和am替换中文
+date +%H:%M:%S:%P | sed -e 's/pm/下午/g' -e's/am/上午/g'
+
 #or
 date +"%Y年%m月%d日 %H时%M分%S秒"
 # 2020年11月27日 11时51分56秒
@@ -955,36 +975,6 @@ pandoc Resume.md -o README.html -t revealjs -s -V theme=beige
 
 # 输入不一定是文件, 可以输入url, 将html文件转换mardown
 pandoc -f html -t markdown https://www.sogou.com > sogou.md
-```
-
-### ffmpeg
-
-- [交互构建常用ffmpeg命令](https://evanhahn.github.io/ffmpeg-buddy/)
-
-- 剪切:
-```sh
-file=old.mp4
-outfile=new.mp4
-
-# 开始时间
-start=00:00:00
-# 结束时间
-end=00:01:00
-
-ffmpeg -i $file -ss $start -t $end -c copy $outfile
-```
-
-- 合并:
-- `file.txt` 文件
-```txt
-file 'file1.mp4'
-file 'file2.mp4'
-```
-
-```sh
-outfile=new.mp4
-# 合并file.txt下的视频
-ffmpeg -f concat -safe 0 -i file.txt -c copy $outfile
 ```
 
 ### jobs, fg, bg, disown, reptyr
@@ -1118,6 +1108,233 @@ mdadm -S /dev/md0
 mdadm --zero-superblock /dev/sdb
 mdadm --zero-superblock /dev/sdc
 mdadm --zero-superblock /dev/sdd
+```
+
+## 视频/图片
+
+### ffmpeg
+
+| 视频格式 | 视频编码器 | 音频编码器 |
+|----------|------------|------------|
+| mp4      | H.264      | aac        |
+| webm     | vp9        | Vorbis     |
+
+- [FFmpeg - The Ultimate Guide](https://img.ly/blog/ultimate-guide-to-ffmpeg/)
+
+- [ruanyifeng:FFmpeg 视频处理入门教程](https://www.ruanyifeng.com/blog/2020/01/ffmpeg.html)
+
+- [ffmpeg原理](https://ffmpeg.xianwaizhiyin.net/cover.html)
+
+- [奇乐编程学院视频:FFmpeg 最最强大的视频工具 (转码/压缩/剪辑/滤镜/水印/录屏/Gif/...)](https://www.bilibili.com/video/BV1AT411J7cH/?vd_source=5de14ac47d024a404772edfe5d5eb20c)
+
+- [在线工具：交互构建常用ffmpeg命令](https://evanhahn.github.io/ffmpeg-buddy/)
+
+- [在线工具：交互构建复杂ffmpeg命令](https://ffmpeg.guide/)
+
+- 基本命令：
+
+```sh
+# 播放视频
+ffplay video.mp4
+
+# 窗口宽度为400
+ffplay -x 400 -i video.mp4
+
+# 播放音频
+ffplay audio.mp3
+
+# 显示波形图
+ffplay -showmode 1 audio.mp3
+```
+
+- [ffprobe的正确打开方式（三剑客之一）](https://cloud.tencent.com/developer/article/1840302)
+```sh
+# 查看视频文件信息。注意输出的视频码率是kb（是比特而不是字节），要除以8
+ffprobe file.mp4
+
+# 获取更多信息
+ffprobe -show_format file.mp4
+
+# json格式输出
+ffprobe -print_format json -show_streams file.mp4
+```
+
+- [简书：ffmpeg # tbr & tbn & tbc](https://www.jianshu.com/p/f2ba8e0fd3a4)
+
+```sh
+# 查看支持的格式
+ffmpeg -formats
+
+# 查看支持的编码器
+ffmpeg -codecs
+
+# ts转mp4。除了转换封装格式外，还会进行编码转换
+ffmpeg -i input.ts output.mp4
+
+# 缩放视频
+ffmpeg -i input.ts -s 1024x576 output.mp4
+
+# -c copy表示使用原来的编码器，即只转换封装格式
+ffmpeg -i input.mp4 -c copy output.mkv
+
+# -c:v指定视频编码器，-c:a指定音频编码器
+ffmpeg -i input.mp4 -c:v copy -c:a libvorbis output.mp4
+
+# 转码 -crf越低码率越高，文件更大（视频质量）。libx264是软解
+ffmpeg -i input.mp4 -c:v libx264 -crf 24 output.mp4
+# 转码av1
+ffmpeg -i input.mp4 -c:v libaom-av1 -crf 24 output.mkv
+# -preset选项可以花费更多的时间，文件更小。但对比上一个命令非常的慢，而压缩大小却没有小很多
+ffmpeg -i input.mp4 -c:v libx264 -preset veryslow -crf 24 output.mp4
+# nvdia显卡可以使用h264_nvenc硬解码（速度更快，但质量会低一些）
+ffmpeg -i input.mp4 -c:v h264_nvenc -crf 24 output.mp4
+# 使用libx265编码器
+ffmpeg -i input.mp4 -c:v libx265 -crf 24 output.mp4
+
+# 降低帧率
+ffmpeg -i input.mp4 -r 24 output.mp4
+
+# 剪切视频 -ss 开始时间 -t -to
+ffmpeg -ss 00:00:20 -i input.mp4 -t 10 -c copy output.mp4
+# -to 从00:00:20开始，录制30秒
+ffmpeg -ss 00:00:20 -i input.mp4 -to 00:00:30 -c copy output.mp4
+
+# 分割视频 前20秒为output1.mp4，20秒后为output2.mp4
+ffmpeg -i input.mp4 -to 00:00:20 output1.mp4 -ss 00:00:20 output2.mp4
+# 分割前20秒和20秒到40秒的视频
+ffmpeg -i input.mp4 -to 00:00:20 output1.mp4 -ss 00:00:20 -to 00:00:40 output2.mp4
+
+# 延迟视频3.84秒
+ffmpeg -i input.mp4 -itsoffset 3.84 -i input.mp4 -map 1:v -map 0:a -vcodec copy -acodec copy output.mp4
+
+# 延迟音频3.84秒
+ffmpeg -i input.mp4 -itsoffset 3.84 -i input.mp4 -map 0:v -map 1:a -vcodec copy -acodec copy output.mp4
+```
+
+- 合并:
+- `file.txt` 文件
+```txt
+file 'file1.mp4'
+file 'file2.mp4'
+```
+
+```sh
+outfile=new.mp4
+# 合并file.txt下的视频
+ffmpeg -f concat -safe 0 -i file.txt -c copy $outfile
+```
+
+#### -vf视频过滤器
+
+- 多个选项用 `,` 分隔
+
+```sh
+# 添加字幕
+ffmpeg -i input.mp4 -vf ass=sub.ass output.mp4
+
+# scale=修改分辨率为480p
+ffmpeg -i input.mp4 -vf scale=480:-1 output.mp4
+
+# transpose=旋转视频。0为90度逆时针并垂直旋转、1为90度顺时针、2为90度逆时针、3为90度顺时针并垂直旋转
+ffmpeg -i input.mp4 -vf "transpose=1" output.mp4
+# 旋转180度顺时针
+ffmpeg -i input.mp4 -vf "transpose=1,transpose=1" output.mp4
+```
+
+#### 音频操作
+
+```sh
+# 提取音频
+ffmpeg -i input.mp4 -vn output.mp3
+
+# -ab压缩音频比特率为128
+ffmpeg -i input.mp3 -ab 128 output.mp3
+
+# 屏蔽前90秒的声音
+ffmpeg -i input.mp4 -vcodec copy -af "volume=enable='lte(t,90)':volume=0" output.mp4
+
+# 屏蔽80秒-90秒的声音
+ffmpeg -i input.mp4 -vcodec copy -af "volume=enable='between(t,80,90)':volume=0" output.mp4
+```
+
+#### 图片操作
+
+```sh
+# 截图
+ffmpeg -ss 00:00:20 -i input.mp4 -vframes 1 output.png
+
+# 每隔1秒截一张图，-r指定1秒内多少帧（默认为25）
+ffmpeg -i input.mp4 -r 1 -f image2 image-%2d.png
+
+# 添加水印overlay表示位置
+ffmpeg -i input.mp4 -i input.png -filter_complex "overlay=100:100" output.mp4
+
+# 制作gif图 -ss 开始时间 -to 结束时间 -r为帧率
+ffmpeg -ss 00:00:20 -i input.mp4 -to 10 -r 10 output.gif
+# scale修改分辨率为200p
+ffmpeg -ss 00:00:20 -i input.mp4 -to 10 -r 10 -vf scale=200:-1 output.gif
+
+# 制作webp动画
+ffmpeg -ss 00:00:20 -i input.mp4 -to 10 -r 10 output.webp
+```
+
+#### 录屏
+
+```sh
+# 录制屏幕(不录制声音)
+ffmpeg -f x11grab -s 1920x1080 -i :0.0 output.mp4
+
+# 录制摄像头
+ffmpeg -i /dev/video0 output.mp4
+
+# 录制声音
+arecord -L # 查看声卡设备
+ffmpeg -f alsa -i default:CARD=Generic output.mp3
+```
+
+#### [plotbitrate](https://github.com/zeroepoch/plotbitrate)
+
+```sh
+# 生成不同时间段的视频码率图
+plotbitrate input.mkv
+
+# 音频码率
+plotbitrate -s audio input.mkv
+
+# 以svg图保存
+plotbitrate -o output.svg input.mkv
+```
+
+### gif
+
+#### gifview
+
+#### gifdiff
+
+#### convert(gif制作)
+
+```sh
+# 合并多张gif -delay合并每张gif的第一秒
+convert -delay 1 -loop 0 *.gif output3.gif
+
+# 多张jpg合成gif
+convert -delay 10 -loop 0 *.jpg linux.gif
+```
+
+#### [gifsicle:gif工具支持压缩、合并、编辑帧、减少帧](https://github.com/kohler/gifsicle)
+
+```sh
+# 查看每1帧的图片
+gifsicle -I input.gif
+
+# 压缩
+gifsicle input.gif -O3 -o output.gif
+
+# 提取第0帧
+gifsicle input.gif '#0' > output.gif
+
+# 替换第5帧
+gifsicle -b target.gif --replace '#5' replace.gif
 ```
 
 # reference
