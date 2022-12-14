@@ -340,7 +340,7 @@ track_script {
 
   - 可查看虚拟 ip
 
-  ![image](./Pictures/lvs/config1.png)
+  ![image](./Pictures/lvs/config1.avif)
 
 **配置:**
 

@@ -119,7 +119,7 @@ systemd-analyze plot > boot.svg
 google-chrome-stable boot.svg #用浏览器打开
 ```
 
-![avatar](/Pictures/systemd/1.png)
+![image](/Pictures/systemd/1.avif)
 
 ### 管理开机启动脚本
 

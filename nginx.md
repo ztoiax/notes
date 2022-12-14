@@ -177,7 +177,7 @@ server {
 
   (等同于 `127.0.0.1/index.html`)
 
-  ![image](./Pictures/nginx/static.png)
+  ![image](./Pictures/nginx/static.avif)
 
 - 2.测试: `curl` 命令
 
@@ -211,7 +211,7 @@ sudo nginx -s reload
 ```
 
 - 1.测试: 在浏览器里输入`127.0.0.1/YouPictureName`
-  ![image](./Pictures/nginx/static1.png)
+  ![image](./Pictures/nginx/static1.avif)
 
 - 2.测试: curl 后通过重定向下载
 
@@ -223,11 +223,11 @@ curl 127.0.0.1/YouPictureName > /tmp/YouPictureName.png
 
 - 正向代理:用户可以察觉.(360,火绒等防火墙)
 
-  ![image](./Pictures/nginx/proxy2.png)
+  ![image](./Pictures/nginx/proxy2.avif)
 
 - 反向代理:一般在内网无法察觉(类似于中介)
 
-  ![image](./Pictures/nginx/proxy3.png)
+  ![image](./Pictures/nginx/proxy3.avif)
 
 proxy_pass 指令: 让 **80** 端口代理 **8080** 端口的流量
 
@@ -246,10 +246,10 @@ proxy_pass 指令: 让 **80** 端口代理 **8080** 端口的流量
 ```
 
 - 1.静态主页测试: 在浏览器里输入`127.0.0.1:8080`:
-  ![image](./Pictures/nginx/proxy.png)
+  ![image](./Pictures/nginx/proxy.avif)
 
 - 2.图片测试: 在浏览器里输入`127.0.0.1:8080/YouPictureName.png`:
-  ![image](./Pictures/nginx/proxy1.png)
+  ![image](./Pictures/nginx/proxy1.avif)
 
 ### fastcgi
 
@@ -405,7 +405,7 @@ http {
 - 第 2 行: 浏览器访问 tz.png 图片
 - 第 3 行: curl 访问 主页
 - 第 4 行: curl 访问 tz.png 图片
-  ![image](./Pictures/nginx/access_log.png)
+  ![image](./Pictures/nginx/access_log.avif)
 
 使用 `gzip` 压缩日志，日志将会是**二进制格式**
 
@@ -420,7 +420,7 @@ sudo nginx -s reload
 sudo nginx -s reopen
 ```
 
-![image](./Pictures/nginx/access_log1.png)
+![image](./Pictures/nginx/access_log1.avif)
 可通过 `zcat` 查看
 
 ```sh
@@ -806,7 +806,7 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log  -o /tmp/report.html --
 chrome /tmp/report.html
 ```
 
-![image](./Pictures/nginx/goaccess.png)
+![image](./Pictures/nginx/goaccess.avif)
 
 输出 实时 html 页面:
 
@@ -891,7 +891,7 @@ server {
 - 负载均衡，当业务压力增大时，可能一个 Tomcat 的实例不足以处理，那么这时可以启动多个 Tomcat 实例进行水平扩展，而 Nginx 的负载均衡功能可以把请求通过算法分发到各个不同的实例进行处理
 
 其实 `Tomcat` 只是一个中间件，真正起作用的是已经安装的 `jdk`。
-![image](./Pictures/nginx/1.png)
+![image](./Pictures/nginx/1.avif)
 `tomcat`的配置文件是`xml` 格式
 
 ## 基本命令
@@ -944,7 +944,7 @@ wget http://dl.zrlog.com/release/zrlog.war /usr/share/tomcat7/webapps
 http://127.0.0.1:8080/zrlog/install
 ```
 
-![image](./Pictures/nginx/2.png)
+![image](./Pictures/nginx/2.avif)
 
 ## mysql zrlog
 
@@ -966,7 +966,7 @@ show databases;
 quit
 ```
 
-![image](./Pictures/nginx/3.png)
+![image](./Pictures/nginx/3.avif)
 
 ### nginx 反向代理 tomcat
 

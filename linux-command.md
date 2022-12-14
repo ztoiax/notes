@@ -473,6 +473,9 @@ sed -i 's/a/b/'  FILE
 # 将文件内所有a替换成b
 sed -i 's/a/b/g'  FILE
 
+# 将.webp)为末尾的字符，改为.avif。注意.avif末尾不需要加$
+sed -i 's/.webp)$/.avif)/g'
+
 # 打印第一行和匹配 nginx
 ps aux | sed '1p;/nginx/!d'
 

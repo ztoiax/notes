@@ -47,6 +47,7 @@
     * [whois(查看域名注册信息)](#whois查看域名注册信息)
     * [curl](#curl)
         * [基本命令](#基本命令-2)
+            * [POST PATCH DELETE](#post-patch-delete)
         * [webhook](#webhook)
     * [httpie](#httpie)
     * [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](#testssl测试网站是否支持ssltls以及检测漏洞)
@@ -234,6 +235,13 @@ EOF
 - `ethtool -i eth0`显示`eth0`接口的驱动信息
 - `ethtool -a eth0`显示`eth0`接口的自动协商的详细信息
 - `ethtool -S etho`显示`eth0`接口的状态
+
+```sh
+# 显示eth0的速度
+ethtool eth0
+Settings for eth0:
+    Speed: 10000Mb/s
+```
 
 ## nmcli
 
@@ -589,6 +597,9 @@ hping3 -S www.baidu.com -p 80 -c 1
 
 # 从50端口开始递增，每个端口都发送(扫描)
 hping3 -S www.baidu.com -p ++50
+
+# 模拟SYN flood攻击
+hping3 -S -p 80 --flood 127.0.0.1
 ```
 
 - udp
@@ -611,7 +622,13 @@ hping3 --traceroute -V -1 www.baidu.com
 
 ## mtr
 
-`mtr --report www.baidu.com` trace www.baidu.com
+```sh
+# 查看连接baidu的丢包率，默认用icmp包
+mtr --report www.baidu.com
+
+# 使用udp包
+mtr -u -r www.baidu.com
+```
 
 ## tcpdump
 
@@ -737,6 +754,7 @@ arpwatch -i enp27s0 -f arpwatch.log
 | -l     | LISTEN                |
 | -s     | 查看 TCP/UDP 状态     |
 | -i     | 查看 每个接口的包统计 |
+| -s     |显示网络统计信息       |
 | --unix | unix sockets          |
 
 ### 统计 tcp 数量
@@ -789,12 +807,23 @@ netstat -a -p --unix
 
 > 基本等同于 `netstat` 工作在 `socket` 层,没有 `-n` 选项,因此不能显示域名
 
+| 参数 | 操作                      |
+|------|-----------------------|
+| -l   | listening状态的socket |
+| -t   | 只显示tcp socket      |
+
 ```bash
 # 显示所有 LISTEM 状态 tcp,udp 进程
 ss -tulp
 
 # 显示所有 tcp,udp 进程
 ss -tuap
+
+# 查看ESTABLISHED状态的连接
+ss -tuap state ESTABLISHED
+
+# 查看目标ip的cwnd、rtt、rto等网络参数
+ss -itmpn dst 104.18.3.111
 ```
 
 ## nc
@@ -1065,6 +1094,10 @@ curl -o /dev/null \
 
 # 查看 包含tls的请求过程,和是否支持http2
 curl -vso /dev/null --http2 https://www.bilibili.com
+
+# 范围请求206
+curl http://www.example.com -i -H "Range: bytes=0-50, 100-150"
+curl http://i.imgur.com/z4d4kWk.jpg -i -H "Range: bytes=0-1023"
 ```
 
 - [可以curl的在线服务](https://github.com/chubin/awesome-console-services)
@@ -1078,6 +1111,32 @@ curl ip-api.com
 
 # 查看新冠疫情
 curl https://corona-stats.online
+```
+
+#### POST PATCH DELETE
+
+- `POST`
+
+```sh
+curl -d "param1=value1&param2=value2" -X POST http://localhost:3000/data
+
+# restful 测试
+curl -d "userId=100&title=post test" -X POST 'https://jsonplaceholder.typicode.com/todos'
+
+# post 当前目录下的json文件
+curl -d "@./file.json" -X POST 'https://jsonplaceholder.typicode.com/todos'
+```
+
+- `PATCH`
+
+```sh
+curl -d "title=patch test" -X PATCH 'https://jsonplaceholder.typicode.com/todos/123'
+```
+
+- `DELETE`
+
+```sh
+curl -X DELETE 'https://jsonplaceholder.typicode.com/todos/321'
 ```
 
 ### webhook
@@ -1149,6 +1208,16 @@ h2spec -t -S -h www.bilibili.com -p 443
 ```
 
 ## [wrk: http benchmark](https://github.com/wg/wrk)
+
+| 参数 | 操作     |
+|------|----------|
+| -t   | 线程数   |
+| -c   | 连接数   |
+| -d   | 压测时间 |
+
+```sh
+wrk -t 6 -c 30000 -d 60s https://127.0.0.1:80
+```
 
 ## [wrk2: wrp的变种](https://github.com/giltene/wrk2)
 

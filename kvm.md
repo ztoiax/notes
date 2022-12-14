@@ -28,18 +28,18 @@
 
   - 一次 `VM-EXIT` 代价大(成百上千周期)
 
-    ![image](./Pictures/kvm/guest.jpeg)
+    ![image](./Pictures/kvm/guest.avif)
 
 - EPT: GVA(guest 虚拟地址) -> GPA(guest 物理地址) -> HPA(host 物理地址)
 
   - GVA 通过 CR3 -> GPA 通过 EPT -> HPA
 
   - 在 guest 虚拟机中的 `CR3` 寄存器,只是虚拟机的物理地址,并不是 host 的物理地址
-    ![image](./Pictures/kvm/ept.png)
+    ![image](./Pictures/kvm/ept.avif)
 
 - SR-IOV: PF(单个设备)派生 VF(多个设备),使 I/O 数据传输,绕过 hypervistor
-  ![image](./Pictures/kvm/sr-iov.png)
-  ![image](./Pictures/kvm/sr-iov1.png)
+  ![image](./Pictures/kvm/sr-iov.avif)
+  ![image](./Pictures/kvm/sr-iov1.avif)
 
   查看虚拟化硬件技术的支持:
 
@@ -55,7 +55,7 @@ dmesg | grep kvm-clock
 ```
 
 - kvm-clock
-  ![image](./Pictures/kvm/kvm-clock.png)
+  ![image](./Pictures/kvm/kvm-clock.avif)
 
 - install(安装)
 
@@ -92,7 +92,7 @@ yum install -y qemu kvm libvirt virt-install virt-viewer libguestfs virt-manager
 | vdi                                              | virtualbox 格式               |
 | [sheepdog](https://github.com/sheepdog/sheepdog) | 分布式存储(见下图)            |
 
-![image](./Pictures/kvm/sheepdog.png)
+![image](./Pictures/kvm/sheepdog.avif)
 
 - `qemu-img` 命令不能查看已启动的镜像, 以下为报错信息: 无法获取共享锁
     ```
@@ -186,7 +186,7 @@ grep 'model name' /proc/cpuinfo
 
 - <kbd>ctrl + alt + g</kbd> guest 和 host 之间的切换
 
-  ![image](./Pictures/kvm/qemu-monitor.png)
+  ![image](./Pictures/kvm/qemu-monitor.avif)
 
 ```sh
 # 开启monitor
@@ -278,9 +278,9 @@ fdisk -l
 ```
 
 - virtio_net
-  ![image](./Pictures/kvm/virtio_net.png)
+  ![image](./Pictures/kvm/virtio_net.avif)
 - virtio_blk
-  ![image](./Pictures/kvm/virtio_blk.png)
+  ![image](./Pictures/kvm/virtio_blk.avif)
 
 #### hugepage
 
@@ -416,13 +416,13 @@ virt-manager -c qemu:///system
 > Error connecting to graphical console:
 could not get a reference to type class
 
-![image](./Pictures/kvm/vnc.png)
+![image](./Pictures/kvm/vnc.avif)
 
 - 默认的显示协议是spice协议, 我们可以改为vnc(需要关闭虚拟机)
 
     - 在图形界面修改
 
-    ![image](./Pictures/kvm/vnc1.png)
+    ![image](./Pictures/kvm/vnc1.avif)
 
     - 也可以修改`/etc/libvirt/qemu/`目录下对应的虚拟机xml文件(两者一样)
     ```xml

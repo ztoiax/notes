@@ -23,11 +23,11 @@
 
 ## [ranger](https://github.com/ranger/ranger)
 
-![image](./Pictures/awesomecli/5.png)
+![image](./Pictures/awesomecli/5.avif)
 
 ## [visidata: 支持查看sqlite的文件管理器](https://github.com/saulpw/visidata)
 
-![image](./Pictures/awesomecli/visidata.png)
+![image](./Pictures/awesomecli/visidata.avif)
 
 ## [broot](https://github.com/Canop/broot)
 
@@ -42,14 +42,14 @@ sudo cp nnn /bin/
 # 显示图标
 sudo make O_NERD=1
 ```
-![image](./Pictures/awesomecli/4.png)
+![image](./Pictures/awesomecli/4.avif)
 
 ## [lf: go ranger](https://github.com/gokcehan/lf)
 ## [joshuto: rust ranger](https://github.com/kamiyaa/joshuto)
 ## [mc](https://github.com/MidnightCommander/mc)
 
 支持鼠标操作
-![image](./Pictures/awesomecli/13.png)
+![image](./Pictures/awesomecli/13.avif)
 
 # File
 
@@ -70,7 +70,7 @@ alias cp="advcp -g"
 
 ## [jql: json过滤器](https://github.com/cube2222/jql)
 
-![image](./Pictures/awesomecli/jql.png)
+![image](./Pictures/awesomecli/jql.avif)
 
 ## [jless:json查看器](https://github.com/PaulJuliusMartinez/jless)
 
@@ -166,29 +166,29 @@ gh release list
 
 ### git tui
 
-![image](./Pictures/awesomecli/lazygit.png)
+![image](./Pictures/awesomecli/lazygit.avif)
 
 ## [gitui](https://github.com/extrawurst/gitui)
 
-![image](./Pictures/awesomecli/gitui.png)
+![image](./Pictures/awesomecli/gitui.avif)
 
 ## [bit](https://github.com/chriswalz/bit)
 
 ### instead git
 
-![image](./Pictures/awesomecli/15.png)
+![image](./Pictures/awesomecli/15.avif)
 
 ## [tig](https://github.com/jonas/tig)
 
 ### git log
 
-![image](./Pictures/awesomecli/tig.png)
+![image](./Pictures/awesomecli/tig.avif)
 
 ## [hub](https://hub.github.com/)
 
 ## [forgit](https://github.com/wfxr/forgit)
 
-![image](./Pictures/awesomecli/forgit.png)
+![image](./Pictures/awesomecli/forgit.avif)
 
 # char
 
@@ -198,13 +198,13 @@ gh release list
 
 ### highlight ls
 
-![image](./Pictures/awesomecli/11.png)
+![image](./Pictures/awesomecli/11.avif)
 
 ## [lsd](https://github.com/Peltoche/lsd)
 
 ### highlight ls and support icon
 
-![image](./Pictures/awesomecli/14.png)
+![image](./Pictures/awesomecli/14.avif)
 
 ## [nat](https://github.com/willdoescode/nat)
 
@@ -212,7 +212,7 @@ gh release list
 
 ## [bat](https://github.com/sharkdp/bat)
 
-![image](./Pictures/awesomecli/9.png)
+![image](./Pictures/awesomecli/9.avif)
 
 ### highlight cat
 
@@ -220,7 +220,7 @@ gh release list
 
 ### highlight tree
 
-![image](./Pictures/awesomecli/14.png)
+![image](./Pictures/awesomecli/14.avif)
 
 ## ag
 
@@ -228,7 +228,7 @@ gh release list
 
 ## [fzf](https://github.com/junegunn/fzf)
 
-![image](./Pictures/awesomecli/8.png)
+![image](./Pictures/awesomecli/8.avif)
 ```sh
 # 模糊搜索
 fzf
@@ -242,7 +242,7 @@ fzf -e
 
 ## [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy)
 
-![image](./Pictures/awesomecli/10.png)
+![image](./Pictures/awesomecli/10.avif)
 
 ### highlight git diff
 
@@ -256,7 +256,7 @@ fzf -e
 
 ## [pet](https://github.com/knqyf263/pet)
 
-![image](./Pictures/awesomecli/3.png)
+![image](./Pictures/awesomecli/3.avif)
 
 ### Simple command-line snippet manager
 
@@ -266,7 +266,7 @@ fzf -e
 
 ## [cheat](https://github.com/cheat/cheat)
 
-![image](./Pictures/awesomecli/cheat.png)
+![image](./Pictures/awesomecli/cheat.avif)
 
 ### instead man
 
@@ -274,7 +274,7 @@ fzf -e
 
 ### markdown preview cli version
 
-![image](./Pictures/awesomecli/16.png)
+![image](./Pictures/awesomecli/16.avif)
 
 ## [fx](https://github.com/antonmedv/fx)
 
@@ -315,7 +315,7 @@ ps aux | peco
 
 ## [dfc](https://github.com/Rolinh/dfc)
 
-![image](./Pictures/awesomecli/6.png)
+![image](./Pictures/awesomecli/6.avif)
 
 ### instead df
 
@@ -323,21 +323,21 @@ ps aux | peco
 
 ### instead fdisk
 
-![image](./Pictures/awesomecli/7.png)
+![image](./Pictures/awesomecli/7.avif)
 
 ## [duf](https://github.com/muesli/duf)
 
-![image](./Pictures/awesomecli/2.png)
+![image](./Pictures/awesomecli/2.avif)
 
 ## [ncdu](https://github.com/rofl0r/ncdu)
 
-![image](./Pictures/awesomecli/ncdu.png)
+![image](./Pictures/awesomecli/ncdu.avif)
 
 ## [dust](https://github.com/bootandy/dust)
 
 ### instead du
 
-![image](./Pictures/awesomecli/dust.png)
+![image](./Pictures/awesomecli/dust.avif)
 
 # process
 
@@ -345,7 +345,7 @@ ps aux | peco
 
 ### instead ps
 
-![image](./Pictures/awesomecli/procs.png)
+![image](./Pictures/awesomecli/procs.avif)
 
 ## [pueue(任务管理)](https://github.com/Nukesor/pueue/wiki/Get-started)
 
@@ -355,41 +355,41 @@ ps aux | peco
 
 ## [curlie: instead curl](https://github.com/rs/curlie)
 
-![image](./Pictures/awesomecli/curlie.png)
+![image](./Pictures/awesomecli/curlie.avif)
 
 ## [dog: instead dig](https://github.com/ogham/dog)
 
-![image](./Pictures/awesomecli/dog.png)
+![image](./Pictures/awesomecli/dog.avif)
 
 ## [Termshark: wireshark cli](https://github.com/gcla/termshark)
 
-![image](./Pictures/awesomecli/1.png)
+![image](./Pictures/awesomecli/1.avif)
 
 # 好看的字符
 
 ## [neofetch](https://github.com/dylanaraps/neofetch)
 
-![image](./Pictures/awesomecli/neofetch.png)
+![image](./Pictures/awesomecli/neofetch.avif)
 
 ## [cpufetch](https://github.com/Dr-Noob/cpufetch)
 
-![image](./Pictures/awesomecli/cpufetch.png)
+![image](./Pictures/awesomecli/cpufetch.avif)
 
 ## [figlet](https://github.com/cmatsuoka/figlet)
 
-![image](./Pictures/awesomecli/figlet.png)
+![image](./Pictures/awesomecli/figlet.avif)
 
 ## [cmatrix](https://github.com/abishekvashok/cmatrix)
 
-![image](./Pictures/awesomecli/cmatrix.png)
+![image](./Pictures/awesomecli/cmatrix.avif)
 
 ## [lolcat](https://github.com/busyloop/lolcat)
 
-![image](./Pictures/awesomecli/lolcat.png)
+![image](./Pictures/awesomecli/lolcat.avif)
 
 ## [colorscript](https://gitlab.com/dwt1/shell-color-scripts)
 
-![image](./Pictures/awesomecli/colorscript.png)
+![image](./Pictures/awesomecli/colorscript.avif)
 
 # Social media
 
@@ -398,7 +398,7 @@ ps aux | peco
 
 ## [rtv(reddit cli)](https://github.com/michael-lazar/rtv)
 ## [rainbowstream(twitter)](https://github.com/orakaro/rainbowstream)
-![image](./Pictures/awesomecli/rtv.png)
+![image](./Pictures/awesomecli/rtv.avif)
 
 ## [haxor-news(hacknew)](https://github.com/donnemartin/haxor-news)
 
@@ -410,6 +410,13 @@ svgo file.svg -o newfile.svg
 ```
 
 # 图片工具
+
+## cwebp
+
+```sh
+# png转webp
+cwebp -lossless input.png -o output.webp
+```
 
 ## [image magick: 图片的ffmpeg](https://github.com/ImageMagick/ImageMagick)
 
@@ -459,10 +466,10 @@ convert  -canny 0x1 TSO.png TSO.avif
 - 压缩图片
 ```sh
 # 转换为avif
-magick -quality 75 file.png file.avif 
+magick -quality 75 file.png file.avif
 
 # 压缩效果比上一条要好，但处理更慢
-magick -define heic:speed=2 file.png file.avif 
+magick -define heic:speed=2 file.png file.avif
 ```
 
 - `compare`
@@ -528,7 +535,7 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 
 ## [xonsh: python shell](https://github.com/xonsh/xonsh)
 
-    ![image](./Pictures/awesomecli/xonsh.png)
+    ![image](./Pictures/awesomecli/xonsh.avif)
 
     - [xonsh 插件](https://xon.sh/xontribs.html)
 
@@ -548,15 +555,15 @@ cat test.py | curl -F 'f:1=<-' ix.io
 
 ## [cloc(统计代码)](https://github.com/AlDanial/cloc)
 
-![image](./Pictures/awesomecli/cloc.png)
+![image](./Pictures/awesomecli/cloc.avif)
 
 ## [openrefine: json, csv...网页操作](https://github.com/OpenRefine/OpenRefine)
 
-![image](./Pictures/awesomecli/openrefine.png)
+![image](./Pictures/awesomecli/openrefine.avif)
 
 ## [npkill: 查找和清理node_module](https://github.com/voidcosmos/npkill)
 
-![image](./Pictures/awesomecli/npkill.png)
+![image](./Pictures/awesomecli/npkill.avif)
 
 ## [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](https://github.com/google/zx)
 

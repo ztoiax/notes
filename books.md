@@ -111,12 +111,6 @@
 
 - [《Real World Haskell》 (中文)](http://cnhaskell.com/)
 
-### Javascript
-
-- [《SICP JavaScript 描述》](https://sicp-js.apachecn.org/#/)
-
-- [我零基础独立开发一个 Web/Hybrid 项目的经历](https://imf.ms/web/2022/07/05/my-first-web-hybird-project-experience/)
-
 ### Python
 
 - [《Python 3标准库》(英文)](https://pymotw.com/3/)
@@ -249,6 +243,8 @@
 
 - [《深入理解计算机系统》(CSAPP)](https://hansimov.gitbook.io/csapp/)
 
+- [所有版本的linux源码](https://elixir.bootlin.com/linux/latest/source)
+
 - [《linux-0.12 内核完全剖析》读书笔记及linux-0.12注释源码](https://github.com/yifengyou/linux-0.12)
 
 - [《一个64位操作系统的设计与实现》学习笔记](https://yifengyou.gitbooks.io/the-design-and-implementation-of-a-64-bit-os/content/)
@@ -295,27 +291,50 @@
 
 - [《计算机网络：系统方法》(英文)](https://github.com/SystemsApproach/book)
 
-- [Computer Networking : Principles,Protocols and Practice](https://www.computer-networking.info/#)
+- [《TCP/IP网络编程》(韩-尹圣雨)学习笔记](https://github.com/riba2534/TCP-IP-NetworkNote)
 
-- [dns查询过程](https://jvns.ca/blog/2022/01/11/how-to-find-a-domain-s-authoritative-nameserver/)
+- [Computer Networking : Principles,Protocols and Practice](https://www.computer-networking.info/#)
 
 ## web
 
-- [《ES6 入门教程》](https://es6.ruanyifeng.com/)
-
 - [《深入浅出 Webpack》](http://webpack.wuhaolin.cn/)
+
+- [how web works](https://github.com/vasanthk/how-web-works)
+
+- [Become-A-Full-Stack-Web-Developer: 各种html、css、js...教程](https://github.com/bmorelli25/Become-A-Full-Stack-Web-Developer#learn-html)
+
+- [spellbook-of-modern-webdev](https://github.com/dexteryy/spellbook-of-modern-webdev)
+
+- [objtube的卢克儿的front-end-roadmap](https://objtube.github.io/front-end-roadmap/#/)
+
+    - [objtube的卢克儿的视频：【干货】前端学习路线分享！写了个网站帮助你学习前端！](https://www.bilibili.com/video/BV1ZZ4y1H7rU)
+
+- [我零基础独立开发一个 Web/Hybrid 项目的经历](https://imf.ms/web/2022/07/05/my-first-web-hybird-project-experience/)
+
+### HTML
+
+### CSS
 
 - [css教程](https://github.com/pengfeiw/css-tutorial/tree/master/chapters)
 
 - [css技巧](https://github.com/AllThingsSmitty/css-protips)
 
-- [React技术揭秘](https://react.iamkasong.com/)
+### Javascript
 
-- [how web works](https://github.com/vasanthk/how-web-works)
+- [《SICP JavaScript 描述》](https://sicp-js.apachecn.org/#/)
+
+- [《ES6 入门教程》](https://es6.ruanyifeng.com/)
+
+#### 框架
+
+- [图解React原理系列](https://7kms.github.io/react-illustration-series/)
+
+- [React技术揭秘](https://react.iamkasong.com/)
 
 ## 运维
 
 - [《The AWK Programming Language》](https://github.com/wuzhouhui/awk)
+
 - [运维实践指南](https://billwang139967.gitbooks.io/op_practice_book/content/)
 
 - [《微服务：从设计到部署》](https://docshome.gitbook.io/microservices/)
@@ -353,6 +372,8 @@
 - [Docker + Kubernetes 微服务容器化实践](https://github.com/liuyi01/kubernetes-starter)
 
 - [sdn](https://sdn.feisky.xyz/)
+
+- [《OpenTelemetry 可观测性的未来》](https://lib.jimmysong.io/opentelemetry-obervability/)
 
 ### Devops
 
@@ -431,6 +452,8 @@
 # 其他相似项目
 
 - [CS自学指南](https://csdiy.wiki/)
+
+- [developer-roadmap: 列举前端、后端、devops、各编程语言和框架的学习路线](https://github.com/kamranahmedse/developer-roadmap)
 
 - [Developer Books](https://github.com/7-sevens/Developer-Books)
 

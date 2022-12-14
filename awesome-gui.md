@@ -10,21 +10,21 @@
 
 - [filelight](https://kde.org/applications/en/filelight)
 
-    ![image](./Pictures/awesomegui/filelight.png)
+    ![image](./Pictures/awesomegui/filelight.avif)
 
 - [bleachbit: 清理工具](https://www.bleachbit.org/)
 
-    ![image](./Pictures/awesomegui/bleachbit.png)
+    ![image](./Pictures/awesomegui/bleachbit.avif)
 
 - [stacer](https://github.com/oguzhaninan/Stacer)
 
-    ![image](./Pictures/awesomegui/stacer.png)
+    ![image](./Pictures/awesomegui/stacer.avif)
 
-- [timeshif: backup](https://github.com/teejee2008/timeshift.png)
+- [timeshif: backup](https://github.com/teejee2008/timeshift.avif)
 
 - [typora](https://www.typora.io/)
 
-    ![image](./Pictures/awesomegui/typora.png)
+    ![image](./Pictures/awesomegui/typora.avif)
 
 - [sioyek: pdf阅读器](https://github.com/ahrm/sioyek)
 
@@ -43,6 +43,8 @@
 - [ToDesk(手机电脑投屏幕)](https://github.com/ji4ozhu/ToDesk)
 
 - [sunloginclient(向日葵运程控制gui版)](https://sunlogin.oray.com/download)
+
+- [keynav：键盘控制鼠标](https://github.com/jordansissel/keynav)
 
 # 其他项目
 

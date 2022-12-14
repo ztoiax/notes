@@ -105,7 +105,7 @@ uname -a
 
 ### [Kernel compression mode (内核压缩算法)](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/Kconfig?id=aefcf2f4b58155d27340ba5f9ddbe9513da8286d#n200)
 
-![image](./Pictures/kernel/compression.png)
+![image](./Pictures/kernel/compression.avif)
 
 - 压缩速度只影响编译内核
 - 解压速度只影响每次开机
@@ -127,7 +127,7 @@ uname -a
 
 ### [preemption model (线程抢占模型)](https://devarea.com/understanding-linux-kernel-preemption/)
 
-![image](./Pictures/kernel/preemption.png)
+![image](./Pictures/kernel/preemption.avif)
 
 1.如果是服务器选择不强制抢占,减少切换上下文
 

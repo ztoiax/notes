@@ -39,7 +39,7 @@ www.123.123/12312 adfasdf
 egrep '((http|https)://|www\.)' lstest #your file name
 ```
 
-![image](./Pictures/dmenu/1.png)
+![image](./Pictures/dmenu/1.avif)
 
 ### Get url tail
 
@@ -47,7 +47,7 @@ egrep '((http|https)://|www\.)' lstest #your file name
 egrep '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 ```
 
-![image](./Pictures/dmenu/2.png)
+![image](./Pictures/dmenu/2.avif)
 
 ### -o cut
 
@@ -55,7 +55,7 @@ egrep '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 egrep -o '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
 ```
 
-![image](./Pictures/dmenu/3.png)
+![image](./Pictures/dmenu/3.avif)
 
 ### 获取上一条命令所输出的网址,并用浏览器打开
 
@@ -80,7 +80,7 @@ dir="bin|boot|dev|etc|home|lib|lib64|lost+found|mnt|opt|proc|root|run|sbin|srv|s
 egrep -o "/($dir)/[a-zA-Z0-9/.]*" lstest
 ```
 
-![image](./Pictures/dmenu/5.png)
+![image](./Pictures/dmenu/5.avif)
 
 ### Copy the path in the same way
 

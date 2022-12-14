@@ -58,7 +58,7 @@ egrep '\<[a-zA-Z]+\>' latest
 egrep '\<the +the\>' latest
 ```
 
-![image](./Pictures/regex/word.png)
+![image](./Pictures/regex/word.avif)
 
 ### `\1` 反向引用,等同于前一个字符序列(结果和上面的 the 一样)
 
@@ -66,7 +66,7 @@ egrep '\<the +the\>' latest
 egrep '\<([a-zA-Z]+) + \1\>' latest
 ```
 
-![image](./Pictures/regex/refer.png)
+![image](./Pictures/regex/refer.avif)
 
 ### `?` `*` `+` 表示前面的元素的数量(包含 `()` `[]` )
 
@@ -78,7 +78,7 @@ egrep  'b[aid]+u' latest
 egrep  'b(aid|hello)+u' latest
 ```
 
-![image](./Pictures/regex/+.png)
+![image](./Pictures/regex/+.avif)
 
 匹配美元: `$123.123`
 
@@ -92,7 +92,7 @@ egrep  '\$[0-9]+(\.[0-9]*)?' latest
 egrep  '(1[12]|[0-9]):[0-5][0-9] (am|pm)' latest
 ```
 
-![image](./Pictures/regex/time.png)
+![image](./Pictures/regex/time.avif)
 
 匹配时间: `23:30`
 
@@ -164,7 +164,7 @@ ip a | rga -o '([\d]{1,3}\.){3}[\d]{3}'
 ip a | rga -o '\b((1[\d][\d]|2[0-5][0-5]|[\d][\d]|[\d])\.){3}(1[\d][\d]|2[0-5][0-5]|[\d])\b'
 ```
 
-![image](./Pictures/regex/ip.png)
+![image](./Pictures/regex/ip.avif)
 
 # reference
 

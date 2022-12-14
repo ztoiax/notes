@@ -33,7 +33,6 @@
     * [iperf3](#iperf3)
     * [masscan](#masscan)
     * [iftop](#iftop)
-    * [mtr](#mtr)
     * [nethogs](#nethogs)
     * [bmon](#bmon)
     * [speedometer](#speedometer)
@@ -110,7 +109,7 @@
 # 基本说明
 
 image from brendangregg:
-![image](./Pictures/benchmark/benchmark-base.png)
+![image](./Pictures/benchmark/benchmark-base.avif)
 
 data from brendangregg book: [Systems Performance](http://www.brendangregg.com/systems-performance-2nd-edition-book.html)
 
@@ -229,7 +228,7 @@ dstat -d -D sda1
 ## sar(sysstat)
 
 image from brendangregg:
-![image](./Pictures/benchmark/benchmark-sar.png)
+![image](./Pictures/benchmark/benchmark-sar.avif)
 
 | 参数 | 操作           |
 | ---- | -------------- |
@@ -302,6 +301,14 @@ sar -P ALL 1 | tail -n+3 | awk '$NF<10 {print $0}'
 sar -I ALL 1 10
 ```
 
+- network
+
+```sh
+# 查看每秒收发包的情况（txkB/s是指当前每秒发送的字节（byte）总数，rxkB/s是指每秒接收的字节（byte）总数）
+sar -n DEV 1
+```
+
+
 ## sadf(sysstat)
 
 多种方式显示 sar 数据
@@ -315,7 +322,7 @@ sadf -g > test.svg
 
 ## nmon
 
-![image](./Pictures/benchmark/nmon.png)
+![image](./Pictures/benchmark/nmon.avif)
 
 ## sysbench
 
@@ -329,7 +336,7 @@ sysbench --test=fileio --file-total-size=5G prepare
 
 ## [below](https://github.com/facebookincubator/below)
 
-![image](./Pictures/benchmark/below.png)
+![image](./Pictures/benchmark/below.avif)
 
 ## [tiptop](https://github.com/nschloe/tiptop)
 
@@ -351,7 +358,7 @@ sysbench --test=fileio --file-total-size=5G prepare
 | lstopo       | 如下图            |
 
 lstopo:
-![image](./Pictures/benchmark/lstopo.png)
+![image](./Pictures/benchmark/lstopo.avif)
 
 | 硬件技术 | 内容                                                                                                     |
 | -------- | -------------------------------------------------------------------------------------------------------- |
@@ -612,6 +619,9 @@ iperf3 -s
 
 ```bash
 iperf3 -c
+
+# 选择bbr拥塞算法
+iperf3 -C bbr -c 127.0.0.1:5201
 ```
 
 ## [masscan](https://github.com/robertdavidgraham/masscan)
@@ -629,30 +639,26 @@ masscan -c /tmp/xxx.conf --rate 1000
 
 ## iftop
 
-![image](./Pictures/benchmark/iftop.png)
-
-## [mtr](https://mp.weixin.qq.com/s?__biz=MzAxODI5ODMwOA==&mid=2666545753&idx=1&sn=2bf5b7f1c814371335a5f1b51798f3c7&chksm=80dc86f2b7ab0fe4cb14bdc1d1285ddff878c3a1355a1f469a21c3a7148b24d1f0b608bbd148&scene=21#wechat_redirect)
-
-![image](./Pictures/benchmark/mtr.png)
+![image](./Pictures/benchmark/iftop.avif)
 
 ## nethogs
 
-![image](./Pictures/benchmark/1.png)
+![image](./Pictures/benchmark/1.avif)
 
 ## bmon
 
-![image](./Pictures/benchmark/3.png)
+![image](./Pictures/benchmark/3.avif)
 
 ## speedometer
 
 **useage** `speedometer -rx eth0`
-![image](./Pictures/benchmark/4.png)
+![image](./Pictures/benchmark/4.avif)
 
 ## [httpstat](https://github.com/reorx/httpstat)
 
 [使用教程](https://linux.cn/article-8039-1.html)
 
-![image](./Pictures/benchmark/httpstat.png)
+![image](./Pictures/benchmark/httpstat.avif)
 
 ## [bandwhich: tui](https://github.com/imsnif/bandwhich)
 
@@ -991,13 +997,13 @@ sudo agedu -s / --exclude "*" --include "*.conf"
 agedu -w
 ```
 
-![image](./Pictures/benchmark/2.png)
+![image](./Pictures/benchmark/2.avif)
 
 # Process
 
 ## [htop](https://github.com/hishamhm/htop)
 
-![image](./Pictures/benchmark/htop.png)
+![image](./Pictures/benchmark/htop.avif)
 
 ## [bpytop](https://github.com/aristocratos/bpytop)
 
@@ -1009,7 +1015,7 @@ agedu -w
 
 ## [bottom](https://github.com/ClementTsang/bottom)
 
-![image](./Pictures/benchmark/bottom.png)
+![image](./Pictures/benchmark/bottom.avif)
 
 ## [Procmon](https://github.com/Sysinternals/ProcMon-for-Linux)
 
@@ -1023,7 +1029,7 @@ agedu -w
 
 > 监控单个进程的 CPU,MEM,I/O,上下文切换
 
-![image](./Pictures/benchmark/bpytop.png)
+![image](./Pictures/benchmark/bpytop.avif)
 
 ```bash
 # 每秒输出
@@ -1100,7 +1106,7 @@ pidstat -w -C nvim 1
 sudo bootchartd
 ```
 
-![image](./Pictures/benchmark/5.png)
+![image](./Pictures/benchmark/5.avif)
 
 # Special file system
 
@@ -1246,15 +1252,15 @@ nvidia-smi pmon -i 0 -s u -o T
 
 ## [nvtop](https://github.com/Syllo/nvtop)
 
-![image](./Pictures/benchmark/nvtop.png)
+![image](./Pictures/benchmark/nvtop.avif)
 
 ## [gpustat](https://github.com/wookayin/gpustat)
 
-![image](./Pictures/benchmark/gpustat.png)
+![image](./Pictures/benchmark/gpustat.avif)
 
 ## [gmonitor](https://github.com/mountassir/gmonitor)
 
-![image](./Pictures/benchmark/gmonitor.png)
+![image](./Pictures/benchmark/gmonitor.avif)
 
 # Debug
 
@@ -1336,7 +1342,7 @@ strace -o file ls
 - 火焰图
 - 太阳图
 
-![image](./Pictures/benchmark/perf_vs_bpf.png)
+![image](./Pictures/benchmark/perf_vs_bpf.avif)
 
 bcc 安装后加入`$PATH`:
 
@@ -1376,7 +1382,7 @@ stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
 ## [perf-tool](http://www.brendangregg.com/perf.html)
 
 查看追踪点(image from brendangregg):
-![image](./Pictures/benchmark/perf_events_map.png)
+![image](./Pictures/benchmark/perf_events_map.avif)
 
 from brendangregg:
 
@@ -1621,7 +1627,7 @@ perf trace ls
 
 ## enhance pstree (进程树)
 
-![image](./Pictures/benchmark/pstree.png)
+![image](./Pictures/benchmark/pstree.avif)
 
 - [Colony Graphs: Visualizing the Cloud](http://www.brendangregg.com/ColonyGraphs/cloud.html#Implementation)
 
