@@ -8,4 +8,6 @@
 
 ## [pinginfoview](https://www.nirsoft.net/utils/multiple_ping_tool.html)
 
+## [Microsoft-Activation-Scripts（windows激活，类似于kms）](https://github.com/massgravel/Microsoft-Activation-Scripts)
+
 # [Sysinternals(windows internal作者写的工具套件)](https://docs.microsoft.com/en-us/sysinternals/)

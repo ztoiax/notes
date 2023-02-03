@@ -17,6 +17,8 @@
     - 幂等性：`GET`、`DELETE`
     - 缓存性：`GET`、`POST`、`PATCH`
 
+- [小林coding：HTTP 常见面试题](https://www.xiaolincoding.com/network/2_http/http_interview.html)
+
 - [腾讯技术工程：了解 HTTP 看这一篇就够](https://cloud.tencent.com/developer/article/2083715)
 
 - [陶辉：HTTP性能极限优化](https://www.taohui.tech/2020/01/08/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/http%E6%80%A7%E8%83%BD%E6%9E%81%E9%99%90%E4%BC%98%E5%8C%96/)
@@ -58,6 +60,12 @@
 
     - `304 Not Modified`：它用于 `If-Modified-Since` 和`If-None-Match` 请求，表示资源未修改，用于缓存控制。它不具有通常的跳转含义，但可以理解成“重定向已到缓存的文件”（即“缓存重定向”）。
 
+- `4××`：
+
+    - `400 Bad Request`：表示客户端请求的报文有错误，但只是个笼统的错误。
+
+    - `403 Forbidden`：表示服务器禁止访问资源，并不是客户端的请求出错。
+
 #### Cache
 
 - [腾讯技术工程：彻底弄懂浏览器缓存策略](https://cloud.tencent.com/developer/article/1660735)
@@ -87,6 +95,8 @@
 - `ETag`(Response Header)与`If-None-Match`(Request Header)是一对报文头：
 
     - 一致时返回不带实体的304，不然就是带有所请求资源实体的200响应
+
+    ![image](./Pictures/net-kernel/http_cache_etag.avif)
 
 - `ETag` 和 `Last-Modified`同时存在优先使用`ETag`
 
@@ -162,7 +172,41 @@
 
 - [李银城：从Chrome源码看HTTP/2](https://zhuanlan.zhihu.com/p/34662800)
 
-![image](./Pictures/net-kernel/http2_vs_http1.1.avif)
+- [小林coding：HTTP/2 牛逼在哪？](https://www.xiaolincoding.com/network/2_http/http2.html)
+
+- 全面采用二进制：收到报文后，无需再将明文的报文转成二进制，而是直接解析二进制报文
+
+- Frame header：
+
+    ![image](./Pictures/net-kernel/http2_header.avif)
+
+    - Frame有多种类型
+
+        ![image](./Pictures/net-kernel/http2_frame-type.avif)
+
+    - 帧数据：存放HPACK 算法压缩后的 HTTP 头部和包体
+
+
+- 1个stream可以包含多个message；1个message可以包含多个Frame
+
+    ![image](./Pictures/net-kernel/http2_stream.avif)
+
+- 多路服用：
+
+    ![image](./Pictures/net-kernel/http2_vs_http1.1.avif)
+
+- 服务器推送：客户端在访问 HTML 时，服务器可以直接主动推送 CSS 文件，减少了消息传递的次数
+
+    - client的请求使用的是奇数号 Stream；server主动的推送，使用的是偶数号 Stream，并使用 `PUSH_PROMISE` 帧传输 HTTP 头部，并通过帧中的 `Promised Stream ID` 字段告知客户端，接下来会在哪个偶数号 Stream 中发送包体。
+
+    ![image](./Pictures/net-kernel/http2_serverpush.avif)
+
+    ```nginx
+    # nginx配置：客户端访问 /test.html 时，服务器直接推送 /test.css
+    location /test.html {
+        http2_push /test.css;
+    }
+    ```
 
 ##### HPACK（头部压缩）
 
@@ -257,19 +301,51 @@
     ![image](./Pictures/net-kernel/quic_window-stream1.avif)
 
 - Connection 流量控制：所有 Stream 窗口相加的总字节数
+
     ![image](./Pictures/net-kernel/quic_window-connection.avif)
 
 - 拥塞控制：默认使用了Cubic
 
     - QUIC 处于应用层：可以针对不同的应用设置不同的拥塞控制算法；升级算法不像tcp那样需要更新内核。
 
-#### 合并请求 vs 并行请求
+#### HTTP优化
+
+- 代理服务器减少http重定向请求：
+
+    优化前：
+    ![image](./Pictures/net-kernel/http_optimization_requests.avif)
+
+    重定向由代理服务器完成：
+    ![image](./Pictures/net-kernel/http_optimization_requests1.avif)
+
+    代理服务器制定好重定向规则：
+    ![image](./Pictures/net-kernel/http_optimization_requests2.avif)
+
+#### 合并请求
+
+- 多个图片合并为一张雪碧图：
+
+    ![image](./Pictures/net-kernel/http_sprite-image.avif)
+
+    - 问题：无法使用`hover`（鼠标悬浮）功能
+
+- `webpack` 等打包工具将 js、css 等资源合并打包成大文件
+
+- 将图片的二进制数据用 `base64` 编码后，以 URL 的形式嵌入到 HTML 文件`<image src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPoAAAFKCAIAAAC7M9WrAAAACXBIWXMAA ... /> `
+
+##### 合并请求 vs 并行请求
 
 - [《React进阶之路》作者：合并HTTP请求 vs 并行HTTP请求，到底谁更快？](https://segmentfault.com/a/1190000015665465)
 
 - [腾讯技术工程：HTTP 请求之合并与拆分技术详解](https://cloud.tencent.com/developer/article/1837260)
 
     - 拆分的多个小请求耗时仍大于合并的请求
+
+### RPC
+
+- [小林coding：既然有 HTTP 协议，为什么还要有 RPC？](https://www.xiaolincoding.com/network/2_http/http_rpc.html)
+
+    - gRPC底层用的是HTTP2
 
 ### WebSocket
 
@@ -282,6 +358,23 @@
     - 全双工：服务端可以主动向客户端发送数据；不像http客户端发送request，服务端response
 
     - 不需要发送http header
+
+- [小林coding：既然有 HTTP 协议，为什么还要有 WebSocket？](https://www.xiaolincoding.com/network/2_http/http_websocket.html)
+
+    - http轮询：
+
+        - 网页的前端代码里不断定时发 HTTP 请求到服务器，服务器收到请求后给客户端响应消息
+
+            - 例子：扫码登录。前端网页根本不知道用户扫没扫，于是不断去向后端服务器询问，看有没有人扫过这个码。
+
+                - 点击[微信公众号官网](https://mp.weixin.qq.com/)，打开F12会发现每隔2秒发送一次请求
+
+
+    - http长轮询：
+
+        - 相比前者可以减少请求次数。每隔30秒，在这 30 秒内只要服务器收到了扫码请求，就立马返回给客户端网页。
+
+            - 例子：百度网盘的扫码登陆
 
 ### DNS
 
@@ -301,13 +394,7 @@
 
 - 最常用的配置是`passive`。如果是`active`防火墙起不到保护作用。
 
-### 数字签名和数字证书
-
-- [ruanyifeng：数字签名是什么？](https://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html)
-
-- 数字签名：的原理其实很简单，就是把公钥私钥的用法反过来，之前是公钥加密、私钥解密，现在是私钥加密、公钥解密。但又因为非对称加密效率太低，所以私钥只加密原文的摘要，这样运算量就小的多，而且得到的数字签名也很小，方便保管和传输。
-
-- 数字证书和CA：因为公钥是任何人都可以发布的，所以我们需要引入第三方来保证公钥的可信度，这个“第三方”就是我们常说的 CA（Certificate Authority，证书认证机构）。小一点的 CA 可以让大 CA 签名认证，但链条的最后，也就是 Root CA
+## 表示层
 
 ### 密钥算法
 
@@ -321,25 +408,105 @@
 
 - [视频：公钥加密技术ECC椭圆曲线加密算法原理](https://www.bilibili.com/video/BV1BY411M74G)
 
-## tls（表示层）
+    ```nginx
+    # 在nginx上选择最快的 x25519 椭圆曲线
+    ssl_ecdh_curve X25519:secp384r1;
+    ```
+
+- AES
+
+    ```sh
+    # 查看cpu是否支持AES指令集
+    grep module /proc/crypto | grep aes
+    ```
+
+    ```nginx
+    # nginx选用 AES_128_GCM，它比 AES_256_GCM 快一些
+    ssl_ecdh_curve 'EECDH+ECDSA+AES128+SHA:RSA+AES128+SHA';
+    ```
+
+### 数字签名和数字证书
+
+- [ruanyifeng：数字签名是什么？](https://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html)
+
+- 数字签名：的原理其实很简单，就是把公钥私钥的用法反过来，之前是公钥加密、私钥解密，现在是私钥加密、公钥解密。但又因为非对称加密效率太低，所以私钥只加密原文的hash值，这样运算量就小的多，而且得到的数字签名也很小，方便保管和传输。
+
+    ![image](./Pictures/net-kernel/http_digital.avif)
+
+- 数字证书和CA：因为公钥是任何人都可以发布的，所以我们需要引入第三方来保证公钥的可信度，这个“第三方”就是我们常说的 CA（Certificate Authority，证书认证机构）。小一点的 CA 可以让大 CA 签名认证，但链条的最后，也就是 Root CA
+
+    ![image](./Pictures/net-kernel/http_certificate.avif)
+    ![image](./Pictures/net-kernel/http_certificate1.avif)
+
+    - 1.首先 CA 会把持有者的公钥、用途、颁发者、有效时间等信息打成一个包，然后对这些信息进行 Hash 计算，得到一个 Hash 值；
+
+    - 2.然后 CA 会使用自己的私钥将该 Hash 值加密，生成 Certificate Signature，也就是 CA 对证书做了签名；
+
+- 证书验证：
+
+    - 服务器会在 TLS 握手过程中，把自己的证书发给客户端，以此证明自己身份是可信的。
+
+        - OCSP Stapling：服务器向 CA 周期性地查询证书状态，获得一个带有时间戳和签名的响应结果并缓存它。当有客户端发起连接请求时，服务器会把这个「响应结果」在 TLS 握手过程中发给客户端。由于有签名的存在，服务器无法篡改，因此客户端就能得知证书是否已被吊销了，这样客户端就不需要再去查询。
+
+    - 服务器的证书应该选择椭圆曲线（ECDSA）证书，而不是 RSA 证书，因为在相同安全强度下， ECC 密钥长度比 RSA 短的多
+
+### tls
 
 - [技术蛋老师视频：HTTPS是什么？加密原理和证书。SSL/TLS握手过程](https://www.bilibili.com/video/BV1KY411x7Jp)
 
 - [李银城：https连接的前几毫秒发生了什么](https://www.rrfed.com/2017/02/03/https/)
 
-- [交互式解释tls1.3每个步骤](https://tls13.xargs.org/)
-
 ![image](./Pictures/net-kernel/tls_history.avif)
 
-tls1.2：
-![image](./Pictures/net-kernel/tls1.2.avif)
+- tls分为握手协议和记录协议：
 
-tls1.3：
-![image](./Pictures/net-kernel/tls1.3.avif)
+    握手协议：
+    ![image](./Pictures/net-kernel/tls_handshake-protocol.avif)
 
-- tls1.2的问题：FREAK中间人攻击
+    记录协议：
+    ![image](./Pictures/net-kernel/tls_record-protocol.avif)
 
-    ![image](./Pictures/net-kernel/tls1.2_freak.avif)
+- tls1.2：四次握手
+
+    - [小林coding：HTTPS RSA 握手解析](https://www.xiaolincoding.com/network/2_http/https_rsa.html#tls-%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B)
+
+    ![image](./Pictures/net-kernel/tls1.2.avif)
+    ![image](./Pictures/net-kernel/tls1.2_wireshark.avif)
+
+- tls1.3：三次握手。废除了不支持前向安全性的 RSA 和 DH 算法，只支持 ECDHE 算法。
+
+    - [交互式解释tls1.3每个步骤](https://tls13.xargs.org/)
+
+    ![image](./Pictures/net-kernel/tls1.3.avif)
+    ![image](./Pictures/net-kernel/tls1.2_vs_tls1.3.avif)
+
+- 中间人攻击：前提是用户点击接受了中间人服务器的证书。
+
+    ![image](./Pictures/net-kernel/https_middle_attack.avif)
+
+    - 中间人会发送自己的公钥证书给客户端，客户端验证证书的真伪，然后从证书拿到公钥，并生成一个随机数，用公钥加密随机数发送给中间人，中间人使用私钥解密，得到随机数，此时双方都有随机数，然后通过算法生成对称加密密钥（A），后续客户端与中间人通信就用这个对称加密密钥来加密数据了。
+
+    - 抓包工具就是中间人，需要在客户端安装 Fiddler 的根证书。而这个证书会被浏览器信任，也就是抓包工具给自己创建了一个认证中心 CA
+
+- 双向认证：不仅客户端会验证服务端的身份，而且服务端也会验证客户端的身份
+
+    ![image](./Pictures/net-kernel/http_two-authentication.avif)
+
+#### Session
+
+- Session ID：
+
+    - 首次 TLS 握手连接后，双方会在内存缓存会话密钥，并用唯一的 Session ID 来标识。再次连接时，hello 消息里会带上 Session ID，服务器收到后就会从内存找，如果找到就直接用该会话密钥恢复会话状态
+
+    - 缺点：
+
+        - 随着客户端的增多，服务器的内存压力也会越大
+
+        - 多台服务器通过负载均衡提供服务时，客户端再次连接不一定会命中上次访问过的服务器，于是还要走完整的 TLS 握手过程
+
+- Session Ticket：服务器不再缓存每个客户端的会话密钥，而是把缓存的工作交给了客户端，类似于 HTTP 的 Cookie
+
+- 重放攻击：如果中间人截获了某个客户端的 Session ID 或 Session Ticket 以及 POST 报文，而一般 POST 请求会改变数据库的数据，中间人就可以利用此截获的报文，不断向服务器发送该报文，这样就会导致数据库的数据被中间人改变了。因此需要对会话密钥设定一个合理的过期时间。
 
 ## Session layer（会话层）
 

@@ -84,6 +84,8 @@
 
 - [《Rust 程序设计语言》](https://kaisery.github.io/trpl-zh-cn/)
 
+- [google rust教程](https://google.github.io/comprehensive-rust/)
+
 - [Rust语言圣经](https://book.rust.team/)
 
 - [《数据结构与算法Rust语言描述》](https://github.com/QMHTMY/RustBook/tree/main/books)
@@ -139,10 +141,6 @@
 
 - [CPython-Internals](https://github.com/zpoint/CPython-Internals/blob/master/README_CN.md)
 
-- [flask/sanic/asyncio/bottle/webpy 源码阅读注释合集](https://github.com/hhstore/annotated-py-projects)
-
-- [The Flask Mega-Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
-
 - [Annotated Algorithms in Python (3.8)(英文)](https://github.com/mdipierro/nlib)
 
 - [PegasusWang: Python/Golang Web 入坑指南](https://python-web-guide.readthedocs.io/zh/latest/index.html)
@@ -154,6 +152,14 @@
 - [《Think DSP: Digital Signal Processing in Python》](https://greenteapress.com/thinkdsp/html/index.html)
 
 - [Python Design Patterns](https://python-patterns.guide/)
+
+#### 框架
+
+- [flask/sanic/asyncio/bottle/webpy 源码阅读注释合集](https://github.com/hhstore/annotated-py-projects)
+
+- [The Flask Mega-Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+
+- [Django-Styleguide](https://github.com/HackSoftware/Django-Styleguide)
 
 ### Lua
 
@@ -172,6 +178,8 @@
 - [《算法新解》](https://github.com/liuxinyu95/AlgoXY)
 
 - [《复杂性思考》(英文)](https://www.greenteapress.com/compmod/html/index.html)
+
+- [GitHub最大的开源算法库](https://the-algorithms.com/zh_Hans)
 
 - [多种编程语言实现 LeetCode、《剑指 Offer（第 2 版）》、《程序员面试金典（第 6 版）》题解](https://doocs.github.io/leetcode/#/)
 
@@ -315,6 +323,8 @@
 
 ### CSS
 
+- [Chrome 团队制作的 CSS 教程](https://web.dev/learn/css/)
+
 - [css教程](https://github.com/pengfeiw/css-tutorial/tree/master/chapters)
 
 - [css技巧](https://github.com/AllThingsSmitty/css-protips)
@@ -401,7 +411,11 @@
 
 - [《Machine Learning Yearning》(中文)](https://deeplearning-ai.github.io/machine-learning-yearning-cn/)
 
+- [Machine Learning University (MLU)可视化机器学习](https://mlu-explain.github.io/)
+
 - [Markov Chains(马尔可夫链)](https://setosa.io/blog/2014/07/26/markov-chains/)
+
+- [《Paradigms of Artificial Intelligence Programming》书籍以及lisp代码](https://github.com/norvig/paip-lisp)
 
 ## 文档
 

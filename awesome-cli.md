@@ -646,6 +646,29 @@ SELECT * FROM users;
 SELECT * FROM processes;
 ```
 
+## [firejail：沙箱运行](https://github.com/netblue30/firejail)
+
+- 默认会让chrome沙箱运行，保存文件到home目录，可能会有问题
+
+## screen：虚拟终端
+
+- [腾云先锋团队：Linux终端命令神器--Screen命令详解。助力Linux使用和管理](https://cloud.tencent.com/developer/article/1844735)
+
+```sh
+# 查看虚拟终端
+screen -ls
+
+# 创建
+screen -R name
+
+# 创建后按Ctril+a，返回主终端
+
+# 返回
+screen -r pid/name
+
+# 退出终端
+exit
+```
 
 # reference
 

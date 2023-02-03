@@ -17,6 +17,8 @@
 * [git-extras](#git-extras)
 * [pre-commit](#pre-commit)
 * [sapling(facebook的版本控制工具兼容git)](#saplingfacebook的版本控制工具兼容git)
+* [git-sim（可视化git）](#git-sim可视化git)
+* [commitgpt（ai自动生成git commit）](#commitgptai自动生成git-commit)
 * [github](#github)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
@@ -348,6 +350,10 @@ git commit -m "..."
 ```
 
 # [sapling(facebook的版本控制工具兼容git)](https://sapling-scm.com/docs/introduction/)
+
+# [git-sim（可视化git）](https://github.com/initialcommit-com/git-sim)
+
+# [commitgpt（ai自动生成git commit）](https://zura.wiki/post/never-write-a-commit-message-again-with-the-help-of-gpt-3/)
 
 # github
 

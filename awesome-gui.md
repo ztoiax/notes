@@ -1,6 +1,9 @@
 <!-- vim-markdown-toc GFM -->
 
 * [file](#file)
+* [image viewer(图片查看器)](#image-viewer图片查看器)
+    * [qt](#qt)
+    * [gtk](#gtk)
 * [other](#other)
 * [其他项目](#其他项目)
 
@@ -30,11 +33,23 @@
 
 - [zathura: pdf, epub阅读器](https://github.com/pwmt/zathura)
 
-- [nomacs(图片查看器)](https://github.com/nomacs/nomacs)
-
 - pcmanfm(文件管理器)
 
 - [aliyunpan(阿里云盘)](https://github.com/liupan1890/aliyunpan)
+
+# image viewer(图片查看器)
+
+## qt
+
+- [qt-avif-image-plugin（avif格式支持）](https://github.com/novomesk/qt-avif-image-plugin)
+
+- [nomacs](https://github.com/nomacs/nomacs)
+
+- [qview](https://github.com/jurplel/qView)
+
+## gtk
+
+- [gthumb](https://github.com/GNOME/gthumb)
 
 # other
 
@@ -45,6 +60,8 @@
 - [sunloginclient(向日葵运程控制gui版)](https://sunlogin.oray.com/download)
 
 - [keynav：键盘控制鼠标](https://github.com/jordansissel/keynav)
+
+- [qv2ray](https://github.com/Qv2ray/Qv2ray)
 
 # 其他项目
 

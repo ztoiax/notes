@@ -483,6 +483,18 @@ ps aux | sed '1p;/nginx/!d'
 date +%H:%M:%S:%P | sed -e 's/pm/下午/g' -e's/am/上午/g'
 ```
 
+```sh
+# 当前目录下的以.webp)等为末尾的字符，改为.avif。注意.avif末尾不需要加$
+for file in *;do
+    if [ -f $file ];then
+        sed -i 's/.png)$/.avif)/g' $file
+        sed -i 's/.jpg)$/.avif)/g' $file
+        sed -i 's/.jpeg)$/.avif)/g' $file
+        sed -i 's/.webp)$/.avif)/g' $file
+    fi
+done
+```
+
 ### awk
 
 - [awk 中文指南](https://awk.readthedocs.io/en/latest/index.html)
@@ -1242,6 +1254,9 @@ ffmpeg -i input.mp4 -vf scale=480:-1 output.mp4
 ffmpeg -i input.mp4 -vf "transpose=1" output.mp4
 # 旋转180度顺时针
 ffmpeg -i input.mp4 -vf "transpose=1,transpose=1" output.mp4
+
+# 旋转270度，但不改变编码
+ffmpeg -i input.mp4 -map_metadata 0 -metadata:s:v rotate="270" -codec copy output.mp4
 ```
 
 #### 音频操作

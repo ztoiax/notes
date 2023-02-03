@@ -19,6 +19,8 @@
 
         ![image](./Pictures/web/chromium-arch.avif)
 
+    [腾讯云开发者：揭秘字节码到像素的一生！Chromium 渲染流水线](https://cloud.tencent.com/developer/article/2187276)
+
     - [objtube的卢克儿视频：【干货】浏览器是如何运作的？](https://www.bilibili.com/video/BV1x54y1B7RE)
 
         > 主要基于Inside look at modern web browser讲解，还有其他技术文档
@@ -86,6 +88,8 @@
 ```
 
 # CSS
+
+- [Chrome 团队制作的 CSS 教程](https://web.dev/learn/css/)
 
 - [How to create high-performance CSS animations](https://web.dev/animations-guide/)
 

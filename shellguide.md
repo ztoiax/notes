@@ -157,7 +157,9 @@ done
 
 ```sh
 for file in *;do
-    echo $file
+    if [ -f $file ];then
+        echo $file
+    fi
 done
 ```
 
@@ -165,7 +167,9 @@ done
 
 ```sh
 for file in d*;do
-    echo $file
+    if [ -f $file ];then
+        echo $file
+    fi
 done
 
 # 通过参数1指定字符

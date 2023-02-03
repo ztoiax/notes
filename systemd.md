@@ -333,6 +333,7 @@ kvm 是因为存储池里有之前临时挂载 vm，现在没有挂载也就读�
 解决办法取消存储池错误的 vm 即可
 
 # referece
+- [systemd教程和在线测试](https://systemd-by-example.com/)
 
 - [ruanyif](http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html)
 - [linux china](https://linux.cn/article-4505-1.html)
