@@ -363,6 +363,8 @@
 
 - [ruanyf: Bash脚本教程](https://wangdoc.com/bash/intro.html)
 
+- [《英雄联盟》在线服务运维之道](https://www.infoq.cn/minibook/running-online-services-riot)
+
 ### cloud
 
 - [《Docker — 从入门到实践》](https://vuepress.mirror.docker-practice.com/)
@@ -424,6 +426,7 @@
 ## 编码
 
 - [浮点数二进制表示](https://devtool.tech/double-type)
+- [浮点数在线工具](https://evanw.github.io/float-toy/)
 
 - [Base64](https://devtool.tech/base64)
 

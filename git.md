@@ -365,6 +365,10 @@ git commit -m "..."
         - ghs for GitHub server-to-server tokens
         - ghr for refresh tokens
 
+- [查看github仓库的trends](https://github-trends.com/)
+
+- [grep app：超快的在线github搜索工具](https://grep.app/)
+
 # reference
 
 - [这才是真正的 Git——Git 实用技巧](https://zhuanlan.zhihu.com/p/192961725)
