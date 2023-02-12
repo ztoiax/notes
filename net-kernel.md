@@ -166,7 +166,10 @@
 
 - http keepalive（长连接）
 
+    - 如果要关闭 HTTP Keep-Alive，需要在 HTTP 请求或者响应的 header 里添加 `Connection:close`
+
     ![image](./Pictures/net-kernel/http_keepalive.avif)
+
 
 #### HTTP2
 
@@ -471,7 +474,32 @@
     - [小林coding：HTTPS RSA 握手解析](https://www.xiaolincoding.com/network/2_http/https_rsa.html#tls-%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B)
 
     ![image](./Pictures/net-kernel/tls1.2.avif)
+    ![image](./Pictures/net-kernel/tls1.2-1.avif)
     ![image](./Pictures/net-kernel/tls1.2_wireshark.avif)
+
+    - 第一次握手 `Client Hello`：是客户端告诉服务端，它支持什么样的加密协议版本，比如 TLS1.2，使用什么样的加密套件，比如最常见的RSA，同时还给出一个客户端随机数。
+
+    - 第二次握手 `Server Hello`：服务端告诉客户端，服务器随机数 + 服务器证书 + 确定的加密协议版本（比如就是TLS1.2）。
+
+    - 第三次握手：
+
+        - `Client Key Exchange`: 此时客户端再生成一个随机数，叫 `pre_master_key` 。从第二次握手的服务器证书里取出服务器公钥，用公钥加密 `pre_master_key`，发给服务器。
+
+        - `Change Cipher Spec`: 客户端这边已经拥有三个随机数：客户端随机数，服务器随机数和`pre_master_key`，用这三个随机数进行计算得到一个"会话秘钥"。此时客户端通知服务端，后面会用这个会话秘钥进行对称机密通信。
+
+        - `Encrypted Handshake Message`：客户端会把迄今为止的通信数据内容生成一个摘要，用"会话秘钥"加密一下，发给服务器做校验，此时客户端这边的握手流程就结束了，因此也叫Finished报文。
+
+    - 第四次握手：
+
+        - `Change Cipher Spec`：服务端此时拿到客户端传来的 pre_master_key（虽然被服务器公钥加密过，但服务器有私钥，能解密获得原文），集齐三个随机数，跟客户端一样，用这三个随机数通过同样的算法获得一个"会话秘钥"。此时服务器告诉客户端，后面会用这个"会话秘钥"进行加密通信。
+
+        - `Encrypted Handshake Message`：跟客户端的操作一样，将迄今为止的通信数据内容生成一个摘要，用"会话秘钥"加密一下，发给客户端做校验，到这里，服务端的握手流程也结束了，因此这也叫Finished报文。
+
+    - 设置环境变量SSLKEYLOGFILE就可以干预TLS库的行为，让它输出一份含有**随机数**的文件。
+        ```sh
+        export SSLKEYLOGFILE=/tmp/ssl.key
+        ```
+
 
 - tls1.3：三次握手。废除了不支持前向安全性的 RSA 和 DH 算法，只支持 ECDHE 算法。
 
@@ -492,6 +520,26 @@
 
     ![image](./Pictures/net-kernel/http_two-authentication.avif)
 
+#### 为什么我抓不到 baidu 的数据包？
+
+- [小林coding：好气啊！为什么我抓不到 baidu 的数据包？
+](https://mp.weixin.qq.com/s?src=11&timestamp=1676189895&ver=4345&signature=bI2NBASrj9x7Rn7H-G2WFFFYf7qKBiI07kAnlKk6aINC70hlR0nxe6gcrbQwQ-8FgKHQr*tKLon3RGlrIoTDS4rrtnjNjbCLlQTjQCZ7dy5Be*m*oDpZgZbT3fZ*LtGH&new=1)
+
+- 因为被加密了，所以没办法通过wireshark中的`http.host`进行过滤。
+
+    - 虽然被加密但还是可以通过 `tls.handshake.extensions_server_name == "baidu.com"` 筛选
+
+- 解决方法：
+
+    ```sh
+    # 设置环境变量，从而获取tls的随机数之一pre_master_key
+    export SSLKEYLOGFILE=/tmp/ssl.key
+
+    # 在环境变量的环境下curl或打开浏览器，访问baidu。并不是所有应用程序都支持将SSLKEYLOGFILE
+    curl 'https://www.baidu.com'
+
+    # 然后在wireshark导入ssl.key：配置->Protocols->TLS->(pre)-master-secret log filename中输入ssl.key的路径
+    ```
 #### Session
 
 - Session ID：
@@ -711,10 +759,6 @@
 
     ![image](./Pictures/net-kernel/TCP_syn_reconnect.avif)
 
-    - 如何关闭一个 TCP 连接？利用上面的原理，使用killcx命令分别向client和server发送`RST`
-
-        ![image](./Pictures/net-kernel/TCP_killcx.avif)
-
 - [小林coding：灵魂拷问 TCP ，你要投降了吗？](https://cloud.tencent.com/developer/article/2141541)
 
     ```sh
@@ -760,121 +804,130 @@
 
             - SHUT_RDWR(2)：相当于 SHUT_RD 和 SHUT_WR 操作各一次，关闭套接字的读和写两个方向。
 
-- `TIME_WAIT` 相关：
+##### TIME_WAIT相关
 
-    ```sh
-    # tcp关闭连接后保持TIME_WAIT时间。目的是防止丢失Fin包，如果没有接受到ack会再次发送fin包（默认为60秒）
-    sysctl net.ipv4.tcp_fin_timeout
-    net.ipv4.tcp_fin_timeout = 60
+```sh
+# tcp关闭连接后保持TIME_WAIT时间。目的是防止丢失Fin包，如果没有接受到ack会再次发送fin包（默认为60秒）
+sysctl net.ipv4.tcp_fin_timeout
+net.ipv4.tcp_fin_timeout = 60
 
-    # TIME_WAIT的最大并发数量。超过这个值时，系统就会将后面的 TIME_WAIT 连接状态重置
-    sysctl net.ipv4.tcp_max_tw_buckets
-    net.ipv4.tcp_max_tw_buckets = 32768
-    ```
+# TIME_WAIT的最大并发数量。超过这个值时，系统就会将后面的 TIME_WAIT 连接状态重置
+sysctl net.ipv4.tcp_max_tw_buckets
+net.ipv4.tcp_max_tw_buckets = 32768
+```
 
-    - 为什么要等待2MSL？
+- 为什么要等待2MSL？
 
-        > MSL：报文段最大生存时间，它是任何报文段被丢弃前在网络内的最长时间。
+    > MSL：报文段最大生存时间，它是任何报文段被丢弃前在网络内的最长时间。
 
-        - MSL 与 TTL 的区别： MSL 的单位是时间，而 TTL 是经过路由跳数。所以 MSL 应该要大于等于 TTL 消耗为 0 的时间，以确保报文已被自然消亡。
+    - MSL 与 TTL 的区别： MSL 的单位是时间，而 TTL 是经过路由跳数。所以 MSL 应该要大于等于 TTL 消耗为 0 的时间，以确保报文已被自然消亡。
 
-            - TTL 的值一般是 64，Linux 将 MSL 设置为 30 秒
-
-            ```sh
-            sysctl net.ipv4.ip_default_ttl
-            net.ipv4.ip_default_ttl = 64
-            ```
-
-        - 防止历史连接中的数据，被后面相同四元组的连接错误的接收：TIME_WAIT 没有等待时间或时间过短，新的连接会收到，历史连接被延迟的包，导致数据错乱
-
-            ![image](./Pictures/net-kernel/TCP_timewait_2msl.avif)
-
-        - 收到重发的第三次挥手fin后，会再次重置2MSL定时器。
-
-            ![image](./Pictures/net-kernel/TCP_timewait_2msl1.avif)
-
-    - 为什么是主动关闭方才会有`TIME_WAIT` 状态：确保另一方，能正确的关闭连接
-
-        - 主动关闭方在发送完 ACK 就走了的话，如果最后发送的 ACK 在路由过程中丢掉了，最后没能到被动关闭方，这个时候被动关闭方没收到自己 FIN 的 ACK 就不能关闭连接，接着被动关闭方会超时重发 FIN 包，但是这个时候已经没有对端会给该 FIN 回 ACK，被动关闭方就无法正常关闭连接了
-
-        ![image](./Pictures/net-kernel/TCP_timewait_2msl2.avif)
-
-    - `TIME_WAIT`消耗的 Client 的端口的解决方法：
-
-        - 1.`tcp_tw_reuse` 和 `tcp_timestamps`（默认启用）对应tcp header的options的`TSOPT`
-
-            - `tcp_tw_reuse`：调用 connect() 函数时，内核会随机找一个 TIME_WAIT 状态超过 1 秒的连接给新的连接复用
-
-                ```sh
-                # 查看是否启用。0表示不启用、1表示全局启用、2表示仅启用loopback（默认为2）
-                sysctl net.ipv4.tcp_tw_reuse
-                net.ipv4.tcp_tw_reuse = 2
-                ```
-
-                - [小林coding：tcp_tw_reuse 为什么默认是关闭的？](https://www.xiaolincoding.com/network/3_tcp/tcp_tw_reuse_close.html#%E4%B8%BA%E4%BB%80%E4%B9%88-tcp-tw-reuse-%E9%BB%98%E8%AE%A4%E6%98%AF%E5%85%B3%E9%97%AD%E7%9A%84)
-
-                    - 新连接接受了历史连接发送的延迟 RST 报文，导致连接关闭。因为 RST 段不携带时间戳，所以PAWS不会检查并丢弃
-
-                        ![image](./Pictures/net-kernel/TCP_timewait_reuse.avif)
-
-                    - 如果第四次挥手的ack丢失，server端重发，但此时TIME_WAIT被新连接复用，client收到后认为这是 Challenge ACK，就会回复`RST`
-
-                        ![image](./Pictures/net-kernel/TCP_timewait_reuse1.avif)
-
-            - `tcp_timestamps`：长度为32位（4G）。
-
-                - 1.开启后可以计算 RTT
-
-                - 2.防止序列号回绕（PAWS）：
-
-                    - 每收到一个新数据包都会读取数据包中的时间戳值跟 Recent TSval 值做比较，如果不是递增的，则表示该数据包是过期的，就会直接丢弃这个数据包
-
-                ```sh
-                # 查看是否开启（默认开启）
-                sysctl net.ipv4.tcp_timestamps
-                net.ipv4.tcp_timestamps = 1
-                ```
-
-        - 2.内核收到 RST 将会产生一个错误并终止该连接。我们可以利用 RST 包来终止掉处于 TIME_WAIT 状态的连接，其实这就是所谓的 RST 攻击了。以下为三个步骤
-
-            - 1.client：利用 `IP_TRANSPARENT` 这个 socket 选项，它可以 bind 不属于本地的地址，因此可以从任意机器绑定 Client 地址以及端口 port1，然后向 Server 发起一个连接Server
-            - 2.server：收到了窗口外的包于是响应一个 ACK，这个 ACK 包会路由到 Client 处
-            - 3.client：这个时候 99% 的可能 Client 已经释放连接 connect1 了，这个时候 Client 收到这个 ACK 包，会发送一个 RST 包，server 收到 RST 包然后就释放连接 connect1 提前终止 TIME_WAIT 状态了
-
-        - `tcp_tw_recycle` Linux 4.12直接取消了这一参数：它允许处于 TIME_WAIT 状态的连接被快速回收。与`tcp_timestamps` 一起使用在NAT网络下会有问题
-
-            - NAT网络下的两个client，使用用相同的 IP 地址与server建立 TCP 连接，如果clinet B 的 timestamp 比 clinet A 的 timestamp 小；server 会启用per-host 的 PAWS（判断TCP 报文中时间戳是否是历史报文） 机制，丢弃clinet B 发来的 SYN 包。
-
-    - [小林coding：服务器出现大量 TIME_WAIT 状态的原因有哪些？](https://www.xiaolincoding.com/network/3_tcp/tcp_interview.html#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%87%BA%E7%8E%B0%E5%A4%A7%E9%87%8F-time-wait-%E7%8A%B6%E6%80%81%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%9C%89%E5%93%AA%E4%BA%9B)
-
-        - HTTP/1.1长连接：client请求数量超过server指定的最大长连接个数（比如 nginx 配置中的 `keepalive_requests` 参数），那么server会主动断开这个连接，此时服务器上就会出现大量的TIME_WAIT 状态。解决方式：调大最大长连接个数。
-
-        - nginx（在服务器上跑）与后端进行大量的短连接请求，由于nginx 会主动挂断这个连接，在server上就会出现大量的 TIME_WAIT 状态。解决方式：使用长连接
-
-        - client在超时时间内没有新的数据发送，那么server会主动挂断这个连接，在server上就会出现 TIME_WAIT 状态。
-
-        - server进程挂掉了，会出现大量的 TIME_WAIT 状态。
-
-            - TCP 的连接信息是由内核维护的，所以当服务端的进程崩溃后，内核需要回收该进程的所有 TCP 连接资源，于是内核会发送第一次挥手 FIN 报文，后续的挥手过程也都是在内核完成，并不需要进程的参与，所以即使服务端的进程退出了，还是能与客户端完成 TCP 四次挥手的过程。
-
-    - [小林coding：在 TIME_WAIT 状态的 TCP 连接，收到 SYN 后会发生什么？](https://www.xiaolincoding.com/network/3_tcp/time_wait_recv_syn.html#_4-11-%E5%9C%A8-time-wait-%E7%8A%B6%E6%80%81%E7%9A%84-tcp-%E8%BF%9E%E6%8E%A5-%E6%94%B6%E5%88%B0-syn-%E5%90%8E%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88)
-
-        - 如果是合法的syn：进入 `SYN_RECV` 状态
-
-            ![image](./Pictures/net-kernel/TCP_timewait_syn.avif)
-
-        - 如果是非法的syn：再回复一个第四次挥手的 ACK 报文，client收到后，发现并不是自己期望收到确认号（Challenge ACK），就回 RST 报文给server。
-
-            ![image](./Pictures/net-kernel/TCP_timewait_syn1.avif)
-
-    - [小林coding：在 TIME_WAIT 状态，收到 RST 会断开连接吗？](https://www.xiaolincoding.com/network/3_tcp/time_wait_recv_syn.html#%E5%9C%A8-time-wait-%E7%8A%B6%E6%80%81-%E6%94%B6%E5%88%B0-rst-%E4%BC%9A%E6%96%AD%E5%BC%80%E8%BF%9E%E6%8E%A5%E5%90%97)
+        - TTL 的值一般是 64，Linux 将 MSL 设置为 30 秒
 
         ```sh
-        # 默认值为0: 收到 RST 报文会提前结束 TIME_WAIT 状态，释放连接
-        # 值为1：丢掉 RST 报文
-        sysctl net.ipv4.tcp_rfc1337
-        net.ipv4.tcp_rfc1337 = 0
+        sysctl net.ipv4.ip_default_ttl
+        net.ipv4.ip_default_ttl = 64
         ```
+
+    - 防止历史连接中的数据，被后面相同四元组的连接错误的接收：TIME_WAIT 没有等待时间或时间过短，新的连接会收到，历史连接被延迟的包，导致数据错乱
+
+        ![image](./Pictures/net-kernel/TCP_timewait_2msl.avif)
+
+    - 收到重发的第三次挥手fin后，会再次重置2MSL定时器。
+
+        ![image](./Pictures/net-kernel/TCP_timewait_2msl1.avif)
+
+- 为什么是主动关闭方才会有`TIME_WAIT` 状态：确保另一方，能正确的关闭连接
+
+    - 主动关闭方在发送完 ACK 就走了的话，如果最后发送的 ACK 在路由过程中丢掉了，最后没能到被动关闭方，这个时候被动关闭方没收到自己 FIN 的 ACK 就不能关闭连接，接着被动关闭方会超时重发 FIN 包，但是这个时候已经没有对端会给该 FIN 回 ACK，被动关闭方就无法正常关闭连接了
+
+    ![image](./Pictures/net-kernel/TCP_timewait_2msl2.avif)
+
+- [小林coding：服务器出现大量 TIME_WAIT 状态的原因有哪些？](https://www.xiaolincoding.com/network/3_tcp/tcp_interview.html#%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%87%BA%E7%8E%B0%E5%A4%A7%E9%87%8F-time-wait-%E7%8A%B6%E6%80%81%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%9C%89%E5%93%AA%E4%BA%9B)
+
+    - 没有开启长连接：如果其中一方的header有 `connection：close` 则不用长连接。
+
+        - nginx（在服务器上跑）与后端进行大量的短连接请求，由于nginx 会主动挂断这个连接，在server上就会出现大量的 TIME_WAIT 状态。
+
+    - clinet请求数量超过了server的长连接个数：比如 nginx 配置中的 `keepalive_requests` 参数，默认是100。对于QPS（每秒请求个数时）比较高时，nginx 就会很频繁地关闭连接，那么此时服务端上就会出大量的 TIME_WAIT 状态。
+
+    - 长连接超时：client在超时时间内没有新的数据发送，那么server会主动挂断这个连接，在server上就会出现 TIME_WAIT 状态。（nginx配置中的`keepalive_timeout` 参数）
+
+    - server进程挂掉了，会出现大量的 TIME_WAIT 状态。
+
+        - TCP 的连接信息是由内核维护的，所以当服务端的进程崩溃后，内核需要回收该进程的所有 TCP 连接资源，于是内核会发送第一次挥手 FIN 报文，后续的挥手过程也都是在内核完成，并不需要进程的参与，所以即使服务端的进程退出了，还是能与客户端完成 TCP 四次挥手的过程。
+
+
+- `TIME_WAIT` 状态过多有什么危害？
+
+    - 1.占用系统资源，比如文件描述符、内存资源、CPU 资源等
+
+    - 2.占用端口资源，端口资源也是有限的，一般可以开启的端口为 32768～61000，也可以通过 `net.ipv4.ip_local_port_range`参数指定范围
+
+- `TIME_WAIT`消耗的 Client 的端口的解决方法：
+
+    - 1.`tcp_tw_reuse` 和 `tcp_timestamps`（默认启用）对应tcp header的options的`TSOPT`
+
+        - `tcp_tw_reuse`：调用 connect() 函数时，内核会随机找一个 TIME_WAIT 状态超过 1 秒的连接给新的连接复用
+
+            ```sh
+            # 查看是否启用。0表示不启用、1表示全局启用、2表示仅启用loopback（默认为2）
+            sysctl net.ipv4.tcp_tw_reuse
+            net.ipv4.tcp_tw_reuse = 2
+            ```
+
+            - [小林coding：tcp_tw_reuse 为什么默认是关闭的？](https://www.xiaolincoding.com/network/3_tcp/tcp_tw_reuse_close.html#%E4%B8%BA%E4%BB%80%E4%B9%88-tcp-tw-reuse-%E9%BB%98%E8%AE%A4%E6%98%AF%E5%85%B3%E9%97%AD%E7%9A%84)
+
+                - 新连接接受了历史连接发送的延迟 RST 报文，导致连接关闭。因为 RST 段不携带时间戳，所以PAWS不会检查并丢弃
+
+                    ![image](./Pictures/net-kernel/TCP_timewait_reuse.avif)
+
+                - 如果第四次挥手的ack丢失，server端重发，但此时TIME_WAIT被新连接复用，client收到后认为这是 Challenge ACK，就会回复`RST`
+
+                    ![image](./Pictures/net-kernel/TCP_timewait_reuse1.avif)
+
+        - `tcp_timestamps`：长度为32位（4G）。
+
+            - 1.开启后可以计算 RTT
+
+            - 2.防止序列号回绕（PAWS）：
+
+                - 每收到一个新数据包都会读取数据包中的时间戳值跟 Recent TSval 值做比较，如果不是递增的，则表示该数据包是过期的，就会直接丢弃这个数据包
+
+            ```sh
+            # 查看是否开启（默认开启）
+            sysctl net.ipv4.tcp_timestamps
+            net.ipv4.tcp_timestamps = 1
+            ```
+
+    - 2.内核收到 RST 将会产生一个错误并终止该连接。我们可以利用 RST 包来终止掉处于 TIME_WAIT 状态的连接，其实这就是所谓的 RST 攻击了。以下为三个步骤
+
+        - 1.client：利用 `IP_TRANSPARENT` 这个 socket 选项，它可以 bind 不属于本地的地址，因此可以从任意机器绑定 Client 地址以及端口 port1，然后向 Server 发起一个连接Server
+        - 2.server：收到了窗口外的包于是响应一个 ACK，这个 ACK 包会路由到 Client 处
+        - 3.client：这个时候 99% 的可能 Client 已经释放连接 connect1 了，这个时候 Client 收到这个 ACK 包，会发送一个 RST 包，server 收到 RST 包然后就释放连接 connect1 提前终止 TIME_WAIT 状态了
+
+    - `tcp_tw_recycle` Linux 4.12直接取消了这一参数：它允许处于 TIME_WAIT 状态的连接被快速回收。与`tcp_timestamps` 一起使用在NAT网络下会有问题
+
+        - NAT网络下的两个client，使用用相同的 IP 地址与server建立 TCP 连接，如果clinet B 的 timestamp 比 clinet A 的 timestamp 小；server 会启用per-host 的 PAWS（判断TCP 报文中时间戳是否是历史报文） 机制，丢弃clinet B 发来的 SYN 包。
+
+- [小林coding：在 TIME_WAIT 状态的 TCP 连接，收到 SYN 后会发生什么？](https://www.xiaolincoding.com/network/3_tcp/time_wait_recv_syn.html#_4-11-%E5%9C%A8-time-wait-%E7%8A%B6%E6%80%81%E7%9A%84-tcp-%E8%BF%9E%E6%8E%A5-%E6%94%B6%E5%88%B0-syn-%E5%90%8E%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88)
+
+    - 如果是合法的syn：进入 `SYN_RECV` 状态
+
+        ![image](./Pictures/net-kernel/TCP_timewait_syn.avif)
+
+    - 如果是非法的syn：再回复一个第四次挥手的 ACK 报文，client收到后，发现并不是自己期望收到确认号（Challenge ACK），就回 RST 报文给server。
+
+        ![image](./Pictures/net-kernel/TCP_timewait_syn1.avif)
+
+- [小林coding：在 TIME_WAIT 状态，收到 RST 会断开连接吗？](https://www.xiaolincoding.com/network/3_tcp/time_wait_recv_syn.html#%E5%9C%A8-time-wait-%E7%8A%B6%E6%80%81-%E6%94%B6%E5%88%B0-rst-%E4%BC%9A%E6%96%AD%E5%BC%80%E8%BF%9E%E6%8E%A5%E5%90%97)
+
+    ```sh
+    # 默认值为0: 收到 RST 报文会提前结束 TIME_WAIT 状态，释放连接
+    # 值为1：丢掉 RST 报文
+    sysctl net.ipv4.tcp_rfc1337
+    net.ipv4.tcp_rfc1337 = 0
+    ```
 
 - TCP端口、连接问题？
 
@@ -903,6 +956,40 @@
         - 系统级：当前系统可打开的最大数量：`cat /proc/sys/fs/file-max`
         - 用户级：指定用户可打开的最大数量：`ulimit -n`
         - 进程级：单个进程可打开的最大数量：`cat /proc/sys/fs/nr_open`
+
+##### 如何关闭一个 TCP 连接？
+
+- [小林coding：原来墙，是这么把我 TCP 连接干掉的！](https://mp.weixin.qq.com/s?src=11&timestamp=1676188303&ver=4345&signature=bI2NBASrj9x7Rn7H-G2WFFFYf7qKBiI07kAnlKk6aIMApYI*7ghxdOaAfjb4dHsYoIpC3pFFdJiFjq0hywVLFKoXi95HdydXg5yyIRWWOHVWK8jWamwMOhmDbLSAMpg0&new=1)
+
+- TCP 重置攻击：伪造 RST 报文来关闭 TCP 连接
+
+    > 问题：如何获取客户端序列号?
+
+    - tcpkill：需要拦截双方的数据，只有目标连接有新 TCP 包发送/接收的时候，才能关闭一条 TCP 连接。
+
+        ```sh
+        # 模拟服务端，端口1234
+        nc -l -p 1234
+        # 模拟客户端，端口10000连接服务端的1234
+        nc 2.1.4.3 1234 -p 10000
+
+        # archliunx安装tcpkill
+        pasman -S dsniff
+
+        # 客户端的ip，端口。在客户端发送数据时，才会关闭
+        tcpkill -1 host 192.168.1.221 and port 10000
+        ```
+
+    - killcx：主动发送一个 SYN 报文，通过对方回复的 Challenge ACK 来获取正确的序列号。然后伪造的 RST 报文发送给对方
+
+        - 处于 Establish 状态的服务端，如果收到了客户端的 SYN 报文，会回复一个携带了正确序列号和确认号的 ACK 报文，这个 ACK 被称之为 Challenge ACK。
+
+        ```sh
+        # 在客户端就输入服务端的ip、端口；在服务端就输入客户端的ip和端口
+        killcx ip:port
+        ```
+
+        ![image](./Pictures/net-kernel/TCP_killcx.avif)
 
 #### 队列
 
