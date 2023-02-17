@@ -397,6 +397,10 @@
 
 - [Serverless 开发速查手册](https://developer.aliyun.com/ebook/7490)
 
+## 区块链
+
+- [《Mastering Bitcoin 2nd Edition》](https://github.com/bitcoinbook/bitcoinbook)
+
 ## 数据科学
 
 - [《Hands-On Data Visualization》(数据可视化)](https://github.com/handsondataviz/book)

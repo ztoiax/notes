@@ -27,13 +27,16 @@
             * [ssh](#ssh)
             * [重要文件加锁chattr -i](#重要文件加锁chattr--i)
             * [ntp(同步时间服务)](#ntp同步时间服务)
+        * [关闭 core dump](#关闭-core-dump)
         * [selinux](#selinux)
         * [tcp_wrappers: 第二层防火墙](#tcp_wrappers-第二层防火墙)
+        * [aide：保存当前文件的状态（新增的文件、修改时间、权限、文件哈希值），日后可以对比](#aide保存当前文件的状态新增的文件修改时间权限文件哈希值日后可以对比)
         * [metasploit](#metasploit)
         * [rkhunter: 检查 rookit](#rkhunter-检查-rookit)
         * [clamav: 病毒扫描](#clamav-病毒扫描)
         * [sqlmap: sql注入](#sqlmap-sql注入)
         * [beef: web渗透测试](#beef-web渗透测试)
+        * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
     * [系统监控](#系统监控)
         * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
     * [自动化任务](#自动化任务)
@@ -42,6 +45,8 @@
         * [jenkins](#jenkins)
             * [jenkins-cli](#jenkins-cli)
             * [插件](#插件)
+    * [日志软件](#日志软件)
+        * [rsyslog](#rsyslog)
 
 <!-- vim-markdown-toc -->
 
@@ -96,6 +101,81 @@ tz ALL = NOPASSWD: ALL
 # sudo cat /etc/shadow 此命令无需输入密码
 tz ALL = NOPASSWD: /bin/cat /etc/shadow
 ```
+
+
+- 禁止 wheel 组以外的用户使用 `su - root` 命令 
+    ```sh
+    # 在/etc/pam.d/su文件下配置
+    auth sufficient pam_rootok.so
+    auth required pam_wheel.so group=wheel
+    ```
+- 设置口令最大的出错次数 5 次，系统锁定后的解锁时间为 180 秒： 在`/etc/pam.d/system-auth` 和 `/etc/pam.d/password-auth` 文件中添加
+    ```sh
+    auth required pam_faillock.so preauth audit silent deny=5 unlock_time=180
+    auth [success=1 default=bad] pam_unix.so
+    auth [default=die] pam_faillock.so authfail audit deny=5 unlock_time=180
+    auth sufficient pam_faillock.so authsucc audit deny=5 unlock_time=180
+    ```
+
+    - 测试
+    ```sh
+    # ssh登陆时输错密码
+
+    # 查看锁定
+    faillock
+
+    # 解锁用户
+    faillock --user username --reset
+    ```
+
+
+- 修改密码有效期
+
+    - 相同的配置下 `/etc/shadow` 文件的优先级高于 `/etc/login.defs`
+
+    | 参数          | 内容                       | 建议设置值 |
+    |---------------|----------------------------|------------|
+    | PASS_MAX_DAYS | 口令最大有效期             | 90         |
+    | PASS_MIN_DAYS | 两次修改口令的最小间隔时间 | 10         |
+    | PASS_WARN_AGE | 口令过期前开始提示天数     | 7          |
+
+    ```sh
+    # 在/etc/login.defs文件下修改
+
+    # 修改前
+    PASS_MAX_DAYS	99999
+    PASS_MIN_DAYS	0
+    PASS_MIN_LEN	5
+    PASS_WARN_AGE	7
+
+    # 修改后
+    PASS_MAX_DAYS	90
+    PASS_MIN_DAYS	10
+    PASS_MIN_LEN	5
+    PASS_WARN_AGE	7
+    ```
+
+- 设置密码复杂度：
+
+    | 参数         | 内容                      |
+    |--------------|---------------------------|
+    | minlen = 8   | 口令长度至少包含 8 个字符 |
+    | dcredit = -1 | 口令包含N个数字           |
+    | ucredit = -1 | 口令包含N大写字母         |
+    | ocredit = -1 | 口令包含N个特殊字符       |
+    | lcredit = -1 | 口令包含N个小写字母       |
+
+    - 在`/etc/pam.d/password-auth` 和`/etc/pam.d/system-auth` 未配置 minlen、dcredit、ucredit、ocredit、lcredit 时，`/etc/security/pwquality.conf` 文件设置才会生效
+    ```sh
+    cat >>/etc/security/pwquality.conf << EOF
+    minlen = 8
+    dcredit = -1
+    ucredit = -1
+    ocredit = -1
+    lcredit = -1
+    EOF
+    ```
+
 
 ## openssh
 
@@ -498,6 +578,13 @@ chattr -i /var/log/lastlog
 systemctl enable ntpd
 ```
 
+### 关闭 core dump
+
+```sh
+echo -e "\n* soft core 0" >> /etc/security/limits.conf 
+echo -e "\n* hard core 0" >> /etc/security/limits.conf 
+```
+
 ### selinux
 
 - 三种状态:
@@ -548,6 +635,19 @@ ALL:ALL EXCEPT 192.168.1.1
     sshd:ALL
     ```
 
+
+### aide：保存当前文件的状态（新增的文件、修改时间、权限、文件哈希值），日后可以对比
+
+```sh
+# 生成数据库，时间比较长
+aide -i
+
+# 改名
+mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+
+# 把现在的文件对比之前保存的状态，时间比较长
+aide -C
+```
 
 ### [metasploit](https://github.com/rapid7/metasploit-framework)
 
@@ -608,6 +708,13 @@ clamscan -r --remove /
 ### [sqlmap: sql注入](https://github.com/sqlmapproject/sqlmap)
 
 ### [beef: web渗透测试](https://github.com/beefproject/beef)
+
+### lynis（安全审计以及加固工具）
+
+```sh
+# 扫描系统
+lynis audit system
+```
 
 ## 系统监控
 
@@ -720,3 +827,47 @@ java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd
 #### 插件
 
 - [插件搜索](https://plugins.jenkins.io/)
+
+## 日志软件
+
+- [Linux开源日志分析](https://cloud.tencent.com/developer/inventory/116450)
+
+### rsyslog
+
+- rsyslog 是syslog 的升级版
+
+- 两种配置模式：
+
+    - 1.客户端-服务器：客户端发送日志到服务器
+
+    - 2.服务器-远程服务器：服务器在网络收集主机的日志，发送到远程服务器
+
+- 客户端-服务器模式：
+
+    - 服务器配置：
+        ```sh
+        # 取消这2行注释，开启udp514端口
+        $ModLoad imudp
+        $UDPServerRun 514
+
+        # 在$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat下面添加这5行
+        # 根据客户端的IP单独存放主机日志在不同目录，设置远程日志存放路径及文件名格式
+        $template Remote,"/var/log/syslog/%fromhost-ip%/%fromhost-ip%_%$YEAR%-%$MONTH%-%$DAY%.log"
+
+        # 排除本地主机IP日志记录，只记录远程主机日志
+        :fromhost-ip, !isequal, "127.0.0.1" ?Remote
+        ```
+
+    - 客户端配置：
+        ```sh
+        # 取消这5行注释
+        $ActionQueueFileName fwdRule1
+        $ActionQueueMaxDiskSpace 1g
+        $ActionQueueSaveOnShutdown on
+        $ActionQueueType LinkedList
+        $ActionResumeRetryCount -1
+
+        # 在最后一行添加服务器IP地址
+        *.* @192.168.31.80
+        ```
+

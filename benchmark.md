@@ -556,8 +556,8 @@ systemctl start ksmtuned.service
 ## base
 
 ```bash
-ps -aux | sort -k4nr | head -K
-ps aux --sort -rss | head
+ps -auxf | sort -k4nr | head -K
+ps auxf --sort -rss | head
 top -c -b -o +%MEM | head -n 20 | tail -15
 ```
 
