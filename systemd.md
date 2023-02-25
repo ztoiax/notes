@@ -8,6 +8,7 @@
         * [查看瀑布状的启动过程流](#查看瀑布状的启动过程流)
         * [可视化每个 units 的启动时间](#可视化每个-units-的启动时间)
         * [管理开机启动脚本](#管理开机启动脚本)
+        * [创建systemd服务，随机mac地址](#创建systemd服务随机mac地址)
     * [systemctl](#systemctl)
         * [查看 `units`](#查看-units)
         * [查看不同类型](#查看不同类型)
@@ -141,7 +142,7 @@ units 文件存放在这两个目录
 - /etc/systemd/system/
 - /usr/lib/systemd/system/
 
-- 随机mac地址
+### 创建systemd服务，随机mac地址
 
 ```sh
 cat > /etc/systemd/system/macspoof.service << 'EOF'

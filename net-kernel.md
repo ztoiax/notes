@@ -929,33 +929,40 @@ net.ipv4.tcp_max_tw_buckets = 32768
     net.ipv4.tcp_rfc1337 = 0
     ```
 
-- TCP端口、连接问题？
+##### TCP端口、连接问题
 
-    - TCP有多少端口可以使用？
+- TCP有多少端口可以使用？
 
-        - `bind(0)`系统调用当参数为0时：Linux内核随机分配一个端口号，Linux内核会在 net.ipv4.ip_local_port_range 系统参数指定的范围内，随机分配一个没有被占用的端口。
+    - `bind(0)`系统调用当参数为0时：Linux内核随机分配一个端口号，Linux内核会在 net.ipv4.ip_local_port_range 系统参数指定的范围内，随机分配一个没有被占用的端口。
 
-        - 但`bind(0)` 不能绑定TIME_WAIT状态，也就是内核参数`net.ipv4.tcp_tw_reuse`
+    - 但`bind(0)` 不能绑定TIME_WAIT状态，也就是内核参数`net.ipv4.tcp_tw_reuse`
 
-            - 解决方法：`bind()`指定端口
+        - 解决方法：`bind()`指定端口
 
-        ![image](./Pictures/net-kernel/TCP_bind(0).avif)
+    ![image](./Pictures/net-kernel/TCP_bind(0).avif)
 
-        ```sh
-        sysctl net.ipv4.ip_local_port_range
-        net.ipv4.ip_local_port_range = 32768	60999
-        ```
+    ```sh
+    sysctl net.ipv4.ip_local_port_range
+    net.ipv4.ip_local_port_range = 32768	60999
+    ```
 
-    - tcp和udp可以绑定同一个端口吗？
+    - 最大连接数 = 客户端 IP 数 × 客户端端口数
 
-        - 可以。sever端的tcp和udp的都可以同时拥有80端口
-
-            ![image](./Pictures/net-kernel/port.avif)
+        - 客户端的 IP 数最多为 2 的 32 次方，客户端的端口数最多为 2 的 16 次方，也就是服务端单机最大 TCP 连接数约为 2 的 48 次方
 
     - 文件描述符限制：每个 TCP 连接都是一个文件，如果文件描述符被占满了，会发生 too many open files。
         - 系统级：当前系统可打开的最大数量：`cat /proc/sys/fs/file-max`
         - 用户级：指定用户可打开的最大数量：`ulimit -n`
         - 进程级：单个进程可打开的最大数量：`cat /proc/sys/fs/nr_open`
+
+    - 内存限制：每个连接占用一定内存。[陈硕的测试为每个tcp占3.155 KB](https://zhuanlan.zhihu.com/p/25241630)
+
+- tcp和udp可以绑定同一个端口吗？
+
+    - 可以。sever端的tcp和udp的都可以同时拥有80端口
+
+        ![image](./Pictures/net-kernel/port.avif)
+
 
 ##### 如何关闭一个 TCP 连接？
 
@@ -1009,7 +1016,7 @@ net.ipv4.tcp_max_tw_buckets = 32768
 
 - [小林coding：TCP 半连接队列和全连接队列](https://www.xiaolincoding.com/network/3_tcp/tcp_queue.html#%E4%BB%80%E4%B9%88%E6%98%AF-tcp-%E5%8D%8A%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97%E5%92%8C%E5%85%A8%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97)
 
-    > `listen()`会创建半连接队列和全连接队列
+    > 内核为每个socket维护两个队列。`listen()`会创建半连接队列和全连接队列
 
     ![image](./Pictures/net-kernel/TCP_queue.avif)
     ![image](./Pictures/net-kernel/TCP_queue1.avif)
@@ -1545,6 +1552,28 @@ net.ipv4.tcp_congestion_control = bbr
     - 在LAN（局域网）下不会有这类问题。但WAN则不同，因此需要设置`Qos`的规则控制udp带宽
 
 #### socket相关
+
+- 两个程序通过socket建立连接
+
+    - 默认是阻塞 I/O，一对一通信
+
+    - 在tcp里client调用 `connect()` 后，才开始建立握手
+
+    ![image](./Pictures/net-kernel/socket.avif)
+
+- socket文件的inode指向内核的`Socket`结构
+
+    - `Socket`结构维持着两个队列（发送和接受队列）
+
+        - 队列保存着 `struct sk_buff` 结构
+
+- sk_buff 可以表示各个层的数据包，在应用层数据包叫 data，在 TCP 层我们称为 segment，在 IP 层我们叫 packet，在数据链路层称为 frame。
+
+    - 发送报文时，创建 sk_buff 结构体：数据缓存区的头部预留足够的空间，每经过下层协议时，就减少 sk_buff->data 的值来增加协议头部。
+
+    - 接收报文时，每经过上一层时：就增加 sk_buff->data 的值，来逐步剥离协议头部。
+
+    ![image](./Pictures/net-kernel/socket-sk_buff.avif)
 
 - [小林coding：服务端没有 listen，客户端发起连接建立，会发生什么？](https://www.xiaolincoding.com/network/3_tcp/tcp_no_listen.html)
 

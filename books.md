@@ -41,6 +41,8 @@
 
 ### C/C++
 
+- [《Linux C编程一站式学习》](http://akaedu.github.io/book/)
+
 - [《Effective Modern C++ 》(中文)](https://github.com/CnTransGroup/EffectiveModernCppChinese)
 
 - [《现代 C++ 教程：高速上手 C++11/14/17/20》](https://changkun.de/modern-cpp/zh-cn/00-preface/)
@@ -48,6 +50,8 @@
 - [C++ Core Guidelines(C++之父写的指南)](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 
 - [ruanyif: C 语言教程](https://wangdoc.com/clang/intro.html)
+
+- [C 参考手册](https://zh.cppreference.com/w/c)
 
 - [360写的C/C++安全代码规范](https://github.com/Qihoo360/safe-rules)
 
@@ -98,6 +102,8 @@
 
 - [《Structure and Interpretation of Computer Programs(SICP)》(英文)](http://sarabander.github.io/sicp/html/index.xhtml)
 
+- [sicp练习答案](http://community.schemewiki.org/?c=a)
+
 - [《Scheme 入门教程》](http://deathking.github.io/yast-cn/)
 
 - [《How to Design Programs, Second Edition》美国面对入门中学生写的Racket方言](https://htdp.org/2018-01-06/Book/index.html)
@@ -109,6 +115,7 @@
 
 - [《SICP Clojure 描述》](http://www.sicpdistilled.com/)
 
+- [《The Scheme Programming Language Fourth Edition》](https://www.scheme.com/tspl4/)
 ### Haskell
 
 - [《Real World Haskell》 (中文)](http://cnhaskell.com/)
@@ -153,6 +160,8 @@
 
 - [Python Design Patterns](https://python-patterns.guide/)
 
+- [《Python Data Science Handbook》](https://jakevdp.github.io/PythonDataScienceHandbook/)
+
 #### 框架
 
 - [flask/sanic/asyncio/bottle/webpy 源码阅读注释合集](https://github.com/hhstore/annotated-py-projects)
@@ -178,6 +187,8 @@
 - [《算法新解》](https://github.com/liuxinyu95/AlgoXY)
 
 - [《复杂性思考》(英文)](https://www.greenteapress.com/compmod/html/index.html)
+
+- [《Hello，算法》](https://www.hello-algo.com/)
 
 - [GitHub最大的开源算法库](https://the-algorithms.com/zh_Hans)
 
@@ -207,6 +218,8 @@
 
 - [《数据库系统概念第7版》课件(英文)](https://www.db-book.com/slides-dir/index.html)
 
+- [《Efficient MySQL Performance](https://hackmysql.com/)
+
 - [《Redis 使用手册》](http://redisdoc.com/)
 
 - [《Redis 设计与实现》部分试读](http://redisbook.com/)
@@ -235,13 +248,15 @@
 
 - [《UNIX编程艺术》(英文)](http://www.catb.org/~esr/writings/taoup/html/)
 
-- [设计模式](https://github.com/karanpratapsingh/system-design)
+- [system design（系统设计）](https://github.com/karanpratapsingh/system-design)
 
 - [设计模式,图解+代码](https://refactoringguru.cn/design-patterns)
 
 - [图说设计模式](https://design-patterns.readthedocs.io/zh_CN/latest/index.html#)
 
 ## 软件工程
+
+- [《高并发的哲学原理》](https://github.com/johnlui/PPHC)
 
 - [《Software Engineering at Google》(谷歌软件工程)(中文)](https://qiangmzsx.github.io/Software-Engineering-at-Google/#/?id=software-engineering-at-google)
 
@@ -331,7 +346,8 @@
 
 ### Javascript
 
-- [《SICP JavaScript 描述》](https://sicp-js.apachecn.org/#/)
+- [《SICP JavaScript 描述》(英文)](https://sourceacademy.org/sicpjs/index)
+    - [《SICP JavaScript 描述》(中文)](https://sicp-js.apachecn.org/#/)
 
 - [《ES6 入门教程》](https://es6.ruanyifeng.com/)
 
@@ -343,6 +359,8 @@
 
 ## 运维
 
+- [《鸟哥的 Linux 私房菜》](http://cn.linux.vbird.org/linux_basic/linux_basic.php)
+
 - [《The AWK Programming Language》](https://github.com/wuzhouhui/awk)
 
 - [运维实践指南](https://billwang139967.gitbooks.io/op_practice_book/content/)
@@ -350,6 +368,8 @@
 - [《微服务：从设计到部署》](https://docshome.gitbook.io/microservices/)
 
 - [《Pro Git第二版》](https://git-scm.com/book/zh/v2)
+
+- [图解Git](https://marklodato.github.io/visual-git-guide/index-zh-cn.html)
 
 - [《Spring 实战》 (第6版)](https://leonli0102.github.io/spring-in-action-v6/)
 
@@ -364,6 +384,8 @@
 - [ruanyf: Bash脚本教程](https://wangdoc.com/bash/intro.html)
 
 - [《英雄联盟》在线服务运维之道](https://www.infoq.cn/minibook/running-online-services-riot)
+
+- [《Elasticsearch: The Definitive Guide》](https://www.elastic.co/guide/en/elasticsearch/guide/master/getting-started.html)
 
 ### cloud
 
@@ -411,6 +433,8 @@
 
 ## AI(人工智能)
 
+- [《动手学深度学习》](https://zh.d2l.ai/)
+
 - [《TensorFlow深度学习》](https://github.com/dragen1860/Deep-Learning-with-TensorFlow-book)
 
 - [《TensorFlow 内核剖析》(英文)](https://github.com/horance-liu/tensorflow-internals)
@@ -422,6 +446,8 @@
 - [Markov Chains(马尔可夫链)](https://setosa.io/blog/2014/07/26/markov-chains/)
 
 - [《Paradigms of Artificial Intelligence Programming》书籍以及lisp代码](https://github.com/norvig/paip-lisp)
+
+- [ai知识库搜索](https://easyai.tech/)
 
 ## 文档
 
@@ -447,6 +473,8 @@
 - [线性代数课程](https://github.com/kenjihiranabe/The-Art-of-Linear-Algebra)
 
 - [统计学习方法（第二版）习题解答](https://datawhalechina.github.io/statistical-learning-method-solutions-manual/#/)
+
+- [微积分](https://www.geogebra.org/m/x39ys4d7)
 
 ## 英语
 
@@ -502,6 +530,10 @@
 - [中文思维导图: Psyduck](https://github.com/SmartKeyerror/Psyduck)
 
 # 大学课程
+
+- [awesome cs大学课程（英文）](https://asmen.icopy.site/)
+
+    - [awesome cs大学课程（中文）](https://asmcn.icopy.site/awesome/awesome-courses/)
 
 - [Computer Science courses](https://github.com/Developer-Y/cs-video-courses)
 

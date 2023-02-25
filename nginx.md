@@ -670,20 +670,31 @@ lingering_time 30s
 ### 文件相关的配置
 
 ```nginx
-# 直接在内核态复制文件，减少内核态和用户态的切换
-sendfile off
+# on 表示开启零拷贝技术，使用 sendfile() 系统调用传输文件：2 次上下文切换，和 2 次数据拷贝
+# off 使用 read() + write() 传统方式进行传输文件：4 次上下文切换，和 4 次数据拷贝
+sendfile on
 
 # 在sendfile on后 将响应包头放到一个 TCP 包中发送
 tcp_nopush off
 
-# aio (异步I/O) 和 sendfile 互诉
-aio off
+# aio (异步I/O)
+aio on
 
 # 使用 O_DIRECT 读取文件 和 sendfile 互诉
 directio_aligment size
 
 # 文件缓存(默认off)
 open_file_cache max=1000 inactive=20s
+```
+
+- 当文件大小大于 `directio` 值后，使用「异步 I/O + 直接 I/O」，否则使用零拷贝技术（sendfile)
+
+```nginx
+location /video/ { 
+    sendfile on; 
+    aio on; 
+    directio 1024m; 
+}
 ```
 
 ## pcre 正则表达式
