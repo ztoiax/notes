@@ -18,10 +18,6 @@
         * [mitmproxy(代理http, 并抓包)](#mitmproxy代理http-并抓包)
         * [socat](#socat)
         * [tc(traffic control队列控制)](#tctraffic-control队列控制)
-    * [压力测试](#压力测试)
-        * [wrk](#wrk)
-        * [wrk2: wrp的变种](#wrk2-wrp的变种)
-        * [lighthouse(chrome 网页性能测试)](#lighthousechrome-网页性能测试)
     * [应用层](#应用层)
         * [http](#http)
             * [curl](#curl)
@@ -50,15 +46,30 @@
         * [nping(代替 ping)](#nping代替-ping)
         * [hping](#hping)
     * [网络层](#网络层)
+        * [ifconfig(net-tools)](#ifconfignet-tools)
         * [ip(iproute2)](#ipiproute2)
         * [ipcalc(ip二进制显示)](#ipcalcip二进制显示)
         * [nali(ip地址离线数据库)](#naliip地址离线数据库)
         * [traceroute](#traceroute)
         * [tcptraceroute](#tcptraceroute)
+        * [防火墙](#防火墙)
+            * [iptables](#iptables)
+                * [基本命令](#基本命令-1)
+                * [过滤命令](#过滤命令)
+                * [通过iptables实现nat功能](#通过iptables实现nat功能)
+            * [nftables](#nftables)
+                * [iptables 转换成 nftables](#iptables-转换成-nftables)
     * [数据链路层](#数据链路层)
         * [ethtool](#ethtool)
         * [arp](#arp)
         * [arpwatch](#arpwatch)
+* [性能监控](#性能监控)
+    * [观察工具](#观察工具)
+        * [查看吞吐率，PPS（Packet Per Second 包 / 秒）](#查看吞吐率ppspacket-per-second-包--秒)
+    * [压力测试](#压力测试)
+        * [wrk](#wrk)
+        * [wrk2: wrp的变种](#wrk2-wrp的变种)
+        * [lighthouse(chrome 网页性能测试)](#lighthousechrome-网页性能测试)
 * [优秀文章](#优秀文章)
 * [在线工具](#在线工具)
 
@@ -174,6 +185,21 @@ netstat -tn | awk '{print $4}' | awk -F ":" '{print $1}' | sort | uniq -c
 netstat -a -p --unix
 ```
 
+- 查看统计信息
+
+    ```sh
+    # 比ss -s输出的信息更丰富
+    netstat -s
+    ```
+
+    | ss -s没有的统计信息         |       内容             |
+    |-----------------------------|--------------------|
+    | active connections openings | TCP 协议的主动连接 |
+    | passive connection openings | 被动连接           |
+    | failed connection attempts  | 失败重试           |
+    | segments send out           | 发送分段的数量     |
+    | segments received           | 接收分段的数量     |
+
 ### ss (iproute2)
 
 > 基本等同于 `netstat` 工作在 `socket` 层,没有 `-n` 选项,因此不能显示域名
@@ -182,6 +208,16 @@ netstat -a -p --unix
 |------|-----------------------|
 | -l   | listening状态的socket |
 | -t   | 只显示tcp socket      |
+
+- 接收队列（Recv-Q）和发送队列（Send-Q），在不同的 socket 状态有所不同
+
+    - 在LISTEN状态下的Recv-Q：当前全连接队列的大小，也就是当前已完成三次握手并等待server端 accept() 的 TCP 连接
+
+    - 在LISTEN状态下的Send-Q：当前全连接最大队列长度：`net.core.somaxconn`的值或`nginx backlog`的值（nginx backlog默认为511）
+
+    - 在Established状态下的Recv-Q：已收到但未被应用进程读取的字节数
+
+    - 在Established状态下的Send-Q：已发送但未收到确认的字节数
 
 ```bash
 # 显示所有 LISTEM 状态 tcp,udp 进程
@@ -195,6 +231,9 @@ ss -tuap state ESTABLISHED
 
 # 查看目标ip的cwnd、rtt、rto等网络参数
 ss -itmpn dst 104.18.3.111
+
+# 查看统计信息。比netstat -s要少
+ss -s
 ```
 
 ### nc（文件传输）
@@ -546,24 +585,6 @@ tc filter add dev ens3 parent 1: \
     protocol ipv6 u32 match ip6 protocol 6 0xff \
     match ip6 dport 5001 0xffff flowid 1:3
 ```
-
-## 压力测试
-
-### [wrk](https://github.com/wg/wrk)
-
-| 参数 | 操作     |
-|------|----------|
-| -t   | 线程数   |
-| -c   | 连接数   |
-| -d   | 压测时间 |
-
-```sh
-wrk -t 6 -c 30000 -d 60s https://127.0.0.1:80
-```
-
-### [wrk2: wrp的变种](https://github.com/giltene/wrk2)
-
-### [lighthouse(chrome 网页性能测试)](https://github.com/GoogleChrome/lighthouse)
 
 ## 应用层
 
@@ -1074,6 +1095,18 @@ hping3 --traceroute -V -1 www.baidu.com
 
 ## 网络层
 
+### ifconfig(net-tools)
+
+- 以下这些指标不为 0 时，则说明网络发送或者接收出问题了
+
+    | 字段       | 表示                                                                                                                                                            |
+    |------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | errors     | 发生错误的数据包数，比如校验错误、帧同步错误等                                                                                                                  |
+    | dropped    | 丢弃的数据包数，即数据包已经收到了 Ring Buffer（这个缓冲区是在内核内存中，更具体一点是在网卡驱动程序里），但因为系统内存不足等原因而发生的丢包                  |
+    | overruns   | 超限数据包数，即网络接收/发送速度过快，导致 Ring Buffer 中的数据包来不及处理，而导致的丢包，因为过多的数据包挤压在 Ring Buffer，这样 Ring Buffer 很容易就溢出了 |
+    | carrier    | 发生 carrirer 错误的数据包数，比如双工模式不匹配、物理电缆出现问题等                                                                                            |
+    | collisions | 冲突、碰撞数据包数                                                                                                                                              |
+
 ### ip(iproute2)
 
 | 参数    | 简写 | 内容     |
@@ -1228,9 +1261,283 @@ nali update
 
 tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过最常见的防火墙的过滤。正如该命令的手册页所述，tcptraceroute 发送 TCP SYN 数据包而不是 UDP 或 ICMP ECHO 数据包，所以其不易被阻塞。
 
+### 防火墙
+
+- `ip_rcv()` 中会处理 netfilter 和 iptable 过滤，如果你有很多或者很复杂的 netfilter 或iptables 规则，这些规则都是在软中断的上下⽂中执⾏的，会加⼤⽹络延迟。
+
+#### iptables
+
+> `iptables` 已经落后了，建议使用 [nftables](https://wiki.nftables.org/wiki-nftables/index.php/Why_nftables%3F_) 一个替换现有{ip,ip6,arp,eb}tables 的框架。[Main differences with iptables](https://wiki.nftables.org/wiki-nftables/index.php/Main_differences_with_iptables)
+
+---
+
+> [iptables 转换为 nftables 的命令](#nftables)
+
+- iptables 和 netfilter 的关系
+
+`iptables` 只是防火墙的管理工具，真正实现防火墙功能的是 `netfilter`，它是 Linux 内核中实现包过滤的内部结构
+
+- iptables 传输数据包的过程
+
+    - ① 当一个数据包进入网卡时，它首先进入 PREROUTING 链，内核根据数据包目的 IP 判断是否需要转送出去。
+    - ② 如果数据包就是进入本机的，它就会沿着图向下移动，到达 INPUT 链。数据包到了 INPUT 链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些数据包会经过 OUTPUT 链，然后到达 POSTROUTING 链输出。
+    - ③ 如果数据包是要转发出去的，且内核允许转发，数据包就会如图所示向右移动，经过 FORWARD 链，然后到达 POSTROUTING 链输出。
+
+    - ①->② 
+    - ①->③
+
+    ![image](./Pictures/net-tools/iptable.avif)
+
+- iptables 的表和链：
+
+    - 链的优先顺序：Raw—>mangle—>nat—>filter
+
+    | 表                                                                    | 链                                              |
+    | --------------------------------------------------------------------- | ----------------------------------------------- |
+    | filter (过滤数据包)                                                   | INPUT、FORWARD、OUTPUT                          |
+    | Nat (网络地址转换)                                                    | PREROUTING、POSTROUTING、OUTPUT                 |
+    | Mangle (修改数据包的服务类型、TTL、并且可以配置路由实现 QOS 内核模块) | PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD |
+    | Raw (决定数据包是否被状态跟踪机制处理)                                | OUTPUT、PREROUTING                              |
+
+    | 链          | 规则           |
+    | ----------- | -------------- |
+    | INPUT       | 进来的数据包   |
+    | OUTPUT      | 出去的数据包   |
+    | PREROUTING  | 路由前的数据包 |
+    | POSTROUTING | 路由后的数据包 |
+
+    ![image](./Pictures/net-tools/iptable1.avif)
+
+- 参数
+
+    | 参数 | 操作                            |
+    | ---- | ------------------------------- |
+    | -L   | 查看规则                        |
+    | -I   | 在首行添加规则                  |
+    | -A   | 在末尾添加规则                  |
+    | -D   | 删除规则,可按规则序号和内容删除 |
+    | -F   | 删除所有规则                    |
+    | -j   | 动作                            |
+    | -s   | 源地址                          |
+    | -d   | 目标地址                        |
+    | -i   | 源接口                          |
+    | -o   | 目标接口                        |
+    | -p   | 协议                            |
+
+- 规则：
+
+    - 注意：要把允许规则放在前面(-I)，拒绝规则放在后面(-A)
+
+    | -j(动作) | 操作                                                                 |
+    | -------- | -------------------------------------------------------------------- |
+    | ACCEPT   | 允许数据包通过                                                       |
+    | DROP     | 直接丢弃数据包，不给任何回应信息                                     |
+    | REJECT   | 拒绝数据包通过，必要时会给数据发送端一个响应的信息。                 |
+    | LOG      | 在/var/log/messages 文件中记录日志信息，然后将数据包传递给下一条规则 |
+
+    ![image](./Pictures/net-tools/iptable2.avif)
+
+##### 基本命令
+
+```sh
+# 创建 INPUT 链的第2条规则
+iptables -I INPUT 2
+
+# 查看 INPUT 链的第2条规则
+iptables -L INPUT 2
+
+# 删除 INPUT 链的第2条规则
+iptables -D INPUT 2
+
+# 查看规则
+iptables -L
+
+# 查看INPUT表的规则
+iptables -L INPUT
+
+# 查看详细规则
+iptables -nvL --line-numbers
+
+# 最近一次启动后所记录的数据包
+journalctl -k | grep "IN=.*OUT=.*" | less
+```
+
+- 保存规则：
+
+| 发行版 | 默认保存目录            |
+| ------ | ----------------------- |
+| centos | /etc/sysconfig/iptables |
+| arch   | /etc/iptables           |
+
+```sh
+iptables-save > /etc/iptables/iptables.bak
+# 只备份filter
+iptables-save -t filter > filter.bak
+
+# 重新加载配置文件
+iptables-restore < /etc/iptables/iptables.bak
+```
+
+- 重置规则：
+
+```sh
+iptables -F #刷新chain
+iptables -X #删除非默认chain
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -t raw -F
+iptables -t raw -X
+iptables -t security -F
+iptables -t security -X
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+```
+
+##### 过滤命令
+
+- 注意`ACCEPT`,`DROP`必须要大写
+
+- 注意：要把拒绝规则放在允许规则后面
+
+- 端口过滤：
+
+```sh
+# 只允许 tcp 协议,访问 80 端口
+iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+
+# 只允许 tcp 以外的协议,访问 80 端口
+iptables -I INPUT -p ! tcp --dport 80 -j ACCEPT
+
+# 只允许在 9:00 到 18:00 这段时间的 tcp 协议,访问 80 端口
+iptables -I INPUT -p tcp --dport 80 -m time --timestart 9:00 --timestop 18:00 -j ACCEPT
+
+# 只允许 192.168.1.0/24 网段使用 SSH
+# 注意要把拒绝规则放在后面
+iptables -I INPUT -p tcp --dport 22 -s 192.168.1.0/24 -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+
+# mysql
+iptables -I INPUT -p tcp --dport 3306 -s 127.0.0.1 -j ACCEPT
+iptables -I INPUT -p tcp --dport 3306 -s 192.168.1.0/24 -j ACCEPT
+iptables -A INPUT -p tcp --dport 3306 -j DROP
+```
+
+- ip地址过滤
+
+```sh
+# 禁止用户访问 www.baidu.com 的网站。
+iptables -A OUTPUT -d www.baidu.com -j DROP
+
+# 禁止 从 192.168.1.0/24 到 10.1.1.0/24 的流量
+iptables -I FORWARD -s 192.168.1.0/24 -d 10.1.1.0/24 -j DROP
+```
+
+- mac地址过滤
+
+```sh
+# 禁止转发来自 MAC 地址为 00：0C：29：27：55：3F 的和主机的数据包
+iptables -I FORWARD -m mac --mac-source 00:0c:29:27:55:3F -j DROP
+```
+
+##### 通过iptables实现nat功能
+
+```sh
+# 将目标端口是 80 的流量,跳转到 192.168.1.1
+iptables -t nat -I PREROUTING -p tcp --dport 80 -j DNAT --to-dest 192.168.1.1
+
+# 将出口为 80 端口的流量,跳转到 192.168.1.1:8080 端口
+iptables -t nat -I OUTPUT -p tcp --dport 80 -j DNAT --to-dest 192.168.1.1:8080
+
+# 伪装 192.168.100.1 为 1.1.1.1
+iptables -t nat -I POSTROUTING -s 192.168.100.1 -j SNAT --to-source 1.1.1.1
+```
+
+使用 tcpdump 抓包测试
+
+![image](./Pictures/net-tools/iptable3.avif)
+
+```sh
+# 将所有内部地址,伪装成一个外部公网地址
+iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE
+
+# 通过 nat 隐藏源 ip 地址
+iptables -t nat -I POSTROUTING -j SNAT --to-source 1.2.3.4
+```
+
+#### nftables
+
+和`iptables`不同，`nftables` 不包含内置表
+
+<span id="nftables"></span>
+
+##### iptables 转换成 nftables
+
+```sh
+iptables-save > save.txt
+iptables-restore-translate -f save.txt > ruleset.nft
+nft -f ruleset.nft
+nft list ruleset
+```
+
+| **nftables 簇** | **iptables 实用程序**  |
+| --------------- | ---------------------- |
+| ip              | iptables               |
+| ip6             | ip6tables              |
+| inet            | iiptables and p6tables |
+| arp             | arptables              |
+| bridge          | ebtables               |
+
+- 基础命令
+
+```sh
+# 列出所有表
+nft list ruleset
+# 保存规则
+nft list ruleset > ruleset.nft
+# 读取规则文件
+nft -f ruleset.nft
+
+# 永久保存规则
+nft list ruleset > /etc/nftables.conf
+
+# 删除fliter表
+nft delete table ip fliter
+
+# 删除所有规则
+nft flush ruleset
+```
+
+- 禁止访问 baidu
+
+```sh
+# 创建一个名为filter的表
+nft add table ip filter
+
+# 在filter表创建OUTPUT规则
+nft 'add chain ip filter OUTPUT { type filter hook output priority 0; policy accept; }'
+
+# 添加规则
+nft add rule ip filter OUTPUT ip daddr 182.61.200.7 counter drop
+nft add rule ip filter OUTPUT ip daddr 182.61.200.6 counter drop
+```
+
+- monitor模式
+
+```sh
+# 追踪nft
+nft monitor
+
+# 只追踪新规则
+nft monitor new rules
+```
 ## 数据链路层
 
 ### ethtool
+
+- 这个命令之所以能查看⽹卡收发包统计、能修改⽹卡⾃适应模式、能调整 RX 队列的数量和⼤⼩，是因为 ethtool 命令最终调⽤到了⽹卡驱动的相应⽅法，⽽不是 ethtool 本身有这个超能⼒
 
 - `ethtool eth0` 显示`eth0`接口的详细信息
 - `ethtool -i eth0`显示`eth0`接口的驱动信息
@@ -1263,6 +1570,45 @@ arp -d 192.168.1.1
 ```bash
 arpwatch -i enp27s0 -f arpwatch.log
 ```
+
+# 性能监控
+## 观察工具
+
+### 查看吞吐率，PPS（Packet Per Second 包 / 秒）
+
+```sh
+
+# 每1秒输出，每个虚拟网卡的信息
+# rxpck/s 和 txpck/s 分别是接收和发送的 PPS，单位为包 / 秒。
+# rxkB/s 和 txkB/s 分别是接收和发送的吞吐率，单位是 KB/ 秒。
+# rxcmp/s 和 txcmp/s 分别是接收和发送的压缩数据包数，单位是包 / 秒。
+sar -n DEV 1
+
+# 显示关于网络错误的统计数据
+sar -n EDEV 1
+
+# 显示 TCP 的统计数据
+sar -n TCP 1
+```
+
+## 压力测试
+
+### [wrk](https://github.com/wg/wrk)
+
+| 参数 | 操作     |
+|------|----------|
+| -t   | 线程数   |
+| -c   | 连接数   |
+| -d   | 压测时间 |
+
+```sh
+wrk -t 6 -c 30000 -d 60s https://127.0.0.1:80
+```
+
+### [wrk2: wrp的变种](https://github.com/giltene/wrk2)
+
+### [lighthouse(chrome 网页性能测试)](https://github.com/GoogleChrome/lighthouse)
+
 
 # 优秀文章
 

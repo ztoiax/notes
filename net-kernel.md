@@ -6,6 +6,7 @@
 
 ![image](./Pictures/net-kernel/osi1.avif)
 
+![image](./Pictures/net-kernel/osi2.avif)
 ## 应用层
 
 ### HTTP
@@ -1081,24 +1082,26 @@ net.ipv4.tcp_max_tw_buckets = 32768
             sysctl net.ipv4.tcp_abort_on_overflow
             net.ipv4.tcp_abort_on_overflow = 0
             ```
+        在LISTEN状态下的Recv-Q：当前全连接队列的大小，也就是当前已完成三次握手并等待server端 accept() 的 TCP 连接
+
+        在LISTEN状态下的Send-Q：当前全连接最大队列长度：`net.core.somaxconn`的值或`nginx backlog`的值（nginx backlog默认为511）
 
         ```sh
         # 显示LISTEN状态的tcp连接
-        ss -lnt
+        ss -lntp
         State      Recv-Q     Send-Q               Local Address:Port           Peer Address:Port     Process
         LISTEN     0          4096                      127.0.0.1:8861                0.0.0.0:*
         ```
-        Recv-Q：当前全连接队列的大小，也就是当前已完成三次握手并等待server端 accept() 的 TCP 连接
-        Send-Q：当前全连接最大队列长度：`net.core.somaxconn`的值或`nginx backlog`的值（nginx backlog默认为511）
+        在Established状态下的Recv-Q：已收到但未被应用进程读取的字节数
+
+        在Established状态下的Send-Q：已发送但未收到确认的字节数
 
         ```sh
-        # 显示非LISTEN状态的tcp连接
-        ss -nt
+        # 显示ESTABLISHED状态的tcp连接
+        ss -tuap state ESTABLISHED
         State         Recv-Q    Send-Q            Local Address:Port              Peer Address:Port    Process
         SYN-SENT      0         1                 192.168.1.221:54900           172.217.163.42:443
         ```
-        Recv-Q：已收到但未被应用进程读取的字节数；
-        Send-Q：已发送但未收到确认的字节数；
 
         ```sh
         # 查看全队列溢出的次数
@@ -1255,7 +1258,7 @@ listen 80 fastopen=256
 
     - 进程调用read()后，数据被读入了用户空间，buffer就被清空，接收窗口就会变大。
 
-    - 内核为每条tcp分配buffer(skb数据结构)
+    - 内核为每条tcp分配buffer(sk_buff数据结构)
 
     - 如果sql查询的过大超过buffer会很慢，通过加大buffer可以减少查询时间
 
@@ -1691,12 +1694,19 @@ net.ipv4.tcp_congestion_control = bbr
 
 - [Troubleshooting MTU Issues](https://netbeez.net/blog/troubleshooting-mtu-issues/)
 
+- 如果ip层的网络包的长度比链路层的 MTU 还大，那么 IP 层就需要进行分片
+
 | Packet Size | Interface MTU | DF option (IP header) | Layer 2 interface (switched) | Layer 3 interface (routed) |
 |-------------|---------------|-----------------------|------------------------------|----------------------------|
 | <= 1500     | 1500          | 0 (unset)             | Pass                         | Pass                       |
 | <= 1500     | 1500          | 1 (set)               | Pass                         | Pass                       |
 | >= 1500     | 1500          | 0 (unset)             | Discard                      | Fragment                   |
 | >= 1500     | 1500          | 1 (set)               | Discard                      | Discard and Notify         |
+
+```sh
+# 查看每个网卡的MTU
+ip a
+```
 
 ## 包的拆分与合并TSO、GSO、LRO、GRO
 

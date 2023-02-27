@@ -1490,13 +1490,16 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
         - 最后一步的「数据从内核态拷贝到用户态」依然时同步
 
+        - 优点：一个线程可以处理多个连接
+        - 缺点：需要频繁的系统调用
+
         ![image](./Pictures/linux-kernel/io-Non-blocking.avif)
 
     - I/O 多路复用：当内核数据准备好时，再以事件通知应用程序进行操作。如果没有事件发生，那么当前线程就会发生阻塞，这时 CPU 会切换其他线程执行任务
 
-        - 可以在一个线程内同时处理多个 socket 的 IO 请求
+        - 主要复用的是通过有限次的系统调用来实现管理多个网络连接
 
-        - 系统调用：`select`, `poll`, `epoll`
+        - 系统调用有：`select`, `poll`, `epoll`
 
         ![image](./Pictures/linux-kernel/io-multiplexing.avif)
 
@@ -1796,21 +1799,25 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
     - 两种事件触发机制：
 
-        - 边缘触发（edge-triggered，ET）：有可读事件发生时，服务器端只会从 epoll_wait 中苏醒一次，即使进程没有调用 read 函数从内核读取数据，也依然只苏醒一次，因此我们程序要保证一次性将内核缓冲区的数据读取完
+        - 边缘触发（edge-triggered，ET）：当 epoll_wait 检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用 epoll_wait 时，不会再次响应应用程序并通知此事件。
 
             - 程序会一直执行 I/O 操作，直到系统调用（如 read 和 write）返回错误，错误类型为 EAGAIN 或 EWOULDBLOCK。
 
             - 你的快递被放到了一个快递箱里，如果快递箱只会通过短信通知你一次，即使你一直没有去取，它也不会再发送第二条短信提醒你
 
-        - 水平触发（level-triggered，LT）：有可读事件发生时，服务器端不断地从 epoll_wait 中苏醒，直到内核缓冲区数据被 read 函数读完才结束，目的是告诉我们有数据需要读取
+        - 水平触发（level-triggered，LT）（默认）：当 epoll_wait 检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用 epoll_wait 时，会再次响应应用程序并通知此事件。
 
             - 如果快递箱发现你的快递没有被取出，它就会不停地发短信通知你，直到你取出了快递，它才消停
 
-        - 边缘触发相比水平触发，效率更高，减少 `epoll_wait` 的系统调用次数
+        - 边缘触发（ET）相比水平触发（LT），效率更高，减少 `epoll_wait` 的系统调用次数
 
             - select/poll 只有水平触发模式，epoll 默认是水平触发
 
     ![image](./Pictures/linux-kernel/io-multiplexing-epoll.avif)
+
+- 主流中间件的网络模型
+
+    ![image](./Pictures/linux-kernel/io-multiplexing-example.avif)
 
 #### Reactor架构
 
