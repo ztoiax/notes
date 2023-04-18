@@ -357,6 +357,10 @@ git commit -m "..."
 
 # github
 
+- 访问速度慢的问题：
+
+    - ghproxy方法：如这样`https://ghproxy.com/https://github.com/liuchengxu/vim-clap`
+
 - [github新认证token背后的故事](https://github.blog/2021-04-05-behind-githubs-new-authentication-token-formats/)
     - token 前缀:
         - ghp for GitHub personal access tokens

@@ -18,6 +18,7 @@
         * [mitmproxy(代理http, 并抓包)](#mitmproxy代理http-并抓包)
         * [socat](#socat)
         * [tc(traffic control队列控制)](#tctraffic-control队列控制)
+        * [tailscale：WireGuard vpn](#tailscalewireguard-vpn)
     * [应用层](#应用层)
         * [http](#http)
             * [curl](#curl)
@@ -584,6 +585,16 @@ tc filter add dev ens3 parent 1: \
 tc filter add dev ens3 parent 1: \
     protocol ipv6 u32 match ip6 protocol 6 0xff \
     match ip6 dport 5001 0xffff flowid 1:3
+```
+
+### [tailscale：WireGuard vpn](https://github.com/tailscale/tailscale)
+
+```sh
+# 发送文件
+sudo tailscale file cp filename ip:
+
+# 设置接受文件的目录
+sudo tailscale file get .
 ```
 
 ## 应用层
@@ -1275,7 +1286,7 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 
 - iptables 和 netfilter 的关系
 
-`iptables` 只是防火墙的管理工具，真正实现防火墙功能的是 `netfilter`，它是 Linux 内核中实现包过滤的内部结构
+`iptables` 只是防火墙的管理工具，真正实现防火墙功能的是 `netfilter`，由内核 hook 构成。每个进入网络系统的包（接收或发送）在经过协议栈时都会触发这些 hook，程序可以通过注册 hook 函数的方式在一些关键路径上处理网络流量。
 
 - iptables 传输数据包的过程
 
@@ -1288,23 +1299,28 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 
     ![image](./Pictures/net-tools/iptable.avif)
 
+- netfilter 提供了 5 个 hook 点
+
+    | 链          | 规则                       |
+    |-------------|----------------------------|
+    | PREROUTING  | 进入协议栈后，路由前的包   |
+    | INPUT       | 路由判断是本机的包         |
+    | FORWARD     | 路由判断是其他主机的包     |
+    | OUTPUT      | 进入协议栈前，本机发送的包 |
+    | POSTROUTING | 路由后的本机发送的包       |
+
 - iptables 的表和链：
 
-    - 链的优先顺序：Raw—>mangle—>nat—>filter
+    - 表的优先顺序：Raw —> mangle —> nat —> filter
+    - 链的优先顺序：PREROUTING -> INPUT -> FORWARD -> OUTPUT -> POSTROUTING
 
-    | 表                                                                    | 链                                              |
-    | --------------------------------------------------------------------- | ----------------------------------------------- |
-    | filter (过滤数据包)                                                   | INPUT、FORWARD、OUTPUT                          |
-    | Nat (网络地址转换)                                                    | PREROUTING、POSTROUTING、OUTPUT                 |
-    | Mangle (修改数据包的服务类型、TTL、并且可以配置路由实现 QOS 内核模块) | PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD |
-    | Raw (决定数据包是否被状态跟踪机制处理)                                | OUTPUT、PREROUTING                              |
-
-    | 链          | 规则           |
-    | ----------- | -------------- |
-    | INPUT       | 进来的数据包   |
-    | OUTPUT      | 出去的数据包   |
-    | PREROUTING  | 路由前的数据包 |
-    | POSTROUTING | 路由后的数据包 |
+    | table（表）            | 内容                                                                  | 链                                              |
+    |------------------------|-----------------------------------------------------------------------|-------------------------------------------------|
+    | filter (过滤数据包)    | 判断是否允许一个包通过                                                | INPUT、FORWARD、OUTPUT                          |
+    | Nat (网络地址转换)     | 是否以及如何修改包的源/目的地址                                       | PREROUTING、POSTROUTING、OUTPUT                 |
+    | Mangle (修改ip包的头） | 服务类型、TTL、并且可以配置路由实现 QOS 内核模块)                     | PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD |
+    | Raw (conntrack 相关)   | iptables 防火墙是有状态，对每个包进行判断的时候是依赖已经判断过的包。 | OUTPUT、PREROUTING                              |
+    | security               | 给包打上 SELinux 标记                                                 | INPUT、FORWARD、OUTPUT                          |
 
     ![image](./Pictures/net-tools/iptable1.avif)
 
@@ -1444,28 +1460,59 @@ iptables -I FORWARD -m mac --mac-source 00:0c:29:27:55:3F -j DROP
 
 ##### 通过iptables实现nat功能
 
-```sh
-# 将目标端口是 80 的流量,跳转到 192.168.1.1
-iptables -t nat -I PREROUTING -p tcp --dport 80 -j DNAT --to-dest 192.168.1.1
+- [[译] NAT - 网络地址转换（2016）](http://arthurchiao.art/blog/nat-zh/)
 
-# 将出口为 80 端口的流量,跳转到 192.168.1.1:8080 端口
-iptables -t nat -I OUTPUT -p tcp --dport 80 -j DNAT --to-dest 192.168.1.1:8080
+| -j 动作    | 只适用的chain      | 操作                                                                                                                                                                    |
+|------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| MASQUERADE | POSTROUTING        | 修改源 IP 为动态新 IP（动态获取网络接口 IP）。如果接口 的 IP 地址发送了变化，MASQUERADE 规则不受影响，可以正常工作；而对于 SNAT 就必须重新调整规则。                    |
+| SNAT       | POSTROUTING        | 发送方的地址会被静态地修改。与 `MASQUERADE` 的区别在于，SNAT必须显式指定转换后的 IP。 如果路由器配置的是静态 IP 地址，那 SNAT 是最合适的选择，因为它比 MASQUERADE 更 快 |
+| DNAT       | PREROUTING、OUTPUT | 修改目的 IP                                                                                                                                                             |
+| REDIRECT   | PREROUTING、OUTPUT | 包被重定向到路由器的另一个本地端口                                                                                                                                      |
 
-# 伪装 192.168.100.1 为 1.1.1.1
-iptables -t nat -I POSTROUTING -s 192.168.100.1 -j SNAT --to-source 1.1.1.1
-```
+- NAT假设路由器的本地网络走 eth0 端口，到公网的网络走 eth1 端口。
+    ```sh
+    # 匹配成功后的动作是 MASQUERADE （伪装）数据包
+    iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+    ```
 
-使用 tcpdump 抓包测试
+- 基本命令
+    ```sh
+    # 将目标端口是 80 的流量,跳转到 192.168.1.1
+    iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-dest 192.168.1.1
 
-![image](./Pictures/net-tools/iptable3.avif)
+    # 将出口为 80 端口的流量,跳转到 192.168.1.1:8080 端口
+    iptables -t nat -A OUTPUT -p tcp --dport 80 -j DNAT --to-dest 192.168.1.1:8080
 
-```sh
-# 将所有内部地址,伪装成一个外部公网地址
-iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE
+    # 伪装 192.168.100.1 为 1.1.1.1
+    iptables -t nat -A POSTROUTING -s 192.168.100.1 -j SNAT --to-source 1.1.1.1
+    # 通过 nat 隐藏源 ip 地址
+    iptables -t nat -A POSTROUTING -j SNAT --to-source 1.2.3.4
 
-# 通过 nat 隐藏源 ip 地址
-iptables -t nat -I POSTROUTING -j SNAT --to-source 1.2.3.4
-```
+    # 从 80 端口进来的流量，重定向到 8080 端口
+    iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 8080
+    # 将 5000 端口 进来的流量重定向到本机的 22 端口（SSH）
+    iptables -t nat -A PREROUTING -p tcp --dport 5000 -j REDIRECT --to-ports 22
+    ```
+
+- 通过跳板机111.111.111.111的 5001 端口，连接机器 123.123.123.123 的 110 （POP3）端口
+    ```sh
+    # 在跳板机111.111.111.111上配置
+    iptables -t nat -A PREROUTING -p tcp --dport 5001 \
+    -j DNAT --to-destination 123.123.123.123:110
+       
+    iptables -t nat -A POSTROUTING -p tcp --dport 110 \
+    -j MASQUERADE
+    ```
+
+    ![image](./Pictures/net-tools/iptable3.avif)
+
+- 通过公网 IP 123.123.123.123 的 80 端口访问 192.168.1.2 的 HTTP 服务
+    - NAT 路由器的地址是 192.168.1.1
+    - http服务器在192.168.1.2
+    - 公网 IP 123.123.123.123
+    ```sh
+    iptables -t nat -A PREROUTING -p tcp -i eth1 --dport 80 -j DNAT --to 192.168.1.2
+    ```
 
 #### nftables
 

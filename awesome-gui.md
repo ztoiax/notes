@@ -1,6 +1,8 @@
 <!-- vim-markdown-toc GFM -->
 
 * [file](#file)
+    * [文件传输](#文件传输)
+    * [文件管理器](#文件管理器)
 * [image viewer(图片查看器)](#image-viewer图片查看器)
     * [qt](#qt)
     * [gtk](#gtk)
@@ -33,9 +35,19 @@
 
 - [zathura: pdf, epub阅读器](https://github.com/pwmt/zathura)
 
+- [aliyunpan(阿里云盘)](https://github.com/liupan1890/aliyunpan)
+
+- [alist:可添加各种网盘的网页文件管理器](https://github.com/alist-org/alist)
+
+## 文件传输
+
+- [localsend](https://github.com/localsend/localsend)
+
+## 文件管理器
+
 - pcmanfm(文件管理器)
 
-- [aliyunpan(阿里云盘)](https://github.com/liupan1890/aliyunpan)
+- [sigma-file-manager](https://github.com/aleksey-hoffman/sigma-file-manager)
 
 # image viewer(图片查看器)
 
@@ -61,7 +73,11 @@
 
 - [keynav：键盘控制鼠标](https://github.com/jordansissel/keynav)
 
+- [lx-music-desktop：一个基于 electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
+
 - [qv2ray](https://github.com/Qv2ray/Qv2ray)
+
+- [nekoray:v2ray客户端](https://github.com/MatsuriDayo/nekoray)
 
 # 其他项目
 

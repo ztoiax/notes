@@ -27,9 +27,7 @@
 
 # 免费在线书籍
 
-## 定律
-
-- [对开发人员有用的定律、理论、原则和模式](https://github.com/nusr/hacker-laws-zh)
+## 计算理论
 
 ## Program Language(编程语言)
 
@@ -49,7 +47,9 @@
 
 - [C++ Core Guidelines(C++之父写的指南)](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 
-- [ruanyif: C 语言教程](https://wangdoc.com/clang/intro.html)
+- [理查德·斯托曼编写的 C 语言教程](https://www.cs.unibo.it/~renzo/doc/C/c.pdf)
+
+- [阮一峰: C 语言教程](https://wangdoc.com/clang/intro.html)
 
 - [C 参考手册](https://zh.cppreference.com/w/c)
 
@@ -116,6 +116,9 @@
 - [《SICP Clojure 描述》](http://www.sicpdistilled.com/)
 
 - [《The Scheme Programming Language Fourth Edition》](https://www.scheme.com/tspl4/)
+
+- [《Learn Lisp The Hard Way》](https://llthw.common-lisp.dev/)
+
 ### Haskell
 
 - [《Real World Haskell》 (中文)](http://cnhaskell.com/)
@@ -160,7 +163,17 @@
 
 - [Python Design Patterns](https://python-patterns.guide/)
 
+#### 数据科学
+
+- [《From Python to Numpy》](https://www.labri.fr/perso/nrougier/from-python-to-numpy/)
+
+- [《Scientific Visualization: Python + Matplotlib》](https://github.com/rougier/scientific-visualization-book)
+
+- [《Python & OpenGL for Scientific Visualization》](https://www.labri.fr/perso/nrougier/python-opengl/)
+
 - [《Python Data Science Handbook》](https://jakevdp.github.io/PythonDataScienceHandbook/)
+
+- [Official Matplotlib cheat sheets](https://github.com/matplotlib/cheatsheets)
 
 #### 框架
 
@@ -190,6 +203,10 @@
 
 - [《Hello，算法》](https://www.hello-algo.com/)
 
+- [Data Structure Visualizations（可视化）](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
+
+- [algorithm-visualizer（可视化）](https://algorithm-visualizer.org/)
+
 - [GitHub最大的开源算法库](https://the-algorithms.com/zh_Hans)
 
 - [多种编程语言实现 LeetCode、《剑指 Offer（第 2 版）》、《程序员面试金典（第 6 版）》题解](https://doocs.github.io/leetcode/#/)
@@ -205,6 +222,13 @@
 - [腾讯技术工程：hash 算法原理及应用漫谈](https://cloud.tencent.com/developer/article/1539930)
 
     - [腾讯技术工程：一致性 Hash 算法原理总结](https://cloud.tencent.com/developer/article/1955794)
+
+- [腾讯技术工程：经典论文解读——布隆过滤器](https://new.qq.com/rain/a/20230307A05QH000)
+
+- [Linus Torvalds' linked list argument for good taste, explained](https://github.com/mkirchner/linked-list-good-taste)
+
+- [推特推荐算法](https://github.com/twitter/the-algorithm)
+    - [推特官方博客对推荐算法的细节介绍](https://blog.twitter.com/engineering/en_us/topics/open-source/2023/twitter-recommendation-algorithm)
 
 ### 图形学
 
@@ -260,6 +284,8 @@
 
 - [《Software Engineering at Google》(谷歌软件工程)(中文)](https://qiangmzsx.github.io/Software-Engineering-at-Google/#/?id=software-engineering-at-google)
 
+- [对开发人员有用的定律、理论、原则和模式。](https://github.com/nusr/hacker-laws-zh)
+
 - [我做系统架构的一些原则](https://coolshell.cn/articles/21672.html)
 
 ## Operating System(操作系统)
@@ -288,13 +314,15 @@
 
 - [腾讯技术工程: 深入剖析虚拟内存工作原理](https://cloud.tencent.com/developer/article/1821336)
 
-- [腾讯技术工程: Linux I/O 那些事儿](https://cloud.tencent.com/developer/article/1902659)
-
 - [腾讯技术工程: Linux I/O 原理和 Zero-copy 技术全面揭秘](https://segmentfault.com/a/1190000038700641)
+
+- [eBPF 开发者教程与知识库：通过 20 个小工具一步步学习 eBPF（尝试教会 ChatGPT 编写 eBPF 程序）](https://github.com/eunomia-bpf/bpf-developer-tutorial)
 
 ## architecture(体系结构)
 
 - [《计算机体系结构基础 第3版(龙芯)》](https://foxsen.github.io/archbase/)
+
+- [《Algorithms for Modern Hardware》（现代硬件算法）](https://en.algorithmica.org/hpc/)
 
 - [【译】CPU 高速缓存原理和应用](https://segmentfault.com/a/1190000022785358)
 
@@ -316,6 +344,8 @@
 
 - [《TCP/IP网络编程》(韩-尹圣雨)学习笔记](https://github.com/riba2534/TCP-IP-NetworkNote)
 
+- [《Linux Advanced Routing & Traffic Control HOWTO》](https://lartc.org/howto/index.html)
+
 - [Computer Networking : Principles,Protocols and Practice](https://www.computer-networking.info/#)
 
 ## web
@@ -333,16 +363,6 @@
     - [objtube的卢克儿的视频：【干货】前端学习路线分享！写了个网站帮助你学习前端！](https://www.bilibili.com/video/BV1ZZ4y1H7rU)
 
 - [我零基础独立开发一个 Web/Hybrid 项目的经历](https://imf.ms/web/2022/07/05/my-first-web-hybird-project-experience/)
-
-### HTML
-
-### CSS
-
-- [Chrome 团队制作的 CSS 教程](https://web.dev/learn/css/)
-
-- [css教程](https://github.com/pengfeiw/css-tutorial/tree/master/chapters)
-
-- [css技巧](https://github.com/AllThingsSmitty/css-protips)
 
 ### Javascript
 
@@ -381,7 +401,7 @@
 
 - [Nginx 源码注释](https://github.com/chronolaw/annotated_nginx)
 
-- [ruanyf: Bash脚本教程](https://wangdoc.com/bash/intro.html)
+- [阮一峰: Bash脚本教程](https://wangdoc.com/bash/intro.html)
 
 - [《英雄联盟》在线服务运维之道](https://www.infoq.cn/minibook/running-online-services-riot)
 
@@ -431,6 +451,8 @@
 
 - [《游戏引擎浅入浅出》](https://www.thisisgame.com.cn/tutorial?book=cpp-game-engine-book&lang=zh&md=Introduction.md)
 
+- [最全面的游戏开发技术图谱](https://github.com/gonglei007/GameDevMind)
+
 ## AI(人工智能)
 
 - [《动手学深度学习》](https://zh.d2l.ai/)
@@ -448,6 +470,12 @@
 - [《Paradigms of Artificial Intelligence Programming》书籍以及lisp代码](https://github.com/norvig/paip-lisp)
 
 - [ai知识库搜索](https://easyai.tech/)
+
+## 数据科学
+
+- [《Foundation of Data Science》](https://www.cs.cornell.edu/jeh/book.pdf)
+
+    > 作者之一霍普克洛夫特(John Hopcroft)是图灵奖得主。本书提到了计算机科学的发展可以分为三个阶段：早期、中期和当今。早期就是让计算机可以运行起来，其重点在于开发程序语言、编译技术、操作系统，以及研究支撑它们的数学理论。中期是让计算机变得有用，变得高效，重点在于研究算法和数据结构。第三个阶段是让计算机具有更广泛的应用，发展重点从离散类数学转到概率和统计。
 
 ## 文档
 
@@ -484,6 +512,8 @@
 
 - [中文技术文档写作风格指南](https://zh-style-guide.readthedocs.io/zh_CN/latest/index.html)
 
+- [[笔记] Google（英文）技术写作课（2020）](http://arthurchiao.art/blog/google-tech-writing-notes-zh/)
+
 - [How Google, Twitter, and Spotify built a culture of documentation](https://blog.doctave.com/2021/09/07/how-google-twitter-and-spotify-build-culture-of-documentation.html)
 
 ## 健康
@@ -497,6 +527,18 @@
 ## 视频
 
 - [H.264 is Magic](https://sidbala.com/h-264-is-magic/)
+
+# 学术期刊/学会
+
+| 体系结构 |
+|----------|
+| ISCA     |
+| HPCA     |
+| MICRO    |
+
+| 计算理论 |
+|----------|
+| SIGACT   |
 
 # 其他相似项目
 

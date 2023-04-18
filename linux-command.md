@@ -1136,7 +1136,7 @@ mdadm --zero-superblock /dev/sdd
 
 - [FFmpeg - The Ultimate Guide](https://img.ly/blog/ultimate-guide-to-ffmpeg/)
 
-- [ruanyifeng:FFmpeg 视频处理入门教程](https://www.ruanyifeng.com/blog/2020/01/ffmpeg.html)
+- [阮一峰:FFmpeg 视频处理入门教程](https://www.ruanyifeng.com/blog/2020/01/ffmpeg.html)
 
 - [ffmpeg原理](https://ffmpeg.xianwaizhiyin.net/cover.html)
 

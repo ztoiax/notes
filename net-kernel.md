@@ -7,6 +7,7 @@
 ![image](./Pictures/net-kernel/osi1.avif)
 
 ![image](./Pictures/net-kernel/osi2.avif)
+
 ## 应用层
 
 ### HTTP
@@ -23,6 +24,8 @@
 - [腾讯技术工程：了解 HTTP 看这一篇就够](https://cloud.tencent.com/developer/article/2083715)
 
 - [陶辉：HTTP性能极限优化](https://www.taohui.tech/2020/01/08/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/http%E6%80%A7%E8%83%BD%E6%9E%81%E9%99%90%E4%BC%98%E5%8C%96/)
+
+- [杰瑞春：老师不会教你的，http协议在万维网世界中的一生！](https://www.bilibili.com/video/BV1Ee4y1c7Wq)
 
 - [技术蛋老师视频：HTTP/1.1，HTTP/2和HTTP/3的区别](https://www.bilibili.com/video/BV1vv4y1U77y)
 
@@ -382,15 +385,73 @@
 
 ### DNS
 
-![image](./Pictures/net-kernel/dns.avif)
+- [朱小厮的博客：一文搞懂 DNS 基础知识，收藏起来有备无患~](https://mp.weixin.qq.com/s?src=11&timestamp=1678026571&ver=4388&signature=XbzLnBwAUMdDP2*TUw4OVETJ7xPZ9A7f9bfiGR7mHT7RCnrMvu9IQDuVHJ5*xMfO9aws0PENX5LpobXKiIuwvuU54*-uVJe*TyMb9JP6FYxHCdAH7Ov1tFRv1B9hbqaj&new=1)
+
+- DNS 解析流程
+
+    - 标准 glibc 提供了 libresolv.so.2 动态库，我们的应用程序就是用它进行域名解析（也叫 resolving）的， 它还提供了一个配置文件 `/etc/nsswitch.conf` 决定了 resolving 的顺序，默认是先查找 hosts 文件，如果没有匹配到，再进行 DNS 解析
+    ```
+    hosts:      files dns myhostname
+    ```
+
+    - 本地 DNS 服务器在 `/etc/resolv.conf`
+
+    - 域名
+
+        - 全球有13个根域名解析服务器，这13条记录持久化在dns服务器中
+        ![image](./Pictures/net-kernel/dns.avif)
+
+        - 域名劫持
+        ![image](./Pictures/net-kernel/dns1.avif)
+
+    - 两种查询方式
+
+        - 1.迭代查询：由dns服务器对每一层域名服务器一查到底
+        ![image](./Pictures/net-kernel/dns-iteration.avif)
+
+        - 2.递归查询：每查一层会return（返回）下一层的域名服务器给客户端，之后客户端继续查询下一层，以此类推。相比递归查询，可以减少dns服务器的压力
+
+    - 转发：当前运营商(比如联通)的LocalDNS不访问百度权威DNS服务器，而是直接访问了其它运营商(比如电信)的LocalDNS服务器，有些小的运营商就是通过这样做来降低成本。如果电信的LocalDNS对非自家ip的访问限了速那么很明显会影响你的DNS解析时间。
+    ![image](./Pictures/net-kernel/dns2.avif)
+
+- HTTPDNS：代替传统的基于UDP的DNS协议，域名解析请求直接发送到HTTPDNS服务端，从而绕过运营商的DNS
 
 - 域名可以对应多个ip地址，从而实现负载均衡
 
     - 第1种方法：域名解析可以返回多个 IP 地址，客户端收到多个 IP 地址后，就可以自己使用轮询算法依次向服务器发起请求，实现负载均衡。
 
-    - 第2种方法：域名解析可以配置内部的策略，返回离客户端最近的主机，或者返回当前服务质量最好的主机，这样在 DNS 端把请求分发到不同的服务器，实现负载均衡。
+    - 第2种方法：智能解析。域名解析可以配置内部的策略，返回离客户端最近的主机，或者返回当前服务质量最好的主机，这样在 DNS 端把请求分发到不同的服务器，实现负载均衡。
+
+        - 智能解析依赖 EDNS 协议（google 起草的 DNS 扩展协议）： 在 DNS 包里面添加 origin client IP, nameserver 据 client IP 返回距离 client 比较近的 server IP 了
+
+        - 国内支持EDNS有DNSPod，已被腾讯收购
 
 - [李银城：从Chrome源码看DNS解析过程](https://www.rrfed.com/2018/01/01/chrome-dns-resolve/)
+
+- [arthurchiao：DNS 问题分析示例（2019）](http://arthurchiao.art/blog/dns-practice-zh/)
+
+    - 1.没有配置合适的dns服务器`/etc/resolv.conf`
+
+    - 2.`/etc/hosts` 中域名映射ip的问题：映射的ip未必是域名最优的地址，甚至可能不可用
+
+    - 3.DNS 查询不稳定，时快时慢：有 tc 或 iptables 规则，导致到 DNS 服务器的 packet 变慢或丢失
+        ```sh
+        # 查看tc规则
+        tc -p qdisc ls dev eth0
+        # 删除规则
+        tc qdisc del dev eth0 root
+        ```
+
+    - 4.DNS反向查询不稳定：ltrace -p <PID>跟踪 ping 域名进程发现问题，卡在 `gethostbyaddr()` 的函数
+        - 解决方法是：修改 `/etc/resolv.conf` 更换 DNS 服务器
+
+        ```sh
+        # 使用以下命令进行验证
+        nslookup <IP>
+        host <IP>
+        dig -x <IP>
+        ```
+
 
 ### FTP
 
@@ -431,7 +492,7 @@
 
 ### 数字签名和数字证书
 
-- [ruanyifeng：数字签名是什么？](https://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html)
+- [阮一峰：数字签名是什么？](https://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html)
 
 - 数字签名：的原理其实很简单，就是把公钥私钥的用法反过来，之前是公钥加密、私钥解密，现在是私钥加密、公钥解密。但又因为非对称加密效率太低，所以私钥只加密原文的hash值，这样运算量就小的多，而且得到的数字签名也很小，方便保管和传输。
 
@@ -1068,6 +1129,7 @@ net.ipv4.tcp_max_tw_buckets = 32768
     - accept 全连接队列： Server 端收到第三次握手的ACK包后，就会将连接信息从SYN 半连接队列移到此队列（此时三次握手已经完成）。`accept()`，从`accept全队列`取出连接对象，返回用于传输的 socket 的文件描述符
 
         ```sh
+        # 查看全队列的长度
         sysctl net.core.somaxconn
         net.core.somaxconn = 4096
         ```
@@ -1258,7 +1320,7 @@ listen 80 fastopen=256
 
     - 进程调用read()后，数据被读入了用户空间，buffer就被清空，接收窗口就会变大。
 
-    - 内核为每条tcp分配buffer(sk_buff数据结构)
+    - 内核为每条tcp分配buffer(sk_buff数据结构，简称skb)
 
     - 如果sql查询的过大超过buffer会很慢，通过加大buffer可以减少查询时间
 
@@ -1492,7 +1554,7 @@ listen 80 fastopen=256
 
 - BBR:
 
-    - [BBR: Congestion-Based Congestion Control（论文）](https://queue.acm.org/detail.cfm?id=3022184)
+    - [BBR: Congestion-Based Congestion Control（论文）（中文）](http://arthurchiao.art/blog/bbr-paper-zh/)
 
     - [陶辉：一文解释清楚Google BBR拥塞控制算法原理](https://www.taohui.tech/2019/08/07/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/%E4%B8%80%E6%96%87%E8%A7%A3%E9%87%8A%E6%B8%85%E6%A5%9Agoogle-bbr%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/)
 
@@ -1568,7 +1630,7 @@ net.ipv4.tcp_congestion_control = bbr
 
     - `Socket`结构维持着两个队列（发送和接受队列）
 
-        - 队列保存着 `struct sk_buff` 结构
+        - 队列保存着 `struct sk_buff` 结构（简称skb）
 
 - sk_buff 可以表示各个层的数据包，在应用层数据包叫 data，在 TCP 层我们称为 segment，在 IP 层我们叫 packet，在数据链路层称为 frame。
 
@@ -1650,6 +1712,7 @@ net.ipv4.tcp_congestion_control = bbr
 
         - 12-15.用户进程被唤醒了，锁住socket。检测复制的长度大于 `SO_RCVLOWAT` 的值后，再检测backlog队列；接着释放socket锁，返回复制的字节数。
 
+
 - [陶辉：高性能网络编程4--TCP连接的关闭](https://www.taohui.tech/2016/01/27/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/%E9%AB%98%E6%80%A7%E8%83%BD%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B4-tcp%E8%BF%9E%E6%8E%A5%E7%9A%84%E5%85%B3%E9%97%AD/)
 
     - `close()`与多线程和多进程有关
@@ -1680,6 +1743,23 @@ net.ipv4.tcp_congestion_control = bbr
 
 - [traceroute and ttl](https://netbeez.net/blog/traceroute/)
 
+- 网络层收发包逻辑：
+
+    ![image](./Pictures/net-kernel/ip-netfilter.avif)
+    ![image](./Pictures/net-kernel/ip-kernel.avif)
+
+    - 1.数据包通过 `ip_rcv` 进入网络层进行处理，该函数主要对上传到网络层的数据包进行前期合法性检查
+    - 2.绿色方框内的 `IP_PRE_ROUTING` 为 Netfilter 框架的 Hook 点，该节点会根据预设的规则对数据包进行判决并根据判决结果做相关的处理，比如执行 NAT 转换
+    - 3.数据包交由`ip_rcv_finish`处理，根据路由规则判断：是转发，还是交给上层
+
+        - 1.ip_forward（转发）
+
+            - 4.Netfilter 框架的`IP_FORWARD`节点会对转发数据包进行检查过滤
+
+        - 2.ip_local_deliver(交给上层)
+
+            - 4.`IP_LOCAL_INPUT` 节点用于监控和检查上交到本地上层应用的数据包，该节点是 Linux 防火墙的重要生效节点之一
+
 ## Data Link layer(数据链路层)
 
 - [The Data Link layer of the OSI model](https://www.ictshore.com/free-ccna-course/data-link-layer/)
@@ -1690,7 +1770,7 @@ net.ipv4.tcp_congestion_control = bbr
 
     ![image](./Pictures/net-kernel/802_11_Frame.avif)
 
-## MTU
+### MTU
 
 - [Troubleshooting MTU Issues](https://netbeez.net/blog/troubleshooting-mtu-issues/)
 
@@ -1734,24 +1814,331 @@ generic-receive-offload: on # GRO
 ```
 
 ```sh
-# 开启TSO
-sudo ethtool -K eth0 tso on
+# 开启GRO。修改 GRO 配置会涉及先 down 再 up 这个网卡
+sudo ethtool -K eth0 gro on
 ```
 
 ## 物理层
 
-- 网卡收到数据后会排队qdisc
+### qdisc（排队规则）
+
+- [[译]《Linux 高级路由与流量控制手册（2012）》第九章：用 tc qdisc 管理 Linux 网络带宽](http://arthurchiao.art/blog/lartc-qdisc-zh/)
+
+```sh
+# 查看所有网卡的qdisc
+tc qdisc
+
+# 查看指定网卡的qdisc
+tc qdisc show dev eth0
+
+# -s 详细信息
+tc -s qdisc show dev eth0
+```
+
+```sh
+# 查看队列长度，满了会丢包
+ifconfig | grep txqueuelen
+
+# 查看丢包数
+ifconfig | grep dropped
+
+# 增大队列长度
+ifconfig eth0 txqueuelen 1500
+```
+
+- 设置延迟为600ms
+```sh
+# 设置延迟为600ms
+tc qdisc add dev eth0 root netem delay 600ms
+
+# 查询会发现变成了600ms
+dig baidu.com
+
+# 删除刚才设置的规则
+sudo tc qdisc del dev eth0 root
+```
+
+- ingress（入口流量） 基本是不受本机控制的；egress（出口流量） 是本机可控的
+
+- HTB、TBF 等方案依赖一把设备全局的 Qdisc spinlock 来进行同步
+
+- 排队规则（queueing disciplines）分两类：classless qdisc（无类别）、classful qdisc（有类别）
+
+#### classless qdisc（无类别）
+
+- 1.pfifo_fast（先入先出队列）：有三个“band”（三个FIFO的队列0、1、2）
+
+    - 如果 band 0 有数据，就不会处理 band 1；同理，band 1 有数据时，不会去处理 band 2。
+
+    - 内核会检查数据包的 `TOS` 字段，将“最小延迟”的包放到 band 0。
+
+        ```sh
+        # 查看每个包的TOS
+        tcpdump -vv
+
+        # 第一列为TOS值，不同的TOS对应不同的内容。例如0x0表示band 1
+        TOS     Bits  Means                    Linux Priority    Band
+        ------------------------------------------------------------
+        0x0     0     Normal Service           0 Best Effort     1
+        0x2     1     Minimize Monetary Cost   1 Filler          2
+        0x4     2     Maximize Reliability     0 Best Effort     1
+        0x6     3     mmc+mr                   0 Best Effort     1
+        0x8     4     Maximize Throughput      2 Bulk            2
+        0xa     5     mmc+mt                   2 Bulk            2
+        0xc     6     mr+mt                    2 Bulk            2
+        0xe     7     mmc+mr+mt                2 Bulk            2
+        0x10    8     Minimize Delay           6 Interactive     0
+        0x12    9     mmc+md                   6 Interactive     0
+        0x14    10    mr+md                    6 Interactive     0
+        0x16    11    mmc+mr+md                6 Interactive     0
+        0x18    12    mt+md                    4 Int. Bulk       1
+        0x1a    13    mmc+mt+md                4 Int. Bulk       1
+        0x1c    14    mr+mt+md                 4 Int. Bulk       1
+        0x1e    15    mmc+mr+mt+md             4 Int. Bulk       1
+
+        # RFC定义了不同协议的TOS值
+        Protocol           TOS Value
+
+        TELNET (1)         1000                 (minimize delay)
+
+        FTP
+          Control          1000                 (minimize delay)
+          Data (2)         0100                 (maximize throughput)
+
+        TFTP               1000                 (minimize delay)
+
+        SMTP (3)
+          Command phase    1000                 (minimize delay)
+          DATA phase       0100                 (maximize throughput)
+
+        Domain Name Service
+          UDP Query        1000                 (minimize delay)
+          TCP Query        0000
+          Zone Transfer    0100                 (maximize throughput)
+
+        NNTP               0001                 (minimize monetary cost)
+
+        ICMP
+          Errors           0000
+          Requests         0000 (4)
+          Responses        <same as request> (4)
+
+        Any IGP            0010                 (maximize reliability)
+
+        EGP                0000
+
+        SNMP               0010                 (maximize reliability)
+
+        BOOTP              0000
+        ```
+
+    ![image](./Pictures/net-kernel/qdisc-pfifo_fast.avif)
+
+- 2.TBF（Token Bucket Filter，令牌桶过滤器）：没有超过预设速率的流量直接透传。可以容忍超过预 设速率的短时抖动
+    - bucket：容纳的 token 数量。
+    - Tokens：会以特定的速率，填充 bucket 缓冲区。
+
+    - 当一个包到来时，会从 bucket 中拿到一个 token：
+
+        - 1.数据速率 == token 速率：每个包都能找到一个对应的token，然后直接从队列出去，没有延时（delay）。
+
+        - 2.数据速率 < token 速率：正常到来的数据都能及时发送出去，然后删除一个 token。 由于 token 速率大于数据速率，会产生 bucket 积压，极端情况会将 bucket 占满。
+
+            - 如果数据速率突然高于 token 速率，就可以消耗这些积压的 token 。能够容忍短时数据速率抖动（burst）。
+
+        - 3.数据速率 > token 速率：token 很快就会用完，然后 TBF 会关闭（throttle ）一会。这种 情况称为 overlimit（超过限制）。之后的包会丢包。
+
+    ![image](./Pictures/net-kernel/qdisc-TBF.avif)
 
     ```sh
-    # 查看队列长度，满了会丢包
-    ifconfig | grep txqueuelen
-
-    # 查看丢包数
-    ifconfig | grep dropped
-
-    # 增大队列长度
-    ifconfig eth0 txqueuelen 1500
+    # 修改为 tbf 排队规则。burst（累积可用的 token 所支持的最大字节数）
+    tc qdisc add dev eth0 root tbf rate 220kbit latency 50ms burst 1540
     ```
+
+- 3.SFQ（Stochastic Fairness Queueing，随机公平排队）：每个 TCP session 或 UDP stream 对应一个 FIFO queue
+
+    - SFQ 会不断变换它使用的哈希算法，避免多个 session 会可能会哈希到同一个 bucket（哈希槽）
+
+    ```sh
+    # 修改为 sfq 排队规则。perturb为每个多少秒重置哈希算法
+    tc qdisc add dev eth0 root sfq perturb 10
+    ```
+
+    ![image](./Pictures/net-kernel/qdisc-SFQ.avif)
+
+- 4.FQ（Fair Queue，公平排队）
+
+#### classful qdisc（有类别）
+
+- 内核需要遍历整棵树。 最终结果是classes dequeue 的速度永远不会超过它们的 parents 允许的速度
+
+    - 每个 handle 由两部分组成，<major>:<minor>
+
+        ```
+        # 一个典型的 handle 层级。向 root qdisc 1: 发送一个 dequeue request. 1: 会将这个请求转发给 1:1，后者会进一步向下传递，转发给 10:、11:、12:
+
+                  1:   root qdisc
+                  |
+                 1:1    child class
+               /  |  \
+              /   |   \
+             /    |    \
+             /    |    \
+          1:10  1:11  1:12   child classes
+           |      |     |
+           |     11:    |    leaf class
+           |            |
+           10:         12:   qdisc
+          /   \       /   \
+       10:1  10:2   12:1  12:2   leaf classes
+       ```
+
+- 1.PRIO qdisc（优先级排队规则）：可以理解为pfifo_fast的升级版。有多个 band，每个 band 都是一个独立的 class
+
+    - enqueue 到 PRIO qdisc 之后，它会根据设置的 filters 选择一个 class ，并将包送到这个 class。默认情况下会创建三个 class。
+
+    - 取出（dequeue）一个包时，会先尝试 :1。只有 lower 没有数据包可取时，才会尝试 higher classes。
+
+        ```
+        # 高吞吐流量（Bulk traffic）将送到 30:，交互式流量（interactive traffic）将送到 20: 或 10:
+                  1:   root qdisc
+                / | \
+               /  |  \
+              /   |   \
+            1:1  1:2  1:3    classes
+             |    |    |
+            10:  20:  30:    qdiscs    qdiscs
+            sfq  tbf  sfq
+            band  0    1    2
+        ```
+
+    ```sh
+    # 修改为 PRIO 排队规则
+    tc qdisc add dev eth0 root handle 1: prio # 会立即创建 classes 1:1, 1:2, 1:3
+
+    tc qdisc add dev eth0 parent 1:1 handle 10: sfq
+    tc qdisc add dev eth0 parent 1:2 handle 20: tbf rate 20kbit buffer 1600 limit 3000
+    tc qdisc add dev eth0 parent 1:3 handle 30: sfq
+    ```
+
+    ![image](./Pictures/net-kernel/qdisc-PRIO.avif)
+
+- 2.CBQ（Class Based Queueing，基于类的排队）：
+
+    - 最复杂、最花哨、最少被理解、也可能是最难用对的 qdisc
+
+    - 在发送包之前等待足够长的时间，以将带宽控制到期望的阈值。因此需要计算包之间的等待间隔
+
+    - 设置条件：
+        - webserver 限制为5Mbps。
+        - SMTP 流量限制到 3Mbps。
+        - webserver + SMTP 总共不超过6Mbps。
+        - 物理网卡是 100Mbps。
+        - 每个 class 之间可以互借带宽。
+
+    ```
+
+               1:           root qdisc
+               |
+              1:1           child class
+             /   \
+            /     \
+          1:3     1:4       leaf classes
+           |       |
+          30:     40:       qdiscs
+         (sfq)   (sfq)
+    ```
+
+    ```sh
+    tc qdisc add dev eth0 root handle 1:0 cbq bandwidth 100Mbit avpkt 1000 cell 8
+
+    # 总共不超过6Mbps，优先级为8，
+    tc class add dev eth0 parent 1:0 classid 1:1 cbq bandwidth 100Mbit  \
+    rate 6Mbit weight 0.6Mbit prio 8 allot 1514 cell 8 maxburst 20      \
+    avpkt 1000 bounded
+
+    # 这两个 leaf class 的总带宽不会超过 6Mbps
+    tc class add dev eth0 parent 1:1 classid 1:3 cbq bandwidth 100Mbit  \
+    rate 5Mbit weight 0.5Mbit prio 5 allot 1514 cell 8 maxburst 20      \
+    avpkt 1000
+
+    tc class add dev eth0 parent 1:1 classid 1:4 cbq bandwidth 100Mbit  \
+    rate 3Mbit weight 0.3Mbit prio 5 allot 1514 cell 8 maxburst 20      \
+    avpkt 1000
+
+    tc qdisc add dev eth0 parent 1:3 handle 30: sfq
+    tc qdisc add dev eth0 parent 1:4 handle 40: sfq
+
+    # webserver 限制为5Mbps。 SMTP 流量限制到 3Mbps。
+    tc filter add dev eth0 parent 1:0 protocol ip prio 1 u32 match ip \
+    sport 80 0xffff flowid 1:3
+
+    tc filter add dev eth0 parent 1:0 protocol ip prio 1 u32 match ip \
+    sport 25 0xffff flowid 1:4
+    ```
+
+- 3.HTB（Hierarchical Token Bucket，层级令牌桶）
+
+    - HTB 配置越来越复杂，这些配置还是能比较好地扩展（scales well）。而使用 CBQ 的话，即使在简单场景下配置就很复杂了
+
+    - 功能几乎与 前面的 CBQ 示例配置 一样的 HTB 配置：
+
+        ```sh
+        tc qdisc add dev eth0 root handle 1: htb default 30
+        tc class add dev eth0 parent 1: classid 1:1 htb rate 6mbit burst 15k
+
+        tc class add dev eth0 parent 1:1 classid 1:10 htb rate 5mbit burst 15k
+        tc class add dev eth0 parent 1:1 classid 1:20 htb rate 3mbit ceil 6mbit burst 15k
+        tc class add dev eth0 parent 1:1 classid 1:30 htb rate 1kbit ceil 6mbit burst 15k
+        # 设置 SFQ
+
+        tc qdisc add dev eth0 parent 1:10 handle 10: sfq perturb 10
+        tc qdisc add dev eth0 parent 1:20 handle 20: sfq perturb 10
+        tc qdisc add dev eth0 parent 1:30 handle 30: sfq perturb 10
+        # 设置 class 的过滤器（filters）
+
+        U32="tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32"
+        $U32 match ip dport 80 0xffff flowid 1:10
+        $U32 match ip sport 25 0xffff flowid 1:20
+        ```
+
+    ![image](./Pictures/net-kernel/qdisc-HTB.avif)
+
+- 4.fq_codel（Fair Queuing Controlled Delay，延迟受控的公平排队）
+
+- 5.MQ （Multi Queue）：拆散全局 spinlock 的软件方案
+
+    - 为网络设备的每一个硬件队列分别创建一个软件 Qdisc，再通过一个 ->attach()操作将它们挂载到各个硬件队列上
+    ![image](./Pictures/net-kernel/qdisc-MQ.avif)
+
+    - child Qdisc都有各自的 spinlock，一把锁被「拆」成了多个锁
+
+    - mq Qdisc 本身并不实现任何限速机制，仅仅提供了一个框架，须和其它具有限速功能的 child Qdisc（HTB、SFQ 等）配合使用。
+
+    - Mellanox 网卡推出了一个通过硬件来实现限速的方案，给 HTB Qdisc 添加了「offload 模式」，模拟 mq Qdisc 的 ->attach() 操作
+    ![image](./Pictures/net-kernel/qdisc-MQ1.avif)
+
+- 6.ifb：
+
+    - 为每一种流量类型新建一个软件 ifb 设备
+
+    - 在原发送设备的 clsact Qdisc 上对流量进行分类，通过 mirred action 将不同类型的流量转发到对应的 ifb 设备，再由各个 ifb 设备上的 TBF Qdisc 完成限速
+
+    - 相比 mq Qdisc 方案和硬件 offload 方案，可以更灵活地满足业务所需的限速需求。
+
+    - 由于各个 ifb 设备上的限速由 TBF Qdisc 实现，仍然可能会出现多个 CPU 同时竞争同一把 spinlock
+
+- 7.EDT (Earliest Departure Time) ： clsact Qdsic + eBPF filter + mq Qdisc + fq Qdisc
+
+    - 1.数据包出口先经过 eBPF filter（包含着主要的限速逻辑），并贴上timestamp（时间戳）
+    - 2.之后被分发到设备的各个硬件队列，且每个硬件队列都有一个自己的 fq Qdisc
+    - 3.fq Qdisc 按照时间戳对数据包进行排序，并确保每个数据包最终出队的时间都不早于数据包上的时间戳，从而达到限速的目的
+
+    - 复杂度：O(1)
+
+    ![image](./Pictures/net-kernel/qdisc-EDT.avif)
+
+### 数据包流程
 
 - 网卡处理数据包流程
 
@@ -1774,14 +2161,11 @@ sudo ethtool -K eth0 tso on
         ethtool -S eth0 | grep rx_queue_0_drops
 
         # 修改RingBuffer长度为4096
+        # 会使网卡先 down 再 up，因此会造成丢包。请谨慎操作。
         ethtool -G eth0 rx 4096 tx 4096
         ```
 
-# 内核网络协议栈
-
-- TCP 相关配置在 `/proc/sys/net/ipv4/` ，但 Linux 的 TCP 协议栈不分 IPV4/IPV6，所有 ipv4.tcp 的设置将同时影响 V6 的 TCP 连接
-
-## sysctl
+# sysctl
 
 - [sysctl-ArchWiki](https://wiki.archlinux.org/index.php/sysctl#Improving_performance)
 
@@ -1835,85 +2219,212 @@ cat /proc/net/softnet_stat                                                      
 00008710 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
 ```
 
-## 网络优化，有争议
+# 网络优化
 
-- [Linux 网络调优：内核网络栈参数篇(这篇文章非常好，可语文表达不太清晰)](https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/#Linux_ingress)
+- [arthurchiao：Linux 网络栈接收数据（RX）：配置调优（2022）](http://arthurchiao.art/blog/linux-net-stack-tuning-rx-zh/)
 
-```bash
-# 回环接口的缓冲区大小
-net.core.netdev_max_backlog = 16384
+    - 这里的RX queue应该就是ringbuffer
 
-# 连接数上限
-net.core.somaxconn = 8192
+    - RX/TX queue数量
+        ```sh
+        # 查看是否支持 RSS/多队列
+        ethtool -l eth0
 
-net.core.rmem_default = 1048576
-net.core.rmem_max = 16777216
-net.core.wmem_default = 1048576
-net.core.wmem_max = 16777216
-net.core.optmem_max = 65536
-net.ipv4.tcp_rmem = 4096 1048576 2097152
-net.ipv4.tcp_wmem = 4096 65536 16777216
-net.ipv4.udp_rmem_min = 8192
-net.ipv4.udp_wmem_min = 8192
+        # 修改rx、tx queue的数量为8
+        ethtool -L eth0 rx 8
+        ethtool -L eth0 tx 8
+        ```
 
-# tcp-fast-open是tcp拓展，允许在tcp syn第一次握手期间建立连接,交换数据,减少握手的网络延迟
-net.ipv4.tcp_fastopen = 3
+    - RX 队列大小
+        ```sh
+        # 查看队列大小
+        ethtool -g eth0
 
-# 最大传输单元（MTU）越长，性能越好，但可靠性越差。
-net.ipv4.tcp_mtu_probing = 1
-```
+        # 修改为4096
+        ethtool -G eth0 rx 4096
+        ```
 
-防止 ddos 攻击:
+    - RX 队列权重（weight）。权重越大， 每次网卡 poll() 能处理的包越多。
 
-```bash
-# tcp syn等待ack的最大队列长度
-net.ipv4.tcp_max_syn_backlog = 8192
+        - queue 一般是和 CPU 绑定
 
-# TIME_WAIT状态下的最大套接字数
-net.ipv4.tcp_max_tw_buckets = 2000000
+        ```sh
+        # 查看是否支持 flow indirection
+        ethtool -x eth0
 
-# fin 秒数
-net.ipv4.tcp_fin_timeout = 10
+        RX flow hash indirection table for eth0 with 40 RX ring(s):
+            0:      0     1     2     3     4     5     6     7
+            8:      8     9    10    11    12    13    14    15
+           16:     16    17    18    19    20    21    22    23
+           24:     24    25    26    27    28    29    30    31
+           32:     32    33    34    35    36    37    38    39
+           40:      0     1     2     3     4     5     6     7
+           48:      8     9    10    11    12    13    14    15
+        ```
 
-# 有助于抵御SYN flood攻击
-net.ipv4.tcp_syncookies = 1
+            - 第一行的哈希值是 0~7，分别对应 RX queue 0~7；
+            - 第六行的哈希值是 40~47，分别对应的也是 RX queue 0~7。
 
-# 启用rp_filter(反向路径过滤)，内核将对所有接口收到的数据包进行源验证，可以防止攻击者使用IP欺骗
-net.ipv4.conf.default.rp_filter = 1
-net.ipv4.conf.all.rp_filter = 1
+        ```sh
+        # 在前两个 RX queue 之间均匀的分发接收到的包
+        ethtool -X eth0 equal 2
 
-# 禁止 icmp 重定向接受
-net.ipv4.conf.all.accept_redirects = 0
-net.ipv4.conf.default.accept_redirects = 0
-net.ipv4.conf.all.secure_redirects = 0
-net.ipv4.conf.default.secure_redirects = 0
-net.ipv6.conf.all.accept_redirects = 0
-net.ipv6.conf.default.accept_redirects = 0
+        # 设置自定义权重：给 rx queue 0 和 1 不同的权重：6 和 2
+        ethtool -X eth0 weight 6 2
+        ```
 
-# 在非路由上禁止 icmp 重定向发送
-net.ipv4.conf.all.send_redirects = 0
-net.ipv4.conf.default.send_redirects = 0
+    - 一些网卡支持 “ntuple filtering” 特性。可以在硬件过滤包
+        ```sh
+        # 查看是否开启ntuple
+        ethtool -k eth0 | grep -i ntuple
 
-# 忽略 icmp echo 请求
-net.ipv4.icmp_echo_ignore_all = 1
-net.ipv6.icmp.echo_ignore_all = 1
-```
+        # 开启ntuple
+        ethtool -K eth0 ntuple on
 
-Tcp keepalive
+        # 查看当前的 ntuple rules
+        ethtool -u eth0
 
-```bash
-# 设置为等待一分钟
-net.ipv4.tcp_keepalive_time = 60
-net.ipv4.tcp_keepalive_intvl = 10
-net.ipv4.tcp_keepalive_probes = 6
-```
+        # 设置规则 80 目的端口，绑定到 CPU 2 处理
+        ethtool -U eth0 flow-type tcp4 dst-port 80 action 2
+        ```
 
-关闭 tcp 慢启动:
+    - 硬中断合并
 
-- 因为 http1.1 采用多连接和域名分片,当一些连接闲置时,连接的网速会下降
+        - 优点：防止中断风暴，提升吞吐，降低 CPU 使用量
+        - 缺点：延迟变大
 
-- 以及 web 服务器的流量是间歇性
+        ```sh
+        # 查看是否支持
+        ethtool -c eth0
+        Coalesce parameters for eth0:
+        Adaptive RX: on  TX: on        # 自适应中断合并
+        ......
 
-```bash
-net.ipv4.tcp_slow_start_after_idle = 0
-```
+        # 开启中断合并
+        ethtool -C eth0 adaptive-rx on
+        ```
+
+    - cpu轮询收包的相关参数
+
+        ```sh
+        # 触发二者中任何一个条件后，都会导致一次轮询结束
+        sysctl -a | grep netdev_budget
+        net.core.netdev_budget = 300         # 一个 CPU 单次轮询所允许的最大收包数量
+        net.core.netdev_budget_usecs = 2000  # 最长允许时间，单位是 us
+
+        # 临时修改值（重启后失效）
+        sysctl -w net.core.netdev_budget=3000
+        sysctl -w net.core.netdev_budget_usecs = 10000
+        ```
+
+    - 开启GRO（generic-receive-offload）
+        ```sh
+        # 查看是否开启GRO
+        ethtool -k eth0 | grep generic-receive-offload
+
+        # 修改 GRO 配置会涉及先 down 再 up 这个网卡
+        ethtool -K eth0 gro on
+        ```
+
+    - RPS 记录一个全局的 hash table，包含所有 flow 的信息
+        ```sh
+        # 查看hash table 的大小
+        sysctl -a | grep rps_
+        net.core.rps_sock_flow_entries = 0 # kernel 5.10 默认值
+
+        # 临时修改
+        sysctl -w net.core.rps_sock_flow_entries=32768
+
+        # 设置每个 RX queue 的 flow 数量
+        sudo bash -c 'echo 2048 > /sys/class/net/eth0/queues/rx-0/rps_flow_cnt'
+        ```
+
+    - 老驱动调优
+        ```sh
+        # backlog默认值为1000
+        sysctl -w net.core.netdev_max_backlog=3000
+
+        # backlog poll loop 可以消耗的整体 budget。默认值64
+        sysctl -w net.core.dev_weight=600
+        ```
+
+- [Linux 网络调优：内核网络栈参数篇](https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/#Linux_ingress)
+
+    ```bash
+    # 回环接口的缓冲区大小
+    net.core.netdev_max_backlog = 16384
+
+    # 连接数上限
+    net.core.somaxconn = 8192
+
+    net.core.rmem_default = 1048576
+    net.core.rmem_max = 16777216
+    net.core.wmem_default = 1048576
+    net.core.wmem_max = 16777216
+    net.core.optmem_max = 65536
+    net.ipv4.tcp_rmem = 4096 1048576 2097152
+    net.ipv4.tcp_wmem = 4096 65536 16777216
+    net.ipv4.udp_rmem_min = 8192
+    net.ipv4.udp_wmem_min = 8192
+
+    # tcp-fast-open是tcp拓展，允许在tcp syn第一次握手期间建立连接,交换数据,减少握手的网络延迟
+    net.ipv4.tcp_fastopen = 3
+
+    # 最大传输单元（MTU）越长，性能越好，但可靠性越差。
+    net.ipv4.tcp_mtu_probing = 1
+    ```
+
+    防止 ddos 攻击:
+
+    ```bash
+    # tcp syn等待ack的最大队列长度
+    net.ipv4.tcp_max_syn_backlog = 8192
+
+    # TIME_WAIT状态下的最大套接字数
+    net.ipv4.tcp_max_tw_buckets = 2000000
+
+    # fin 秒数
+    net.ipv4.tcp_fin_timeout = 10
+
+    # 有助于抵御SYN flood攻击
+    net.ipv4.tcp_syncookies = 1
+
+    # 启用rp_filter(反向路径过滤)，内核将对所有接口收到的数据包进行源验证，可以防止攻击者使用IP欺骗
+    net.ipv4.conf.default.rp_filter = 1
+    net.ipv4.conf.all.rp_filter = 1
+
+    # 禁止 icmp 重定向接受
+    net.ipv4.conf.all.accept_redirects = 0
+    net.ipv4.conf.default.accept_redirects = 0
+    net.ipv4.conf.all.secure_redirects = 0
+    net.ipv4.conf.default.secure_redirects = 0
+    net.ipv6.conf.all.accept_redirects = 0
+    net.ipv6.conf.default.accept_redirects = 0
+
+    # 在非路由上禁止 icmp 重定向发送
+    net.ipv4.conf.all.send_redirects = 0
+    net.ipv4.conf.default.send_redirects = 0
+
+    # 忽略 icmp echo 请求
+    net.ipv4.icmp_echo_ignore_all = 1
+    net.ipv6.icmp.echo_ignore_all = 1
+    ```
+
+    Tcp keepalive
+
+    ```bash
+    # 设置为等待一分钟
+    net.ipv4.tcp_keepalive_time = 60
+    net.ipv4.tcp_keepalive_intvl = 10
+    net.ipv4.tcp_keepalive_probes = 6
+    ```
+
+    关闭 tcp 慢启动:
+
+    - 因为 http1.1 采用多连接和域名分片,当一些连接闲置时,连接的网速会下降
+
+    - 以及 web 服务器的流量是间歇性
+
+    ```bash
+    net.ipv4.tcp_slow_start_after_idle = 0
+    ```

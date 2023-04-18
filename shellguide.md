@@ -256,7 +256,7 @@ done
 
 # reference
 
-- [ruanyf: Bash脚本教程](https://wangdoc.com/bash/intro.html)
+- [阮一峰: Bash脚本教程](https://wangdoc.com/bash/intro.html)
 
 - [good bash 脚本集合](https://github.com/alexanderepstein/Bash-Snippets)
 

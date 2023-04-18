@@ -20,7 +20,9 @@
         * [proxy(代理)服务器](#proxy代理服务器)
             * [squid](#squid)
             * [stunnel](#stunnel)
-        * [openvpn](#openvpn)
+        * [VPN](#vpn)
+            * [openvpn](#openvpn)
+            * [wireguard](#wireguard)
     * [安全(security)](#安全security)
         * [思路](#思路)
             * [以redis为例的服务检查](#以redis为例的服务检查)
@@ -470,7 +472,9 @@ stunnel /etc/stunnel/stunnel-client.conf
 curl --proxy http://127.0.0.1:1234 www.baidu.com
 ```
 
-### openvpn
+### VPN
+
+#### openvpn
 
 ```sh
 cp /usr/share/openvpn/examples/server.conf /etc/openvpn/server/server.conf
@@ -497,6 +501,118 @@ openssl dhparam -out /etc/openvpn/server/dh.pem 2048
 # 生成HMAC(哈希消息认证码)密钥
 openvpn --genkey secret /etc/openvpn/server/ta.key
 ```
+
+#### wireguard
+
+- [Getting Started with WireGuard](https://miguelmota.com/blog/getting-started-with-wireguard/)
+
+- 从 2020 年 1 月开始，它已经并入了 Linux 内核的 5.6 版本
+
+- wireguard是组网的『乐高积木』，就像 ZFS 是构建文件系统的『乐高积木』一样。
+
+- Linus Torvalds在邮件中称其为一件艺术品：work of art
+
+    > Can I just once again state my love for it and hope it gets merged soon? Maybe the code isn't perfect, but I've skimmed it, and compared to the horrors that are OpenVPN and IPSec, it's a work of art.
+    > 我能再说一次我非常喜欢它并且希望它能尽快并入内核么？或许代码不是最完美的，但是我大致浏览了一下，和OpenVPN、IPSec的恐怖相比，它就是一件艺术品。
+
+-  OpenVPN：大约有 10 万行代码；WireGuard 只有大概 4000 行代码
+![image](./Pictures/server/wireguard.avif)
+
+- 服务端（server）：
+
+    - 安装
+    ```sh
+    yum install -y wireguard-tools
+    ```
+
+    - 生成公私钥
+    ```sh
+    mkdir /etc/wireguard/keys
+    cd /etc/wireguard/keys
+    umask 077
+
+    # 同时生成公私钥
+    wg genkey | tee privatekey | wg pubkey > publickey
+    ```
+
+    - 配置文件
+    ```sh
+    # ini格式
+    touch /etc/wireguard/wg0.conf
+
+    [Interface]
+    PrivateKey = <server private key>
+    Address = 10.0.0.1/24
+    ListenPort = 51820
+
+    ; NAT则需要设置iptables
+    PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+
+    PublicKey = <client public key>
+    AllowedIPs = 10.0.0.2/32
+    ```
+
+    - 开启转发ip数据包
+    ```sh
+    echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+    sysctl -p
+    ```
+
+    - 配置网卡 + 启动wireguard
+    ```sh
+    # 新建wireguard网卡, kernel必须大于5.6
+    ip link add wg0 type wireguard
+    wg setconf wg0 /dev/fd/63
+    ip -4 address add 10.0.0.1/24 dev wg0
+    ip link set mtu 8921 up dev wg0
+    iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+    # 启动wireguard
+    wg-quick up wg0
+
+    # 开机自启动
+    systemctl enable wg-quick@wg0.service
+    ```
+
+- 客户端（client）：
+    - 安装
+    ```sh
+    pacman -S wireguard-tools wireguard-dkms
+    ```
+
+    - 生成公私钥（和服务端一样）
+    ```sh
+    mkdir /etc/wireguard/keys
+    cd /etc/wireguard/keys
+    umask 077
+
+    # 同时生成公私钥
+    wg genkey | tee privatekey | wg pubkey > publickey
+    ```
+
+    - 配置文件
+    ```sh
+    touch /etc/wireguard/wg0.conf
+
+    [Interface]
+    Address = 10.0.0.2/32
+    PrivateKey = <client private key>
+    DNS = 1.1.1.1
+
+    [Peer]
+    PublicKey = <server public key>
+    Endpoint = <server public ip>:51820
+    AllowedIPs = 0.0.0.0/0
+
+    ; 如果服务端开启了NAT，不能访问公共ip，则需要开启PersistentKeepalive（定期的心跳机制）
+    PersistentKeepalive = 25
+    ```
+
+    - 启动wireguard
+    ```sh
+    wg-quick up wg0
+    ```
 
 ## 安全(security)
 

@@ -1,3 +1,102 @@
+# CPU
+
+## 内核态
+
+- [朱小厮的博客：进入内核态究竟是什么意思？]()
+
+- 实模式：早期的DOS这样的操作系统，它其实将要执行的应用程序加载变成了操作系统的一部分
+
+    - 单任务问题：用户程序自己可以访问大部分的硬件设备；用户程序甚至可以随意修改属于操作系统的数据。于是，当时的许多病毒也毫不客气地把自己直接连接到了操作系统的程序里面，一旦执行就永远驻留成为操作系统的一部分。
+
+    - 多任务问题更严重：
+
+        - 没有内存隔离：两个应用程序执意要使用同一个内存地址
+
+        - 不管谁操作外部设备它都是一样响应。这样如果多个应用程序自己直接去操纵硬件设备，就会出现相互冲突
+        - 如果应用程序自己把中断响应程序改掉了，整个操作系统都会崩溃
+
+        - 操作系统没有能力在程序崩溃的下，清理这个应用程序使用的资源
+
+
+- 内核态（保护模式）或者说CPU的特权模式
+
+    - intel CPU每一代产品都会尽量兼容之前的产品，早期的CPU启动时是实模式，后来的CPU为了兼容早期的CPU，启动时也处于实模式，需要引导程序主动进入保护模式
+
+    - 限制指令：判断当前状态，如果状态为用户模式则拒绝执行「特权指令
+
+    - 限制内存：在cpu引入MMU的单元
+
+        - 在用户模式下，所有内存访问经过MMU，从而对内存的访问受到了保护；在特权模式下，内存访问绕过MMU，直接访问物理内存
+
+## 中断
+
+- [Linux 中断（IRQ/softirq）基础：原理及内核实现（2022）](http://arthurchiao.art/blog/linux-irq-softirq-zh/)
+
+- 中断（IRQ）：希望 CPU 停下手头的工作，优先处理重要的工作
+
+- 硬中断流程：
+
+    - 1.抢占当前任务：内核必须暂停正在执行的进程
+    - 2.执行中断处理函数（ISR）：找到对应的中断处理函数，将 CPU 交给它（执行）
+        - ISR 位于 Interrupt Vector table，这个 table 位于内存中的固定地址。
+
+    - 3.中断处理完成之后：第 1 步被抢占的进程恢复执行
+
+- 中断类型：
+
+    - 异常（exception）：给被中断的进程发送一个 Unix 信号，以此来唤醒它，这也是为什么内核能如此迅速地处理异常的原因。
+
+    - 外部硬件中断：
+        - 1.I/O interrupts（IO 中断）： PCI 总线架构，多个设备共享相同的 IRQ line。
+        - 2.Timer interrupts（定时器中断）
+        - 3.Interprocessor interrupts（IPI，进程间中断）
+
+```sh
+# 最大中断数
+dmesg | grep NR_IRQS
+[    0.000000] NR_IRQS: 20736, nr_irqs: 1064, preallocated irqs: 16
+```
+
+- 软中断（softirq）：软中断是一个内核子系统
+
+    - 每个 CPU 上会初始化一个 ksoftirqd 内核线程，负责处理各种类型的 softirq 中断事件
+
+    ```sh
+    systemd-cgls -k | grep softirq # 或者  ps -ef | grep ksoftirqd
+    ├─   15 [ksoftirqd/0]
+    ├─   24 [ksoftirqd/1]
+    ├─   30 [ksoftirqd/2]
+    ├─   36 [ksoftirqd/3]
+    ├─   42 [ksoftirqd/4]
+    ├─   48 [ksoftirqd/5]
+    ├─   54 [ksoftirqd/6]
+    ├─   60 [ksoftirqd/7]
+    ├─   66 [ksoftirqd/8]
+    ├─   72 [ksoftirqd/9]
+    ├─   78 [ksoftirqd/10]
+    ├─   84 [ksoftirqd/11]
+    ```
+
+    - 软中断占 CPU 的总开销
+    ```sh
+    # si 字段就是系统的软中断开销
+    top -n1 | head -n3
+    top - 23:01:35 up  3:49,  1 user,  load average: 0.84, 1.01, 1.14
+    Tasks: 318 total,   1 running, 317 sleeping,   0 stopped,   0 zombie
+    %Cpu(s):  2.6 us,  2.6 sy,  0.0 ni, 94.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+    ```
+
+    - 每个软中断会经过下面几个阶段：
+
+        - 1.通过 open_softirq() 注册软中断处理函数
+        - 2.通过 raise_softirq() 将一个软中断 标记为 deferred interrupt，这会唤醒该软中断（但还没有开始处理）
+        - 3.内核调度器调度到 ksoftirqd 内核线程时，会将所有等待处理的 deferred interrupt （也就是 softirq）拿出来，执行对应的处理方法（softirq handler）
+
+    - 软中断类型
+    ```sh
+    cat /proc/softirqs
+    ```
+
 # memory（内存）
 
 ## 物理内存
@@ -1179,10 +1278,100 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
     - 顾了长短作业，同时有较好的响应时间
 
+## 中断
+
+### 硬中断
+
+- 中断处理流程：
+    - 1.抢占当前任务：内核必须暂停正在执行的进程
+    - 2.执行中断处理函数（ISR）：找到对应的中断处理函数，将 CPU 交给它（执行）
+    - 3.中断处理完成之后，处理器恢复执行被中断的进程
+
+| 外部硬件中断                                 |
+|----------------------------------------------|
+| I/O interrupts（IO 中断）                    |
+| Timer interrupts（定时器中断）               |
+| Interprocessor interrupts（IPI，进程间中断） |
+
+```sh
+# 最大硬中断数量。有 16 个是预分配的 IRQs
+sudo dmesg | grep NR_IRQS
+[    0.000000] NR_IRQS: 20736, nr_irqs: 1096, preallocated irqs: 16
+```
+
+### 软中断
+
+- 每个 CPU 上会初始化一个 ksoftirqd 内核线程，负责处理各种类型的 softirq 中断事件
+
+    ```sh
+    # 查看ksoftirqd
+    systemd-cgls -k | grep softirq 
+    ```
+
+    ```sh
+    # 软中断的cpu开销
+    top | grep -i si
+    ```
+
+- softirqs 是在 Linux 内核编译时就确定好的。一共 9 种 softirq。如果想加一种新 softirq 类型，就需要修改并重新编译内核
+    ```c
+    // include/linux/interrupt.h
+
+    enum {
+        HI_SOFTIRQ=0,          // tasklet
+        TIMER_SOFTIRQ,         // timer
+        NET_TX_SOFTIRQ,        // networking
+        NET_RX_SOFTIRQ,        // networking
+        BLOCK_SOFTIRQ,         // IO
+        IRQ_POLL_SOFTIRQ,
+        TASKLET_SOFTIRQ,       // tasklet
+        SCHED_SOFTIRQ,         // schedule
+        HRTIMER_SOFTIRQ,       // timer
+        RCU_SOFTIRQ,           // lock
+        NR_SOFTIRQS
+    };
+    ```
+    ```sh
+    # 等同于上面的类型
+    cat /proc/softirqs
+                  CPU0     CPU1
+          HI:        2        0
+       TIMER:   443727   467971
+      NET_TX:    57919    65998
+      NET_RX:    28728  5262341
+       BLOCK:      261     1564
+    IRQ_POLL:        0        0
+     TASKLET:       98      207
+       SCHED:  1854427  1124268
+     HRTIMER:    12224    68926
+         RCU:  1469356   972856
+    ```
+
+#### tasklet：动态机制，基于 softirq
+
+- 可以在运行时（runtime）创建和初始化的 softirq
+
+- 永远运行在指定 CPU
+
+#### workqueue：动态机制，运行在进程上下文
+
+- softirq 和 tasklet 依赖软中断子系统，运行在软中断上下文中
+
+- workqueue 不依赖软中断子系统，运行在内核进程上下文中
+
+    - 不能像 tasklet 那样是原子
+
+- Workqueue工作队列是利用内核线程来异步执行工作任务的通用机制
+
+```sh
+systemd-cgls -k | grep kworker
+```
 
 # I/O
 
 ![image](./Pictures/linux-kernel/io-layer.avif)
+![image](./Pictures/linux-kernel/io-layer1.avif)
+![image](./Pictures/linux-kernel/io-layer2.avif)
 
 ## 磁盘调度算法
 
@@ -1439,6 +1628,8 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
 - [小林coding：文件系统全家桶](https://www.xiaolincoding.com/os/6_file_system/file_system.html)
 
+- [微信：你管这破玩意叫 IO 多路复用？](https://mp.weixin.qq.com/s?src=11&timestamp=1677635997&ver=4379&signature=FHMv9hT1cgc95fpEElGCyKw3ZTIzTE*L*ZacfLz41IPLk*8iB2Kt1X6Hqk7KxIoFcQHbuX53vi6KgaZxgc-tEOBjw2ji7nDM5QIQaRqrSphcOKejfeVUZBtkGWhIVhfs&new=1)
+
 阻塞 I/O 好比，你去饭堂吃饭，但是饭堂的菜还没做好，然后你就一直在那里等啊等，等了好长一段时间终于等到饭堂阿姨把菜端了出来（数据准备的过程），但是你还得继续等阿姨把菜（内核空间）打到你的饭盒里（用户空间），经历完这两个过程，你才可以离开。
 
 非阻塞 I/O 好比，你去了饭堂，问阿姨菜做好了没有，阿姨告诉你没，你就离开了，过几十分钟，你又来饭堂问阿姨，阿姨说做好了，于是阿姨帮你把菜打到你的饭盒里，这个过程你是得等待的。
@@ -1461,11 +1652,11 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
     - 页缓存（page cache）：在系统调用后，会把用户数据拷贝到内核中的内存
 
-    - 设置 `O_DIRECT` 标志，表示直接 I/O；如果没有设置过，默认使用的是非直接 I/O。
+    - `open()` 设置 `O_DIRECT` 标志：表示直接 I/O；如果没有设置过，默认使用的是非直接 I/O。
 
-    - 直接 I/O：不使用页缓存，直接经过文件系统访问磁盘。
+    - 直接 I/O：绕过page cache（页缓存），直接让用户态和块IO层对接
 
-        - 可以通过 DMA 的方式与磁盘以及网卡进行数据拷贝
+        - 自缓存应用程序（ self-caching applications ）：对于某些应用程序来说，它会有它自己的数据缓存机制。数据库就是这样的程序。
 
         ![image](./Pictures/linux-kernel/io-direct.avif)
 
@@ -1482,32 +1673,81 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
     - socket 设置 `O_NONBLOCK` 标志，表示非阻塞 I/O ；默认是阻塞 I/O。
 
-    - 阻塞 I/O：调用 `read` 时：阻塞等待的是「内核数据准备好」和「数据从内核态拷贝到用户态」这两个过程
+    - 阻塞 I/O：
 
-        ![image](./Pictures/linux-kernel/io-blocking.avif)
+        - 服务端的线程阻塞在了两个地方：`accept()` , `read()` 
+        ![image](./Pictures/linux-kernel/io-blocking.gif)
 
-    - 非阻塞 I/O：调用 `read` 时：在数据未准备好的情况下立即返回，此时应用程序不断轮询内核，直到数据准备好，内核将数据拷贝到应用程序缓冲区
+        - `read()`阻塞等待的是：「内核数据准备好」和「数据从内核态拷贝到用户态」这两个过程
+        ![image](./Pictures/linux-kernel/io-blocking1.gif)
+        ![image](./Pictures/linux-kernel/io-blocking2.avif)
 
-        - 最后一步的「数据从内核态拷贝到用户态」依然时同步
+    - 非阻塞 I/O：调用 `read` 时：不断轮询，直到数据准备好
 
-        - 优点：一个线程可以处理多个连接
-        - 缺点：需要频繁的系统调用
+        - 数据还未到达网卡，或者到达网卡但还没有拷贝到内核缓冲区之前，这个阶段是非阻塞的
 
-        ![image](./Pictures/linux-kernel/io-Non-blocking.avif)
+        - 最后一步的「数据从内核缓冲区拷贝到用户缓冲区」依然是阻塞
 
-    - I/O 多路复用：当内核数据准备好时，再以事件通知应用程序进行操作。如果没有事件发生，那么当前线程就会发生阻塞，这时 CPU 会切换其他线程执行任务
+        ![image](./Pictures/linux-kernel/io-Non-blocking.gif)
 
-        - 主要复用的是通过有限次的系统调用来实现管理多个网络连接
+        ![image](./Pictures/linux-kernel/io-Non-blocking1.avif)
 
-        - 系统调用有：`select`, `poll`, `epoll`
+        - 方法1：每次都创建一个新的进程或线程，去调用 read 函数
+
+            ```c
+            while(1) {
+              connfd = accept(listenfd);  // 阻塞建立连接
+              pthread_create（doWork);  // 创建一个新的线程
+            }
+            void doWork() {
+              int n = read(connfd, buf);  // 阻塞读数据
+              doSomeThing(buf);  // 利用读到的数据做些什么
+              close(connfd);     // 关闭连接，循环等待下一个连接
+            }
+            ```
+
+        - 方法2：一个线程处理了多个客户端连接
+
+            - 每 accept 一个客户端连接后，将对应的文件描述符放到一个数组里fdlist。之后使用一个的线程去不断遍历这个数组
+
+            - 缺点：依然是用户层，需要不断系统调用
+
+            ```c
+            while(1) {
+              for(fd <-- fdlist) {
+                if(read(fd) != -1) {
+                  doSomeThing();
+                }
+              }
+            }
+            ```
+
+            ![image](./Pictures/linux-kernel/io-Non-blocking2.gif)
+
+    - I/O 多路复用（`select`, `poll`, `epoll`）：将一批文件描述符通过一次系统调用传给内核，由内核层去遍历
+
+        - 当内核数据准备好时，再以事件通知应用程序进行操作。如果没有事件发生，那么当前线程就会发生阻塞，这时 CPU 会切换其他线程执行任务
 
         ![image](./Pictures/linux-kernel/io-multiplexing.avif)
 
-    - 异步 I/O：「内核数据准备好」和「数据从内核态拷贝到用户态」这两个过程都不用等待。
+    - 2.6版本的异步 I/O `aio`：「内核数据准备好」和「数据从内核态拷贝到用户态」这两个过程都不用等待。
 
         - 调用 `aio_read` 之后，就立即返回，内核自动将数据从内核空间拷贝到应用程序空间，这个拷贝过程同样是异步的，内核自动完成的
 
         ![image](./Pictures/linux-kernel/io-aio.avif)
+
+    - 5.1版本的真正异步 I/O `io_uring` ：
+
+        - [[译] Linux 异步 I/O 框架 io_uring：基本原理、程序示例与性能压测（2020）](http://arthurchiao.art/blog/intro-to-io-uring-zh/)
+
+        - 相比 linux-aio 提升5%左右
+
+        - 使用场景也不再仅限于数据库应用，普通的非数据库应用也能用
+
+        - ceph已经支持io_uring了
+            ```sh
+            ceph config show osd.16 | grep ioring
+            ```
 
 ### 非直接I/O Page cache
 
@@ -1557,11 +1797,33 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
 - 文件持久化的一致性的两种方法：
 
-    - Write Through（写穿）：向用户层提供特定接口，应用程序可主动调用接口来保证文件一致性
+    - Write Through（写穿）：write操作将数据拷贝到Page Cache后立即和下层进行同步的写操作，完成下层的更新后才返回
+
+        - `open()`文件时，传入 `O_SYNC` flag，实现写穿
 
         - 优缺点：以牺牲系统 I/O 吞吐量作为代价，一旦写入不会丢失
 
-    - Write back（写回）：系统中存在定期任务（表现形式为内核线程），周期性地同步文件系统中文件脏数据块，这是默认的 Linux 一致性方案
+    - Write back（写回）（默认）：写完Page Cache就可以返回了。Page Cache中被修改的内存页称之为脏页（Dirty Page），脏页在特定的时候被一个叫做pdflush(Page Dirty Flush)的内核线程写入磁盘
+
+        - 满足以下三个条件之一就会flush
+
+            - 当空闲内存低于一个特定的阈值时，内核必须将脏页写回磁盘，以便释放内存。
+            - 当脏页在内存中驻留时间超过一个特定的阈值时，内核必须将超时的脏页写回磁盘。
+            - 用户进程调用sync、fsync、fdatasync系统调用时，内核会执行相应的写回操作。
+
+            ```sh
+            # 每隔5秒一次flush
+            sysctl vm.dirty_writeback_centisecs
+            500
+
+            # 超过30秒，就flush
+            sysctl vm.dirty_expire_centisecs
+            vm.dirty_expire_centisecs = 3000
+
+            # 若脏页占总物理内存10％以上，就flush
+            sysctl vm.dirty_background_ratio
+            vm.dirty_background_ratio = 10
+            ```
 
         - 优缺点：系统发生宕机的情况下无法确保数据已经落盘，因此存在数据丢失的问题。不过，在程序挂了，例如被 kill -9，Page Cache 中的数据操作系统还是会确保落盘
 
@@ -1605,7 +1867,7 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
     - 1.需要4次用户态与内核态的上下文切换：一共read()和write()2次系统调用，而每次系统调用都得先从用户态切换到内核态，等内核完成任务后，再从内核态切换回用户态。
 
-    - 2.有4次数据拷贝：2次DMA，2次cpu从内核拷贝到用户缓冲区
+    - 2.有4次数据拷贝：2次DMA，1次cpu从内核Page Cache拷贝到用户缓冲区，1次从用户缓冲区拷贝到 Socket 缓冲区
 
     - 结论：需要减少「用户态与内核态的上下文切换」和「内存拷贝」的次数
 
@@ -1761,11 +2023,16 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
 - `select()`：
 
-    - 1.将已连接的 Socket 都放到一个文件描述符集合
+    - 步骤：
 
-    - 2.然后调用 select() 将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生，检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此 Socket 标记为可读或可写
+        - 1.将已连接的 Socket 都放到一个文件描述符集合
 
-    - 3.接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。
+        - 2.然后调用 select() 将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生，检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此 Socket 标记为可读或可写
+
+        - 3.接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。
+
+        ![image](./Pictures/linux-kernel/io-multiplexing-select.gif)
+        ![image](./Pictures/linux-kernel/io-multiplexing-select1.avif)
 
     - 总共2次遍历（内核+用户）每次的时间复杂度为 O(n)，2次拷贝文件描述符（从用户->内核，在从内核->用户）
 
@@ -1773,7 +2040,9 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
 - `poll()`：与 `select()` 无本质区别。而是用链表代替bitsmap，突破了select的最大长度，但还是会受系统文件描述符的限制。
 
-- `epoll()`：
+#### epoll()
+
+- `epoll()`
 
     - 遍历socket用红黑树，时间复杂度为O(log n)
 
@@ -1782,11 +2051,11 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
     bind(s, ...);
     listen(s, ...)
 
-    int epfd = epoll_create(...); //红黑树数据结构
-    epoll_ctl(epfd, ...); //将所有需要监听的socket添加到epfd中
+    int epfd = epoll_create(100) //创建epoll实例（红黑树数据结构），预计监听100个fd
+    epoll_ctl(epfd, ...); //将所有需要监听的socket添加到epoll对象的管理中
 
     while(1) {
-        int n = epoll_wait(...); //等待数据
+        int n = epoll_wait(...); //等待监听socket连接的事件
         for(接收到数据的socket){
             //处理
         }
@@ -1796,6 +2065,10 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
     - 使用事件驱动的机制，内核里维护了一个链表来记录就绪事件
 
         - 当某个 socket 有事件发生时，通过回调函数，内核会将其加入到这个就绪事件列表中，当用户调用 epoll_wait() 函数时，只会返回有事件发生的文件描述符的个数，不需要像 select/poll 那样轮询扫描整个 socket 集合，大大提高了检测的效率。
+
+        ![image](./Pictures/linux-kernel/io-multiplexing-epoll.gif)
+
+        ![image](./Pictures/linux-kernel/io-multiplexing-epoll.avif)
 
     - 两种事件触发机制：
 
@@ -1813,15 +2086,100 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
             - select/poll 只有水平触发模式，epoll 默认是水平触发
 
-    ![image](./Pictures/linux-kernel/io-multiplexing-epoll.avif)
+        - [大佬的实验](https://github.com/cheerfuldustin/test_epoll_lt_and_et)： 客户端都是输入 “abcdefgh” 8 个字符，服务端每次接收 2 个字符。
 
-- 主流中间件的网络模型
+            - 水平触发：服务端 4 次循环每次都能取到 2 个字符，直到 8 个字符全部读完。
+            ![image](./Pictures/linux-kernel/io-multiplexing-epoll-lt.avif)
 
-    ![image](./Pictures/linux-kernel/io-multiplexing-example.avif)
+            - 边缘触发：读到 2 个字符后这个读就绪事件就没有了。等客户端再输入一个字符串后，服务端关注到了数据的 “变化” 继续从缓冲区读接下来的 2 个字符 “c” 和”d”。
+            ![image](./Pictures/linux-kernel/io-multiplexing-epoll-et.avif)
+
+- [腾讯技术工程：十个问题理解 Linux epoll 工作原理](https://cloud.tencent.com/developer/article/1831360?areaSource=103001.1&traceId=BvF3fKyDKtNgcpPoiZcYP)
+
+    ![image](./Pictures/linux-kernel/io-multiplexing-epoll1.avif)
+
+    - 那什么样的 fd 才可以被 epoll 监视呢？
+
+        - 底层驱动实现了 `file_operations` 中 poll 函数的文件类型才可以被 epoll 监视！socket 类型的文件驱动是实现了 poll 函数的，因此才可以被 epoll 监视。
+
+    - ep->wq 的作用是什么？
+
+        - wq 是一个等待队列，保存对某一个 epoll 实例调用 epoll_wait() 的所有进程。一个进程调用 epoll_wait() 后，如果没有事件发生，就会放到 ep->wq 里；当 epoll 实例监视的文件上有事件发生后，在唤醒wq队列上的进程
+
+    - 什么是 epoll 惊群？
+
+        - 多个进程等待在 ep->wq 上，事件触发后所有进程都被唤醒，但只有其中 1 个进程能够成功继续执行的现象。其他被白白唤起的进程，导致开销
+
+        - 解决方法：内核提供了 `EPOLLEXCLUSIVE` 选项和 `SO_REUSEPORT` 选项
+
+            - `EPOLLEXCLUSIVE`：只唤起排在队列最前面的 1 个进程
+            - `SO_REUSEPORT`：每个进程自己都有一个独立的 epoll 实例，内核来决策把连接分配给哪个 epoll
+        - nginx的解决方法：配置加入`accept_mutex`
+
+    - ep->poll_wait 的作用是什么？
+
+        - epoll 也是一种文件类型。也实现了 file_operations 中的 poll 函数，因此 epoll 类型的 fd 可以被其他 epoll 实例监视。
+
+        - ep->poll_wait 也是一个等待队列。当被监视的文件是一个 **epoll 类型** 时，需要用这个等待队列来处理递归唤醒。
+
+        - 一个 epoll 实例监视了另一个 epoll 就会出现递归
+            - epollfd1 监视了 2 个 “非 epoll” 类型的 fd
+            - epollfd2 监视了 epollfd1 和 2 个 “非 epoll” 类型的 fd
+
+            ![image](./Pictures/linux-kernel/io-multiplexing-epoll-poll_wait.avif)
+
+    - ep->rdllist 的作用是什么？
+
+        - rdlist是就绪事件的 fd 组成的链表
+
+        - 扫描 ep->rdllist 链表，内核可以轻松获取当前有事件触发的 fd。而不是像 select()/poll() 那样全量扫描所有被监视的 fd，再从中找出有事件就绪的。
+
+    - 事件就绪的 fd 会 “主动” 跑到 rdllist 中去，而不用全量扫描就能找到它们呢？
+
+        - 调用 epoll_ctl 新增一个被监视的 fd 时，都会注册一下这个 fd 的回调函数 ep_poll_callback
+
+        - 当网卡收到数据包会触发一个中断，中断处理函数再回调 ep_poll_callback 将这个 fd 所属的 “epitem” 添加至 epoll 实例中的 rdllist 中。
+
+    - ep->ovflist 的作用是什么？
+
+        - 由于 rdllist 链表业务非常繁忙，所以在复制数据到用户空间时，加了一个 ep->mtx 互斥锁来保护 epoll 自身数据结构线程安全
+
+        - 但加锁期间很可能有新事件源源不断地产生，新触发的事件需要一个地方来收集，不然就丢事件了。这个用来临时收集新事件的链表就是 ovflist。
+
+    - txlist 链表是什么？
+
+        - 这个链表用来最后向用户态复制数据，rdllist 要先把自己的数据全部转移到 txlist，然后 rdllist 自己被清空。ep_send_events_proc 遍历 txlist 处理向用户空间复制，复制成功后如果是水平触发 (LT) 还要把这个事件还回 rdllist，等待下一次 epoll_wait 来获取它。ovflist 上的 fd 会合入 rdllist 上等待下一次扫描
+
+        ![image](./Pictures/linux-kernel/io-multiplexing-epoll-list.avif)
+
+    - epmutex、ep->mtx、ep->lock 3 把锁的区别是？
+
+        - epmutex 全局互斥锁，只有 3 个地方用到这把锁：
+            - ep_free() 销毁一个 epoll 实例时
+            - eventpoll_release_file() 清理从 epoll 中已经关闭的文件时
+            - epoll_ctl() 时避免 epoll 间嵌套调用时形成死锁
+
+        - ep->mtx 内部的互斥锁，涉及对 epoll 实例中 rdllist 或红黑树的访问的锁
+            - ep_scan_ready_list() 扫描就绪列表
+            - eventpoll_release_file() 中执行 ep_remove() 删除一个被监视文件
+            - ep_loop_check_proc() 检查 epoll 是否有循环嵌套或过深嵌套
+            - epoll_ctl() 操作被监视文件增删改等处有使用
+
+        - ep->lock 内部的自旋锁，用来保护 ep->rdllist 的线程安全
+
+            - 自旋锁的特点是得不到锁时不会引起进程休眠，所以在 ep_poll_callback 中只能使用 ep->lock，否则就会丢事件。
+
+    - epoll、epitem、和红黑树间的组织关系
+
+        ![image](./Pictures/linux-kernel/io-multiplexing-epoll-rdllist.avif)
 
 #### Reactor架构
 
 - [小林coding：高性能网络模式：Reactor 和 Proactor](https://www.xiaolincoding.com/os/8_network_system/reactor.html)
+
+- 主流中间件的网络模型
+
+    ![image](./Pictures/linux-kernel/io-multiplexing-example.avif)
 
 - Reactor 是非阻塞同步网络模式
 
@@ -1934,6 +2292,46 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
     - 而 Windows 里实现了一套完整的支持 socket 的异步编程接口，这套接口就是 IOCP，是由操作系统级别实现的异步 I/O，真正意义上异步 I/O，因此在 Windows 里实现高性能网络程序可以使用效率更高的 Proactor 方案。
 
+
+## 通用块层
+
+- 通过一个统一的通用块层，来管理不同的块设备，提供一个框架来管理这些设备的驱动程序
+
+    - 处于文件系统和磁盘驱动之间
+
+- I/O 调度：通用层还会给文件系统和应用程序发来的 I/O 请求排队，接着会对队列重新排序、请求合并等方式
+
+- linux的 5 种 I/O 调度算法
+
+    - 1.没有调度算法（NOOP）：不对文件系统和应用程序的 I/O 做任何处理
+
+        - 适用于虚拟机 I/O 中，此时磁盘 I/O 调度算法交由物理机系统负责。
+
+    - 2.先入先出调度算法：先进入 I/O 调度队列的 I/O 请求先发生。
+
+    - 完全公平调度算法（CFS）（默认）：它为每个进程维护了一个 I/O 调度队列，并按照时间片来均匀分布每个进程的 I/O 请求。
+
+    - 优先级调度算法（DEADLINE）：在CFS的基础上分为读、写两个FIFO队列
+
+        - 读队列：最大等待时间为500ms
+
+        - 写队列：最大等待时间为5s
+
+        - 优先级：FIFO(Read) > FIFO(Write) > CFQ
+
+    - 最终期限调度算法（ANTICIPATORY）：DEADLINE没有对顺序读做优化。为此在DEADLINE的基础上，为每个读IO都设置了6ms的等待时间窗口。如果在这6ms内OS收到了相邻位置的读IO请求，就可以立即满足。
+
+        - 多个随机的小写入流合并成一个大写入流(相当于给随机读写变顺序读写)
+
+            - 延时换取吞吐量
+
+- 磁盘io调度器
+    ```sh
+    # 查看sda磁盘的io调度器为mq-deadline
+    cat /sys/block/sda/queue/scheduler
+    [mq-deadline] kyber bfq none
+    ```
+
 ## 设备控制器
 
 - [小林coding：键盘敲入 A 字母时，操作系统期间发生了什么？](https://www.xiaolincoding.com/os/7_device/device.html)
@@ -1995,31 +2393,4 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
     - 设备驱动程序初始化的时候，要先注册一个该设备的中断处理函数
 
         ![image](./Pictures/linux-kernel/io-drive.avif)
-
-### 通用块层
-
-- 通过一个统一的通用块层，来管理不同的块设备，提供一个框架来管理这些设备的驱动程序
-
-    - 处于文件系统和磁盘驱动之间
-
-- I/O 调度：通用层还会给文件系统和应用程序发来的 I/O 请求排队，接着会对队列重新排序、请求合并等方式
-
-- linux的 5 种 I/O 调度算法
-
-    - 1.没有调度算法：不对文件系统和应用程序的 I/O 做任何处理
-
-        - 适用于虚拟机 I/O 中，此时磁盘 I/O 调度算法交由物理机系统负责。
-
-    - 2.先入先出调度算法：先进入 I/O 调度队列的 I/O 请求先发生。
-
-    - 完全公平调度算法（默认）：它为每个进程维护了一个 I/O 调度队列，并按照时间片来均匀分布每个进程的 I/O 请求。
-
-    - 优先级调度算法：优先级高的 I/O 请求先发生
-
-        - 适用于运行大量进程的系统，像是桌面环境、多媒体应用等。
-
-    - 最终期限调度算法：分别为读、写请求创建了不同的 I/O 队列，这样可以提高机械磁盘的吞吐量，并确保达到最终期限的请求被优先处理
-
-        - 适用于在 I/O 压力比较大的场景，比如数据库等。
-
 

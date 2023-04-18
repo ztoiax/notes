@@ -670,6 +670,17 @@ screen -r pid/name
 exit
 ```
 
+## [xdotool：模拟键盘](https://github.com/jordansissel/xdotool)
+
+```sh
+xdotool type "Hello world"
+
+xdotool key ctrl+l
+```
+
+# ai
+- [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)
+
 # reference
 
 - [现代版命令行基础工具](https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/)

@@ -91,7 +91,13 @@
 
 - [Chrome 团队制作的 CSS 教程](https://web.dev/learn/css/)
 
+- [css教程](https://www.pengfeixc.com/tutorial/css/introduction)
+
+- [css技巧](https://github.com/AllThingsSmitty/css-protips)
+
 - [How to create high-performance CSS animations](https://web.dev/animations-guide/)
+
+- [Color Formats in CSS（详细介绍 CSS 颜色的各种格式）](https://www.joshwcomeau.com/css/color-formats/)
 
 - 图片优先选择avif
 ```css
@@ -105,7 +111,7 @@
 
 # js
 
-- [ruanyifeng：Deno 运行时入门教程：Node.js 的替代品](https://www.ruanyifeng.com/blog/2021/01/deno-intro.html)
+- [阮一峰：Deno 运行时入门教程：Node.js 的替代品](https://www.ruanyifeng.com/blog/2021/01/deno-intro.html)
 
 - [objtube的卢克儿的视频：【干货】8分钟带你了解V8引擎是如何运行JS！都2020年了还不知道什么是V8？](https://www.bilibili.com/video/BV1zV411z7RX)
 

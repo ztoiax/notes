@@ -10,4 +10,6 @@
 
 ## [Microsoft-Activation-Scripts（windows激活，类似于kms）](https://github.com/massgravel/Microsoft-Activation-Scripts)
 
+## [GlazeWM窗口管理器](https://github.com/lars-berger/GlazeWM)
+
 # [Sysinternals(windows internal作者写的工具套件)](https://docs.microsoft.com/en-us/sysinternals/)
