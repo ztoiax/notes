@@ -98,3 +98,9 @@
 # RDMA
 
 - [RDMA技术详解（一）：RDMA概述](https://zhuanlan.zhihu.com/p/55142557)
+
+# FPGA
+
+- [FPGA, CPU, GPU, ASIC区别]()
+
+- [HDLBits — Verilog Practice](https://hdlbits.01xz.net/wiki/Main_Page)

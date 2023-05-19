@@ -678,6 +678,8 @@ xdotool type "Hello world"
 xdotool key ctrl+l
 ```
 
+- [vhs:命令行录制生成gif](https://github.com/charmbracelet/vhs)
+
 # ai
 - [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)
 

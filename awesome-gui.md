@@ -6,6 +6,7 @@
 * [image viewer(图片查看器)](#image-viewer图片查看器)
     * [qt](#qt)
     * [gtk](#gtk)
+* [note](#note)
 * [other](#other)
 * [其他项目](#其他项目)
 
@@ -38,6 +39,15 @@
 - [aliyunpan(阿里云盘)](https://github.com/liupan1890/aliyunpan)
 
 - [alist:可添加各种网盘的网页文件管理器](https://github.com/alist-org/alist)
+    - 使用davfs2挂载
+    ```sh
+    # 安装davfs2
+    sudo pacman -S davfs2
+
+    # mount到yun目录
+    mkdir yun
+    sudo mount -t davfs http://127.0.0.1:5244/dav yun
+    ```
 
 ## 文件传输
 
@@ -63,6 +73,12 @@
 
 - [gthumb](https://github.com/GNOME/gthumb)
 
+# note
+
+- [zotero：文献管理工具](https://github.com/zotero/zotero)
+
+- [zotero-gpt](https://github.com/MuiseDestiny/zotero-gpt)
+
 # other
 
 - [noti: 任务完成后通知](https://github.com/variadico/noti)
@@ -75,9 +91,19 @@
 
 - [lx-music-desktop：一个基于 electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
 
+- [增强版qbittorrent](https://github.com/c0re100/qBittorrent-Enhanced-Edition)
+    - [trackerslist](https://trackerslist.com/all.txt)
+    - [海盗湾](https://thepiratebay.org/index.html)
+
 - [qv2ray](https://github.com/Qv2ray/Qv2ray)
 
 - [nekoray:v2ray客户端](https://github.com/MatsuriDayo/nekoray)
+
+- [veracrypt：加密](https://github.com/veracrypt/VeraCrypt)
+
+- [session：加密通信](https://getsession.org/download)
+
+- [bitwarden：密码管理器](https://bitwarden.com/download/)
 
 # 其他项目
 

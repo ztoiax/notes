@@ -88,6 +88,8 @@
 
 - [《Rust 程序设计语言》](https://kaisery.github.io/trpl-zh-cn/)
 
+- [用Rust实现Lua解释器](https://wubingzheng.github.io/build-lua-in-rust/zh/)
+
 - [google rust教程](https://google.github.io/comprehensive-rust/)
 
 - [Rust语言圣经](https://book.rust.team/)
@@ -346,6 +348,8 @@
 
 - [《Linux Advanced Routing & Traffic Control HOWTO》](https://lartc.org/howto/index.html)
 
+- [《SDN手册》](https://tonydeng.github.io/sdn-handbook/)
+
 - [Computer Networking : Principles,Protocols and Practice](https://www.computer-networking.info/#)
 
 ## web
@@ -406,6 +410,8 @@
 - [《英雄联盟》在线服务运维之道](https://www.infoq.cn/minibook/running-online-services-riot)
 
 - [《Elasticsearch: The Definitive Guide》](https://www.elastic.co/guide/en/elasticsearch/guide/master/getting-started.html)
+
+- [Load Balancing](https://samwho.dev/load-balancing/)
 
 ### cloud
 
@@ -539,6 +545,20 @@
 | 计算理论 |
 |----------|
 | SIGACT   |
+
+| FPGA |
+|------|
+| FPGA |
+| FCCM |
+| FPT  |
+| FPL  |
+
+| 芯片设计 |
+|----------|
+| DAC      |
+| ASP-DAC  |
+| DATE     |
+| ICCAD    |
 
 # 其他相似项目
 

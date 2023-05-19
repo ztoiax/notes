@@ -3,10 +3,9 @@
 > 本文采用自顶向下的讲解
 
 ![image](./Pictures/net-kernel/osi.avif)
-
 ![image](./Pictures/net-kernel/osi1.avif)
-
 ![image](./Pictures/net-kernel/osi2.avif)
+![image](./Pictures/net-kernel/osi3.avif)
 
 ## 应用层
 
@@ -1770,6 +1769,192 @@ net.ipv4.tcp_congestion_control = bbr
 
     ![image](./Pictures/net-kernel/802_11_Frame.avif)
 
+
+## 分段 (fragmentation)
+
+- [解决 GRE 和 IPsec 中的 IPv4 分段、MTU、MSS 和 PMTUD 问题](https://www.cisco.com/c/zh_cn/support/docs/ip/generic-routing-encapsulation-gre/25885-pmtud-ipfrag.html)
+
+### IPv4 Fragmentation （分段） 
+
+- 尽管 IPv4 数据报的最大长度为 65535 字节，但大多数传输链路强制执行更小的最大数据包长度限制（即 MTU）
+
+- DF 标志位（一个 IP 包能否分段）：
+    | DF bit | 表示                   |
+    |--------|------------------------|
+    | 0      | may fragment（分段）   |
+    | 1      | don't fragment（不分） |
+
+- MF 标志位（分段后，每个分段有 ）：
+    | MF bit | 表示           |
+    |--------|----------------|
+    | 0      | last fragment  |
+    | 1      | more fragments |
+
+- ![image](./Pictures/net-kernel/ipv4-fragmentation.avif)
+
+    - 第一个表格：
+        - IP 包长度 5140，包括 5120 bytes 的 payload
+        - DF = 0， 允许分段
+        - MF = 0， 这是未分段
+
+    - 第二个表格：
+        - 0-0 第一个分段: 长度 1500 = 1480 (payload) + 20 (IP Header). Offset(起始偏移量): 0 
+        - 0-1 第二个分段: 长度 1500 = 1480 (payload) + 20 (IP Header). Offset: 185 = 1480 / 8 
+        - 0-2 第三个分段: 长度 1500 = 1480 (payload) + 20 (IP Header). Offset: 370 = 185 + 1480/8
+        - 0-3 第四个分段: 长度 700 =  680 (payload, = (5140 - 20) - 1480 * 3) + 20 (IP Header) . Offset: 555 = 370 + 1480/8
+
+- 分段的问题：
+    - 导致CPU和内存开销小幅增加
+    - 执行重组的路由器会选择可用的最大缓冲区(18K)，因为在收到最后一个分段之前，它无法确定原始IPv4数据包的大小。
+    - 第4层(L4)到第7层(L7)信息过滤或处理数据包的防火墙无法处理ipv4的分段
+    - 丢弃其中一个分段包，需要重传根据tcp还是udp决定
+        - tcp有编号确认机制，只需要重传丢失的那个分段包
+        - udp则不可靠
+
+#### 设置TCP MSS(Maximum Segment Size 最大段长)，可以避免ipv4分段
+
+- MSS 值仅作为 TCP SYN 数据段中的一个 TCP 报头选项发送。
+
+- TCP 连接的每一端都会向另一端报告其 MSS 值。发送主机需要将单个 TCP 数据段中的数据大小限制为小于或等于接收主机报告的 MSS 的值。
+
+![image](./Pictures/net-kernel/tcp-mss.avif)
+
+#### PMTU（只有TCP和UDP支持）
+
+- TCP MSS解决TCP连接的两个端点上的分段，但不处理这两个端点之间中间有较小MTU链路的情况。
+
+    - PMTU：动态确定从数据包源到目的地的路径中的最低MTU。
+
+- 查看是否开启PMTU
+    ```sh
+    # 默认为1（关闭PMTU），0为打开
+    sysctl net.ipv4.ip_no_pmtu_disc
+    net.ipv4.ip_no_pmtu_disc = 0
+    ```
+
+- PMTU的工作原理：路由器尝试将IPv4数据报（设置了DF位）转发到其MTU低于数据包大小的链路上，路由器会丢弃数据包，并将互联网控制消息协议(ICMP)“目标无法到达”(Destination Unreachable)消息返回到IPv4数据报源，消息中的代码表示“需要分段并设置DF”（类型3，代码4）。
+
+    - 例子1：数据包可以一直传输到接收方，而不会被分段。
+    - 例子2：http连接中：TCP 客户端发送小数据包，服务器发送大数据包。
+
+        - 只有来自服务器的大数据包（大于576字节）触发PMTUD。
+
+        - 客户端的数据包很小（小于576字节），不触发PMTUD，因为它们不需要分段即可通过576 MTU链路。
+
+        ![image](./Pictures/net-kernel/pmtu.avif)
+
+    - 例子3：非对称路由示例，其中一条路径的最小MTU小于另一条路径。
+
+        - TCP 客户端到服务器的流量会经过路由器 A 和路由器 B，
+            - 客户端永远不会收到带有表示“需要分段和DF设置”的代码的ICMP“目标无法到达”消息，因为路由器A在通过路由器B向服务器发送数据包时无需对数据包进行分段。
+
+        - TCP 服务器到客户端的返回流量会经过路由器 D 和路由器 C。
+            - 服务器向客户端发送数据包时，PMTUD会触发服务器降低发送MSS，因为路由器D必须对4092字节的数据包进行分段，然后才能将其发送到路由器C。
+
+        ![image](./Pictures/net-kernel/pmtu1.avif)
+
+##### PMTU 与 GRE隧道
+
+- GRE包大小
+    ![image](./Pictures/net-kernel/gre-overhead.avif)
+    ![image](./Pictures/net-kernel/gre-overhead1.avif)
+    | 步骤 | 操作/封包    | 协议     | 长度                                             | 备注                 |
+    |------|--------------|----------|--------------------------------------------------|----------------------|
+    | 1    | ping -s 1448 | ICMP     | 1456 = 1448 + 8 （ICMP header）                  | ICMP MSS             |
+    | 2    | L3           | IP       | 1476 = 1456 + 20 （IP header）                   | GRE Tunnel MTU       |
+    | 3    | L2           | Ethernet | 1490 = 1476 + 14 （Ethernet header）             | 经过 bridge 到达 GRE |
+    | 4    | GRE          | IP       | 1500 = 1476 + 4 （GRE header）+ 20 （IP header） | 物理网卡 （IP）MTU   |
+    | 5    | L2           | Ethernet | 1514 = 1500 + 14 （Ethernet header）             | 最大可传输帧大小     |
+
+    - 1514 - 1490 = 24 byte
+
+        - GRE 隧道接口的 IPv4 MTU 默认比物理接口的 IPv4 MTU 少 24 字节，因此 GRE 接口的 IPv4 MTU 为 1476 字节
+
+- DF位=0 和 = 1的两种情况：
+
+    - DF位=0（分段）：
+        - 1.发送端发送一个 1500 字节的数据包（20 字节 IPv4 报头 + 1480 字节 TCP 负载）。
+        - 2.由于GRE隧道的MTU为1476，因此1500字节的数据包将分为两个IPv4分段（1476字节和44字节），每个分段预计会额外增加24字节的GRE报头。
+        - 3.每个 IPv4 分段增加 24 字节的 GRE 报头。现在，两个分段分别为 1500 字节 (1476 + 24) 和 68 字节 (44 + 24)。
+        - 4.包含两个 IPv4 分段的 GRE + IPv4 数据包被转发到 GRE 隧道对等路由器。
+        - 5.GRE 隧道对等路由器将删除两个数据包中的 GRE 报头。
+        - 6.此路由器将两个数据包转发到目标主机。
+        - 7.目标主机将 IPv4 分段重组为原始 IPv4 数据报。
+
+    - DF位=1（不分段），并且路径中存在一条链路，其MTU低于其他链路：
+        - 1.路由器收到 1500 字节的数据包（20 字节 IPv4 报头 + 1480 字节 TCP 负载），然后丢弃该数据包。路由器丢弃数据包是因为该数据包大于 GRE 隧道接口上的 IPv4 MTU (1476)。
+        - 2.路由器向发送者发送一条 ICMP 错误，通知发送者下一跳 MTU 为 1476。主机将此信息记录在其路由表中，通常作为目标的主机路由。
+        - 3.当重新发送数据时，发送主机采用 1476 字节作为数据包大小。GRE 路由器添加 24 字节的 GRE 封装，然后发送一个 1500 字节的数据包。
+        - 4.该 1500 字节的数据包无法通过 1400 字节的链路，因此中间路由器将丢弃该数据包。
+        - 5.中间路由器将向 GRE 路由器发送一个含有下一跳 MTU 为 1400 的 ICMP（类型 = 3，代码 = 4）。GRE 路由器将其降低至 1376 (1400 - 24) 字节，并在 GRE 接口上设置内部 IPv4 MTU 值。
+        - 6.下次主机重新发送1476字节的数据包时，GRE路由器会丢弃该数据包，因为它大于GRE隧道接口上的当前IPv4 MTU(1376)。
+        - 7.GRE路由器向下一跳MTU为1376的发送方发送另一个ICMP（类型= 3，代码= 4），主机使用新值更新其当前信息。
+        - 8.主机再次重新发送数据，但现在GRE在较小的1376字节数据包中添加24字节的封装并继续转发数据。此时，数据包将发送到GRE隧道对等体，数据包在该对等体解封并发送到目的主机。
+        ![image](./Pictures/net-kernel/pmtu-gre-df=1.avif)
+
+##### PMTU 与 IPv4sec
+
+- IPv4sec包大小：52 字节
+
+- IPv4sec隧道模式（默认模式）下，DF位=0 和 = 1的两种情况：
+
+    - DF位=0（分段）：
+        - 1.路由器收到发往主机 2 的 1500 字节的数据包（20 字节 IPv4 报头 + 1480 字节 TCP 负载）。
+        - 2.1500 字节的数据包经过 IPv4sec 加密，增加了 52 字节的开销（IPv4sec 报头、报尾和另外的 IPv4 报头）。现在 IPv4sec 需要发送 1552 字节的数据包。由于出站MTU为1500，因此必须对此数据包进行分段。
+        - 3.IPv4sec 数据包被拆分为两个分段。在分段期间，会为第二个分段添加一个额外的20字节IPv4报头，从而产生一个1500字节的分段和一个72字节的IPv4分段。
+        - 4.IPv4sec 隧道对等路由器接收分段，剥离附加的 IPv4 报头，并将 IPv4 分段合并为原始 IPv4sec 数据包。然后 IPv4sec 解密该数据包。
+        - 5.最后，路由器将 1500 字节的原始数据包转发到主机 2。
+        ![image](./Pictures/net-kernel/pmtu-ipv4sec-df=0.avif)
+
+    - DF位=1（不分段），并且路径中存在一条链路，其MTU低于其他链路：
+        - 1.路由器收到1500字节的数据包并将其丢弃，因为添加IPv4sec开销时，数据包会大于PMTU(1500)。
+        - 2.路由器向主机 1 发送一条 ICMP 消息，并通知该主机下一跳 MTU 为 1442 (1500 - 58 = 1442)。此58字节是使用IPv4sec ESP和ESPauth时的最大IPv4sec开销。实际IPv4sec开销可能比此值小7个字节。主机 1 通常在其路由表中以目标（主机 2）主机路由的形式记录该信息。
+        - 3.主机1将主机2的PMTU降低到1442，因此主机1在将数据重新发送到主机2时发送更小（1442字节）的数据包。路由器接收 1442 字节的数据包，然后 IPv4sec 添加 52 字节的加密开销，由此产生 1496 字节的 IPv4sec 数据包。由于此数据包的报头中设置了 DF 位，因此，采用 1400 字节 MTU 链路的中间路由器将丢弃此数据包。
+        - 4.丢弃数据包的中间路由器向 IPv4sec 数据包的发送端（第一个路由器）发送一条 ICMP 消息，告知发送端下一跳 MTU 为 1400 字节。这个值记录在 IPv4sec SA PMTU 中。
+        - 5.主机1下次重新传输1442字节的数据包（它未收到该数据包的确认）时，IPv4sec将丢弃该数据包。路由器丢弃该数据包，因为在添加到数据包时，IPv4sec开销会使其大于PMTU(1400)。
+        - 6.路由器向主机 1 发送一条 ICMP 消息，通知它下一跳 MTU 现在为 1342。(1400 - 58 = 1342)。主机1再次记录此信息。
+        - 7.当主机1再次重新传输数据时，它使用较小大小的数据包(1342)。此数据包不需要分段，而是通过IPv4sec隧道发送到主机2。
+        ![image](./Pictures/net-kernel/pmtu-ipv4sec-df=1.avif)
+
+##### PMTU 与 GRE 与 IPv4sec 协同工作
+
+- 使用 IPv4sec 来加密 GRE 隧道
+
+    - IPv4sec 和 GRE 以这种方式组合是因为 IPv4sec 不支持 IPv4 组播数据包，这意味着在 IPv4sec VPN 网络上无法运行动态路由协议。
+
+    - GRE 隧道支持组播，因此可先使用 GRE 隧道加密 GRE IPv4 单播数据包中的动态路由协议组播数据包，然后再使用 IPv4sec 加密单播数据包。
+
+- DF位=0 和 = 1的两种情况：
+
+    - DF位=0（分段）：
+        - 1.路由器收到一个 1500 字节的数据报。
+        - 2.在封装之前，GRE 将 1500 字节的数据包拆分为两个分段，一个 1476 字节 (1500 - 24 = 1476)，另一个 44 字节（24 字节数据 + 20 字节 IPv4 报头）。
+        - 3.GRE 封装 IPv4 分段，该过程将导致每个数据包增加 24 字节。因而将产生两个 GRE + IPv4sec 字段，一个 1500 字节 (1476 + 24 = 1500)，另一个 68 字节 (44 + 24 = 68)。
+        - 4.IPv4sec对两个数据包进行加密，每个数据包增加52字节（IPv4sec隧道模式）的封装开销，以提供1552字节和120字节的数据包。
+        - 5.由于 1552 字节的 IPv4sec 数据包大于出站 MTU (1500)，因此，路由器会将其分段。1552 字节的数据包被拆分为 1500 字节的数据包和 72 字节的数据包（52 字节负载加上为第二个分段附加的 20 字节 IPv4 报头）。三个数据包（1500 字节、72 字节和 120 字节）被转发到 IPv4sec + GRE 对等设备。
+        - 6.接收路由器重组两个 IPv4sec 分段（1500 字节和 72 字节），以便获取原始 1552 字节的 IPv4sec + GRE 数据包。对于 120 字节的 IPv4sec + GRE 数据包无需任何操作。
+        - 7.IPv4sec 对 1552 字节和 120 字节的 IPv4sec + GRE 数据包进行解密，以便获取 1500 字节和 68 字节的 GRE 数据包。
+        - 8.GRE 解封装 1500 字节和 68 字节的 GRE 数据包，以便获取 1476 字节和 44 字节的 IPv4 数据包分段。然后这些 IPv4 数据包分段被转发到目标主机。
+        - 9.主机 2 重组这些 IPv4 分段，以便获取原始 1500 字节的 IPv4 数据报。
+        ![image](./Pictures/net-kernel/pmtu-gre-ipv4sec-df=0.avif)
+
+    - DF位=1（不分段）：
+        - 1.路由器收到一个 1500 字节的数据包。由于设置了 DF 位，并且在增加 GRE 开销（24 字节）之后数据包大小超过出站接口“ip mtu”，因此 GRE 无法对该数据包进行分段或转发，并丢弃此数据包。
+        - 2.路由器向主机 1 发送 ICMP 消息，以便该主机知晓下一跳 MTU 为 1476 (1500 - 24 = 1476)。
+        - 3.主机 1 针对主机 2 将其 PMTU 更改为 1476，并在重新传输数据包时发送更小大小。GRE 封装数据包，并将 1500 字节的数据包传递给 IPv4sec。由于 GRE 从内部 IPv4 报头中复制了 DF 位（已设置），并且加上 IPv4sec 开销（最大 38 字节）后，数据包因太大而无法传出物理接口，因此 IPv4sec 丢弃该数据包。
+        - 4.IPv4sec向GRE发送ICMP消息，表示下一跳MTU为1462字节（因为为加密和IPv4开销添加了最大38字节）。GRE在隧道接口上将值1438 (1462 - 24)记录为"ip mtu"。
+        - 5.主机 1 下次重新传输 1476 字节的数据包时，GRE 将丢弃此数据包。
+        - 6.路由器向主机 1 发送 ICMP 消息，指明下一跳 MTU 为 1438。
+        - 7.主机 1 针对主机 2 减小其 PMTU，并重新传输 1438 字节的数据包。这次 GRE 接受该数据包，对其进行封装，并将其传递给 IPv4sec 进行加密。
+        - 8.IPv4sec 数据包被转发到中间路由器并被丢弃，因为该路由器出站接口 MTU 为 1400。
+        - 9.中间路由器向 IPv4sec 发送 ICMP 消息，指明下一跳 MTU 为 1400。IPv4sec 将该值记录在关联 IPv4sec SA 的 PMTU 值中。
+        - 10.当主机 1 重新传输 1438 字节的数据包时，GRE 封装该数据包，然后将其传递给 IPv4sec。IPv4sec 丢弃该数据包，因为其已将自己的 PMTU 改为 1400。
+        - 11.IPv4sec 向 GRE 发送 ICMP 错误消息，指明下一跳 MTU 为 1362，并且 GRE 在内部记录值 1338。
+        - 12.当主机1重新传输原始信息包时(因为没有收到确认)，GRE将丢弃它。
+        - 13.路由器向主机 1 发送 ICMP 消息，指明下一跳 MTU 为 1338（1362 - 24 字节）。主机 1 针对主机 2 将其 PMTU 减小至 1338。
+        - 14.主机1转发1338字节信息包，同时它可以最终到达主机2。
+        ![image](./Pictures/net-kernel/pmtu-gre-ipv4sec-df=1.avif)
+
 ### MTU
 
 - [Troubleshooting MTU Issues](https://netbeez.net/blog/troubleshooting-mtu-issues/)
@@ -1785,10 +1970,24 @@ net.ipv4.tcp_congestion_control = bbr
 
 ```sh
 # 查看每个网卡的MTU
-ip a
+ip a | grep mtu
+
+# 临时修改mtu
+ifconfig eth0 mtu 9000
+# 或者
+ip link set dev eth0 mtu 9000
+
+# 永久修改mtu。不同的linux发行版有所不同。redhat系修改这个配置文件/etc/sysconfig/network-scripts/ifcfg-eth0
+auto eth0
+iface eth0 inet static
+        address 192.168.0.2
+        netmask 255.255.255.0
+        mtu 9000
 ```
 
-## 包的拆分与合并TSO、GSO、LRO、GRO
+- jumebo frames（巨型帧）：标准帧的MTU为1500，jumebo的MTU为9000（需要网卡支持，如intel X520）
+
+### 包的拆分与合并TSO、GSO、LRO、GRO
 
 - 拆分
 
@@ -2164,6 +2363,110 @@ sudo tc qdisc del dev eth0 root
         # 会使网卡先 down 再 up，因此会造成丢包。请谨慎操作。
         ethtool -G eth0 rx 4096 tx 4096
         ```
+# Overlay虚拟化技术
+
+## Vxlan（Virtual Extensible LAN）
+
+- Vxlan的包大小
+
+    ![image](./Pictures/net-kernel/vxlan-overhead.avif)
+
+    | 步骤 | 操作/封包    | 协议     | 长度                                                | MTU                                                  |
+    |------|--------------|----------|-----------------------------------------------------|------------------------------------------------------|
+    | 1    | ping -s 1422 | ICMP     | 1430 = 1422 + 8 （ICMP header）                     |                                                      |
+    | 2    | L3           | IP       | 1450 = 1430 + 20 （IP header）                      | VxLAN Interface 的 MTU                               |
+    | 3    | L2           | Ethernet | 1464 = 1450 + 14 （Ethernet header）                |                                                      |
+    | 4    | VxLAN        | UDP      | 1480 = 1464 + 8 （VxLAN header） + 8 （UDP header） |                                                      |
+    | 5    | L3           | IP       | 1500 = 1480 + 20 （IP header）                      | 物理网卡的（IP）MTU，它不包括 Ethernet header 的长度 |
+    | 6    | L2           | Ethernet | 1514 = 1500 + 14 （Ethernet header）                | 最大可传输帧大小                                     |
+
+    - 因此，VxLAN 的 overhead 是1514- 1464 = 50 byte。
+
+## GRE（Generic Routing Encapsulation）
+
+## MPLS（Multiprotocol Label Switching）
+
+## SD-WAN（Software-Defined Wide Area Network）
+
+# DPDK
+
+- [一文看懂DPDK](https://cloud.tencent.com/developer/article/1198333)
+
+    - [查看DPDK的CPU和网卡](https://core.dpdk.org/supported/)
+
+    - DPDK：内核是导致瓶颈的原因所在，要解决问题需要绕过内核。所以主流解决方案都是旁路网卡 IO，绕过内核直接在用户态收发包来解决内核的瓶颈。
+
+        - 根据经验，在 C1（8 核）上跑应用每 1W 包处理需要消耗 1% 软中断 CPU，这意味着单机的上限是 100 万 PPS（Packet Per Second）。
+
+            - 从 TGW（Netfilter 版）的性能 100 万 PPS，AliLVS 优化了也只到 150 万 PPS，并且他们使用的服务器的配置还是比较好的。
+
+        - 要跑满 10GE （万兆）网卡，每个包 64 字节，这就需要 2000 万 PPS（注：以太网万兆网卡速度上限是 1488 万 PPS，因为最小帧大小为 84B
+
+        - 要跑满 100G 是 2 亿 PPS：即每个包的处理耗时不能超过 50 纳秒。
+
+            - 直接感受一下这里的挑战有多大：
+
+                - 一次 Cache Miss，不管是 TLB、数据 Cache、指令 Cache 发生 Miss，回内存读取大约 65 纳秒
+
+                - NUMA 体系下跨 Node 通讯大约 40 纳秒。
+
+                - 传统的收发报文方式都必须采用硬中断来做通讯，每次硬中断大约消耗 100 微秒，这还不算因为终止上下文所带来的 Cache Miss。
+
+                - 数据必须从内核态用户态之间切换拷贝带来大量 CPU 消耗，全局锁竞争。
+
+    - DPDK 旁路原理：
+
+        - 左边传统方式：数据从 网卡 -> 驱动 -> 协议栈 -> Socket 接口 -> 业务
+
+        - 右边是 DPDK 的方式：基于 UIO（Userspace I/O）旁路数据。数据从 网卡 -> DPDK 轮询模式 -> DPDK 基础库 -> 业务
+
+            - 用户态的好处是易用开发和维护，灵活性好。并且 Crash 也不影响内核运行，鲁棒性强。
+
+            - UIO 旁路了内核，主动轮询去掉硬中断，DPDK 从而可以在用户态做收发包处理。带来 Zero Copy、无系统调用的好处，同步处理减少上下文切换带来的 Cache Miss。
+
+        ![image](./Pictures/net-kernel/DPDK.avif)
+
+    - UIO（Userspace I/O）原理：通过 read 感知中断，通过 mmap 实现和网卡的通讯。
+
+        -[UIO: user-space drivers](https://lwn.net/Articles/232575/)
+
+        - 开发用户态驱动的步骤：
+
+            - 1.开发运行在内核的 UIO 模块，因为硬中断只能在内核处理
+
+            - 2.通过 / dev/uioX 读取中断
+
+            - 3.通过 mmap 和外设共享内存
+
+        ![image](./Pictures/net-kernel/DPDK-UIO.avif)
+
+    - PMD：DPDK 的 UIO 驱动屏蔽了硬件发出中断，然后在用户态采用主动轮询的方式，这种模式被称为 PMD（Poll Mode Driver）。
+
+        - [Poll Mode Driver](http://doc.dpdk.org/guides/prog_guide/poll_mode_drv.html)
+
+        - 运行在 PMD 的 Core 会处于用户态 CPU100% 的状态。会带来能耗问题。所以，DPDK 推出 Interrupt DPDK 模式。
+
+            - 没包可处理时进入睡眠，改为中断通知。
+            - 并且可以和其他进程共享同个 CPU Core，但是 DPDK 进程会有更高调度优先级。
+
+    - DPDK 的高性能代码实现
+        - 1.采用 HugePage 减少 TLB Miss
+            - DPDK 采用 HugePage，在 x86-64 下支持 2MB、1GB 的页大小，几何级的降低了页表项的大小，从而减少 TLB-Miss。
+            - 并提供了内存池（Mempool）、MBuf、无锁环（Ring）、Bitmap 等基础库。
+            - 根据我们的实践，在数据平面（Data Plane）频繁的内存分配释放，必须使用内存池，不能直接使用 rte_malloc，DPDK 的内存分配实现非常简陋，不如 ptmalloc。
+
+        - 2.SNA（Shared-nothing Architecture）：软件架构去中心化
+
+            - NUMA 体系下不跨 Node 远程使用内存。
+
+        - 3.SIMD（单指令多数据）
+            - DPDK 采用批量同时处理多个包，再用向量编程，一个周期内对所有包进行处理。比如，memcpy 就使用 SIMD 来提高速度。
+
+        - 4.不使用慢速 API
+
+            - 慢速 API：比如说 gettimeofday，虽然在 64 位下通过 vDSO 已经不需要陷入内核态，只是一个纯内存访问，每秒也能达到几千万的级别。但是，不要忘记了我们在 10GE 下，每秒的处理能力就要达到几千万。所以即使是 gettimeofday 也属于慢速 API。
+
+            - DPDK 提供 Cycles 接口，例如 rte_get_tsc_cycles 接口，基于 HPET 或 TSC 实现。
 
 # sysctl
 
