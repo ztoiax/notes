@@ -6,7 +6,7 @@
             * [交互模式](#交互模式)
         * [netstat](#netstat)
         * [ss (iproute2)](#ss-iproute2)
-        * [nc（文件传输）](#nc文件传输)
+        * [nc（连接服务器）](#nc连接服务器)
         * [frp: 反向代理(内网穿透)](#frp-反向代理内网穿透)
             * [端口](#端口)
             * [sock](#sock)
@@ -237,26 +237,21 @@ ss -itmpn dst 104.18.3.111
 ss -s
 ```
 
-### nc（文件传输）
+### nc（连接服务器）
 
-服务端开启 1234 端口传送文件:
-
-```bash
-nc -l 1234 > file
+- 连接服务器
+```sh
+nc 0.0.0.0 38359
 ```
 
-客户端接受文件
+- 文件传输
+```sh
+# 接受文件
+nc -l -p 1234 > received_file
 
-```bash
-nc <server ip> 1234 < file
+# 发送文件:端口为1234
+nc 127.0.0.1 1234 < file_to_send
 ```
-
-```bash
-while true;do
-    date | nc -l 1234
-done
-```
-
 
 ### [frp: 反向代理(内网穿透)](https://github.com/fatedier/frp/blob/dev/README_zh.md)
 

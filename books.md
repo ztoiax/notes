@@ -67,6 +67,8 @@
 
 - [JavaGuide](https://javaguide.cn/)
 
+- [Spring 中文文档](https://springdoc.cn/)
+
 ### Go
 
 - [《Golang学习资源大全-只有Go语言才能改变世界》](https://github.com/LearnGolang/LearnGolang)
@@ -232,7 +234,9 @@
 - [推特推荐算法](https://github.com/twitter/the-algorithm)
     - [推特官方博客对推荐算法的细节介绍](https://blog.twitter.com/engineering/en_us/topics/open-source/2023/twitter-recommendation-algorithm)
 
-### 图形学
+## 图形学
+
+- [3D编程模式](https://yyc-git.github.io/3dProgramPattern/docs/%E5%89%8D%E8%A8%80/)
 
 - [腾讯技术工程：十种图像模糊算法的总结与实现](https://cloud.tencent.com/developer/article/1614858)
 
@@ -444,6 +448,10 @@
 - [google-sre-ebook](https://github.com/captn3m0/google-sre-ebook)
 
 - [Serverless 开发速查手册](https://developer.aliyun.com/ebook/7490)
+
+## 存储
+
+- [glusterfs-book](https://github.com/httaotao/glusterfs-book)
 
 ## 区块链
 
