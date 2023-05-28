@@ -190,6 +190,8 @@ gh release list
 
 ![image](./Pictures/awesomecli/forgit.avif)
 
+## [gitoxide:rust版git](https://github.com/Byron/gitoxide)
+
 # char
 
 ## [viddy:instead watch](https://github.com/sachaos/viddy)
@@ -679,6 +681,10 @@ xdotool key ctrl+l
 ```
 
 - [vhs:命令行录制生成gif](https://github.com/charmbracelet/vhs)
+
+# markdown
+
+- [mlc:检测markdown文件的连接](https://github.com/becheran/mlc)
 
 # ai
 - [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)

@@ -1,14 +1,5 @@
 # lua
 
-- `#` 获取类型长度
-
-```lua
-str1 = 'hello'
-print(#str1) -- 5
-
-print(# 'hello') -- 5
-```
-
 ## 数据类型
 
 ### string(字符串)
@@ -21,40 +12,37 @@ print('hello'..'world') -- helloworld
 
 #### string库
 
+- 5.3：string库支持utf-8
 
-- 5.3开始使用utf-8编码
+    - string库的函数`reverse` `upper` `lower` `byte` `char` 只支持1bit的字符编码（也就是不支持中文）
 
-    - string库的`reverse` `upper` `lower` `byte` `char` 函数只支持1个字节编码的字符串，这意味着不支持中文
+    - `len` 函数支持utf-8字符串（支持中文）
 
-    ```lua
-    str = '你好啊'
-    print(string.reverse(str)) -- "��彥堽�"
-    ```
+- string.sub(): 删除字符串里的字符
 
-    - `len` `sub` 支持utf-8字符串
-
-    ```lua
-    str1 = '你好啊'
-    str2 = string.sub(str1, 2, -2)
-    print(str2) -- 'ell'
-
-    str = '你好啊'
-    print(string.len(str))
-    -- sub(): 删除字符串里的字符。实际上是创建新字符串
-    print(string.sub(str, 2, -1)) -- "��好啊"
-    ```
+```lua
+str1 = 'hello'
+-- 实际上是创建新字符串
+str2 = string.sub(str1, 2, -2)
+print(str2) -- 'ell'
+```
 
 ### table(表)
 
-- lua默认使用表来存储全局变量
+- lua既可以是数组，也可以是hash表
 
-- 未赋值的变量为`nil`值
+- lua用表来存储全局变量
+
+- 未赋值的变量为`nil`
+
+    - 假设有10000个节点的邻居图, 也就是10000 * 10000, 一亿个元素. 设置每个节点最多只有5个邻居, 也就是只有5万个元素不为nil. 对于lua来说, nil值不占用内存
+
     ```lua
     t = {}
     print(t[1]) -- nil
     ```
 
-- 也可以通过对已有值的变量赋值'nil'，将其删除
+- 也可以对以赋值的变量赋值`nil` 表示删除此变量
     ```lua
     t = {}
     t[1] = 10
@@ -62,8 +50,6 @@ print('hello'..'world') -- helloworld
     t[1] = nil
     print(t[1]) -- nil
     ```
-
-    - 假设有10000个节点的邻居图, 也就是10000 * 10000, 一亿个元素. 设置每个节点最多只有5个邻居, 也就是只有5万个元素不为nil. 对于lua来说, nil值不占用内存
 
 - stack(栈)
 
@@ -88,23 +74,22 @@ table.insert(table1, 1, i)
 table.remove(table1, 1)
 ```
 
-- unpack()
+- unpack()：提取table指定范围的元素
 ```lua
 table1 = {1, 2, 3, 4, 5}
 
 function unpack(t, i, n)
-    i = i or 1
-    n = n or #t
     if i <= n then
         return t[i], unpack(t, i+1, n)
     end
 end
 
+-- 提取前两个元素
 print(unpack(table1, 1, 2)) -- 1, 2
 ```
 
 - 链表
-```
+```lua
 link = nil
 link = {next = link, data = data}
 
@@ -154,8 +139,8 @@ end
 
 function popLast(link)
     local last = link.last
-    local data = link[last].data
-    if link.first > last then error('link is empty') end
+    wlocal data = link[last].data
+    if link.first > last then error('link is empty') endw
     link[last] = nil
     link.last = last - 1
     return data

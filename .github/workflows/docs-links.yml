@@ -1,0 +1,17 @@
+name: Check Docs Links
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check README
+        uses: becheran/mlc@v0.16.1
+        # with:
+        #   args: ./README.md
