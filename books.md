@@ -348,6 +348,8 @@
 
 - [《计算机网络：系统方法》(英文)](https://github.com/SystemsApproach/book)
 
+- [《Beej's Guide to Network Programming》](https://beej.us/guide/bgnet/)
+
 - [《TCP/IP网络编程》(韩-尹圣雨)学习笔记](https://github.com/riba2534/TCP-IP-NetworkNote)
 
 - [《Linux Advanced Routing & Traffic Control HOWTO》](https://lartc.org/howto/index.html)
@@ -371,6 +373,8 @@
     - [objtube的卢克儿的视频：【干货】前端学习路线分享！写了个网站帮助你学习前端！](https://www.bilibili.com/video/BV1ZZ4y1H7rU)
 
 - [我零基础独立开发一个 Web/Hybrid 项目的经历](https://imf.ms/web/2022/07/05/my-first-web-hybird-project-experience/)
+
+- [大圣的前端进阶课程](https://shengxinjing.cn/)
 
 ### Javascript
 

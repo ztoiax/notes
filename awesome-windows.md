@@ -1,5 +1,7 @@
 # windows
 
+## [SophiApp：微调windows10，windows11](https://github.com/Sophia-Community/SophiApp)
+
 ## [winget-cli(windows的包管理器)](https://github.com/microsoft/winget-cli)
 
 ## [terminal](https://github.com/microsoft/terminal)

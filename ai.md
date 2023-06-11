@@ -24,7 +24,9 @@
 
 - [腾讯技术工程：如何与ChatGPT4结对编程提升研发效率](https://www.163.com/dy/article/I13L6MEP0518R7MO.html)
 
-- [腾讯云开发：GPT4结对编程实战，鹅厂一线研发真实使用感受](https://cloud.tencent.com/developer/article/2285573)
+- [腾讯云开发者：GPT4结对编程实战，鹅厂一线研发真实使用感受](https://cloud.tencent.com/developer/article/2285573)
+
+- [腾讯云开发者：我用低代码结合ChatGPT开发，每天多出1小时摸鱼]()
 
 # 在线ai工具
 

@@ -1064,10 +1064,10 @@ touch /var/log/php-fpm/php_errors.log
 ```
 
 # reference
-- [http的基本知识](https://github.com/CyC2018/CS-Notes/blob/master/notes/HTTP.md#3xx-%E9%87%8D%E5%AE%9A%E5%90%91)
-- [tomcat 与 nginx，apache 的区别是什么？](https://www.zhihu.com/question/32212996/answer/87524617)
-- [你还记得 Tomcat 的工作原理么](https://zhuanlan.zhihu.com/p/248426114)
-- [CentOS 安装 MySQL 详解](https://juejin.im/post/6844903870053761037)
-- [Tomcat 基础架构——jdk、java、zrlog](https://my.oschina.net/u/3851633/blog/1858422)
 - [nginx ssl 配置](https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1d&guideline=5.6)
+
 - [测试网站是否支持 http2 和 alpn](https://tools.keycdn.com/http2-test)
+
+- [朱小厮的博客：原创 | Nginx 架构原理科普]()
+- [朱小厮的博客：OpenResty 概要及原理科普]()
+- [朱小厮的博客：原创 | 微服务网关 Kong 科普]()

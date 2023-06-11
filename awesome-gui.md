@@ -81,6 +81,8 @@
 
 # other
 
+- [linux-wifi-hotspot](https://github.com/lakinduakash/linux-wifi-hotspot)
+
 - [noti: 任务完成后通知](https://github.com/variadico/noti)
 
 - [ToDesk(手机电脑投屏幕)](https://github.com/ji4ozhu/ToDesk)

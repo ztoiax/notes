@@ -20,6 +20,8 @@
 * [git-sim（可视化git）](#git-sim可视化git)
 * [commitgpt（ai自动生成git commit）](#commitgptai自动生成git-commit)
 * [github](#github)
+    * [github工作流](#github工作流)
+    * [code action](#code-action)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
 * [关于 Git 的书](#关于-git-的书)
@@ -372,6 +374,14 @@ git commit -m "..."
 - [查看github仓库的trends](https://github-trends.com/)
 
 - [grep app：超快的在线github搜索工具](https://grep.app/)
+
+## github工作流
+
+- [码农高天：十分钟学会正确的github工作流，和开源作者们使用同一套流程](https://www.bilibili.com/video/BV19e4y1q7JJ)
+
+## code action
+
+- [GitHub Actions by Example](https://www.actionsbyexample.com/?utm_source=hackernewsletter&utm_medium=email&utm_term=code)
 
 # reference
 
