@@ -196,15 +196,13 @@ gh release list
 
 ## [viddy:instead watch](https://github.com/sachaos/viddy)
 
-## [exa](https://github.com/ogham/exa)
-
-### highlight ls
+## [exa：highlight ls](https://github.com/ogham/exa)
 
 ![image](./Pictures/awesomecli/11.avif)
 
-## [lsd](https://github.com/Peltoche/lsd)
+## [erd：highlight ls](https://github.com/solidiquis/erdtree)
 
-### highlight ls and support icon
+## [lsd：highlight ls](https://github.com/Peltoche/lsd)
 
 ![image](./Pictures/awesomecli/14.avif)
 
@@ -350,6 +348,8 @@ ps aux | peco
 ![image](./Pictures/awesomecli/procs.avif)
 
 ## [pueue(任务管理)](https://github.com/Nukesor/pueue/wiki/Get-started)
+
+## [killport：输入指定端口，杀掉进程](https://github.com/jkfran/killport)
 
 # net
 

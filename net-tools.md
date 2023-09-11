@@ -23,6 +23,7 @@
         * [http](#http)
             * [curl](#curl)
                 * [POST PATCH DELETE](#post-patch-delete)
+            * [curl作者的新作品trurl](#curl作者的新作品trurl)
             * [webhook（微信机器人）](#webhook微信机器人)
             * [httpie](#httpie)
                 * [nghttp（测试是否支持 http2）](#nghttp测试是否支持-http2)
@@ -686,6 +687,8 @@ curl -d "title=patch test" -X PATCH 'https://jsonplaceholder.typicode.com/todos/
 curl -X DELETE 'https://jsonplaceholder.typicode.com/todos/321'
 ```
 
+#### [curl作者的新作品trurl](https://github.com/curl/trurl)
+
 #### webhook（微信机器人）
 
 [企业微信群机器人配置说明](https://work.weixin.qq.com/api/doc/90000/90136/91770)
@@ -1276,6 +1279,8 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 > `iptables` 已经落后了，建议使用 [nftables](https://wiki.nftables.org/wiki-nftables/index.php/Why_nftables%3F_) 一个替换现有{ip,ip6,arp,eb}tables 的框架。[Main differences with iptables](https://wiki.nftables.org/wiki-nftables/index.php/Main_differences_with_iptables)
 
 ---
+
+- [技术蛋老师：iptables核心运作原理和数据包过滤方法](https://www.bilibili.com/list/watchlater?bvid=BV1Jz4y1u7Lz)
 
 > [iptables 转换为 nftables 的命令](#nftables)
 

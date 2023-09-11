@@ -14,11 +14,13 @@
             * [stash(暂存)](#stash暂存)
     * [rebase](#rebase)
     * [remote](#remote)
-* [git-extras](#git-extras)
-* [pre-commit](#pre-commit)
-* [sapling(facebook的版本控制工具兼容git)](#saplingfacebook的版本控制工具兼容git)
-* [git-sim（可视化git）](#git-sim可视化git)
-* [commitgpt（ai自动生成git commit）](#commitgptai自动生成git-commit)
+    * [第三方git工具](#第三方git工具)
+        * [git-extras](#git-extras)
+        * [pre-commit](#pre-commit)
+        * [sapling(facebook的版本控制工具兼容git)](#saplingfacebook的版本控制工具兼容git)
+        * [git-sim（可视化git）](#git-sim可视化git)
+        * [commitgpt（ai自动生成git commit）](#commitgptai自动生成git-commit)
+        * [git-cliff：对history生成markdown日志](#git-cliff对history生成markdown日志)
 * [github](#github)
     * [github工作流](#github工作流)
     * [code action](#code-action)
@@ -316,9 +318,11 @@ git merge --abort
 git pull <REMOTE> <BRANCH>
 ```
 
-# [git-extras](https://github.com/tj/git-extras/blob/master/Commands.md#git-alias)
+## 第三方git工具
 
-# [pre-commit](https://github.com/pre-commit/pre-commit)
+### [git-extras](https://github.com/tj/git-extras/blob/master/Commands.md#git-alias)
+
+### [pre-commit](https://github.com/pre-commit/pre-commit)
 
 - [官方文档](https://pre-commit.com/)
 
@@ -351,11 +355,13 @@ pre-commit run --all-files
 git commit -m "..."
 ```
 
-# [sapling(facebook的版本控制工具兼容git)](https://sapling-scm.com/docs/introduction/)
+### [sapling(facebook的版本控制工具兼容git)](https://sapling-scm.com/docs/introduction/)
 
-# [git-sim（可视化git）](https://github.com/initialcommit-com/git-sim)
+### [git-sim（可视化git）](https://github.com/initialcommit-com/git-sim)
 
-# [commitgpt（ai自动生成git commit）](https://zura.wiki/post/never-write-a-commit-message-again-with-the-help-of-gpt-3/)
+### [commitgpt（ai自动生成git commit）](https://zura.wiki/post/never-write-a-commit-message-again-with-the-help-of-gpt-3/)
+
+### [git-cliff：对history生成markdown日志](https://github.com/orhun/git-cliff)
 
 # github
 

@@ -169,6 +169,8 @@
 
 #### 数据科学
 
+- [《Python for Data Analysis, 3E》](https://wesmckinney.com/book/)
+
 - [《From Python to Numpy》](https://www.labri.fr/perso/nrougier/from-python-to-numpy/)
 
 - [《Scientific Visualization: Python + Matplotlib》](https://github.com/rougier/scientific-visualization-book)
@@ -259,7 +261,13 @@
 - [《Redis核心原理与实践》部分试读](https://www.yuque.com/binecy/redis)
     > redis6.0源代码分析
 
+- [《Build Your Own Redis with C/C++》](https://build-your-own.org/redis/)
+
+- [《Build Your Own Database From Scratch》](https://build-your-own.org/database/)
+
 - [《postgresql 14 internals》](https://postgrespro.com/community/books/internals)
+
+- [MiniOB 是 OceanBase 团队基于华中科技大学数据库课程原型](https://github.com/oceanbase/miniob)
 
 ### 分布式
 
@@ -344,6 +352,10 @@
 
 - [手写一个解释器](https://github.com/munificent/craftinginterpreters)
 
+- [《From Source Code To Machine Code》](https://build-your-own.org/compiler/)
+
+- [《Introduction to Compilers and Language Design》](https://www3.nd.edu/~dthain/compilerbook/)
+
 ## network(网络)
 
 - [《计算机网络：系统方法》(英文)](https://github.com/SystemsApproach/book)
@@ -381,7 +393,13 @@
 - [《SICP JavaScript 描述》(英文)](https://sourceacademy.org/sicpjs/index)
     - [《SICP JavaScript 描述》(中文)](https://sicp-js.apachecn.org/#/)
 
-- [《ES6 入门教程》](https://es6.ruanyifeng.com/)
+- [ruanyifeng：《ES6 入门教程》](https://es6.ruanyifeng.com/)
+
+- [ruanyifeng：《JavaScript 教程》](https://wangdoc.com/javascript/)
+
+- [ruanyifeng：《TypeScript 教程》](https://wangdoc.com/typescript/)
+
+- [History of JavaScript Frameworks](https://programmingsoup.com/history-of-javascript-frameworks)
 
 #### 框架
 
@@ -394,6 +412,8 @@
 - [《鸟哥的 Linux 私房菜》](http://cn.linux.vbird.org/linux_basic/linux_basic.php)
 
 - [《The AWK Programming Language》](https://github.com/wuzhouhui/awk)
+
+- [Learn Makefiles](https://makefiletutorial.com/)
 
 - [运维实践指南](https://billwang139967.gitbooks.io/op_practice_book/content/)
 
@@ -421,6 +441,8 @@
 
 - [Load Balancing](https://samwho.dev/load-balancing/)
 
+- [LINUX-TUTORIAL（包含nginx、tomat、zk、es等运维）](https://dunwu.github.io/linux-tutorial/)
+
 ### cloud
 
 - [《Docker — 从入门到实践》](https://vuepress.mirror.docker-practice.com/)
@@ -428,6 +450,8 @@
 - [《凤凰架构 构建可靠的大型分布式系统》](https://icyfenix.cn/)
 
 - [《前端架构：从入门到微前端》](https://github.com/phodal/microfrontends)
+
+- [深入架构原理与实践](https://www.thebyte.com.cn/)
 
 - [《Istio 服务网格进阶实战》](https://www.servicemesher.com/istio-handbook/)
 
@@ -489,6 +513,10 @@
 
 - [ai知识库搜索](https://easyai.tech/)
 
+- [提示工程指南](https://www.promptingguide.ai/zh)
+
+- [Awesome-AIGC-Tutorials](https://github.com/luban-agi/Awesome-AIGC-Tutorials)
+
 ## 数据科学
 
 - [《Foundation of Data Science》](https://www.cs.cornell.edu/jeh/book.pdf)
@@ -498,6 +526,8 @@
 ## 文档
 
 - [YAML 语言教程](https://www.ruanyifeng.com/blog/2016/07/yaml.html)
+
+- [腾讯技术工程：数据序列化工具Protobuf编码&避坑指南](https://cloud.tencent.com/developer/article/2302699)
 
 ## 编码
 
@@ -517,6 +547,8 @@
 - [线性代数笔记](https://github.com/zlotus/notes-linear-algebra)
 
 - [线性代数课程](https://github.com/kenjihiranabe/The-Art-of-Linear-Algebra)
+
+- [矩阵是图，图是矩阵（英文）](https://thepalindrome.org/p/matrices-and-graphs)
 
 - [统计学习方法（第二版）习题解答](https://datawhalechina.github.io/statistical-learning-method-solutions-manual/#/)
 
@@ -545,6 +577,12 @@
 ## 视频
 
 - [H.264 is Magic](https://sidbala.com/h-264-is-magic/)
+
+- [digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction)
+
+## 副业
+
+- [副业](http://r.ftqq.com/lean-side-bussiness/index.html)
 
 # 学术期刊/学会
 
@@ -608,6 +646,8 @@
 - [awesome cs大学课程（英文）](https://asmen.icopy.site/)
 
     - [awesome cs大学课程（中文）](https://asmcn.icopy.site/awesome/awesome-courses/)
+
+- [计算机专业学习路线（包含mit、斯坦福、cmu高校）](https://hackway.org/docs/cs/intro)
 
 - [Computer Science courses](https://github.com/Developer-Y/cs-video-courses)
 

@@ -739,10 +739,28 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
     - 调整文件页和匿名页的回收倾向
 
+        | 值  | 策略                                                                           |
+        |-----|--------------------------------------------------------------------------------|
+        | 0   | linux3.5以上：宁愿oom killer也不用swap；linux3.4以下：宁愿swap也不用oom killer |
+        | 1   | linux3.5以上：宁愿swap也不用oom killer                                         |
+        | 60  | 默认值                                                                         |
+        | 100 | 操作系统主动使用swap                                                           |
+
         ```sh
         # 数值为0-100（默认为60）。越大越积极回收匿名页；越小越积极回收文件页，因此一般建议设置为0，但是并不代表不会回收匿名页。
         cat /proc/sys/vm/swappiness
         60
+        ```
+
+        ```sh
+        # 查看swap的使用量
+        free -h
+
+        # 实时查看swap的使用。si和so表示swap in swap on
+        dstat --vmstat 1
+
+        # 查看redis进程的swap使用情况，求和可以得出总的swap量
+        cat /proc/$(pidof redis-server)/smaps | grep -i swap
         ```
 
     - 文件页、匿名页都是根据LRU算法进行回收，维护着 active 和 inactive 两个双向链表：

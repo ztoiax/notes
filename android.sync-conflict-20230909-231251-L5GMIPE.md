@@ -33,9 +33,7 @@
 
 - [syncthing：文件同步](https://github.com/syncthing/syncthing-android)
 
-- [ApplistDetector：隐藏检测英文](https://github.com/Dr-TSNG/ApplistDetector)
-
-- [ruru：隐藏检测中文](https://github.com/byxiaorun/Ruru/releases)
+- [ApplistDetector：隐藏检测](https://github.com/Dr-TSNG/ApplistDetector)
 
 - [session：加密通信](https://github.com/oxen-io/session-android)
 
@@ -52,12 +50,6 @@
 - [np管理器](https://github.com/githubXiaowangzi/NP-Manager)
 
 - [阅读](https://github.com/gedoor/MyBookshelf)
-
-- [unison：intel的手机电脑消息、文件传输]()
-
-- [localsend](https://github.com/localsend/localsend)
-
-- [KernelFlasher：刷、备份、恢复内核](https://github.com/capntrips/KernelFlasher)
 
 ## 刷机
 
@@ -87,8 +79,6 @@
     adb reboot edl
     fastboot oem edl
     ```
-
-### 刷入recovery、magisk、lsposed
 
 - 步骤
 
@@ -131,38 +121,12 @@
 
     - 4.[KernelSU](https://github.com/tiann/KernelSU)
 
+        - [[系统进阶指南 Vol.5]KernelSU旧内核编译实践教程](https://www.bilibili.com/video/BV1cX4y127gQ)
         - [小米开源的kernel列表](https://github.com/MiCode/Xiaomi_Kernel_OpenSource)
-
-        - [派大宝UI：【Root玩机】KernelSU 内核root刷入教程](https://www.bilibili.com/video/BV1dm4y1h7Py)
-            - 下载文件
-
-                - boot-gz.img.gz后续的文件为联发科机型；boot.img.gz为高通
-
-                - 内核要选择与文件名相同的版本
-
-                    - 官方没有提供kernel版本（5以前），需要自己编译
-
-                        - [[系统进阶指南 Vol.5]KernelSU旧内核编译实践教程](https://www.bilibili.com/video/BV1cX4y127gQ)
-
-            - 文件解压后为boot.img文件，通过fastboot刷入即可
-
-                - magisk模块会自动加载，由于kernelsu是基于kernel的root，可以完美隐藏root，因此fastboot刷入前记得移除shamiko等模块
 
     - 4.[magisk](https://github.com/topjohnwu/Magisk)
 
-        - 4.[Magisk Delta](https://github.com/HuskyDG/magisk-files/releases)
-
-            - delta版和普通版是可以随意切换的，在magisk授予root后，打开根据提升进行修复，选“直接安装（推荐）”选项即可
-
-                - 切换前：由于delta版使用超级用户列表管理root权限，没有隐藏列表，因此记得移除shamiko模块
-
-                    - 开启“强制使用超级用户列表”，更好的隐藏root
-
-        - 更新magisk时，如果使用了隐藏改名为Settings记得取消
-
         - [Magisk模块列表](https://github.com/Magisk-Modules-Repo)
-
-        - [Magisk和xposed模块资源分享](https://magisk.suchenqaq.club/)
 
         - 隐藏：
 
@@ -170,8 +134,6 @@
                 - 不依赖`zygisk`，与shamiko冲突
             - [shamiko：隐藏root](https://github.com/LSPosed/LSPosed.github.io/releases)
             - [safetynet-fix魔改版：隐藏bootloader锁](https://github.com/PaperStrike/safetynet-fix/releases)
-
-            - 注意：数据人民币app会残留未隐藏时检测的数据，记得清除全部数据
 
         - [ssh服务器](https://github.com/Magisk-Modules-Repo/ssh)
         - [universal-gms-doze：减少google play服务耗电](https://github.com/gloeyisk/universal-gms-doze)
@@ -185,8 +147,6 @@
             - 使用 暗码 `*#*#lsposed#*#*` 可以启动寄生管理器。
 
         - [xposed模块列表](https://github.com/Xposed-Modules-Repo)
-
-        - [核心破解：降级安装](https://github.com/LSPosed/CorePatch)
 
         - [解除地区限制](https://github.com/Xposed-Modules-Repo/cn.cyanc.xposed.noregionlimits)
         - [虚拟定位](https://github.com/Lerist/FakeLocation)
@@ -215,35 +175,22 @@
         - [miui传送门增强 -- TaplusExtension](https://github.com/Xposed-Modules-Repo/io.github.yangyiyu08.taplusext)
         - [customiuizer](https://github.com/monwf/customiuizer)
 
-### [frida](https://frida.re/docs/home/)
+- [frida](https://frida.re/docs/home/)
+    - pc上安装frida
+        ```sh
+        pip install frida-tools
+        ```
+    - 手机上安装frida
+        - [下载frida-server](https://github.com/frida/frida/releases)
+        ```sh
+        adb push frida-server-16.0.18-android-arm64 /data/local/tmp/
+        adb shell "chmod 755 /data/local/tmp/frida-server-16.0.18-android-arm64"
+        adb shell "/data/local/tmp/frida-server-16.0.18-android-arm64 &"
+        ```
 
-- pc上安装frida
-    ```sh
-    pip install frida-tools
-    ```
-- 手机上安装frida
-    - [下载frida-server](https://github.com/frida/frida/releases)
-    ```sh
-    adb push frida-server-16.0.18-android-arm64 /data/local/tmp/
-    adb shell "chmod 755 /data/local/tmp/frida-server-16.0.18-android-arm64"
-    adb shell "/data/local/tmp/frida-server-16.0.18-android-arm64 &"
-    ```
+    - pc上操作
+        ```sh
+        # 查看手机上的安装应用
+        frida-ps -U
 
-- pc上操作
-    ```sh
-    # 查看手机上的安装应用
-    frida-ps -U
-
-    ```
-
-## 救砖
-
-### magisk模块变砖
-
-- 进入`/data/adb/modules/`（magisk模块目录），删除导致变砖的magisk模块。
-
-    - 多种方法进入目录删除模块：
-        - 1.twrp删除
-        - 2.使用小米手机自带的recovery安全模式，使用有root权限的文件管理器
-
-- 提取当前刷机包的boot.img，进入fastboot刷入
+        ```

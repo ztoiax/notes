@@ -1126,5 +1126,7 @@ trivy image redislabs/redismod
 
 - [gvistor](https://mp.weixin.qq.com/s?src=11&timestamp=1613136113&ver=2886&signature=6e*T4ylvJCA--fGa-tb*ttJq3JArF7z-Wzs5eAPzlY813SG154AK1YyEgLv2MQSi7BUW8muQyHQnOl3arAu2m9qK8bCk2fgGLOv4-VYvAyWDfMUcBrvB8oZ9csaoQ-aI&new=1)
 
+- [Docker and Kubernetes 完整开发指南](https://www.bilibili.com/read/cv21266100)
+
 # [rust重写的云原生的项目](https://rust-cloud-native.github.io/)
 

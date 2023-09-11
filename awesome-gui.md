@@ -53,6 +53,8 @@
 
 - [localsend](https://github.com/localsend/localsend)
 
+- [kdeconnect](https://github.com/KDE/kdeconnect-kde)
+
 ## 文件管理器
 
 - pcmanfm(文件管理器)

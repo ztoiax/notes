@@ -11,6 +11,7 @@
             * [checkmake检查makefile](#checkmake检查makefile)
         * [lsof](#lsof)
         * [rsync](#rsync)
+            * [UDR模式](#udr模式)
         * [split](#split)
         * [fsarchiver](#fsarchiver)
         * [find](#find)
@@ -210,7 +211,49 @@ rsync -av /source /target
 rsync -a --delete --link-dest /compare /source /target
 ```
 
+- daemon模式运行
+
+    - rsync可以通过rsh或ssh，也能以daemon模式去运行，在以daemon方式运行时rsync server会打开一个873端口，等待客户端去连接。
+
+    - 配置文件：`/etc/rsyncd.conf`
+    ```sh
+    uid = nobody
+    gid = nobody
+    use chroot = yes
+    max connections = 4
+    syslog facility = local5
+    pid file = /run/rsyncd.pid
+
+    [rsynctest]
+            path = /tmp/rsynctest
+            read only = no
+    ```
+
+    ```sh
+    # 不要忘记创建共享目录
+    mkdir /tmp/rsynctest
+
+    # 从/tmp/rsynctest sync到 /tmp/test
+    rsync --archive rsync://127.0.0.1/rsynctest /tmp/test
+    ```
+
 - [rsync+inotify-tools](https://github.com/wsgzao/sersync)
+
+#### UDR模式
+
+- [UDR](https://github.com/allisonheath/UDR)
+
+- 测试对比
+
+    - 1.在稳定的内网网络环境（同网段）用两种不同的传输方式多次进行了对比，udr方式和常规的rsync方式速度基本相当。
+    - 2.在内网网络环境（跨网段、跨机房）用两种不同的传输方式多次进行了对比，udr方式要明显快于常规的rsync方式，传输大小为1G的文件进行对比：
+
+```sh
+# 下载udr并编译
+git clone https://github.com/allisonheath/UDR.git
+cd UDR
+make -e os=XXX arch=YYY
+```
 
 ### split
 

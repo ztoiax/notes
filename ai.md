@@ -28,6 +28,10 @@
 
 - [腾讯云开发者：我用低代码结合ChatGPT开发，每天多出1小时摸鱼]()
 
+### 商业
+
+- [新职业|我用GPT给电子厂带货](https://t.cj.sina.com.cn/articles/view/6286736254/176b7fb7e01901df3u?display=0&retcode=0)
+
 # 在线ai工具
 
 - [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)

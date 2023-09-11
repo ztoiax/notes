@@ -48,6 +48,7 @@
             * [jenkins-cli](#jenkins-cli)
             * [插件](#插件)
     * [日志软件](#日志软件)
+        * [logrotate（自带的日志分割工具）](#logrotate自带的日志分割工具)
         * [rsyslog](#rsyslog)
 
 <!-- vim-markdown-toc -->
@@ -946,9 +947,56 @@ java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd
 
 ## 日志软件
 
+- [小米技术：Linux日志服务初识]()
+
 - [Linux开源日志分析](https://cloud.tencent.com/developer/inventory/116450)
 
+| 路径             | 描述                                                                                                                         |
+|------------------|------------------------------------------------------------------------------------------------------------------------------|
+| /var/log/message | 核心系统日志文件，包含系统启动引导，系统运行状态和大部分错误信息等都会记录到这个文件，因此这个日志是故障诊断的首要查看对象。 |
+| /var/log/dmesg   | 核心启动日志，系统启动时会在屏幕显示与硬件有关的信息，这些信息会保存在这个文件里面。                                         |
+| /var/log/secure  | 验证，授权和安全日志，常见的用户登录验证相关日志就存放在这里。                                                               |
+| /var/log/spooler | UUCP和news设备相关的日志信息                                                                                                 |
+| /var/log/cron    | 与定时任务相关的日志信息                                                                                                     |
+| /var/log/maillog | 记录每一个发送至系统或者从系统发出的邮件活动                                                                                 |
+| /var/log/boot    | 系统引导日志                                                                                                                 |
+
+### logrotate（自带的日志分割工具）
+
+- 默认配置`/etc/logrotate.conf`
+```
+# 按周轮训
+weekly
+
+# 保留4周日志备份
+rotate 4
+
+# 标记分割日志并创建当前日志
+create
+
+# 使用时间作为后缀
+dateext
+
+# 对 logrotate.d 目录下面的日志种类使用
+include /etc/logrotate.d
+
+# 对于wtmp 和 btmp 日志处理在这里进行设置
+/var/log/wtmp {
+    monthly
+    create 0664 root utmp
+ minsize 1M
+    rotate 1
+}
+/var/log/btmp {
+    missingok
+    monthly
+    create 0600 root utmp
+    rotate 1
+}
+```
 ### rsyslog
+
+- [前端日志展示工具 loganalyzer，其利用的工具有 httpd，php和mysql。](https://github.com/rsyslog/loganalyzer)
 
 - rsyslog 是syslog 的升级版
 
@@ -983,7 +1031,7 @@ java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd
         $ActionQueueType LinkedList
         $ActionResumeRetryCount -1
 
-        # 在最后一行添加服务器IP地址
+        # 在最后一行添加服务器IP地址。@表示使用udp
         *.* @192.168.31.80
         ```
 
