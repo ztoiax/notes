@@ -32,7 +32,11 @@
 
 - [新职业|我用GPT给电子厂带货](https://t.cj.sina.com.cn/articles/view/6286736254/176b7fb7e01901df3u?display=0&retcode=0)
 
-# 在线ai工具
+# 工具
+
+- [DB-GPT（本地运行的ai，防止数据隐私上传平台）](https://github.com/eosphoros-ai/DB-GPT)
+
+## 在线ai工具
 
 - [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
 - [chat-pdf](https://damngood.tools/tools/chat-pdf)

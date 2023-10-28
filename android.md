@@ -21,6 +21,14 @@
 
 ## app
 
+- [f-droid：只上架开源app的应用商店](https://f-droid.org/)
+
+- [AuroraStore：匿名googleplay商店](https://github.com/whyorean/AuroraStore)
+
+- [NewPipe：youtube开源版，可以按时间顺序浏览up的视频](https://github.com/TeamNewPipe/NewPipe)
+
+- [fcitx5：开源输入法](https://github.com/fcitx5-android/fcitx5-android)
+
 - [AidLearning-FrameWork](https://github.com/aidlearning/AidLearning-FrameWork)
 
 - [termux](https://github.com/termux/termux-app)
@@ -58,6 +66,12 @@
 - [localsend](https://github.com/localsend/localsend)
 
 - [KernelFlasher：刷、备份、恢复内核](https://github.com/capntrips/KernelFlasher)
+
+- [自定义屏幕点击](https://github.com/gkd-kit/gkd)
+
+- [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
+
+- [SmsForwarder（短信转发器）：备用机监控，如应用，短信通知等](https://github.com/pppscn/SmsForwarder)
 
 ## 刷机
 

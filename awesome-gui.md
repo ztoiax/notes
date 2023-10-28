@@ -38,6 +38,8 @@
 
 - [aliyunpan(阿里云盘)](https://github.com/liupan1890/aliyunpan)
 
+- [syncthing：文件同步](https://github.com/syncthing/syncthing)
+
 - [alist:可添加各种网盘的网页文件管理器](https://github.com/alist-org/alist)
     - 使用davfs2挂载
     ```sh
@@ -48,6 +50,8 @@
     mkdir yun
     sudo mount -t davfs http://127.0.0.1:5244/dav yun
     ```
+
+- [photoprism：ai相册管理](https://github.com/photoprism/photoprism)
 
 ## 文件传输
 
@@ -110,6 +114,8 @@
 - [bitwarden：密码管理器](https://bitwarden.com/download/)
 
 - [timeshift](https://github.com/teejee2008/timeshift)
+
+- [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
 
 # 其他项目
 

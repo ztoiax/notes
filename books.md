@@ -197,6 +197,10 @@
 
 - [《PHP 之道》](https://learnku.com/docs/php-the-right-way/PHP8.0)
 
+### julia
+
+- [北京大学Linux俱乐部：【PKU Linux】Julia 沙龙：发展现状、编译机制、性能优化和实例（2024A01）](https://www.bilibili.com/list/watchlater?oid=958543414&bvid=BV1dp4y1A7Eu)
+
 ### vim
 
 - [Learn-Vim](https://github.com/iggredible/Learn-Vim)
@@ -279,6 +283,7 @@
 
 - [Raft一致性算法论文的中文翻译](https://github.com/maemual/raft-zh_cn)
 
+- [《高并发的哲学原理》开源图书](https://github.com/johnlui/PPHC)
 
 ## 软件开发
 
@@ -324,13 +329,9 @@
 
 - [Linux 内核揭秘](https://xinqiu.gitbooks.io/linux-insides-cn/content/index.html)
 
-- [腾讯技术工程: 一文掌握 Linux 内存管理](https://cloud.tencent.com/developer/article/1823228)
-
-- [腾讯技术工程: 深入剖析虚拟内存工作原理](https://cloud.tencent.com/developer/article/1821336)
-
-- [腾讯技术工程: Linux I/O 原理和 Zero-copy 技术全面揭秘](https://segmentfault.com/a/1190000038700641)
-
 - [eBPF 开发者教程与知识库：通过 20 个小工具一步步学习 eBPF（尝试教会 ChatGPT 编写 eBPF 程序）](https://github.com/eunomia-bpf/bpf-developer-tutorial)
+
+- [coder-kung-fu（开发内功修炼）](https://github.com/yanfeizhang/coder-kung-fu)
 
 ## architecture(体系结构)
 
@@ -356,6 +357,8 @@
 
 - [《Introduction to Compilers and Language Design》](https://www3.nd.edu/~dthain/compilerbook/)
 
+- [腾讯技术工程：如何从0到1设计实现一门自己的脚本语言]()
+
 ## network(网络)
 
 - [《计算机网络：系统方法》(英文)](https://github.com/SystemsApproach/book)
@@ -378,6 +381,10 @@
 
 - [Become-A-Full-Stack-Web-Developer: 各种html、css、js...教程](https://github.com/bmorelli25/Become-A-Full-Stack-Web-Developer#learn-html)
 
+- [CSS Animation](https://cssanimation.rocks/)
+
+- [CSS Loaders：css各种动画](https://css-loaders.com/)
+
 - [spellbook-of-modern-webdev](https://github.com/dexteryy/spellbook-of-modern-webdev)
 
 - [objtube的卢克儿的front-end-roadmap](https://objtube.github.io/front-end-roadmap/#/)
@@ -387,6 +394,8 @@
 - [我零基础独立开发一个 Web/Hybrid 项目的经历](https://imf.ms/web/2022/07/05/my-first-web-hybird-project-experience/)
 
 - [大圣的前端进阶课程](https://shengxinjing.cn/)
+
+- [WebGL lessons that start with the basics（从零开始学习WebGL](https://webglfundamentals.org/)
 
 ### Javascript
 
@@ -414,6 +423,8 @@
 - [《The AWK Programming Language》](https://github.com/wuzhouhui/awk)
 
 - [Learn Makefiles](https://makefiletutorial.com/)
+
+- [跟我一起写Makefile](https://seisman.github.io/how-to-write-makefile/)
 
 - [运维实践指南](https://billwang139967.gitbooks.io/op_practice_book/content/)
 
@@ -516,6 +527,8 @@
 - [提示工程指南](https://www.promptingguide.ai/zh)
 
 - [Awesome-AIGC-Tutorials](https://github.com/luban-agi/Awesome-AIGC-Tutorials)
+
+- [AIGC 课程, 目前已支持 ChatGPT, Midjourney, Runway, Stable Diffusion, AI数字人，AI声音&音乐，大模型微调](https://www.learnprompt.pro/)
 
 ## 数据科学
 

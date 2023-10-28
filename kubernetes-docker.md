@@ -1088,6 +1088,16 @@ trivy image redislabs/redismod
 
 - [gvistor 对比普通容器和 aliuk](https://mp.weixin.qq.com/s?src=11&timestamp=1613134736&ver=2886&signature=6e*T4ylvJCA--fGa-tb*ttJq3JArF7z-Wzs5eAPzlY813SG154AK1YyEgLv2MQSiIgP-pWSXHI2l*Fwri21PvvVMnlRoFkCEoiew-uvj8AFuYyM*dD5l83dQ2G5TriVb&new=1)
 
+# 与裸机性能对比
+
+- [NGINX开源社区：比较裸机和虚拟环境中的 NGINX 性能]()
+
+    - 两个关键指标：
+
+        - 每秒请求数（RPS）：Kubernetes约为裸机值的 80%。 Kubernetes 环境中使用的底层容器网络堆栈，因此在 Kubernetes 中运行 NGINX Ingress Controller 会导致这种网络密集型操作的性能大幅下降。
+
+        - 每秒SSL/TLS 事务数 (TPS)：几乎无甚差异
+
 # Kubernetes 是希腊语中的船长(captain)
 
 ## 第三方软件资源

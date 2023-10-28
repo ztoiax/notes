@@ -169,17 +169,49 @@ dmesg | grep NR_IRQS
 
 ### UMA
 
-- SMP（Symmetric multiprocessing 对称多处理器）：所有的 CPU 访问内存都要过总线，并且它们的速度都是一样的。
+- SMP（Symmetric multiprocessing 对称多处理器）：
 
-    ![image](./Pictures/linux-kernel/uma.avif)
+    - 一个物理 CPU 可以存在多个物理 Core，而每个 Core 又可以存在多个硬件线程。
 
-- 缺点：总线很快就会成为性能瓶颈，随着 CPU 个数的增多导致每个 CPU 可用带宽会减少
+    - 例子：1 个 x86 CPU 有 4 个物理 Core，每个 Core 有两个 HT (Hyper Thread)
+        - L1 和 L2 Cache 都被两个 HT 共享，且在同一个物理 Core。而 L3 Cache 则在物理 CPU 里，被多个 Core 来共享。
+        - 在操作系统看来，就是一个 8 个 CPU 的 SMP 系统。
+
+- SMP 系统的 CPU 和内存的互连方式分为：
+
+    - 1.UMA (一致内存访问)
+
+        ![image](./Pictures/linux-kernel/uma.avif)
+
+        - 所有的 CPU 访问内存都要过总线，并且它们的速度都是一样的。
+
+        - 多路处理器通过 FSB (前端系统总线) 和主板上的内存控制器芯片 (MCH) 相连，DRAM 是以 UMA 方式组织的，延迟并无访问差异，
+
+        - 缺点：总线很快就会成为性能瓶颈，随着 CPU 个数的增多导致每个 CPU 可用带宽会减少
+
+    - 2.NUMA (非一致内存访问)
+
+        ![image](./Pictures/linux-kernel/numa.avif)
+
+        - 内存控制器芯片被集成到处理器内部：多个处理器通过 QPI 链路相连，从此 DRAM 有了远近之分。
+        - 片外的 IOH 芯片也集成到了处理器内部：至此，内存控制器和 PCIe Root Complex 全部在处理器内部了。
+
+        - 一个 NUMA 节点通常可以被认为是一个物理 CPU 加上它本地的 DRAM 和 Device 组成。
+            - 四路服务器就拥有四个 NUMA 节点。
+
+        - 优点：CPU 在读取自己拥有的内存的时候就会很快；缺点：读取别 U 的内存的时候就会比较慢。
+
+            - 这个技术伴随着服务器 CPU 核心数越来越多，内存总量越来越大的趋势下诞生的，因为传统的模型中不仅带宽不足，而且极易被抢占，效率下降的厉害。
+
+        - Cache：除物理 CPU 有本地的 Cache 的层级结构以外，还存在跨越系统总线 (QPI) 的远程 Cache 命中访问的情况。
+            - 远程的 Cache 命中，对发起 Cache 访问的 CPU 来说，还是被记入了 LLC Cache Miss。
+
+        - DRAM：在两路及以上的服务器，远程 DRAM 的访问延迟，远远高于本地 DRAM 的访问延迟，有些系统可以达到 2 倍的差异。
+            - 即使服务器 BIOS 里关闭了 NUMA 特性，也只是对 OS 内核屏蔽了这个特性，这种延迟差异还是存在的。
+
+        - Device：对 CPU 访问设备内存，及设备发起 DMA 内存的读写活动而言，存在本地 Device 和远程 Device 的差别，有显著的延迟访问差异。
 
 ### NUMA（Non-uniform memory access，非一致存储访问结构）
-
-- 为了解决UMA的总线瓶颈。NUMA 架构将每个 CPU 进行了分组，一个 Node 可能包含多个 CPU 。Node 之间可以通过互联模块总线（QPI）进行通信，这就导致了远程内存访问比本地访问多了额外的延迟开销
-
-![image](./Pictures/linux-kernel/numa.avif)
 
 - NUMA 的内存分配策略
 
@@ -275,6 +307,59 @@ numastat
     | 2            | 只回收本地内存，在本地回收内存时，可以将文件页中的脏页写回硬盘，以回收内存 |
     | 4            | 只回收本地内存，在本地回收内存时，可以用 swap 方式回收内存                 |
 
+#### cache一致性
+
+- [云巅论剑：CPU Cache Line伪共享问题的总结和分析]()
+
+- Cache Line ：是 CPU 和主存之间数据传输的最小单位。当一行 Cache Line 被从内存拷贝到 Cache 里，Cache 里会为这个 Cache Line 创建一个条目。
+
+    - Cache 容量小于主存：多个主存地址可以被映射到同一个 Cache 条目
+
+        - 通常是由内存的虚拟或者物理地址的某几位决定的，取决于 Cache 硬件设计是虚拟地址索引，还是物理地址索引。
+
+            - 一个主存的物理或者虚拟地址，可以被分成三部分：
+                - 高地址位当作 Cache 的 Tag，用来比较选中多路 (Way) Cache 中的某一路 (Way)
+                - 低地址位可以做 Index，用来选中某一个 Cache Set。
+                    - 由于索引位一般设计为低地址位，通常在物理页的页内偏移以内，因此，不论是内存虚拟或者物理地址，都可以拿来判断两个内存地址，是否在同一个 Cache Line 里。
+
+        ```sh
+        # 查看cache line的大小
+        getconf -a | grep -i cache
+        ```
+
+- 在多个处理器的本地 Cache 里存在多份拷贝的可能性，因此就存在数据一致性问题。
+
+    - 处理器都实现了 Cache 一致性 (Cache Coherence）协议。如历史上 x86 曾实现了 MESI 协议以及 MESIF 协议。
+
+    - 假设两个处理器 A 和 B, 都在各自本地 Cache Line 里有同一个变量的拷贝流程：
+
+        - 一：此时该 Cache Line 处于 Shared 状态。
+
+        - 二：处理器 A 在本地修改了变量，除去把本地变量所属的 Cache Line 置为 Modified 状态以外，
+            - 还必须在另一个处理器 B 读同一个变量前，对该变量所在的 B 处理器本地 Cache Line 发起 Invaidate 操作，标记 B 处理器的那条 Cache Line 为 Invalidate 状态。
+
+        - 三：处理器 B 在对变量做读写操作时，如果遇到这个标记为 Invalidate 的状态的 Cache Line，即会引发 Cache Miss
+            - 从而将内存中最新的数据拷贝到 Cache Line 里，然后处理器 B 再对此 Cache Line 对变量做读写操作
+
+- Cache Line 伪共享：多个 CPU 上的多个线程同时修改自己的变量引发的。
+
+    - 这些变量表面上是不同的变量，但是实际上却存储在同一条 Cache Line 里。
+
+    - 由于 Cache 一致性协议，两个处理器都存储有相同的 Cache Line 拷贝的前提下
+
+        - 本地 CPU 变量的修改会导致本地 Cache Line 变成 Modified 状态，然后在其它共享此 Cache Line 的 CPU 上，导致 Cache Line 变为 Invalidate 状态，从而使 Cache Line 再次被访问时，发生本地 Cache Miss，从而伤害到应用的性能。
+
+        - 多个线程在不同的 CPU 上高频反复访问这种 Cache Line 伪共享的变量，则会因 Cache 颠簸引发严重的性能问题。
+
+- Perf c2c 发现伪共享
+
+    - 当应用在 NUMA 环境中运行，或者应用是多线程的，又或者是多进程间有共享内存，满足其中任意一条，那么这个应用就可能因为 Cache Line 伪共享而性能下降。
+
+    - 要怎样才能知道一个应用是不是受伪共享所害呢？
+        - Joe 的 patch 是在 Linux 的著名的 perf 工具上，添加了一些新特性，叫做 c2c，意思是“缓存到缓存” (cache-2-cache)。
+
+    - 此处省略：perf c2c介绍和使用
+
 ## 虚拟内存
 
 - [小林coding：深入理解 Linux 虚拟内存管理](https://www.xiaolincoding.com/os/3_memory/linux_mem.html)
@@ -314,9 +399,9 @@ numastat
 
 ### 分页
 
-- 解决分段的缺点：在内存交换时只写入少量固定的数据（页）。
+- 解决分段的缺点：在内存交换时只写入少量固定的数据Page（页）。
 
-- 把整个虚拟和物理地址切割成固定页（4KB），虚拟地址和物理地址通过页表进行映射，由cpu集成的硬件MMU（内存管理单元）负责转换
+- 「页表」保存的是虚拟内存地址与物理内存地址的映射关系。把整个虚拟和物理地址切割成固定页（4KB），由cpu集成的硬件MMU（内存管理单元）负责转换
 
 - 进程要访问的虚拟地址，在页表找不到的时候，就会产生**缺页中断**。`Page Fault Handler （缺页中断函数）` 就会分配物理地址，建立虚拟与物理地址的正向映射，更新页表。
 
@@ -346,13 +431,13 @@ numastat
 
         - 一个页的大小是 4KB（2^12）
 
-        - 在 32 位的环境下虚拟地址空间共有 4GB（2^20）个页，大概一百万个页
+        - 在 32 位的环境下虚拟地址空间共有4GB，也就是100万（2^20）个页
 
         - 一个「页表项」需要 4Bytes，4GB 就需要有 4Bytes * 2^20 = 4MB 的内存来存储页表。
 
         - 100 个进程的话，就需要 400MB 的内存来存储页。那64 位就更大了
 
-    - 解决方法多级页表：
+    - 解决方法：多级页表
 
         - 二级分页：将一级页表分为 1024 个二级页表（4Bytes * 1024 = 4KB），每个二级页表中包含 1024 个「页表项」（4Bytes * 1024 * 1024 = 4MB)
 
@@ -552,6 +637,10 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
     - 线程：`vfork()` 或者 `clone()` 系统调用创建出的子进程会设置 `CLONE_VM 标识` ，父进程和子进程的虚拟内存空间就变成共享的了，并不是一份拷贝。
 
+- 进程的虚拟内存空间包含一段一段的虚拟内存区域（Virtual memory area, 简称 VMA），每个VMA描述虚拟内存空间中一段连续的区域，每个VMA由许多虚拟页组成，即每个VMA包含许多页表项PTE。
+
+    - 在默认fork中，父进程遍历每个VMA，将每个VMA复制到子进程，并自上而下地复制该VMA对应的页表项到子进程，对于64位的系统，使用四级分页目录，每个VMA包括PGD、PUD、PMD、PTE，都将由父进程逐级复制完成。
+
 - [小林coding：定义虚拟内存区域的访问权限和行为规范](https://www.xiaolincoding.com/os/3_memory/linux_mem.html#_5-4-%E5%AE%9A%E4%B9%89%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E7%9A%84%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90%E5%92%8C%E8%A1%8C%E4%B8%BA%E8%A7%84%E8%8C%83)
 
     | vm_flags     | 访问权限               |
@@ -597,6 +686,28 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
     | .rodata（只读） | 代码段（只读可执行） |
     | .data（可读写） | 数据段（可读写）     |
     | .bss （可读写） | BSS 段（可读写）     |
+
+#### COW(copy-on-write，写时拷贝)
+
+- 简单来说就是可以延迟拷贝页
+
+- COW流程：
+    - fork出的子进程共享父进程的物理空间，当父子进程有内存写入操作时，
+    - 内存管理单元MMU检测到内存页是read-only内存页，于是触发缺页中断异常（page-fault）
+    - 处理器会从中断描述符表（IDT）中获取到对应的处理程序。
+    - 在中断程序中，内核就会把触发异常的物理内存页复制一份，并重新设置其内存映射关系，将父子进程的内存读写权限设置为可读写，于是父子进程各自持有独立的一份，之后进程才会对内存进行写操作
+
+    ![image](./Pictures/linux-kernel/io-cow.avif)
+
+- 缺点：
+
+    - 只适用于多读少写：其它场景下反而可能造成负优化，因为 COW事件所带来的系统开销要远远高于一次 CPU 拷贝所产生的。
+
+    - 内存页的只读标志 (read-ony) 更改为 (write-only)需要TLB flush
+
+    - 还是会造成父进程出现短时间阻塞，阻塞的时间跟页表的大小有关，页表越大，阻塞的时间也越长。
+
+- 应用例子：redis的 `bgsave` , `bgwriteaof` 命令
 
 #### malloc 是如何分配内存的？
 
@@ -1758,14 +1869,20 @@ systemd-cgls -k | grep kworker
 
         - [[译] Linux 异步 I/O 框架 io_uring：基本原理、程序示例与性能压测（2020）](http://arthurchiao.art/blog/intro-to-io-uring-zh/)
 
+        - 就是借助mmap技术，在应用程序和内核之间共享环形缓冲（ring buffer），使两者可以基于该共享内存进行交互，从而达到最小化系统调用频次（以及由此导致的系统上下文切换）的目的
+
         - 相比 linux-aio 提升5%左右
 
-        - 使用场景也不再仅限于数据库应用，普通的非数据库应用也能用
+        - 应用：
 
-        - ceph已经支持io_uring了
-            ```sh
-            ceph config show osd.16 | grep ioring
-            ```
+            - Netty框架的io_uring实现目前已正在孵化阶段，而根据其作者在0.0.1.Final版本基于一个简单的echo-server的benchmarking数据来看，io_uring实现的QPS是epoll实现的3倍左右
+
+            - Redis团队也正在考虑未来将io_uring技术整合至Redis（注14）
+
+            - ceph已经支持io_uring了
+                ```sh
+                ceph config show osd.16 | grep ioring
+                ```
 
 ### 非直接I/O Page cache
 
@@ -1959,23 +2076,6 @@ systemd-cgls -k | grep kworker
     blockdev --getpbsz /dev/sda
     512
     ```
-
-### COW(copy-on-write，写时拷贝)
-
-- fork出的子进程共享父进程的物理空间，当父子进程有内存写入操作时，read-only内存页发生中断，将触发的异常的内存页复制一份(其余的页还是共享父进程的)。
-
-    - 需要 MMU 的硬件支持，MMU 会记录当前哪些内存页被标记成只读，当有进程尝试往这些内存页中写数据的时候，MMU 就会抛一个异常给操作系统内核
-
-    ![image](./Pictures/linux-kernel/io-cow.avif)
-
-- 缺点：
-
-    - 只适用于多读少写：其它场景下反而可能造成负优化，因为 COW事件所带来的系统开销要远远高于一次 CPU 拷贝所产生的。
-
-    - 内存页的只读标志 (read-ony) 更改为 (write-only)需要TLB flush
-
-
-- 应用例子：redis的 `bgsave` , `bgwriteaof` 命令
 
 ### 缓冲区共享 (Buffer Sharing)
 

@@ -936,6 +936,15 @@ pigz -dc /mnt/Z/linux/arch.gz | pv | dd of=/dev/nvme0n1p5 status=progress bs=64K
 echo 3 > /proc/sys/vm/drop_caches
 ```
 
+- 擦出磁盘数据
+```sh
+# 使用随机数，擦除 /dev/sdb 设备中的数据
+dd if=/dev/urandom of=/dev/sdb bs=512 status=progress
+
+# 使用0，擦除 /dev/sdb 设备中的数据
+dd if=/dev/zero of=/dev/sdb bs=4096 status=progress
+```
+
 - `conv=fdatasync` 保证写入硬盘
 
 ---

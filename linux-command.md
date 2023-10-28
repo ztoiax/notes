@@ -16,7 +16,8 @@
         * [fsarchiver](#fsarchiver)
         * [find](#find)
         * [fselect: sql语句的ls](#fselect-sql语句的ls)
-    * [locate:定位文件](#locate定位文件)
+        * [locate:定位文件](#locate定位文件)
+        * [shred：安全地抹去磁盘数据。代替rm](#shred安全地抹去磁盘数据代替rm)
     * [char (字符串操作)](#char-字符串操作)
         * [column](#column)
         * [tr](#tr)
@@ -420,11 +421,27 @@ fselect path from . where modified gt '2021-04-20 18:10'
 fselect path from . where modified gt '2021-04-20 18:10:30'
 ```
 
-## locate:定位文件
+### locate:定位文件
 ```sh
 sudo updatedb
 ```
 
+### shred：安全地抹去磁盘数据。代替rm
+
+- `rm`命令或者文件管理器删除文件只是删除指向文件系统的指针（inode），所以原始数据仍可以使用
+
+- `shred` 是 Linux 软件包 `coreutils` 的一部分
+
+```sh
+# 默认情况下，shred 会执行三次，在执行的时候，它会将伪随机数据写入设备。
+shred -v /dev/sdb
+
+# 但是执行三次所需的时间太长了，我们可以通过 -n 来设置执行次数
+shred -v -n 1 /dev/sdb
+
+# 使用随机生成的数据覆盖磁盘
+shred -v -n 1 --random-source=/dev/urandom /dev/sdb
+```
 ## char (字符串操作)
 
 ### column
