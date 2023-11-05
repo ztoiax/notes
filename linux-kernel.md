@@ -640,6 +640,11 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 - 进程的虚拟内存空间包含一段一段的虚拟内存区域（Virtual memory area, 简称 VMA），每个VMA描述虚拟内存空间中一段连续的区域，每个VMA由许多虚拟页组成，即每个VMA包含许多页表项PTE。
 
     - 在默认fork中，父进程遍历每个VMA，将每个VMA复制到子进程，并自上而下地复制该VMA对应的页表项到子进程，对于64位的系统，使用四级分页目录，每个VMA包括PGD、PUD、PMD、PTE，都将由父进程逐级复制完成。
+        - 在Async-fork中，父进程同样遍历每个VMA，但只负责将PGD、PUD这两级页表项复制到子进程。
+
+- 在操作系统中，PTE的修改分为两类：
+    - 1.VMA级的修改。例如，创建、合并、删除VMA等操作作用于特定VMA上，VMA级的修改通常会导致大量的PTE修改，因此涉及大量的PMD。
+    - 2.PMD级的修改。PMD级的修改仅涉及一个PMD。
 
 - [小林coding：定义虚拟内存区域的访问权限和行为规范](https://www.xiaolincoding.com/os/3_memory/linux_mem.html#_5-4-%E5%AE%9A%E4%B9%89%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%E7%9A%84%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90%E5%92%8C%E8%A1%8C%E4%B8%BA%E8%A7%84%E8%8C%83)
 
@@ -1859,6 +1864,14 @@ systemd-cgls -k | grep kworker
 
         ![image](./Pictures/linux-kernel/io-multiplexing.avif)
 
+    - IO模型之信号驱动模型
+
+        - 信号驱动IO不再用主动询问的方式去确认数据是否就绪，而是向内核发送一个信号（调用sigaction的时候建立一个SIGIO的信号），然后应用用户进程可以去做别的事，不用阻塞。
+
+        - 当内核数据准备好后，再通过SIGIO信号通知应用进程，数据准备好后的可读状态。应用用户进程收到信号之后，立即调用recvfrom，去读取数据。
+
+        ![image](./Pictures/linux-kernel/io-信号驱动模型.avif)
+
     - 2.6版本的异步 I/O `aio`：「内核数据准备好」和「数据从内核态拷贝到用户态」这两个过程都不用等待。
 
         - 调用 `aio_read` 之后，就立即返回，内核自动将数据从内核空间拷贝到应用程序空间，这个拷贝过程同样是异步的，内核自动完成的
@@ -1986,6 +1999,11 @@ systemd-cgls -k | grep kworker
 
 - [小林coding：什么是零拷贝？](https://www.xiaolincoding.com/os/8_network_system/zero_copy.html)
 
+- 指CPU拷贝的次数为0
+
+- 零拷贝实现思想，利用了虚拟内存这个点：多个虚拟内存可以指向同一个物理地址，可以把内核空间和用户空间的虚拟地址映射到同一个物理地址
+    ![image](./Pictures/linux-kernel/io-zero-copy6.avif)
+
 - DMA（Direct Memory Access，直接内存访问）技术
 
     - 没有DMA的`read()`：需要 CPU 亲自参与搬运数据
@@ -2008,15 +2026,62 @@ systemd-cgls -k | grep kworker
 
 - 零拷贝解决方法的演化过程：
 
-    - 1.`mmap()` 代替 `read()`：`mmap()` 系统调用会把内核缓冲区**映射**到用户缓冲区。变成了4次上下文切换 + 3次数据拷贝。
-    ![image](./Pictures/linux-kernel/io-zero-copy1.avif)
+    - 1.`mmap()` 代替 `read()`：`mmap()` 系统调用会把内核缓冲区**映射**到用户缓冲区。变成了4次上下文切换 + 3次数据拷贝（2次DMA拷贝和1次CPU拷贝）。
 
-    - 2.`sendfile()` 代替 `read()` 和 `write()` 。变成了只有2次上下文切换 + 3次数据拷贝
-    ![image](./Pictures/linux-kernel/io-zero-copy2.avif)
+        - mmap使用了虚拟内存，可以把内核空间和用户空间的虚拟地址映射到同一个物理地址，从而减少数据拷贝次数
+
+        ```c
+        void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+
+        // addr：指定映射的虚拟内存地址
+        // length：映射的长度
+        // prot：映射内存的保护模式
+        // flags：指定映射的类型
+        // fd:进行映射的文件句柄
+        // offset:文件偏移量
+        ```
+
+        - 1.用户进程通过mmap方法向操作系统内核发起IO调用，上下文从用户态切换为内核态。
+        - 2.CPU利用DMA控制器，把数据从硬盘中拷贝到内核缓冲区。
+        - 3.上下文从内核态切换回用户态，mmap方法返回。
+        - 4.用户进程通过write方法向操作系统内核发起IO调用，上下文从用户态切换为内核态。
+        - 5.CPU将内核缓冲区的数据拷贝到的socket缓冲区。
+        - 6.CPU利用DMA控制器，把数据从socket缓冲区拷贝到网卡，上下文从内核态切换回用户态，write调用返回。
+
+        ![image](./Pictures/linux-kernel/io-zero-copy1.avif)
+
+    - 2.`sendfile()` 代替 `read()` 和 `write()` 。变成了只有2次上下文切换 + 3次数据拷贝（2次DMA拷贝和1次CPU拷贝）
+
+        - sendfile是Linux2.1内核版本后引入的一个系统调用函数
+
+        ```c
+        ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count);
+
+        // out_fd:为待写入内容的文件描述符，一个socket描述符。，
+        // in_fd:为待读出内容的文件描述符，必须是真实的文件，不能是socket和管道。
+        // offset：指定从读入文件的哪个位置开始读，如果为NULL，表示文件的默认起始位置。
+        // count：指定在fdout和fdin之间传输的字节数。
+        ```
+
+        - 1.用户进程发起sendfile系统调用，上下文（切换1）从用户态转向内核态
+        - 2.DMA控制器，把数据从硬盘中拷贝到内核缓冲区。
+        - 3.CPU将读缓冲区中数据拷贝到socket缓冲区
+        - 4.DMA控制器，异步把数据从socket缓冲区拷贝到网卡，
+        - 5.上下文（切换2）从内核态切换回用户态，sendfile调用返回。
+
+        ![image](./Pictures/linux-kernel/io-zero-copy2.avif)
 
     - 3.在`sendfile()` 基础之上，如果网卡支持SG-DMA：可以在减少1次 CPU 把内核缓冲区里的数据拷贝到 socket 缓冲区的过程。变成了2次上下文切换 + 2次数据拷贝。
 
+        - linux 2.4版本之后，对sendfile做了优化升级，引入SG-DMA技术，其实就是对DMA拷贝加入了scatter/gather操作，它可以直接从内核空间缓冲区中将数据读取到网卡。
+
         - 这就是所谓的零拷贝技术，全程没有cpu参与
+
+        - 1.用户进程发起sendfile系统调用，上下文（切换1）从用户态转向内核态
+        - 2.DMA控制器，把数据从硬盘中拷贝到内核缓冲区。
+        - 3.CPU把内核缓冲区中的文件描述符信息（包括内核缓冲区的内存地址和偏移量）发送到socket缓冲区
+        - 4.DMA控制器根据文件描述符信息，直接把数据从内核缓冲区拷贝到网卡
+        - 5.上下文（切换2）从内核态切换回用户态，sendfile调用返回。
 
         ```sh
         # 查看网卡是否开启SG-DMA
@@ -2139,7 +2204,7 @@ systemd-cgls -k | grep kworker
 
         ![image](./Pictures/linux-kernel/io-multiplexing3.avif)
 
-- `select()`：
+- `select()`：调用select函数，可以同时监控多个fd，在select函数监控的fd中，只要有任何一个数据状态准备就绪了，select函数就会返回可读状态，这时应用进程再发起recvfrom请求去读取数据。
 
     - 步骤：
 

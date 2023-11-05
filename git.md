@@ -14,6 +14,7 @@
             * [stash(暂存)](#stash暂存)
     * [rebase](#rebase)
     * [remote](#remote)
+    * [一些问题](#一些问题)
     * [第三方git工具](#第三方git工具)
         * [git-extras](#git-extras)
         * [pre-commit](#pre-commit)
@@ -317,6 +318,18 @@ git merge --abort
 # 取回远程仓库的变化，并与本地分支合并
 git pull <REMOTE> <BRANCH>
 ```
+
+## 一些问题
+
+- `git status`中文乱码
+    ```
+    "\346\225\260\346\215\256\344\270\255\345\277\203\345\220\214\346\255\245-\347\275\221\347\273\234\351\243\216\346\232\264\351\227\256\351\242\230.avif"
+    ```
+
+    ```sh
+    # 解决方法
+    git config --global core.quotepath false
+    ```
 
 ## 第三方git工具
 
