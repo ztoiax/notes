@@ -33,6 +33,8 @@
 
 - [cheat sheet](https://wangchujiang.com/reference/)
 
+- [Google Style Guides：Google的编程风格](https://google.github.io/styleguide/)
+
 ### 汇编
 
 - [《the art of assembly language programming》](http://www.phatcode.net/res/223/files/html/toc.html)
@@ -102,6 +104,10 @@
 
 - [并发编程](https://github.com/smallnest/concurrency-programming-via-rust)
 
+- [Proc-Macro-Workshop：如何编写 Rust 过程宏](https://github.com/dtolnay/proc-macro-workshop)
+
+    - Rust 的过程宏（procedural macros）是一种高级用法，可以理解为生成 Rust 代码的 Rust 代码。
+
 ### Lisp
 
 - [《Structure and Interpretation of Computer Programs(SICP)》(英文)](http://sarabander.github.io/sicp/html/index.xhtml)
@@ -166,6 +172,8 @@
 - [《Think DSP: Digital Signal Processing in Python》](https://greenteapress.com/thinkdsp/html/index.html)
 
 - [Python Design Patterns](https://python-patterns.guide/)
+
+- [《流畅的 Python（第 2 版）》的示例代码](https://github.com/fluentpython/example-code-2e)
 
 #### 数据科学
 
@@ -406,15 +414,23 @@
 
 - [ruanyifeng：《JavaScript 教程》](https://wangdoc.com/javascript/)
 
-- [ruanyifeng：《TypeScript 教程》](https://wangdoc.com/typescript/)
-
 - [History of JavaScript Frameworks](https://programmingsoup.com/history-of-javascript-frameworks)
+
+- [javascript-testing-best-practices](https://github.com/goldbergyoni/javascript-testing-best-practices)
 
 #### 框架
 
 - [图解React原理系列](https://7kms.github.io/react-illustration-series/)
 
 - [React技术揭秘](https://react.iamkasong.com/)
+
+### TypeScript
+
+- [ruanyifeng：《TypeScript 教程》](https://wangdoc.com/typescript/)
+
+- [《简洁的TypeScript之书》（中文）](https://github.com/gibbok/typescript-book/blob/main/README-zh_CN.md)
+
+    - [《简洁的TypeScript之书》（英文）](https://github.com/gibbok/typescript-book)
 
 ## 运维
 

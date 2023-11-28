@@ -382,6 +382,8 @@ git commit -m "..."
 
     - ghproxy方法：如这样`https://ghproxy.com/https://github.com/liuchengxu/vim-clap`
 
+    - [GitHub520：改hosts](https://github.com/521xueweihan/GitHub520)
+
 - [github新认证token背后的故事](https://github.blog/2021-04-05-behind-githubs-new-authentication-token-formats/)
     - token 前缀:
         - ghp for GitHub personal access tokens

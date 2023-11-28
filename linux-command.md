@@ -18,6 +18,7 @@
         * [fselect: sql语句的ls](#fselect-sql语句的ls)
         * [locate:定位文件](#locate定位文件)
         * [shred：安全地抹去磁盘数据。代替rm](#shred安全地抹去磁盘数据代替rm)
+        * [sshfs：ssh将远程目录挂载到本地](#sshfsssh将远程目录挂载到本地)
     * [char (字符串操作)](#char-字符串操作)
         * [column](#column)
         * [tr](#tr)
@@ -72,7 +73,7 @@
 
 ```bash
 # 对于多行内容,比普通重定向更方便
-cat > FILE << "EOF"
+cat > FILE << EOF
 # 内容
 EOF
 ```
@@ -442,6 +443,14 @@ shred -v -n 1 /dev/sdb
 # 使用随机生成的数据覆盖磁盘
 shred -v -n 1 --random-source=/dev/urandom /dev/sdb
 ```
+
+### [sshfs：ssh将远程目录挂载到本地](https://github.com/deadbeefsociety/sshfs)
+
+```sh
+# 将根目录，挂载到本地
+sshfs root@192.168.100.208:/ dir
+```
+
 ## char (字符串操作)
 
 ### column

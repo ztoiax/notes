@@ -36,7 +36,7 @@
         * [metasploit](#metasploit)
         * [rkhunter: 检查 rookit](#rkhunter-检查-rookit)
         * [clamav: 病毒扫描](#clamav-病毒扫描)
-        * [sqlmap: sql注入](#sqlmap-sql注入)
+        * [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](#sqlmap-自动检测和利用-sql-注入漏洞获得数据库服务器的权限)
         * [beef: web渗透测试](#beef-web渗透测试)
         * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
     * [系统监控](#系统监控)
@@ -823,7 +823,7 @@ clamscan -r --bell -i /
 clamscan -r --remove /
 ```
 
-### [sqlmap: sql注入](https://github.com/sqlmapproject/sqlmap)
+### [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](https://github.com/sqlmapproject/sqlmap)
 
 ### [beef: web渗透测试](https://github.com/beefproject/beef)
 

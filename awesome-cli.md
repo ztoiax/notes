@@ -68,6 +68,26 @@ alias cp="advcp -g"
 
 ## [fselect: sql语句的ls](https://github.com/jhspetersson/fselect)
 
+## [jq:json处理](https://github.com/jqlang/jq)
+
+```sh
+# 格式化
+echo '{"people" : {"name": "tz", "age": 26}}' | jq '.'
+curl http://api.open-notify.org/iss-now.json | jq '.'
+
+# 读取文件
+echo '{"people" : {"name": "tz", "age": 26}, "people1": {"name": "joe", "age": 10}}' > /tmp/test
+jq '.' /tmp/test
+# 内嵌读取
+jq '.people' /tmp/test
+jq '.people.name' /tmp/test
+
+# 获取所有key
+jq '. | keys' /tmp/test
+jq '.people | keys' /tmp/test
+jq '.[].age | min' /tmp/test
+```
+
 ## [jql: json过滤器](https://github.com/cube2222/jql)
 
 ![image](./Pictures/awesomecli/jql.avif)
@@ -350,6 +370,19 @@ ps aux | peco
 ## [pueue(任务管理)](https://github.com/Nukesor/pueue/wiki/Get-started)
 
 ## [killport：输入指定端口，杀掉进程](https://github.com/jkfran/killport)
+
+## [devbox：隔离空间运行](https://github.com/jetpack-io/devbox)
+
+```sh
+# 先生成devbox.json
+devbox init
+
+# 需要下载nixos的包
+devbox add python2
+
+# 启动shell。需要安装nix
+devbox shell
+```
 
 # net
 

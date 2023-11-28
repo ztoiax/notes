@@ -31,6 +31,8 @@
 
 - [rail用户性能模型](https://web.dev/rail/)
 
+- [67 Weird Debugging Tricks Your Browser Doesn't Want You to Know（67 种浏览器中调试技巧）](https://alan.norbauer.com/articles/browser-debugging-tricks)
+
 # WebAssembly
 
 - [李银城：WebAssembly与程序编译](https://www.rrfed.com/2017/05/21/webassembly/)
