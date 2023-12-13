@@ -71,6 +71,8 @@
 
 - [Spring 中文文档](https://springdoc.cn/)
 
+- [Spring 源码解读](https://github.com/xuchengsheng/spring-reading)
+
 ### Go
 
 - [《Golang学习资源大全-只有Go语言才能改变世界》](https://github.com/LearnGolang/LearnGolang)
@@ -366,6 +368,10 @@
 - [《Introduction to Compilers and Language Design》](https://www3.nd.edu/~dthain/compilerbook/)
 
 - [腾讯技术工程：如何从0到1设计实现一门自己的脚本语言]()
+
+## 调试
+
+- [张银奎调试工具官网](https://www.nanocode.cn/wiki/)
 
 ## network(网络)
 

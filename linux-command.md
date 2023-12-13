@@ -550,6 +550,9 @@ ps aux | sed '1p;/nginx/!d'
 
 # pm和am替换为中文
 date +%H:%M:%S:%P | sed -e 's/pm/下午/g' -e's/am/上午/g'
+
+# 替换当前目录下（包含子目录）的所有文件
+find . -type f -exec sed -i 's/a/b/g' {} +
 ```
 
 ```sh
@@ -704,6 +707,9 @@ ls | paste - -
 
 # 分成三列, 以此类推
 ls | paste - - -
+
+# 将多个文件，以新增1列的方式，合并为一个文件
+paste file1 file2
 ```
 
 ### perl5

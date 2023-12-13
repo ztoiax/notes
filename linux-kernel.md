@@ -289,6 +289,9 @@ numactl -s
 
 # 查看node 的内存分配情况
 numastat
+
+# --interleave=all内存分配是应该尽量均匀地分布在各个节点上，启动mongodb
+numactl --interleave=all mongod --port 27017 --dbpath ~/mongodb
 ```
 
 - 通过调整 `/proc/sys/vm/zone_reclaim_mode` ：当某个 Node 内存不足时，系统可以从其他 Node 寻找空闲内存，也可以从本地内存中回收内存。
@@ -2488,7 +2491,10 @@ systemd-cgls -k | grep kworker
 
     - 1.没有调度算法（NOOP）：不对文件系统和应用程序的 I/O 做任何处理
 
-        - 适用于虚拟机 I/O 中，此时磁盘 I/O 调度算法交由物理机系统负责。
+        - 应用场景：
+            - 1.虚拟机 I/O 中，此时磁盘 I/O 调度算法交由物理机系统负责。
+            - 2.SSD。SSD不存在机械磁盘中的局部问题
+            - 3.带有缓存的RAID控制器，与SSD一样
 
     - 2.先入先出调度算法：先进入 I/O 调度队列的 I/O 请求先发生。
 
@@ -2501,6 +2507,10 @@ systemd-cgls -k | grep kworker
         - 写队列：最大等待时间为5s
 
         - 优先级：FIFO(Read) > FIFO(Write) > CFQ
+
+        - 最适合磁盘密集型的数据库
+
+        - 应用场景：非虚拟机的物理机
 
     - 最终期限调度算法（ANTICIPATORY）：DEADLINE没有对顺序读做优化。为此在DEADLINE的基础上，为每个读IO都设置了6ms的等待时间窗口。如果在这6ms内OS收到了相邻位置的读IO请求，就可以立即满足。
 

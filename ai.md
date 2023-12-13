@@ -16,6 +16,8 @@
 
 ### 原理
 
+- [可视化LLM](https://bbycroft.net/llm)
+
 - [wolfram作者：What Is ChatGPT Doing … and Why Does It Work?](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)
 
 ### 使用
@@ -40,3 +42,4 @@
 
 - [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
 - [chat-pdf](https://damngood.tools/tools/chat-pdf)
+- [chatdoc：对pdf、eppub、md文件进行总结](https://chatdoc.com/)

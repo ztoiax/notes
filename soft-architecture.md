@@ -1213,6 +1213,8 @@
 
 ### 微服务理论
 
+#### 康威定律
+
 - [邱小侠：微服务架构的理论基础 - 康威定律](https://developer.aliyun.com/article/8611)
 
     - 康威四大定律：
@@ -1779,3 +1781,7 @@
         - GraphQL虽然让客户端代码变得简单，但性能比不上REST API
 
 - [Why I regret using Ionic for app development](https://mhamri.com/why-i-regret-using-ionic-for-app-development-c8b21b88d83a)
+
+# 熵增和技术债
+
+- [腾讯云开发者：99%的程序员容易忽视的“系统”健康问题](https://cloud.tencent.com/developer/article/2361561)

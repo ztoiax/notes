@@ -3,9 +3,10 @@
 * [file](#file)
     * [文件传输](#文件传输)
     * [文件管理器](#文件管理器)
-* [image viewer(图片查看器)](#image-viewer图片查看器)
-    * [qt](#qt)
-    * [gtk](#gtk)
+* [图片](#图片)
+    * [image viewer(图片查看器)](#image-viewer图片查看器)
+        * [qt](#qt)
+        * [gtk](#gtk)
 * [note](#note)
 * [other](#other)
 * [其他项目](#其他项目)
@@ -65,9 +66,15 @@
 
 - [sigma-file-manager](https://github.com/aleksey-hoffman/sigma-file-manager)
 
-# image viewer(图片查看器)
+# 图片
 
-## qt
+- [upscayl：ai图片质量提升](https://github.com/upscayl/upscayl)
+
+- [pot-desktop：划词翻译，并支持ocr](https://github.com/pot-app/pot-desktop)
+
+## image viewer(图片查看器)
+
+### qt
 
 - [qt-avif-image-plugin（avif格式支持）](https://github.com/novomesk/qt-avif-image-plugin)
 
@@ -75,7 +82,7 @@
 
 - [qview](https://github.com/jurplel/qView)
 
-## gtk
+### gtk
 
 - [gthumb](https://github.com/GNOME/gthumb)
 
@@ -116,6 +123,8 @@
 - [timeshift](https://github.com/teejee2008/timeshift)
 
 - [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
+
+- [gImageReader：ocr，但不太准确](https://github.com/manisandro/gImageReader)
 
 # 其他项目
 
