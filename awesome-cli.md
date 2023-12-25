@@ -377,9 +377,6 @@ ps aux | peco
 # 先生成devbox.json
 devbox init
 
-# 需要下载nixos的包
-devbox add python2
-
 # 启动shell。需要安装nix
 devbox shell
 ```

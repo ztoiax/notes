@@ -34,11 +34,30 @@
 
 - [新职业|我用GPT给电子厂带货](https://t.cj.sina.com.cn/articles/view/6286736254/176b7fb7e01901df3u?display=0&retcode=0)
 
-# 工具
+# 项目
 
-- [DB-GPT（本地运行的ai，防止数据隐私上传平台）](https://github.com/eosphoros-ai/DB-GPT)
+## GPT
 
-## 在线ai工具
+- [](https://github.com/wgwang/awesome-LLMs-In-China)
+- [llama：facebook的llm](https://github.com/ggerganov/llama.cpp)
+
+    - [llama配置要求](http://www.bimant.com/blog/llama-consumer-hardware-requirements/)
+    - [Llama2-Chinese：中文优化](https://github.com/FlagAlpha/Llama2-Chinese)
+
+
+- [ChatGLM-6B：清华大学的llm](https://github.com/THUDM/ChatGLM-6B)
+- [ChatGLM2-6B：清华大学的llm](https://github.com/THUDM/ChatGLM2-6B)
+- [ChatGLM3：清华大学和智谱合作的llm](https://github.com/THUDM/ChatGLM3)
+
+- [LaWGPT：在通用中文基座模型（如 Chinese-LLaMA、ChatGLM 等）的基础上扩充法律领域专有词表、大规模中文法律语料预训练](https://github.com/pengxiao-song/LaWGPT)
+
+- [DB-GPT（部署数据库交互llm。防止数据隐私上传平台）](https://github.com/eosphoros-ai/DB-GPT)
+
+## 图片视频
+
+- [dandere2x：使用waifu2x提升视频质量](https://github.com/akai-katto/dandere2x)
+
+# 在线ai工具
 
 - [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
 - [chat-pdf](https://damngood.tools/tools/chat-pdf)

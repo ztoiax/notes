@@ -6,7 +6,7 @@
 
   > 也就是在 windows,macos 上的 docker,无法使用 centos,opensuse 这些依赖 linux 内核的容器
 
-  ![image](./Pictures/kubernetes-docker/docker.avif)
+  ![image](./Pictures/docker/docker.avif)
 
 - 通过 `namespace` 实现资源**隔离**(isolate)
 
@@ -30,27 +30,27 @@
 
   - `pgrep --ns 4026532713 -a ` 命令,传递 namespace 编号,查看此 namespace 下的进程
 
-    ![image](./Pictures/kubernetes-docker/namespace.avif)
+    ![image](./Pictures/docker/namespace.avif)
 
 - 通过 `cgroup` 实现资源**限制**(limit) 和 监控容器的统计信息
 
   - `mount -t cgroup` 查看 cgroup 子系统
 
-    ![image](./Pictures/kubernetes-docker/cgroup.avif)
+    ![image](./Pictures/docker/cgroup.avif)
 
   - docker 在每个 cgroup 子系统目录下,都有自己的控制组
 
     - 每个控制组下有对应的容器`/sys/fs/cgroup/cpu/docker/<container-id>`
 
-      ![image](./Pictures/kubernetes-docker/cgroup1.avif)
-      ![image](./Pictures/kubernetes-docker/cgroup2.avif)
+      ![image](./Pictures/docker/cgroup1.avif)
+      ![image](./Pictures/docker/cgroup2.avif)
 
 - Capability 对 root 权限,分成多个子权限 [详细文档](https://man7.org/linux/man-pages/man7/capabilities.7.html)
 
   - 对容器授予某些子权限,而不是整个 root 权限,以此实现安全
 
   - 通过 `capsh --print` 命令查看权限
-    ![image](./Pictures/kubernetes-docker/capability.avif)
+    ![image](./Pictures/docker/capability.avif)
 
 - docker 采用 `client/server` 结构进行通信交互 [官方文档](https://docs.docker.com/get-started/overview/#docker-architecture)
 
@@ -60,21 +60,21 @@
 
     - REST API 最简单的例子是浏览器:通过 url 使用不同的动作(get,push)请求资源(可以是图片,文字,视频),而服务器会对请求返回不同的状态(200,404)
 
-      ![image](./Pictures/kubernetes-docker/cs1.avif)
-      ![image](./Pictures/kubernetes-docker/cs.svg)
+      ![image](./Pictures/docker/cs1.avif)
+      ![image](./Pictures/docker/cs.svg)
 
 - docker 镜像使用分层的文件系统(union fs),联合挂载(union mount)会进行整合,让我们看上去为一层
 
   - 修改容器内的某个文件时,会在最顶层记录修改的内容,不会覆盖下层的内容(类似于 git diff),以此实现共享镜像层
 
-    ![image](./Pictures/kubernetes-docker/fs.avif)
+    ![image](./Pictures/docker/fs.avif)
 
 - 多个容器运行时,如果未修改镜像内容,会**共享镜像层**(layer)
 
   - 容器启动时,在只读的镜像层上添加 自己的**可写覆盖层**
 
   - 容器运行过程中修改镜像时,会将修改的内容写入 可写覆盖层(copy on wirte)
-    ![image](./Pictures/kubernetes-docker/fs1.avif)
+    ![image](./Pictures/docker/fs1.avif)
 
 - 配置文件 `/var/lib/docker`
 
@@ -114,7 +114,7 @@ logout
 
 ## 基本命令
 
-![image](./Pictures/kubernetes-docker/cmd_logic.avif)
+![image](./Pictures/docker/cmd_logic.avif)
 
 ```bash
 # 查看docker信息
@@ -266,7 +266,7 @@ docker run --volumes-from=opensuse_data1 \
     -it opensuse
 ```
 
-![image](./Pictures/kubernetes-docker/volumes-from.avif)
+![image](./Pictures/docker/volumes-from.avif)
 
 - 1.此时如果 `rm -v` 删除 `opensuse_data1` 容器
 
@@ -286,7 +286,7 @@ docker run --volumes-from=opensuse_data1 \
 
     - 右边为 `opensuse_data2`
 
-      ![image](./Pictures/kubernetes-docker/volumes-from1.avif)
+      ![image](./Pictures/docker/volumes-from1.avif)
 
 ### --link 连接容器
 
@@ -335,6 +335,15 @@ docker run --net test \
 
 # 在new_link容器里,ping c1进行通信测试
 ping c1
+```
+
+### --gpus
+
+- `--gpus`：需要安装`nvidia-container-toolkit`和`nvidia-docker`
+
+```sh
+# 运行dandere2x视频提升质量的ai项目
+docker run --rm -it --gpus all -v $PWD:/host akaikatto/dandere2x -p singleprocess -ws . -i 123.mp4 -o 123new.mp4
 ```
 
 ### cgroup(资源限制)
@@ -481,7 +490,7 @@ docker save centos | gzip > centos.tar.gz
 ```
 
 镜像内:
-![image](./Pictures/kubernetes-docker/save.avif)
+![image](./Pictures/docker/save.avif)
 
 - 其中`layer.tar` 为镜像根目录的打包,可以使用以下命令直接获取
 
@@ -570,9 +579,9 @@ docker run --volumes-from=centos_data \
 
 > 容器中间层,runc 之上,cli 客户端之下
 
-![image](./Pictures/kubernetes-docker/containerd.avif)
+![image](./Pictures/docker/containerd.avif)
 
-![image](./Pictures/kubernetes-docker/containerd1.avif)
+![image](./Pictures/docker/containerd1.avif)
 
 - 管理容器的生命周期
 
@@ -625,7 +634,7 @@ sudo runc list
 
   - `runc delete`退出后删除
 
-![image](./Pictures/kubernetes-docker/runc.avif)
+![image](./Pictures/docker/runc.avif)
 
 ## network
 
@@ -647,7 +656,7 @@ sudo runc list
 
 - 左边与右边不通
 
-![image](./Pictures/kubernetes-docker/cnm-model.avif)
+![image](./Pictures/docker/cnm-model.avif)
 
 ```bash
 # 创建两个btrctl网络
@@ -662,7 +671,7 @@ docker network ls
 ```
 
 通过 `ip a` 命令,查看刚才创建的网络的 ip 地址
-![image](./Pictures/kubernetes-docker/cnm.avif)
+![image](./Pictures/docker/cnm.avif)
 
 ```bash
 # 启动3个容器,并配置图片上的网络
@@ -697,7 +706,7 @@ docker run --net backend --ip "172.18.0.10" \
 - 当一方 down 后,链接关闭
 
   下图为 `ip link | grep veth` 命令的结果,比 `ip a` 更直观
-  ![image](./Pictures/kubernetes-docker/cnm1.avif)
+  ![image](./Pictures/docker/cnm1.avif)
 
 ### 容器之间的网络隔离
 
@@ -1018,7 +1027,7 @@ docker run -d \
 ```
 
 - [cAdvisor](https://github.com/google/cadvisor)
-  ![image](./Pictures/kubernetes-docker/cadvisor.avif)
+  ![image](./Pictures/docker/cadvisor.avif)
 
 ```bash
 docker run \
@@ -1036,7 +1045,7 @@ docker run \
 ```
 
 - [k3s-rancher](https://github.com/rancher/rancher)
-  ![image](./Pictures/kubernetes-docker/rancher.avif)
+  ![image](./Pictures/docker/rancher.avif)
 
 ```bash
 docker run -d \
@@ -1047,7 +1056,7 @@ docker run -d \
 ```
 
 - [docker-ui](https://github.com/kevana/ui-for-docker)
-  ![image](./Pictures/kubernetes-docker/ui.avif)
+  ![image](./Pictures/docker/ui.avif)
 
 ```bash
 docker run -d -p 9000:9000 \
@@ -1057,7 +1066,7 @@ docker run -d -p 9000:9000 \
 ```
 
 - [ctop](https://github.com/bcicen/ctop)
-  ![image](./Pictures/kubernetes-docker/ctop.avif)
+  ![image](./Pictures/docker/ctop.avif)
 
 ```bash
 docker run --rm -ti \
@@ -1067,7 +1076,7 @@ docker run --rm -ti \
 ```
 
 - [lazydocker](https://github.com/jesseduffield/lazydocker)
-  ![image](./Pictures/kubernetes-docker/lazydocker.avif)
+  ![image](./Pictures/docker/lazydocker.avif)
 
 - [trivy容器安全检测](https://github.com/aquasecurity/trivy)
 

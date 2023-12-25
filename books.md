@@ -458,7 +458,7 @@
 
 - [《Spring 实战》 (第6版)](https://leonli0102.github.io/spring-in-action-v6/)
 
-- [Prometheus](https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/quickstart/why-monitoro)
+- [《prometheus-book》](https://yunlzheng.gitbook.io/prometheus-book/)
 
 - [QEMU KVM 学习笔记](https://yifengyou.gitbooks.io/learn-kvm/content/)
 
