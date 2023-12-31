@@ -57,6 +57,10 @@
 
 - [dandere2x：使用waifu2x提升视频质量](https://github.com/akai-katto/dandere2x)
 
+# ai测试
+
+- [Google Gemini 的图像能力测试](https://blog.roboflow.com/first-impressions-with-google-gemini/)
+
 # 在线ai工具
 
 - [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)

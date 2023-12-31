@@ -19,6 +19,8 @@
 
 ## [termpair: 网页操作终端](https://github.com/cs01/termpair)
 
+## [sshx：通过浏览器远程访问，共享的终端。体验有点卡](https://github.com/ekzhang/sshx?tab=readme-ov-file)
+
 # File Browser
 
 ## [ranger](https://github.com/ranger/ranger)
@@ -711,6 +713,10 @@ xdotool key ctrl+l
 ```
 
 - [vhs:命令行录制生成gif](https://github.com/charmbracelet/vhs)
+
+# modern unix
+
+- [tailspin](https://github.com/bensadeh/tailspin)
 
 # markdown
 

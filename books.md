@@ -63,6 +63,8 @@
 
 - [《TCP/IP网络编程》学习笔记](https://github.com/riba2534/TCP-IP-NetworkNote)
 
+- [Modern-CPP-Programming](https://github.com/federico-busato/Modern-CPP-Programming)
+
 ### Java
 
 - [《Java 编程思想》 第四版](https://wizardforcel.gitbooks.io/thinking-in-java/content/)
@@ -176,6 +178,8 @@
 - [Python Design Patterns](https://python-patterns.guide/)
 
 - [《流畅的 Python（第 2 版）》的示例代码](https://github.com/fluentpython/example-code-2e)
+
+- [《JavaScript 工程师的 Python 指南》](https://github.com/luckrnx09/python-guide-for-javascript-engineers)|
 
 #### 数据科学
 
@@ -438,6 +442,10 @@
 
     - [《简洁的TypeScript之书》（英文）](https://github.com/gibbok/typescript-book)
 
+### nodejs
+
+- [Node.js 应用故障排查手册](https://github.com/aliyun-node/Node.js-Troubleshooting-Guide)
+
 ## 运维
 
 - [《鸟哥的 Linux 私房菜》](http://cn.linux.vbird.org/linux_basic/linux_basic.php)
@@ -537,6 +545,10 @@
 - [《TensorFlow 内核剖析》(英文)](https://github.com/horance-liu/tensorflow-internals)
 
 - [《Machine Learning Yearning》(中文)](https://deeplearning-ai.github.io/machine-learning-yearning-cn/)
+
+- [《概率机器学习》。该项目包含凯文·墨菲的三本书籍，分别为《机器学习：概率视角》、《概率机器学习：简介》、《概率机器学习：高级》](https://github.com/probml/pml-book)
+
+- [machine-learning-roadmap](https://github.com/mrdbourke/machine-learning-roadmap)
 
 - [Machine Learning University (MLU)可视化机器学习](https://mlu-explain.github.io/)
 

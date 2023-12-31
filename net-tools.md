@@ -68,6 +68,7 @@
 * [性能监控](#性能监控)
     * [观察工具](#观察工具)
         * [查看吞吐率，PPS（Packet Per Second 包 / 秒）](#查看吞吐率ppspacket-per-second-包--秒)
+        * [wondershaper：Linux 限制网络带宽的工具](#wondershaperlinux-限制网络带宽的工具)
     * [压力测试](#压力测试)
         * [wrk](#wrk)
         * [wrk2: wrp的变种](#wrk2-wrp的变种)
@@ -1638,6 +1639,7 @@ sar -n EDEV 1
 sar -n TCP 1
 ```
 
+### [wondershaper：Linux 限制网络带宽的工具](https://github.com/magnific0/wondershaper)
 ## 压力测试
 
 ### [wrk](https://github.com/wg/wrk)
