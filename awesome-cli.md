@@ -218,7 +218,8 @@ gh release list
 
 ## [viddy:instead watch](https://github.com/sachaos/viddy)
 
-## [exa：highlight ls](https://github.com/ogham/exa)
+## [eza：highlight ls](https://github.com/eza-community/eza)
+## [exa：highlight ls.很久没更新了，建议使用eza](https://github.com/ogham/exa)
 
 ![image](./Pictures/awesomecli/11.avif)
 
@@ -384,6 +385,12 @@ devbox shell
 ```
 
 # net
+
+## [curlconverter：将curl转换为编程语言的代码](https://github.com/curlconverter/curlconverter)
+
+- [各种curl命令](https://www.httpbin.org/)
+
+- [官方在线转换](https://curlconverter.com/)
 
 ## [prettyping: instead ping](https://github.com/denilsonsa/prettyping)
 
@@ -652,19 +659,6 @@ pacman -S festival
 
 ## [sql语句检查](https://github.com/sqlfluff/sqlfluff)
 
-## [ocrmypdf: pdf图片转文字](https://github.com/ocrmypdf/OCRmyPDF)
-
-```sh
-# 安装程序
-pip install ocrmypdf
-
-# 安装中文简体、英文语言包
-pacman -S tesseract-data-chi_sim tesseract-data-eng
-
-# -l选择语言包
-ocrmypdf -l chi_sim file.pdf new_file.pdf
-```
-
 ## [osquery: sql语句查询系统配置和参数](https://github.com/osquery/osquery)
 
 - [官方文档](https://osquery.readthedocs.io/en/stable/introduction/sql/)
@@ -713,6 +707,23 @@ xdotool key ctrl+l
 ```
 
 - [vhs:命令行录制生成gif](https://github.com/charmbracelet/vhs)
+
+# pdf、mobi、epub
+
+## [ocrmypdf: pdf图片转文字](https://github.com/ocrmypdf/OCRmyPDF)
+
+```sh
+# 安装程序
+pip install ocrmypdf
+
+# 安装中文简体、英文语言包
+pacman -S tesseract-data-chi_sim tesseract-data-eng
+
+# -l选择语言包
+ocrmypdf -l chi_sim file.pdf new_file.pdf
+```
+
+## [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](https://github.com/drunkdream/weread-exporter)
 
 # modern unix
 

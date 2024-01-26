@@ -35,6 +35,8 @@
 
 - [Google Style Guides：Google的编程风格](https://google.github.io/styleguide/)
 
+- [腾讯技术工程：七十年编程语言发展漫谈](https://cloud.tencent.com/developer/article/2218286)
+
 ### 汇编
 
 - [《the art of assembly language programming》](http://www.phatcode.net/res/223/files/html/toc.html)
@@ -74,6 +76,8 @@
 - [Spring 中文文档](https://springdoc.cn/)
 
 - [Spring 源码解读](https://github.com/xuchengsheng/spring-reading)
+
+- [Java 数据结构和算法](https://github.com/fuzhengwei/java-algorithms)
 
 ### Go
 
@@ -286,6 +290,8 @@
 - [《postgresql 14 internals》](https://postgrespro.com/community/books/internals)
 
 - [MiniOB 是 OceanBase 团队基于华中科技大学数据库课程原型](https://github.com/oceanbase/miniob)
+
+- [分布式文档数据库mongodb-3.6(mongos、mongod、wiredtiger存储引擎)源码中文注释分析，持续更新。后期重点进行mongodb-4.4最新版本内核源码分析](https://github.com/y123456yz/reading-and-annotate-mongodb-3.6?spm=a2c6h.12873639.article-detail.7.3f291969XElWnV&file=reading-and-annotate-mongodb-3.6)
 
 ### 分布式
 
@@ -603,6 +609,8 @@
 
 ## 英语
 
+- [离谱的英语学习指南/英语学习教程](https://github.com/byoungd/English-level-up-tips)
+
 - [中国程序员容易发音错误的单词](https://github.com/shimohq/chinese-programmer-wrong-pronunciation)
 
 ## 文档
@@ -626,10 +634,6 @@
 - [H.264 is Magic](https://sidbala.com/h-264-is-magic/)
 
 - [digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction)
-
-## 副业
-
-- [副业](http://r.ftqq.com/lean-side-bussiness/index.html)
 
 # 学术期刊/学会
 
@@ -715,3 +719,13 @@
 - [papers-we-love(计算机论文和课程)](https://github.com/papers-we-love/papers-we-love)
 
 - [1000+份计算机paper](https://github.com/0voice/computer_expert_paper)
+
+# 职业和面试
+
+- [如何成为一名靠谱的程序员：职业素养入门指南](https://mp.weixin.qq.com/s/7uyA8bFr8FZTRGlN38tdHg)
+
+- [副业](http://r.ftqq.com/lean-side-bussiness/index.html)
+
+- [路人zhang：各种编程语言、算法、数据库面试手册](https://www.mianshi.online/)
+
+- [路人zhang：被裁自救指南](https://mp.weixin.qq.com/s/NLkxGuIhdXlPM_xWmROZnw)

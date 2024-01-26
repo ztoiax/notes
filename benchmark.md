@@ -1,5 +1,8 @@
 <!-- vim-markdown-toc GFM -->
 
+* [性能](#性能)
+    * [基准测试](#基准测试)
+    * [性能指标](#性能指标)
 * [基本说明](#基本说明)
 * [all-have 综合](#all-have-综合)
     * [sysbench](#sysbench)
@@ -7,7 +10,7 @@
     * [dstat](#dstat)
     * [sar(sysstat)](#sarsysstat)
     * [sadf(sysstat)](#sadfsysstat)
-    * [nmon](#nmon)
+    * [nmon：tui观察系统资源，以及压测时的图表统计](#nmontui观察系统资源以及压测时的图表统计)
     * [sysbench](#sysbench-1)
     * [below](#below)
     * [tiptop](#tiptop)
@@ -40,7 +43,7 @@
     * [httpstat](#httpstat)
     * [bandwhich: tui](#bandwhich-tui)
 * [Web](#web)
-    * [ab](#ab)
+    * [ab：web 压力测试](#abweb-压力测试)
     * [httperf](#httperf)
 * [File](#file)
     * [VFS](#vfs)
@@ -106,6 +109,48 @@
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
+
+# 性能
+
+## 基准测试
+
+- [北大未名超算队 高性能计算入门讲座（七）:CPU和GPU上的性能分析](https://www.bilibili.com/list/watchlater?oid=538893258&bvid=BV1oi4y1i7Ef)
+
+## 性能指标
+
+![image](./Pictures/benchmark/性能指标.avif)
+
+- 响应时间（RT）：
+    - P50表示响应时间的中位数，即有一半的请求在400毫秒以下完成。
+    - P90表示90%的请求在1200毫秒以下完成。
+    - P99表示99%的请求在2000毫秒以下完成。
+
+- 并发数：同一时间点请求服务器的用户数。通过并发连接或线程进行模拟
+
+- 吞吐量（TPS/QPS）：每秒处理的事务数，一个事务对一次请求响应的过程
+
+    - 吞吐量=并发数/响应时间
+
+    - 拿 5% 来计算，就是 10000 用户 x5%=500(TPS)，注意哦，这里是 TPS，而不是并发线程数。如果这时响应时间是 100ms，那显然并发线程数是 500TPS/(1000ms/100ms)=50(并发线程)。
+
+- 最佳线程数计算：
+
+    - 单线程的场景QPS公式：QPS=1/RT，实际上RT应该=CPU time + CPU wait time，如果将线程数提高到2，那么`QPS=2/(CPU time + CPU wait time)`
+
+    - 假设CPU time是49ms，CPU wait time是200ms，那么QPS=1000ms/249ms=4.01
+
+        - 200ms的wait时间我们可以认为CPU一直处于等待状态啥也没干，理论上来说200ms还可以接受200/49≈4个请求，不考虑上下文切换和其他开销的话，可以认为总线程数=(200+49)/49=5
+
+        - 如果再考虑上CPU多核和利用率的问题，我们大致可以认为：最佳线程数=`RT/CPUTime * CPU核心数 * CPU利用率`
+
+- 最大QPS=最佳线程数*单线程QPS=（RT/CPU Time * CPU核心数 * CPU利用率）*（1/RT) = CPU核心数*CPU利用率/CPUTime
+
+- 压测还需要关注：系统资源用量，响应错误率等
+
+- 一般测试方法：逐步加大系统的并发数，观察系统性能指标变化以及拐点的出现
+    - 当并发数达到一定的数量后，系统的吞吐量开始呈现平稳的趋势，当压力持续增大，并超过系统负荷之后，吞吐量反而会降低，此时也伴随着响应时间的增大
+
+    ![image](./Pictures/benchmark/基准测试.avif)
 
 # 基本说明
 
@@ -321,9 +366,17 @@ sar -n DEV 1
 sadf -g > test.svg
 ```
 
-## nmon
+## nmon：tui观察系统资源，以及压测时的图表统计
 
 ![image](./Pictures/benchmark/nmon.avif)
+
+```sh
+# 每隔5s进行一次数据采集，采集10000次
+nmon -s 5 -c 10000 -F result.nmon &
+
+# 压测停止时，终止nmon
+pkill nmon
+```
 
 ## sysbench
 
@@ -676,15 +729,24 @@ bandwhich --raw | grep firefox
 
 # Web
 
-## ab
+## ab：web 压力测试
 
-web 压力测试
-安装包`apache-tools`
+- 安装包`apache-tools`
 
-- `-c` 并发次数(模拟多少个客户端)
-- `-n` 请求次数
+| 参数 | 说明                                  |
+|------|---------------------------------------|
+| n    | 总共的请求数                          |
+| c    | 并发的请求数                          |
+| t    | 测试所进行的最大秒数，默认值 为 50000 |
+| p    | 包含了需要的 POST 的数据文件          |
+| T    | POST 数据所使用的 Content-type 头信息 |
 
-`ab -c 1 -n 10000 https://127.0.0.1/index.html`
+```sh
+ab -c 1 -n 10000 https://127.0.0.1/index.html
+
+# 每次发送1000并发的请求数，请求数总数为5000。
+ab -n 1000 -c 5000 http://127.0.0.1/
+```
 
 > ```bash
 > # 摘取重要的输出

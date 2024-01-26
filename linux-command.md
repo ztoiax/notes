@@ -40,7 +40,7 @@
         * [gnuplot](#gnuplot)
         * [shellcheck](#shellcheck)
         * [pandoc 文档转换](#pandoc-文档转换)
-        * [jobs, fg, bg, disown, reptyr](#jobs-fg-bg-disown-reptyr)
+        * [jobs, fg, bg, nohup, disown, reptyr](#jobs-fg-bg-nohup-disown-reptyr)
     * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
         * [创建 RAID5](#创建-raid5)
@@ -1067,7 +1067,7 @@ pandoc Resume.md -o README.html -t revealjs -s -V theme=beige
 pandoc -f html -t markdown https://www.sogou.com > sogou.md
 ```
 
-### jobs, fg, bg, disown, reptyr
+### jobs, fg, bg, nohup, disown, reptyr
 - 教程参考: [bilibili: [高效搬砖] ssh上进程跑一半，发现忘开 tmux 了，又需要断开连接？场面一度很尴尬！reptyr来打救你](https://www.bilibili.com/video/BV1pT4y1w7kc?from=search&seid=17793808854272221660&spm_id_from=333.337.0.0)
 
 - test.sh
@@ -1116,6 +1116,18 @@ sudo reptyr -T 112908
 - kill命令, 终止test.sh
 ```sh
 kill -9 112908
+```
+
+- nohup：可以让进程忽略挂断信号（SIGHUP）。就算退出shell, 那么后台任务test.sh也不会退出
+```sh
+# 会自动将输出重定向nohup.out文件
+nohup ./test.sh &
+[1] 21086
+nohup: ignoring input and appending output to 'nohup.out'
+
+# 退出shell后依然会运行
+# 开启新shell后，kill命令终止test.sh
+kill -9 21086
 ```
 
 ## 调整分区大小

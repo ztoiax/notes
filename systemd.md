@@ -487,6 +487,14 @@ systemctl get-default
 systemctl set-default graphical.target
 ```
 
+- 查看当前用户的服务
+```sh
+# --user：指定操作应用于当前用户的用户级别 systemd 实例
+systemctl --user enable --now pipewire-pulse.service
+systemctl --user restart --now pipewire-pulse.service
+systemctl --user status --now pipewire-pulse.service
+```
+
 ### unmask
 
 systemd 支持 mask 操作，如果一个服务被 mask 了，那么它无法被手动启动或者被其他服务所启动，也无法被设置为开机启动。

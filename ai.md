@@ -16,6 +16,8 @@
 
 ### 原理
 
+- [llm-course](https://github.com/mlabonne/llm-course)
+
 - [可视化LLM](https://bbycroft.net/llm)
 
 - [wolfram作者：What Is ChatGPT Doing … and Why Does It Work?](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)
@@ -38,7 +40,7 @@
 
 ## GPT
 
-- [](https://github.com/wgwang/awesome-LLMs-In-China)
+- [awesome-LLMs-In-China](https://github.com/wgwang/awesome-LLMs-In-China)
 - [llama：facebook的llm](https://github.com/ggerganov/llama.cpp)
 
     - [llama配置要求](http://www.bimant.com/blog/llama-consumer-hardware-requirements/)

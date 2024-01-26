@@ -600,6 +600,8 @@ sudo tailscale file get .
 
 #### curl
 
+- [各种curl命令](https://www.httpbin.org/)
+
 - [curl book](https://everything.curl.dev/)
 
 注意 url 目录后要有`/`

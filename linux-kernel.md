@@ -2157,6 +2157,8 @@ systemd-cgls -k | grep kworker
 
 ### I/O多路复用（select, poll, epoll）
 
+![image](./Pictures/linux-kernel/io-multiplexing-性能图.avif)
+
 - [小林coding：I/O 多路复用：select/poll/epoll](https://www.xiaolincoding.com/os/8_network_system/selete_poll_epoll.html#%E5%A6%82%E4%BD%95%E6%9C%8D%E5%8A%A1%E6%9B%B4%E5%A4%9A%E7%9A%84%E7%94%A8%E6%88%B7)
 
 - 最基础的 TCP 的 Socket 编程，它是阻塞 I/O 模型，基本上只能一对一通信
