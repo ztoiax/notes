@@ -13,6 +13,7 @@
 # regex
 
 - [regex 在线工具](https://regex101.com/)
+- [ihateregex：可以直接查找如匹配ip的regex](https://ihateregex.io/?q=)
 
 ## egrep
 

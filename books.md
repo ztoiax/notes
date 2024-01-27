@@ -542,6 +542,8 @@
 
 - [最全面的游戏开发技术图谱](https://github.com/gonglei007/GameDevMind)
 
+- [《游戏编程模式》该书收集了经过验证、已发布的 3A 级游戏中的经验和模式，来解决你在游戏开发中遇到的问题。](https://github.com/munificent/game-programming-patterns)
+
 ## AI(人工智能)
 
 - [《动手学深度学习》](https://zh.d2l.ai/)
@@ -577,6 +579,8 @@
     > 作者之一霍普克洛夫特(John Hopcroft)是图灵奖得主。本书提到了计算机科学的发展可以分为三个阶段：早期、中期和当今。早期就是让计算机可以运行起来，其重点在于开发程序语言、编译技术、操作系统，以及研究支撑它们的数学理论。中期是让计算机变得有用，变得高效，重点在于研究算法和数据结构。第三个阶段是让计算机具有更广泛的应用，发展重点从离散类数学转到概率和统计。
 
 ## 文档
+
+- [PDF Explained （译作《PDF 解析》）](https://github.com/zxyle/PDF-Explained)
 
 - [YAML 语言教程](https://www.ruanyifeng.com/blog/2016/07/yaml.html)
 
@@ -729,3 +733,9 @@
 - [路人zhang：各种编程语言、算法、数据库面试手册](https://www.mianshi.online/)
 
 - [路人zhang：被裁自救指南](https://mp.weixin.qq.com/s/NLkxGuIhdXlPM_xWmROZnw)
+
+# 有趣的言论
+
+- 一家公司需要多少工程师？这与软件功能的数量有关，与软件用户的数量无关。
+
+    - 如果软件要添加更多功能，就需要更多工程师。如果软件功能单一，但是规模很大，甚至有几亿用户，事实上并不需要很多工程师。

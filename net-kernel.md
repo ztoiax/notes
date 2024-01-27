@@ -67,6 +67,8 @@
 
     - `400 Bad Request`：表示客户端请求的报文有错误，但只是个笼统的错误。
 
+    - `401 Authorization Required`：需要用户密码认证。比如nginx对资源，设置了auth_basic模块
+
     - `403 Forbidden`：表示服务器禁止访问资源，并不是客户端的请求出错。
 
 - `500` (Internal Server Error)

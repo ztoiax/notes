@@ -432,6 +432,8 @@ devbox shell
 
 ![image](./Pictures/awesomecli/colorscript.avif)
 
+## [cmd-wrapped：读取你的命令行操作历史记录，并生成详细的分析报告。](https://github.com/YiNNx/cmd-wrapped)
+
 # Social media
 
 ## [googler(google)](https://github.com/jarun/googler)
@@ -707,6 +709,24 @@ xdotool key ctrl+l
 ```
 
 - [vhs:命令行录制生成gif](https://github.com/charmbracelet/vhs)
+
+# 磁盘备份
+
+## [restic](https://github.com/restic/restic)
+
+- [官方文档](https://restic.readthedocs.io/en/latest/)
+
+- 一款强大的开源备份工具。该项目提供了简单、快速、安全的开源备份解决方案。它无需繁琐的配置，即可轻松完成备份和恢复操作。
+
+- 采用增量备份策略，备份数据经过加密和压缩处理，保障数据安全且节省空间，支持灵活的存储选择，包括本地磁盘和云存储。可设置自动备份时间，确保数据得到定期的备份保护。
+
+```sh
+# 需要输入密码
+restic init --repo /tmp/backup
+
+# 备份~/st目录。需要验证密码。执行后变成了一个文件/tmp/backup/data/c1/c14f12ee55181fb97ef8c94a92ea72a3c72e8845bd36edb399800bc6da507734
+restic --repo /tmp/backup backup ~/st
+```
 
 # pdf、mobi、epub
 

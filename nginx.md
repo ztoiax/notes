@@ -3,6 +3,8 @@
 * [LNMP](#lnmp)
 * [nginx](#nginx)
     * [安装nginx](#安装nginx)
+        * [源码安装](#源码安装)
+        * [yum安装](#yum安装)
         * [安装echo模块](#安装echo模块)
         * [Nginx版本热升级](#nginx版本热升级)
     * [基本命令](#基本命令)
@@ -27,45 +29,62 @@
                 * [例子：丢弃对不支持的文件扩展名的请求](#例子丢弃对不支持的文件扩展名的请求)
                 * [例子：配置自定义重路由](#例子配置自定义重路由)
             * [if指令](#if指令)
-            * [autoindex指令： 用户请求以 `/` 结尾时，列出目录结构，可以用于快速搭建静态资源下载网站。](#autoindex指令-用户请求以--结尾时列出目录结构可以用于快速搭建静态资源下载网站)
             * [set指令：设置变量](#set指令设置变量)
+            * [aio（异步io）](#aio异步io)
         * [内置变量](#内置变量)
         * [正向代理和反向代理](#正向代理和反向代理)
             * [proxy相关指令](#proxy相关指令)
         * [静态页面](#静态页面)
-        * [动静分离。整合tomcat](#动静分离整合tomcat)
-        * [负载均衡upstream](#负载均衡upstream)
-            * [负载均衡策略](#负载均衡策略)
-            * [基本配置](#基本配置-1)
-            * [多tomcat负载均衡](#多tomcat负载均衡)
-        * [配置缓存](#配置缓存)
+        * [tomcat](#tomcat)
+            * [安装（不需要编译，解压后mv到指定目录即可）](#安装不需要编译解压后mv到指定目录即可)
+            * [nginx配置tomcat](#nginx配置tomcat)
+            * [后台管理配置](#后台管理配置)
+            * [tomcat connector（连接器）](#tomcat-connector连接器)
+            * [性能优化](#性能优化)
+            * [zrlog使用java开发的博客](#zrlog使用java开发的博客)
+                * [nginx 反向代理 zrlog](#nginx-反向代理-zrlog)
         * [php-fpm](#php-fpm)
-            * [fastcgi](#fastcgi)
+            * [nginx配置fastcgi](#nginx配置fastcgi)
+        * [cgit](#cgit)
+        * [负载均衡](#负载均衡)
+            * [stream：4层负载均衡](#stream4层负载均衡)
+            * [upstream：7层负载均衡](#upstream7层负载均衡)
+            * [7层负载均衡策略](#7层负载均衡策略)
+            * [7层负载均衡基本配置](#7层负载均衡基本配置)
+            * [多tomcat的7层负载均衡](#多tomcat的7层负载均衡)
+            * [配置缓存](#配置缓存)
+        * [https](#https)
+            * [使用acme.sh生成证书](#使用acmesh生成证书)
+            * [http2](#http2)
+            * [http3](#http3)
+        * [autoindex模块： 用户请求以 `/` 结尾时，列出目录结构，可以用于快速搭建静态资源下载网站。](#autoindex模块-用户请求以--结尾时列出目录结构可以用于快速搭建静态资源下载网站)
         * [配置跨域 CORS](#配置跨域-cors)
         * [跨域请求头部配置](#跨域请求头部配置)
         * [图片防盗链](#图片防盗链)
         * [适配 PC 或移动设备](#适配-pc-或移动设备)
-        * [https](#https)
         * [单页面项目history路由配置](#单页面项目history路由配置)
-        * [aio（异步io）](#aio异步io)
     * [log (日志)](#log-日志)
         * [access log:](#access-log)
         * [开启gzip日志](#开启gzip日志)
+        * [linux命令统计日志](#linux命令统计日志)
+        * [日志切割](#日志切割)
         * [error log](#error-log)
         * [open_log_file_cache 日志缓存](#open_log_file_cache-日志缓存)
     * [第三方模块](#第三方模块)
         * [echo模块：可以 echo 变量](#echo模块可以-echo-变量)
-        * [Stub Status模块：提供了有关 NGINX 操作的基本指标。](#stub-status模块提供了有关-nginx-操作的基本指标)
     * [管理](#管理)
-        * [用户密码认证](#用户密码认证)
+        * [auth_basic模块：对访问资源加密，需要用户权限认证](#auth_basic模块对访问资源加密需要用户权限认证)
+        * [Stub Status模块：输出nginx的基本状态信息指标。](#stub-status模块输出nginx的基本状态信息指标)
         * [请求过滤](#请求过滤)
             * [根据请求类型过滤](#根据请求类型过滤)
             * [根据状态码过滤](#根据状态码过滤)
             * [根据 URL 名称过滤](#根据-url-名称过滤)
         * [对 ua 进行限制](#对-ua-进行限制)
         * [http方法和ip访问控制](#http方法和ip访问控制)
-        * [请求限制：对同一IP的连接数以及并发数进行限制](#请求限制对同一ip的连接数以及并发数进行限制)
-    * [cgit](#cgit)
+        * [请求限制：限制同一IP的连接数和并发数](#请求限制限制同一ip的连接数和并发数)
+            * [limit_conn_module模块：限制连接数](#limit_conn_module模块限制连接数)
+            * [limit_req_module模块：限制并发的连接数](#limit_req_module模块限制并发的连接数)
+        * [limit_rate模块：限制客户端响应传输速率](#limit_rate模块限制客户端响应传输速率)
     * [常见错误与性能优化](#常见错误与性能优化)
         * [每个 worker 没有足够的文件描述符：](#每个-worker-没有足够的文件描述符)
         * [未启用与上游服务器的 keepalive 连接](#未启用与上游服务器的-keepalive-连接)
@@ -78,7 +97,7 @@
         * [客户端](#客户端)
             * [ngxtop 日志监控](#ngxtop-日志监控)
             * [goaccess 日志监控](#goaccess-日志监控)
-            * [rhit:A nginx log explorer](#rhita-nginx-log-explorer)
+            * [rhit:日志浏览器](#rhit日志浏览器)
     * [在线工具](#在线工具)
     * [第三方nginx](#第三方nginx)
         * [Openresty](#openresty)
@@ -86,12 +105,6 @@
         * [Kong](#kong)
     * [reference](#reference)
 * [keepalived](#keepalived)
-* [TOMCAT](#tomcat)
-    * [基本命令](#基本命令-1)
-    * [zrlog](#zrlog)
-    * [mysql zrlog](#mysql-zrlog)
-        * [zrlog 连接 mysql](#zrlog-连接-mysql)
-        * [nginx 反向代理 tomcat](#nginx-反向代理-tomcat)
 
 <!-- vim-markdown-toc -->
 
@@ -107,10 +120,13 @@
 
 ## [安装nginx](http://nginx.org/en/linux_packages.html)
 
+### 源码安装
+
 - [源码下载（官网）](https://nginx.org/download/)
 - [源码下载(搜狗镜像)](http://mirrors.sohu.com/nginx/?C=M&O=D)
 
 ```sh
+# 下载源码
 curl -LO http://mirrors.sohu.com/nginx/nginx-1.25.3.tar.gz
 tar -xzvf nginx-1.25.3.tar.gz
 cd nginx-1.25.3
@@ -152,6 +168,7 @@ yum -y install openssl openssl-devel
     --with-stream_ssl_preread_module \
     --with-threads \
     --with-file-aio \
+    --with-stream  \
 
 # 可以自定义是否以www用户启动。如果设置了以下选项，则需要新建www用户，不然启动nginx时会报错：nginx: [emerg] getpwnam("www") failed
 ./configure --prefix=/usr/local/nginx \
@@ -178,6 +195,58 @@ nginx: /etc/nginx /usr/local/nginx /usr/share/man/man8/nginx.8.gz
 # 添加PATH路径
 export PATH=$PATH:/usr/local/nginx/sbin
 ```
+
+### yum安装
+
+- 安装nginx前的准备工作
+```sh
+# 安装pcre库
+yum install -y pcre-devel zlib-devel
+yum install -y yum-utils
+```
+
+- 两种方法使用yum安装nginx
+
+    - 1.配置epel仓库
+
+    - 2.配置nginx官方仓库
+
+        ```sh
+        cat > /etc/yum.repos.d/nginx.repo << EOF
+        [nginx-stable]
+        name=nginx stable repo
+        baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+        gpgcheck=1
+        enabled=1
+        gpgkey=https://nginx.org/keys/nginx_signing.key
+        module_hotfixes=true
+
+        [nginx-mainline]
+        name=nginx mainline repo
+        baseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/
+        gpgcheck=1
+        enabled=0
+        gpgkey=https://nginx.org/keys/nginx_signing.key
+        module_hotfixes=true
+        EOF
+
+        # 默认安装stable的nginx。如果需要mainline版则执行
+        yum-config-manager --enable nginx-mainline
+
+        # 安装nginx
+        yum install -y nginx
+        ```
+
+- 安装nginx后
+
+    ```sh
+    # 关闭selinux系统安全规则
+    setenforce 0
+
+    # 开启防火墙80端口对外允许访问
+    firewalld-cmd --add-port=80/tcp --permanent
+    systemctl restart firewalld.service
+    ```
 
 ### 安装echo模块
 <span id="echo"></span>
@@ -278,7 +347,7 @@ sudo nginx
 
     ```sh
     # 查看nginx版本
-    ./nginx -V
+    ./nginx -v
 
     # 检查nginx配置是否有错误
     ./nginx -t
@@ -289,6 +358,9 @@ sudo nginx
 ```sh
 # 查看当前 Nginx 最终的配置
 nginx -T
+
+# 备份配置
+nginx -T > /tmp/nginx.conf.bak
 
 # -t 检查配置是否正确
 nginx -t
@@ -302,8 +374,15 @@ nginx -t -c <配置路径>
 # -v 查看版本
 nginx -v
 
-# -V 查看模块安装
+# -V 查看预编译的参数。
 nginx -V
+
+# -qt 静默模式测试nginx，如果测试成功，不返回测试结果
+nginx -qt
+
+# -g 执行全局命令。不可与配置文件中的指令重复
+# 关闭后台运行
+nginx -g "daemon off;"
 
 # -s 发送signal (类似于systemctl)
 
@@ -754,8 +833,6 @@ systemctl status nginx   # 查看 Nginx 运行状态
     - 内层块会继承外层块的设置，如果有冲突以内层块为主
         - 例子：**http 块** 设置 `gzip on` 而 **location 块** 设置 `gzip off` 结果为 **off**
 
-- [**nginx** 使用的正则表达式与 **Perl** 编程语言 `PCRE` 使用的正则表达式**兼容**](https://github.com/DocsHome/nginx-docs/blob/master/%E4%BB%8B%E7%BB%8D/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%90%8D%E7%A7%B0.md)
-
 ### main块配置
 
 - [官方文档：各种指令解释](http://nginx.org/en/docs/ngx_core_module.html)
@@ -851,10 +928,14 @@ events {
     # Nginx 使用何种事件驱动模型。不推荐配置它，让 Nginx 自己选择。method 可选值为：select、poll、kqueue、epoll、/dev/poll、eventport
     use epoll;
 
-    # worker 子进程能够处理的最大并发连接数。
+    # worker 子进程能够处理的最大并发连接数。默认值为512
     worker_connections  1024;
+
+    # 尽可能多的接受请求。默认值为off
+    multi_accept on;
 }
 ```
+
 ### http块配置
 
 - [官方文档：各种指令解释](http://nginx.org/en/docs/http/ngx_http_core_module.html)
@@ -980,7 +1061,7 @@ http {
     # 用于在响应消息头中添加 Vary：Accept-Encoding，使代理服务器根据请求头中的 Accept-Encoding 识别是否启用 gzip 压缩；
     gzip_vary on;
 
-    # gzip 压缩比，压缩级别是 1-9，1 压缩级别最低，9 最高，级别越高压缩率越大，压缩时间越长，建议 4-6；
+    # gzip 压缩比，压缩级别从低到高1-9，值越大越消耗cpu。建议 4-6；
     gzip_comp_level 6;
 
     # 获取多少内存用于缓存压缩结果，16 8k 表示以 8k*16 为单位获得；
@@ -1630,27 +1711,6 @@ rewrite ^/listings/(.*)$ /listing.html?listing=$1 last;
         }
         ```
 
-#### autoindex指令： 用户请求以 `/` 结尾时，列出目录结构，可以用于快速搭建静态资源下载网站。
-
-```nginx
-server {
-  listen 80;
-  server_name fe.lion-test.club;
-
-  location /tz/ {
-    root /home; # /home/tz/下的文件
-
-    autoindex on; # 打开 autoindex，，可选参数有 on | off
-    autoindex_exact_size on; # 修改为 off，以 KB、MB、GB 显示文件大小，默认为 on，以 bytes 显示出⽂件的确切⼤⼩
-    autoindex_format html; # 以 html 的方式进行格式化，可选参数有 html | json | xml
-    autoindex_localtime off; # 显示的⽂件时间为⽂件的服务器时间。默认为 off，显示的⽂件时间为GMT时间
-  }
-}
-```
-
-- 测试：浏览器打开`http://127.0.0.1:80/tz/`。可以对文件进行下载
-  ![image](./Pictures/nginx/autoindex.avif)
-
 #### set指令：设置变量
 
 - nginx 的配置文件使用的是一门微型的编程语言
@@ -1704,6 +1764,52 @@ server {
         set $temp "hello ";
         return "${temp}world: $dollar";
     }
+}
+```
+
+#### aio（异步io）
+
+- nginx安装编译需要加入aio选项。不然会报错`nginx: [emerg] "aio on" is unsupported on this platform in /usr/local/nginx/conf/nginx.conf:176`
+
+```sh
+# 编译需要加入aio选项。
+./configure --prefix=/usr/local/nginx \
+    --with-file-aio \
+```
+
+- aio需要linux2.6.22以上的版本
+
+```nginx
+
+    # 使用 O_DIRECT 读取文件 和 sendfile 互诉
+    # directio_aligment size
+
+```
+
+- 启用aio
+
+    ```nginx
+    location /video/ {
+        aio            on;
+        directio       512; # 需要启用directio，否则读取将阻塞
+        output_buffers 1 128k;
+    }
+    ```
+
+- 大于等于directio时：使用aio；小于directio时使用sendfile
+```nginx
+location /video/ {
+    sendfile on;
+    aio on;
+    directio 8m;
+}
+```
+
+- 使用多线程读取和发送文件
+```nginx
+location /video/ {
+    sendfile       on;
+    aio            threads;
 }
 ```
 
@@ -2058,14 +2164,83 @@ server {
         curl 127.0.0.1/YouPictureName > /tmp/YouPictureName.png
         ```
 
-### 动静分离。整合tomcat
+### tomcat
 
-![image](./Pictures/nginx/动静分离.avif)
+- 动静分离：
 
-- 方式主要有两种：
+    ![image](./Pictures/nginx/动静分离.avif)
+
+- apache软件基金会下属的jakarta项目开发的一个servlet容器，安装sun公司提供的技术规范，实现了对servlet和JSP（java server page）的支持
+
+- 如果是包管理安装：目录在`/usr/share/tomcat10`，配置文件目录除了在`/usr/share/tomcat10/conf`，还在`/etc/tomcat10/`
+
+    | /usr/share/tomcat10目录 | 说明                                                        |
+    |-------------------------|-------------------------------------------------------------|
+    | bin                     | 可执行文件。如startup.sh和shutdown.sh                       |
+    | conf                    | 配置文件，如核心配置文件server.xml和应用默认部署文件web.xml |
+    | lib                     | 运行时需要的jar包                                           |
+    | logs                    | 日志                                                        |
+    | webapps                 | 存放默认的web应用部署目录                                   |
+    | work                    | 存放web应用代码生成和编译文件的临时目录                     |
+
+- `tomcat`的配置文件是`xml` 格式
+
+- 默认端口
+
+    - 8080 是 Tomcat 提供 web 服务的端口
+    - 8009 是 AJP 端口（第三方的应用连接这个端口，和 Tomcat 结合起来）
+    - 8005 shutdown（管理端口）
+
+    ```sh
+    # 将8080修改为8088端口
+    sed -i 's/port="8080"/port="8088"/' /usr/local/tomcat/conf/server.xml
+
+    # 查看端口
+    netstat -tunlp | grep 8088
+    ```
+
+- 配置文件`/usr/local/tomcat/conf/server.xml`
+
+    - name 定义域名
+    - appBase 定义默认应用目录
+    - unpackWARs=”true” 是否自动解压；(也是就是说，当我们往站点目录里面直接上传一个 war 的包，它会自动解压)
+    - docBase，这个参数用来定义网站的文件存放路径，如果不定义，默认是在 appBase/ROOT 下面，定义了 docBase 就以该目录为主了，其中 appBase 和 docBase 可以一样。在这一步操作过程中,可能会遇到过访问 404 的问题，其实就是 docBase 没有定义对。
+
+- 日志
+
+    - catalina 开头的日志为 Tomcat 的综合日志，它记录 Tomcat 服务相关信息，也会记录错误日志。
+    - catalina.2017-xx-xx.log 和 catalina.out 内容相同，前者会每天生成一个新的日志。
+    - host-manager 和 manager 为管理相关的日志，其中 host-manager 为虚拟主机的管理日志。
+    - localhost 和 localhost_access 为虚拟主机相关日志，其中带 access 字样的日志为访问日志，不带 access 字样的为默认虚拟主机的错误日志。
+
+#### 安装（不需要编译，解压后mv到指定目录即可）
+
+- [官方网站](https://tomcat.apache.org/)
+
+```sh
+# 下载
+curl -LO https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.18/bin/apache-tomcat-10.1.18.tar.gz
+tar xzfv apache-tomcat-10.1.18.tar.gz
+
+# 复制到指定目录
+mv apache-tomcat-10.1.18 /usr/local/tomcat
+```
+
+```sh
+# 启动tomcat
+sudo /usr/local/tomcat/bin/startup.sh
+
+# 关闭tomcat
+sudo /usr/local/tomcat/bin/shutdown.sh
+```
+
+#### nginx配置tomcat
+
+- 配置nginx动静分离。方式主要有两种：
 
     - 1.把静态文件独立成单独的域名，放在独立的服务器上，也是目前主流推崇的方案
     - 2.动态跟静态文件混合在一起发布， 通过 nginx 配置来分开
+
         ```nginx
         # 所有静态请求都由nginx处理，存放目录为 html
         location ~* \.(gif|jpg|jpeg|png|webp|avif|bmp|swf|fly|wma|asf|mp3|mmf|zip|rar)$ {
@@ -2076,6 +2251,14 @@ server {
         # 所有动态请求都转发给 tomcat 处理。tomcat默认使用8080端口，如果nginx配置了8080端口的server记得注销代码，然后nginx -s reload重新加载配置后，在启动tomcat
         location ~ \.(jsp|do)$ {
             proxy_pass  http://127.0.0.1:8080;
+
+            # 传递代理服务器的头部
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+            # 自动故障转移。遇到500、502、503、504、执行超时等错误，nginx会将请求转发到upstream负载均衡组中的另一台服务器
+            proxy_next_upstream http_500 http_502 http_503 http_504 error timeout invalid_header;
         }
 
         error_page  500 502 503 504  /50x.html;
@@ -2084,15 +2267,489 @@ server {
         }
         ```
 
-- 启动tomcat后
+- nginx重新加载配置
+    ```sh
+    nginx -s reload
+    ```
 
-- 测试：`curl http://127.0.0.1:8080`
+- 测试：`curl http://127.0.0.1/index.jsp`
 
-### 负载均衡upstream
+- 创建jsp测试代码：`/usr/local/tomcat/webapps/www/index.jsp`。（其实也可以不创建，使用默认的目录和index.jsp）
+
+    ```sh
+    # 创建自定义的目录。这里为www
+    mkdir /usr/local/tomcat/webapps/www
+    ```
+
+    ```html
+    <html>
+        <body>
+            <h1>JSP Test Page</h1>
+            <%=new java.util.Date() %>
+        </body>
+    </html>
+    ```
+
+    - 修改`/usr/local/tomcat/conf/server.xml`。在末尾`</Host>`前添加以下代码
+
+        ```xml
+        <Context path="/" docBase="/usr/local/tomcat/webapps/www" reloadable="true"/>
+        ```
+
+- 重启tomcat
+
+    ```sh
+    # 关闭tomcat
+    sudo /usr/local/tomcat/bin/shutdown.sh
+    # 启动tomcat
+    sudo /usr/local/tomcat/bin/startup.sh
+    ```
+
+- 测试
+    ```sh
+    curl http://127.0.0.1/index.jsp
+    ```
+
+#### 后台管理配置
+
+- 添加以下内容到`/usr/local/tomcat/conf/tomcat-users.xml`
+```xml
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-status"/>
+<user username="tz" password="12345678" roles="manager-gui,manager-script,manager-jmx,manager-status"/>
+```
+
+`/usr/local/tomcat/webapps/manager/META-INF/context.xml`
+```xml
+  <!-- <Valve className="org.apache.catalina.valves.RemoteAddrValve" -->
+  <!--        allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> -->
+
+```
+
+- 重启tomcat
+
+    ```sh
+    # 关闭tomcat
+    sudo /usr/local/tomcat/bin/shutdown.sh
+    # 启动tomcat
+    sudo /usr/local/tomcat/bin/startup.sh
+    ```
+
+- 打开`127.0.0.1:8080/manager/html`
+![image](./Pictures/nginx/tomcat-manager.avif)
+
+#### tomcat connector（连接器）
+
+- tomcat connector（连接器）有3种运行模式：
+
+    - BIO（阻塞式I/O）：使用传统的java I/O操作（即java.io包及其子包）
+        - 默认值，性能最差
+
+    - NIO（非阻塞式I/O）：java SE1.4后提供的一种新I/O操作（即java.nio包及其子包）
+
+        - java nio基于一个缓冲区。有更好的并发性能
+
+        - 让tomcat以NIO模式运行，修改配置文件`/usr/local/tomcat/conf/server.xml`
+            ```xml
+            # 原值
+            <Connector port="8080" protocol="HTTP/1.1"
+                       connectionTimeout="20000"
+                       redirectPort="8443"
+                       maxParameterCount="1000"
+                       />
+            # 修改protocol的值为org.apache.coyote.http11.Http11NioProtocol
+            <Connector port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol"
+                       connectionTimeout="20000"
+                       redirectPort="8443"
+                       maxParameterCount="1000"
+                       />
+            ```
+
+    - APR（apache可移植运行时库）：以JNI的形式调用apache http服务器的核心动态链接库处理文件读取或网络传输操作，从而大大提高tomcat对静态文件的处理性能，从操作系统级别解决异步I/O问题
+
+        - 是运行高并发的首选
+
+        - 安装tomcat-native
+
+            ```sh
+            # 必须安装APR和tomcat-native
+            yum install -y apr apr-devel
+
+            # 只有源码安装才有tomcat-native.tar.gz文件。archlinux的包管理器安装则没有
+            cd /usr/local/tomcat/bin/
+            tar xzfv tomcat-native.tar.gz
+            cd tomcat-native-2.0.6-src/native
+
+            # 编译选项
+            ./configure --with-apr=/usr/bin/apr-1-config
+            # 编译
+            make -j$(nproc)
+            # 安装
+            make install
+            ```
+
+        - 设置环境变量
+            ```sh
+            export CATALINA_OPTS=-Djava.library.path=/usr/local/apr/lib
+            ```
+
+        - 让tomcat以APR模式运行，修改配置文件`/usr/local/tomcat/conf/server.xml`
+            ```xml
+            # 原值
+            <Connector port="8080" protocol="HTTP/1.1"
+                       connectionTimeout="20000"
+                       redirectPort="8443"
+                       maxParameterCount="1000"
+                       />
+            # 修改protocol的值为org.apache.coyote.http11.Http11NioProtocol
+            <Connector port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol"
+                       connectionTimeout="20000"
+                       redirectPort="8443"
+                       maxParameterCount="1000"
+                       />
+            ```
+
+#### 性能优化
+
+- 修改配置文件`/usr/local/tomcat/conf/server.xml`
+
+    ```xml
+    <!-- 修改Connector -->
+    <Connector port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               connectionTimeout="20000"
+               redirectPort="8443"
+               maxParameterCount="5000"
+               minSpareThreads="20"
+               acceptCount="10000"
+               disableUploadTimeout="true"
+               enbaleLookups="false"
+               URIEncoding="UTF-8"
+               />
+    ```
+
+- 优化jvm内存参数。修改`/usr/local/tomcat/bin/catalina.sh`
+
+#### zrlog使用java开发的博客
+
+```sh
+# 安装
+wget http://dl.zrlog.com/release/zrlog.war /usr/share/tomcat7/webapps
+
+# 访问
+http://127.0.0.1:8080/zrlog/install
+```
+
+![image](./Pictures/nginx/zrlog.avif)
+
+- zrlog 连接 mysql
+
+```sh
+mariadb -uroot -h127.0.0.1 -pYouPassward
+# 创建
+create database zrlog;
+# 密码
+grant all on zrlog.* to 'zrlog'@127.0.0.1 identified by 'YouPassward'
+quit
+
+# 登录
+mariadb -uzrlog -h127.0.0.1 -pYouPassward
+# 查看数据
+show databases;
+# 显示成功后即可连接
+quit
+```
+
+![image](./Pictures/nginx/zrlog1.avif)
+
+##### nginx 反向代理 zrlog
+
+```sh
+server
+{
+    listem 80;
+    server_name example.com;
+
+    location / {
+        proxy_pass http://example.com:8081/zrlog/;
+        proxy_set_header HOST $host;
+        proxy_set_header X-Real_IP $remote_addr;
+        proxy_set_header X-Forwared-For $proxy_add_x_forwarded_for;
+    }
+
+    access_log /var/log/nginx/zrlog-access.log;
+    error_log  /var/log/nginx/zrlog-error.log;
+}
+```
+
+
+### php-fpm
+
+- cgi公共网关接口：是http服务器与本机或其他机器上的程序通信工具
+    - cgi可以使用任何一种语言编写。
+    - 缺点：性能很差：每次http服务器遇到动态请求都需要重新启动脚本解析器，然后将结果返回http服务器
+
+- fastcgi：从cgi发展而来。
+    - 采用C/S架构，将http服务器与脚本服务器分开；同时脚本服务器启动一个或多个脚本守护程序
+    - 脚本服务器每次遇到动态请求时，直接交付给fastcgi进程执行，然后将得到的结果返回浏览器
+    - fastcgi只是一个协议，将cgi解释器进程保持在内存中。
+
+- nginx无法直接处理动态请求，也无法直接调用php。要让nginx和php协同工作需要php-fpm
+
+    - nginx提供一个fastcgi模块来将http请求映射为对应的fastcgi请求。——这样就可以将请求发送给php-fpm了
+
+    - php-fpm(PHP FastCGI Process Manager)：php-fpm实现fastcgi进程叫php-cgi。是第三方的 FastCGI 进程管理器。最初作为第三方补丁，现在已经集成到php源码中。
+
+        - 安装指定`--enable-fpm`
+
+    - php-fpm管理的进程包含
+        - master进程：只有一个。负责监听端口，接受web server的请求
+        - worker进程：一般有多个。每个进程内部都嵌入一个php解释器，是php代码真正执行的地方
+
+- 安装编译php
+
+    ```sh
+    # 官网https://www.php.net/
+    # 下载源码
+    curl -LO https://www.php.net/distributions/php-8.3.2.tar.gz
+    tar zxvf php-8.3.2.tar.gz
+    cd php-8.3.2
+
+    # 编译设置
+    ./configure --prefix=/usr/local/php8 \
+        --enable-fpm \
+        --with-pdo-mysql=mysqlnd \
+        --with-zlib \
+        --with-curl \
+        --with-gd \
+        --with-jpeg-dir \
+        --with-png-dir \
+        --with-freetype-dir \
+        --with-openssl \
+        --enable-mbstring \
+        --enable-xml \
+        --enable-session \
+        --enable-ftp \
+        --enable-pdo -enable-tokenizer \
+        --enable-zip \
+        --with-fpm-user=www \
+        --with-fpm-group=www \
+
+    # --enalbe-fpm启用php-fpm功能
+    # --with-pdo-mysql=mysqlnd 表示使用mysqlnd驱动。pdo的api可以无缝切换数据库，比如从oracle到mysql，仅仅需要修改很少的代码。类似于jdbc、odbc、dbi之类接口。这里的--pdo-mysql表示与mysql进行连接的方式。mysqlnd是php官方的mysql驱动代码，代替就得libmysql驱动（mysql官方的驱动）
+
+    # --with-fpm-user=www 指定以www用户启动。因此需要新建用户
+    useradd www
+
+    # 编译
+    make -j$(nproc)
+    # 安装
+    make install
+
+    # 复制
+    cp php.ini-production /usr/local/php8/lib/php.ini
+    cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/
+
+    # 创建二进制文件的硬连接
+    ln /usr/local/php8/bin/php /bin/php
+    ```
+
+- 启动php-fpm
+
+    ```sh
+    # 复制php-fpm配置文件
+    cp /usr/local/php8/etc/php-fpm.conf.default /usr/local/php8/etc/php-fpm.conf
+    cp /usr/local/php8/etc/php-fpm.d/www.conf.default /usr/local/php8/etc/php-fpm.d/www.conf
+
+    # 之前已经把service复制到system里了。直接启动
+    systemctl enable php-fpm
+    systemctl start php-fpm
+    systemctl status php-fpm
+    ```
+
+
+- 以下为优化php-fpm。如果php-fpm可以启动，则php的配置已经完成，只需在nginx配置fastcgi即可
+
+
+    - 可配置多个`pool`（默认配置：1个）
+
+        - 如果 nginx 有多个站点，都使用一个 pool，则会有单点错误。因此建议每个站点都配置一个 pool
+
+    - php-fpm.conf
+
+        ```sh
+        pid = /var/log/php-fpm/php-fpm.pid
+        include=/etc/php/php-fpm.d/*.conf
+        ```
+
+    - 配置文件`/etc/php/php-fpm.d/www.conf`
+
+        | 参数                 | 内容                                                                                                                                           |
+        | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+        | pm = dynamic         | 动态管理                                                                                                                                       |
+        | pm.max_children      | 静态方式下开启的 php-fpm 进程数量，在动态方式下他限定 php-fpm 的最大进程数（这里要注意 pm.max_spare_servers 的值只能小于等于 pm.max_children） |
+        | pm.start_servers     | 动态方式下的起始 php-fpm 进程数量                                                                                                              |
+        | pm.min_spare_servers | 动态方式空闲状态下的最小 php-fpm 进程数量                                                                                                      |
+        | pm.max_spare_servers | 动态方式空闲状态下的最大 php-fpm 进程数量                                                                                                      |
+
+        ```sh
+        # 慢执行日志配置
+        request_slowlog_timeout = 1
+        slowlog = /var/log/php-fpm/www-slow.log
+        ```
+
+    - php.ini
+
+        ```sh
+        # 设置errors日志
+        error_log = /var/log/php-fpm/php_errors.log
+        ```
+
+        **sed** 快速设置 errors 日志
+
+        ```sh
+        sed -i "/;error_log = php_errors.log/cerror_log = /var/log/php-fpm/php_errors.log" /etc/php/php.ini
+        # 需要自己创建文件
+        sudo mkdir /var/log/php-fpm
+        touch /var/log/php-fpm/php_errors.log
+        ```
+
+#### nginx配置fastcgi
+
+```nginx
+server {
+    listen 80;
+    server_name localhost;
+
+    location ~ \.php$ {
+        root html;
+
+        # php-fpm的监听端口为9000
+        fastcgi_pass  localhost:9000; # 也可以是unix_sock fastcgi_pass  unix:/var/run/php-fpm/php80fpm.sock;
+
+        fastcgi_index index.php;
+
+        # $document_root 与 root 指令的值是一样的，变量 $fastcgi_script_name 的值为请求URI，即 /index.php。
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param QUERY_STRING    $query_string;
+    }
+}
+```
+
+- 测试
+
+    ```sh
+    # 创建php文件。输出phpinfo
+    echo "<?php phpinfo(); ?>" > /usr/local/nginx/html/tz.php
+
+    # 客户端测试
+    curl http://127.0.0.1/tz.php | php
+    ```
+
+### cgit
+
+- [arch文档](https://wiki.archlinux.org/title/Cgit)
+
+- 使用fcgiwrap
+
+```sh
+# 安装并启动fcgiwrap
+systemctl restart fcgiwrap.socket
+```
+
+```nginx
+  server {
+    listen                8086;
+    server_name           localhost;
+    root                  /usr/share/webapps/cgit;
+    try_files             $uri @cgit;
+
+    location @cgit {
+      include             fastcgi_params;
+      fastcgi_param       SCRIPT_FILENAME $document_root/cgit.cgi;
+      fastcgi_param       PATH_INFO       $uri;
+      fastcgi_param       QUERY_STRING    $args;
+      fastcgi_param       HTTP_HOST       $server_name;
+      fastcgi_pass        unix:/run/fcgiwrap.sock;
+    }
+  }
+```
+
+- 使用uwsgi
+
+```nginx
+server {
+  listen                8086;
+  server_name           localhost;
+  root /usr/share/webapps/cgit;
+
+  # Serve static files with nginx
+  location ~* ^.+(cgit.(css|png)|favicon.ico|robots.txt) {
+    root /usr/share/webapps/cgit;
+    expires 30d;
+  }
+  location / {
+    try_files $uri @cgit;
+  }
+  location @cgit {
+    gzip off;
+    include uwsgi_params;
+    uwsgi_modifier1 9;
+    uwsgi_pass unix:/run/uwsgi/cgit.sock;
+  }
+}
+```
+
+### 负载均衡
 
 - 负载均衡：分摊到多个操作单元上进行执行，例如：Web服务器、FTP服务器、企业关键应用服务器和其它关键任务服务器等，从而共同完成工作任务。
 
     - 简单而言就是当有2台或以上服务器时，根据规则将请求分发到指定的服务器上处理，负载均衡配置一般都需要同时配置反向代理，通过反向代理跳转到负载均衡。
+
+![image](./Pictures/nginx/负载均衡.avif)
+
+- 7层负载均衡：upstream模块
+- 4层负载均衡：stream模块
+
+#### stream：4层负载均衡
+
+- [官方文档：各种指令解释](http://nginx.org/en/docs/stream/ngx_stream_core_module.html)
+
+- nginx1.9版本后才有stream模块，可以支持四层负载均衡
+
+- nginx安装编译需要加入选项。
+
+    ```sh
+    # 编译需要加入stream选项。
+    ./configure --prefix=/usr/local/nginx \
+         --with-stream  \
+    ```
+
+- nginx配置
+
+    ```nginx
+    events {}
+
+    # stream不在http块里面
+    stream {
+        upstream backend {              
+            # 转发到80端口
+            server 127.0.0.1:80;  
+        }
+        server {
+            # 监听90端口
+            listen 90;
+            proxy_pass backend;    
+        }
+    }
+
+    http {}
+    ```
+
+- 测试：`curl http://127.0.0.1:90`
+
+#### upstream：7层负载均衡
 
 - upstream指令设置负载均衡：
 
@@ -2129,7 +2786,7 @@ server {
     }
     ```
 
-#### 负载均衡策略
+#### 7层负载均衡策略
 
 - nginx 目前支持自带 4 种负载均衡策略，还有 2 种常用的第三方策略。
 
@@ -2273,7 +2930,7 @@ server {
     }
     ```
 
-#### 基本配置
+#### 7层负载均衡基本配置
 
 - 配置负载均衡
 
@@ -2317,7 +2974,7 @@ server {
           location /balance/ {
            proxy_pass http://demo_server;
 
-           # 故障转移。遇到500、502、503、504、执行超时等错误，nginx会将请求转发到upstream负载均衡组中的另一台服务器
+           # 自动故障转移。遇到500、502、503、504、执行超时等错误，nginx会将请求转发到upstream负载均衡组中的另一台服务器
            proxy_next_upstream http_500 http_502 http_503 http_504 error timeout invalid_header;
 
            # 可以使用include指令，把独立的proxy相关的配置加载进来
@@ -2330,7 +2987,7 @@ server {
 
     - 测试：执行多次`curl http://balance.lion.club/balance/`
 
-#### 多tomcat负载均衡
+#### 多tomcat的7层负载均衡
 
 ```nginx
 # 3台tomcat
@@ -2353,11 +3010,19 @@ server {
     # tomcat
     location / {
         proxy_pass http://mytomcats;
+
+        # 传递代理服务器的头部
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # 自动故障转移。遇到500、502、503、504、执行超时等错误，nginx会将请求转发到upstream负载均衡组中的另一台服务器
+        proxy_next_upstream http_500 http_502 http_503 http_504 error timeout invalid_header;
     }
 }
 ```
 
-### 配置缓存
+#### 配置缓存
 
 - upstream_cache_status变量：它存储了缓存是否命中的信息，会设置在响应头信息中，在调试中非常有用。
 
@@ -2507,275 +3172,6 @@ server {
             }
             ```
 
-### php-fpm
-
-- nginx无法直接调用php完成请求。要让nginx和php协同工作需要php-fpm
-
-    - php-fpm(PHP FastCGI Process Manager)：是第三方的 FastCGI 进程管理器。最初作为第三方补丁，现在已经集成到php源码中。
-
-        - 安装指定`--enable-fpm`
-
-    - php-fpm管理的进程包含
-        - master进程：只有一个。负责监听端口，接受web server的请求
-        - worker进程：一般有多个。每个进程内部都嵌入一个php解释器，是php代码真正执行的地方
-
-- nginx提供一个fastcgi模块来将http请求映射为对应的fastcgi请求。——这样就可以将请求发送给php-fpm了
-
-- 安装编译php
-
-    ```sh
-    # 官网https://www.php.net/
-    # 下载源码
-    curl -LO https://www.php.net/distributions/php-8.3.2.tar.gz
-    tar zxvf php-8.3.2.tar.gz
-    cd php-8.3.2
-
-    # 编译设置
-    ./configure --prefix=/usr/local/php8 \
-        --enable-fpm \
-        --with-pdo-mysql=mysqlnd \
-        --with-zlib \
-        --with-curl \
-        --with-gd \
-        --with-jpeg-dir \
-        --with-png-dir \
-        --with-freetype-dir \
-        --with-openssl \
-        --enable-mbstring \
-        --enable-xml \
-        --enable-session \
-        --enable-ftp \
-        --enable-pdo -enable-tokenizer \
-        --enable-zip \
-        --with-fpm-user=www \
-        --with-fpm-group=www \
-
-    # --enalbe-fpm启用php-fpm功能
-    # --with-pdo-mysql=mysqlnd 表示使用mysqlnd驱动。pdo的api可以无缝切换数据库，比如从oracle到mysql，仅仅需要修改很少的代码。类似于jdbc、odbc、dbi之类接口。这里的--pdo-mysql表示与mysql进行连接的方式。mysqlnd是php官方的mysql驱动代码，代替就得libmysql驱动（mysql官方的驱动）
-
-    # --with-fpm-user=www 指定以www用户启动。因此需要新建用户
-    useradd www
-
-    # 编译
-    make -j$(nproc)
-    # 安装
-    make install
-
-    # 复制
-    cp php.ini-production /usr/local/php8/lib/php.ini
-    cp sapi/fpm/php-fpm.service /usr/lib/systemd/system/
-
-    # 创建二进制文件的硬连接
-    ln /usr/local/php8/bin/php /bin/php
-    ```
-
-- 启动php-fpm
-
-    ```sh
-    # 复制php-fpm配置文件
-    cp /usr/local/php8/etc/php-fpm.conf.default /usr/local/php8/etc/php-fpm.conf
-    cp /usr/local/php8/etc/php-fpm.d/www.conf.default /usr/local/php8/etc/php-fpm.d/www.conf
-
-    # 之前已经把service复制到system里了。直接启动
-    systemctl enable php-fpm
-    systemctl start php-fpm
-    systemctl status php-fpm
-    ```
-
-
-- 以下为优化php-fpm。如果php-fpm可以启动，则php的配置已经完成，只需在nginx配置fastfgi即可
-
-    - php-fpm.conf
-
-        - 可配置多个`pool`
-
-        > 默认配置了一个`www` pool
-        > 如果 nginx 有多个站点，都使用一个 pool，则会有单点错误
-        > 因此要每个站点都配置一个 pool
-
-        ```sh
-        pid = /var/log/php-fpm/php-fpm.pid
-        include=/etc/php/php-fpm.d/*.conf
-        ```
-
-    - 配置文件`/etc/php/php-fpm.d/www.conf`
-
-        | 参数                 | 内容                                                                                                                                           |
-        | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-        | pm = dynamic         | 动态管理                                                                                                                                       |
-        | pm.max_children      | 静态方式下开启的 php-fpm 进程数量，在动态方式下他限定 php-fpm 的最大进程数（这里要注意 pm.max_spare_servers 的值只能小于等于 pm.max_children） |
-        | pm.start_servers     | 动态方式下的起始 php-fpm 进程数量                                                                                                              |
-        | pm.min_spare_servers | 动态方式空闲状态下的最小 php-fpm 进程数量                                                                                                      |
-        | pm.max_spare_servers | 动态方式空闲状态下的最大 php-fpm 进程数量                                                                                                      |
-
-        ```sh
-        # 慢执行日志配置
-        request_slowlog_timeout = 1
-        slowlog = /var/log/php-fpm/www-slow.log
-        ```
-
-    - php.ini
-
-        ```sh
-        # 设置errors日志
-        error_log = /var/log/php-fpm/php_errors.log
-        ```
-
-        **sed** 快速设置 errors 日志
-
-        ```sh
-        sed -i "/;error_log = php_errors.log/cerror_log = /var/log/php-fpm/php_errors.log" /etc/php/php.ini
-        # 需要自己创建文件
-        sudo mkdir /var/log/php-fpm
-        touch /var/log/php-fpm/php_errors.log
-        ```
-
-#### fastcgi
-
-```nginx
-server {
-    listen 80;
-    server_name localhost;
-
-    location ~ \.php$ {
-        root html;
-
-        # php-fpm的监听端口为9000
-        fastcgi_pass  localhost:9000; # 也可以是unix_sock fastcgi_pass  unix:/var/run/php-fpm/php80fpm.sock;
-
-        fastcgi_index index.php;
-
-        # $document_root 与 root 指令的值是一样的，变量 $fastcgi_script_name 的值为请求URI，即 /index.php。
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param QUERY_STRING    $query_string;
-    }
-}
-```
-
-- 测试
-
-    ```sh
-    # 创建php文件。输出phpinfo
-    echo "<?php phpinfo(); ?>" > /usr/local/nginx/html/tz.php
-
-    # 客户端测试
-    curl http://127.0.0.1/tz.php | php
-    ```
-
-### 配置跨域 CORS
-
-- 同源：如果两个页面的协议，端口（如果有指定）和域名都相同，则两个页面具有相同的源。
-
-    - 例子：与 URL http://store.company.com/dir/page.html 的源进行对比的
-
-        ```
-        http://store.company.com/dir2/other.html 同源
-        https://store.company.com/secure.html 不同源，协议不同
-        http://store.company.com:81/dir/etc.html 不同源，端口不同
-        http://news.company.com/dir/other.html 不同源，主机不同
-        ```
-
-    - 不同源会有如下限制：
-        - Web 数据层面：同源策略限制了不同源的站点读取当前站点的 Cookie、IndexDB、LocalStorage 等数据。
-        - DOM 层面：同源策略限制了来自不同源的 JavaScript 脚本对当前 DOM 对象读和写的操作。
-        - 网络层面：同源策略限制了通过 XMLHttpRequest 等方式将站点的数据发送给不同源的站点。
-
-- 跨域：同源策略限制了从同一个源加载的文档或脚本如何与来自另一个源的资源进行交互。
-
-    - 这是一个用于隔离潜在恶意文件的重要安全机制。通常不允许不同源间的读操作。
-
-- Nginx 解决跨域的原理：
-
-    - 前端的域名为：fe.server.com
-    - 后端的域名为：dev.server.com
-    - 现在我在 fe.server.com 对 dev.server.com 发起请求一定会出现跨域。
-
-    - 将 server_name 设置为 fe.server.com 然后设置相应的 location 以拦截前端需要跨域的请求，最后将请求代理回 dev.server.com
-
-        - 这样可以完美绕过浏览器的同源策略：fe.server.com 访问 Nginx 的 fe.server.com 属于同源访问，而 Nginx 对服务端转发的请求不会触发浏览器的同源策略。
-
-        ```nginx
-        server {
-         listen      80;
-         server_name  fe.server.com;
-         location / {
-          proxy_pass dev.server.com;
-         }
-        }
-        ```
-
-### 跨域请求头部配置
-
-```nginx
-location / {
-
-     if ($request_method = 'OPTIONS') {
-
-        add_header 'Access-Control-Allow-Origin' '*';
-
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-
-        add_header 'Access-Control-Max-Age' 1728000;
-
-        add_header 'Content-Type' 'text/plain; charset=utf-8';
-
-        add_header 'Content-Length' 0;
-
-        return 204;
-
-     }
-
-     add_header 'Access-Control-Allow-Origin' '*';
-
-     add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
-
-     add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
-
-     add_header 'Access-Control-Expose-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
-
-}
-```
-
-### 图片防盗链
-
-- 防止其它网站利用外链访问我们的图片，有利于节省流量
-
-```nginx
-server {
-    listen       80;
-    server_name  *.test;
-
-    # 图片防盗链
-    location ~* \.(gif|jpg|jpeg|png|bmp|swf)$ {
-        valid_referers none blocked server_names ~\.google\. ~\.baidu\. *.qq.com;  # 只允许本机 IP 外链引用，将百度和谷歌也加入白名单有利于 SEO
-        if ($invalid_referer){
-            return 403;
-        }
-    }
-}
-```
-
-### 适配 PC 或移动设备
-
-- 根据用户设备不同返回不同样式的站点，以前经常使用的是纯前端的自适应布局，但是复杂的网站并不适合响应式，无论是复杂性和易用性上面还是不如分开编写的好，比如我们常见的淘宝、京东。
-
-- 根据用户请求的 user-agent 来判断是返回 PC 还是 H5 站点：
-
-```nginx
-server {
-    listen 80;
-    server_name test.com;
-
-    location / {
-     root  /usr/local/app/pc; # pc 的 html 路径
-        if ($http_user_agent ~* '(Android|webOS|iPhone|iPod|BlackBerry)') {
-            root /usr/local/app/mobile; # mobile 的 html 路径
-        }
-        index index.html;
-    }
-}
-```
-
 ### https
 
 - ssl证书的功能
@@ -2815,7 +3211,7 @@ server {
 
 - [nginx ssl 配置](https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1d&guideline=5.6)
 
-- [阿里云ssl证书](https://www.aliyun.com/product/cas)
+- [购买阿里云ssl证书](https://www.aliyun.com/product/cas)
 
 - nginx安装编译需要加入ssl选项
     ```sh
@@ -2915,6 +3311,238 @@ server {
     }
     ```
 
+#### 使用acme.sh生成证书
+
+- [官网](https://github.com/acmesh-official/acme.sh)
+
+- 安装
+
+```sh
+git clone https://github.com/acmesh-official/acme.sh.git
+cd ./acme.sh
+# 输入自己的邮箱
+./acme.sh --install -m my@example.com
+```
+
+```sh
+# 生成key和csr文件。会创建example.com的目录
+acme.sh --issue -d example.com -w .
+
+# 生成证书。然而并没有成功
+acme.sh --install-cert -d example.com \
+--key-file       ./key.pem  \
+--fullchain-file ./cert.pem \
+```
+
+#### http2
+
+- [官方配置](http://nginx.org/en/docs/http/ngx_http_v2_module.html)
+
+```nginx
+server {
+    listen 443 ssl;
+
+    http2 on;
+
+    ssl_certificate server.crt;
+    ssl_certificate_key server.key;
+}
+```
+
+#### http3
+
+- [编译选项](http://nginx.org/en/docs/quic.html)
+
+    - 不建议使用openssl。建议使用BoringSSL，LibreSSL，or QuicTLS
+
+    ```sh
+    # boringssl编译选项
+    ./configure
+    --with-debug
+    --with-http_v3_module
+    --with-cc-opt="-I../boringssl/include"
+    --with-ld-opt="-L../boringssl/build/ssl
+                   -L../boringssl/build/crypto"
+    ```
+
+
+- [官方配置](http://nginx.org/en/docs/http/ngx_http_v3_module.html)
+
+```nginx
+http {
+    log_format quic '$remote_addr - $remote_user [$time_local] '
+                    '"$request" $status $body_bytes_sent '
+                    '"$http_referer" "$http_user_agent" "$http3"';
+
+    access_log logs/access.log quic;
+
+    server {
+        # for better compatibility it's recommended
+        # to use the same port for http/3 and https
+        listen 8443 quic reuseport;
+        listen 8443 ssl;
+
+        ssl_certificate     certs/example.com.crt;
+        ssl_certificate_key certs/example.com.key;
+
+        location / {
+            # used to advertise the availability of HTTP/3
+            add_header Alt-Svc 'h3=":8443"; ma=86400';
+        }
+    }
+}
+```
+
+### autoindex模块： 用户请求以 `/` 结尾时，列出目录结构，可以用于快速搭建静态资源下载网站。
+
+```nginx
+server {
+  listen 80;
+  server_name fe.lion-test.club;
+
+  location /tz/ {
+    root /home; # /home/tz/下的文件
+
+    autoindex on; # 打开 autoindex，，可选参数有 on | off
+    autoindex_exact_size on; # 修改为 off，以 KB、MB、GB 显示文件大小，默认为 on，以 bytes 显示出⽂件的确切⼤⼩
+    autoindex_format html; # 以 html 的方式进行格式化，可选参数有 html | json | xml
+    autoindex_localtime off; # 显示的⽂件时间为⽂件的服务器时间。默认为 off，显示的⽂件时间为GMT时间
+  }
+}
+```
+
+- 测试：浏览器打开`http://127.0.0.1:80/tz/`。可以对文件进行下载
+  ![image](./Pictures/nginx/autoindex.avif)
+
+
+### 配置跨域 CORS
+
+- 同源：如果两个页面的协议，端口（如果有指定）和域名都相同，则两个页面具有相同的源。
+
+    - 例子：与 URL http://store.company.com/dir/page.html 的源进行对比的
+
+        ```
+        http://store.company.com/dir2/other.html 同源
+        https://store.company.com/secure.html 不同源，协议不同
+        http://store.company.com:81/dir/etc.html 不同源，端口不同
+        http://news.company.com/dir/other.html 不同源，主机不同
+        ```
+
+    - 不同源会有如下限制：
+        - Web 数据层面：同源策略限制了不同源的站点读取当前站点的 Cookie、IndexDB、LocalStorage 等数据。
+        - DOM 层面：同源策略限制了来自不同源的 JavaScript 脚本对当前 DOM 对象读和写的操作。
+        - 网络层面：同源策略限制了通过 XMLHttpRequest 等方式将站点的数据发送给不同源的站点。
+
+- 跨域：同源策略限制了从同一个源加载的文档或脚本如何与来自另一个源的资源进行交互。
+
+    - 这是一个用于隔离潜在恶意文件的重要安全机制。通常不允许不同源间的读操作。
+
+- Nginx 解决跨域的原理：
+
+    - 前端的域名为：fe.server.com
+    - 后端的域名为：dev.server.com
+    - 现在我在 fe.server.com 对 dev.server.com 发起请求一定会出现跨域。
+
+    - 将 server_name 设置为 fe.server.com 然后设置相应的 location 以拦截前端需要跨域的请求，最后将请求代理回 dev.server.com
+
+        - 这样可以完美绕过浏览器的同源策略：fe.server.com 访问 Nginx 的 fe.server.com 属于同源访问，而 Nginx 对服务端转发的请求不会触发浏览器的同源策略。
+
+        ```nginx
+        server {
+         listen      80;
+         server_name  fe.server.com;
+         location / {
+          proxy_pass dev.server.com;
+         }
+        }
+        ```
+
+### 跨域请求头部配置
+
+```nginx
+location / {
+
+     if ($request_method = 'OPTIONS') {
+
+        add_header 'Access-Control-Allow-Origin' '*';
+
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+
+        add_header 'Access-Control-Max-Age' 1728000;
+
+        add_header 'Content-Type' 'text/plain; charset=utf-8';
+
+        add_header 'Content-Length' 0;
+
+        return 204;
+
+     }
+
+     add_header 'Access-Control-Allow-Origin' '*';
+
+     add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
+
+     add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
+
+     add_header 'Access-Control-Expose-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
+
+}
+```
+
+### 图片防盗链
+
+- 防盗链：是网站内容本身不再自己公司的服务器上，使用技术手段直接调用其其他公司的服务器网站数据，并向最终用户提供
+    - 一些小网站盗链高访问量网站的音乐、图片、软件连接，然后放置在自己的网站中
+    - 通过这种方法盗取高访问量网站的空间和流量
+
+- 如果没有配置防盗链，别人就能轻而易举地在其他网站上引用页面
+
+```nginx
+server {
+    listen       80;
+    server_name  *.test;
+
+    # 图片防盗链
+    location ~* \.(gif|jpg|jpeg|png|bmp|swf)$ {
+
+        # 只允许本机 IP 外链引用，将百度和谷歌也加入白名单有利于 SEO
+        valid_referers none blocked server_names ~\.google\. ~\.baidu\. *.qq.com;
+
+        # 
+        valid_referers none blocked example.com *.example.com;
+
+        root   /home/tz/Pictures/;
+
+        if ($invalid_referer){
+            return 403;
+        }
+    }
+}
+```
+
+- 测试：找另一台测试服务器，调用example.com/file.jpg访问图片，由于设置了防盗链，所以无法访问。
+
+### 适配 PC 或移动设备
+
+- 根据用户设备不同返回不同样式的站点，以前经常使用的是纯前端的自适应布局，但是复杂的网站并不适合响应式，无论是复杂性和易用性上面还是不如分开编写的好，比如我们常见的淘宝、京东。
+
+- 根据用户请求的 user-agent 来判断是返回 PC 还是 H5 站点：
+
+```nginx
+server {
+    listen 80;
+    server_name test.com;
+
+    location / {
+     root  /usr/local/app/pc; # pc 的 html 路径
+        if ($http_user_agent ~* '(Android|webOS|iPhone|iPod|BlackBerry)') {
+            root /usr/local/app/mobile; # mobile 的 html 路径
+        }
+        index index.html;
+    }
+}
+```
+
 ### 单页面项目history路由配置
 
 - vue-router 官网只有一句话 `try_files $uri $uri/ /index.html;`，而上面做了一些重定向处理。
@@ -2939,52 +3567,6 @@ server {
 }
 ```
 
-### aio（异步io）
-
-- nginx安装编译需要加入aio选项。不然会报错`nginx: [emerg] "aio on" is unsupported on this platform in /usr/local/nginx/conf/nginx.conf:176`
-
-```sh
-# 编译需要加入aio选项。
-./configure --prefix=/usr/local/nginx \
-    --with-file-aio \
-```
-
-- aio需要linux2.6.22以上的版本
-
-```nginx
-
-    # 使用 O_DIRECT 读取文件 和 sendfile 互诉
-    # directio_aligment size
-
-```
-
-- 启用aio
-
-    ```nginx
-    location /video/ {
-        aio            on;
-        directio       512; # 需要启用directio，否则读取将阻塞
-        output_buffers 1 128k;
-    }
-    ```
-
-- 大于等于directio时：使用aio；小于directio时使用sendfile
-```nginx
-location /video/ {
-    sendfile on;
-    aio on;
-    directio 8m;
-}
-```
-
-- 使用多线程读取和发送文件
-```nginx
-location /video/ {
-    sendfile       on;
-    aio            threads;
-}
-```
-
 ## log (日志)
 
 - [ngx_http_log_module 模块指定日志格式等](https://github.com/DocsHome/nginx-docs/blob/master/%E6%A8%A1%E5%9D%97%E5%8F%82%E8%80%83/http/ngx_http_log_module.md)
@@ -2995,7 +3577,7 @@ location /video/ {
 http {
     log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
                       '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for"';
+                      '"$http_user_agent" "$request_time"';
 
     access_log  logs/access.log  main;
 }
@@ -3079,6 +3661,70 @@ http {
     zcat 80.access.log
     ```
 
+### linux命令统计日志
+
+- 或者直接使用ngxtop、 goaccess等日志监控客户端
+
+```sh
+# 统计ip的访问次数
+awk '{print $1}' /usr/local/nginx/logs/access/80.access.log | sort -r | uniq -c
+
+# 访问资源的次数
+awk '{print $7}' /usr/local/nginx/logs/access/80.access.log | sort -r | uniq -c
+
+# 统计以下状态码的ip和次数
+awk '{if ($9 ~ "404|500|501|502|503|504") print $1, $9}' /usr/local/nginx/logs/access/80.access.log | sort | uniq -c
+
+# 统计出现以下状态大于20次的ip
+awk '{if ($9 ~ "404|500|501|502|503|504") print $1, $9}' /usr/local/nginx/logs/access/80.access.log | sort | uniq -c | sort -nr | awk '{if($1>20) print $2}'
+
+# 统计请求时间超过5s的url
+awk '{if ($NF>5) print $NF, $7, $1}' /usr/local/nginx/logs/access/80.access.log | sort -nr | more
+```
+
+### 日志切割
+
+- nginx每天都会产生大量的访问日志，不会自动切割。日积月累会导致access.log日志非常庞大
+
+- 使用shell脚本配合crontab进行切割
+
+- 写入`/var/spool/cron/root`文件，实现每天凌晨自动切割日志
+
+    ```
+    0 0 * * * /bin/sh /usr/local/nginx/auto_nginx_log.sh >> /tmp/nginx_cut.log 2>&1
+    ```
+
+- 脚本1
+
+```sh
+#!/bin/bash
+# auto mv nginx log shell
+# by author jfedu.net
+# auto_nginx_log.sh
+
+# 日志文件
+S_LOG=/usr/local/nginx/logs/access.log
+# 备份目录格式为2024-01-27
+D_LOG=/home/tz/nginx/log/backup/`date +%Y-%m-%d`
+
+echo Please wait start cut nginx access.log
+sleep 2
+
+# 如果不存在创建备份目录
+if [ ! -d $D_LOG ];then
+    mkdir -p $D_LOG
+fi
+
+# 将access.log移动到备份目录
+mv $S_LOG $D_LOG
+
+# 发送信号重新打开日志文件
+kill -USR1 'cat /usr/local/nginx/logs/nginx.pid'
+echo "---------------------"
+echo "The nginx log Cutting successfully"
+echo "You can access backup nginx log $D_LOG/access.log files"
+```
+
 ### error log
 
 高等级会输出包含比自己低等级的日志:
@@ -3153,11 +3799,73 @@ open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;
 
 - 测试：http://127.0.0.1/echo
 
-### Stub Status模块：提供了有关 NGINX 操作的基本指标。
+## 管理
 
-- 对于 NGINX Plus，您还可以使用 NGINX Plus API 收集更广泛的指标集。
+### auth_basic模块：对访问资源加密，需要用户权限认证
 
-- 通过在 server{} 或 location{} 块中分别包含 `stub_status` 或 `api` 指令来启用指标收集，您随后可以通过访问 URL 来查看这些指标。
+```sh
+yum install -y httpd-tools
+
+# 生成认证文件。用户为tz
+htpasswd -c /usr/local/nginx/conf/auth.passwd tz
+```
+
+- 配置nginx
+```nginx
+location /auth {
+    auth_basic "User Auth";
+    auth_basic_user_file /usr/local/nginx/conf/auth.passwd;
+
+    alias  /usr/local/nginx/html/;
+    index  index.html index.htm;
+}
+```
+
+- 使用curl进行测试
+```sh
+curl -u 'tz:12345' 127.0.0.1:80/auth    # 密码12345
+```
+
+### Stub Status模块：输出nginx的基本状态信息指标。
+
+```sh
+# 编译需要加入选项。
+./configure --prefix=/usr/local/nginx \
+    --with-http_stub_status_module \
+```
+
+- 通过在 server{} 或 location{} 块中分别包含 `stub_status`  指令来启用指标收集，您随后可以通过访问 URL 来查看这些指标。
+
+    - 对于 NGINX Plus，使用`api` 收集更广泛的指标集。
+
+- nginx配置
+
+    ```nginx
+    # stub_status模块
+    location = /basic_status {
+       stub_status;
+    }
+    ```
+
+- 测试
+
+    ```sh
+    curl 127.0.0.1/basic_status
+    Active connections: 1
+    server accepts handled requests
+     13 13 16
+    Reading: 0 Writing: 1 Waiting: 0
+    ```
+
+    | 指标               | 说明                                         |
+    |--------------------|----------------------------------------------|
+    | Active connections | 当前活动连接数                               |
+    | accepts            | 统计总值，已经接受的客户端请求连接数         |
+    | handled            | 统计总值，已经处理完成的客户端请求的总数     |
+    | requests           | 统计总值，客户端发来的请求数                 |
+    | Reading            | 当前状态，正在读取客户端请求报文首部的连接数 |
+    | Writing            | 当前状态，正在向客户端发送报文过程中的连接数 |
+    | Waiting            | 当前状态，正在等待客户端发出请求的空闲连接数 |
 
 - 其中一些指标是敏感信息，可被用来攻击你的网站或nginx代理的应用
 
@@ -3251,30 +3959,6 @@ open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;
             }
         }
         ```
-
-## 管理
-
-### 用户密码认证
-
-Nginx 用户认证也需要用到 apache 密码生成命令
-
-```sh
-# 在/etc/nginx下创建密码文件
-htpasswd -c /etc/nginx/htpasswd tz # 用户tz
-
-# 在location函数下
-    location / {
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
-        #加入以下3行
-        #auth setting
-        auth_basic "Auth";
-        auth_basic_user_file /etc/nginx/htpasswd;
-    }
-
-# 使用curl进行测试
-curl -u 'tz:12345' 127.0.0.1:80    # 密码12345
-```
 
 ### 请求过滤
 
@@ -3382,7 +4066,7 @@ server
     }
     ```
 
-### 请求限制：对同一IP的连接数以及并发数进行限制
+### 请求限制：限制同一IP的连接数和并发数
 
 - 对于大流量恶意的访问，会造成带宽的浪费，给服务器增加压力。合理的控制还可以用来防止 DDos 和 CC 攻击。
 
@@ -3391,36 +4075,53 @@ server
     - limit_conn_module 连接频率限制模块
     - limit_req_module 请求频率限制模块
 
-- 涉及到的配置主要是：
+#### limit_conn_module模块：限制连接数
 
-    - limit_conn_zone 限制并发连接数
-    - limit_req_zone 限制请求数
+- 如果共享内存空间被耗尽，服务器将会对后续所有的请求返回 503 (Service Temporarily Unavailable) 错误。
 
-- 通过 limit_conn_zone 限制请求数
-
-    - 如果共享内存空间被耗尽，服务器将会对后续所有的请求返回 503 (Service Temporarily Unavailable) 错误。
+- 限制每个ip最多建立5个连接
 
     ```nginx
     http{
-        limit_conn_zone $binary_remote_addrzone=limit:10m; // 设置共享内存空间大
+        limit_conn_zone $binary_remote_addr zone=perip:10m; # 设置共享内存空间大
         server{
-         location /{
-                limit_conn addr 5; # 同一用户地址同一时间只允许有5个连接。
+            location /{
+                limit_conn perip 5;
             }
         }
     }
     ```
 
-- 当多个 limit_conn_zone 指令被配置时，所有的连接数限制都会生效。比如，下面配置不仅会限制单一 IP 来源的连接数，同时也会限制单一虚拟服务器的总连接数：
+- 限制每个域名最多建立5个连接
 
     ```nginx
-    limit_conn_zone $binary_remote_addr zone=perip:10m;
-    limit_conn_zone $server_name zone=perserver:10m;
-    server {
-        limit_conn perip 10; # 限制每个 ip 连接到服务器的数量
-        limit_conn perserver 2000; # 限制连接到服务器的总数
+    http{
+        limit_conn_zone $server_name zone=perserver:10m; # 设置共享内存空间大
+        server{
+            location /{
+                limit_conn perserver 5;
+            }
+        }
     }
     ```
+
+
+- 限制每个ip和域名最多建立5个连接
+
+    ```nginx
+    http{
+        limit_conn_zone $binary_remote_addr zone=perip:10m; # 设置共享内存空间大
+        limit_conn_zone $server_name zone=perserver:10m; # 设置共享内存空间大
+        server{
+            location /{
+                limit_conn perserver 5;
+                limit_conn perip 5;
+            }
+        }
+    }
+    ```
+
+#### limit_req_module模块：限制并发的连接数
 
 - 通过 limit_req_zone 限制并发连接数
 
@@ -3439,54 +4140,26 @@ server
         limit_req zone=creq burst=5 nodelay;
         ```
 
-## cgit
-- [arch文档](https://wiki.archlinux.org/title/Cgit)
-- 使用fcgiwrap
-```sh
-# 安装并启动fcgiwrap
-systemctl restart fcgiwrap.socket
-```
+### limit_rate模块：限制客户端响应传输速率
+
+- 该限制针对每个请求设置的：如果客户端同时打开2个连接，则总体速率将是指定限制的2倍
 
 ```nginx
-  server {
-    listen                8086;
-    server_name           localhost;
-    root                  /usr/share/webapps/cgit;
-    try_files             $uri @cgit;
+location / {
+    # 速度限制为10kb/s
+    limit_rate 10k;
 
-    location @cgit {
-      include             fastcgi_params;
-      fastcgi_param       SCRIPT_FILENAME $document_root/cgit.cgi;
-      fastcgi_param       PATH_INFO       $uri;
-      fastcgi_param       QUERY_STRING    $args;
-      fastcgi_param       HTTP_HOST       $server_name;
-      fastcgi_pass        unix:/run/fcgiwrap.sock;
-    }
-  }
-```
+    root   html;
+    index  index.html index.htm;
+}
 
-- 使用uwsgi
+location / {
+    # 下载15MB之后，速度限制10kb/s
+    limit_rate_after 15m;
+    limit_rate 10k;
 
-```nginx
-server {
-  listen                8086;
-  server_name           localhost;
-  root /usr/share/webapps/cgit;
-
-  # Serve static files with nginx
-  location ~* ^.+(cgit.(css|png)|favicon.ico|robots.txt) {
-    root /usr/share/webapps/cgit;
-    expires 30d;
-  }
-  location / {
-    try_files $uri @cgit;
-  }
-  location @cgit {
-    gzip off;
-    include uwsgi_params;
-    uwsgi_modifier1 9;
-    uwsgi_pass unix:/run/uwsgi/cgit.sock;
-  }
+    root   html;
+    index  index.html index.htm;
 }
 ```
 
@@ -3727,7 +4400,7 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 
 ![image](./Pictures/nginx/goaccess1.gif)
 
-#### [rhit:A nginx log explorer](https://github.com/Canop/rhit)
+#### [rhit:日志浏览器](https://github.com/Canop/rhit)
 
 ## 在线工具
 
@@ -3793,111 +4466,3 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 # keepalived
 
 - 配置高可用集群（双机热备）
-
-# TOMCAT
-
-- 虽然 Tomcat 也可以认为是 HTTP 服务器，但通常它仍然会和 Nginx 配合在一起使用：动静态资源分离——运用 Nginx 的反向代理功能分发请求：所有动态资源的请求交给 Tomcat，而静态资源的请求（例如图片、视频、CSS、JavaScript 文件等）则直接由 Nginx 返回到浏览器，这样能大大减轻 Tomcat 的压力。
-
-- 负载均衡，当业务压力增大时，可能一个 Tomcat 的实例不足以处理，那么这时可以启动多个 Tomcat 实例进行水平扩展，而 Nginx 的负载均衡功能可以把请求通过算法分发到各个不同的实例进行处理
-
-其实 `Tomcat` 只是一个中间件，真正起作用的是已经安装的 `jdk`。
-![image](./Pictures/nginx/1.avif)
-`tomcat`的配置文件是`xml` 格式
-
-## 基本命令
-
-```sh
-# 虚拟主机配置在server.xml下
-<Host name="tzlog.com"  appBase="webapps"
-    unpackWARs="true" autoDeploy="true">
-...
-</HOST>
-```
-
-- name 定义域名
-- appBase 定义默认应用目录
-- unpackWARs=”true” 是否自动解压；(也是就是说，当我们往站点目录里面直接上传一个 war 的包，它会自动解压)
-- docBase，这个参数用来定义网站的文件存放路径，如果不定义，默认是在 appBase/ROOT 下面，定义了 docBase 就以该目录为主了，其中 appBase 和 docBase 可以一样。在这一步操作过程中,可能会遇到过访问 404 的问题，其实就是 docBase 没有定义对。
-
----
-
-默认端口
-
-- 8080 是 Tomcat 提供 web 服务的端口
-- 8009 是 AJP 端口（第三方的应用连接这个端口，和 Tomcat 结合起来）
-- 8005 shutdown（管理端口）
-
-```sh
-# 将8080修改为80端口
-sed -i 's/port="8080"/port="80"/' /etc/tomcat/server.xml
-
-# 查看端口
-netstat -tunlp | grep 80
-```
-
----
-
-日志
-
-- catalina 开头的日志为 Tomcat 的综合日志，它记录 Tomcat 服务相关信息，也会记录错误日志。
-- catalina.2017-xx-xx.log 和 catalina.out 内容相同，前者会每天生成一个新的日志。
-- host-manager 和 manager 为管理相关的日志，其中 host-manager 为虚拟主机的管理日志。
-- localhost 和 localhost_access 为虚拟主机相关日志，其中带 access 字样的日志为访问日志，不带 access 字样的为默认虚拟主机的错误日志。
-
-## zrlog
-
-```sh
-# 安装
-wget http://dl.zrlog.com/release/zrlog.war /usr/share/tomcat7/webapps
-
-# 访问
-http://127.0.0.1:8080/zrlog/install
-```
-
-![image](./Pictures/nginx/2.avif)
-
-## mysql zrlog
-
-### zrlog 连接 mysql
-
-```sh
-mariadb -uroot -h127.0.0.1 -pYouPassward
-# 创建
-create database zrlog;
-# 密码
-grant all on zrlog.* to 'zrlog'@127.0.0.1 identified by 'YouPassward'
-quit
-
-# 登录
-mariadb -uzrlog -h127.0.0.1 -pYouPassward
-# 查看数据
-show databases;
-# 显示成功后即可连接
-quit
-```
-
-![image](./Pictures/nginx/3.avif)
-
-### nginx 反向代理 tomcat
-
-将域名加入`/etc/hosts`
-
-```sh
-echo "127.0.0.1 tzlog.com" >> /etc/hosts
-```
-
-```sh
-server
-{
-        server_name  tzlog.com;
-    location / {
-        proxy_pass http://tzlog.com:8081/zrlog/;
-        proxy_set_header HOST $host;
-        proxy_set_header X-Real_IP $remote_addr;
-        proxy_set_header X-Forwared-For $proxy_add_x_forwarded_for;
-    }
-
-        access_log /var/log/nginx/zrlog-access.log;
-        error_log  /var/log/nginx/zrlog-error.log;
-}
-```

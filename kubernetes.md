@@ -1,4 +1,4 @@
-# Kubernetes
+# Kubernetes 是希腊语中的船长(captain)
 
 - Kubernetes 是希腊语中的船长(captain)
 
@@ -2132,6 +2132,8 @@ curl https://argocd.kubernets.cn -I
 
 - [awesome-k8s-resources](https://github.com/tomhuang12/awesome-k8s-resources)
 
+- [kubernetes-network-policy-recipes：只需复制粘贴即可解决 K8s 网络问题的配方。该项目包含了 Kubernetes 网络策略的各种用例和示例 YAML 文件，可直接复制使用。](https://github.com/ahmetb/kubernetes-network-policy-recipes)
+
 - [pixie：性能监控](https://github.com/pixie-io/pixie)
 
 - [kubesphere](https://github.com/kubesphere/kubesphere)
@@ -2177,6 +2179,15 @@ curl https://argocd.kubernets.cn -I
         # kube-system namespace
         stern . -n kube-system --tail 0
         ```
+
+## 云原生
+
+- [云原生应用市场](https://hub.grapps.cn/)
+
+- [rust重写的云原生的项目](https://rust-cloud-native.github.io/)
+
+- [automq-for-kafka](https://github.com/AutoMQ/automq-for-kafka)
+    -  一款真正的云原生 Kafka 解决方案。该项目是基于云原生重新设计的新一代 Kafka 发行版。在保持和 Apache Kafka 100%兼容前提下，AutoMQ 可以为用户提供高达 10 倍的成本优势以及百倍的弹性优势，同时支持秒级分区迁移和流量自动重平衡，解决运维痛点。
 
 # 在线网站工具
 

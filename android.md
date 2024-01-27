@@ -21,6 +21,49 @@
 
 ## app
 
+- [ZeroTermux](https://github.com/hanxinhao000/ZeroTermux)
+
+    - ZeroTermux 基于 Termux，整合了非常多的脚本和工具，在国内网络环境中部署更简单。
+    - 功能：
+        - 开启 Web 文件管理，通过网页访问 Termux 以及手机存储部分文件（基于FlieBrowser)
+        - 自带文件管理器管理 Termux 文件
+        - 一键配置 Termux （换源、美化、安装插件）
+        - 一键配置 qemu 虚拟机（甚至可以一键安装 windows7 等）
+        - 可通过脚本一键安装 Linux 发行版（Ubuntu、Kail 等等）
+            - 通过 proot 容器部署 Linux 发行版（性能损耗较少）
+
+                ```sh
+                # 安装 proot-distro 
+                pkg install proot-distro 
+                # 列出支持的 Linux 发行版
+                proot-distro list
+
+                # 安装 Ubuntu
+                proot-distro install ubuntu
+                # 登录 ubuntu
+                proot-distro login ubuntu
+                ```
+
+            - 可以通过 Moe 全能脚本、termux-linux-toolx（旧版用的是yutools）这两个脚本工具快速部署Linux 发行版（而且更适合国内网络环境）
+
+        - 开启 SSH
+            ```sh
+            # 安装 SSH
+            pkg install openssh-server
+            # 安装 termux-services 退出 termux 重新启动
+            pkg install termux-services -y
+            # sshd服务设为自启动
+            sv-enable sshd 
+            # 取消sshd自启动
+            sv-disable sshd 
+            # 停止sshd服务
+            sv down sshd 
+            # 启动sshd服务
+            sv up sshd 
+            # 查看sshd服务运行状态
+            sv status sshd
+            ```
+
 - [f-droid：只上架开源app的应用商店](https://f-droid.org/)
 
 - [AuroraStore：匿名googleplay商店](https://github.com/whyorean/AuroraStore)
@@ -72,6 +115,8 @@
 - [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
 
 - [SmsForwarder（短信转发器）：备用机监控，如应用，短信通知等](https://github.com/pppscn/SmsForwarder)
+
+- [network_proxy_flutter：支持手机端的免费抓包工具](https://github.com/wanghongenpin/network_proxy_flutter)
 
 ## 刷机
 
@@ -142,6 +187,12 @@
         ```
 
         - 如果data分区挂载失败，会找不到刷机包。需要格式化data
+
+    - 4.[Apatch](https://github.com/bmax121/APatch)
+
+        - [派大宝UI：速通全新内核级ROOT方案APatch，隐藏效果堪比KSU](https://www.bilibili.com/list/watchlater?bvid=BV1wb4y1P74d)
+
+        - [Android-Kernel-Tutorials](https://github.com/ravindu644/Android-Kernel-Tutorials)
 
     - 4.[KernelSU](https://github.com/tiann/KernelSU)
 

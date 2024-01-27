@@ -1003,19 +1003,24 @@ docker container start opensuse_1
 docker container exec -it opensuse_1 bash
 ```
 
-## other item(第三方项目)
+## 第三方软件
 
-- [awesome-docker](https://github.com/veggiemonk/awesome-docker)
+- [awesome-docker：包含 docker 相关的文档资源和项目](https://github.com/veggiemonk/awesome-docker)
 
-  > 包含 docker 相关的文档资源和项目
+- [dockge：Docker Compose web管理平台。用于管理 docker-compose.yaml 文件。](https://github.com/louislam/dockge)
 
-- [pipework](https://github.com/jpetazzo/pipework)
+    - 支持交互式编辑 compose.yaml 文件
+    - 更新 docker 镜像，以及启动、停止、重启、删除 docker 等操作。
 
-  > 容器自定义网络工具
+- [slim：优化docker容器体积](https://github.com/slimtoolkit/slim)
 
-- [hub-tool](https://github.com/docker/hub-tool)
+    - 允许开发人员使用 xray , lint , build , debug , run , images , merge , registry , vulnerability （以及其他）命令来检查、优化和调试他们的容器。
 
-  > 管理 docker hub 的 cli 工具
+    - Slim 不但可以优化容器镜像大小，它还能帮助你理解和编写更好的容器镜像。
+
+- [pipework：容器自定义网络工具](https://github.com/jpetazzo/pipework)
+
+- [hub-tool：管理 docker hub 的 cli 工具](https://github.com/docker/hub-tool)
 
 - [自动更新 docker 镜像](https://github.com/containrrr/watchtower)
 
@@ -1106,46 +1111,3 @@ trivy image redislabs/redismod
         - 每秒请求数（RPS）：Kubernetes约为裸机值的 80%。 Kubernetes 环境中使用的底层容器网络堆栈，因此在 Kubernetes 中运行 NGINX Ingress Controller 会导致这种网络密集型操作的性能大幅下降。
 
         - 每秒SSL/TLS 事务数 (TPS)：几乎无甚差异
-
-# Kubernetes 是希腊语中的船长(captain)
-
-## 第三方软件资源
-
-- [minikube 单机运行k8s集群](https://github.com/kubernetes/minikube)
-
-- [pixie 性能监控](https://github.com/pixie-io/pixie)
-
-- [kubesphere](https://github.com/kubesphere/kubesphere)
-
-- [kube-shell](https://github.com/cloudnativelabs/kube-shell)
-
-- [lazykube](https://github.com/TNK-Studio/lazykube)
-
-- [lazykube 替换墙外镜像的下载地址](https://github.com/joyme123/lazykube)
-
-- [helm 包管理器](https://github.com/helm/helm)
-
-- [k0s](https://github.com/k0sproject/k0s)
-  > k0s 是一个包含所有功能的单一二进制 Kubernetes 发行版，它预先配置了所有所需的 bell 和 whistle，使构建 Kubernetes 集群只需将可执行文件复制到每个主机并运行它即可。
-
-- [像tcpdump那样管理](https://github.com/up9inc/mizu)
-
-## 优秀文章
-
-- [Kubernetes纪录片](https://www.bilibili.com/video/BV13q4y1h7QR)
-
-- [图解儿童 Kubernetes 指南](https://www.cncf.io/the-childrens-illustrated-guide-to-kubernetes/)
-- [关于 kubernetes 失败的故事](https://k8s.af/)
-
-- [Unikernel(VM 容器融合技术),或许是下一代云技术](https://zhuanlan.zhihu.com/p/29053035)
-
-- 目前可以使用 linuxkit 进行构建
-
-- [mirageos](https://mirage.io/)
-
-- [gvistor](https://mp.weixin.qq.com/s?src=11&timestamp=1613136113&ver=2886&signature=6e*T4ylvJCA--fGa-tb*ttJq3JArF7z-Wzs5eAPzlY813SG154AK1YyEgLv2MQSi7BUW8muQyHQnOl3arAu2m9qK8bCk2fgGLOv4-VYvAyWDfMUcBrvB8oZ9csaoQ-aI&new=1)
-
-- [Docker and Kubernetes 完整开发指南](https://www.bilibili.com/read/cv21266100)
-
-# [rust重写的云原生的项目](https://rust-cloud-native.github.io/)
-
