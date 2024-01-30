@@ -978,6 +978,8 @@ java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd
 
         - 必须使用 Gitlab
 
+- [hellogitlab：GitLab的安装和配置](https://hellogitlab.com/CI/gitlab/)
+
 ## 日志软件
 
 - [小米技术：Linux日志服务初识]()

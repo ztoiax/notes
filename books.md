@@ -293,6 +293,8 @@
 
 - [分布式文档数据库mongodb-3.6(mongos、mongod、wiredtiger存储引擎)源码中文注释分析，持续更新。后期重点进行mongodb-4.4最新版本内核源码分析](https://github.com/y123456yz/reading-and-annotate-mongodb-3.6?spm=a2c6h.12873639.article-detail.7.3f291969XElWnV&file=reading-and-annotate-mongodb-3.6)
 
+- [how-query-engines-work](https://howqueryengineswork.com/)
+
 ### 分布式
 
 - [《分布式系统模式》](https://github.com/dreamhead/patterns-of-distributed-systems)
