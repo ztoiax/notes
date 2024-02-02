@@ -732,9 +732,11 @@
 
 - [副业](http://r.ftqq.com/lean-side-bussiness/index.html)
 
+- [路人zhang：被裁自救指南](https://mp.weixin.qq.com/s/NLkxGuIhdXlPM_xWmROZnw)
+
 - [路人zhang：各种编程语言、算法、数据库面试手册](https://www.mianshi.online/)
 
-- [路人zhang：被裁自救指南](https://mp.weixin.qq.com/s/NLkxGuIhdXlPM_xWmROZnw)
+- [sre面试](https://github.com/bregman-arie/devops-exercises)
 
 # 有趣的言论
 

@@ -48,6 +48,8 @@
             * [jenkins-cli](#jenkins-cli)
             * [插件](#插件)
         * [Gitlab-CI](#gitlab-ci)
+    * [Gitlab-CE](#gitlab-ce)
+            * [安装](#安装)
     * [日志软件](#日志软件)
         * [logrotate（自带的日志分割工具）](#logrotate自带的日志分割工具)
         * [rsyslog](#rsyslog)
@@ -978,7 +980,128 @@ java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd
 
         - 必须使用 Gitlab
 
+## Gitlab-CE
+
 - [hellogitlab：GitLab的安装和配置](https://hellogitlab.com/CI/gitlab/)
+
+- GitLab Runner：如果有多台服务器的话，不建议将GitLab Runner安装在GitLab服务器上，运行GitLab Runner可能消耗大量内存。
+
+#### 安装
+
+- yum安装
+
+- 新建一个gitlab的repo
+    ```sh
+    cat > /etc/yum.repos.d/gitlab-ce.repo << EOF
+    [gitlab-ce]
+    name=Gitlab CE Repository
+    # 清华源
+    baseurl=https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el\$releasever/
+    gpgcheck=0
+    enabled=1
+    EOF
+    ```
+
+    ```sh
+    # 查找yum源中gitlab-ce的版本
+    yum list gitlab-ce --showduplicates
+
+    # 安装需要的版本
+    yum install -y gitlab-ce-16.8.1
+    ```
+
+- 手动下载安装
+
+    ```sh
+    # 下载
+    wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-16.8.1-ce.0.el7.x86_64.rpm
+
+    # 安装
+    rpm -ivh gitlab-ce-16.8.1-ce.0.el7.x86_64.rpm
+    ```
+
+- 配置文件：`/etc/gitlab/gitlab.rb`
+    ```sh
+    # 先备份配置文件
+    cp /etc/gitlab/gitlab.rb /etc/gitlab/gitlab.rb.bak
+    ```
+
+    ```
+    # gitlab访问地址。内网主机的 ip 地址
+    external_url 'http://gitlab.example.com'
+
+    # 设置为tcp,而不是unix
+    gitlab_workhorse['listen_network'] = "tcp"
+
+    # ip和端口
+    gitlab_workhorse['listen_addr'] = "127.0.0.1:8181"
+
+    # 将IP子网段添加到可信代理中
+    gitlab_rails['trusted_proxies'] = ['127.0.0.1']
+
+    # git仓库路径。记得mkdir /root/gitlab-gitdir
+    git_data_dirs({
+      "default" => {
+        "path" => "/root/gitlab-gitdir"
+       }
+    })
+
+    # 设置时区为上海
+    gitlab_rails['time_zone'] = 'Asia/Shanghai'
+
+    # 设置邮箱
+    gitlab_rails['gitlab_email_enabled'] = true
+    # 设置自己的邮箱
+    gitlab_rails['gitlab_email_from'] = 'mzh_love_linux@163.com'
+    gitlab_rails['gitlab_email_display_name'] = 'Example'
+    # 设置自己的邮箱
+    gitlab_rails['gitlab_email_reply_to'] = 'mzh_love_linux@163.com'
+    gitlab_rails['gitlab_email_subject_suffix'] = '[GitLab]'
+
+    # 设置smtp
+    gitlab_rails['smtp_enable'] = true
+    gitlab_rails['smtp_address'] = "smtp.163.com"
+    gitlab_rails['smtp_port'] = 465
+    gitlab_rails['smtp_user_name'] = "mzh_love_linux@163.com"
+    gitlab_rails['smtp_password'] = "authCode"  # <--- 说明：先在邮箱设置中开启客户端授权码，防止密码泄露，此处填写网易邮箱的授权码，不要填写真实密码
+    gitlab_rails['smtp_domain'] = "163.com"
+    gitlab_rails['smtp_authentication'] = "login"
+    gitlab_rails['smtp_enable_starttls_auto'] = true
+    gitlab_rails['smtp_tls'] = true
+
+    # 禁止用户修改用户名
+    gitlab_rails['gitlab_username_changing_enabled'] = true
+
+    # Git用户和组信息
+    user['username'] = "git"
+    user['group'] = "git"
+    user['home'] = "/home/git"
+    user['git_user_name'] = "GitLab"
+    user['git_user_email'] = "mzh_love_linux@163.com"
+
+    # web服务器
+    web_server['external_users'] = ['nginx', 'root']
+    web_server['username'] = 'nginx'
+    web_server['group'] = 'nginx'
+
+    # 默认自带了nginx，不需要手动配置。以下为禁用gitlab自带的nginx
+    nginx['enable'] = false
+    ```
+
+- 配置nginx集成gitlab
+
+- 启动gitlab和nginx
+    ```sh
+    # 加载配置
+    systemctl start gitlab-runsvdir
+    gitlab-ctl reconfigure
+
+    # 启动gitlab
+    gitlab-ctl start
+
+    # 启动nginx
+    systemctl start nginx
+    ```
 
 ## 日志软件
 

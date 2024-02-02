@@ -22,6 +22,7 @@
         * [git-sim（可视化git）](#git-sim可视化git)
         * [commitgpt（ai自动生成git commit）](#commitgptai自动生成git-commit)
         * [git-cliff：对history生成markdown日志](#git-cliff对history生成markdown日志)
+        * [github/gitignore：A collection of useful .gitignore templates](#githubgitignorea-collection-of-useful-gitignore-templates)
 * [github](#github)
     * [github工作流](#github工作流)
     * [code action](#code-action)
@@ -375,6 +376,8 @@ git commit -m "..."
 ### [commitgpt（ai自动生成git commit）](https://zura.wiki/post/never-write-a-commit-message-again-with-the-help-of-gpt-3/)
 
 ### [git-cliff：对history生成markdown日志](https://github.com/orhun/git-cliff)
+
+### [github/gitignore：A collection of useful .gitignore templates](https://github.com/github/gitignore)
 
 # github
 

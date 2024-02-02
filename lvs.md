@@ -180,8 +180,56 @@ modprobe ip_vs
 
 # [keepalived](https://github.com/acassen/keepalived)
 
-> 是 lvs 的拓展项目
-> 最初是服务器状态检测,后来加入 ipvs 模块实现负载均衡
+- keepalivved软件有2种功能：
+    - 1.监控检查
+    - 2.VRRP冗余
+
+- keepalived的作用是：检测web服务器的状态
+    - 1.如果一台web服务器或mysql服务器宕机或工作出现故障，keepalived检测到后，会将有故障的服务器从系统中剔除
+    - 2.当服务器工作正常后keepalived自动将其入服务器群
+
+    - 这些工作都是自动完成。人工需要做的是修复故障的web和mysql服务器
+
+- keepalived在不同tcp/ip层，有不同的工作模式：
+
+    - 网络层（第3层）：根据ip地址是否有效作为服务器的工作是否正常。
+        - 定期向服务器集群发送icmp数据包，如果某台服务器无法ping通。则报告这台服务器失效，从集群中剔除。
+
+    - 传输层（第4层）：根据tcp端口状态决定服务器工作是否正常。
+        - keepalived检测80端口没有启动，则报告这台服务器失效，从集群中剔除。
+
+    - 应用层（第7层）：根据用户的设定检查服务器程序的运行是否正常
+        - 如果与用户设定不符，则报告这台服务器失效，从集群中剔除。
+
+- keepalived是模块化设计，不同模块复制不同的功能
+
+    - 1.core：keepalived的核心，负责主进程的启动和维护，全局配置文件的加载解析等
+
+    - 2.check：负责healthecker（健康检查），包含各种健康检查方式
+        - 以及对应配置解析，包括lvs配置解析
+
+    - 3.Vrrp：vrrpd子进程，用来实现vrrp
+    - 4.libipfwc：iptables库，配置lvs会用到
+    - 5.libipvs：虚拟服务集群，配置lvs会使用
+
+- 生产环境使用keepalived正常与性能，需要启动3个进程：父进程（监控子进程）、VRRP子进程、Checkers子进程
+
+    - 两个子进程都被系统watchlog看管，各自负责自己的工作。
+    - healthecheck子进程检查各自服务器的健康状况，如果healthecheck子进程检查各自服务器的健康情况，如果查到master服务不可用，就会通知本机上的vrrp子进程，让它删除通告，并去掉虚拟IP，转换为BACKUP状态
+
+## vrrp原理
+
+- vrrp虚拟路由冗余协议：可以将2台物理主机当成路由器，组成一个虚拟路由集群。
+
+    - 一台Master路由器复制路由工作，其他都是Backup
+
+    - master主机产生VIP，该VIP负责转发用户发起的ip包或者负责处理用户的请求。不管谁是master，对外都是相同的MAC地址和VIP
+        - 例子：nginx+keepalived组合，用户请求访问keepalived VIP地址，然后访问master相应的服务和端口
+
+    - master会一直发送VRRP组播包，bakcup不会抢占master，除非它的优先级（priority）更高。
+        - VRRP组播包使用加密协议进行
+        - 当master不可用（Backup收不到组播包），堕胎Backup中优先级最高的会抢占成为master（过程非常快速）。
+
 
 ## install(安装)
 
@@ -202,12 +250,14 @@ cd keepalived-2.2.1
 make -j$(nproc) && make install
 ```
 
-## 基本
+## 配置
 
 - [参数介绍(官方文档)](https://www.keepalived.org/manpage.html)
 
-- 配置文件 `/usr/local/keepalived/keepalived.conf`
-  > 注意:keepalived 并不检查配置文件是否正确,要保证语法正确
+- 包管理安装的配置文件路径：`/etc/keepalived/keepalived.conf`
+- 编译安装的配置文件路径：`/usr/local/keepalived/keepalived.conf`
+
+- 注意:keepalived 并不检查配置文件是否正确,要保证语法正确
 
 配置可分为三类:
 
@@ -216,6 +266,111 @@ make -j$(nproc) && make install
 | global(全局配置)  | global_defs         |
 | vrrpd(虚拟路由器) | vrrp_instance,group |
 | lvs               | virtual_server      |
+
+```
+! Configuration File for keepalived
+
+# 全局配置
+global_defs {
+   # 指定keepalived发生切换时发送email
+   notification_email {
+     acassen@firewall.loc
+     failover@firewall.loc
+     sysadmin@firewall.loc
+   }
+
+   # 指定发件人
+   notification_email_from Alexandre.Cassen@firewall.loc
+   # smtp服务器地址
+   smtp_server 192.168.200.1
+   # smtp超时时间
+   smtp_connect_timeout 30
+   # 运行keepalived机器的标识
+   router_id LVS_DEVEL
+
+   vrrp_skip_check_adv_addr
+   vrrp_strict
+   vrrp_garp_interval 0
+   vrrp_gna_interval 0
+}
+
+# vrrp同步组(任何一个instance出现问题,都会进行主备切换)
+vrrp_sync_group  NAME  {
+    group {
+        # 实例名
+        VI_1
+        VI_2
+    }
+
+    # 进入master状态时,执行脚本
+    notify_master "/etc/keepalived/notify.sh master"
+
+    # 进入backup状态时,执行脚本
+    notify_backup "/etc/keepalived/notify.sh backup"
+
+    # 进入fault状态时,执行脚本
+    notify_fault "/etc/keepalived/notify.sh fault"
+
+    # 发生任何状态切换时,执行脚本
+    notify "/etc/keepalived/notify.sh fault"
+
+    # 使用global_defs中的提供邮件地址和SMTP服务器发送邮件通知
+    smtp_alert
+}
+
+vrrp_instance VI_1 {
+    # 设置主机状态
+    state MASTER
+
+    # 对外提供服务的网络接口
+    interface eth0
+
+    # VRID标记，路由ID
+    virtual_router_id 50
+
+    # 优先级。优先级高的成为master
+    priority 100
+
+    # 检查间隔。默认为1秒
+    advert_int 5
+
+    # 设置认证
+    authentication {
+        auth_type PASS # 认证方式
+        auth_pass 1111 # 认证密码
+    }
+
+    # 设置VIP
+    virtual_ipaddress {
+        192.168.200.16
+    }
+}
+
+virtual_server 192.168.200.16 443 {
+    delay_loop 6
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 50
+    protocol TCP
+
+    real_server 192.168.201.100 443 {
+        weight 1
+        SSL_GET {
+            url {
+              path /
+              digest ff20ad2481f97b1754ef3e12ecd3a9cc
+            }
+            url {
+              path /mrtg/
+              digest 9b3a0c85a887a256d6939da88aabd8cd
+            }
+            connect_timeout 3
+            retry 3
+            delay_before_retry 3
+        }
+    }
+}
+```
 
 ### global
 
@@ -253,8 +408,6 @@ vrrp_instance VI_1 {
     preempt_delay  300
 }
 ```
-
-<span id="notify.sh"></span>
 
 #### notify 脚本
 
@@ -295,23 +448,6 @@ esac
 ### vrrp_group
 
 ```
- # vrrp同步组(任何一个instance出现问题,都会进行主备切换)
- vrrp_sync_group  NAME  {
-    group {
-        VI_1
-        VI_2
-        VI_3
-    }
-
-    # 进入master状态时,执行脚本
-    notify_master "/etc/keepalived/notify.sh master"
-
-    # 进入backup状态时,执行脚本
-    notify_backup "/etc/keepalived/notify.sh backup"
-
-    # 进入fault状态时,执行脚本
-    notify_fault "/etc/keepalived/notify.sh fault"
- }
 ```
 
 ### virtual_server
@@ -578,8 +714,6 @@ track_script {
     check_nginx
 }
 ```
-
-[notify.sh](#notify.sh)脚本
 
 ## 优秀文章
 

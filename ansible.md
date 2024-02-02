@@ -1239,13 +1239,13 @@ ansible-playbook test.yml
         ansible-galaxy init nginx
         ```
 
-    - `/etc/ansible/nginx-roles.yml` 与 roles存放位置在同一目录。
+    - `~/ansible/roles/nginx-roles.yml`
 
         ```yml
         - hosts: centos
           remote_user: root
           roles:
-            # 调用定义好的role，存放在roles目录中。
+            # 调用定义好的role
             - role: nginx
         ```
 

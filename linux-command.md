@@ -12,6 +12,7 @@
         * [lsof](#lsof)
         * [rsync](#rsync)
             * [UDR模式](#udr模式)
+        * [scp](#scp)
         * [split](#split)
         * [fsarchiver](#fsarchiver)
         * [find](#find)
@@ -255,6 +256,36 @@ rsync -a --delete --link-dest /compare /source /target
 git clone https://github.com/allisonheath/UDR.git
 cd UDR
 make -e os=XXX arch=YYY
+```
+
+### scp
+
+```sh
+# 复制文件到/home/tz目录下
+scp file tz@192.168.1.102:/home/tz/
+# 复制目录到/home/tz目录下
+scp -r notes tz@192.168.1.102:/home/tz/
+
+# 从远程主机复制文件到本机
+scp tz@192.168.1.102:file .
+# 复制不同目录的多个文件，需要使用空格分割文件
+scp tz@192.168.1.102:'/path/file1 /path2/file2 /path3/file3' .
+
+# 在两个远程主机之间复制文件
+scp root@192.168.1.102:file root@127.0.0.1:24831:
+
+# 指定端口
+scp -P 22 file tz@192.168.1.102:/home/tz/
+# 保留文件原属性
+scp -p file tz@192.168.1.102:/home/tz/
+# 输出debug信息
+scp -v file tz@192.168.1.102:/home/tz/
+# 静默复制
+scp -q file tz@192.168.1.102:/home/tz/
+# 指定加密算法
+scp -c 3des file tz@192.168.1.102:/home/tz/
+# 限制传输速度为50kb/s。 需要记住的一点是，带宽是以千比特/秒(kbps)指定的。这意味着8位等于1字节
+scp -l 400 file tz@192.168.1.102:/home/tz/
 ```
 
 ### split

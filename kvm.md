@@ -12,7 +12,9 @@
         * [普通用户连接 qemu:///system](#普通用户连接-qemusystem)
         * [vnc打开虚拟机](#vnc打开虚拟机)
         * [virsh](#virsh)
-        * [for net](#for-net)
+            * [基本命令](#基本命令)
+            * [网络](#网络)
+                * [通过修改dhcp配置文件default，自定义ip地址](#通过修改dhcp配置文件default自定义ip地址)
         * [克隆虚拟机](#克隆虚拟机)
     * [KSM(Kernel Samepage Merging)](#ksmkernel-samepage-merging)
 * [第三方软件资源](#第三方软件资源)
@@ -119,7 +121,7 @@ qemu-img convert -o encryption -O qcow2 file.qcow2 file_encryption.qcow2
 qemu-img snapshot -l centos7.0.qcow2
 ```
 
--f 创建镜像:
+- `-f` 创建镜像:
 
 ```bash
 # 随着使用逐渐增大
@@ -150,33 +152,97 @@ qemu-img resize arch.qcow2 +10G
 | -gdb tcp::1234 -S | 调试                  |
 | -d                | 保存日志/tmp/qemu.log |
 
-```bash
-# 安装虚拟机.2G内存,4个cpu,首次启动顺序为光驱
-qemu-system-x86_64 -enable-kvm -m 2G -smp 4 -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2
+- 参数解析：
 
-# -smp 4,maxcpus=$(nproc) 分配4个cpu,最多能有所有cpu
-qemu-system-x86_64 -enable-kvm -m 2G -smp 4,maxcpus=$(nproc) -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2
-```
+    ```sh
+    # 安装虚拟机.2G内存,4个cpu,首次启动顺序为光驱
+    qemu-system-x86_64 \
+        -enable-kvm \
+        -m 2G \
+        -smp 4
+        -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2
 
-```sh
-# 启动虚拟机
-qemu-system-x86_64 /mnt/Z/kvm/arch.qcow2
+    # -smp 4,maxcpus=$(nproc) 分配4个cpu,最多能有所有cpu
+    qemu-system-x86_64 \
+        -enable-kvm \
+        -m 2G \
+        -smp 4,maxcpus=$(nproc) \
+        -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2
 
-# 启动虚拟机, 并设置ssh端口转发60022
-qemu-system-x86_64 arch.qcow2 -nic user,hostfwd=tcp::60022-:22
-# ssh连接虚拟机
-ssh root@127.0.0.1 -p 60022
+    # -net nic表示为虚拟机创建虚拟机网卡。hostfwd=tcp::2222-:22表示将虚拟机22端口转发到宿主机的2222端口
+    qemu-system-x86_64 \
+        -enable-kvm \
+        -m 2G \
+        -smp 4,maxcpus=$(nproc) \
+        -net nic \
+        -net user,hostfwd=tcp::2222-:22 \
+        -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2
+    # ssh连接虚拟机
+    ssh root@localhost -p 2222
 
-# 设置samba共享目录, samba配置文件/tmp/qemu-smb.VAEJD1/smb.conf
-qemu-system-x86_64 -nic user,id=nic0,smb=./share_qemu arch.qcow2
-```
+    # 设置samba共享目录, samba配置文件/tmp/qemu-smb.VAEJD1/smb.conf。??失败了
+    qemu-system-x86_64 \
+        -enable-kvm \
+        -m 2G \
+        -smp 4,maxcpus=$(nproc) \
+        -net nic \
+        -net user,hostfwd=tcp::2222-:22,smb=/tmp/share_qemu \
+        /mnt/virt/centos7-1.qcow2
+        -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2
+    ```
 
-guest:
+- 1.创建镜像
+    ```sh
+    qemu-img create -f qcow2 arch.qcow2 10G
+    ```
 
-```bash
-# 查看cpu模型
-grep 'model name' /proc/cpuinfo
-```
+- 2.安装
+
+     ```bash
+     # 自动开启ssh。
+     qemu-system-x86_64 -enable-kvm -m 2G -smp 4,maxcpus=$(nproc) \
+         -net nic \
+         -net user,hostfwd=tcp::2222-:22 \
+         -boot once=d -cdrom archlinux-2020.11.01-x86_64.iso /mnt/Z/kvm/arch.qcow2
+
+     # 可以对安装好的虚拟机开启
+     qemu-system-x86_64 -enable-kvm -m 2G -smp 4,maxcpus=$(nproc) \
+         -net nic \
+         -net user,hostfwd=tcp::2222-:22 \
+         /mnt/Z/kvm/arch.qcow2
+
+     # 使用ssh连接虚拟机
+     ssh -p 2222 root@localhost
+     ```
+
+- 3.可以执行换源。安装必要软件，再安装openssh配置好后允许root登陆，和密钥登陆后。可以关闭虚拟机
+
+- 4.添加进virt进行管理，这样就可以在virt-manager图形界面和virsh list命令进行管理
+    ```sh
+    # --os-variant的值，可以通过virt-install --osinfo list查看。我这里为archlinux可以是centos7、centos8
+    virt-install --name archlinux --ram 2048 --disk path=arch.qcow2,format=qcow2 --import --os-variant=archlinux --network network=default --noautoconsole
+
+    # 启动dhcp服务。不然会出现error starting domain:Requeted operation is not calid:network 'default' is not active
+    virsh net-start default
+
+    # 启动刚才添加的虚拟机
+    virsh start archlinux
+
+    # 进入虚拟机查看ip
+    ip a
+    ```
+
+- 5.在第3步安装好ssh服务并开启后。就可以使用普通的ssh登陆了
+    ```sh
+    ssh root@192.168.122.38
+    ```
+
+- guest（虚拟机）:
+
+    ```bash
+    # 查看cpu模型
+    grep 'model name' /proc/cpuinfo
+    ```
 
 ### qemu monitor
 
@@ -441,6 +507,8 @@ vncviewer 127.0.0.1:5900
 
 ### virsh
 
+#### 基本命令
+
 ```sh
 # 非ssh连接虚拟机
 virsh console centos7
@@ -471,21 +539,6 @@ virsh resume opensuse15.2
 # 查看cpu信息
 vitsh vcpuinfo opensuse15.2
 
-# 查看网络
-virsh net-list --all
-
-# 查看dhcp ip
-virsh net-dhcp-leases --network default
-
-# 查看运行中的虚拟机ip,mac
-virsh domifaddr opensuse15.2_1
-
-# 修改虚拟机ip地址.如虚拟机运行,需要重启
-virsh net-update default add ip-dhcp-host \
-      "<host mac='52:54:00:7f:81:df' \
-       name='bob' ip='192.168.100.71' />" \
-       --live --config
-
 # 编辑xml配置文件
 virsh edit centos7
 
@@ -500,43 +553,101 @@ mv centos7-bak.xml centos7.xml
 virsh define centos7.xml
 ```
 
-### for net
-
-**source** host run
+#### 网络
 
 ```sh
-virsh net-dumpxml NETNAME > netxml.xml
+# 查看网络
+virsh net-list --all
+
+# 查看dhcp ip
+virsh net-dhcp-leases --network default
+
+# 修改centos7-1。可以修改mac地址
+virsh edit centos7-1
+
+# 通过配置文件。查看虚拟机的mac地址
+virsh dumpxml centos7 | grep -i '<mac'
+
+# 查看dhcp配置文件default
+virsh net-dumpxml default
+
+# 修改dhcp配置文件的ip、mac
+virsh net-edit default
+# 修改后需要重启dhcp服务
+virsh net-destroy default
+virsh net-start default
+
+# 查看运行中的虚拟机ip,mac
+virsh domifaddr opensuse15.2_1
 ```
 
-**destination** host run
+##### 通过修改dhcp配置文件default，自定义ip地址
 
-```sh
-virsh net-define netxml.xml && virsh net-start NETNAME & virsh net-autostart NETNAME
-```
+- 1.查看centos7-1的mac地址
+    ```sh
+    virsh dumpxml centos7-1 | grep -i '<mac'
+          <mac address='52:54:00:a9:8e:e7'/>
+    ```
 
-If the output is error
+- 2.方法1：`virsh net-update`命令修改
+    ```sh
+    # 修改虚拟机ip地址.如虚拟机运行,需要重启
+    virsh net-update default add ip-dhcp-host \
+          "<host mac='52:54:00:a9:8e:e7' name='centos7-1' ip='192.168.110.4'/>" \
+           --live --config
+    ```
 
-```sh
-virsh net-destroy SOURCEname
-virsh net-undefine SOURCEname
-```
+- 2.方法2：`virsh net-edit default`修改配置文件。并且可以修改网段
+    ```sh
+    # 修改default配置文件
+    virsh net-edit default
 
-And then do it again
+      <ip address='192.168.110.1' netmask='255.255.255.0'>
+        <dhcp>
+          <range start='192.168.110.2' end='192.168.110.254'/>
+          <host mac='52:54:00:a9:8e:e7' name='centos7-1' ip='192.168.110.3'/>
+        </dhcp>
+      </ip>
+    ```
+
+- 3.重启
+    ```sh
+    # 修改后需要重启dhcp服务
+    virsh net-destroy default
+    virsh net-start default
+
+    # 重启虚拟机后。查看
+    virsh domifaddr centos7-1
+
+     Name       MAC address          Protocol     Address
+    -------------------------------------------------------------------------------
+     vnet5      52:54:00:a9:8e:e7    ipv4         192.168.110.3/24
+    ```
 
 ### 克隆虚拟机
 
 opensuse15.2 -> opensuse15.2_1
 
 ```bash
-# 暂停opensuse15.2
-sudo virsh suspend opensuse15.2
+# 关机opensuse15.2
+sudo virsh shutdown opensuse15.2
 
 # 克隆qcow2镜像
 sudo virt-clone --original opensuse15.2 \
 --name opensuse15.2_1 \
 --file ./opensuse15.2_1.qcow2
 
-grep mac /etc/libvirt/qemu/opensuse15.2_1.xml
+# 克隆后的opensuse15.2_1.qcow2会自动修改mac地址。
+sudo grep mac /etc/libvirt/qemu/opensuse15.2.xml
+sudo grep mac /etc/libvirt/qemu/opensuse15.2_1.xml
+
+# 如果是dhcp。则修改dhcp配置文件default。根据上一条命令输出的mac，自定义ip
+sudo virsh net-update default add ip-dhcp-host \
+      "<host mac='52:54:00:9d:20:17' name='opensuse15.2_1' ip='192.168.110.6'/>" \
+       --live --config
+# 重启dhcp配置文件default
+sudo virsh net-destroy default
+sudo virsh net-start default
 
 # 连接
 virsh start opensuse15.2_1
@@ -545,20 +656,9 @@ ssh user@ip
 # 修改新的uuid
 uuidgen eth0
 
-# 如果是静态ip,则需要修改
+# 如果不是dhcp，而是静态ip,则需要修改
 vim /etc/sysconfig/network/ifcfg-eth0
 systemctl restart network.service
-
-# 如果是dhcp,在真机执行以下命令
-
-# 查看mac地址
-grep "mac address" /etc/libvirt/qemu/opensuse15.2_1.xml
-
-# 通过mac地址修改ip
-virsh net-update default add ip-dhcp-host \
-      "<host mac='52:54:00:3d:62:04' \
-       name='bob' ip='192.168.100.72' />" \
-       --live --config
 ```
 
 ## KSM(Kernel Samepage Merging)

@@ -61,7 +61,7 @@
                 * [通过iptables实现nat功能](#通过iptables实现nat功能)
             * [nftables](#nftables)
                 * [iptables 转换成 nftables](#iptables-转换成-nftables)
-    * [数据链路层](#数据链路层)
+            * [firewall-cmd](#firewall-cmd)
         * [ethtool](#ethtool)
         * [arp](#arp)
         * [arpwatch](#arpwatch)
@@ -1583,7 +1583,49 @@ nft monitor
 # 只追踪新规则
 nft monitor new rules
 ```
-## 数据链路层
+
+#### firewall-cmd
+
+- 基本使用
+    ```sh
+    # 查看防火墙放行列表。
+    firewall-cmd --list-all
+    public (active)
+      target: default
+      icmp-block-inversion: no
+      interfaces: ens3
+      sources:
+      services: cockpit dhcpv6-client ssh
+      ports:
+      protocols:
+      masquerade: no
+      forward-ports:
+      source-ports:
+      icmp-blocks:
+      rich rules:
+
+    # 放行80端口
+    firewall-cmd --zone=public --add-port=80/tcp --permanent
+
+    # 重启防火墙
+    firewall-cmd --reload
+
+    # 再次查看。会出现ports字段有80端口
+    firewall-cmd --list-all
+    public (active)
+      target: default
+      icmp-block-inversion: no
+      interfaces: ens3
+      sources:
+      services: cockpit dhcpv6-client ssh
+      ports: 80/tcp
+      protocols:
+      masquerade: no
+      forward-ports:
+      source-ports:
+      icmp-blocks:
+      rich rules:
+    ```
 
 ### ethtool
 

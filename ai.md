@@ -38,7 +38,7 @@
 
 # 项目
 
-## GPT
+## LLM
 
 - [awesome-LLMs-In-China](https://github.com/wgwang/awesome-LLMs-In-China)
 - [llama：facebook的llm](https://github.com/ggerganov/llama.cpp)
@@ -54,6 +54,8 @@
 - [LaWGPT：在通用中文基座模型（如 Chinese-LLaMA、ChatGLM 等）的基础上扩充法律领域专有词表、大规模中文法律语料预训练](https://github.com/pengxiao-song/LaWGPT)
 
 - [DB-GPT（部署数据库交互llm。防止数据隐私上传平台）](https://github.com/eosphoros-ai/DB-GPT)
+
+- [llm-course：免费的 LLM 课程，包含面向新手入门 LLM 的基础知识，面向程序员和科学家的 LLMs 产品和部署 LLM 应用的知识和笔记。](https://github.com/mlabonne/llm-course)
 
 ## 图片视频
 
