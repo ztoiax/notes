@@ -1,0 +1,27 @@
+- hosts: centos
+  remote_user: root
+
+  vars:
+    # 列表
+    listen_port:
+      - 80
+      - 81
+      - 82
+    # 字典
+    service:
+      - name: web1
+        port: 9090
+        user: nginx
+        path: /var/www/html
+      - name: web2
+        port: 9091
+        user: nginx
+        path: /var/www/html
+      - name: web3
+        port: 9092
+        user: nginx
+        path: /var/www/html
+
+  tasks:
+    - name: copy template conf
+      template: src=~/ansible/templates/nginx-for.conf.j2 dest=/tmp/nginx.conf

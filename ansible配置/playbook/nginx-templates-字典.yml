@@ -1,0 +1,32 @@
+- hosts: centos
+  remote_user: root
+
+  vars:
+
+    # 列表
+    listen_port:
+      - 80
+      - 81
+      - 82
+
+    # 字典的形式
+    service:
+      - name: web1
+        domain: tz.com
+        port: 9090
+        user: nginx
+        path: /var/www/html
+      - name: web2
+        domain: tz.com
+        port: 9091
+        user: nginx
+        path: /var/www/html
+      - name: web3
+        domain: tz.com
+        port: 9092
+        user: nginx
+        path: /var/www/html
+
+  tasks:
+    - name: copy template conf
+      template: src=~/ansible/templates/nginx-字典.conf.j2 dest=/tmp/nginx.conf

@@ -1,0 +1,13 @@
+# 192.168.110.4和192.168.110.5
+- hosts: web
+  remote_user: root
+
+  tasks:
+    - name: install keepalived
+      yum: name=keepalived
+
+    - name: copy config file
+      copy: src=~/config/ansible/playbook/centos/keepalived/双主架构/keepalived-nginx-双主架构.conf  dest=/etc/keepalived/keepalived.conf backup=yes
+
+    - name: start service
+      service: name=keepalived state=started enabled=yes

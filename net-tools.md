@@ -28,6 +28,7 @@
             * [httpie](#httpie)
                 * [nghttp（测试是否支持 http2）](#nghttp测试是否支持-http2)
             * [h2spec：测试服务器 http2 一致性](#h2spec测试服务器-http2-一致性)
+            * [grpcurl：类似 cURL 但用于 gRPC 的工具](#grpcurl类似-curl-但用于-grpc-的工具)
         * [websocket](#websocket)
         * [websocat:创建websocat](#websocat创建websocat)
         * [websocketd:创建websocket服务执行命令](#websocketd创建websocket服务执行命令)
@@ -61,7 +62,9 @@
                 * [通过iptables实现nat功能](#通过iptables实现nat功能)
             * [nftables](#nftables)
                 * [iptables 转换成 nftables](#iptables-转换成-nftables)
-            * [firewall-cmd](#firewall-cmd)
+            * [firewalld](#firewalld)
+                * [基本命令](#基本命令-2)
+                * [复杂规则](#复杂规则)
         * [ethtool](#ethtool)
         * [arp](#arp)
         * [arpwatch](#arpwatch)
@@ -749,6 +752,12 @@ nghttp -nva -t 1 https://www.bilibili.com
 
 ```bash
 h2spec -t -S -h www.bilibili.com -p 443
+```
+
+#### [grpcurl：类似 cURL 但用于 gRPC 的工具](https://github.com/fullstorydev/grpcurl)
+
+```sh
+grpcurl grpc.server.com:443 my.custom.server.Service/Method
 ```
 
 ### websocket
@@ -1584,48 +1593,245 @@ nft monitor
 nft monitor new rules
 ```
 
-#### firewall-cmd
+#### firewalld
+
+- 从centos7开始，默认没有`iptables`。而是使用firewalld动态防火墙工具
+- firewalld与iptables的关系：
+    - firewalld提供了一个daemon和service，还有命令行和图形界面，仅仅代替iptables service的部分，底层还是`iptables`作为防火墙规则管理入口。
+    - firewalld使用python开发，在新版本已经计划用c++重写daemon部分
+
+- 静态防火墙：哪怕只修改一条规则，也需要将所有规则重新加载的模式
+
+    - `iptables`是用户将新规则添加进`/etc/sysconfig/iptables`配置文件中。在执行`service iptables reload`使规则生效。
+        - 整个过程需要对旧规则进行清空，然后重新完整加载新规则。如果配置了需要重新加载的内核模块，则还包含相关内核模块的卸载和加载
+
+- 动态防火墙：`firewalld`不需要对整个规则重新加载，只需变更部分的iptables就可以
+
+- firewalld将网卡划分为不同的区域（zone），默认有9个：
+
+    - 不同区域之间的差异是对待数据包的默认行为不同。centos7中默认为public
+
+    - block（限制）：传入的网络连接被拒绝。并带有ipv4的icmp-host-prohibited信息和ipv6的icmp6-adm-prohibited
+        - 仅允许由该系统发起的网络连接。
+    - dmz（非军事区）：适用于非军事区内可公开访问的计算机，但对内部网络的访问受限。
+        - 仅接受某些入站连接。
+    - drop（丢弃）：传入的网络连接都被丢弃，并且不发送任何响应。
+        - 只允许传出网络连接。
+    public（公共）：用于公共区域。
+    - external（外部）：为路由器启用了伪装功能的外部网络。
+        - 不信任来自网络其他计算机。仅接受某些类型的入站连接。
+        - 基本信任来自网络其他计算机。仅接受某些类型的入站连接。
+    internal（内部）：用于内部网络。
+        - 基本信任来自网络其他计算机。仅接受某些类型的入站连接。
+    - home（家庭）：用于家庭网络。
+    - work（工作）：用于工作区。
+        - 基本信任来自网络其他计算机。仅接受某些类型的入站连接。
+        - 不信任来自网络其他计算机。仅接受某些类型的入站连接。
+    - trusted（信任）：可接受所有的网络连接
+
+    ```sh
+    # 查看支持的所有区域
+    firewall-cmd --get-zones
+
+    # 查看默认区域
+    firewall-cmd --get-default-zone
+    # 设置默认区域为home
+    firewall-cmd --set-default-zone=home
+
+    # 查看活动区域和分配给它们的网络接口
+    firewall-cmd --get-active-zones
+    # 修改网络接口
+    firewall-cmd --zone=public --change-interface=enp1s0
+    # 添加新的网络接口
+    firewall-cmd --zone=public --add-interface=eth0
+
+    # 查看所有区域的所有规则
+    firewall-cmd --list-all-zone
+    # 查看public区域的所有规则
+    firewall-cmd --zone=public --list-all
+    ```
+
+##### 基本命令
 
 - 基本使用
+
     ```sh
-    # 查看防火墙放行列表。
-    firewall-cmd --list-all
-    public (active)
-      target: default
-      icmp-block-inversion: no
-      interfaces: ens3
-      sources:
-      services: cockpit dhcpv6-client ssh
-      ports:
-      protocols:
-      masquerade: no
-      forward-ports:
-      source-ports:
-      icmp-blocks:
-      rich rules:
+    # 查看状态
+    systemctl status firewalld
+    firewall-cmd --state
 
-    # 放行80端口
-    firewall-cmd --zone=public --add-port=80/tcp --permanent
+    # 重启防火墙。并不中断用户连接，即不丢弃状态信息
+    firewall-cmd --reload
+    # 重启防火墙。中断用户连接，即丢弃状态信息
+    firewall-cmd --complete-reload
 
-    # 重启防火墙
+    # 将当前防火墙的规则永久保存
+    firewall-cmd --runtime-to-permanent
+
+    # 检查配置正确性
+    firewall-cmd --check-config
+    ```
+
+- 日志
+
+    ```sh
+    # 获取记录被拒绝的日志。默认为off
+    firewall-cmd --get-log-denied
+
+    # 设置记录被拒绝的日志，只能为 'all','unicast','broadcast','multicast','off' 其中的一个
+    firewall-cmd --set-log-denied=all
+    ```
+
+- 断网和连网
+
+    ```sh
+    # 启用应急模式，阻断所有网络连接。防止出现紧急情况
+    firewall-cmd --panic-on
+
+    # 查看应急模式
+    firewall-cmd --query-panic
+
+    # 禁用应急模式
+    firewall-cmd --panic-off
+    ```
+
+- firewalld service（服务）
+    - 保存在`/usr/lib/firewalld/services/`目录（请勿修改）；每个文件对应一项具体的网络服务（如ssh服务），文件为`xml`类型
+    - 如果默认的service不够用，需要把自定义的配置文件放进`/etc/firewalld/services/`目录（可以修改）
+    - 每加载一项service，相当于开放了对应的端口
+
+    ```sh
+    # 查看所有支持的sevice
+    firewall-cmd --get-services
+
+    # 查看所有支持的icmp类型的sevice
+    firewall-cmd --get-icmptypes
+
+    # 查看--permanent的service。表示重启后也生效的service
+    firewall-cmd --get-services --permanent
+    firewall-cmd --get-icmptypes --permanent
+
+    # 查看当前zone（区域）加载的service
+    firewall-cmd --list-services
+
+    # 查看service的配置文件
+    cat /usr/lib/firewalld/services/mysql.xml
+    cat /usr/lib/firewalld/services/http.xml
+
+    # 查看service
+    firewall-cmd --query-service=http
+
+    # 开启service
+    firewall-cmd --add-service=http
+    # 只在pubilic区域开启
+    firewall-cmd --zone=public --add-service=http
+
+    # 关闭service
+    firewall-cmd --remove-service=http
+
+    # --permanent参数。即使在重新启动后，Firewalld 也会自动加载它。
+    firewall-cmd --zone=public --add-service=http --permanent
+    firewall-cmd --query-service=http --permanent
+    firewall-cmd --remove-service=http --permanent
+    ```
+
+- 开启/关闭端口：
+
+    ```sh
+    # 查看redis的端口6379是否开启。no表示没有开启
+    firewall-cmd --query-port=6379/tcp
+
+    # 查看public的配置文件。可以看到新的记录
+    cat /etc/firewalld/zones/public.xml
+    # 开启端口后，需要重启防火墙
     firewall-cmd --reload
 
-    # 再次查看。会出现ports字段有80端口
-    firewall-cmd --list-all
-    public (active)
-      target: default
-      icmp-block-inversion: no
-      interfaces: ens3
-      sources:
-      services: cockpit dhcpv6-client ssh
-      ports: 80/tcp
-      protocols:
-      masquerade: no
-      forward-ports:
-      source-ports:
-      icmp-blocks:
-      rich rules:
+    # 查看port是否有对应的端口
+    firewall-cmd --list-ports
+
+    # 关闭端口。如果需要将规则保存至zone配置文件中，重启后也会自动加载，需要加入参数--permanent
+    firewall-cmd --reload
+
+    # --permanent参数，重启后也会自动加载
+    firewall-cmd --add-port=6379/tcp --permanent
+    firewall-cmd --list-ports --permanent
+    firewall-cmd --remove-port=6379/tcp --permanent
     ```
+
+- 端口转发
+
+    ```sh
+    # 开启端口转发。将80端口的流量转发到192.168.110.5
+    firewall-cmd --zone=public --add-forward-port=port=80:proto=tcp:toaddr=192.168.110.5
+
+    # 开启端口转发。将80端口的流量转发到8080端口
+    firewall-cmd --zone=public --add-forward-port=port=80:proto=tcp:toport=8080
+
+    # 开启端口转发。将80端口的流量转发到192.168.110.5的8080端口
+    firewall-cmd --zone=public --add-forward-port=port=80:proto=tcp:toaddr=192.168.110.5:toport=8080
+
+    # 查看端口转发。
+    firewall-cmd --zone=public --query-forward-port=port=80:proto=tcp:toaddr=192.168.110.5
+
+    # 关闭端口转发。
+    firewall-cmd --zone=public --remove-forward-port=port=80:proto=tcp:toaddr=192.168.110.5
+   ```
+
+- 开启ip伪装：常用于路由器。由于内核限制仅可用于ipv4。
+
+    - 私有网络的地址将会别隐藏并映射到一个共有ip，这是地址转换的一种形式
+
+    ```sh
+    # 开启ip伪装
+    firewall-cmd --add-masquerade
+    # 查询ip伪装
+    firewall-cmd --query-masquerade
+    # 关闭ip伪装
+    firewall-cmd --remove-masquerade
+    ```
+
+- 开启icmp阻塞：会对icmp报文进行阻塞。icmp类似可以是请求信息、响应的应答报文、错误的应答报文
+
+    ```sh
+    # 开启icmp阻塞。echo-reply为响应的应答报文
+    firewall-cmd --add-icmp-block=echo-reply
+    # 查询icmp阻塞
+    firewall-cmd --query-icmp-block=echo-reply
+    # 关闭icmp阻塞
+    firewall-cmd --remove-icmp-block=echo-reply
+    ```
+
+##### 复杂规则
+
+- 基本使用
+
+```sh
+# mysql服务器从 IP 地址 192.168.1.69 侦听端口 3306
+firewall-cmd --zone=public --add-rich-rule 'rule family="ipv4" source address="192.168.1.69" port port=3306 protocol=tcp accept'
+
+# 查看
+firewall-cmd --zone=public --list-rich-rules
+
+# 删除规则
+firewall-cmd --zone=public --remove-rich-rule 'rule family="ipv4" source address="192.168.1.69" port port="3306" protocol="tcp" accept'
+
+# --permanent 重启后依然生效
+firewall-cmd --zone=public --add-rich-rule 'rule family="ipv4" source address="192.168.1.69" port port=3306 protocol=tcp accept' --permanent
+firewall-cmd --zone=public --list-rich-rules --permanent
+firewall-cmd --zone=public --remove-rich-rule 'rule family="ipv4" source address="192.168.1.69" port port="3306" protocol="tcp" accept' --permanent
+```
+
+- 各种规则
+```sh
+# mysql服务器从 IP 地址 192.168.1.69 侦听端口 3306
+firewall-cmd --zone=public --add-rich-rule 'rule family="ipv4" source address="192.168.1.69" port port=3306 protocol=tcp accept'
+
+# 与上一条命令相反。阻止从 IP 地址 192.168.1.69 访问 MySQL 服务器
+firewall-cmd --zone=public --add-rich-rule 'rule family="ipv4" source address="192.168.1.69" port port="3306" protocol="tcp" reject'
+
+# 将所有入站流量从端口 80 重定向到主机 192.168.1.200
+firewall-cmd --zone=public --add-rich-rule 'rule family=ipv4 forward-port port=80 protocol=tcp to-port=8080 to-addr=192.168.1.200'
+```
 
 ### ethtool
 

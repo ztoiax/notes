@@ -1,0 +1,7 @@
+- hosts: centos
+  remote_user: root
+
+  tasks:
+    - name: Calculate InnoDB buffer pool size
+      set_fact: innodb_buffer_pool_size_mb="{{ ansible_memtotal_mb / 2 |int }}"
+    - debug: var=innodb_buffer_pool_size_mb

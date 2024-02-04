@@ -1,0 +1,12 @@
+{% for s in service %}
+user {{ s.user }};
+worker_processes {{ ansible_processor_vcpus * 2 }};
+pid /run/nginx.pid;
+    server {
+        listen       {{ s.port }} default_server;
+        listen       [::]:{{ s.port }} default_server;
+        server_name  {{ s.name }}.{{ s.domain }};
+        root         {{ s.path }};
+    }
+
+{% endfor %}

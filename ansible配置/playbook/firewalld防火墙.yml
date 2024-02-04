@@ -1,0 +1,12 @@
+- hosts: all
+  remote_user: root
+
+  tasks:
+    - name: 开启端口
+      ansible.posix.firewalld:
+        port: 8080/tcp
+        permanent: true
+        state: enabled
+        # state: disabled
+    - name: restart firewalld
+      service: name=firewalld state=restarted

@@ -1,3 +1,14 @@
+<!-- vim-markdown-toc GFM -->
+
+* [browsers](#browsers)
+* [WebAssembly](#webassembly)
+* [数据库](#数据库)
+* [HTML](#html)
+* [CSS](#css)
+* [js](#js)
+
+<!-- vim-markdown-toc -->
+
 # browsers
 
 - [chrome浏览器F12官方文档](https://developer.chrome.com/docs/devtools/network/reference/?utm_source=devtools#timing-explanation)

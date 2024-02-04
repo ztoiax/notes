@@ -13,6 +13,7 @@
         * [vnc打开虚拟机](#vnc打开虚拟机)
         * [virsh](#virsh)
             * [基本命令](#基本命令)
+            * [快照snapshot](#快照snapshot)
             * [网络](#网络)
                 * [通过修改dhcp配置文件default，自定义ip地址](#通过修改dhcp配置文件default自定义ip地址)
         * [克隆虚拟机](#克隆虚拟机)
@@ -553,13 +554,32 @@ mv centos7-bak.xml centos7.xml
 virsh define centos7.xml
 ```
 
+#### 快照snapshot
+
+```sh
+# 创建快照
+virsh snapshot-create-as centos7-2 snapshot0 --description "first snapshot"
+
+# 查看所有快照
+virsh snapshot-list centos7-2
+
+# 查看指定快照
+virsh snapshot-info centos7-2 snapshot0
+
+# 恢复快照
+virsh snapshot-revert centos7-2 --current
+
+# 删除快照
+virsh snapshot-delete centos7-2 snapshot0
+```
+
 #### 网络
 
 ```sh
 # 查看网络
 virsh net-list --all
 
-# 查看dhcp ip
+# 查看当前使用dhcp配置文件default的所有虚拟机的ip
 virsh net-dhcp-leases --network default
 
 # 修改centos7-1。可以修改mac地址
@@ -571,11 +591,13 @@ virsh dumpxml centos7 | grep -i '<mac'
 # 查看dhcp配置文件default
 virsh net-dumpxml default
 
-# 修改dhcp配置文件的ip、mac
+# 修改dhcp配置文件的ip、mac。配置文件目录/etc/libvirt/qemu/networks
 virsh net-edit default
 # 修改后需要重启dhcp服务
 virsh net-destroy default
 virsh net-start default
+# 开机自动启动，而不需要每次宿主机重启都要执行一遍 virsh net-start default
+virsh net-autostart default
 
 # 查看运行中的虚拟机ip,mac
 virsh domifaddr opensuse15.2_1
@@ -645,6 +667,9 @@ sudo grep mac /etc/libvirt/qemu/opensuse15.2_1.xml
 sudo virsh net-update default add ip-dhcp-host \
       "<host mac='52:54:00:9d:20:17' name='opensuse15.2_1' ip='192.168.110.6'/>" \
        --live --config
+# 上一条命令，也可以通过修改dhcp配置文件default。实现
+sudo virsh net-edit default\n
+
 # 重启dhcp配置文件default
 sudo virsh net-destroy default
 sudo virsh net-start default

@@ -116,6 +116,9 @@
 
     - Rust 的过程宏（procedural macros）是一种高级用法，可以理解为生成 Rust 代码的 Rust 代码。
 
+- [comprehensive-rust：为期四天的 Rust 课程。](https://github.com/google/comprehensive-rust)
+    - 这是谷歌 Android 团队使用的 Rust 课程，它涵盖了 Rust 的基本语法到高级主题，如泛型和错误处理，还包括最后一天的 Android 特定内容。
+
 ### Lisp
 
 - [《Structure and Interpretation of Computer Programs(SICP)》(英文)](http://sarabander.github.io/sicp/html/index.xhtml)
@@ -258,6 +261,10 @@
 - [推特推荐算法](https://github.com/twitter/the-algorithm)
     - [推特官方博客对推荐算法的细节介绍](https://blog.twitter.com/engineering/en_us/topics/open-source/2023/twitter-recommendation-algorithm)
 
+### 算法题
+
+- [LeetCode solutions in any programming language | 多种编程语言实现 LeetCode、《剑指 Offer（第 2 版）》、《程序员面试金典（第 6 版）》题解](https://github.com/doocs/leetcode)
+
 ## 图形学
 
 - [3D编程模式](https://yyc-git.github.io/3dProgramPattern/docs/%E5%89%8D%E8%A8%80/)
@@ -289,7 +296,7 @@
 
 - [《postgresql 14 internals》](https://postgrespro.com/community/books/internals)
 
-- [MiniOB 是 OceanBase 团队基于华中科技大学数据库课程原型](https://github.com/oceanbase/miniob)
+- [MiniOB 是 OceanBase 团队基于华中科技大学数据库课程原型。从 0 到 1 数据库内核实战教程](https://github.com/oceanbase/miniob)
 
 - [分布式文档数据库mongodb-3.6(mongos、mongod、wiredtiger存储引擎)源码中文注释分析，持续更新。后期重点进行mongodb-4.4最新版本内核源码分析](https://github.com/y123456yz/reading-and-annotate-mongodb-3.6?spm=a2c6h.12873639.article-detail.7.3f291969XElWnV&file=reading-and-annotate-mongodb-3.6)
 
@@ -492,6 +499,10 @@
 
 - [LINUX-TUTORIAL（包含nginx、tomat、zk、es等运维）](https://dunwu.github.io/linux-tutorial/)
 
+- [cdn-up-and-running：从零开始构建 CDN 的教程](https://github.com/leandromoreira/cdn-up-and-running)
+
+    - 为了让你在实战中学习 CDN 的工作原理，这里会从创建一个单一的后端服务开始，逐渐扩展到多个节点、模拟延迟、可视化、可测试的 CDN 服务。因为设计 CDN 会涉及 Nginx、Lua、Docker、Grafana 等知识点，所以学习该教程需要有一定的编程基础。
+
 ### cloud
 
 - [《Docker — 从入门到实践》](https://vuepress.mirror.docker-practice.com/)
@@ -503,6 +514,8 @@
 - [深入架构原理与实践](https://www.thebyte.com.cn/)
 
 - [《Istio 服务网格进阶实战》](https://www.servicemesher.com/istio-handbook/)
+
+- [k8s_PaaS：教你用 K8s 部署一套完整服务的教程](通过该教程你可以学习到如何部署 Kubernetes 集群，以及在此基础上搭建由 Apollo、Jenkins、Prometheus 等服务组成的完整的软件研发和部署平台。)
 
 - [Kubernetes 指南](https://kubernetes.feisky.xyz/)
 
@@ -574,6 +587,10 @@
 
 - [AIGC 课程, 目前已支持 ChatGPT, Midjourney, Runway, Stable Diffusion, AI数字人，AI声音&音乐，大模型微调](https://www.learnprompt.pro/)
 
+## 硬件
+
+- [《现代硬件的算法》。该书来自俄罗斯非营利性的教育组织 Tinkoff Generation，它培养了大约一半的俄罗斯奥林匹克信息学决赛选手。不管你是算法研究员还是学生，这本书都可以让你学到更多提升程序性能的实用方法](https://github.com/algorithmica-org/algorithmica)
+
 ## 数据科学
 
 - [《Foundation of Data Science》](https://www.cs.cornell.edu/jeh/book.pdf)
@@ -609,6 +626,8 @@
 
 - [矩阵是图，图是矩阵（英文）](https://thepalindrome.org/p/matrices-and-graphs)
 
+- [矩阵力量》。该书介绍了向量、矩阵、向量空间、矩阵分解、微积分、空间几何等知识，内含全彩图解和 Python 示例代码](https://github.com/Visualize-ML/Book4_Power-of-Matrix)
+
 - [统计学习方法（第二版）习题解答](https://datawhalechina.github.io/statistical-learning-method-solutions-manual/#/)
 
 - [微积分](https://www.geogebra.org/m/x39ys4d7)
@@ -639,7 +658,9 @@
 
 - [H.264 is Magic](https://sidbala.com/h-264-is-magic/)
 
-- [digital_video_introduction](https://github.com/leandromoreira/digital_video_introduction)
+- [digital_video_introduction：一份讲解视频技术的教程](https://github.com/leandromoreira/digital_video_introduction)
+
+    - 这是一份循序渐进的视频技术教程，从基本概念讲到视频编码器如何工作，内容通俗易懂、图文并茂。
 
 # 学术期刊/学会
 
@@ -732,11 +753,17 @@
 
 - [副业](http://r.ftqq.com/lean-side-bussiness/index.html)
 
-- [路人zhang：被裁自救指南](https://mp.weixin.qq.com/s/NLkxGuIhdXlPM_xWmROZnw)
-
 - [路人zhang：各种编程语言、算法、数据库面试手册](https://www.mianshi.online/)
 
 - [sre面试](https://github.com/bregman-arie/devops-exercises)
+
+- [小林coding：有哪些值得程序员去的银行开发？]()
+
+## 裁员
+
+- [路人zhang：被裁自救指南](https://mp.weixin.qq.com/s/NLkxGuIhdXlPM_xWmROZnw)
+
+- [Meta万人裁员亲历者自述：小扎尝到了降本的甜头](https://www.huxiu.com/article/1600148.html)
 
 # 有趣的言论
 

@@ -1,0 +1,33 @@
+# MASTER
+- hosts: 192.168.110.4
+  remote_user: root
+
+  tasks:
+    - name: install keepalived
+      yum: name=keepalived
+
+    - name: copy config file
+      copy: src=./keepalived-nginx-MASTER.conf  dest=/etc/keepalived/keepalived.conf backup=yes
+
+    - name: copy nginx_check.sh
+      copy: src=./nginx_check.sh  dest=/etc/keepalived/nginx_check.sh backup=yes
+
+    - name: start service
+      service: name=keepalived state=started enabled=yes
+
+# BACKUP
+- hosts: 192.168.110.5
+  remote_user: root
+
+  tasks:
+    - name: install keepalived
+      yum: name=keepalived
+
+    - name: copy config file
+      copy: src=./keepalived-nginx-BACKUP.conf  dest=/etc/keepalived/keepalived.conf backup=yes
+
+    - name: copy nginx_check.sh
+      copy: src=./nginx_check.sh  dest=/etc/keepalived/nginx_check.sh backup=yes
+
+    - name: start service
+      service: name=keepalived state=started enabled=yes

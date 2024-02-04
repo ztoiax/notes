@@ -1,0 +1,4 @@
+- hosts: centos
+  roles:
+    # 调用定义好的role
+    - role: nginx

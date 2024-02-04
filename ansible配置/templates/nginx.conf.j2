@@ -1,0 +1,353 @@
+#user  nobody;
+
+# Nginx 启动的 worker 子进程数量
+worker_processes  auto;
+
+# Nginx 的错误日志存放目录。默认值为logs/error.log error;
+error_log  logs/error.log  debug;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+# master主进程的的 pid 存放在 nginx.pid 的文件。默认值为logs/nginx.pid;
+pid        logs/nginx.pid;
+
+# 定义用于多线程读取和发送文件而不阻塞工作进程的线程池的名称和参数
+thread_pool default threads=32 max_queue=65536;
+
+
+events {
+    # Nginx 使用何种事件驱动模型。不推荐配置它，让 Nginx 自己选择。method 可选值为：select、poll、kqueue、epoll、/dev/poll、eventport
+    use epoll;
+
+    # worker 子进程能够处理的最大并发连接数。默认值为512
+    worker_connections  1024;
+
+    # 尽可能多的接受请求。默认值为off
+    multi_accept on;
+}
+
+
+# 4层负载均衡
+# stream不在http块里面
+stream {
+    upstream backend {
+        # 转发到80端口
+        server 127.0.0.1:80;
+    }
+    server {
+        # 监听90端口
+        listen 90;
+        proxy_pass backend;
+    }
+}
+
+http {
+
+    # 实现对配置文件所包含的文件的设定
+    include mime.types;
+    include /etc/nginx/conf.d/*.conf;   # 加载子配置项
+
+    # 设置日志模式
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$request_time"';
+
+    # Nginx 访问日志存放位置
+    access_log  logs/access/access.log main;
+
+    # on 表示开启零拷贝技术，使用 sendfile() 系统调用传输文件：2 次上下文切换，和 2 次数据拷贝
+    # off 使用 read() + write() 传统方式进行传输文件：4 次上下文切换，和 4 次数据拷贝
+    sendfile            on;
+
+    # 限制单个sendfile（）调用中可以传输的数据量。默认值2m
+    sendfile_max_chunk 2m;
+
+    # 减少网络报文段的数量。在sendfile on后 将响应包头放到一个 TCP 包中发送
+    tcp_nopush          on;
+    tcp_nodelay         on;
+
+
+    # 默认值为1000
+    keepalive_requests 1000;
+
+    # 请求的最长时间。默认值为1h
+    keepalive_time 1h;
+
+    # timeout时间，单位秒。默认值为75s
+    keepalive_timeout 75s;
+
+    # 定义MIME类型哈希表中条目的最大大小。
+    types_hash_max_size 2048;
+
+    # nginx用哈希表存储服务器名字，设置哈希表的内存大小。默认值512
+    server_names_hash_max_size 512;
+    # 哈希桶的大小。可选值为 32|64|128
+    server_names_hash_bucket_size 128;
+
+    # 这里设定的默认类型为二进制流。也就是当文件类型未定义时使用这种方式。例如在没有配置php环境时，nginx是不予解析的，此时用浏览器访问php文件就会出现下载窗口
+    default_type        application/octet-stream;
+
+    # 子请求的缓冲区大小。可选值4k|8k
+    subrequest_output_buffer_size 8k;
+
+    # 请求头的大小不能超过8k
+    large_client_header_buffers 4 8k;
+
+    # 客户端请求头的缓冲区大小。对于大多数请求1KB就足够了。如果自定义了消息头或有更大的cookie可以设置为32k
+    client_header_buffer_size 1k;
+
+    # 客户端请求体的缓冲区大小
+    client_body_buffer_size 8k;
+
+    # 客户端请求的最大的单个文件字节数
+    client_max_body_size 1m;
+
+    # 可以存储打开了的文件描述符，它们的大小和修改时间。max表示最大数量，溢出时会使用lru算法移除。inactive表示在一定时间内没有访问就移除。默认为（60s）
+    open_file_cache          max=1000 inactive=20s;
+    open_file_cache_valid    30s;
+    open_file_cache_min_uses 2;
+    # 启用文件查找错误的缓存
+    open_file_cache_errors   on;
+
+    # 设置内核在处理文件时的预读量
+    read_ahead 0;
+
+    # 解析超时时间。默认为30s
+    resolver_timeout 30s;
+
+    # 设置向客户端传输响应的超时。超时仅在两个连续写操作之间设置，不用于传输整个响应。如果客户端在此时间内没有收到任何消息，则连接将关闭。默认60s
+    send_timeout 60s;
+
+    gzip  on;
+    gzip_min_length 1k;
+    gzip_comp_level 4;
+    gzip_http_version 1.0;
+    gzip_vary off;
+    gzip_disable "MSIE [1-6]\.";
+
+    server {
+        listen       {{ http_port }};
+        server_name example.com www.example.com localhost;
+        # listen 443 ssl;
+
+        # RSA certificate
+        # ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;  # 证书文件地址
+        # ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem; # 私钥文件地址
+
+        # include /etc/letsencrypt/options-ssl-nginx.conf;
+
+        # 将http重定向到https
+        # if ($scheme != "https") {
+        #     return 301 https://$host$request_uri;
+        # }
+
+        #charset koi8-r;
+
+        access_log  logs/access/80.access.log;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        location ~\.(gif|png|jpg)$ {
+            root   /home/tz/Pictures/;
+            error_page 404 = /404.png;
+        }
+
+        # 所有动态请求都转发给 tomcat 处理。实现动静分离
+        location ~ \.(jsp|do)$ {
+            proxy_pass  http://127.0.0.1:8080;
+
+            # 传递代理服务器的头部
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+            # 自动故障转移。遇到500、502、503、504、执行超时等错误，nginx会将请求转发到upstream负载均衡组中的另一台服务器
+            proxy_next_upstream http_500 http_502 http_503 http_504 error timeout invalid_header;
+        }
+
+        # php-fpm
+        location ~ \.php$ {
+            root html;
+
+            # php-fpm的监听端口为9000
+            fastcgi_pass  localhost:9000; # 也可以是unix_sock fastcgi_pass  unix:/var/run/php-fpm/php80fpm.sock;
+            fastcgi_index index.php;
+
+            # $document_root 与 root 指令的值是一样的，变量 $fastcgi_script_name 的值为请求URI，即 /index.php。
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param QUERY_STRING    $query_string;
+        }
+
+        # aio
+        location /aio {
+            aio            on;
+            directio       512; # 需要启用directio，否则读取将阻塞
+            output_buffers 1 128k;
+
+            # 访问http://127.0.0.1:80/aio时，实际访问/usr/local/nginx/html/index.html
+            alias  /usr/local/nginx/html/;
+            index  index.html index.htm;
+        }
+
+        # auth_basic模块
+        location /auth {
+            auth_basic "User Auth";
+            auth_basic_user_file /usr/local/nginx/conf/auth.passwd;
+
+            alias  /usr/local/nginx/html/;
+            index  index.html index.htm;
+        }
+
+        # stub_status模块
+        location = /basic_status {
+           stub_status;
+        }
+
+        # redirect server error pages to the static page /50x.html
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+        # echo模块
+        # location /echo {
+        #     set $a 'tz';
+        #     set $b 'i\'m $a';
+        #     echo "$b";
+        #     echo "Here is $a nginx tutorial";
+        # }
+      }
+
+    server {
+        listen 443;
+        server_name www.example.com;
+
+        access_log  logs/access/443.access.log;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        # ssl on;
+
+        # 默认会放在/usr/local/nginx/conf/
+        ssl_certificate      example.crt;
+        ssl_certificate_key  example.key;
+
+        # 指定目录
+        # ssl_certificate /etc/letsencrypt/live/example.com/fullchain.crt;
+        # ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.key;
+
+        # 缓存有效期
+        ssl_session_timeout  5m;
+
+        # 使用服务器端的首选算法
+        ssl_prefer_server_ciphers  on;
+
+        # 安全链接可选的加密协议
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+
+        # 加密算法
+        ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305;
+
+
+        # 增强安全性选项，减少点击劫持
+        add_header X-Frame-Options DENY;
+        # 增强安全性选项，禁止服务器自动解析资源类型
+        add_header X-Conntent-Type-Options nosniff;
+        # 增强安全性选项，防止XSS攻击
+        add_header X-Xss-Protection 1;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+    }
+
+    # server {
+    #     listen 8080;
+    #     server_name  localhost;
+    #
+    #     access_log  logs/access/8080.access.log;
+    #
+    #     location / {
+    #         # 设置代理为 80 端口
+    #         proxy_pass http://localhost:80/;
+    #     }
+    #
+    #     location /baidu {
+    #         # 设置为baidu
+    #         proxy_pass https://www.baidu.com/;
+    #     }
+    #
+    #     location /github {
+    #         # 设置为github
+    #         proxy_pass https://www.github.com/;
+    #     }
+    #
+    #     # autoindex指令： 用户请求以 `/` 结尾时，列出目录结构，可以用于快速搭建静态资源下载网站。
+    #     location /tz/ {
+    #       root /home;
+    #
+    #       autoindex on; # 打开 autoindex，，可选参数有 on | off
+    #       autoindex_exact_size on; # 修改为 off，以 KB、MB、GB 显示文件大小，默认为 on，以 bytes 显示出⽂件的确切⼤⼩
+    #       autoindex_format html; # 以 html 的方式进行格式化，可选参数有 html | json | xml
+    #       autoindex_localtime off; # 显示的⽂件时间为⽂件的服务器时间。默认为 off，显示的⽂件时间为GMT时间
+    #     }
+    # }
+
+    server {
+        listen 8081;
+        server_name example.com www.example.com;
+        root /usr/local/nginx/html;
+
+        location / {
+            return 200 "
+            remote_addr: $remote_addr
+            remote_port: $remote_port
+            server_addr: $server_addr
+            server_port: $server_port
+            server_protocol: $server_protocol
+            binary_remote_addr: $binary_remote_addr
+            connection: $connection
+            uri: $uri
+            request_uri: $request_uri
+            scheme: $scheme
+            request_method: $request_method
+            request_length: $request_length
+            args: $args
+            arg_pid: $arg_pid
+            is_args: $is_args
+            query_string: $query_string
+            host: $host
+            http_user_agent: $http_user_agent
+            http_referer: $http_referer
+            http_via: $http_via
+            request_time: $request_time
+            https: $https
+            request_filename: $request_filename
+            document_root: $document_root
+            ";
+         }
+    }
+
+
+  # Cgit
+  # server {
+  #   listen                8086;
+  #   server_name           localhost;
+  #   root                  /usr/share/webapps/cgit;
+  #   try_files             $uri @cgit;
+  #
+  #   location @cgit {
+  #     include             fastcgi_params;
+  #     fastcgi_param       SCRIPT_FILENAME $document_root/cgit.cgi;
+  #     fastcgi_param       PATH_INFO       $uri;
+  #     fastcgi_param       QUERY_STRING    $args;
+  #     fastcgi_param       HTTP_HOST       $server_name;
+  #     fastcgi_pass        unix:/run/fcgiwrap.sock;
+  #   }
+  # }
+}

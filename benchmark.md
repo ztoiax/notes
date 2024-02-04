@@ -5,6 +5,7 @@
     * [性能指标](#性能指标)
 * [基本说明](#基本说明)
 * [all-have 综合](#all-have-综合)
+    * [flent：可以同时运行多个 netperf/iperf/ping 实例并聚合结果，通过交互式 GUI 和可扩展的绘图功能展示数据，支持本地和远程主机，支持采集 CPU 使用率、WiFi、qdisc 和 TCP 套接字统计信息等。](#flent可以同时运行多个-netperfiperfping-实例并聚合结果通过交互式-gui-和可扩展的绘图功能展示数据支持本地和远程主机支持采集-cpu-使用率wifiqdisc-和-tcp-套接字统计信息等)
     * [sysbench](#sysbench)
     * [vmstat](#vmstat)
     * [dstat](#dstat)
@@ -197,6 +198,40 @@ data from brendangregg book: [Systems Performance](http://www.brendangregg.com/s
 - strace
 
 # all-have 综合
+
+## [flent：可以同时运行多个 netperf/iperf/ping 实例并聚合结果，通过交互式 GUI 和可扩展的绘图功能展示数据，支持本地和远程主机，支持采集 CPU 使用率、WiFi、qdisc 和 TCP 套接字统计信息等。](https://github.com/tohojo/flent)
+
+- [官方文档](https://flent.org/contents.html)
+
+- 安装
+```sh
+# 安装netperf和fping
+sudo pacman -S netperf fping
+
+# 安装flent
+pip install flent matplotlib
+```
+
+- 基本使用
+```sh
+# 在本地主机运行netperf
+netserver &
+
+# all_scaled。-H为指定开启netserver的主机；-l为收集时间为60秒。以下命令会生成filename.png和rrul-2024-02-03T230134.682312.text-to-be-included-in-plot.flent.gz
+flent rrul -p all_scaled -l 60 -H 127.0.0.1 -t text-to-be-included-in-plot -o filename.png
+
+# ping_cdf。
+flent rrul -p ping_cdf -l 60 -H 127.0.0.1 -t text-to-be-included-in-plot -o filename.png
+
+# tcp_upload。
+flent tcp_upload -p totals -l 60 -H 127.0.0.1 -t text-to-be-included-in-plot -o filename.png
+
+# tcp_upload。
+flent tcp_upload -p totals -l 60 -H 127.0.0.1 -t text-to-be-included-in-plot -o filename.png
+
+# tcp_download。
+flent tcp_download -p totals -l 60 -H 127.0.0.1 -t text-to-be-included-in-plot -o filename.png
+```
 
 ## sysbench
 

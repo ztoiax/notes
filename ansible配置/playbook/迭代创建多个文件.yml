@@ -1,0 +1,10 @@
+- hosts: centos
+  remote_user: root
+
+  tasks:
+    - name: create some files
+      file: name=/tmp/{{ item }} state=touch
+      with_items:
+        - file1
+        - file2
+        - file3

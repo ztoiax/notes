@@ -1,0 +1,33 @@
+# MASTER
+- hosts: 192.168.110.4
+  remote_user: root
+
+  tasks:
+    - name: install keepalived
+      yum: name=keepalived
+
+    - name: copy config file
+      copy: src=./keepalived-haproxy-MASTER.conf  dest=/etc/keepalived/keepalived.conf backup=yes
+
+    - name: copy haproxy_check.sh
+      copy: src=./haproxy_check.sh  dest=/etc/keepalived/haproxy_check.sh backup=yes
+
+    - name: start haproxy service
+      service: name=keepalived state=started enabled=yes
+
+# BACKUP
+- hosts: 192.168.110.5
+  remote_user: root
+
+  tasks:
+    - name: install keepalived
+      yum: name=keepalived
+
+    - name: copy config file
+      copy: src=./keepalived-haproxy-BACKUP.conf  dest=/etc/keepalived/keepalived.conf backup=yes
+
+    - name: copy haproxy_check.sh
+      copy: src=./haproxy_check.sh  dest=/etc/keepalived/haproxy_check.sh backup=yes
+
+    - name: start haproxy service
+      service: name=keepalived state=started enabled=yes

@@ -1,3 +1,11 @@
+<!-- vim-markdown-toc GFM -->
+
+* [yum](#yum)
+    * [yum源](#yum源)
+    * [repo](#repo)
+
+<!-- vim-markdown-toc -->
+
 # yum
 
 - 自动解决增加或删除rpm包时，遇到的依赖问题

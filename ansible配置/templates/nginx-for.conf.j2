@@ -1,0 +1,7 @@
+{% for port in listen_port %}
+
+server {
+   listen {{ port }}
+}
+
+{% endfor %}

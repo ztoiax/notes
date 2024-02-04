@@ -1,0 +1,16 @@
+- hosts: centos
+  remote_user: root
+
+  tasks:
+    - name: create some group
+      group: name={{ item }}
+      with_items:
+        - g1
+        - g2
+        - g3
+    - name: create some user
+      user: name={{ item.name }} group={{ item.group }}
+      with_items:
+        - {name: "user1" , group:  "g1"}
+        - {name: "user2" , group:  "g2"}
+        - {name: "user3" , group:  "g3"}

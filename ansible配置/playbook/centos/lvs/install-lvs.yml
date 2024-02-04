@@ -1,0 +1,49 @@
+# lvs服务器
+- hosts: 192.168.110.5
+  remote_user: root
+
+  tasks:
+    - name: install lvs
+      yum: name=ipvsadm
+
+    - name: 新建vip：192.168.110.110
+      shell: ifconfig eth0:0 192.168.110.110 broadcast 192.168.110.110 netmask 255.255.255.255 up
+
+    - name: 设置路由
+      shell: route add -host 192.168.110.110 dev eth0:0
+
+    - name: 开启转发
+      shell: echo "1" >/proc/sys/net/ipv4/ip_forward
+
+    - name: 添加转发规则。rr：表示轮询算法
+      shell: ipvsadm -A -t 192.168.110.110:80 -s rr
+
+    - name: 添加转发规则。 -g:设置lvs工作模式为DR直连路由, -w:指定真实服务器权重
+      shell: ipvsadm -a -t 192.168.110.110:80 -r 192.168.110.6:80 -g -w 1
+
+    - name: 添加转发规则。 -g:设置lvs工作模式为DR直连路由, -w:指定真实服务器权重
+      shell: ipvsadm -a -t 192.168.110.110:80 -r 192.168.110.7:80 -g -w 1
+
+# 2台RealServer服务器：192.168.110.6 192.168.110.7
+- hosts: 192.168.110.6 192.168.110.7
+  remote_user: root
+
+  tasks:
+    - name: install lvs
+      yum: name=ipvsadm
+
+    - name: 新建vip：192.168.110.110
+      shell: ifconfig lo:0 192.168.110.110 broadcast 192.168.110.110 netmask 255.255.255.255 up
+
+    - name: 设置路由
+      shell: route add -host 192.168.110.110 dev lo:0
+
+    - name: 关闭arp解析
+      shell: echo "1" >/proc/sys/net/ipv4/conf/lo/arp_ignore
+    - name: 关闭arp解析
+      shell: echo "2" >/proc/sys/net/ipv4/conf/lo/arp_announce
+    - name: 关闭arp解析
+      shell: echo "1" >/proc/sys/net/ipv4/conf/all/arp_ignore
+    - name: 关闭arp解析
+      shell: echo "2" >/proc/sys/net/ipv4/conf/all/arp_announce
+

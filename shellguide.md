@@ -1,3 +1,18 @@
+<!-- vim-markdown-toc GFM -->
+
+* [shell script](#shell-script)
+    * [cheatsheet](#cheatsheet)
+    * [字符串](#字符串)
+        * [字符串颜色](#字符串颜色)
+    * [if](#if)
+    * [for](#for)
+        * [读取目录下的文件](#读取目录下的文件)
+        * [读取指定文件的行](#读取指定文件的行)
+    * [获取参数](#获取参数)
+* [reference](#reference)
+
+<!-- vim-markdown-toc -->
+
 # shell script
 
 ## cheatsheet

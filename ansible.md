@@ -1,3 +1,26 @@
+<!-- vim-markdown-toc GFM -->
+
+* [ansible](#ansible)
+    * [架构](#架构)
+    * [运行原理](#运行原理)
+    * [基本命令](#基本命令)
+    * [配置文件](#配置文件)
+    * [ansible命令和内置模块的使用](#ansible命令和内置模块的使用)
+    * [ansible-playbook](#ansible-playbook)
+        * [变量](#变量)
+        * [fact](#fact)
+        * [template模板](#template模板)
+        * [handlers和notify 触发器](#handlers和notify-触发器)
+        * [tags标签](#tags标签)
+        * [逻辑实现：when、迭代](#逻辑实现when迭代)
+        * [roles（角色）](#roles角色)
+    * [ansible-galaxy](#ansible-galaxy)
+        * [ansible-vault：加密yml文件](#ansible-vault加密yml文件)
+* [第三方软件](#第三方软件)
+* [reference](#reference)
+
+<!-- vim-markdown-toc -->
+
 # [ansible](https://github.com/ansible/ansible)
 
 - Anasible 是基于Python2-Paramiko 模块开发的自动化维护工具
@@ -504,6 +527,28 @@ ansible all -m fetch -a "src=/root/log.tar.xz dest=/data"
     ansible 192.168.100.208 -m get_url -a "url=http://192.168.100.208/file dest=/tmp mode=0440"
     ```
 
+- [ansible.posix.firewalld模块](https://docs.ansible.com/ansible/latest/collections/ansible/posix/firewalld_module.html)：管理firewalld
+
+    ```sh
+    # service服务。允许默认zone（区域）的https流量
+    ansible 192.168.100.208 -m ansible.posix.firewalld -a "service=https permanent=true state=enabled"
+
+    # protocl协议。允许ospf流量
+    ansible 192.168.100.208 -m ansible.posix.firewalld -a "protocol=ssh permanent=true state=enabled"
+
+    # port端口。
+    ansible 192.168.100.208 -m ansible.posix.firewalld -a "port=6379/tcp permanent=true state=enabled"
+
+    # source ip地址。
+    ansible 192.168.100.208 -m ansible.posix.firewalld -a "source=192.0.2.0/24 zone=internal state=enabled"
+
+    # interface 虚拟网卡。
+    ansible 192.168.100.208 -m ansible.posix.firewalld -a "interface=eth2 permanent=true state=enabled"
+
+    # 指定zone（区域）。
+    ansible 192.168.100.208 -m ansible.posix.firewalld -a "zone=trusted interface=eth2 permanent=true state=enabled"
+    ```
+
 ## ansible-playbook
 
 ![image](./Pictures/ansible/ansible-playbook命令.avif)
@@ -771,7 +816,7 @@ ansible-playbook test.yml
         - name: install package
           yum: name=nginx
         - name: copy template
-          template: src=~/ansible/templates/nginx.conf.j2  dest=/usr/local/nginx/conf/nginx.conf
+          template: src=~/config/ansible/templates/nginx.conf.j2  dest=/usr/local/nginx/conf/nginx.conf
           notify: restart service
         - name: start service
           service: name=nginx state=started enabled=yes
@@ -782,7 +827,7 @@ ansible-playbook test.yml
     - 复制nginx.conf到templates目录名字为nginx.conf.j2
 
         ```sh
-        cp /usr/local/nginx/conf/nginx.conf ~/ansible/templates/nginx.conf.j2
+        cp /usr/local/nginx/conf/nginx.conf ~/config/ansible/templates/nginx.conf.j2
         ```
 
     - 修改nginx.conf.j2。设置端口变量
@@ -823,7 +868,7 @@ ansible-playbook test.yml
 
           tasks:
             - name: copy template conf
-              template: src=~/ansible/templates/nginx-for.conf.j2 dest=/tmp/nginx.conf
+              template: src=~/config/ansible/templates/nginx-for.conf.j2 dest=/tmp/nginx.conf
         ```
 
     - nginx-for.conf.j2 文件
@@ -885,7 +930,7 @@ ansible-playbook test.yml
 
           tasks:
             - name: copy template conf
-              template: src=~/ansible/templates/nginx-字典.conf.j2 dest=/tmp/nginx.conf
+              template: src=~/config/ansible/templates/nginx-字典.conf.j2 dest=/tmp/nginx.conf
         ```
 
     - nginx-字典.conf.j2 文件
@@ -969,7 +1014,7 @@ ansible-playbook test.yml
 
           tasks:
             - name: copy template conf
-              template: src=~/ansible/templates/nginx-if.conf.j2 dest=/tmp/nginx.conf
+              template: src=~/config/ansible/templates/nginx-if.conf.j2 dest=/tmp/nginx.conf
         ```
 
     - nginx-if.conf.j2文件：
@@ -1239,7 +1284,7 @@ ansible-playbook test.yml
         ansible-galaxy init nginx
         ```
 
-    - `~/ansible/roles/nginx-roles.yml`
+    - `~/config/ansible/roles/nginx-roles.yml`
 
         ```yml
         - hosts: centos

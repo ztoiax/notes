@@ -1,0 +1,9 @@
+- hosts: centos
+  remote_user: root
+
+  tasks:
+    - name: install package
+      yum: name={{ item }}
+      with_items:
+        - zsh
+        - fish
