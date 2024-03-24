@@ -1,6 +1,11 @@
 - hosts: all
   remote_user: root
 
+  # 自定义变量
+  vars:
+    varname: zsh
+    varname2: fish
+
   tasks:
     # - name: install haproxy
     #   yum: name=haproxy
@@ -11,11 +16,31 @@
     #   file: name=/usr/share/nginx/logs state=directory
     #   file: name=/usr/share/nginx/logs/access state=directory
 
-    - name: start service
-      service: name=nginx state=started enabled=yes
+    # - name: start service
+    #   service: name=nginx state=started enabled=yes
+
+    # - name: start mysqld_exporter
+    #   systemd_service:
+    #     name: mysqld_exporter
+    #     state: started
+    #     enabled: true
+    #     daemon_reload: true
+
+    # - name: 将sql文件复制下来
+    #   fetch: "src=/root/test.sql dest=/tmp/test.sql"
 
     - name: shell命令
-      ansible.builtin.shell: echo 123 > /tmp/123
+      shell: echo 123 > /tmp/123
+
+    - name: shell命令
+      shell: echo 123 > 123
+      args:
+        chdir: /tmp
+
+    # - name: 解压
+    #   unarchive:
+    #     src: ./mysqld_exporter-0.15.1.linux-amd64.tar.gz
+    #     dest: ./
 
     # - name: Disable SELinux
     #   ansible.posix.selinux:

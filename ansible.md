@@ -5,6 +5,9 @@
     * [运行原理](#运行原理)
     * [基本命令](#基本命令)
     * [配置文件](#配置文件)
+    * [优化执行速度](#优化执行速度)
+        * [优化/etc/ansible/ansible.cfg](#优化etcansibleansiblecfg)
+        * [playbook文件中的task优化](#playbook文件中的task优化)
     * [ansible命令和内置模块的使用](#ansible命令和内置模块的使用)
     * [ansible-playbook](#ansible-playbook)
         * [变量](#变量)
@@ -138,7 +141,7 @@
     # 插件的配置文件路径
     # plugin_filters_cfg = /etc/ansible/plugin_filters.yml
 
-    # 最多能有多少个进程同时工作，最多设置5个
+    # 最多能有多少台远程主机同时工作，默认为5
     # forks = 5
 
     # 异步任务查询间隔 单位秒
@@ -173,6 +176,68 @@
 
     # private_key_file使用ssh公钥私钥登陆系统的时候，密钥的路径
     # private_key_file=/path/ to/file.pem
+    ```
+
+## 优化执行速度
+
+### 优化/etc/ansible/ansible.cfg
+
+```ini
+[defaults]
+
+# 设置callbacks查看task的时间
+callbacks_enabled = timer, profile_tasks, profile_roles
+
+# 关闭fact，整个playbookfact变量将不会在显示，可以提高执行效率
+gathering = explicit
+
+# 最多50台主机同时工作
+forks = 50
+
+# 禁用ssh的密钥检查。默认情况下，Ansible检查并验证SSH主机密钥，以防范服务器欺骗和中间人攻击。
+host_key_checking = False
+
+# 减少ssh连接数量
+pipelining = True
+
+[ssh_connection]
+# 多个SSH会话以使用单个网络连接。这节省了SSH连接初始进程的时间 # 连接保持60s
+ssh_args = -o ControlMaster=auto -o ControlPersist=60s
+```
+
+- [Mitogen模块加速](https://mitogen.networkgenomics.com/ansible_detailed.html)
+
+    ```yml
+    [defaults]
+    strategy_plugins = /path/to/mitogen-0.3.5.dev0/ansible_mitogen/plugins/strategy
+    strategy = mitogen_linear
+    ```
+
+### playbook文件中的task优化
+
+- 默认task是线性执行。如果task之间没有依赖关系，可以将strategy（策略）设置为free，无需等待其他task完成后在执行。
+    ```yml
+    - hosts: production servers
+      strategy: free
+      tasks:
+    ```
+
+- 异步任务：当您有执行时间较长的任务（如磁盘备份、包安装等）时，这可能会成为一个瓶颈。需要异步处理
+
+    ```yml
+    - name: Async Demo
+      hosts: nodes
+      tasks:
+
+    - name: 异步任务
+      shell:
+        "/opt/diskutils/snapshot.sh init"
+
+      # 任务超过此时间，才超时
+      async: 120
+
+      # 轮询次数。值为0时：Ansible将启动任务并立即转到下一个任务，而无需等待结果。每个异步任务都会运行，直到它完成、失败或超时（运行时间超过其异步值）。剧本运行结束时不检查异步任务。
+      poll: 5
     ```
 
 ## ansible命令和内置模块的使用
@@ -251,6 +316,9 @@ ansible '~(codo|k3s)-cluster' -m ping -k
 
 # -k 使用密码方式，默认是使用SSH-KEY登录。
 ansible centos -a 'date' -k
+
+# --forks设置最多可以多少台主机同时工作。默认值为5，可以在ansible.cfg修改
+ansible centos -a 'date' --forks 10
 ```
 
 - command模块：不指定模块时，默认使用command模块

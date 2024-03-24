@@ -21,6 +21,8 @@
 
 ## app
 
+- [busybox](https://github.com/meefik/busybox)
+
 - [ZeroTermux](https://github.com/hanxinhao000/ZeroTermux)
 
     - ZeroTermux 基于 Termux，整合了非常多的脚本和工具，在国内网络环境中部署更简单。
@@ -63,6 +65,8 @@
             # 查看sshd服务运行状态
             sv status sshd
             ```
+
+- [将 Python 程序变成 Android APK](https://github.com/kivy/python-for-android)
 
 - [f-droid：只上架开源app的应用商店](https://f-droid.org/)
 
@@ -117,6 +121,8 @@
 - [SmsForwarder（短信转发器）：备用机监控，如应用，短信通知等](https://github.com/pppscn/SmsForwarder)
 
 - [network_proxy_flutter：支持手机端的免费抓包工具](https://github.com/wanghongenpin/network_proxy_flutter)
+
+- [Winlator：使用 Wine 和 Box86/Box64 来运行 Windows 应用和游戏](https://github.com/brunodev85/winlator/releases/download/v5.1.0/Winlator.Development.apk)
 
 ## 刷机
 
@@ -240,9 +246,14 @@
 
         - [ssh服务器](https://github.com/Magisk-Modules-Repo/ssh)
         - [universal-gms-doze：减少google play服务耗电](https://github.com/gloeyisk/universal-gms-doze)
+
+        - [lamda：逆向及自动化的辅助框架](https://github.com/rev1si0n/lamda)
+
         - [uperf：调度](https://github.com/yc9559/uperf)
         - [FingerprintPay：指纹支付](https://github.com/eritpchy/FingerprintPay)
         - [Fingerface：面部识别](https://github.com/topjohnwu/Fingerface)
+
+        - [ZygiskFrida](https://github.com/lico-n/ZygiskFrida)
 
     - 5.xposed
 
@@ -266,6 +277,7 @@
         - [TSBattery：使 QQ、TIM、微信 变得更省电](https://github.com/fankes/TSBattery)
         - [解除网易云](https://github.com/nining377/UnblockMusicPro_Xposed)
         - [网易云换源插件](https://github.com/Xposed-Modules-Repo/com.blanke.diaomao163)
+        - [HookVip：解锁部分App会员](https://github.com/Xposed-Modules-Repo/Hook.JiuWu.Xp)
 
         - [知了：知乎去广告](https://github.com/shatyuka/Zhiliao)
         - [微博极速版去广告](https://github.com/Xposed-Modules-Repo/me.zhenxin.thisreallylite)
@@ -279,6 +291,8 @@
         - [MIUI 生活质量提升](https://github.com/Xposed-Modules-Repo/io.github.chsbuffer.miuihelper)
         - [miui传送门增强 -- TaplusExtension](https://github.com/Xposed-Modules-Repo/io.github.yangyiyu08.taplusext)
         - [customiuizer](https://github.com/monwf/customiuizer)
+
+        - [Jshook：对应用程序注入rhino/frida，你只需要会js就可以快速实现hook](https://github.com/Xposed-Modules-Repo/me.jsonet.jshook)
 
 ### [frida](https://frida.re/docs/home/)
 

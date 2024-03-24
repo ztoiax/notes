@@ -34,6 +34,10 @@
 
 - [clink：让 Windows 原生的 cmd.exe 拥有类似 bash 一样强大的自动补全、历史记录、行编辑等功能](https://github.com/chrisant996/clink)
 
+- [Shell：拓展右键](https://github.com/moudey/Shell)
+
+- [wsl2-distro-manager：WSL 发行版图形管理工具。](https://github.com/bostrot/wsl2-distro-manager)
+
 ## 手机与电脑交互
 
 - [intel unison：手机电脑消息、文件传输]()

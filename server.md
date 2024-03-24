@@ -6,11 +6,13 @@
         * [irqbalance(中断分配多cpu)](#irqbalance中断分配多cpu)
         * [关闭按Control-Alt-Delete就重启](#关闭按control-alt-delete就重启)
     * [su, sudo](#su-sudo)
-    * [openssh](#openssh)
+    * [ssh](#ssh)
         * [基本配置](#基本配置)
-        * [使用ssh-agent 管理私钥, 自动进行远程连接](#使用ssh-agent-管理私钥-自动进行远程连接)
+        * [/etc/ssh/sshd_config 配置文件](#etcsshsshd_config-配置文件)
+        * [ssh-agent管理私钥的passphrase密码，日后不需要输入passphrase就可以远程连接](#ssh-agent管理私钥的passphrase密码日后不需要输入passphrase就可以远程连接)
         * [快速连接](#快速连接)
-        * [用户管理](#用户管理)
+        * [ssh3：使用 QUIC + TLS 重新实现的 SSH 加密登陆工具，支持 UDP 端口转发](#ssh3使用-quic--tls-重新实现的-ssh-加密登陆工具支持-udp-端口转发)
+        * [sshfs：ssh将远程目录挂载到本地](#sshfsssh将远程目录挂载到本地)
         * [pdsh(ssh 并行管理)](#pdshssh-并行管理)
         * [pssh](#pssh)
     * [服务(server)](#服务server)
@@ -26,7 +28,7 @@
     * [安全(security)](#安全security)
         * [思路](#思路)
             * [以redis为例的服务检查](#以redis为例的服务检查)
-            * [ssh](#ssh)
+            * [ssh](#ssh-1)
             * [重要文件加锁chattr -i](#重要文件加锁chattr--i)
             * [ntp(同步时间服务)](#ntp同步时间服务)
         * [关闭 core dump](#关闭-core-dump)
@@ -183,37 +185,87 @@ tz ALL = NOPASSWD: /bin/cat /etc/shadow
     ```
 
 
-## openssh
+## ssh
 
 > 默认为22端口, 安全起见可更改为其它端口.如8022
 
 ### 基本配置
 
-- 服务器公钥保存路径: `~/.ssh/authorized_keys`
+- [技术蛋老师：OpenSSH核心操作 | GitHub SSH连接](https://www.bilibili.com/video/BV1Sx4y1y7B2)
 
-- 注意:服务端`authorized_keys`和客户端`私钥文件`权限必须是**600**
+- 服务器公钥保存路径：`~/.ssh/authorized_keys`
+
+    - 注意:服务端`authorized_keys`和客户端`私钥文件`权限必须是**600**
+
+- 服务器会保存曾经尝试连接（因为要输入密码，未必真的连接成功）的主机记录：`~/.ssh/known_hosts`
 
 ```sh
-# 生成密钥
-ssh-keygen -t rsa
+# 生成公私密钥。-t为rsa算法 -C为注释。
+ssh-keygen -t rsa -b 4096 -C "your_mail@example.com"
+# 生成公私密钥。github建议使用ed25519算法，openssh9.5开始默认使用ed25519算法
+ssh-keygen -t ed25519 -C "your_mail@example.com"
+# 执行后。第一次输入需要修改文件名，默认会覆盖id_rsa文件；第二次passphrase为输入密码，就算密钥被盗也没用。
 
 # 添加公钥到远程服务器
 ssh user@ip 'mkdir -p .ssh && cat >> .ssh/authorized_keys' < ~/.ssh/id_rsa.pub
 # or 使用ssh-copy-id -i
 sudo ssh-copy-id -i ~/.ssh/id_rsa.pub ip
+
+# ssh连接远程服务器
+ssh user@ip
+# -i 指定私钥路径
+ssh -i ~/.ssh/id_rsa user@ip
 ```
 
-### 使用ssh-agent 管理私钥, 自动进行远程连接
+- 修改 `/etc/ssh/sshd_config` 配置文件
+
+    ```
+    # 允许密钥连接
+    PubkeyAuthentication yes
+    ```
+
+- 重启sshd服务
+
+    ```sh
+    systemctl restart sshd
+    ```
+
+### /etc/ssh/sshd_config 配置文件
+
+```
+# 允许密钥连接
+PubkeyAuthentication yes
+
+# 允许密码连接
+PasswordAuthentication yes
+
+# 允许用户
+AllowUsers user1 user2
+
+# 禁止root登陆
+PermitRootLogin no
+
+# 修改默认端口
+Port 22221
+
+# 不使用dns反查, 提高ssh连接速度
+UseDNS no
+```
+
+### ssh-agent管理私钥的passphrase密码，日后不需要输入passphrase就可以远程连接
 
 ```sh
-# 启动ssh-agent
+# 后台启动ssh-agent
 eval `ssh-agent -s`
 
-# 添加私钥
-ssh-add /tmp/id_rsa
+# 添加私钥。需要输入passphrase密码
+ssh-add ~/.ssh/id_rsa
 
 # 查看私钥
 ssh-add -L
+
+# 关闭ssh-agent。ssh-agent把密码写入内存，可能会有被入侵的风险。
+ssh-agent -k
 ```
 
 ### 快速连接
@@ -248,12 +300,13 @@ ssh centos7
 ssh opensuse
 ```
 
-### 用户管理
+### [ssh3：使用 QUIC + TLS 重新实现的 SSH 加密登陆工具，支持 UDP 端口转发](https://github.com/francoismichel/ssh3)
 
-- 配置`/etc/ssh/sshd_config`文件:
+### [sshfs：ssh将远程目录挂载到本地](https://github.com/deadbeefsociety/sshfs)
 
-```
-AllowUsers user1 user2
+```sh
+# 将根目录，挂载到本地
+sshfs root@192.168.100.208:/ dir
 ```
 
 ### [pdsh(ssh 并行管理)](https://github.com/chaos/pdsh)

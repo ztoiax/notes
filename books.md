@@ -102,6 +102,8 @@
 
 - [Modern-CPP-Programming](https://github.com/federico-busato/Modern-CPP-Programming)
 
+- [Learn Modern C++](https://learnmoderncpp.com/)
+
 ### Java
 
 - [《Java 编程思想》 第四版](https://wizardforcel.gitbooks.io/thinking-in-java/content/)
@@ -397,6 +399,8 @@
 
 - [coder-kung-fu（开发内功修炼）](https://github.com/yanfeizhang/coder-kung-fu)
 
+- [《从零创建虚拟机管理程序》](https://github.com/SinaKarvandi/Hypervisor-From-Scratch)
+
 ## architecture(体系结构)
 
 - [《计算机体系结构基础 第3版(龙芯)》](https://foxsen.github.io/archbase/)
@@ -596,6 +600,8 @@
 
 ## AI(人工智能)
 
+- [AI光影社：马老师教AI](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzkzNDY0Nzc0OA==&action=getalbum&album_id=3334320359428292610&scene=126#wechat_redirect)
+
 - [《动手学深度学习》](https://zh.d2l.ai/)
 
 - [《TensorFlow深度学习》](https://github.com/dragen1860/Deep-Learning-with-TensorFlow-book)
@@ -620,7 +626,14 @@
 
 - [Awesome-AIGC-Tutorials](https://github.com/luban-agi/Awesome-AIGC-Tutorials)
 
+- [generative-ai-for-beginners](https://github.com/microsoft/generative-ai-for-beginners)
+
 - [AIGC 课程, 目前已支持 ChatGPT, Midjourney, Runway, Stable Diffusion, AI数字人，AI声音&音乐，大模型微调](https://www.learnprompt.pro/)
+
+- [从零到神经网络高手](https://github.com/karpathy/nn-zero-to-hero)
+
+- [《LLMs-from-scratch》](https://github.com/rasbt/LLMs-from-scratch)
+    - 这是一本讲述如何从头制作一个类似 ChatGPT 的大语言模型的书，它介绍了 LLMs 的工作原理，并教你如何创建自己的 LLM，内含丰富的图示和代码示例，目前该书还在编写中未完结。
 
 ## 硬件
 
@@ -793,6 +806,8 @@
 - [sre面试](https://github.com/bregman-arie/devops-exercises)
 
 - [小林coding：有哪些值得程序员去的银行开发？]()
+
+- [reactjs-interview-questions](https://github.com/sudheerj/reactjs-interview-questions)
 
 ## 裁员
 

@@ -150,7 +150,10 @@
 
 ## 华为
 
-- [一只羊咩咩1995](https://www.bilibili.com/list/watchlater?oid=284344040&bvid=BV1Bc411v7ok)
+- [一只羊咩咩1995：华为离职后，才敢公开的华为工作的一切：遥遥领先、应聘、工资、狼性文化、绩效、离职跳槽……](https://www.bilibili.com/video/BV1Bc411v7ok)
+
+- [华为访谈录——田峰（一线经营）](https://mp.weixin.qq.com/s/GOUnQetGmrOTYeRKePHGiw)
+- [华为访谈录——陈珠芳（人力资源）](https://mp.weixin.qq.com/s/OBPFu5Dk2JKmaFAl8DjUxQ)
 
 # 开源相关
 

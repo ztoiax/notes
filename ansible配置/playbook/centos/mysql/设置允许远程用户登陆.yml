@@ -1,0 +1,13 @@
+- hosts: all
+  remote_user: root
+
+  # 自定义变量
+  vars:
+    # 允许远程连接mysql的用户名
+    username: tz
+    # 允许远程连接mysql的本地ip
+    ip: 192.168.110.1
+
+  tasks:
+    - name: 创建用户，并赋予所有数据库权限
+      shell: mysql -uroot -e "create user '{{ username }}'@'{{ ip }}'; grant all on *.* to '{{ username }}'@'{{ ip }}'; FLUSH PRIVILEGES;"

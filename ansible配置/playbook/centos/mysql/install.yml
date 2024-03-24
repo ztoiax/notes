@@ -1,0 +1,26 @@
+- hosts: all
+  remote_user: root
+
+  tasks:
+    - name: 安装dnf命令
+      yum: name=dnf
+    - name: 安装mariadb
+      ansible.builtin.shell: dnf install -y mariadb-server
+
+    - name: 创建/etc/mysql目录
+      file: name=/etc/mysql state=directory
+
+    - name: copy /etc/mysql/my.cnf
+      copy: src=./my.cnf  dest=/etc/mysql/my.cnf backup=yes
+
+    - name: start mariadb service
+      service: name=mariadb state=started enabled=yes
+
+    - name: 防火墙永久开启mariadb端口
+      ansible.posix.firewalld:
+        port: 3306/tcp
+        permanent: true
+        state: enabled
+        # state: disabled
+    - name: restart firewalld
+      service: name=firewalld state=restarted

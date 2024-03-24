@@ -3,6 +3,7 @@
 * [file](#file)
     * [文件传输](#文件传输)
     * [文件管理器](#文件管理器)
+    * [文件清理](#文件清理)
 * [图片](#图片)
     * [image viewer(图片查看器)](#image-viewer图片查看器)
         * [qt](#qt)
@@ -65,6 +66,10 @@
 - pcmanfm(文件管理器)
 
 - [sigma-file-manager](https://github.com/aleksey-hoffman/sigma-file-manager)
+
+## 文件清理
+
+- [czkawka：多功能文件清理工具](https://github.com/qarmin/czkawka)
 
 # 图片
 

@@ -18,7 +18,7 @@
 
 - [llm-course](https://github.com/mlabonne/llm-course)
 
-- [可视化LLM](https://bbycroft.net/llm)
+- [llm-viz：3D 可视化 GPT 大语言模型。](https://bbycroft.net/llm)
 
 - [wolfram作者：What Is ChatGPT Doing … and Why Does It Work?](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)
 
@@ -30,7 +30,9 @@
 
 - [腾讯云开发者：GPT4结对编程实战，鹅厂一线研发真实使用感受](https://cloud.tencent.com/developer/article/2285573)
 
-- [腾讯云开发者：我用低代码结合ChatGPT开发，每天多出1小时摸鱼]()
+- [腾讯云开发者：我用低代码结合ChatGPT开发，每天多出1小时摸鱼](https://cloud.tencent.com/developer/article/2294350)
+
+- [铭毅天下Elasticsearch：吴恩达 x Open AI ChatGPT ——如何写出好的提示词视频核心笔记](https://mp.weixin.qq.com/s/VkLNKRtN7KR3Gjttk1cpPg)
 
 ### 商业
 
@@ -44,18 +46,27 @@
 - [llama：facebook的llm](https://github.com/ggerganov/llama.cpp)
 
     - [llama配置要求](http://www.bimant.com/blog/llama-consumer-hardware-requirements/)
-    - [Llama2-Chinese：中文优化](https://github.com/FlagAlpha/Llama2-Chinese)
+    - [Llama2-Chinese：Llama中文社区](https://github.com/LlamaFamily/Llama-Chinese)
 
+- [Gemma：google的llm](https://github.com/google-deepmind/gemma)
 
 - [ChatGLM-6B：清华大学的llm](https://github.com/THUDM/ChatGLM-6B)
 - [ChatGLM2-6B：清华大学的llm](https://github.com/THUDM/ChatGLM2-6B)
 - [ChatGLM3：清华大学和智谱合作的llm](https://github.com/THUDM/ChatGLM3)
+
+- [Grok-1：马斯克的 xAI 公司开源的 314B 参数、MoE（混合专家模型）的大型语言模型](https://github.com/xai-org/grok-1)
 
 - [LaWGPT：在通用中文基座模型（如 Chinese-LLaMA、ChatGLM 等）的基础上扩充法律领域专有词表、大规模中文法律语料预训练](https://github.com/pengxiao-song/LaWGPT)
 
 - [DB-GPT（部署数据库交互llm。防止数据隐私上传平台）](https://github.com/eosphoros-ai/DB-GPT)
 
 - [llm-course：免费的 LLM 课程，包含面向新手入门 LLM 的基础知识，面向程序员和科学家的 LLMs 产品和部署 LLM 应用的知识和笔记。](https://github.com/mlabonne/llm-course)
+
+## Transformer
+
+- [transformer-debugger](https://github.com/openai/transformer-debugger)
+
+    - OpenAI 开源了一款用于分析小型语言模型内部行为的工具：Transformer Debugger (TDB)，它将自动可解释性技术与稀疏自动编码器相结合，无需写代码就能快速探索模型。基于 Transformer 的语言模型就像个黑盒，该项目可以解密 Transfomer 的内部结构和预测行为。
 
 ## 图片视频
 

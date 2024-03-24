@@ -12,6 +12,7 @@
             * [在单个策略中组合入站和出站规则](#在单个策略中组合入站和出站规则)
             * [阻止对特定 IP 范围的出站流量](#阻止对特定-ip-范围的出站流量)
     * [minikube：单机运行Kubernetes集群](#minikube单机运行kubernetes集群)
+        * [插件](#插件)
         * [nginx](#nginx)
         * [Prometheus](#prometheus)
             * [服务发现](#服务发现)
@@ -19,7 +20,8 @@
         * [Prometheus Operator（简化在Kubernetes下部署和管理Prmetheus的复杂度）（??失败了）](#prometheus-operator简化在kubernetes下部署和管理prmetheus的复杂度失败了)
     * [helm：包管理器](#helm包管理器)
         * [基本命令](#基本命令)
-        * [插件](#插件)
+        * [插件](#插件-1)
+    * [Timoni：Helm 的可能替代方案](#timonihelm-的可能替代方案)
     * [Nacos](#nacos)
     * [云原生CI/CD](#云原生cicd)
         * [Tekton](#tekton)
@@ -829,20 +831,32 @@ sudo systemctl start docker
 minikube start --image-mirror-country='cn'
 # 可以调整配置参数
 minikube start --image-mirror-country='cn' --cpus=4 --memory=2048MB
+# 换成docker源最快
+minikube start --image-mirror-country='cn' --registry-mirror=https://registry.docker-cn.com --cpus=4 --memory=4096MB
 
 # Dashboard管理界面
 minikube dashboard
 
-# 当前集群虚拟机的IP地址
+# 查看当前集群列表
+minikube profile list
+
+# 查看当前集群虚拟机的IP地址
 minikube ip
 
 # 通过kubectl命令行工具，找到Dashboard对应的Service对外暴露的端口
 kubectl get service --namespace=kube-system
 ```
 
+### 插件
+
+```sh
+# 安装nginx-ingress插件
+minikube addons enable ingress
+```
+
 ### nginx
 
-- 创建了一个名为`nginx-deploymeht.yml`文件
+- 创建了一个名为`nginx-deployment.yml`文件
 
     - 创建的资源类型为`Deployment`
     - 注意新版kubernetes的`apiVersion: extensions/v1beta1`已被抛弃。使用`apps/v1`代替
@@ -855,6 +869,7 @@ kubectl get service --namespace=kube-system
       labels:
         app: nginx
     spec:
+      # 三份nginx
       replicas: 3
       selector:
         matchLabels:
@@ -869,7 +884,6 @@ kubectl get service --namespace=kube-system
             image: nginx:1.7.9
             ports:
             - containerPort: 80
-
     ```
 
 ```sh
@@ -1747,6 +1761,10 @@ helm dashboard
 helm plugin uninstall dashboard
 ```
 
+## [Timoni：Helm 的可能替代方案](https://github.com/stefanprodan/timoni)
+
+- 使用CUElang，这是一种专门为这些用例而设计的语言。代替yaml
+
 ## [Nacos](https://github.com/alibaba/nacos)
 
 - Nacos（Namings and Configuration Management）是阿里巴巴开源的一个易于构建云原生应用的动态服务发现、配置管理和服务管理平台。
@@ -2182,6 +2200,8 @@ curl https://argocd.kubernets.cn -I
 
 - [像tcpdump那样管理](https://github.com/up9inc/mizu)
 
+- [Tekton Pipelines：声明 CI/CD 样式管道的 k8s 样式资源]()
+
 - 客户端
 
     - [krew：kubectl的插件管理](https://github.com/kubernetes-sigs/krew)
@@ -2202,9 +2222,16 @@ curl https://argocd.kubernets.cn -I
         kubectl krew install cert-manager
         ```
 
+    - [k8sgpt](https://github.com/k8sgpt-ai/k8sgpt)
+
+    - [kubectx：像git那样切换分支](https://github.com/ahmetb/kubectx)
+
     - [kubecolor：让kubectl的输出有颜色](https://github.com/hidetatz/kubecolor)
 
     - [kube-shell：类似ipython的补全shell](https://github.com/cloudnativelabs/kube-shell)
+
+    - [Lens：k8s ide](https://github.com/lensapp/lens)
+    - [K8Studio：k8s ide](https://k8studio.io/)
 
     - [k9s：tui管理pod](https://github.com/derailed/k9s)
 

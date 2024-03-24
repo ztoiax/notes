@@ -1,0 +1,26 @@
+[mysqld]
+# 允许MySQL监听所有网络接口
+bind-address = 0.0.0.0
+
+###### 主从复制 ######
+# 本机为slave
+server-id=128              # 默认是 1 ,这个数字必须是唯一的
+# 可以通过show master status;查看
+log_bin=centos7-3
+
+binlog-do-db=test          # 同步指定库tz
+slave-skip-errors = all    # 忽略因复制出现的所有错误
+
+# 设置 binlog_format 格式为row（默认）。如果是STATEMENT使用 uuid()函数主从数据会不一致
+binlog_format=row
+
+# 设置一个 binlog 文件的最大字节。设置最大 100MB
+max_binlog_size=100M
+
+# 设置了 binlog 文件的有效期（单位：天）
+expire_logs_days = 7
+
+# 默认值为0，最不安全。只写入到文件系统缓存（page cache），由系统自行判断什么时候执行fsync磁盘，因此会丢失数据
+# 最安全的值为1。但这也是最慢的。每次都fsync到磁盘
+# 执行n 次事务提交后，才fsync到磁盘
+sync_binlog=1

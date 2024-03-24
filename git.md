@@ -2,6 +2,7 @@
 
 * [Git](#git)
     * [初次运行 Git 前的配置](#初次运行-git-前的配置)
+    * [连接远程github仓库](#连接远程github仓库)
     * [基本命令](#基本命令)
     * [branch(分支)](#branch分支)
         * [merge(分支合并)](#merge分支合并)
@@ -23,7 +24,9 @@
         * [commitgpt（ai自动生成git commit）](#commitgptai自动生成git-commit)
         * [git-cliff：对history生成markdown日志](#git-cliff对history生成markdown日志)
         * [github/gitignore：A collection of useful .gitignore templates](#githubgitignorea-collection-of-useful-gitignore-templates)
+        * [gitbutler：git的gui](#gitbutlergit的gui)
 * [github](#github)
+    * [api](#api)
     * [github工作流](#github工作流)
     * [code action](#code-action)
 * [reference](#reference)
@@ -56,6 +59,44 @@ git config --list
 # 生成git ssh密钥
 ssh-keygen -t rsa -C <userid> #your userid
 ```
+
+## 连接远程github仓库
+
+- [技术蛋老师：给学完Git，还不会用GitHub的朋友们](https://www.bilibili.com/video/BV1RC411W7UE)
+
+```sh
+# 添加远程github仓库地址。可以是https、ssh的地址
+git remote add origin <url>
+
+# 修改远程仓库地址
+git remote set-url origin <url>
+
+# 查看远程仓库地址
+git remote -v
+
+# 把当前分支改为main
+git branch -m main
+# -M强制执行
+git branch -M main
+
+# 把远程仓库同步到本地
+git pull origin main
+
+# 如果本地的commit log与远程不一致，rebase参数可以将本地的commit作为最新的commit
+git pull rebase origin main
+
+# 同步到远程仓库。-u表示以后默认这个远程地址
+git push -u origin main
+```
+
+- 如果是ssh连接。需要生成密钥对。然后将公钥复制到github个人主页中的`settings`中的`SSH and GPG keys`
+
+    ```sh
+    # -T 进行连接测试
+    ssh -T git@github.com
+    # -i 指定私钥路径
+    ssh -i ~/.ssh/id_rsa -T git@github.com
+    ```
 
 ## 基本命令
 
@@ -119,13 +160,16 @@ git gc --prune=now --aggressive
 git branch
 
 # 新建分支
-git branch <BRANCH>
+git branch <name>
+
+# 对当前分支改名
+git branch -M <new_name>
 
 # 删除分支
-git branch -d <BRANCH>
+git branch -d <name>
 
 # 切换分支
-git checkout <BRANCH>
+git checkout <name>
 
 # 切换上一个分支
 git checkout -
@@ -379,6 +423,8 @@ git commit -m "..."
 
 ### [github/gitignore：A collection of useful .gitignore templates](https://github.com/github/gitignore)
 
+### [gitbutler：git的gui](https://github.com/gitbutlerapp/gitbutler)
+
 # github
 
 - 访问速度慢的问题：
@@ -398,6 +444,13 @@ git commit -m "..."
 - [查看github仓库的trends](https://github-trends.com/)
 
 - [grep app：超快的在线github搜索工具](https://grep.app/)
+
+## api
+
+```sh
+# 这个api网址上json文件。以下命令为下载最新的linux-amd64包
+curl -s https://api.github.com/repos/prometheus/mysqld_exporter/releases/latest   | grep browser_download_url | grep linux-amd64 |  cut -d '"' -f 4 | wget -qi -
+```
 
 ## github工作流
 

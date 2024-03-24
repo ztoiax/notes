@@ -1,0 +1,53 @@
+# master
+- hosts: 192.168.110.4
+  remote_user: root
+
+  vars:
+    # 要同步复制的数据库
+    database: test
+
+  tasks:
+
+    - name: copy master /etc/mysql/my.cnf
+      copy: src=./master-my.cnf  dest=/etc/mysql/my.cnf backup=yes
+
+    - name: restart mariadb
+      service: name=mariadb state=restarted
+
+    - name: 导出数据库
+      shell: mysqldump -uroot {{ database }} > /root/{{ database }}.sql
+
+    - name: 将sql文件复制下来
+      fetch: src=/root/{{ database }}.sql dest=/tmp/{{ database }}
+
+# slave
+- hosts: 192.168.110.5
+  remote_user: root
+
+  vars:
+    master_ip: 192.168.110.4
+    # 要同步复制的数据库
+    database: test
+
+  tasks:
+
+    - name: copy slave /etc/mysql/my.cnf
+      copy: src=./slave-my.cnf  dest=/etc/mysql/my.cnf backup=yes
+
+    - name: restart mariadb
+      service: name=mariadb state=restarted
+
+    - name: copy 从master导出的数据库
+      copy: src=/tmp/test/{{ master_ip }}/root/{{ database }}.sql  dest=/etc/mysql/{{ database }}.sql
+
+    - name: 导入数据库
+      shell: mysql test < /etc/mysql/{{ database }}.sql
+
+    - name: copy slave.sql
+      copy: src=./slave.sql  dest=/etc/mysql/slave.sql
+
+    - name: 执行sql
+      shell: mysql < /etc/mysql/slave.sql
+
+      # 最后需要自己手动在在slave上执行查看是否成功
+      # show slave status\G;

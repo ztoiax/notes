@@ -19,7 +19,6 @@
         * [fselect: sql语句的ls](#fselect-sql语句的ls)
         * [locate:定位文件](#locate定位文件)
         * [shred：安全地抹去磁盘数据。代替rm](#shred安全地抹去磁盘数据代替rm)
-        * [sshfs：ssh将远程目录挂载到本地](#sshfsssh将远程目录挂载到本地)
     * [char (字符串操作)](#char-字符串操作)
         * [column](#column)
         * [tr](#tr)
@@ -475,13 +474,6 @@ shred -v -n 1 /dev/sdb
 shred -v -n 1 --random-source=/dev/urandom /dev/sdb
 ```
 
-### [sshfs：ssh将远程目录挂载到本地](https://github.com/deadbeefsociety/sshfs)
-
-```sh
-# 将根目录，挂载到本地
-sshfs root@192.168.100.208:/ dir
-```
-
 ## char (字符串操作)
 
 ### column
@@ -716,6 +708,13 @@ awk -v a="$i" 'NR == a  {sub(/root/,"tz")}1' FILE
 awk 'ORS=NR%2' FILE
 
 awk -v a="$var1" -v b="$var2" 'BEGIN {print a,b}'
+
+# 找出当前系统中 swap 占用最大的几个进程，并列出它们的进程号、进程名和 swap  大小。
+# awk 命令用于匹配 VmSwap、Name 或者 Pid 这几个关键字，并输出它们的值。END{ print ""}是末尾加上换行符。
+# sort -k 3 -n -r：对输出的结果进行排序。-k 3 表示按第三列进行排序，即按照交换空间大小排序；-n 表示按照数字顺序排序；-r 表示逆序排序，即从大到小排序。
+for file in /proc/*/status;
+    do awk '/VmSwap|Name|^Pid/{printf $2 " " $3}END{ print ""}' $file;
+done | sort -k 3 -n -r | head
 ```
 
 - [Understanding AWK](https://earthly.dev/blog/awk-examples/)

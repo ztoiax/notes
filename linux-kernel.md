@@ -947,9 +947,24 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
         # 实时查看swap的使用。si和so表示swap in swap on
         dstat --vmstat 1
+        # 或者
+        vmstat 1
 
+        # 查看进程 swap 换出的虚拟内存大小，它保存在 /proc/pid/status 的 Vmswap 字段中
         # 查看redis进程的swap使用情况，求和可以得出总的swap量
         cat /proc/$(pidof redis-server)/smaps | grep -i swap
+
+        # 找出当前系统中 swap 占用最大的几个进程，并列出它们的进程号、进程名和 swap  大小。-k 3 表示按第三列进行排序，即按照交换空间大小排序
+        for file in /proc/*/status;
+            do awk '/VmSwap|Name|^Pid/{printf $2 " " $3}END{ print ""}' $file;
+        done | sort -k 3 -n -r | head
+
+        # 如果 swap 过高导致告警。可以关闭swap
+        swapoff -a
+
+        # 查看是否已经关闭，如果输出为空则表示 swap 成功关闭。
+        cat /proc/swaps
+        # 为了下一次重启机器后 swap 还是关闭状态我们还要编辑 /etc/fstab 文件，将其中关于 swap 的配置注释掉或者删除掉。
         ```
 
     - 文件页、匿名页都是根据LRU算法进行回收，维护着 active 和 inactive 两个双向链表：

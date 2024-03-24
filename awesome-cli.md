@@ -572,6 +572,10 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 
 ## [onedrive](https://github.com/skilion/onedrive)
 
+# 国内知名网站的第三方客户端
+
+## [fav：b站收藏下载](https://github.com/kingwingfly/fav)
+
 # other
 
 ## [haxor-news: hacker new](https://github.com/donnemartin/haxor-news)
@@ -729,6 +733,8 @@ restic --repo /tmp/backup backup ~/st
 ```
 
 # pdf、mobi、epub
+
+## [Web2pdf](https://github.com/dvcoolarun/web2pdf)
 
 ## [ocrmypdf: pdf图片转文字](https://github.com/ocrmypdf/OCRmyPDF)
 

@@ -1,0 +1,48 @@
+# - hosts: 127.0.0.1
+#
+#   tasks:
+#     - name: 下载最新的mysqld_exporter包
+#       shell: curl -LO https://github.com/prometheus/mysqld_exporter/releases/download/v0.15.1/mysqld_exporter-0.15.1.linux-amd64.tar.gz
+#
+#     - name: 解压
+#       unarchive:
+#         src: ./mysqld_exporter-0.15.1.linux-amd64.tar.gz
+#         dest: ./
+
+- hosts: all
+  remote_user: root
+
+  tasks:
+    # - name: 复制mysqld_exporter，并赋予执行权限
+    #   copy: src=./mysqld_exporter-0.15.1.linux-amd64/mysqld_exporter dest=/usr/bin/ mode=a+x
+    #
+    # - name: create dir
+    #   file: name=/etc/prometheus state=directory
+    #
+    # - name: 复制mysqld_exporter.cnf
+    #   copy: src=./mysqld_exporter.cnf dest=/etc/prometheus/
+    #
+    # - name: Copy file
+    #   copy:
+    #     src: ./install.sql
+    #     dest: /root/
+    #
+    # - name: 创建mysqld_exporter用户，并设置权限
+    #   shell: mysql test < /root/install.sql
+    #
+    # - name: 复制mysqld_exporter.service
+    #   copy: src=./mysqld_exporter.service dest=/usr/lib/systemd/system/ mode=a+x
+    #
+    # - name: start mysqld_exporter
+    #   systemd_service:
+    #     name: mysqld_exporter
+    #     state: started
+    #     enabled: true
+    #     daemon_reload: true
+
+    - name: 开启mysqld_exporter的9104端口
+      ansible.posix.firewalld:
+        port: 9104
+        permanent: true
+        state: enabled
+        # state: disabled
