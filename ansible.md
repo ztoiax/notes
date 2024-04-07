@@ -188,9 +188,6 @@
 # 设置callbacks查看task的时间
 callbacks_enabled = timer, profile_tasks, profile_roles
 
-# 关闭fact，整个playbookfact变量将不会在显示，可以提高执行效率
-gathering = explicit
-
 # 最多50台主机同时工作
 forks = 50
 
@@ -204,6 +201,55 @@ pipelining = True
 # 多个SSH会话以使用单个网络连接。这节省了SSH连接初始进程的时间 # 连接保持60s
 ssh_args = -o ControlMaster=auto -o ControlPersist=60s
 ```
+
+- 开启accelerate模式
+
+    - Ansible还有一个accelerate模式，这和前面SSH的Multiplexing有点类似，因为都依赖Ansible中控机跟远端机器有一个长连接。但是accelerate是使用Python程序在远端机器上运行一个守护进程，然后Ansible会通过这个守护进程监听的端口进行通信。开启accelerate模式很简单，只要在playbook中配置accelerate: true即可。但是需要注意，如果开启accelerate模式，则需要在Ansible中控机与远端机器都安装python-keyczar软件包。
+
+    - 如果采用了accelerate模式，整个Ansible流程将变得不一样了。读者可以使用debug参数-vvvv查看整个执行过程。
+
+    - 保存至/etc/ansible/ansible.cfg
+    ```ini
+    [accelerate]
+    accelerate_port = 5099
+    accelerate_timeout = 30
+    accelerate_connect_timeout = 5.0
+    ```
+
+- 设置facts缓存
+
+    - 如果细心的话，就会发现在执行playbook的时候，默认第一个task都是GATHERING FACTS，这个过程就是Ansible收集每台主机的facts信息。方便我们在playbook中直接引用facts里的信息。
+
+    - 当然如果你的playbook中不需要facts信息，可以在playbook中设置`gather_facts: False`来提高playbook效率。
+
+    - 但是如果我们既想在每次执行playbook的时候都能收集facts，又想加速这个收集过程，那么就需要配置facts缓存了。目前Ansible支持使用json文件存储facts信息。下面我们首先通过示例来了解如何使用json文件存储facts信息：
+
+    ```ini
+    [defaults]
+    gathering = smart
+    fact_caching_timeout = 86400
+    fact_caching = jsonfile
+    fact_caching_connection = /dev/shm/ansible_fact_cache
+    ```
+
+    ```sh
+    # 查看fact缓存
+    cat /dev/shm/ansible_fact_cache/192.168.110.4
+    ```
+
+    - 使用redis缓存，而不是json文件
+
+        ```sh
+        # 安装redis库
+        pip install redis
+        ```
+
+        ```ini
+        [defaults]
+        gathering = smart
+        fact_caching_timeout = 86400
+        fact_caching = redis
+        ```
 
 - [Mitogen模块加速](https://mitogen.networkgenomics.com/ansible_detailed.html)
 

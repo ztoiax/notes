@@ -293,6 +293,8 @@
 
 - [腾讯技术工程：经典论文解读——布隆过滤器](https://new.qq.com/rain/a/20230307A05QH000)
 
+- [腾讯云开发者：一文搞懂七种基本的GC垃圾回收算法](https://mp.weixin.qq.com/s/M8R4QPidlCrr6vix4JUWmg)
+
 - [Linus Torvalds' linked list argument for good taste, explained](https://github.com/mkirchner/linked-list-good-taste)
 
 - [推特推荐算法](https://github.com/twitter/the-algorithm)
@@ -611,6 +613,8 @@
 - [《Machine Learning Yearning》(中文)](https://deeplearning-ai.github.io/machine-learning-yearning-cn/)
 
 - [《概率机器学习》。该项目包含凯文·墨菲的三本书籍，分别为《机器学习：概率视角》、《概率机器学习：简介》、《概率机器学习：高级》](https://github.com/probml/pml-book)
+
+- [《动手实战人工智能 AI By Doing》](https://aibydoing.com/intro)
 
 - [machine-learning-roadmap](https://github.com/mrdbourke/machine-learning-roadmap)
 

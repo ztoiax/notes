@@ -5,6 +5,7 @@
     * [中断](#中断)
 * [memory（内存）](#memory内存)
     * [物理内存](#物理内存)
+        * [内存管理：用户态和内核态](#内存管理用户态和内核态)
         * [热插拔（hotplug）](#热插拔hotplug)
         * [三种内存模型](#三种内存模型)
         * [UMA](#uma)
@@ -39,13 +40,14 @@
         * [socket](#socket)
     * [线程（Thread）](#线程thread)
     * [调度](#调度)
+        * [调度器](#调度器)
         * [调度算法](#调度算法)
     * [中断](#中断-1)
         * [硬中断](#硬中断)
         * [软中断](#软中断)
             * [tasklet：动态机制，基于 softirq](#tasklet动态机制基于-softirq)
             * [workqueue：动态机制，运行在进程上下文](#workqueue动态机制运行在进程上下文)
-* [I/O](#io)
+* [磁盘和文件系统](#磁盘和文件系统)
     * [磁盘调度算法](#磁盘调度算法)
     * [文件系统](#文件系统)
         * [文件的存储](#文件的存储)
@@ -54,15 +56,15 @@
             * [linux ext2](#linux-ext2)
         * [目录的存储](#目录的存储)
         * [硬链接、软链接](#硬链接软链接)
-    * [文件I/O](#文件io)
-        * [非直接I/O Page cache](#非直接io-page-cache)
-            * [Page cache的零拷贝技术](#page-cache的零拷贝技术)
-        * [直接I/O + 异步I/O 解决大文件传输问题](#直接io--异步io-解决大文件传输问题)
-        * [缓冲区共享 (Buffer Sharing)](#缓冲区共享-buffer-sharing)
-        * [I/O多路复用（select, poll, epoll）](#io多路复用select-poll-epoll)
-            * [epoll()](#epoll)
-            * [Reactor架构](#reactor架构)
-            * [Proactor架构](#proactor架构)
+* [I/O](#io)
+    * [非直接I/O Page cache](#非直接io-page-cache)
+        * [Page cache的零拷贝技术](#page-cache的零拷贝技术)
+    * [直接I/O + 异步I/O 解决大文件传输问题](#直接io--异步io-解决大文件传输问题)
+    * [缓冲区共享 (Buffer Sharing)](#缓冲区共享-buffer-sharing)
+    * [I/O多路复用（select, poll, epoll）](#io多路复用select-poll-epoll)
+        * [epoll()](#epoll)
+        * [Reactor架构](#reactor架构)
+        * [Proactor架构](#proactor架构)
     * [通用块层](#通用块层)
     * [设备控制器](#设备控制器)
 
@@ -92,11 +94,19 @@
 
     - intel CPU每一代产品都会尽量兼容之前的产品，早期的CPU启动时是实模式，后来的CPU为了兼容早期的CPU，启动时也处于实模式，需要引导程序主动进入保护模式
 
-    - 限制指令：判断当前状态，如果状态为用户模式则拒绝执行「特权指令
+    - X86架构，用户态运行在ring3，内核态运行在ring0，两个特权等级。
 
-    - 限制内存：在cpu引入MMU的单元
+        - 1.ring0：一些特权指令，例如填充页表、切换进程环境等，一般在ring0进行。内核态包括了异常向量表（syscall、中断等）、内存管理、调度器、文件系统、网络、虚拟化、驱动等。
 
-        - 在用户模式下，所有内存访问经过MMU，从而对内存的访问受到了保护；在特权模式下，内存访问绕过MMU，直接访问物理内存
+        - 2.ring3：只能访问部分寄存器，做协程切换等。可以运行用户程序。用户态lib、服务等。
+
+        - 区别
+
+            - 用户态crash，重启app即可；系统是安全的。内核态crash，整机需要重启。
+
+            - 通过页表做进程隔离，进程之间内存一般不可见（共享内存除外）。而内核态内存全局可见。
+
+        ![image](./Pictures/linux-kernel/内核态和用户态.avif)
 
 ## 中断
 
@@ -175,6 +185,16 @@ dmesg | grep NR_IRQS
 
 - CPU通过物理内存地址向物理内存读写数据的完整过程：
     ![image](./Pictures/linux-kernel/cpu_to_memory.avif)
+
+### 内存管理：用户态和内核态
+
+- 64位地址空间0x0000,0000,0000,0000。~0x0000, 7fff,ffff,f000为用户态空间地址，0xffff,8800,0000,0000~0xffff,ffff,ffff,ffff为内核态空间地址（除去部分空洞）。
+    ![image](./Pictures/linux-kernel/内存管理.avif)
+
+- 用户态部分，有mmap、malloc（实际brk）、不同语言分配接口等分配虚拟内存。read、write等fs相关系统调用也可以直接访问页缓存。
+
+- 内核部分，内存管理由slub子系统（支持小内存分配）和伙伴系统buddy（管理所有分配给内核使用的可见页）组成。功能包括了内存映射（map与缺页异常）、内存分配、内存回收、内存迁移等组成。
+    ![image](./Pictures/linux-kernel/内存管理-用户态和内核态.avif)
 
 ### 热插拔（hotplug）
 
@@ -477,6 +497,7 @@ numactl --interleave=all mongod --port 27017 --dbpath ~/mongodb
 - 「页表」保存的是虚拟内存地址与物理内存地址的映射关系。把整个虚拟和物理地址切割成固定页（4KB），由cpu集成的硬件MMU（内存管理单元）负责转换
 
 - 进程要访问的虚拟地址，在页表找不到的时候，就会产生**缺页中断**。`Page Fault Handler （缺页中断函数）` 就会分配物理地址，建立虚拟与物理地址的正向映射，更新页表。
+    ![image](./Pictures/linux-kernel/缺页异常.avif)
 
 - 页表项中除了物理地址之外，还有一些标记属性的比特，比如控制一个页的读写权限，标记该页是否存在等。在内存访问方面，操作系统提供了更好的安全性。
 
@@ -1442,6 +1463,28 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 | 等待时间   | 进程处于就绪队列的时间，等待的时间越长，用户越不满意                                                                                          |
 | 响应时间   | 用户提交请求到系统第一次产生响应所花费的时间，对于鼠标、键盘这种交互式比较强的应用，我们当然希望它的响应时间越快越好，否则就会影响用户体验了 |
 
+### 调度器
+
+- 调度器由调度类（例如cfs、rt、stop、deadline、idle等，都是调度类）与通用调度模块组成（主要在core.c）。
+
+- 调度完整运行，需要抢占、切换机制的支持，需要有调度的上下文进程/线程。
+
+- 首选可以通过clone、fork、execv等创建进程。抢占包括设置抢占标志need_schded、执行抢占两部分。设置抢占标志一般由调度类支持，例如cfs分配的quota到期，设置抢占标志；更高优先级的进程到来，设置抢占标志。
+
+- 抢占，分为用户态抢占和内核态抢占
+
+    - 一般只打开用户态抢占，只有实时性要求非常高的场景，考虑打开内核态抢占。
+
+    - 用户态抢占：在用户态运行时，由syscall、中断、缺页异常等陷入内核，再返回用户态时（entry_64.S），会判断是否有need_sched抢占标志，如果有，则执行抢占，通过schedule()选择新进程执行。
+
+        - 在schedule()完成进程上下文切换，进程A切换到进程B，进程A->schedule()->进程B，保存进程A的寄存器上下文，恢复进程B的寄存器上下文，从而完成切换。
+
+    - 内核态抢占：则是在内核态运行时，触发异常后，执行抢占，例如中断、tick等到来可以执行抢占。
+
+- 调度类按照优先级，包括stop（主要用于核间通信等）、deadline、RT、cfs、idle等。
+
+    ![image](./Pictures/linux-kernel/process-调度器.avif)
+
 ### 调度算法
 
 - 非抢占式的先来先服务（First Come First Serve, FCFS）：从就绪队列选择最先进入队列的进程，然后一直运行，直到进程退出或被阻塞
@@ -1589,7 +1632,7 @@ sudo dmesg | grep NR_IRQS
 systemd-cgls -k | grep kworker
 ```
 
-# I/O
+# 磁盘和文件系统
 
 ![image](./Pictures/linux-kernel/io-layer.avif)
 ![image](./Pictures/linux-kernel/io-layer1.avif)
@@ -1647,6 +1690,8 @@ systemd-cgls -k | grep kworker
 
 
 ## 文件系统
+
+![image](./Pictures/linux-kernel/fs架构.avif)
 
 - 一切皆文件：每个文件有两个数据结构
 
@@ -1846,11 +1891,37 @@ systemd-cgls -k | grep kworker
 
     ![image](./Pictures/linux-kernel/fs-symbolic_link-save.avif)
 
-## 文件I/O
+# I/O
 
 - [小林coding：文件系统全家桶](https://www.xiaolincoding.com/os/6_file_system/file_system.html)
 
 - [微信：你管这破玩意叫 IO 多路复用？](https://mp.weixin.qq.com/s?src=11&timestamp=1677635997&ver=4379&signature=FHMv9hT1cgc95fpEElGCyKw3ZTIzTE*L*ZacfLz41IPLk*8iB2Kt1X6Hqk7KxIoFcQHbuX53vi6KgaZxgc-tEOBjw2ji7nDM5QIQaRqrSphcOKejfeVUZBtkGWhIVhfs&new=1)
+
+- I/O：在计算机内存与外部设备之间拷贝数据的过程。
+
+- 程序通过CPU向外部设备发出读指令，数据从外部设备拷贝至内存需要一段时间，这段时间CPU就没事情做了，程序就会两种选择：
+
+    - 1.让出CPU资源，让其干其他事情
+    - 2.继续让CPU不停地查询数据是否拷贝完成
+    - 到底采取何种选择就是I/O模型需要解决的事情了。
+
+- 以网络数据读取为例来分析，会涉及两个对象，一个是调用这个I/O操作的用户线程，另一个是操作系统内核。
+
+- 当用户线程发起 I/O 调用后，网络数据读取操作会经历两个步骤：
+
+    - 数据准备阶段：用户线程等待内核将数据从网卡拷贝到内核空间。
+    - 数据拷贝阶段：内核将数据从内核空间拷贝到用户空间（应用进程的缓冲区）。
+
+- Linux 系统下的 I/O 模型有 5 种：
+
+    - 1.同步阻塞I/O（bloking I/O）
+    - 2.同步非阻塞I/O（non-blocking I/O）
+    - 3.I/O多路复用（multiplexing I/O）
+    - 4.信号驱动式I/O（signal-driven I/O）
+    - 5.异步I/O（asynchronous I/O）
+
+    ![image](./Pictures/linux-kernel/io模型.avif)
+    ![image](./Pictures/linux-kernel/io模型对比.avif)
 
 阻塞 I/O 好比，你去饭堂吃饭，但是饭堂的菜还没做好，然后你就一直在那里等啊等，等了好长一段时间终于等到饭堂阿姨把菜端了出来（数据准备的过程），但是你还得继续等阿姨把菜（内核空间）打到你的饭盒里（用户空间），经历完这两个过程，你才可以离开。
 
@@ -1859,8 +1930,6 @@ systemd-cgls -k | grep kworker
 基于非阻塞的 I/O 多路复用好比，你去饭堂吃饭，发现有一排窗口，饭堂阿姨告诉你这些窗口都还没做好菜，等做好了再通知你，于是等啊等（select 调用中），过了一会阿姨通知你菜做好了，但是不知道哪个窗口的菜做好了，你自己看吧。于是你只能一个一个窗口去确认，后面发现 5 号窗口菜做好了，于是你让 5 号窗口的阿姨帮你打菜到饭盒里，这个打菜的过程你是要等待的，虽然时间不长。打完菜后，你自然就可以离开了。
 
 异步 I/O 好比，你让饭堂阿姨将菜做好并把菜打到饭盒里后，把饭盒送到你面前，整个过程你都不需要任何等待。
-
-![image](./Pictures/linux-kernel/io.avif)
 
 - 缓冲与非缓冲 I/O
 
@@ -1985,7 +2054,7 @@ systemd-cgls -k | grep kworker
                 ceph config show osd.16 | grep ioring
                 ```
 
-### 非直接I/O Page cache
+## 非直接I/O Page cache
 
 - [小林coding：进程写文件时，进程发生了崩溃，已写入的数据会丢失吗？](https://www.xiaolincoding.com/os/6_file_system/pagecache.html)
 
@@ -2081,7 +2150,7 @@ systemd-cgls -k | grep kworker
     | fdatasync(int fd) | fdatasync(fd)：将 fd 代表的文件的脏数据刷新至磁盘，同时对必要的元数据刷新至磁盘中，这里所说的必要的概念是指：对接下来访问文件有关键作用的信息，如文件大小，而文件修改时间等不属于必要信息 |
     | sync()            | sync()：则是对系统中所有的脏的文件数据元数据刷新至磁盘中                                                                                                                                   |
 
-#### Page cache的零拷贝技术
+### Page cache的零拷贝技术
 
 - [腾讯技术工程：从Linux零拷贝深入了解Linux-I/O](https://cloud.tencent.com/developer/article/2190176)
 
@@ -2211,7 +2280,7 @@ systemd-cgls -k | grep kworker
         }
         ```
 
-### 直接I/O + 异步I/O 解决大文件传输问题
+## 直接I/O + 异步I/O 解决大文件传输问题
 
 - 大文件传输 不使用Page cache零拷贝技术：Page cache 由于长时间被大文件占据，其他「热点」的小文件可能就无法充分使用到 Page cache，于是这样磁盘读写的性能就会下降了
 
@@ -2230,7 +2299,7 @@ systemd-cgls -k | grep kworker
     512
     ```
 
-### 缓冲区共享 (Buffer Sharing)
+## 缓冲区共享 (Buffer Sharing)
 
 - 目前大多数的实现都还处于实验阶段
 
@@ -2240,7 +2309,7 @@ systemd-cgls -k | grep kworker
 
 - fbufs 为每一个用户进程分配一个 buffer pool，里面会储存预分配 (也可以使用的时候再分配) 好的 buffers，这些 buffers 会被同时映射到用户内存空间和内核内存空间。fbufs 只需通过一次虚拟内存映射操作即可创建缓冲区，有效地消除那些由存储一致性维护所引发的大多数性能损耗。
 
-### I/O多路复用（select, poll, epoll）
+## I/O多路复用（select, poll, epoll）
 
 ![image](./Pictures/linux-kernel/io-multiplexing-性能图.avif)
 
@@ -2313,7 +2382,7 @@ systemd-cgls -k | grep kworker
 
 - `poll()`：与 `select()` 无本质区别。而是用链表代替bitsmap，突破了select的最大长度，但还是会受系统文件描述符的限制。
 
-#### epoll()
+### epoll()
 
 - `epoll()`
 
@@ -2446,7 +2515,11 @@ systemd-cgls -k | grep kworker
 
         ![image](./Pictures/linux-kernel/io-multiplexing-epoll-rdllist.avif)
 
-#### Reactor架构
+### Reactor架构
+
+- Reactor 模型是网络服务器端用来处理高并发网络 IO 请求的一种编程模型。
+    - 该模型主要有三类处理事件：即连接事件、写事件、读事件
+    - 三个关键角色：即 reactor、acceptor、handler。acceptor负责连接事件，handler负责读写事件，reactor负责事件监听和事件分发。
 
 - [小林coding：高性能网络模式：Reactor 和 Proactor](https://www.xiaolincoding.com/os/8_network_system/reactor.html)
 
@@ -2480,11 +2553,11 @@ systemd-cgls -k | grep kworker
 
     - Reactor：通过select 监听，收到事件后，根据事件类型通过 dispatch 分发给 Acceptor， Handler
 
-    - Acceptor：accept 方法获取连接，并创建一个 Handler 对象来处理后续的响应事件
+    - Acceptor：accept 方法建立连接，并创建一个 Handler 对象来处理后续的响应事件
 
         - 如果不是连接建立事件， 则交由当前连接对应的 Handler 对象来进行响应
 
-    - Handler：通过 read -> 业务处理 -> send 的流程来完成完整的业务流程
+    - Handler：如果是读写事件reactor 将事件分发给 handler 进行处理。通过 read -> 业务处理 -> send 的流程来完成完整的业务流程
 
     ![image](./Pictures/linux-kernel/reactor.avif)
 
@@ -2500,7 +2573,9 @@ systemd-cgls -k | grep kworker
 
 - 单 Reactor 多线程 / 多进程
 
-    - 包含上一个模式的所有对象的处理
+    - 该模型中，reactor、acceptor 和 handler 的功能由一个线程来执行，与此同时，会有一个线程池，由若干 worker 线程组成。
+
+    - 在监听客户端事件、连接事件处理方面，这个类型和单 rector 单线程是相同的，但是不同之处在于，在单 reactor 多线程类型中，handler 只负责读取请求和写回结果，而具体的业务处理由 Processor 对象的worker线程来完成。
 
     - Handler 对象不再负责业务处理，只负责数据的接收和发送，Handler 对象通过 read 读取到数据后，会将数据发给子线程里的 Processor 对象进行业务处理
 
@@ -2509,17 +2584,20 @@ systemd-cgls -k | grep kworker
 
     - 引入多线程：
 
-        - 优点：充分利用多核 CPU 
+        - 优点：充分利用多核 CPU
 
         - 缺点：操作共享资源前加上互斥锁
 
     ![image](./Pictures/linux-kernel/reactor1.avif)
 
-- 多 Reactor 多进程 / 线程
+- 多 Reactor 多进程 / 线程（主从 Reactor 多线程）
 
-    - MainReactor：通过 select 监控事件，收到事件后通过 Acceptor 对象中的 accept 获取连接，将新的连接分配给某个子线程
+    - 有一个主 reactor 线程、多个子 reactor 线程和多个 worker 线程组成的一个线程池。
 
-    - SubReactor：将 MainReactor 对象分配的连接加入 select 继续进行监听，并创建一个 Handler 用于处理连接的响应事件。
+
+    - MainReactor（主Reactor）：负责监听客户端事件，后通过 Acceptor 对象中的 accept 获取连接。一旦连接建立后，主 reactor 会把连接分发给子 reactor 线程，由子 reactor 负责这个连接上的后续事件处理。
+
+    - SubReactor（子Reactor）：子 reactor 会监听客户端连接上的后续事件，有读写事件发生时，它会让在同一个线程中的 handler 读取请求和返回结果，而和单 reactor 多线程类似，具体业务处理，它还是会让线程池中的 worker 线程处理。
 
         - 如果有新的事件发生时，调用当前连接对应的 Handler 对象来进行响应。
 
@@ -2538,7 +2616,7 @@ systemd-cgls -k | grep kworker
 
     ![image](./Pictures/linux-kernel/reactor2.avif)
 
-#### Proactor架构
+### Proactor架构
 
 - Proactor 是异步网络模式
 
@@ -2585,9 +2663,9 @@ systemd-cgls -k | grep kworker
 
     - 2.先入先出调度算法：先进入 I/O 调度队列的 I/O 请求先发生。
 
-    - 完全公平调度算法（CFS）（默认）：它为每个进程维护了一个 I/O 调度队列，并按照时间片来均匀分布每个进程的 I/O 请求。
+    - 3.完全公平调度算法（CFS）（默认）：它为每个进程维护了一个 I/O 调度队列，并按照时间片来均匀分布每个进程的 I/O 请求。
 
-    - 优先级调度算法（DEADLINE）：在CFS的基础上分为读、写两个FIFO队列
+    - 4.优先级调度算法（DEADLINE）：在CFS的基础上分为读、写两个FIFO队列
 
         - 读队列：最大等待时间为500ms
 
@@ -2599,7 +2677,7 @@ systemd-cgls -k | grep kworker
 
         - 应用场景：非虚拟机的物理机
 
-    - 最终期限调度算法（ANTICIPATORY）：DEADLINE没有对顺序读做优化。为此在DEADLINE的基础上，为每个读IO都设置了6ms的等待时间窗口。如果在这6ms内OS收到了相邻位置的读IO请求，就可以立即满足。
+    - 5.最终期限调度算法（ANTICIPATORY）：DEADLINE没有对顺序读做优化。为此在DEADLINE的基础上，为每个读IO都设置了6ms的等待时间窗口。如果在这6ms内OS收到了相邻位置的读IO请求，就可以立即满足。
 
         - 多个随机的小写入流合并成一个大写入流(相当于给随机读写变顺序读写)
 

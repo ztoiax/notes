@@ -41,6 +41,7 @@
         * [shellcheck](#shellcheck)
         * [pandoc 文档转换](#pandoc-文档转换)
         * [jobs, fg, bg, nohup, disown, reptyr](#jobs-fg-bg-nohup-disown-reptyr)
+    * [expect交互](#expect交互)
     * [调整分区大小](#调整分区大小)
     * [mdadm(RAID)](#mdadmraid)
         * [创建 RAID5](#创建-raid5)
@@ -1159,6 +1160,10 @@ nohup: ignoring input and appending output to 'nohup.out'
 # 开启新shell后，kill命令终止test.sh
 kill -9 21086
 ```
+
+## expect交互
+
+- [expect - 自动交互脚本](https://xstarcd.github.io/wiki/shell/expect.html)
 
 ## 调整分区大小
 

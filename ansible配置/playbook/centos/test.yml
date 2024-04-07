@@ -7,8 +7,8 @@
     varname2: fish
 
   tasks:
-    # - name: install haproxy
-    #   yum: name=haproxy
+    - name: install mysql-utilities
+      yum: name=mysql-utilities
     # - name: copy nginx.conf
     #   copy: src=~/config/ansible/playbook/centos/nginx/nginx.conf  dest=/etc/nginx/nginx.conf backup=yes
     # - name: create dir
@@ -29,18 +29,26 @@
     # - name: 将sql文件复制下来
     #   fetch: "src=/root/test.sql dest=/tmp/test.sql"
 
-    - name: shell命令
-      shell: echo 123 > /tmp/123
+    # - name: shell命令
+    #   shell: echo 123 > /tmp/123
+    #
+    # - name: shell命令
+    #   shell: echo 123 > 123
+    #   args:
+    #     chdir: /tmp
 
-    - name: shell命令
-      shell: echo 123 > 123
-      args:
-        chdir: /tmp
+    # - name: 下载kafka
+    #   shell: wget --no-check-certificate https://archive.apache.org/dist/kafka/3.0.0/kafka_2.12-3.0.0.tgz
+    #   args:
+    #     chdir: /tmp
 
+    # - name: 复制kafka
+    #   fetch: "src=/tmp/kafka_2.12-3.0.0.tgz dest=/tmp/kafka_2.12-3.0.0.tgz"
+    #
     # - name: 解压
     #   unarchive:
-    #     src: ./mysqld_exporter-0.15.1.linux-amd64.tar.gz
-    #     dest: ./
+    #     src: /tmp/kafka_2.12-3.0.0.tgz
+    #     dest: /usr/local/
 
     # - name: Disable SELinux
     #   ansible.posix.selinux:

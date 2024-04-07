@@ -6,6 +6,7 @@
     * [systemd](#systemd-1)
         * [基本使用](#基本使用)
         * [创建systemd unit 服务](#创建systemd-unit-服务)
+        * [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](#咸鱼运维杂谈运维排查--systemd-之服务停止后状态为-failed)
     * [systemctl](#systemctl)
         * [unmask](#unmask)
     * [hostnamectl, localectl, timedatectl, loginctl命令](#hostnamectl-localectl-timedatectl-loginctl命令)
@@ -189,25 +190,18 @@ google-chrome-stable boot.svg #用浏览器打开
 
 - `[Service]`只有service类型，才有的区块
 
-    | [Service]字段 | 内容                                                                                                                                 |
-    |---------------|--------------------------------------------------------------------------------------------------------------------------------------|
-    | Type          | 定义启动时的进程行为。它有以下几种值。                                                                                               |
-    | Type=simple   | 默认值，执行ExecStart指定的命令，启动主进程                                                                                          |
-    | Type=forking  | 以 fork 方式从父进程创建子进程，创建后父进程会立即退出                                                                               |
-    | Type=oneshot  | 一次性进程，Systemd 会等当前服务退出，再继续往下执行                                                                                 |
-    | Type=dbus     | 当前服务通过D-Bus启动                                                                                                                |
-    | Type=notify   | 当前服务启动完毕，会通知Systemd，再继续往下执行                                                                                      |
-    | Type=idle     | 若有其他任务执行完毕，当前服务才会运行                                                                                               |
-    | ExecStart     | 启动当前服务的命令                                                                                                                   |
-    | ExecStartPre  | 启动当前服务之前执行的命令                                                                                                           |
-    | ExecStartPost | 启动当前服务之后执行的命令                                                                                                           |
-    | ExecReload    | 重启当前服务时执行的命令                                                                                                             |
-    | ExecStop      | 停止当前服务时执行的命令                                                                                                             |
-    | ExecStopPost  | 停止当其服务之后执行的命令                                                                                                           |
-    | RestartSec    | 自动重启当前服务间隔的秒数                                                                                                           |
+    | [Service]字段 | 内容                                                                                                                                |
+    |---------------|-------------------------------------------------------------------------------------------------------------------------------------|
+    | ExecStart     | 启动当前服务的命令                                                                                                                  |
+    | ExecStartPre  | 启动当前服务之前执行的命令                                                                                                          |
+    | ExecStartPost | 启动当前服务之后执行的命令                                                                                                          |
+    | ExecReload    | 重启当前服务时执行的命令                                                                                                            |
+    | ExecStop      | 停止当前服务时执行的命令                                                                                                            |
+    | ExecStopPost  | 停止当其服务之后执行的命令                                                                                                          |
+    | RestartSec    | 自动重启当前服务间隔的秒数                                                                                                          |
     | Restart       | 定义何种情况 Systemd 会自动重启当前服务，可能的值包括always（总是重启）、on-success、on-failure、on-abnormal、on-abort、on-watchdog |
-    | TimeoutSec    | 定义 Systemd 停止当前服务之前等待的秒数                                                                                              |
-    | Environment   | 指定环境变量                                                                                                                         |
+    | TimeoutSec    | 定义 Systemd 停止当前服务之前等待的秒数                                                                                             |
+    | Environment   | 指定环境变量                                                                                                                        |
 
     - `-`：表示"抑制错误"，即发生错误的时候，不影响其他命令的执行。比如：`EnvironmentFile=-/etc/sysconfig/sshd`
 
@@ -285,7 +279,14 @@ google-chrome-stable boot.svg #用浏览器打开
     | Alias         | 当前 Unit 可用于启动的别名                                                                                                            |
     | Also          | 当前 Unit 激活（enable）时，会被同时激活的其他 Unit                                                                                   |
 
-    - `WantedBy`：表示该服务所在的 Target。
+    - Target 的含义是服务组，表示一组服务。`WantedBy=multi-user.target`指的是，kafka 和 zookeeper 所在的 Target 是 multi-user.target。
+
+        ```sh
+        systemctl get-default
+        multi-user.target
+        ```
+
+        - 这个设置非常重要，因为执行systemctl enable 命令时，zookeeper .service 的一个符号链接，就会放在/etc/systemd/system目录下面的multi-user.target.wants子目录之中。
 
 - 随机mac地址
 ```sh
@@ -313,6 +314,63 @@ systemctl enable macspoof.service
 ```sh
 systemctl disable macspoof.service
 ```
+
+### [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](https://mp.weixin.qq.com/s/l30kvYhga3YZO__ac0-cWg)
+
+- zookeeper 是通过源码编译来安装，为了方便管理，决定改成通过 systemd 来管理。
+
+    ```sh
+    # zookeeper
+    [Unit]
+    Description=Zookeeper
+    After=network.target
+
+    [Service]
+    Type=forking
+    ExecStart=/opt/zookeeper/bin/zkServer.sh start
+    ExecStop=/opt/zookeeper/bin/zkServer.sh stop
+    PIDFile=/var/lib/zookeeper/zookeeper_server.pid
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+
+- 问题：
+    - ` systemctl start zookeeper.service`启动没有问题。
+    - `systemctl stop zookeeper.service` 命令停止 zookeeper 的时候，问题出现了：zookeeper 服务在停止后并不是 inactive ，而是 failed 状态，最后两行输出里有 Unit zookeeper.service entered failed state./zookeeper.service failed 字段
+
+- 问题定位
+
+    - 在设置了 Type=forking 后，服务在启动或关闭时执行对应的脚本会开启一个进程，并且两个进程都成功执行了（返回状态码为 0 ）。但是主进程退出时返回的状态码却是 143，而不是状态码 0。
+
+        ```sh
+        Process: 61183 ExecStop=/opt/zookeeper/bin/zkServer.sh stop (code=exited, status=0/SUCCESS)
+        Process: 61116 ExecStart=/opt/zookeeper/bin/zkServer.sh start (code=exited, status=0/SUCCESS)
+        Main PID: 61132 (code=exited, status=143)
+        ```
+
+    - 接着看下 zookeeper 进程还在不在：明明 zookeeper 进程已经成功退出了，但是 systemd 却说它退出失败。
+
+
+    - 接着我们注释掉 ExecStop 字段，采用 systemd 默认的方式来停止服务。还是一样的问题，zookeeper 已经成功退出但是却显示 failed 状态，状态码是 143。
+
+        - 默认情况下，systemd 将向进程发送 `SIGTERM` 信号（相当于 kill -15命令发送的终止信号），等待一段时间后，如果服务进程未正常退出，则发送 `SIGKILL` 信号（相当于 kill -9 命令发送的强制终止信号）强制终止服务进程。
+
+        - 而根据 POSIX 规范：【因接收到信号而终止的命令的退出状态应报告为大于 128】，所以被信号中断的进程退出时会返回 128 加上信号数值作为退出状态码。
+            - 也就是说，当 zookeeper 进程收到 SIGTERM 信号时，会返回 128 + 15 也就是 143 作为退出状态码，这也就是为什么进程在成功退出后 systemctl  显示为 failed 状态。
+
+- 解决方法：
+
+    - 既然知道了进程在退出时的状态码是 143 但是 systemd 不会解释为成功，因为预期的退出状态码为 0，那么我们只需要让 systemd 把状态码 143 也解释为成功就行。
+
+    - 所以在 zookeeper 的 service 文件中添加下面的配置：表示当服务进程以状态码 143 正常退出时，systemd 将其视为成功退出而不是异常退出。
+
+        ```
+        [Service]
+        ...
+        SuccessExitStatus=143
+        ...
+        ```
 
 ## systemctl
 

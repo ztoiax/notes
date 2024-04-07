@@ -69,6 +69,7 @@
     * [agedu](#agedu)
         * [只统计.conf 文件](#只统计conf-文件)
 * [Process](#process)
+    * [top](#top)
     * [htop](#htop)
     * [bpytop](#bpytop)
     * [btop](#btop)
@@ -1111,9 +1112,21 @@ agedu -w
 
 # Process
 
+## top
+
+```sh
+# 监控进程pid的 CPU 和内存资源使用情况
+top -p 20316
+```
+
 ## [htop](https://github.com/hishamhm/htop)
 
 ![image](./Pictures/benchmark/htop.avif)
+
+```sh
+# 监控进程pid的 CPU 和内存资源使用情况
+htop -p 20316
+```
 
 ## [bpytop](https://github.com/aristocratos/bpytop)
 

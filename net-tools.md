@@ -37,17 +37,17 @@
             * [dnspeep：记录程序的dns请求,响应](#dnspeep记录程序的dns请求响应)
             * [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](#dns-detector从-dns-服务器获取某个网站的所有-ip-地址逐一进行延迟测试)
     * [表示层](#表示层)
-        * [ssh](#ssh)
-            * [代理(agent)](#代理agent)
         * [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](#testssl测试网站是否支持ssltls以及检测漏洞)
     * [传输层](#传输层)
         * [tcpdump](#tcpdump)
             * [基本命令](#基本命令)
             * [捕抓 TCP SYN，ACK 和 FIN 包](#捕抓-tcp-synack-和-fin-包)
+        * [tshark、editcap、capinfos](#tsharkeditcapcapinfos)
         * [nmap](#nmap)
         * [zmap](#zmap)
         * [nping(代替 ping)](#nping代替-ping)
         * [hping](#hping)
+        * [ngrok：内网穿透（端口转发）](#ngrok内网穿透端口转发)
     * [网络层](#网络层)
         * [ifconfig(net-tools)](#ifconfignet-tools)
         * [ip(iproute2)](#ipiproute2)
@@ -803,80 +803,6 @@ websocat ws://127.0.0.1:1234
 
 ## 表示层
 
-### ssh
-
-- [arch文档](https://wiki.archlinux.org/title/OpenSSH#Forwarding_other_ports)
-
-- 配置文件:
-
- | 文件内容     | 路径                 |
- |--------------|----------------------|
- | 配置文件     | /etc/ssh/sshd_config |
- | 存放公钥私钥 | /etc/ssh             |
-
- - 关闭密码登陆, 强制密钥登陆
- ```
- PasswordAuthentication no
- AuthenticationMethods publickey
- ```
-
- - 运行root用户登陆(默认是关闭)
- ```
- PermitRootLogin yes
- ```
-
- - 大多数情况下关闭root用户登陆, 但有些命令需要root权限. 可以在`/root/.ssh/authorized_keys` 文件的密钥前面加入
- ```
- command="/usr/lib/rsync/rrsync -ro /" ssh-rsa …
- ```
- - 配置文件
- ```
- PermitRootLogin forced-commands-only
- ```
-
- - 对root用户执行的命令, 都需要密钥验证(相比上一条方案, 限制低一些)
- ```
- PermitRootLogin prohibit-password
- ```
-
- - 开启gzip压缩(默认是关闭)
- ```
- Compression yes
- ```
-
-```sh
-# 查看连接会话
-netstat -tnpa | grep sshd
-# or
-ps aux | grep sshd
-```
-
-```sh
-# -f 连接后, 执行命令
-ssh -f 127.0.0.1 ls
-```
-
-- `sshguard` 软件可以防止暴力破解
-
-#### 代理(agent)
-
-- [韦易笑: SSH 命令的三种代理功能（-L/-R/-D）](https://www.skywind.me/blog/archives/2546#more-2546)
-
-| 参数 | 操作       |
-|------|------------|
-| -L   | 正向代理   |
-| -R   | 反向代理   |
-| -D   | socks5代理 |
-
-```sh
-# -L 端口转发. 将9900转发到5900(vnc端口), 实现更安全的vnc连接
-ssh 127.0.0.1 -L 9900:127.0.0.1:5900
-
-# 正向代理. 将9900转发到5900(vnc端口), 实现更安全的vnc连接
-ssh 127.0.0.1 -L 8080:192.168.100.208:80 root@192.168.100.208
-ssh -L 127.0.0.1:8080:192.168.100.208:80 root@192.168.100.208
-```
-
 ### [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](https://github.com/drwetter/testssl.sh)
 
 ```bash
@@ -969,6 +895,196 @@ tcpdump -i eth0 not port 22 and "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0"
 # 只捕抓TCP SYN或ACK包(不包含22,80端口)：
 tcpdump -i ens3 not port 22 and not port 80 and "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0"
 ```
+
+### tshark、editcap、capinfos
+
+- [一文读懂网络报文分析神器Tshark： 100+张图、100+个示例轻松掌握原创](https://cloud.tencent.com/developer/article/2312883)
+
+- capinfos：查看被抓包的文件信息
+```sh
+# 可以看到包的数量、平均包大小、抓包的时间段
+capinfos test.pcapng
+
+# 获取文件中数据包的个数
+total=$(capinfos -c -M src.pcap | awk 'NR==2 {print $NF}')
+```
+
+- editcap将pcap文件切割成多个小文件
+```sh
+# 过滤出特定时间段的数据包
+editcap -A "2024-04-06 11:58:00" -B "2024-04-06 11:58:10" src.pcap -F pcap dst.pcap
+# 查看时间段进行确认
+capinfos dst.pcap
+
+# 把抓包切小，每个文件20万个包，保证wireshark打开不太慢
+editcap -c 200000 src.pcap dst.pcap
+```
+
+- tshark：wireshark命令行版
+```sh
+# 读取test.pcapng文件
+tshark -r test.pcapng
+# -n禁止域名解析
+tshark -n -r test.pcapng
+# -V显示完整报文
+tshark -n -r test.pcapng -V -Y 'tcp.flags.syn==1&&tcp.flags.ack==0&&frame.number<=5'
+# -w保存报文
+tshark -n -r test.pcapng -V -Y 'tcp.flags.syn==1&&tcp.flags.ack==0&&frame.number<=5' -w test1.pcapng
+
+# 通过正则来拿到我们想要的直播流URL：
+tshark -n -r test.pcapng -Y 'http.request.method eq GET' -V | grep -Po '(?<=Full request URI:\s).*m3u8(?=])' |& sort -u
+
+# 输出成json格式
+tshark -r test.pcapng -T json
+# 输出成ek格式。Elasticsearch bulk，代表批量写入Elasticsearch的格式。
+tshark -r test.pcapng -T ek
+
+# -e输出报文指定字段
+tshark -n -r test.pcapng -e 'frame.number' -e 'ip.addr' -e 'tcp.port' -e tcp -T json
+
+# -Y过滤报文
+# 只保留http host为某个值的包
+tshark -n -r test.pcapng -Y 'http.host == "web-server1"'
+# 只保留TCP重传、快速重传、DUP ACK的包
+tshark -n -r test.pcapng -Y 'tcp.stream eq 2 && ( tcp.analysis.retransmission or tcp.analysis.fast_retransmission or tcp.analysis.duplicate_ack )' -t d
+
+# 只保留第一次握手的请求
+tshark -n -r test.pcapng -Y 'tcp.flags.syn==1&&tcp.flags.ack==0'
+
+# 统计重传数据包的个数
+tshark -n -r test.pcapng -Y "tcp.analysis.retransmission" -T fields -e tcp.stream | wc -l
+
+# 统计分析报文（-z）
+# 查看支持的统计分析选项。
+tshark -z help
+
+# 会话统计需要用到'conv,'作为前缀，表示的是conversation。
+tshark -n -r test.pcapng -z 'conv,ip'
+# -q参数来让它只输出统计结果，不显示报文
+tshark -q -n -r test.pcapng -z 'conv,ip'
+# ipv6
+tshark -q -n -r test.pcapng -z 'conv,ipv6'
+
+# conv,ip 统计IP层，那么conv,tcp则统计tcp头部
+tshark -n -q -r test.pcapng -z conv,tcp
+# 也支持过滤选项：
+tshark -n -q -r test.pcapng -z conv,tcp,tcp.port==443
+# 只统计第一条流的结果
+tshark -n -q -r test.pcapng -z conv,ip,tcp.stream==0
+# 只想要第三个的流的统计数据
+tshark -n -q -r test.pcapng -z conv,ip,tcp.stream==2
+tshark -n -q -r test.pcapng -z conv,tcp,'tcp.stream eq 2'
+
+# 统计udp
+tshark -n -q -r test.pcapng -z conv,udp
+# 过滤规则如果有多条或者空格，可以通过单引号引起来：
+tshark -n -q -r test.pcapng -z conv,udp,'udp.port in {8000,8803}'
+
+# 统计分析DNS层次结构
+tshark -n -q -r test.pcapng -z dns,tree
+# 过滤选项
+tshark -n -q -r test.pcapng -z dns,tree,dns.'qry.name == baidu.com'
+
+# 统计分析UDP端点数据
+tshark -n -q -r test.pcapng -z endpoints,udp
+================================================================================
+UDP Endpoints
+Filter:<No Filter>
+                       |  Port  ||  Packets  | |  Bytes  | | Tx Packets | | Tx Bytes | | Rx Packets | | Rx Bytes |
+101.226.4.6                  53        112         13905         56            9425          56            4480
+192.168.1.222             22000          9           666          9             666           0               0
+198.211.120.59             3478          9           666          0               0           9             666
+
+# 指定过滤规则，只过滤涉及到DNS的数据：
+tshark -n -q -r test.pcapng -z endpoints,udp,dns
+
+# 对应wireshark的专家信息功能
+tshark -n -q -r test.pcapng -z expert
+# 只分析第3个流
+tshark -n -q -r test.pcapng -z expert,'tcp.stream==2'
+
+# 对应wireshark的Flow Graph功能，即流量图显示功能，可以把整个通信过程画出一个通信图出来，在wireshark上的显示如下：
+tshark -q -n -r test.pcapng -z flow,tcp,network
+tshark -q -2 -n -r test.pcapng -z flow,icmp,network
+tshark -q -2 -n -r test.pcapng -z flow,icmp,network,icmp.seq==3
+
+# 以“十六进制”格式显示第一个TCP流的内容
+tshark -q -n -r test.pcapng -z "follow,tcp,hex,0"
+# 在第一个TCP连接中显示第一个HTTP的内容
+tshark -q -n -r test.pcapng -z "follow,http,hex,0,1"
+# 第一个HTTP为GET，那么第二个HTTP为response：
+tshark -q -n -r test.pcapng -z "follow,http,hex,0,2"
+
+# 统计分析HTTP的状态码以及请求方法
+tshark -q -n -r test.pcapng -z http,stat
+# 统计分析HTTP树状结构
+tshark -q -n -r test.pcapng -z http,tree
+# http2协议
+tshark -q -n -r test.pcapng -z http2,tree
+# 只会统计请求涉及到的URI资源路径，不关注响应
+tshark -q -n -r test.pcapng -z http_req,tree
+# 只过滤第一条TCP连接的数据：
+tshark -q -n -r test.pcapng -z http_req,tree,'tcp.stream==0'
+# 和http_req,tree的区别是，它会自动补齐请求的服务器，以URL路径方式呈现出来
+tshark -q -n -r test.pcapng -z http_seq,tree
+# 对于HTTP request，显示的值是目的端服务器IP地址和服务器主机名。对于HTTP response，显示的值是目的端服务器IP地址及状态：
+tshark -q -n -r test.pcapng -z http_srv,tree
+
+# 统计ICMP回显请求总数、回复、丢失和丢失百分比，以及ping返回的最小、最大、平均、中值和样本标准差SRT统计信息。
+tshark -q -n -r test.pcapng -z icmp,srt
+# 过滤某个ip
+tshark -q -n -r test.pcapng -z icmp,srt,'ip.addr==xxx'
+# icmpv6
+tshark -q -n -r test.pcapng -z icmpv6,srt
+
+# 统计协议层次结构及包量（io,phs）
+tshark -q -n -r test.pcapng -z io,phs
+===================================================================
+Protocol Hierarchy Statistics
+Filter:
+
+eth                                      frames:1782 bytes:1021701
+  ip                                     frames:1775 bytes:1020512
+    tcp                                  frames:1648 bytes:1004942
+      tls                                frames:390 bytes:396690
+        tcp.segments                     frames:110 bytes:185541
+          tls                            frames:83 bytes:150929
+    udp                                  frames:126 bytes:15516
+      dns                                frames:112 bytes:13905
+      data                               frames:2 bytes:476
+      stun                               frames:9 bytes:666
+      mdns                               frames:3 bytes:469
+    igmp                                 frames:1 bytes:54
+  ipv6                                   frames:6 bytes:1147
+    udp                                  frames:6 bytes:1147
+      mdns                               frames:4 bytes:631
+      data                               frames:2 bytes:516
+  arp                                    frames:1 bytes:42
+===================================================================
+# 只统计第一条TCP流
+tshark -q -n -r test.pcapng -z io,phs,'tcp.stream==0'
+# 统计分析包量和字节大小
+tshark -q -n -r test.pcapng -z io,stat,0
+# 如果想指定间隔为10s统计一次，且只统计第一条TCP流则可以是：
+tshark -q -n -r test.pcapng -z io,stat,10,'tcp.stream==0'
+
+# 统计分析某个字段的最大最小平均值等。io,stat,interval,"COUNT|SUM|MIN|MAX|AVG|LOAD(field)filter"
+tshark -q -n -r test.pcapng -z io,stat,0,'MAX(icmp.data_time_relative)icmp.data_time_relative,'ip.addr==192.168.1.1''
+# 统计第一条TCP连接中，距离它上一个包间隔时间最长的为：
+tshark -q -n -r test.pcapng -z io,stat,0,'MAX(tcp.time_delta)tcp.time_delta,tcp.stream==0'
+# 统计第一条TCP流中，HTTP响应时间的平均值和最大值，分别为：
+tshark -q -n -r test.pcapng -z io,stat,0,'AVG(http.time)http.time,tcp.stream==0'
+tshark -q -n -r test.pcapng -z io,stat,0,'MAX(http.time)http.time,tcp.stream==0'
+# 只统计返回了200 OK状态码的http最大响应时间
+tshark -q -n -r test.pcapng -z io,stat,0,'MAX(http.time)http.time and http.response.code == 200'
+
+# 统计IP地址占比
+tshark -q -n -r test.pcapng -z ip_hosts,tree
+
+# 统计源地址和目标地址占比
+tshark -q -n -r test.pcapng -z ip_srcdst,tree
+```
+
 
 ### nmap
 
@@ -1113,6 +1229,8 @@ hping3 -1 192.168.1.x --rand-dest -I enp27s0
 # -1 icmp模式
 hping3 --traceroute -V -1 www.baidu.com
 ```
+
+### [ngrok：内网穿透（端口转发）](https://github.com/inconshreveable/ngrok)
 
 ## 网络层
 

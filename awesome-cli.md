@@ -118,6 +118,14 @@ arp | jc --arp -p
 jc -p df
 ```
 
+## [jnv：交互式搜索json](https://github.com/ynqa/jnv)
+
+```sh
+cat test.json | jnv
+# or
+jnv test.json
+```
+
 ## [dsq: sql语句查看json, csv, nginxlog](https://github.com/multiprocessio/dsq)
 
 ```sh

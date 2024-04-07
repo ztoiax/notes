@@ -19,7 +19,10 @@
         * [RPC](#rpc)
         * [WebSocket](#websocket)
         * [DNS](#dns)
+            * [基本概念](#基本概念)
+            * [knowclub：localhost和127.0.0.1的区别](#knowclublocalhost和127001的区别)
         * [FTP](#ftp)
+        * [DHCP](#dhcp)
     * [表示层](#表示层)
         * [密钥算法](#密钥算法)
         * [数字签名和数字证书](#数字签名和数字证书)
@@ -35,6 +38,11 @@
             * [TCP 连接](#tcp-连接)
                 * [TIME_WAIT相关](#time_wait相关)
                 * [TCP端口、连接问题](#tcp端口连接问题)
+            * [reset包](#reset包)
+                * [鹅厂架构师：什么！TCP又发reset包？](#鹅厂架构师什么tcp又发reset包)
+                    * [两种RST包：active rst包；passive rst包](#两种rst包active-rst包passive-rst包)
+                    * [分析rst包](#分析rst包)
+                    * [案例分析](#案例分析)
                 * [如何关闭一个 TCP 连接？](#如何关闭一个-tcp-连接)
             * [队列](#队列)
             * [Tcp keepalive](#tcp-keepalive)
@@ -43,6 +51,7 @@
             * [重传与RTT、RTO](#重传与rttrto)
             * [TCP window(窗口、流量控制)](#tcp-window窗口流量控制)
                 * [延迟ACK](#延迟ack)
+                * [Nagle算法](#nagle算法)
             * [TCP congestion control(拥塞算法)](#tcp-congestion-control拥塞算法)
             * [socket相关](#socket相关)
         * [UDP](#udp)
@@ -309,6 +318,8 @@
 
 #### HTTP3(Quic)
 
+- [（视频）技术蛋老师：QUIC核心原理和握手过程](https://www.bilibili.com/video/BV1Mg411s7mP)
+
 - [小林coding：如何基于 UDP 协议实现可靠传输？](https://www.xiaolincoding.com/network/3_tcp/quic.html)
 
 - [腾讯技术工程：HTTP/3 原理实战](https://cloud.tencent.com/developer/article/1634011)
@@ -465,6 +476,8 @@
 
 ### DNS
 
+#### 基本概念
+
 - [朱小厮的博客：一文搞懂 DNS 基础知识，收藏起来有备无患~](https://mp.weixin.qq.com/s?src=11&timestamp=1678026571&ver=4388&signature=XbzLnBwAUMdDP2*TUw4OVETJ7xPZ9A7f9bfiGR7mHT7RCnrMvu9IQDuVHJ5*xMfO9aws0PENX5LpobXKiIuwvuU54*-uVJe*TyMb9JP6FYxHCdAH7Ov1tFRv1B9hbqaj&new=1)
 
 - DNS 解析流程
@@ -532,6 +545,12 @@
         dig -x <IP>
         ```
 
+#### [knowclub：localhost和127.0.0.1的区别](https://mp.weixin.qq.com/s/5vKgzvXsbrOMElc5VPGAPA)
+
+- 有人告诉我 localhost 和 127.0.0.1 的区别是 localhost 不经过网卡
+    - 这是错误的！
+
+- localhost 会按[dns 解析流程进行解析]，然后和 127.0.0.1 一样
 
 ### FTP
 
@@ -539,19 +558,23 @@
 
 - 最常用的配置是`passive`。如果是`active`防火墙起不到保护作用。
 
+### DHCP
+
+- [视频（技术蛋老师）：DHCP运作原理和握手过程](https://www.bilibili.com/video/BV1Gd4y1n7Xz)
+
 ## 表示层
 
 ### 密钥算法
 
-- [视频：【不懂数学没关系】DH算法 | 迪菲-赫尔曼Diffie–Hellman 密钥交换](https://www.bilibili.com/video/BV1sY4y1p78s)
+- [视频（技术蛋老师）：【不懂数学没关系】DH算法 | 迪菲-赫尔曼Diffie–Hellman 密钥交换](https://www.bilibili.com/video/BV1sY4y1p78s)
 
-- [视频：数学不好也能听懂的算法 - RSA加密和解密原理和过程](https://www.bilibili.com/video/BV1XP4y1A7Ui)
+- [视频（技术蛋老师）：数学不好也能听懂的算法 - RSA加密和解密原理和过程](https://www.bilibili.com/video/BV1XP4y1A7Ui)
 
 - [视频（奇乐编程学院）：探秘公钥加密算法 RSA](https://www.bilibili.com/video/BV14y4y1272w)
 
     > 对比上一个rsa视频，对欧拉函数有进一步介绍
 
-- [视频：公钥加密技术ECC椭圆曲线加密算法原理](https://www.bilibili.com/video/BV1BY411M74G)
+- [视频（技术蛋老师）：公钥加密技术ECC椭圆曲线加密算法原理](https://www.bilibili.com/video/BV1BY411M74G)
 
     ```nginx
     # 在nginx上选择最快的 x25519 椭圆曲线
@@ -572,11 +595,9 @@
 
 ### 数字签名和数字证书
 
+- [视频（技术蛋老师）：数字签名和CA数字证书的核心原理和作用](https://www.bilibili.com/video/BV1mj421d7VE)
+
 - [阮一峰：数字签名是什么？](https://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html)
-
-- 数字签名：原理其实很简单，就是把公钥私钥的用法反过来，之前是公钥加密、私钥解密，现在是私钥加密、公钥解密。但又因为非对称加密效率太低，所以私钥只加密原文的hash值，这样运算量就小的多，而且得到的数字签名也很小，方便保管和传输。
-
-    ![image](./Pictures/net-kernel/http_digital.avif)
 
 - 数字证书和CA：因为公钥是任何人都可以发布的，所以我们需要引入第三方来保证公钥的可信度，这个“第三方”就是我们常说的 CA（Certificate Authority，证书认证机构）。小一点的 CA 可以让大 CA 签名认证，但链条的最后，也就是 Root CA
 
@@ -586,6 +607,10 @@
     - 1.首先 CA 会把持有者的公钥、用途、颁发者、有效时间等信息打成一个包，然后对这些信息进行 Hash 计算，得到一个 Hash 值；
 
     - 2.然后 CA 会使用自己的私钥将该 Hash 值加密，生成 Certificate Signature，也就是 CA 对证书做了签名；
+
+- 数字签名：原理其实很简单，就是把公钥私钥的用法反过来，之前是公钥加密、私钥解密，现在是私钥加密、公钥解密。但又因为非对称加密效率太低，所以私钥只加密原文的hash值，这样运算量就小的多，而且得到的数字签名也很小，方便保管和传输。
+
+    ![image](./Pictures/net-kernel/http_digital.avif)
 
 - 证书验证：
 
@@ -597,7 +622,9 @@
 
 ### tls
 
-- [技术蛋老师视频：HTTPS是什么？加密原理和证书。SSL/TLS握手过程](https://www.bilibili.com/video/BV1KY411x7Jp)
+- [视频（技术蛋老师）：HTTPS是什么？加密原理和证书。SSL/TLS握手过程](https://www.bilibili.com/video/BV1KY411x7Jp)
+
+- [视频（技术蛋老师）：TLS/1.2和TLS/1.3的核心区别 | HTTPS有哪些不安全因素 ](https://www.bilibili.com/video/BV12X4y197Pr)
 
 - [李银城：https连接的前几毫秒发生了什么](https://www.rrfed.com/2017/02/03/https/)
 
@@ -842,6 +869,8 @@
     - 四次挥手：TCP 是全双工的，需要 Peer 两端分别各自拆除自己通向 Peer 对端的方向的通信信道。这样需要四次挥手来分别拆除通信信道
 
         - 四次挥手变三次挥手：没有数据要发送 + 延迟ack（默认开启），那么第二和第三次挥手就会合并传输，这样就出现了三次挥手。
+
+            ![image](./Pictures/net-kernel/TCP_四次挥手变三次挥手.avif)
 
         - TCP 的连接信息是由内核维护的，所以当server的进程崩溃后，内核需要回收该进程的所有 TCP 连接资源，还是能与client完成 TCP 四次挥手的过程
 
@@ -1113,6 +1142,208 @@ net.ipv4.tcp_max_tw_buckets = 32768
 
         ![image](./Pictures/net-kernel/port.avif)
 
+
+#### reset包
+
+##### [鹅厂架构师：什么！TCP又发reset包？](https://mp.weixin.qq.com/s/bic8IqdTYLpi9ll3zmkdbw)
+
+- TCP的经典异常问题无非就是丢包和连接中断
+    - 在这里我打算与各位聊一聊TCP的RST到底是什么？
+    - 现网中的RST问题有哪些模样？我们如何去应对、解决？
+    - 本文将从RST原理、排查手段、现网痛难点案例三个板块自上而下带给读者一套完整的分析。
+
+- 最近一年的时间里，现网碰到RST问题屡屡出现，一旦TCP连接中收到了RST包，大概率会导致连接中止或用户异常。如何正确解决RST异常是较为棘手的问题。
+
+- 本文关注的不是细节，而是方法论，也确实方法更为重要。
+
+- RST问题并不可怕，只要思路理清楚，先判断类型，再抓取对应代码，继而翻出RFC协议，最后分析源码就能搞定，仅仅四步就可以了 。
+
+###### 两种RST包：active rst包；passive rst包
+
+- RST包分为两种：一种是`active rst包`，另一种是`passive rst包`
+
+    - 前者多半是指的符合预期的reset行为，此种情况多半是属于机器自己主动触发，更具有先前意识，且和协议栈本身的细节关联性不强
+    - 后者多半是指的机器也不清楚后面会发生什么，走一步看一步，如果不符合协议栈的if-else实现的RFC中条条杠杠的规则的情况下，那就只能reset重置了。
+
+- active rst包
+
+    - 如果从tcpdump抓包上来看表现就是（如下图）RST的报文中含有了一串Ack标识。
+    ![image](./Pictures/net-kernel/TCP_reset-active-rst包.avif)
+
+    - 内核代码
+
+        ```c
+        tcp_send_active_reset()
+            -> skb = alloc_skb(MAX_TCP_HEADER, priority);
+            -> tcp_init_nondata_skb(skb, tcp_acceptable_seq(sk), TCPHDR_ACK | TCPHDR_RST);
+            -> tcp_transmit_skb()
+        ```
+
+    - 通常发生active rst的有几种情况：
+
+        - 1.主动方调用close()的时候，上层却没有取走完数据；这个属于上层user自己犯下的错。
+        - 2.主动方调用close()的时候，setsockopt设置了linger；这个标识代表我既然设置了这个，那close就赶快结束吧。
+        - 3.主动方调用close()的时候，发现全局的tcp可用的内存不够了（这个可以sysctl调整tcp mem第三个参数），或，发现已经有太多的orphans了，这时候系统就是摆烂的意思：我也没辙了”，那就只能干脆点长痛不如短痛，结束吧。这个案例可以搜索(dmesg日志）“too many orphaned sockets”或“out of memory -- consider tuning tcp_mem”，匹配其中一个就容易中rst。
+
+        - 注：这里省略其他使用diag相关（如ss命令）的RST问题。上述三类是主要的active rst问题的情况。
+
+- passive rst包
+
+    - rst的报文中无ack标识，而且RST的seq等于它否定的报文的ack号（红色框的rst否定的黄色框的ack），当然还有另一种极小概率出现的特殊情况的表现我这里不贴出来了，它的表现形式就是RST的Ack号为1。
+
+    ![image](./Pictures/net-kernel/TCP_reset-passive-rst包.avif)
+
+    - 内核代码
+        ```c
+        tcp_v4_send_reset()
+                if (th->ack) {
+                        // 这里对应的就是上图中为何出现Seq==Ack
+                        rep.th.seq = th->ack_seq;
+                } else {
+                        // 极小概率，如果出现，那么RST包的就没有Seq序列号
+                        rep.th.ack = 1;
+                        rep.th.ack_seq = htonl(ntohl(th->seq) + th->syn + th->fin +
+                                               skb->len - (th->doff << 2));
+                }
+        ```
+
+    - 通常发生passive rst的有哪些情况呢？这个远比active rst更复杂，场景更多。具体的需要看TCP的收、发的协议，文字的描述可以参考rfc 793即可。
+
+###### 分析rst包
+
+- 首先tcpdump的抓捕是一定需要的，这个可以在整体流程上给我们缩小排查范围，其次是，必须要手写抓捕异常调用rst的点，文末我会分享一些源码出来供参考。
+
+- 当然，无论那种，我们抓到了堆栈后依然需要输出很多的关于skb和sk的信息，这个读者自行考虑即可。再补充一些抓捕小技巧，如果现网机器的rst数量较多时候，尽量使用匹配固定的ip+port方式或其它关键字来减少打印输出，否则会消耗资源过多！
+
+    - 注：切记不能去抓捕reset tracepoint（具体函数：trace_tcp_send_reset()），这个tracepoint实现是有问题的，这个问题已经在社区内核中存在了7年之久！目前我正在修复中。
+
+- 那如何抓调用RST的点？
+
+    - 1.`active rst包`
+
+        - 使用bpf*相关的工具抓捕tcp_send_active_reset()函数并打印堆栈即可，通过crash现场机器并输入“dis -l [addr]”可以得到具体的函数位置，比对源码就可以得知了。
+
+        ```sh
+        # 可以使用bpftrace进行快速抓捕。我们可以根据堆栈信息推算上下文。
+        sudo bpftrace -e 'k:tcp_send_active_reset { @[kstack()] = count(); }'
+        ```
+
+        ![image](./Pictures/net-kernel/TCP_reset-active-rst包堆栈.avif)
+
+    - 2.`passive rst包`
+        ```sh
+        # 使用bpf*相关的工具抓捕抓捕tcp_v4_send_reset()和其他若干小的地方即可，原理同上。
+        sudo bpftrace -e 'k:tcp_v4_send_reset { @[kstack()] = count(); }'
+        ```
+        ![image](./Pictures/net-kernel/TCP_reset-passive-rst包堆栈.avif)
+
+###### 案例分析
+
+- 本章节我将用现网实际碰到的三个”离谱“的case作为案例分析，让各位读者可以看下极为复杂的RST案例到底长成什么样？对内核不感兴趣的同学可以不用纠结具体的细节，只需要知道一个过程即可；对内核感兴趣的同学不妨可以一起构造RST然后自己再抓取的试试。
+
+- 第一个案例：小试牛刀—— close阶段RST
+
+    - 背景：这是线上出现概率/次数较多的一种类型的RST，业务总是抱怨为何我的连接莫名其妙的又没了。
+
+    - 我们先使用网络异常检测中最常用的工具：tcpdump。如下抓包的图片再结合前文对RST的两种分类（active && passive）可知，这是active rst。
+
+    - 我们先使用网络异常检测中最常用的工具：tcpdump。如下抓包的图片再结合前文对RST的两种分类（active && passive）可知，这是active rst。
+        ![image](./Pictures/net-kernel/TCP_reset包-第一个案例.avif)
+
+    - 好，既然知道了是active rst，我们就针对性的在线上对关键函数抓捕，如下：
+        ![image](./Pictures/net-kernel/TCP_reset包-第一个案例1.avif)
+
+    - 通过crash命令找到了对应的源码，如下：
+        ![image](./Pictures/net-kernel/TCP_reset包-第一个案例2.avif)
+
+    - 这时候便知是用户设置了linger，主动预期内的行为触发的rst，所以本例就解决了。不过插曲是，用户并不认为他设置了linger，这个怎么办？那就再抓一次sk->sk_lingertime值就好咯，如下：
+        ![image](./Pictures/net-kernel/TCP_reset包-第一个案例3.avif)
+
+    - 计算：socket的flag是784，第5位（从右往左）是1，这个是SO_LINGER位置位成功，但是同时linger_time为0。这个条件默认（符合预期）触发：上层用户退出时候，不走四次挥手，直接RST结束。
+
+    - 结论：linger的默认机制触发了加速结束TCP连接从而RST报文发出。
+
+- 第二个案例：TCP 两个bug —— 握手与挥手的RS
+
+    - 背景：某重点业务报告他们的某重点用户出现了莫名其妙的RST问题，而且每一次都是出现在三次握手阶段，复现概率约为——”按请求数来算的话差不多百万级别分之1的概率，概率极低“（这是来自业务的原话）。
+
+    - 这里需要剧透一点的是，后文提到的两个场景下的rst的bug，都是由于相同的race condition导致的。rcu保护关注的是reader&writer的安全性（不会踩错地址），而不保护数据的实时性，这个很重要。所以当rcu与hashtable结合的时候，对整个表的增删和读如何保证数据的绝对的同步显得很重要！
+
+    - 握手阶段的TCP bug
+
+        ![image](./Pictures/net-kernel/TCP_reset包-第二个案例.avif)
+
+        - 问题的表象是，三次握手完毕后client端给server端发送了数据，结果server端却发送了rst拒绝了。
+
+        - 分析：注意看上图最左边的第4和5这两行的时间间隔非常短，只有11微妙，11微妙是什么概念？查一次tcp socket的hash表可能都是几十微妙，这点时间完全可能会停顿在一个函数上。
+
+        - 当server端看到第三行的ack的时候几乎同时也看到了第四行的数据，详细来说，这时候server端在握手最后一个环节，会在socket的hash表中删除一个老的socket（我们叫req sk），再插入一个新的socket（我们叫full sk），在删除和插入之间的这短暂的几微妙发生的时候，server收第行的数据的时候需要去到这个hash表中寻找（根据五元组）对应的socket来接受这个报文，结果在这个空档期间没有匹配到应该找到的socket，这时候没办法只能把当时上层最初监听的listener拿出来接收，这样就出现了错误，违背了协议栈的基本的设计：对于listener socket接收到了数据包，那么这个数据包是非预期的，应该发送RST！
+
+        ```
+        CPU 0                           CPU 1
+           -----                           -----
+        tcp_v4_rcv()                  syn_recv_sock()
+                                    inet_ehash_insert()
+                                    -> sk_nulls_del_node_init_rcu(osk)
+        __inet_lookup_established()
+                                    -> __sk_nulls_add_node_rcu(sk, list)
+        ```
+
+        - 对应上图的cpu0就是server的第四行的读者，cpu1就是写者，对于cpu0而言，读到的数据可能是三种情况：1）读到老的sk，2）读到新的sk，3）谁也读不到，前两个都是可以接收，但是最后一个就是bug了——我们必须要找到两者之一！如下就是一种场景，无法正确找到new或者old。
+
+            ![image](./Pictures/net-kernel/TCP_reset包-第二个案例1.avif)
+
+        - 那如何修复这个问题？在排查完整个握手规则后，发现只需要先插入新的sk到hash桶的尾部，再删除老的sk即可，这样就会有几种情况：1）两个同时都在，一定能匹配到其中一个，2）匹配到新的。如下图，无论reader在哪里都能保证可以读到一个。如下是正确的：
+            ![image](./Pictures/net-kernel/TCP_reset包-第二个案例2.avif)
+
+        - 结论：第3行（client给server发生了握手最后一次ack）和第4行（client端给server发送了第一组数据）出现的并发问题。
+
+    - 挥手阶段的bug：
+
+        ![image](./Pictures/net-kernel/TCP_reset包-第二个案例3.avif)
+
+        - 这个问题根因同上：rcu+hash表的使用问题，在挥手阶段发起close()的一方竞争的乱序的收到了一个ack和一个fin ack触发，导致socket在最后接收fin ack时候没有匹配到任何一个socket，又只能拿出最初监听的listener来收包的时候，这时候出现了错误。但是这个原始代码中，是先插入新的sk再删除了老的sk，乍一听没有任何问题，但是实际上插入新的sk出现了问题，源码中插入到头部，这里需要插入到尾部才行！出现问题的情景如下图。
+
+        ![image](./Pictures/net-kernel/TCP_reset包-第二个案例4.avif)
+
+        - 结论：这个是原生内核长达十多年的一个实现上的BUG，即为了性能考虑使用的RCU机制，由此必然引入的不准确性导致并发的问题，我定位并分析出这个问题的并发的根因，由此提交了一份bugfix patch到社区被接收，链接：https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=3f4ca5fafc08881d7a57daa20449d171f2887043
+
+- 第三个案例：netfilter两个bug —— 数据传输RST
+
+    - 背景：用户报告有两个痛点问题：偶发性出现1）根本无法完成三次握手连接，2）在传输数据的阶段突然被RST异常中止。
+
+    - 分析：我们很容易的通过TCP的设计推测到这种情况一定不是正常的、符合预期的行为。我抓取了passive rst后发现原因是TCP层无法通过收到的skb包寻找到对应的socket，要知道socket是最核心的TCP连接通信的基站，它保存了TCP应有的信息（wscale、seq、buf等等），如果skb无法找到socket，那么就像小时候的故事小蝌蚪找妈妈但是找不到回家的路一样。
+
+    - 那为什么会出现找不到socket？
+
+    - 经过排查发现线上配置了DNAT规则，如下例子，凡是到达server端的1111端口或1112端口的都被转发到80端口接收。
+
+        ```
+        // iptables A port -> B port
+        iptables ... -p tcp --port 1111 -j REDIRECT --to-ports 80
+        iptables ... -p tcp --port 1112 -j REDIRECT --to-ports 80
+        ```
+
+    - DNAT+netfilter的流程是什么样？
+
+        ![image](./Pictures/net-kernel/TCP_reset包-第三个案例.avif)
+
+    - 那么，有了DNAT之后，凡是进入到server端的A port会被直接转发到B port，最后TCP完成接收。完整的逻辑是这样：DNAT的端口映射在ip层收包时候先进入prerouting流程，修改skb的dst_ip:dst_port为真正的最后映射的信息，而后由ip early demux机制针对skb中的原始信息src_ip:src_port（也就是A port）修改为dst_ip:dst_port（也就是使用B port），由此4元组hash选择一个sk，继而成功由TCP接收才对。
+
+    - 两条流冲突触发的bug
+
+        - 如下，如果这时候有两条流量想要TCP建连，二者都是由同一个client端相同的ip和port发起连接，这时候第1条连接首先发起握手那么肯定可以顺利进行，而当第2条连接发起的时候抵达到server端的1112端口最终被转化为80端口，但是根据80端口可以发现我们已经建立了连接，所以第2条流三次握手直接失败。
+
+        ```
+        1：saddr:12345 -> daddr:1111
+        2：saddr:12345 -> daddr:1112
+        ```
+
+        - （对内核细节不感兴趣的同学可以跳过此段）详细的来说，第一条链接成功建联，第二条链接开始握手，server端的收到syn包，在prerouting之后，修改skb的dst_ip:dst_port将saddr:12345->daddr:1112改为saddr:12345->daddr:80，然后进入early demux根据这个四元组找到了第一条链接的sk（因为dst_port都被iptables的prerouting改为一样），而这个是一个established socket，后面进入到tcp层就会接收syn包失败。
+
+        - 所以内核对应的修复方式就是，在prerouting->early demux完成后的local in阶段，如果识别到了这个case，则放弃early demux的选择结果（通过skb_orphan()），在local in里完成修改skb的源port端口（saddr:1112 -> daddr:80），这时候的第二条链接和第一条链接就有区分了，这时候交给tcp层真正意义上可以针对四元组的skb找sk，这时候肯定会找不到established sk、只能找listener socket，因此完成建联流程。
+
+        - 结论：这个是early demux+DNAT的bug，它未能解决冲突问题，导致了异常RST的发生。
 
 ##### 如何关闭一个 TCP 连接？
 
@@ -1518,13 +1749,52 @@ listen 80 fastopen=256
 
     - 3.有数据发送，则立刻返回ack + 数据
 
+    ![image](./Pictures/net-kernel/TCP_delay-ack1.avif)
     ![image](./Pictures/net-kernel/TCP_delay-ack.avif)
 
-- Nagle算法与延迟ack的一起使用的问题：
+##### Nagle算法
+
+- Nagle算法：发送端不要立即发送数据，攒多了再发。但是也不能一直攒，否则就会造成程序的延迟上升。
+
+    - 像 nc 和 ssh 这样的交互式程序，你按下一个字符，就发出去一个字符给 Server 端。每通过 TCP 发送一个字符都需要额外包装 20 bytes IP header 和 20 bytes TCP header，发送 1 bytes 带来额外的 40 bytes 的流量，不是很不划算吗？
+
+    - 还有一种情况是应用代码写的不好。TCP 实际上是由 Kernel 封装然后通过网卡发送出去的，用户程序通过调用 write syscall 将要发送的内容送给 Kernel。有些程序的代码写的不好，每次调用 write 都只写一个字符（发送端糊涂窗口综合症）。如果 Kernel 每收到一个字符就发送出去，那么有用数据和 overhead 占比就是 1/41。
+
+- 算法的伪代码：简单来说，就是如果要发送的内容足够一个 MSS 了，就立即发送。否则，每次收到对方的 ACK 才发送下一次数据。
+
+    ```
+    if there is new data to send then
+        if the window size ≥ MSS and available data is ≥ MSS then
+            send complete MSS segment now
+        else
+            if there is unconfirmed data still in the pipe then
+                enqueue data in the buffer until an acknowledge is received
+            else
+                send data immediately
+            end if
+        end if
+    end if
+    ```
+- Delay ACK 和 Nagle 算法：这两个方法看似都能解决一些问题。但是如果一起用就很糟糕了。
 
     ![image](./Pictures/net-kernel/TCP_delay-ack1.avif)
 
     - 解决方法：发送方关闭 Nagle 算法；或者接收方关闭延迟ACK
+        - 1.关闭 Nagle’s Algorithm 的方法：可以给 socket 设置 TCP_NODELAY. 这样程序在 write 的时候就可以 bypass Nagle’s Algorithm，直接发送。
+
+        - 2.关闭 Delay ACK 的方法：可以给 socket 设置 TCP_QUICKACK，这样自己（作为 server 端）在收到 TCP segment 的时候会立即 ACK。实际上，在现在的 Linux 系统默认就是关闭的。
+
+            - 如果我们关闭 TCP_QUICKACK ，就可以看到几乎每一次 TCP 握手，第三个 ACK 都是携带了数据的。
+            ```sh
+            int off = 0;
+            setsockopt(sockfd, IPPROTO_TCP, TCP_QUICKACK, &off, sizeof(off));
+
+            04:13:32.240213 IP foobarhost.57010 > 104.244.42.65.http: Flags [S], seq 1515096107, win 64240, options [mss 1460,sackOK,TS val 2468276221 ecr 0,nop,wscale 7], length 0
+            04:13:32.383742 IP 104.244.42.65.http > foobarhost.57010: Flags [S.], seq 1620480001, ack 1515096108, win 65535, options [mss 1460], length 0
+            04:13:32.384536 IP foobarhost.57010 > 104.244.42.65.http: Flags [P.], seq 1:38, ack 1, win 64240, length 37: HTTP: POST /apikey=1&command=2 HTTP/1.0
+            ```
+
+
 
 #### TCP congestion control(拥塞算法)
 
@@ -1826,6 +2096,8 @@ net.ipv4.tcp_congestion_control = bbr
 
 - [KCP: 快速可靠的ARQ协议](http://kaiyuan.me/2017/07/29/KCP%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/)
 - [WeTest：可靠UDP，KCP协议快在哪？](https://cloud.tencent.com/developer/article/1148654)
+
+- [（视频）小白debug：原神用的是TCP还是UDP? KCP是什么？](https://www.bilibili.com/video/BV1wC4y1D7H3)
 
 ## Network Layer（网络层）
 
@@ -2427,6 +2699,9 @@ sudo tc qdisc del dev eth0 root
     ![image](./Pictures/net-kernel/qdisc-EDT.avif)
 
 ## 数据包流程
+
+![image](./Pictures/net-kernel/数据包流程.avif)
+![image](./Pictures/net-kernel/数据包流程1.avif)
 
 - [美团技术团队：Redis高负载下的中断优化](https://tech.meituan.com/2018/03/16/redis-high-concurrency-optimization.html)
 

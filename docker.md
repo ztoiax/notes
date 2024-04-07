@@ -1,22 +1,36 @@
 <!-- vim-markdown-toc GFM -->
 
 * [docker](#docker)
+    * [容器与虚拟机对比](#容器与虚拟机对比)
     * [without sudo](#without-sudo)
     * [基本命令](#基本命令)
     * [docker run](#docker-run)
-        * [--volumes-from 会递归容器引用的数据卷](#--volumes-from-会递归容器引用的数据卷)
         * [--link 连接容器](#--link-连接容器)
         * [--gpus](#--gpus)
+        * [--cap-add。Capability](#--cap-addcapability)
+    * [数据卷(Volume)](#数据卷volume)
+        * [匿名卷](#匿名卷)
+        * [具名卷](#具名卷)
+        * [本机的目录映射到容器](#本机的目录映射到容器)
+        * [docker run --volumes-from 会递归容器引用的数据卷](#docker-run---volumes-from-会递归容器引用的数据卷)
+    * [Docker的底层技术](#docker的底层技术)
         * [cgroup(资源限制)](#cgroup资源限制)
-        * [其他资源限制](#其他资源限制)
-        * [namespace(命名空间)](#namespace命名空间)
-    * [Capability](#capability)
+            * [docker run cgourp相关命令](#docker-run-cgourp相关命令)
+            * [通过操作cgroup目录下的文件，限制进程cpu使用率、内存等等](#通过操作cgroup目录下的文件限制进程cpu使用率内存等等)
+            * [go语言 cgroup相关代码](#go语言-cgroup相关代码)
+        * [namespaces（命名空间）实现资源隔离](#namespaces命名空间实现资源隔离)
+            * [unshare namespace相关命令](#unshare-namespace相关命令)
+            * [docker run namespace相关命令](#docker-run-namespace相关命令)
+            * [go语言 namespace相关代码](#go语言-namespace相关代码)
+        * [UnionFS（联合文件系统）](#unionfs联合文件系统)
+            * [OverlayFS](#overlayfs)
+            * [rootfs（根文件系统）](#rootfs根文件系统)
     * [import/export](#importexport)
         * [镜像导入导出](#镜像导入导出)
         * [容器导入导出](#容器导入导出)
         * [容器数据卷之间的备份恢复](#容器数据卷之间的备份恢复)
     * [containerd](#containerd)
-    * [runc](#runc)
+    * [runc管理容器](#runc管理容器)
     * [network](#network)
         * [cnm model(容器网络模型)](#cnm-model容器网络模型)
         * [容器之间的网络隔离](#容器之间的网络隔离)
@@ -24,13 +38,31 @@
             * [方法 1: 使用第三方工具 pipework](#方法-1-使用第三方工具-pipework)
             * [方法 2: 手动设置](#方法-2-手动设置)
     * [Dockerfile 创建容器镜像](#dockerfile-创建容器镜像)
-    * [registry](#registry)
+        * [Dockerfile命令](#dockerfile命令)
+        * [Dockerfile优化](#dockerfile优化)
+        * [构建属于自己的 centos 容器](#构建属于自己的-centos-容器)
+        * [hadolint：自动检查您的Dockerfile是否存在任何问题](#hadolint自动检查您的dockerfile是否存在任何问题)
+    * [registry仓库](#registry仓库)
+    * [Docker Compose定义和运行多容器](#docker-compose定义和运行多容器)
+        * [docker-compose.yml示例](#docker-composeyml示例)
+        * [Docker Compose的常用命令](#docker-compose的常用命令)
+    * [Docker Swarm集群](#docker-swarm集群)
+        * [Swarm服务](#swarm服务)
+        * [Swarm节点管理](#swarm节点管理)
+        * [Swarm网络](#swarm网络)
+        * [Swarm存储](#swarm存储)
+        * [高级主题](#高级主题)
+    * [监控](#监控)
     * [不同应用是否适合docker，以及性能对比](#不同应用是否适合docker以及性能对比)
         * [nosql](#nosql)
         * [关系型数据库](#关系型数据库)
-    * [第三方软件](#第三方软件)
-    * [reference article(优秀文章)](#reference-article优秀文章)
-* [与裸机性能对比](#与裸机性能对比)
+    * [与裸机性能对比](#与裸机性能对比)
+* [第三方软件](#第三方软件)
+    * [服务端](#服务端)
+    * [客户端](#客户端)
+* [reference article(优秀文章)](#reference-article优秀文章)
+* [podman](#podman)
+    * [Podman Desktop：一个管理容器的gui。兼容docker引擎](#podman-desktop一个管理容器的gui兼容docker引擎)
 
 <!-- vim-markdown-toc -->
 
@@ -43,43 +75,6 @@
   > 也就是在 windows,macos 上的 docker,无法使用 centos,opensuse 这些依赖 linux 内核的容器
 
   ![image](./Pictures/docker/docker.avif)
-
-- 通过 `namespace` 实现资源**隔离**(isolate)
-
-  - 我们所熟知的 `chroot` 命令,就是切换挂载点,实现文件系统的隔离
-
-  - namespace 有 8 项隔离
-    | namespace | 内容 |
-    | -------- | ------------------------------------ |
-    | Cgroup | Cgroup root directory |
-    | IPC | System V IPC, POSIX message queues,Shared memory |
-    | Network | Network devices, stacks, ports, etc. |
-    | Mount | Mount points |
-    | PID | Process IDs |
-    | Time | Boot and monotonic, clocks |
-    | User | User and group IDs |
-    | UTS | Hostname and NIS, domain name |
-
-  - `/proc/pid/ns` 目录下查看不同的 namespace(以编号区分)
-
-  - `lsns` 命令查看所有 namespace
-
-  - `pgrep --ns 4026532713 -a ` 命令,传递 namespace 编号,查看此 namespace 下的进程
-
-    ![image](./Pictures/docker/namespace.avif)
-
-- 通过 `cgroup` 实现资源**限制**(limit) 和 监控容器的统计信息
-
-  - `mount -t cgroup` 查看 cgroup 子系统
-
-    ![image](./Pictures/docker/cgroup.avif)
-
-  - docker 在每个 cgroup 子系统目录下,都有自己的控制组
-
-    - 每个控制组下有对应的容器`/sys/fs/cgroup/cpu/docker/<container-id>`
-
-      ![image](./Pictures/docker/cgroup1.avif)
-      ![image](./Pictures/docker/cgroup2.avif)
 
 - Capability 对 root 权限,分成多个子权限 [详细文档](https://man7.org/linux/man-pages/man7/capabilities.7.html)
 
@@ -99,19 +94,6 @@
       ![image](./Pictures/docker/cs1.avif)
       ![image](./Pictures/docker/cs.svg)
 
-- docker 镜像使用分层的文件系统(union fs),联合挂载(union mount)会进行整合,让我们看上去为一层
-
-  - 修改容器内的某个文件时,会在最顶层记录修改的内容,不会覆盖下层的内容(类似于 git diff),以此实现共享镜像层
-
-    ![image](./Pictures/docker/fs.avif)
-
-- 多个容器运行时,如果未修改镜像内容,会**共享镜像层**(layer)
-
-  - 容器启动时,在只读的镜像层上添加 自己的**可写覆盖层**
-
-  - 容器运行过程中修改镜像时,会将修改的内容写入 可写覆盖层(copy on wirte)
-    ![image](./Pictures/docker/fs1.avif)
-
 - 配置文件 `/var/lib/docker`
 
   | 内容    | 目录                    |
@@ -128,6 +110,19 @@
   | container         | /var/lib/docker/containers    |
   | ----------------- | ----------------------------- |
   | volume 的具体情况 | <container_id>/config.v2.json |
+
+## 容器与虚拟机对比
+
+- 同一台机器上的所有容器，都共享宿主机操作系统的内核。
+    - 如果你的应用程序需要配置内核参数、加载额外的内核模块，以及跟内核进行直接的交互，你就需要注意了，这些操作和依赖的对象，都是宿主机操作系统的内核，它对于该机器上的所有容器来说是一个“全局变量”，牵一发而动全身。
+
+    - 这也是容器相比于虚拟机的主要缺陷之一，毕竟后者不仅有模拟出来的硬件机器充当沙盒，而且每个沙盒里还运行着一个完整的 Guest OS 给应用随便折腾。
+
+- 如果底层操作系统不同，比如有些是 ubuntu，有些是 centos，部署应用的时候就会有各种环境问题。docker可以让软件轻松跑在各类操作系统上
+
+- 将软件和操作系统一起打包成虚拟机部署，运行一个完整的虚拟机，太重了。只打包软件和系统依赖库加配置就好了，也就是容器。
+
+- docker除了有ubuntu、centos等操作系统镜像，还有nginx、httpd应用镜像。
 
 ## without sudo
 
@@ -156,7 +151,7 @@ logout
 # 查看docker信息
 docker info
 
-# 查看容器运行信息
+# 查看容器详细信息
 docker inspect CONTAINER_ID
 
 # 查看容器写入层的diff(类似git diff)
@@ -164,6 +159,21 @@ docker diff CONTAINER_ID
 
 # 查看容器镜像构建信息
 docker history IMAGE_ID
+
+# 查看运行的容器
+docker ps
+
+# 重新启动正在运行的容器
+docker restart CONTAINER_ID
+
+# 暂停运行容器
+docker stop CONTAINER_ID
+
+# 查看所有容器包含被stop（暂停）的
+docker ps -a
+
+# 启用一个暂停的容器
+docker start CONTAINER_ID
 
 # 查看端口映射
 docker ps -l
@@ -197,6 +207,15 @@ docker rename CONTAINER_ID New_name
 
 # 查看容器ip
 docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' CONTAINER_ID
+
+# 查看容器的日志
+docker logs nginx
+
+# 从容器Copy到宿主机
+docker cp nginx:/etc/nginx/nginx.conf .
+
+# 从宿主机Copy到容器
+docker cp test nginx:/opt
 ```
 
 ## docker run
@@ -228,6 +247,10 @@ docker run --name opensuse_1 \
 
 # -it 默认是/bin/bash
 docker run --name opensuse_1 \
+    -it opensuse
+
+# -d 后台运行
+docker run -d --name opensuse_1 \
     -it opensuse
 
 # --rm 退出后自动删除容器
@@ -283,46 +306,6 @@ docker logs -f opensuse_1
 docker run --log-driver="syslog"\
     --name opensuse_1 -it opensuse /bin/bash
 ```
-
-### --volumes-from 会递归容器引用的数据卷
-
-opensuse_data2(data2) -> opensuse_data1(data1) -> opensuse_data(data)
-
-```bash
-docker run -v /data \
-    --name opensuse_data \
-    -itd opensuse
-
-docker run --volumes-from=opensuse_data \
-    -v /data1 --name opensuse_data1 \
-    -itd opensuse
-
-docker run --volumes-from=opensuse_data1 \
-    -v /data2 --name opensuse_data2 \
-    -it opensuse
-```
-
-![image](./Pictures/docker/volumes-from.avif)
-
-- 1.此时如果 `rm -v` 删除 `opensuse_data1` 容器
-
-  - 数据卷 `data1` 并不会删除
-
-- 2.而如果在重新创建 opensuse_data1
-
-  ```bash
-  docker run --volumes-from=opensuse_data \
-      -v /data1 --name opensuse_data1 \
-      -itd opensuse
-  ```
-
-  - 容器数据卷名字虽然也是 data1,但并不是原来的数据卷
-
-    - 左边为新创建的 `opensuse_data1`
-
-    - 右边为 `opensuse_data2`
-
-      ![image](./Pictures/docker/volumes-from1.avif)
 
 ### --link 连接容器
 
@@ -382,7 +365,446 @@ ping c1
 docker run --rm -it --gpus all -v $PWD:/host akaikatto/dandere2x -p singleprocess -ws . -i 123.mp4 -o 123new.mp4
 ```
 
+### --cap-add。Capability
+
+```bash
+docker run --cap-add=ALL --cap-drop=MKNOD \
+    --rm -it opensuse
+```
+
+## 数据卷(Volume)
+
+- [云原生运维圈：你必须知道的Docker数据卷(Volume)](https://mp.weixin.qq.com/s/v9e5j5o56MnOehoJ_Wp5Ew)
+
+数据卷(Volume)：使用docker容器的时候，会产生一系列的数据文件，这些数据文件在删除docker容器时是会消失的，程序员希望在运行过程钟产生的部分数据是可以持久化的的，而且容器之间我们希望能够实现数据共享。数据卷是一个可供一个或多个容器使用的特殊目录，它将主机操作系统目录直接映射进容器。
+
+- 数据卷的特点
+    - 1.持久性：数据卷独立于容器的生命周期，容器删除后数据卷仍然存在，可以被其他容器挂载和使用。
+    - 2.共享性：多个容器可以共享同一个数据卷，实现数据在容器之间的共享和传递。
+    - 3.数据卷可以提供外部数据：可以将主机文件系统的目录或文件挂载为数据卷，容器可以直接访问主机上的数据。
+    - 4.容器之间隔离：即使多个容器共享同一个数据卷，它们之间的操作仍然是相互隔离的，不会相互影响。
+    - 5.高性能：与将数据存储在容器内部相比，使用数据卷通常具有更高的性能，因为数据卷可以利用主机文件系统的优势。
+    - 6.可备份和恢复：可以轻松备份和恢复数据卷中的数据，方便进行数据管理和迁移。
+
+```sh
+# 列出所有卷
+docker volume ls
+DRIVER    VOLUME NAME
+local     ec56e4ef1cd8d70873d1b9c130326bbdd52cb6ebd302d85899d822f085568e1f
+local     minikube
+
+# 数据卷对应/var/lib/docker/volumes/中的目录
+ls -l /var/lib/docker/volumes/
+brw------- 1 root root 259, 3 Mar 30 10:41 backingFsBlockDev
+drwx-----x 3 root root   4096 Mar 26  2022 ec56e4ef1cd8d70873d1b9c130326bbdd52cb6ebd302d85899d822f085568e1f
+-rwxrwxrwx 1 root root  65536 Mar 30 10:41 metadata.db
+drwx-----x 3 root root   4096 Jan 17 13:32 minikube
+
+# 创建卷
+docker volume create test
+
+# 查询数据卷详情
+docker volume inspect test
+[
+    {
+        "CreatedAt": "2024-03-30T10:47:01+08:00",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/test/_data",
+        "Name": "test",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+
+# 删除卷
+docker volume rm test
+
+# 移除无用卷
+docker volume prune
+```
+
+### 匿名卷
+
+```sh
+# 创建匿名卷，并保存容器 /usr/share/nginx/html 下面的内容
+docker run -d --name nginx -P -v /usr/share/nginx/html nginx
+
+# 查看容器
+docker inspect nginx
+ "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "eed5af324ff6a4af2f02cf3dd2ed0da51be01b6e34abcf578c179ccde3bc3992",
+                "Source": "/var/lib/docker/volumes/eed5af324ff6a4af2f02cf3dd2ed0da51be01b6e34abcf578c179ccde3bc3992/_data",
+                "Destination": "/usr/share/nginx/html",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+
+# 列出所有卷。可以看到多出来了ec56e4ef1cd8d70873d1b9c130326bbdd52cb6ebd302d85899d822f085568e1f
+docker volume ls
+DRIVER    VOLUME NAME
+local     ec56e4ef1cd8d70873d1b9c130326bbdd52cb6ebd302d85899d822f085568e1f
+local     eed5af324ff6a4af2f02cf3dd2ed0da51be01b6e34abcf578c179ccde3bc3992
+local     minikube
+
+# 可以看到Labels中有anonymous（匿名）。并且可以看到对应的宿主机挂载点目录
+docker volume inspect eed5af324ff6a4af2f02cf3dd2ed0da51be01b6e34abcf578c179ccde3bc3992
+[
+    {
+        "CreatedAt": "2024-03-30T11:03:16+08:00",
+        "Driver": "local",
+        "Labels": {
+            "com.docker.volume.anonymous": ""
+        },
+        "Mountpoint": "/var/lib/docker/volumes/eed5af324ff6a4af2f02cf3dd2ed0da51be01b6e34abcf578c179ccde3bc3992/_data",
+        "Name": "eed5af324ff6a4af2f02cf3dd2ed0da51be01b6e34abcf578c179ccde3bc3992",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+
+# 进入容器
+docker exec -it nginx sh
+
+# 进入匿名卷的目录
+cd /usr/share/nginx/html/
+
+# 可以看到nginx镜像，在这个目录默认有2个文件。
+ls
+50x.html  index.html
+
+# 创建一个文件
+touch test
+
+# 退出容器
+exit
+
+# 测试持久化。查看nginx容器的匿名卷挂载点，是否能看到刚才创建的test文件
+ls /var/lib/docker/volumes/eed5af324ff6a4af2f02cf3dd2ed0da51be01b6e34abcf578c179ccde3bc3992/_data
+50x.html  index.html  test
+```
+
+### 具名卷
+
+```sh
+# 创建一个名为nginx的数据卷
+docker volume create nginx
+# 查看数据卷详情。可以看到与匿名卷不同的是，Labels是空值，没有anonymous（匿名）
+docker volume inspect nginx
+[
+    {
+        "CreatedAt": "2024-03-30T11:16:11+08:00",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/nginx/_data",
+        "Name": "nginx",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+
+# 使用具名卷映射
+docker run -d --name nginx -P -v nginx:/usr/share/nginx/html nginx
+
+# 查看容器详细信息
+docker inspect nginx
+ "Mounts": [
+            {
+                "Type": "volume",
+                "Name": "nginx",
+                "Source": "/var/lib/docker/volumes/nginx/_data",
+                "Destination": "/usr/share/nginx/html",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+
+# 进入容器
+docker exec -it nginx sh
+
+# 进入匿名卷的目录
+cd /usr/share/nginx/html/
+
+# 可以看到nginx镜像，在这个目录默认有2个文件。
+ls
+50x.html  index.html
+
+# 创建一个文件
+touch test
+
+# 退出容器
+exit
+
+# 测试持久化。查看nginx容器的匿名卷挂载点，是否能看到刚才创建的test文件
+ls /var/lib/docker/volumes/nginx/_data
+50x.html  index.html  test
+
+# 删除容器重新创建
+docker rm -f nginx
+docker run -d --name nginx -P -v nginx:/usr/share/nginx/html nginx
+
+# 进入容器
+docker exec -it nginx sh
+# 再次查看有之前创建test文件。持久化成功
+ls /usr/share/nginx/html
+50x.html  index.html  test
+```
+
+### 本机的目录映射到容器
+
+```sh
+# 将本机的/tmp/nginx目录，映射到容器的/usr/share/nginx/html
+# 使用 bind 方式做数据卷的映射时，首次 docker run -v 运行，如果本机的文件夹是没有内容的，docker容器中的文件夹是有内容的，则本机的会覆盖dokcer容器中的，也就是容器中原本有内容的也会没有内容
+# 如果本机的文件夹是有内容的，docker容器中的文件夹是有内容的，则本机的会覆盖dokcer容器中的 由于宿主机上 /tmp/nginx 这个目录底下没有文件，所以容器内的数据会被主机目录覆盖清空。
+docker run -d --name nginx -P -v /tmp/nginx:/usr/share/nginx/html nginx
+
+# 查看容器详情
+docker inspect nginx
+ "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/tmp/nginx",
+                "Destination": "/usr/share/nginx/html",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+
+# 列出数据卷。并没有多出来volume name
+docker volume ls
+DRIVER    VOLUME NAME
+local     ec56e4ef1cd8d70873d1b9c130326bbdd52cb6ebd302d85899d822f085568e1f
+local     eed5af324ff6a4af2f02cf3dd2ed0da51be01b6e34abcf578c179ccde3bc3992
+local     minikube
+local     nginx
+
+# 查看目录，什么也没有
+ls /tmp/nginx
+
+# 进入映射目录
+cd /usr/share/nginx/html/
+# 查看目录，什么也没有。因为会/tmp/nginx目录覆盖，而/tmp/nginx什么文件也没有。
+ls
+
+# 创建一个新文件
+touch test
+
+# 退出容器
+exit
+
+# 查看宿主机的映射目录
+ls /tmp/nginx
+test
+
+# 删除容器重新创建
+docker rm -f nginx
+docker run -d --name nginx -P -v /tmp/nginx:/usr/share/nginx/html nginx
+
+# 持久化成功
+ls /usr/share/nginx/html
+test
+```
+
+### docker run --volumes-from 会递归容器引用的数据卷
+
+opensuse_data2(data2) -> opensuse_data1(data1) -> opensuse_data(data)
+
+```bash
+docker run -v /data \
+    --name opensuse_data \
+    -itd opensuse
+
+docker run --volumes-from=opensuse_data \
+    -v /data1 --name opensuse_data1 \
+    -itd opensuse
+
+docker run --volumes-from=opensuse_data1 \
+    -v /data2 --name opensuse_data2 \
+    -it opensuse
+```
+
+![image](./Pictures/docker/volumes-from.avif)
+
+- 1.此时如果 `rm -v` 删除 `opensuse_data1` 容器
+
+  - 数据卷 `data1` 并不会删除
+
+- 2.而如果在重新创建 opensuse_data1
+
+  ```bash
+  docker run --volumes-from=opensuse_data \
+      -v /data1 --name opensuse_data1 \
+      -itd opensuse
+  ```
+
+  - 容器数据卷名字虽然也是 data1,但并不是原来的数据卷
+
+    - 左边为新创建的 `opensuse_data1`
+
+    - 右边为 `opensuse_data2`
+
+      ![image](./Pictures/docker/volumes-from1.avif)
+
+
+## Docker的底层技术
+
 ### cgroup(资源限制)
+
+- [knowclub：探究Docker三板斧NameSpace、Cgroups、UnionFS](https://mp.weixin.qq.com/s?__biz=Mzk0OTI3MDg5MA==&mid=2247486995&idx=1&sn=5d3950b305882aa2028e8bf8526d39e6&chksm=c35bae16f42c2700578d4d9d8b6612ab620dd15ff6199485baba5e1811cb4de73add9d37bd91&token=1480493907&lang=zh_CN&scene=21#wechat_redirect)
+
+- Linux Cgroup全称Linux Control Group， 是Linux内核的一个功能，用来限制，控制与分离一个进程组群的资源（如CPU、内存、磁盘输入输出等）。
+
+- Linux Cgroup可让您为系统中所运行任务（进程）的用户定义组群分配资源 — 比如 CPU 时间、系统内存、网络带宽或者这些资源的组合。
+    - 您可以监控您配置的 cgroup，拒绝 cgroup 访问某些资源，甚至在运行的系统中动态配置您的 cgroup。
+
+
+- 主要功能:
+
+    - 限制资源使用，比如内存使用上限以及文件系统的缓存限制。
+    - 优先级控制，CPU利用和磁盘IO吞吐。
+    - 一些审计或一些统计，主要目的是为了计费。
+    - 挂起进程，恢复执行进程。
+
+- 相关概念：
+
+    - task: 在cgroups中，任务就是系统的一个进程。
+    - control group: 控制组，指明了资源的配额限制。进程可以加入到某个控制组，也可以迁移到另一个控制组。
+    - hierarchy: 层级结构，控制组有层级结构，子节点的控制组继承父节点控制组的属性(资源配额、限制等)
+    - subsystem: 子系统，一个子系统其实就是一种资源的控制器，比如memory子系统可以控制进程内存的使用。子系统需要加入到某个层级，然后该层级的所有控制组，均受到这个子系统的控制。
+
+- 相互关系
+    - 每次在系统中创建新层级时，该系统中的所有任务都是那个层级的默认cgroup（root cgroup，此cgroup在创建层级时自动创建，后面在该层级中创建的cgroup都是此cgroup的后代）的初始成员。
+    - 一个子系统最多只能附加到一个层级
+    - 一个层级可以附加多个子系统
+    - 一个任务可以是多个cgroup的成员，但是这些cgroup必须在不同的层级
+    - 系统中的进程（任务）创建子进程（任务）时，该子任务自动成为其父进程所在cgroup的成员。然后可根据需要将该子任务移动到不同的cgroup中，但开始时它总是继承其父任务的cgroup。
+
+![image](./Pictures/docker/cgroup3.avif)
+
+- 当你的cgroup 关联了哪些subsystem ，那这个cgroup 目录下就会有对应subsystem 的参数配置文件，可以通过这些文件对对应的资源进行限制
+
+- cgroup目录下的tasks文件里面可以添加你想要进行资源限制管理的进程的PID
+
+
+- 子系统
+    - cpu 子系统，主要限制进程的 cpu 使用率。
+    - cpuacct 子系统，可以统计 cgroups 中的进程的 cpu 使用报告。
+    - cpuset 子系统，可以为 cgroups 中的进程分配单独的 cpu 节点或者内存节点。
+    - memory 子系统，可以限制进程的 memory 使用量。
+    - blkio 子系统，可以限制进程的块设备 io。
+    - devices 子系统，可以控制进程能够访问某些设备。
+    - net_cls 子系统，可以标记 cgroups 中进程的网络数据包，然后可以使用 tc 模块（traffic control）对数据包进行控制。
+    - net_prio — 这个子系统用来设计网络流量的优先级
+    - freezer 子系统，可以挂起或者恢复 cgroups 中的进程。
+    - ns 子系统，可以使不同 cgroups 下面的进程使用不同的 namespace
+    - hugetlb — 这个子系统主要针对于HugeTLB系统进行限制，这是一个大页文件系统。
+
+- CPU子系统
+
+    - cpu子系统限制对CPU的访问，每个参数独立存在于cgroups虚拟文件系统的伪文件系中，参数如 下：
+
+    - cpu.shares: cgroup对时间的分配。比如cgroup A设置的是1，cgroup B设置的是2，那么B中的任务获取cpu的时间，是A中任务的2倍。
+    - cpu.cfs_period_us: 完全公平调度器的调整时间配额的周期。
+    - cpu.cfs_quota_us: 完全公平调度器的周期当中可以占用的时间。
+    - cpu.stat 统计值
+        - nr_periods 进入周期的次数
+        - nr_throttled 运行时间被调整的次数
+        - throttled_time 用于调整的时间
+
+    - cpuacct子系统：生成cgroup任务所使用的CPU资源报告，不做资源限制功能。
+        ```sh
+        cpuacct.usage # 该cgroup中所有任务总共使用的CPU时间（ns纳秒）
+        cpuacct.stat # 该cgroup中所有任务总共使用的CPU时间，区分user和system时间。
+        cpuacct.usage_percpu # 该cgroup中所有任务使用各个CPU核数的时间。
+        ```
+
+    - cpuset子系统
+
+        - 适用于分配独立的CPU节点和Mem节点，比如将进程绑定在指定的CPU或者内存节点上运行，各 参数解释如下
+        ```
+        cpuset.cpus # 可以使用的cpu节点
+        cpuset.mems # 可以使用的mem节点
+        cpuset.memory_migrate # 内存节点改变是否要迁移？
+        cpuset.cpu_exclusive # 此cgroup里的任务是否独享cpu？
+        cpuset.mem_exclusive # 此cgroup里的任务是否独享mem节点？
+        cpuset.mem_hardwall # 限制内核内存分配的节点（mems是用户态的分配）
+        cpuset.memory_pressure # 计算换页的压力。
+        cpuset.memory_spread_page # 将page cache分配到各个节点中，而不是当前内存节点。
+        cpuset.memory_spread_slab # 将slab对象(inode和dentry)分散到节点中。
+        cpuset.sched_load_balance # 打开cpu set中的cpu的负载均衡。
+        cpuset.sched_relax_domain_level # 迁移任务的搜索范围the searching range when migrating tasks
+        cpuset.memory_pressure_enabled # 是否需要计算 memory_pressure?
+        ```
+
+- memory子系统：memory子系统主要涉及内存一些的限制和操作，主要有以下参数：
+
+    ```
+    memory.usage_in_bytes # 当前内存中的使用量
+    memory.memsw.usage_in_bytes # 当前内存和交换空间中的使用量
+    memory.limit_in_bytes # 设置or查看内存使用量
+    memory.memsw.limit_in_bytes # 设置or查看 内存加交换空间使用量
+    memory.failcnt # 查看内存使用量被限制的次数
+    memory.memsw.failcnt # - 查看内存和交换空间使用量被限制的次数
+    memory.max_usage_in_bytes # 查看内存最大使用量
+    memory.memsw.max_usage_in_bytes # 查看最大内存和交换空间使用量
+    memory.soft_limit_in_bytes # 设置or查看内存的soft limit
+    memory.stat # 统计信息
+    memory.use_hierarchy # 设置or查看层级统计的功能
+    memory.force_empty # 触发强制page回收
+    memory.pressure_level # 设置内存压力通知
+    memory.swappiness # 设置or查看vmscan swappiness 参数
+    memory.move_charge_at_immigrate # 设置or查看 controls of moving charges?
+    memory.oom_control # 设置or查看内存超限控制信息(OOM killer)
+    memory.numa_stat # 每个numa节点的内存使用数量
+    memory.kmem.limit_in_bytes # 设置or查看 内核内存限制的硬限
+    memory.kmem.usage_in_bytes # 读取当前内核内存的分配
+    memory.kmem.failcnt # 读取当前内核内存分配受限的次数
+    memory.kmem.max_usage_in_bytes # 读取最大内核内存使用量
+    memory.kmem.tcp.limit_in_bytes # 设置tcp 缓存内存的hard limit
+    memory.kmem.tcp.usage_in_bytes # 读取tcp 缓存内存的使用量
+    memory.kmem.tcp.failcnt # tcp 缓存内存分配的受限次数
+    memory.kmem.tcp.max_usage_in_bytes # tcp 缓存内存的最大使用量
+    ```
+
+- blkio子系统：主要用于控制设备IO的访问。
+
+    - 有两种限制方式：权重和上限
+        - 权重是给不同的应用一个权重值，按百分比使用IO资源
+        - 上限是控制应用读写速率的最大值。
+
+    - 按权重分配IO资源：
+        ```
+        blkio.weight：填写 100-1000 的一个整数值，作为相对权重比率，作为通用的设备分配比。
+        blkio.weight_device：针对特定设备的权重比，写入格式为 device_types:node_numbers weight，空格前的参数段指定设备，weight参数与blkio.weight相同并覆盖原有的通用分配比。
+        ```
+
+    - 按上限限制读写速度：
+        ```
+        blkio.throttle.read_bps_device：按每秒读取块设备的数据量设定上限，格式device_types:node_numbers bytes_per_second。
+        blkio.throttle.write_bps_device：按每秒写入块设备的数据量设定上限，格式device_types:node_numbers bytes_per_second。
+        blkio.throttle.read_iops_device：按每秒读操作次数设定上限，格式device_types:node_numbers operations_per_second。
+        blkio.throttle.write_iops_device：按每秒写操作次数设定上限，格式device_types:node_numbers operations_per_second
+        ```
+
+    - 针对特定操作 (read, write, sync, 或 async) 设定读写速度上限
+        ```
+        blkio.throttle.io_serviced：针对特定操作按每秒操作次数设定上限，格式device_types:node_numbers operation operations_per_second
+        blkio.throttle.io_service_bytes：针对特定操作按每秒数据量设定上限，格式device_types:node_numbers operation bytes_per_second
+        ```
+
+#### docker run cgourp相关命令
+
+- docker 在每个 cgroup 子系统目录下,都有自己的控制组
+
+    - 每个控制组下有对应的容器`/sys/fs/cgroup/cpu/docker/<container-id>`
 
 | cgroup 相关参数 | 简写          | 操作             |
 | --------------- | ------------- | ---------------- |
@@ -445,7 +867,7 @@ docker run --privileged \
     --rm -it opensuse
 ```
 
-### 其他资源限制
+- 其他资源限制
 
 | 相关参数      | 功能实现        | 操作     |
 | ------------- | --------------- | -------- |
@@ -465,7 +887,668 @@ docker run -u tz --ulimit nproc=3 \
     -it busybox top
 ```
 
-### namespace(命名空间)
+#### 通过操作cgroup目录下的文件，限制进程cpu使用率、内存等等
+
+- 不同发行版的cgroup并不一样
+
+    ```sh
+    # 这是centos7
+    mount -t cgroup
+    cgroup on /sys/fs/cgroup/systemd type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,xattr,release_agent=/usr/lib/systemd/systemd-cgroups-agent,name=systemd)
+    cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,cpuacct,cpu)
+    cgroup on /sys/fs/cgroup/pids type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,pids)
+    cgroup on /sys/fs/cgroup/net_cls,net_prio type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,net_prio,net_cls)
+    cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,memory)
+    cgroup on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,freezer)
+    cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,blkio)
+    cgroup on /sys/fs/cgroup/perf_event type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,perf_event)
+    cgroup on /sys/fs/cgroup/hugetlb type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,hugetlb)
+    cgroup on /sys/fs/cgroup/devices type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,devices)
+    cgroup on /sys/fs/cgroup/cpuset type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,cpuset)
+
+    # 这是archlinux。archlinux没有mount -t cgroup
+    mount -t cgroup2
+    cgroup2 on /sys/fs/cgroup type cgroup2 (rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot)
+    ```
+
+- cpu消耗限制
+
+    - 创建一个死循环脚本
+
+        ```sh
+        #/bin/sh
+        a=1
+        while (( 1 ))
+        do
+         let a++
+        done
+        ```
+
+        ```sh
+        # 运行脚本后，使用top命令查看
+        top
+        top - 21:11:17 up 6 min,  1 user,  load average: 0.68, 0.58, 0.34
+        Tasks: 211 total,   3 running, 203 sleeping,   0 stopped,   5 zombie
+        %Cpu(s): 28.4 us,  2.4 sy,  0.0 ni, 69.2 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+        KiB Mem :  3875640 total,   601128 free,  2540740 used,   733772 buff/cache
+        KiB Swap:  2621436 total,  2621436 free,        0 used.   986168 avail Mem
+
+          PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+        18608 root      20   0  113284   1188   1008 R 100.0  0.0   0:35.18 bash
+        ```
+
+    ```sh
+    # 不同发行版的/sys/fs/cgroup/目录下的文件并不一样。我这里为centos7
+    cd /sys/fs/cgroup/cpu
+
+    # 在原有的/sys/fs/cgroup/cpu下面创建一个新的cgroup为cpu_t
+    mkdir cpu_t
+
+    # 创建cpu_t目录后，会自动生成以下文件
+    ls cpu_t
+    cgroup.clone_children  cpuacct.stat          cpu.cfs_period_us  cpu.rt_runtime_us  notify_on_release
+    cgroup.event_control   cpuacct.usage         cpu.cfs_quota_us   cpu.shares         tasks
+    cgroup.procs           cpuacct.usage_percpu  cpu.rt_period_us   cpu.stat
+
+    # 将该cgroup的cpu消耗限制为20%  1000 1%  20*1000 20%
+    echo 20000 > /sys/fs/cgroup/cpu/cpu_t/cpu.cfs_quota_us
+    # 将死循环脚本进程的pid，纳入该cgroup限制管理
+    echo 18608 >> /sys/fs/cgroup/cpu/cpu_t/tasks
+
+    # 再用top命令查看。就会发现这个shell脚本进程的cpu消耗变成了20%，限制起了作用
+    top - 21:16:43 up 12 min,  1 user,  load average: 0.98, 0.97, 0.59
+    Tasks: 224 total,   3 running, 216 sleeping,   0 stopped,   5 zombie
+    %Cpu(s): 11.1 us,  1.4 sy,  0.2 ni, 87.4 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+    KiB Mem :  3875640 total,   360680 free,  2656752 used,   858208 buff/cache
+    KiB Swap:  2621436 total,  2621436 free,        0 used.   866636 avail Mem
+
+      PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+    18608 root      20   0  113284   1188   1008 R  19.9  0.0   5:51.78 bash
+    ```
+
+- 内存限制
+    ```sh
+    # memory subsystem 默认的 hierarchy 就在 /sys/fs/cgroup/memory 目录
+    mount | grep memory
+    cgroup on /sys/fs/cgroup/memory type cgroup (rw,nosuid,nodev,noexec,relatime,seclabel,memory)
+    ```
+
+    ```sh
+    cd /sys/fs/cgroup/memory
+    mkdir hello
+
+    # 创建hello目录后，会自动生成以下文件
+    ls hello
+    cgroup.clone_children           memory.kmem.tcp.max_usage_in_bytes  memory.oom_control
+    cgroup.event_control            memory.kmem.tcp.usage_in_bytes      memory.pressure_level
+    cgroup.procs                    memory.kmem.usage_in_bytes          memory.soft_limit_in_bytes
+    memory.failcnt                  memory.limit_in_bytes               memory.stat
+    memory.force_empty              memory.max_usage_in_bytes           memory.swappiness
+    memory.kmem.failcnt             memory.memsw.failcnt                memory.usage_in_bytes
+    memory.kmem.limit_in_bytes      memory.memsw.limit_in_bytes         memory.use_hierarchy
+    memory.kmem.max_usage_in_bytes  memory.memsw.max_usage_in_bytes     notify_on_release
+    memory.kmem.slabinfo            memory.memsw.usage_in_bytes         tasks
+    memory.kmem.tcp.failcnt         memory.move_charge_at_immigrate
+    memory.kmem.tcp.limit_in_bytes  memory.numa_stat
+    ```
+
+    | 文件名                          | 功能                                                                                                                                                                                                                                                                                                     |
+    |---------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | tasks                           | cgroup 中运行的进程（ PID）列表。将 PID 写入一个 cgroup 的 tasks 文件，可将此进程移至该 cgroup                                                                                                                                                                                                           |
+    | cgroup.procs                    | cgroup 中运行的线程群组列表（ TGID ）。将 TGID 写入 cgroup 的 cgroup.procs 文件，可将此线程组群移至该 cgroup                                                                                                                                                                                            |
+    | cgroup.event_control            | event_fd() 的接口。允许 cgroup 的变更状态通知被发送                                                                                                                                                                                                                                                      |
+    | notify_on_release               | 用于自动移除空 cgroup 。默认为禁用状态（0）。设定为启用状态（1）时，当 cgroup 不再包含任何任务时（即，cgroup 的 tasks 文件包含 PID，而 PID 被移除，致使文件变空），kernel 会执行 release_agent 文件（仅在 root cgroup 出现）的内容，并且提供通向被清空 cgroup 的相关路径（与 root cgroup 相关）作为参数 |
+    | memory.usage_in_bytes           | 显示 cgroup 中进程当前所用的内存总量（以字节为单位）                                                                                                                                                                                                                                                     |
+    | memory.memsw.usage_in_bytes     | 显示 cgroup 中进程当前所用的内存量和 swap 空间总和（以字节为单位）                                                                                                                                                                                                                                       |
+    | memory.max_usage_in_bytes       | 显示 cgroup 中进程所用的最大内存量（以字节为单位）                                                                                                                                                                                                                                                       |
+    | memory.memsw.max_usage_in_bytes | 显示 cgroup 中进程的最大内存用量和最大 swap 空间用量（以字节为单位）                                                                                                                                                                                                                                     |
+    | memory.limit_in_bytes           | 设定用户内存（包括文件缓存）的最大用量                                                                                                                                                                                                                                                                   |
+    | memory.memsw.limit_in_bytes     | 设定内存与 swap 用量之和的最大值                                                                                                                                                                                                                                                                         |
+    | memory.failcnt                  | 显示内存达到 memory.limit_in_bytes 设定的限制值的次数                                                                                                                                                                                                                                                    |
+    | memory.memsw.failcnt            | 显示内存和 swap 空间总和达到 memory.memsw.limit_in_bytes 设定的限制值的次数                                                                                                                                                                                                                              |
+    | memory.oom_control              | 可以为 cgroup 启用或者禁用“内存不足”（Out of Memory，OOM） 终止程序。默认为启用状态（0），尝试消耗超过其允许内存的任务会被 OOM 终止程序立即终止。设定为禁用状态（1）时，尝试使用超过其允许内存的任务会被暂停，直到有额外内存可用。                                                                       |
+
+    - [更多文件的功能说明可以查看 kernel 文档中的 cgroup-v1/memory[4]](https://www.kernel.org/doc/Documentation/cgroup-v1/memory.txt)
+
+    ```sh
+    # 开启一个bash
+    bash
+    cd /sys/fs/cgroup/memory/hello
+
+    # 在这个 hello cgroup 节点中，我们想限制某些进程的内存资源，只需将对应的进程 pid 写入到 tasks 文件，并把内存最大用量设定到 memory.limit_in_bytes 文件即可。
+
+    # 这时候memory.usage_in_bytes还是0
+    cat memory.usage_in_bytes
+    0
+
+    # 将当前bash添加
+    echo $$ > tasks
+
+    # 再次查看。可以看到当前内存使用量
+    cat memory.usage_in_bytes
+    380928
+
+    # 设置内存最大用量
+    echo 100M > memory.limit_in_bytes
+    # 查看
+    cat memory.limit_in_bytes
+    104857600
+
+    # hello cgroup 节点默认启用了 OOM 终止程序，因此，当有进程尝试使用超过可用内存时会被立即终止。查询 memory.failcnt 可知，目前还没有进程内存达到过设定的最大内存限制值。
+    cat memory.failcnt
+    0
+    ```
+
+    - 使用 [memtester](http://pyropus.ca/software/memtester/)工具来测试 100M 的最大内存限制是否生效：
+        ```sh
+        # 下载并安装
+        curl -LO https://pyropus.ca./software/memtester/old-versions/memtester-4.6.0.tar.gz
+        tar -zxvf memtester-4.6.0.tar.gz
+        cd memtester-4.6.0/
+        make && make install
+
+        # 申请50M的内存成功
+        memtester 50M 1
+        cat memory.failcnt
+        0
+
+        # 申请100M，失败了
+        memtester 100M 1
+        pagesize is 4096
+        pagesizemask is 0xfffffffffffff000
+        want 100MB (104857600 bytes)
+        got  100MB (104857600 bytes), trying mlock ...Killed
+
+        # memory.failcnt 报告显示内存达到 memory.limit_in_bytes 设定的限制值（100M）的次数为 2793次。
+        cat memory.failcnt
+        2793
+        ```
+
+    - 删除
+        ```sh
+        rmdir /sys/fs/cgroup/memory/hello
+
+        ```
+#### go语言 cgroup相关代码
+
+- 内存限制
+
+    ```go
+    //go:build linux
+    // +build linux
+
+    package main
+
+    import (
+     "fmt"
+     "io/ioutil"
+     "os"
+     "os/exec"
+     "path/filepath"
+     "strconv"
+     "syscall"
+    )
+
+    func main() {
+     switch os.Args[1] {
+     case "run":
+      run()
+     case "child":
+      child()
+     default:
+      panic("help")
+     }
+    }
+
+    func run() {
+     fmt.Println("[main]", "pid:", os.Getpid())
+     cmd := exec.Command("/proc/self/exe", append([]string{"child"}, os.Args[2:]...)...)
+     cmd.Stdin = os.Stdin
+     cmd.Stdout = os.Stdout
+     cmd.Stderr = os.Stderr
+     cmd.SysProcAttr = &syscall.SysProcAttr{
+      Cloneflags: syscall.CLONE_NEWUTS |
+       syscall.CLONE_NEWPID |
+       syscall.CLONE_NEWNS,
+      Unshareflags: syscall.CLONE_NEWNS,
+     }
+     must(cmd.Run())
+    }
+
+    func child() {
+     fmt.Println("[exe]", "pid:", os.Getpid())
+     cg()
+     must(syscall.Sethostname([]byte("mycontainer")))
+     must(os.Chdir("/"))
+     must(syscall.Mount("proc", "proc", "proc", 0, ""))
+     cmd := exec.Command(os.Args[2], os.Args[3:]...)
+     cmd.Stdin = os.Stdin
+     cmd.Stdout = os.Stdout
+     cmd.Stderr = os.Stderr
+     must(cmd.Run())
+     must(syscall.Unmount("proc", 0))
+    }
+
+    func cg() {
+     mycontainer_memory_cgroups := "/sys/fs/cgroup/memory/mycontainer"
+     os.Mkdir(mycontainer_memory_cgroups, 0755)
+     must(ioutil.WriteFile(filepath.Join(mycontainer_memory_cgroups, "memory.limit_in_bytes"), []byte("100M"), 0700))
+     must(ioutil.WriteFile(filepath.Join(mycontainer_memory_cgroups, "notify_on_release"), []byte("1"), 0700))
+     must(ioutil.WriteFile(filepath.Join(mycontainer_memory_cgroups, "tasks"), []byte(strconv.Itoa(os.Getpid())), 0700))
+    }
+
+    func must(err error) {
+     if err != nil {
+      panic(err)
+     }
+    }
+    ```
+
+    ```sh
+    go run main.go run /bin/bash
+    [main] pid: 31699
+    [exe] pid: 1
+    [root@mycontainer /]# ps
+      PID TTY          TIME CMD
+        1 pts/0    00:00:00 exe
+        6 pts/0    00:00:00 bash
+       17 pts/0    00:00:00 ps
+    [root@mycontainer /]# cat /sys/fs/cgroup/memory/mycontainer/tasks
+    1
+    6
+    18
+    [root@mycontainer /]# cat /sys/fs/cgroup/memory/mycontainer/notify_on_release
+    1
+
+    # 最大内存使用量为100M
+    [root@mycontainer /]# cat /sys/fs/cgroup/memory/mycontainer/memory.limit_in_bytes
+    104857600
+
+    # 使用前面安装好的memtester命令后。申请100M内存
+    [root@mycontainer /]# memtester 100M 1
+    pagesize is 4096
+    pagesizemask is 0xfffffffffffff000
+    want 100MB (104857600 bytes)
+    got  100MB (104857600 bytes), trying mlock ...已杀死
+    ```
+
+### namespaces（命名空间）实现资源隔离
+
+- namespaces（命名空间）是 Linux 为我们提供的用于分离进程树、网络接口、挂载点以及进程间通信等资源的方法。
+
+- namespace是在内核级别以一种抽象的形式来封装系统资源，通过将系统资源放在不同的Namespace中，来实现资源隔离的目的。不同的Namespace程序，可以享有一份独立的系统资源。
+
+- Linux 的命名空间机制提供了以下8种不同的命名空间，包括 :
+
+    - 通过这八个选项, 我们能在创建新的进程时, 设置新进程应该在哪些资源上与宿主机器进行隔离。具体如下：
+
+    | Namespace | Flag            | Page               | Isolates                                                                                                                       |
+    |-----------|-----------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------|
+    | Cgroup    | CLONE_NEWCGROUP | cgroup_namespaces  | Cgroup root directory，Cgroup 信息隔离。用于隐藏进程所属的控制组的身份，使命名空间中的 cgroup 视图始终以根形式来呈现，保障安全 |
+    | IPC       | CLONE_NEWIPC    | ipc_namespaces     | System V IPC                                                                                                                   | POSIX message queues ， 进程 IPC 通信隔离。让只有相同 IPC 命名空间的进程之间才可以共享内存、信号量、消息队列通信 |
+    | Network   | CLONE_NEWNET    | network_namespaces | Network devices                                                                                                                | stacks                                                                                                           | ports | etc.网络隔离。使每个 net 命名空间有独立的网络设备，IP 地址，路由表，/proc/net 目录等网络资源 |
+    | Mount     | CLONE_NEWNS     | mount_namespaces   | Mount points ，文件目录挂载隔离。用于隔离各个进程看到的挂载点视图                                                              |
+    | PID       | CLONE_NEWPID    | pid_namespaces     | Process IDs ，进程 ID 隔离。使每个命名空间都有自己的初始化进程，PID 为 1，作为所有进程的父进程                                 |
+    | Time      | CLONE_NEWTIME   | time_namespaces    | Boot and monotonic clocks，系统时间隔离。允许不同进程查看到不同的系统时间                                                     |
+    | User      | CLONE_NEWUSER   | user_namespaces    | User and group IDs ，用户 UID 和组 GID 隔离。例如每个命名空间都可以有自己的 root 用户                                         |
+    | UTS       | CLONE_NEWUTS    | uts_namespaces     | Hostname and NIS domain name ，主机名或域名隔离。使其在网络上可以被视作一个独立的节点而非主机上的一个进程                     |
+
+- namespace将全局系统资源封装在抽象中，使命名空间内的进程看起来拥有自己的全局资源单独实例。对全局资源的更改对属于命名空间成员的其他进程可见，但对其他进程不可见。
+
+    ![image](./Pictures/docker/namespace1.avif)
+
+- 查看进程的Namespace
+
+    - 每个进程都有一个独立的`/proc/[pid]/ns/`子目录
+        - 其中包含了每个被支持操作的命名空间的条目，每个条目都是一个符号链接，其指向为对应namespace的文件的iNode ID，可以通过readlink命令查看这两个进程是否属于同一个命名空间，如果inode ID相同，则他们所属的相同的命名空间。
+
+    ```sh
+    # 查看进程的Namespace
+    ls -l /proc/1010/ns
+    lrwxrwxrwx - tz 29 Mar 17:11 cgroup -> cgroup:[4026531835]
+    lrwxrwxrwx - tz 29 Mar 17:11 ipc -> ipc:[4026531839]
+    lrwxrwxrwx - tz 29 Mar 17:11 mnt -> mnt:[4026531841]
+    lrwxrwxrwx - tz 29 Mar 17:11 net -> net:[4026531840]
+    lrwxrwxrwx - tz 29 Mar 17:11 pid -> pid:[4026531836]
+    lrwxrwxrwx - tz 29 Mar 17:11 pid_for_children -> pid:[4026531836]
+    lrwxrwxrwx - tz 29 Mar 17:11 time -> time:[4026531834]
+    lrwxrwxrwx - tz 29 Mar 17:11 time_for_children -> time:[4026531834]
+    lrwxrwxrwx - tz 29 Mar 17:11 user -> user:[4026531837]
+    lrwxrwxrwx - tz 29 Mar 17:11 uts -> uts:[4026531838]
+
+    # 查看pid为1010和2020的namespace是否相同。结果是相同
+    readlink /proc/1010/ns/uts
+    uts:[4026531838]
+
+    readlink /proc/2020/ns/uts
+    uts:[4026531838]
+
+    # 运行最小化linux的alpine，并进入shell
+    docker run -it --rm alpine /bin/sh
+
+    / #     ls -l /proc/$$/ns
+    total 0
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 cgroup -> cgroup:[4026533361]
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 ipc -> ipc:[4026532936]
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 mnt -> mnt:[4026532932]
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 net -> net:[4026532938]
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 pid -> pid:[4026532937]
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 pid_for_children -> pid:[4026532937]
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 time -> time:[4026531834]
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 time_for_children -> time:[4026531834]
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 user -> user:[4026531837]
+    lrwxrwxrwx    1 root     root             0 Mar 29 09:16 uts -> uts:[4026532935]
+
+    / # readlink /proc/$$/ns/uts
+    uts:[4026532935]
+    ```
+
+#### unshare namespace相关命令
+
+- `unshare`命令是 util-linux 工具包中的一个工具，CentOS 7 系统默认已经集成了该工具，使用 `unshare` 命令可以实现创建并访问不同类型的 Namespace。执行命令后，当前命令行窗口加入了新创建的namespace。
+
+- 1.`PID Namespace`：用来隔离进程ID。在不同的 PID Namespace 中，进程可以拥有相同的 PID 号，利用 PID Namespace 可以实现每个容器的主进程为 1 号进程，而容器内的进程在主机上却拥有不同的PID。
+
+    ```sh
+    # 在当前主机上创建了一个新的 PID Namespace，并且当前命令行窗口加入了新创建的 PID Namespace
+    unshare --fork --pid --mount-proc /bin/bash
+
+    # 通过ps -ef，可以看到PID的1号进程和Host OS的1号进程不一致。而且我们也看不到主机上的其他进程信息
+    ps -ef
+    UID          PID    PPID  C STIME TTY          TIME CMD
+    root           1       0  0 17:18 pts/3    00:00:00 /bin/bash
+    root           3       1  0 17:18 pts/3    00:00:00 ps -ef
+    ```
+
+    - 除了 pid, mnt Namespace 的 ID 值不一样外，其他Namespace 的 ID 值均一致。
+        ```sh
+        # 在新的pid namespace下，查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        total
+        lrwxrwxrwx cgroup -> cgroup:[4026531835]
+        lrwxrwxrwx ipc -> ipc:[4026531839]
+        lrwxrwxrwx mnt -> mnt:[4026532926]
+        lrwxrwxrwx net -> net:[4026531840]
+        lrwxrwxrwx pid -> pid:[4026532927]
+        lrwxrwxrwx pid_for_children -> pid:[4026532927]
+        lrwxrwxrwx time -> time:[4026531834]
+        lrwxrwxrwx time_for_children -> time:[4026531834]
+        lrwxrwxrwx user -> user:[4026531837]
+        lrwxrwxrwx uts -> uts:[4026531838]
+
+        # 退出新的pid namespace
+        exit
+
+        # 在本机查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        lrwxrwxrwx cgroup:[4026531835]
+        lrwxrwxrwx ipc:[4026531839]
+        lrwxrwxrwx mnt:[4026531841]
+        lrwxrwxrwx net:[4026531840]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx user:[4026531837]
+        lrwxrwxrwx uts:[4026531838]
+        ```
+
+- 2.`Mount Namespace`：用来隔离不同的进程或者进程组看到的挂载点。在容器内的挂载操作不会影响主机的挂载目录。
+    ```sh
+    # 创建新的Mount Namespace.
+    unshare --mount --fork /bin/bash
+
+    # 独立的 Mount Namespace 中执行 mount 操作并不会影响主机。
+    mkdir /tmp/mnt
+    mount -t tmpfs -o size=1m tmpfs /tmp/mnt
+    df -h|grep mnt
+    ```
+
+    - 除了 mnt Namespace 的 ID 值不一样外，其他Namespace 的 ID 值均一致。
+        ```sh
+        # 在新的mount namespace下，查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        total 0
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 cgroup -> 'cgroup:[4026531835]'
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 ipc -> 'ipc:[4026531839]'
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 mnt -> 'mnt:[4026532926]'
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 net -> 'net:[4026531840]'
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 pid -> 'pid:[4026531836]'
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 pid_for_children -> 'pid:[4026531836]'
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 time -> 'time:[4026531834]'
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 time_for_children -> 'time:[4026531834]'
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 user -> 'user:[4026531837]'
+        lrwxrwxrwx 1 root root 0 Mar 29 17:25 uts -> 'uts:[4026531838]'
+
+        # 退出新的mount namespace
+        exit
+
+        # 在本机查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        lrwxrwxrwx cgroup:[4026531835]
+        lrwxrwxrwx ipc:[4026531839]
+        lrwxrwxrwx mnt:[4026531841]
+        lrwxrwxrwx net:[4026531840]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx user:[4026531837]
+        lrwxrwxrwx uts:[4026531838]
+        ```
+
+- 3.`IPC Namespace`：用来隔离进程间通信的。
+    - 例如 PID Namespace 和 IPC Namespace 一起使用。可以实现同一 IPC Namespace 内的进程彼此可以通信，不同 IPC Namespace 的进程却不能通信。
+    ```sh
+    # 创建新的ipc Namespace.
+    unshare --fork --ipc /bin/bash
+
+    # 使用ipcs -q 命令查看当前IPC Namespace下的系统通信队列列表，可以看到当前为空
+    ipcs -q
+    ------ Message Queues --------
+    key        msqid      owner      perms      used-bytes   messages
+
+    # 创建一个系统通信队列
+    ipcmk -Q
+
+    # 再次查看
+    ipcs -q
+    ------ Message Queues --------
+    key        msqid      owner      perms      used-bytes   messages
+    0x26d94c97 0          root       644        0            0
+    ```
+
+    - 除了 ipc Namespace 的 ID 值不一样外，其他Namespace 的 ID 值均一致。
+
+        ```sh
+        # 在新的ipc namespace下，查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        total
+        lrwxrwxrwx cgroup -> cgroup:[4026531835]
+        lrwxrwxrwx ipc -> ipc:[4026532926]
+        lrwxrwxrwx mnt -> mnt:[4026531841]
+        lrwxrwxrwx net -> net:[4026531840]
+        lrwxrwxrwx pid -> pid:[4026531836]
+        lrwxrwxrwx pid_for_children -> pid:[4026531836]
+        lrwxrwxrwx time -> time:[4026531834]
+        lrwxrwxrwx time_for_children -> time:[4026531834]
+        lrwxrwxrwx user -> user:[4026531837]
+        lrwxrwxrwx uts -> uts:[4026531838]
+
+        # 退出新的ipc namespace
+        exit
+
+        # 在本机查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        lrwxrwxrwx cgroup:[4026531835]
+        lrwxrwxrwx ipc:[4026531839]
+        lrwxrwxrwx mnt:[4026531841]
+        lrwxrwxrwx net:[4026531840]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx user:[4026531837]
+        lrwxrwxrwx uts:[4026531838]
+        ```
+
+- 4.`UTS Namespace`：用来隔离主机名。
+    ```sh
+    # 创建新的uts Namespace.
+    unshare --fork --uts /bin/bash
+
+    # 修改主机名为docker
+    hostname docker
+    # 查看主机名，可以看到已经被修改为docker
+    hostname
+    docker
+    ```
+
+    - 除了 uts Namespace 的 ID 值不一样外，其他Namespace 的 ID 值均一致。
+
+        ```sh
+        # 在新的uts namespace下，查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        total
+        lrwxrwxrwx cgroup -> cgroup:[4026531835]
+        lrwxrwxrwx ipc -> ipc:[4026531839]
+        lrwxrwxrwx mnt -> mnt:[4026531841]
+        lrwxrwxrwx net -> net:[4026531840]
+        lrwxrwxrwx pid -> pid:[4026531836]
+        lrwxrwxrwx pid_for_children -> pid:[4026531836]
+        lrwxrwxrwx time -> time:[4026531834]
+        lrwxrwxrwx time_for_children -> time:[4026531834]
+        lrwxrwxrwx user -> user:[4026531837]
+        lrwxrwxrwx uts -> uts:[4026532927]
+
+        # 退出新的uts namespace
+        exit
+
+        # 在本机查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        lrwxrwxrwx cgroup:[4026531835]
+        lrwxrwxrwx ipc:[4026531839]
+        lrwxrwxrwx mnt:[4026531841]
+        lrwxrwxrwx net:[4026531840]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx user:[4026531837]
+        lrwxrwxrwx uts:[4026531838]
+        ```
+
+- 5.`User Namespace`：用来隔离用户和用户组的。
+    - 一个比较典型的应用场景就是在主机上以非 root 用户运行的进程可以在一个单独的 User Namespace 中映射成 root 用户。
+
+    - 使用 User Namespace 可以实现进程在容器内拥有 root 权限，而在主机上却只是普通用户。
+
+    - CentOS7 默认允许创建的 User Namespace 为 0，如果执行unshare命令失败（ unshare 命令返回的错误为 unshare: unshare failed: Invalid argument ），需要使用以下命令修改系统允许创建的 User Namespace 数量，命令为：`echo 65535 > /proc/sys/user/max_user_namespaces`，然后再次尝试创建 User Namespace。
+
+    ```sh
+    # 新建test用户
+    useradd test
+    passwd test
+    # 切换test用户
+    su - test
+
+    # 创建新的user Namespace.
+    unshare --user -r /bin/bash
+
+    # 执行id命令，可以发现我们用户已经变成了root,uid, gid都变成0了。
+    id
+    uid=0(root) gid=0(root) groups=0(root)
+
+    # 但是在执行root用户才能执行的命令时，并没有root权限
+    mkdir /root/test
+    mkdir: cannot create directory ‘/root/test’: Permission denied
+    ```
+
+    - 除了 user Namespace 的 ID 值不一样外，其他Namespace 的 ID 值均一致。
+        ```sh
+        # 在新的user namespace下，查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        total
+        lrwxrwxrwx cgroup -> cgroup:[4026531835]
+        lrwxrwxrwx ipc -> ipc:[4026531839]
+        lrwxrwxrwx mnt -> mnt:[4026531841]
+        lrwxrwxrwx net -> net:[4026531840]
+        lrwxrwxrwx pid -> pid:[4026531836]
+        lrwxrwxrwx pid_for_children -> pid:[4026531836]
+        lrwxrwxrwx time -> time:[4026531834]
+        lrwxrwxrwx time_for_children -> time:[4026531834]
+        lrwxrwxrwx user -> user:[4026532919]
+        lrwxrwxrwx uts -> uts:[4026531838]
+
+        # 退出新的user namespace
+        exit
+
+        # 在本机查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        lrwxrwxrwx cgroup:[4026531835]
+        lrwxrwxrwx ipc:[4026531839]
+        lrwxrwxrwx mnt:[4026531841]
+        lrwxrwxrwx net:[4026531840]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx user:[4026531837]
+        lrwxrwxrwx uts:[4026531838]
+        ```
+
+- 6.`Net Namespace`：用来隔离网络设备、IP 地址和端口等信息的。
+    ```sh
+    # 创建新的net Namespace.
+    unshare --net --fork /bin/bash
+
+    # 查看主机的网络配置相关的信息
+    ip a
+    ```
+
+    - 除了 net Namespace 的 ID 值不一样外，其他Namespace 的 ID 值均一致。
+        ```sh
+        # 在新的net namespace下，查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        total
+        lrwxrwxrwx cgroup -> cgroup:[4026531835]
+        lrwxrwxrwx ipc -> ipc:[4026531839]
+        lrwxrwxrwx mnt -> mnt:[4026531841]
+        lrwxrwxrwx net -> net:[4026532928]
+        lrwxrwxrwx pid -> pid:[4026531836]
+        lrwxrwxrwx pid_for_children -> pid:[4026531836]
+        lrwxrwxrwx time -> time:[4026531834]
+        lrwxrwxrwx time_for_children -> time:[4026531834]
+        lrwxrwxrwx user -> user:[4026531837]
+        lrwxrwxrwx uts -> uts:[4026531838]
+
+        # 退出新的net namespace
+        exit
+
+        # 在本机查看进程namespace
+        ls -l /proc/$$/ns | awk '{print $1, $9, $10, $11}'
+        lrwxrwxrwx cgroup:[4026531835]
+        lrwxrwxrwx ipc:[4026531839]
+        lrwxrwxrwx mnt:[4026531841]
+        lrwxrwxrwx net:[4026531840]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx pid:[4026531836]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx time:[4026531834]
+        lrwxrwxrwx user:[4026531837]
+        lrwxrwxrwx uts:[4026531838]
+        ```
+
+- 7.`Cgroup Namespace`：对进程的cgroup视图虚拟化。每个 cgroup 命名空间都有自己的一组 cgroup 根目录。Linux 4.6开始支持。
+
+    - cgroup 命名空间提供的虚拟化有多种用途：
+        - 防止信息泄漏。否则容器外的cgroup 目录路径对容器中的进程可见。
+        - 简化了容器迁移等任务。
+        - 允许更好地限制容器化进程。可以挂载容器的 cgroup 文件系统，这样容器无需访问主机 cgroup 目录。
+
+- 8.`Time Namespace`：虚拟化两个系统时钟名称空间，用于隔离时间。linux 5.7内核开始支持
+
+#### docker run namespace相关命令
 
 | 命名空间相关参数 | 操作         |
 | ---------------- | ------------ |
@@ -474,7 +1557,6 @@ docker run -u tz --ulimit nproc=3 \
 | --pid            | pid          |
 | --user           | 指定用户和组 |
 
----
 
 `host` 表示与本地主机同一命名空间
 
@@ -508,12 +1590,435 @@ docker run -u=1000 \
     --rm -it centos
 ```
 
-## Capability
+#### go语言 namespace相关代码
 
-```bash
-docker run --cap-add=ALL --cap-drop=MKNOD \
-    --rm -it opensuse
-```
+![image](./Pictures/docker/namespace-go.avif)
+
+- `clone()`：用于创建新进程，通过传入一个或多个系统调用参数（ flags 参数）可以创建出不同类型的 NameSpace ，并且子进程也将会成为这些 NameSpace 的成员。
+
+    ```go
+    int clone(int (*fn)(void *), void *stack, int flags, void *arg, ...
+                     /* pid_t *parent_tid, void *tls, pid_t *child_tid */ );
+    ```
+
+- `setns()`：用于将进程加入到一个现有的 Namespace 中。其中 fd 为文件描述符，引用 /proc/[pid]/ns/ 目录里对应的文件，nstype 代表 NameSpace 类型。
+
+    ```go
+    int setns(int fd, int nstype);
+    ```
+
+- `unshare()`：用于将进程移出原本的 NameSpace ，并加入到新创建的 NameSpace 中。同样是通过传入一个或多个系统调用参数（ flags 参数）来创建新的 NameSpace 。
+    ```go
+    int unshare(int flags);
+    ```
+
+- `ioctl()`：用于发现有关 NameSpace 的信息。
+
+    ```go
+    int ioctl(int fd, unsigned long request, ...);
+    ```
+
+- 上面的这些系统调用函数，我们可以直接用 C 语言调用，创建出各种类型的 NameSpace ，对于 Go 语言，其内部已经帮我们封装好了这些函数操作，可以更方便地直接使用，降低心智负担。
+
+- 创建`main.go`文件
+    ```go
+    package main
+
+    import (
+     "os"
+     "os/exec"
+    )
+
+    func main() {
+     switch os.Args[1] {
+     case "run":
+      run()
+     default:
+      panic("help")
+     }
+    }
+
+    func run() {
+     cmd := exec.Command(os.Args[2], os.Args[3:]...)
+     cmd.Stdin = os.Stdin
+     cmd.Stdout = os.Stdout
+     cmd.Stderr = os.Stderr
+     must(cmd.Run())
+    }
+
+    func must(err error) {
+     if err != nil {
+      panic(err)
+     }
+    }
+    ```
+
+    ```sh
+    # 执行main.go代码。会创建出 main 进程， main 进程内执行 echo hello 命令创建出一个新的 echo 进程，最后随着 echo 进程的执行完毕，main 进程也随之结束并退出。
+    go run main.go run echo hello
+
+    go run main.go run /bin/bash
+    [tz@tz-pc tmp]$ ps
+        PID TTY          TIME CMD
+       8356 pts/2    00:00:00 zsh
+       9073 pts/2    00:00:00 go
+       9180 pts/2    00:00:00 main
+       9185 pts/2    00:00:00 bash
+       9213 pts/2    00:00:00 ps
+    ```
+
+- UTS隔离
+
+    - 要想实现资源隔离，在 run() 函数增加 SysProcAttr 配置，先从最简单的 UTS 隔离开始，传入对应的 CLONE_NEWUTS 系统调用参数，并通过 syscall.Sethostname 设置主机名：
+
+    - 但是这样做是修改的main进程的主机，所以需要/proc/self/exe
+
+    ```go
+    package main
+
+    import (
+     "os"
+     "os/exec"
+     "syscall"
+    )
+
+    func main() {
+     switch os.Args[1] {
+     case "run":
+      run()
+     case "child":
+      child()
+     default:
+      panic("help")
+     }
+    }
+
+    func run() {
+     cmd := exec.Command("/proc/self/exe", append([]string{"child"}, os.Args[2:]...)...)
+     cmd.Stdin = os.Stdin
+     cmd.Stdout = os.Stdout
+     cmd.Stderr = os.Stderr
+     cmd.SysProcAttr = &syscall.SysProcAttr{
+      Cloneflags: syscall.CLONE_NEWUTS,
+     }
+     must(cmd.Run())
+    }
+
+    func child() {
+     must(syscall.Sethostname([]byte("mycontainer")))
+     cmd := exec.Command(os.Args[2], os.Args[3:]...)
+     cmd.Stdin = os.Stdin
+     cmd.Stdout = os.Stdout
+     cmd.Stderr = os.Stderr
+     must(cmd.Run())
+    }
+
+    func must(err error) {
+     if err != nil {
+      panic(err)
+     }
+    }
+    ```
+
+    - 总结一下就是， main 进程创建了 exe 进程（exe 进程已经进行 UTS 隔离，exe 进程更改主机名不会影响到 main 进程）， 接着 exe 进程内执行 echo hello 命令创建出一个新的 echo 进程，最后随着 echo 进程的执行完毕，exe 进程随之结束，exe 进程结束后， main 进程再结束并退出。
+
+    ```sh
+    sudo go run main.go run echo hello
+
+    sudo go run main.go run /bin/bash
+
+    [root@mycontainer k8s]# hostname
+    mycontainer
+
+    [root@mycontainer tmp]# ps
+        PID TTY          TIME CMD
+      10893 pts/3    00:00:00 sudo
+      10894 pts/3    00:00:00 go
+      10994 pts/3    00:00:00 main
+      10999 pts/3    00:00:00 exe
+      11004 pts/3    00:00:00 bash
+      11125 pts/3    00:00:00 ps
+    ```
+
+- PID隔离
+
+    - Cloneflags 参数新增了 CLONE_NEWPID 和 CLONE_NEWNS 分别隔离进程 pid 和文件目录挂载点视图，Unshareflags: syscall.CLONE_NEWNS 则是用于禁用挂载传播。
+
+    - 当我们创建 PID Namespace 时，exe 进程包括其创建出来的子进程的 pid 已经和 main 进程隔离了，这一点可以通过打印 os.Getpid() 结果或执行 echo $$ 命令得到验证。但此时还不能使用 ps 命令查看，因为 ps 和 top 等命令会使用 /proc 的内容，所以我们才继续引入了 Mount Namespace ，并在 exe 进程挂载 /proc 目录。
+
+    ```go
+    package main
+
+    import (
+     "fmt"
+     "os"
+     "os/exec"
+     "syscall"
+    )
+
+    func main() {
+     switch os.Args[1] {
+     case "run":
+      run()
+     case "child":
+      child()
+     default:
+      panic("help")
+     }
+    }
+
+    func run() {
+     fmt.Println("[main]", "pid:", os.Getpid())
+     cmd := exec.Command("/proc/self/exe", append([]string{"child"}, os.Args[2:]...)...)
+     cmd.Stdin = os.Stdin
+     cmd.Stdout = os.Stdout
+     cmd.Stderr = os.Stderr
+     cmd.SysProcAttr = &syscall.SysProcAttr{
+      Cloneflags: syscall.CLONE_NEWUTS |
+       syscall.CLONE_NEWPID |
+       syscall.CLONE_NEWNS,
+      Unshareflags: syscall.CLONE_NEWNS,
+     }
+     must(cmd.Run())
+    }
+
+    func child() {
+     fmt.Println("[exe]", "pid:", os.Getpid())
+     must(syscall.Sethostname([]byte("mycontainer")))
+     must(os.Chdir("/"))
+     must(syscall.Mount("proc", "proc", "proc", 0, ""))
+     cmd := exec.Command(os.Args[2], os.Args[3:]...)
+     cmd.Stdin = os.Stdin
+     cmd.Stdout = os.Stdout
+     cmd.Stderr = os.Stderr
+     must(cmd.Run())
+     must(syscall.Unmount("proc", 0))
+    }
+
+    func must(err error) {
+     if err != nil {
+      panic(err)
+     }
+    }
+    ```
+
+    ```sh
+    sudo go run main.go run /bin/bash
+    [main] pid: 11829
+    [exe] pid: 1
+
+    # exe 作为初始化进程，pid 为 1 ，创建出了 pid 6 的 bash 子进程，而且已经看不到 main 进程了
+    [root@mycontainer /]# ps
+        PID TTY          TIME CMD
+          1 pts/3    00:00:00 exe
+          6 pts/3    00:00:00 bash
+          8 pts/3    00:00:00 ps
+    ```
+
+### UnionFS（联合文件系统）
+
+- [knowclub：探究Docker三板斧之联合文件系统 UnionFS](https://mp.weixin.qq.com/s?__biz=Mzk0OTI3MDg5MA==&mid=2247487039&idx=1&sn=ad9b717096fbb345b6f21be5775ab589&chksm=c35bae3af42c272c510ddc63f5faef3dbade509ff20f175ff494ff6a9819f8a80a25963e8e23&token=641505571&lang=zh_CN&scene=21#wechat_redirect)
+
+- UnionFS 全称 Union File System （联合文件系统）：是为 Linux、FreeBSD 和 NetBSD 操作系统设计的一种分层、轻量级并且高性能的文件系统，可以 **把多个目录内容联合挂载到同一个目录下** ，而目录的物理位置是分开的，并且对文件系统的修改是类似于 git 的 commit 一样 **作为一次提交来一层层的叠加的 。**
+
+- 在 Docker 中，镜像相当于是容器的模板，一个镜像可以衍生出多个容器。
+    - 镜像利用 UnionFS 技术来实现，就可以利用其 分层的特性 来进行镜像的继承，基于基础镜像，制作出各种具体的应用镜像，不同容器就可以直接 共享基础的文件系统层 ，同时再加上自己独有的改动层，大大提高了存储的效率。
+
+- 以下面dockerfile为例，介绍UnionFS原理
+
+    ```dockerfile
+    FROM ubuntu:18.04
+    LABEL org.opencontainers.image.authors="org@example.com"
+    COPY . /app
+    RUN make /app
+    RUN rm -r $HOME/.cache
+    CMD python /app/app.py
+    ```
+
+    - 1.`FROM` 语句从 ubuntu:18.04 镜像创建一个层 【1】
+    - 2.`LABEL` 命令仅修改镜像的元数据，不会生成新镜像层
+    - 3.`COPY` 命令会把当前目录中的文件添加到镜像中的 /app 目录下，在层【1】的基础上生成了层【2】。
+    - 4.第一个 `RUN` 命令使用 make 构建应用程序，并将结果写入新层【3】
+    - 5.第二个 `RUN` 命令删除缓存目录，并将结果写入新层【4】。
+    - 6.最后，CMD 指令指定在容器内运行什么命令，只修改了镜像的元数据，也不会产生镜像层。
+
+    - 这【4】个层（layer）相互堆叠在一起就是一个镜像。
+
+    - 当创建一个新容器时，会在 镜像层（image layers） 上面再添加一个新的可写层，称为 容器层（container layer） 。对正在运行的容器所做的所有更改，例如写入新文件、修改现有文件和删除文件，都会写入到这个可写容器层。
+
+        - 多个容器运行时,如果未修改镜像内容,会**共享镜像层**(layer)
+
+          - 容器启动时,在只读的镜像层上添加 自己的**可写覆盖层**
+
+          - 容器运行过程中修改镜像时,会将修改的内容写入 可写覆盖层(copy on wirte)
+
+            ![image](./Pictures/docker/fs1.avif)
+
+        - 对于相同的镜像层，每一个容器都会有自己的可写**容器层**，并且所有的变化都存储在这个**容器层**中，所以多个容器可以共享对同一个底层镜像的访问，并且拥有自己的数据状态。而当容器被删除时，其可写容器层也会被删除。
+
+        - 如果用户需要持久化容器里的数据，就需要使用 Volume 挂载到宿主机目录。
+
+- Docker 支持的 UnionFS 有以下几种类型：
+
+    | 联合文件系统  | 存储驱动       | 说明                                                                                                                                                         |
+    |---------------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | OverlayFS     | overlay2       | 当前所有受支持的 Linux 发行版的 首选 存储驱动程序，并且不需要任何额外的配置                                                                                 |
+    | OverlayFS     | fuse-overlayfs | 仅在不提供对 rootless 支持的主机上运行 Rootless Docker 时才首选                                                                                              |
+    | Btrfs 和 ZFS  | btrfs 和 zfs   | 允许使用高级选项，例如创建快照，但需要更多的维护和设置                                                                                                       |
+    | VFS           | vfs            | 旨在用于测试目的，以及无法使用写时复制文件系统的情况下使用。此存储驱动程序性能较差，一般不建议用于生产用途                                                   |
+    | AUFS          | aufs           | Docker 18.06 和更早版本的首选存储驱动程序。但是在没有 overlay2 驱动的机器上仍然会使用 aufs 作为 Docker 的默认驱动                                           |
+    | Device Mapper | devicemapper   | RHEL （旧内核版本不支持 overlay2，最新版本已支持）的 Docker Engine 的默认存储驱动，有两种配置模式：loop-lvm（零配置但性能差） 和 direct-lvm（生产环境推荐） |
+    | OverlayFS     | overlay        | 推荐使用 overlay2 存储驱动                                                                                                                                   |
+
+    - AUFS 目前并未被合并到 Linux 内核主线，因此只有 Ubuntu 和 Debian 等少数操作系统支持 AUFS。如果你想要在 CentOS 等操作系统下使用 AUFS，需要单独安装 AUFS 模块（生产环境不推荐）。
+
+        ```sh
+        # 查看是否支持 AUFS
+        grep aufs /proc/filesystems
+        nodev   aufs
+        ```
+
+#### OverlayFS
+
+- OverlayFS 的发展分为两个阶段：
+    - 1.第一版的overlay文件系统存在很多弊端（例如运行一段时间后Docker 会报 "too many links problem" 的错误）
+    - 2.Linux 内核在 4.0 版本对overlay做了很多必要的改进，此时的 OverlayFS 被称之为overlay2。
+    - 因此，在 Docker 中 OverlayFS 文件驱动被分为了两种
+        - 一种是早期的overlay，不推荐在生产环境中使用
+        - 另一种是更新和更稳定的overlay2，推荐在生产环境中使用
+
+- 使用 overlay2 的先决条件
+
+    - 条件限制
+        - 1.Docker 版本必须高于 17.06.02
+        - 2.如果你的操作系统是 RHEL 或 CentOS，Linux 内核版本必须使用 3.10.0-514 或者更高版本，其他 Linux 发行版的内核版本必须高于 4.0（例如 Ubuntu 或 Debian），你可以使用uname -a查看当前系统的内核版本。
+
+    - overlay2最好搭配 xfs 文件系统使用，并且使用 xfs 作为底层文件系统时，d_type必须开启
+
+        ```sh
+        # 验证 d_type 是否开启
+        xfs_info /var/lib/docker | grep ftype
+        naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+
+        # 以上命令输出结果中有 ftype=1 时，表示 d_type 已经开启。如果你的输出结果为 ftype=0，则需要重新格式化磁盘目录，命令如下：
+        sudo mkfs.xfs -f -n ftype=1 /path/to/disk
+        ```
+
+        - 写入到 `/etc/fstab`
+
+            ```
+            UUID /var/lib/docker xfs defaults,pquota 0 0
+            ```
+
+- 如何在 Docker 中配置 overlay2？
+
+    ```sh
+    # 默认就是overlay2
+    docker info | grep -i  "Storage Driver"
+    Storage Driver: overlay2
+    ```
+
+    - 也可以在 /etc/docker 目录下创建 daemon.json 文件，如果该文件已经存在，则修改配置为以下内容
+
+        - overlay2.size 参数表示限制每个容器根目录大小为 20G。
+            - 限制每个容器的磁盘空间大小是通过 xfs 的 pquota 特性实现
+            - overlay2.size 可以根据不同的生产环境来设置这个值的大小。
+            - 我推荐你在生产环境中开启此参数，防止某个容器写入文件过大，导致整个 Docker 目录空间溢出。
+
+        ```json
+        {
+          "storage-driver": "overlay2",
+          "storage-opts": [
+            "overlay2.size=20G",
+            "overlay2.override_kernel_check=true"
+          ]
+        }
+        ```
+
+- overlay2 工作原理
+
+    - overlay2 由四个结构组成，其中：
+        - lowerdir ：表示较为底层的目录，对应 Docker 中的只读镜像层
+        - upperdir ：表示较为上层的目录，对应 Docker 中的可写容器层
+        - workdir ：表示工作层（中间层）的目录，在使用过程中对用户不可见
+        - merged ：所有目录合并后的联合挂载点，给用户暴露的统一目录视图，对应 Docker 中用户实际看到的容器内的目录视图
+
+    - overlay2 将所有目录称之为层（layer），overlay2 的目录是镜像和容器分层的基础，而把这些层统一展现到同一的目录下的过程称为联合挂载（union mount）。overlay2 把目录的下一层叫作lowerdir，上一层叫作upperdir，联合挂载后的结果叫作merged。
+
+        ![image](./Pictures/docker/overlay2架构图.avif)
+
+    - overlay2 文件系统最多支持 128 个层数叠加，也就是说你的 Dockerfile 最多只能写 128 行，不过这在日常使用中足够了。
+
+    ```sh
+    # 查看alpine镜像
+    docker image inspect alpine
+        "GraphDriver": {
+            "Data": {
+                "MergedDir": "/var/lib/docker/overlay2/45c4d745bc72a9358d014f4a11b9db4966f24dd164900a01da8faf5a27e6d3d8/merged",
+                "UpperDir": "/var/lib/docker/overlay2/45c4d745bc72a9358d014f4a11b9db4966f24dd164900a01da8faf5a27e6d3d8/diff",
+                "WorkDir": "/var/lib/docker/overlay2/45c4d745bc72a9358d014f4a11b9db4966f24dd164900a01da8faf5a27e6d3d8/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:8d3ac3489996423f53d6087c81180006263b79f206d3fdec9e66f0e27ceb8759"
+            ]
+        },
+
+    docker run --name=al -d alpine sleep 3600
+
+    # 查看一下容器的工作目录。MergedDir 后面的内容即为容器层的工作目录，LowerDir 为容器所依赖的镜像层目录。
+    docker inspect al
+    "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/e317fdbf5c0bfecee7e756cceca8b26e05ab0cf6ac8f975b38734d51d44aeec5-init/diff:/var/lib/docker/overlay2/45c4d745bc72a9358d014f4a11b9db4966f24dd164900a01da8faf5a27e6d3d8/diff",
+                "MergedDir": "/var/lib/docker/overlay2/e317fdbf5c0bfecee7e756cceca8b26e05ab0cf6ac8f975b38734d51d44aeec5/merged",
+                "UpperDir": "/var/lib/docker/overlay2/e317fdbf5c0bfecee7e756cceca8b26e05ab0cf6ac8f975b38734d51d44aeec5/diff",
+                "WorkDir": "/var/lib/docker/overlay2/e317fdbf5c0bfecee7e756cceca8b26e05ab0cf6ac8f975b38734d51d44aeec5/work"
+            },
+            "Name": "overlay2"
+        },
+
+    # 查看一下容器层下的内容
+    # link 文件内容为该容器层的短 ID，lower 文件为该层的所有父层镜像的短 ID 。diff 目录为容器的读写层，容器内修改的文件都会在 diff 中出现，merged 目录为分层文件联合挂载后的结果，也是容器内的工作目录。
+    ls /var/lib/docker/overlay2/e317fdbf5c0bfecee7e756cceca8b26e05ab0cf6ac8f975b38734d51d44aeec5
+    diff  link  lower  merged  work
+    ```
+
+    - 总体来说，overlay2 是这样储存文件的：overlay2将镜像层和容器层都放在单独的目录，并且有唯一 ID，每一层仅存储发生变化的文件，最终使用联合挂载技术将容器层和镜像层的所有文件统一挂载到容器中，使得容器中看到完整的系统文件。
+
+- overlay2 如何读取、修改文件？
+
+    - 对于读的情况：
+        - 文件在 upperdir ，直接读取
+        - 文件不在 upperdir ，从 lowerdir 读取，会产生非常小的性能开销
+        - 文件同时存在 upperdir 和 lowerdir 中，从 upperdir 读取（upperdir 中的文件隐藏了 lowerdir 中的同名文件）
+
+    - 对于写的情况：
+
+        - 创建一个新文件，文件在 upperdir 和 lowerdir 中都不存在，则直接在 upperdir 创建
+        - 修改文件，如果该文件在 upperdir 中存在，则直接修改
+        - 修改文件，如果该文件在 upperdir 中不存在，将执行 copy_up 操作，把文件从 lowerdir 复制到 upperdir ，后续对该文件的写入操作将对已经复制到 upperdir 的副本文件进行操作。这就是 写时复制（copy-on-write）
+        - 删除文件，如果文件只在 upperdir 存在，则直接删除
+        - 删除文件，如果文件只在 lowerdir 存在，会在 upperdir 中创建一个同名的空白文件（whiteout file），lowerdir 中的文件不会被删除，因为他们是只读的，但 whiteout file 会阻止它们继续显示
+        - 删除文件，如果文件在 upperdir 和 lowerdir 中都存在，则先将 upperdir 中的文件删除，再创建一个同名的空白文件（whiteout file）
+        - 删除目录和删除文件是一致的，会在 upperdir 中创建一个同名的不透明的目录（opaque directory），和 whiteout file 原理一样，opaque directory 会阻止用户继续访问，即便 lowerdir 内的目录仍然存在
+
+    - 这里面没有涉及到workdir，但其实 workdir 的作用不可忽视。想象一下，在删除文件（或目录）的场景下（文件或目录在 upperdir 和 lowerdir 中都存在）对于 lowerdir 而言，倒没什么，毕竟只读，不需要理会，但是对于 upperdir 来讲就不同了。在 upperdir 中，我们要先删除对应的文件，然后才可以创建同名的 whiteout file ，如何保证这两步必须都执行，这就涉及到了原子性操作了。
+
+    - workdir 是用来进行一些中间操作的，其中就包括了原子性保证。在上面的问题中，完全可以先在 workdir 创建一个同名的 whiteout file ，然后再在 upperdir 上执行两步操作，成功之后，再删除掉 workdir 中的 whiteout file 即可。
+
+    - 而当修改文件时，workdir 也在充当着中间层的作用，当对 upperdir 里面的副本进行修改时，会先放到 workdir ，然后再从 workdir 移到 upperdir 里面去。
+
+#### rootfs（根文件系统）
+
+- rootfs（根文件系统）：包括如下所示的一些目录和文件，比如 /bin，/etc，/proc 等等。
+
+    - 而你进入容器之后执行的 /bin/bash，就是 /bin 目录下的可执行文件，与宿主机的 /bin/bash 完全不同。
+
+- rootfs 只是一个操作系统所包含的文件、配置和目录，并不包括操作系统内核。
 
 ## import/export
 
@@ -633,7 +2138,7 @@ docker run --volumes-from=centos_data \
 
   - push
 
-## runc
+## runc管理容器
 
 - dockercli 通过 runc 管理容器
 
@@ -673,6 +2178,8 @@ sudo runc list
 ![image](./Pictures/docker/runc.avif)
 
 ## network
+
+- [视频（技术蛋老师）：【入门篇】Docker网络模式Linux - Bridge | Host | None](https://www.bilibili.com/video/BV1Aj411r71b)
 
 ### cnm model(容器网络模型)
 
@@ -914,17 +2421,44 @@ ip netns exec $pid ip route add default via 192.168.1.1
 
 ## Dockerfile 创建容器镜像
 
-通过 commit,修改过的容器,创建新的镜像(**不推荐**)
+- [告别手写烦恼！一键生成Dockerfile，轻松搞定容器化部署！](https://mp.weixin.qq.com/s/ZkfR7zfHIiygyjXYbPOl_A)
 
-```bash
-docker commit CONTAINER_ID tz/opensuse
-```
+    - 需要安装docker desktop。不然会显示`docker: 'init' is not a docker command.`
+    - 快速生成 .dockerignore Dockerfile compose.yaml README.Docker.md
+    ```sh
+    docker init
+    ```
 
-Dockerfile:
+- 通过 commit,修改过的容器,创建新的镜像(**不推荐**)
 
-- 为了有效利用缓存,尽量将文件相关的命令放在前面
+    ```sh
+    docker commit CONTAINER_ID tz/opensuse
+    ```
 
-- RUN 命令会让镜像分层,不要担心层数过多,而将命令放在一个 RUN 下
+### Dockerfile命令
+
+- [云原生云维圈：万字长文带你看全网最详细Dockerfile教程](https://mp.weixin.qq.com/s?__biz=MzUxNTg5NTQ0NA==&mid=2247484540&idx=1&sn=06106c2301c0954827bc787b82f43068&chksm=f9aefd87ced974919413fe6b2a6dd894826a808b6b01437f57e3310ee1f79d03ba145d1178bb&cur_album_id=2200317766446923776&scene=190&poc_token=HJThB2aj_sy_LFapN6zLthL1fTyOtkO6ycKZGa-K)
+
+| Dockerfile 指令 | 说明                                                                 |
+|-----------------|----------------------------------------------------------------------|
+| FROM            | 指定基础镜像，用于后续的指令构建。                                   |
+| MAINTAINER      | 指定Dockerfile的作者/维护者。                                        |
+| LABEL           | 添加镜像的元数据，使用键值对的形式。                                 |
+| RUN             | 在构建过程中在镜像中执行命令。                                       |
+| CMD             | 指定容器创建时的默认命令。（可以被覆盖）                             |
+| ENTRYPOINT      | 设置容器创建时的主要命令。（不可被覆盖）                             |
+| EXPOSE          | 声明容器运行时监听的特定网络端口。                                   |
+| ENV             | 在容器内部设置环境变量。                                             |
+| ADD             | 将文件、目录或远程URL复制到镜像中。                                  |
+| COPY            | 将文件或目录复制到镜像中。                                           |
+| VOLUME          | 为容器创建挂载点或声明卷。                                           |
+| WORKDIR         | 设置后续指令的工作目录。                                             |
+| USER            | 指定后续指令的用户上下文。                                           |
+| ARG             | 定义在构建过程中传递给构建器的变量，可使用 "docker build" 命令设置。 |
+| ONBUILD         | 当该镜像被用作另一个构建过程的基础时，添加触发器。                   |
+| STOPSIGNAL      | 设置发送给容器以退出的系统调用信号。                                 |
+| HEALTHCHECK     | 定义周期性检查容器健康状态的命令。                                   |
+| SHELL           | 覆盖Docker中默认的shell，用于RUN、CMD和ENTRYPOINT指令。              |
 
 | 命令       | 操作     | 能否被覆盖       |
 | ---------- | -------- | ---------------- |
@@ -953,14 +2487,79 @@ Dockerfile:
     CMD [“World”]
     ```
 
-在容器里的 linux 使用变量
+- 在容器里的 linux 使用变量
 
-```docker
-FROM alpine
+    ```dockerfile
+    FROM alpine
 
-RUN  a="$(date)"
-RUN  echo "$a"
-```
+    RUN  a="$(date)"
+    RUN  echo "$a"
+    ```
+
+- 构建镜像：docker build命令
+    ```sh
+    # 根据Dockerfile的内容，逐条执行其中的指令，并创建一个新的镜像。
+    docker build -t my_image .
+
+    # --build-arg 指定构建参数的值
+    docker build --build-arg APP_VERSION=2.0 -t my_app .
+    ```
+
+### Dockerfile优化
+
+- 最小化镜像大小：可以减少网络传输和存储开销，加快镜像的下载和部署速度。
+    - 1.使用轻量的基础镜像：选择合适的基础镜像，可以避免不必要的依赖和组件，例如Alpine Linux镜像比Ubuntu镜像更轻量。
+    - 2.单独安装软件包：将软件包的安装命令合并到一条RUN指令中，并在安装完成后清理缓存和临时文件，以减少镜像大小。
+    - 3.删除不必要的文件：在复制文件或目录到镜像时，只复制必要的文件，并在复制后删除不需要的文件和目录。
+    - 4.使用特定的构建工具：对于特定的编程语言和应用程序，使用专门优化过的构建工具可以减少构建中的不必要依赖。
+
+- 多阶段构建：在一个Dockerfile中使用多个FROM指令，每个FROM指令都代表一个构建阶段。
+
+    - 每个构建阶段都可以从之前的阶段复制所需的文件，并执行特定的构建操作。使用多阶段构建可以使得最终生成的镜像只包含运行应用程序所必需的文件和依赖，而不包含构建过程中产生的不必要文件和依赖。
+
+    - 在下面的例子中，我们使用两个构建阶段。
+        - 第一个构建阶段使用Golang基础镜像来编译应用程序
+        - 第二个构建阶段使用Alpine Linux基础镜像，仅复制编译后的应用程序，并设置容器启动时的命令。
+
+    ```dockerfile
+    # 构建阶段1
+    FROM golang:1.17 AS builder
+
+    WORKDIR /app
+    COPY . .
+
+    # 编译应用程序
+    RUN go build -o myapp
+
+    # 构建阶段2
+    FROM alpine:latest
+
+    # 复制编译后的应用程序
+    COPY --from=builder /app/myapp /usr/local/bin/
+
+    # 设置工作目录
+    WORKDIR /usr/local/bin
+
+    # 容器启动时运行的命令
+    CMD ["myapp"]
+    ```
+
+- 有效使用缓存
+
+    - Docker在构建镜像时会缓存每个指令的结果，以便在下次构建相同的指令时直接使用缓存，加快构建速度。
+    - 常变化的指令在后面，不变的指令在前面，这样可以最大程度地利用Docker的缓存机制。
+        - 例如，将不经常修改的基础依赖安装放在前面的指令，并将频繁修改的应用程序代码放在后面的指令。
+
+- 每个RUN指令会产生一个新的镜像层，而每个镜像层都会占用额外的存储空间。为了优化多层镜像构建，可以使用&&操作符将多个命令合并成一个RUN指令，避免产生额外的镜像层。
+
+    ```dockerfile
+    RUN apt-get update && apt-get install -y \
+        package1 \
+        package2 \
+        package3
+    ```
+
+### 构建属于自己的 centos 容器
 
 - 构建属于自己的 centos 容器:
 
@@ -1005,9 +2604,15 @@ docker build -t tz/centos .
 docker history tz/centos
 ```
 
-[docker hub 基于 github 自动构建](https://docs.docker.com/docker-hub/builds/link-source/)
+### [hadolint：自动检查您的Dockerfile是否存在任何问题](https://github.com/hadolint/hadolint)
 
-## registry
+```sh
+hadolint Dockerfile
+Dockerfile:1 DL3006 warning: Always tag the version of an image explicitly
+Dockerfile:7 DL3020 error: Use COPY instead of ADD for files and folders
+```
+
+## registry仓库
 
 创建本地 `registry`
 
@@ -1038,6 +2643,600 @@ docker container create -it --name opensuse_1 opensuse
 docker container start opensuse_1
 docker container exec -it opensuse_1 bash
 ```
+
+## Docker Compose定义和运行多容器
+
+- [docker官方的各种compose文件例子](https://github.com/docker/awesome-compose)
+
+- [喵叔写技术：《Docker极简教程》--Docker的高级特性--Docker Compose的使用](https://mp.weixin.qq.com/s/mw_GiIJDehUvGwvztEMu8Q)
+
+- 通过YAML文件来定义应用程序的服务、网络和卷等资源，并使用单个命令来启动、停止和管理整个应用程序的容器。
+
+    - 1.定义多容器应用程序：通过一个单独的文件来定义整个应用程序的服务组件，包括Web服务器、数据库、消息队列等。
+
+        - 这些服务可以相互通信，共同组成一个完整的应用程序。
+
+    - 2.简化开发环境配置：在本地创建与生产环境相似的开发环境。通过在Compose文件中定义应用程序的组件和配置，开发人员可以轻松地在不同的环境之间进行切换，从而加快开发和测试周期。
+
+    - 3.一键启动和停止：通过简单的命令，如docker-compose up和docker-compose down，你可以轻松地启动和停止整个应用程序。这使得在开发、测试和部署过程中快速迭代成为可能。
+
+    - 4.依赖管理：Docker Compose允许你定义服务之间的依赖关系，以确保它们在启动时以正确的顺序启动。
+
+    - 5.可扩展性和灵活性：可以定义网络配置、卷挂载、环境变量等，以满足不同场景下的需求。
+
+- Docker Compose基础概念
+
+    - 服务（Services）：是指一个定义了容器运行方式的配置。一个服务可以包括一个或多个容器，通常用于运行一个特定的应用程序或服务组件。
+
+    - 容器（Containers）：是指通过Docker镜像启动的运行实例。每个容器都是一个独立的、轻量级的虚拟环境，其中包含了一个完整的应用程序以及其运行所需的所有依赖项。
+
+    - 网络（Networks）：是指用于连接多个容器的虚拟网络。通过网络，容器可以相互通信，实现数据交换和服务之间的连接。
+
+    - 卷（Volumes）：是一种用于持久化存储数据的机制，它允许容器之间或容器与主机之间共享数据，并且数据会在容器被删除时保持不变。
+
+### docker-compose.yml示例
+
+- 以下内容保存为`docker-compose.yml`
+
+    - 这将会启动nginx服务和MySQL服务，并将它们连接到默认的网络中，使得它们可以相互通信。
+
+    ```yml
+    version: '3.8'
+
+    services:
+      web:
+        image: nginx:latest
+        ports:
+          - "8080:80"
+
+      db:
+        image: mysql:latest
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+    ```
+
+    - `version: '3.8'` 指定了Compose文件的版本。
+    - `services` 是一个包含了两个服务的字典。
+    - `web` 是一个服务定义，它使用nginx:latest镜像，并将容器内部的80端口映射到主机的8080端口。
+    - `db` 是另一个服务定义，它使用mysql:latest镜像，并通过环境变量设置了MySQL的root密码为password。
+
+- 下面是一个示例的Docker Compose文件，用于配置一个包含多个容器的应用程序，其中包括Web服务、数据库服务和消息队列服务
+
+    - 这将会启动nginx、MySQL和Redis服务，并将它们连接到默认的网络中，从而使得它们可以相互通信。
+
+    ```yml
+    version: '3.8'
+
+    services:
+      web:
+        image: nginx:latest
+        ports:
+          - "8080:80"
+        depends_on:
+          - db
+
+      db:
+        image: mysql:latest
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+        volumes:
+          - db_data:/var/lib/mysql
+
+      redis:
+        image: redis:latest
+
+    volumes:
+      db_data:
+    ```
+
+    - `version: '3.8'` 指定了Compose文件的版本。
+    - `services` 是一个包含了三个服务的字典，分别是web、db和redis。
+    - `web` 是一个服务定义，它使用nginx:latest镜像，并将容器内部的80端口映射到主机的8080端口。它还通过depends_on字段指定了依赖于db服务，表示web服务依赖于db服务的启动。
+    - `db` 是一个服务定义，它使用mysql:latest镜像，并通过环境变量设置了MySQL的root密码为password。此外，通过volumes字段将数据库的数据持久化到名为db_data的卷中。
+    - `redis` 是另一个服务定义，它使用redis:latest镜像。
+    - `volumes` 定义db_data的卷，用于持久化存储MySQL数据库的数据。
+
+- 结合dockerfile使用
+
+    - Dockerfile文件
+
+        ```dockerfile
+        FROM nginx:latest
+        COPY ./html /usr/share/nginx/html
+        ```
+
+    - docker-compose.yml 文件
+        - 这个Compose文件定义了一个名为 web 的服务，它使用当前目录下的Dockerfile构建Nginx镜像，并将容器内的80端口映射到主机的8080端口。
+
+        ```yml
+        version: '3.8'
+
+        services:
+          web:
+            build: .
+            ports:
+              - "8080:80"
+        ```
+
+    - 构建和启动应用程序：
+
+        ```sh
+        # 这将会构建Nginx镜像并启动容器，你的Web应用程序将在 http://localhost:8080 上可用。
+        docker-compose up -d
+        ```
+
+### Docker Compose的常用命令
+
+- `docker-compose up`启动相关命令
+
+    ```sh
+    # 在当前目录下寻找 docker-compose.yml 文件，并根据其中定义的服务启动应用程序。
+    docker-compose up
+
+    # 使用 -f 选项可以指定要使用的 Compose 文件，默认情况下是 docker-compose.yml
+    docker-compose -f docker-compose.prod.yml up
+
+    # 后台启动
+    docker-compose up -d
+
+    # 指定要启动的服务名称，而不是启动所有服务。可以同时指定多个服务，用空格分隔。
+    docker-compose up service_name
+
+    # 重新构建镜像。在启动容器之前重新构建服务的镜像。
+    docker-compose up --build
+
+    # 重新创建容器。强制重新创建所有容器，即使它们已经存在。
+    docker-compose up --force-recreate
+
+    # 强制重新创建容器并构建镜像
+    docker-compose up --force-recreate --build
+    ```
+
+- `docker-compose down`停止移除相关命令
+
+    ```sh
+    # 这会停止并移除通过 docker-compose up 启动的所有容器，并移除相关的网络和卷。
+    docker-compose down
+
+    # 使用 -f 选项可以指定要使用的 Compose 文件，默认情况下是 docker-compose.yml
+    docker-compose -f docker-compose.prod.yml down
+
+    # 使用 --volumes 选项可以同时移除相关的卷。这会删除所有定义在 docker-compose.yml 中的 volumes 字段中的卷。
+    docker-compose down --volumes
+
+    # 使用 --stop 选项可以停止容器，但不移除它们。这意味着容器会停止运行，但仍然保留在系统中，可以使用 docker-compose up 再次启动。
+    docker-compose down --stop
+
+    # 指定要停止和移除的特定服务，而不是停止和移除所有服务。可以同时指定多个服务，用空格分隔。
+    docker-compose down service_name
+
+    # 移除网络。移除未在 docker-compose.yml 文件中定义的服务的网络。这些服务称为 "孤儿" 服务。
+    docker-compose down --remove-orphans
+
+    # 结合使用 --volumes 和 --remove-orphans 选项可以停止并移除所有容器，相关的网络和卷，以及未定义的孤儿服务的网络。
+    docker-compose down --volumes --remove-orphans
+    ```
+
+- `docker-compose ps` 容器状态相关命令
+
+    ```sh
+    # 显示所有容器的状态信息，包括容器名称、运行状态、关联端口等
+    docker-compose ps
+
+    # 使用 -f 选项可以指定要使用的 Compose 文件，默认情况下是 docker-compose.yml
+    docker-compose -f docker-compose.prod.yml ps
+
+    # 只显示服务的名称
+    docker-compose ps --services
+
+    # 显示详细信息：包括容器ID、端口映射、命令等。
+    docker-compose ps --verbose
+
+    # 只显示停止的容器。--filter 选项可以根据容器的状态进行过滤。在这个示例中，status=exited 表示只显示已停止的容器。
+    docker-compose ps --filter "status=exited"
+
+    # 显示指定服务的容器
+    docker-compose ps service_name
+    ```
+
+- 其他常用命令
+
+    ```sh
+    # 启动已定义的服务，但不会重新构建容器或镜像。
+    docker-compose start
+
+    # 停止已启动的服务，但容器和网络保留。
+    docker-compose stop
+
+    # 重启已启动的服务，会重新构建容器。
+    docker-compose restart
+
+    # 暂停已启动的服务，暂停后容器继续存在，但不再接收流量。
+    docker-compose pause
+
+    # 恢复被暂停的服务，使其重新接收流量。
+    docker-compose unpause
+
+    # 根据 docker-compose.yml 中的配置重新构建服务的容器镜像。
+    docker-compose build
+
+    # 查看服务日志
+    docker-compose logs
+
+    # 进入服务容器。在特定的服务容器中执行命令，service_name 为服务名称，command 为要执行的命令。
+    docker-compose exec service_name command
+
+    # 列出所有在 docker-compose.yml 文件中定义的服务名称。
+    docker-compose config --services
+
+    # 查看Compose文件配置。检查并验证 docker-compose.yml 文件的配置。
+    docker-compose config
+    ```
+
+## Docker Swarm集群
+
+- Docker Swarm是Docker官方提供的容器编排工具，旨在简化容器化应用程序的部署、管理和扩展。
+
+    - 它允许将多个Docker主机组成一个集群，统一管理这些主机上运行的容器。
+
+- Swarm集群：采用主-从架构，其中包括管理节点（manager nodes）和工作节点（worker nodes）。
+
+    - 管理节点：
+
+        - 管理节点是Swarm集群的核心，负责集群的管理、调度和控制。
+        - 管理节点维护着整个集群的状态，并负责决定在哪些工作节点上运行容器以及如何分配资源。
+        - 管理节点还负责处理用户的命令和请求，执行集群管理操作，如创建、更新、扩展和删除服务。
+
+        - 通常一个Swarm集群会有多个管理节点，以确保高可用性和容错性。
+
+        - 管理节点使用Raft协议来保持集群的一致性，确保对集群状态的更改在所有节点之间得到正确地复制和传播。
+
+    - 工作节点：
+        - 工作节点是实际运行容器的节点，它们接收来自管理节点的指令，并负责执行这些指令以运行容器。
+        - 工作节点负责监视和维护在其上运行的容器，并根据需要调整资源的分配。
+
+    - 通过Swarm集群，用户可以轻松地将容器化应用程序部署到多个节点上，并利用集群的自动负载平衡、故障恢复和扩展性能，实现高度可靠和可扩展的应用程序部署和管理。
+
+### Swarm服务
+
+- 1.创建服务：在Docker Swarm中，服务是定义和管理容器化应用程序的方式，是部署和运行容器的第一步。
+
+    - 这个服务将根据定义的配置，在集群中的工作节点上运行一个或多个容器实例，以提供所需的应用程序功能。步骤如下
+
+        - 确认服务已经成功创建并且在集群中运行。
+        - 可以通过访问服务的暴露端口或者查看服务日志来验证服务是否正常运行。
+        - 可以使用`docker service ls`命令来查看所有服务的状态和信息，包括运行中的服务数量、所在节点等信息。
+        - 使用`docker service ps <service-name>`命令可以查看特定服务的详细信息，包括每个服务实例的状态、节点等信息。
+        - Swarm管理节点接收到创建服务的请求后，会在集群中选择适当的工作节点来运行服务的实例。
+        - 然后，Swarm会启动并运行服务的容器实例，根据配置在工作节点上创建容器。
+        - 使用`docker service create`命令创建服务，指定服务的名称以及服务的配置参数。
+        - 示例命令：`docker service create --name my_service my_image:tag`
+        - 定义服务的配置，包括容器镜像、端口映射、环境变量、挂载的数据卷等。
+        - 可以使用Docker Compose文件或直接使用命令行来定义服务的配置。
+        - 定义服务配置：
+        - 执行创建服务命令：
+        - 等待服务部署：
+        - 监视服务状态：
+        - 验证服务运行：
+
+- 2.扩展服务：在Docker Swarm中，扩展服务是指增加服务的副本数量，以提高应用程序的可用性和性能。以下是扩展服务的步骤：
+
+     - 查看当前服务副本数量： 使用以下命令查看当前服务的副本数量：
+
+        ```sh
+        docker service ls
+        ```
+
+    - 扩展服务： 使用以下命令扩展服务的副本数量：
+
+        ```sh
+        docker service scale <service-name>=<number-of-replicas>
+
+        # 例如，要将名为my_service的服务扩展到5个副本，可以运行：
+        docker service scale my_service=5
+        ```
+
+    - 等待副本部署： Swarm管理节点接收到扩展服务的请求后，会根据当前集群的资源情况，在适当的工作节点上创建新的容器副本。
+
+    - 监视服务状态： 使用`docker service ls`命令来查看服务的状态，确保新的副本已经部署并处于运行状态。
+
+    - 验证服务扩展： 确认服务已经成功扩展并且新的副本已经运行。可以通过访问服务的暴露端口或者查看服务日志来验证新的副本是否正常运行。
+
+- 3.更新服务更新服务是在Docker Swarm中管理容器化应用程序的重要操作，可以用于更新服务的镜像版本、配置等。以下是更新服务的步骤：
+
+    - 查看当前服务信息： 使用以下命令查看当前服务的信息，包括服务名称、镜像版本、副本数量等：
+
+        ```sh
+        docker service ls
+        ```
+
+    - 更新服务： 使用docker service update命令更新服务的配置，例如更新镜像版本或其他配置参数：
+        ```sh
+        docker service update --image <new-image>:<tag> <service-name>
+
+        # 例如，要将名为my_service的服务更新到新的镜像版本，可以运行：
+        docker service update --image my_image:new_tag my_service
+        ```
+
+    - 等待服务更新： Swarm管理节点接收到更新服务的请求后，会在集群中逐步更新服务的实例，将它们替换为新的容器实例。
+
+    - 监视服务更新进度： 使用docker service ps <service-name>命令查看服务的详细信息，以监视更新进度。
+        ```sh
+        docker service ps <service-name>
+        ```
+
+    - 验证服务更新： 确认服务已经成功更新并且新的容器实例已经在运行。可以通过访问服务的暴露端口或者查看服务日志来验证更新后的服务是否正常运行。
+
+- 4.删除服务要在Docker Swarm中删除服务，你可以按照以下步骤操作：
+
+    - 查看当前服务列表： 运行以下命令以查看当前在Swarm集群中运行的服务列表：
+        ```sh
+        docker service ls
+        ```
+
+    - 删除服务： 使用docker service rm命令删除指定的服务。例如，要删除名为my_service的服务，可以运行：
+        ```sh
+        # 这将从Swarm集群中移除该服务，并停止与之关联的所有容器。
+        docker service rm my_service
+        ```
+
+    - 等待服务删除： Swarm管理节点接收到删除服务的请求后，会停止该服务的所有容器实例，并从集群中删除该服务。
+
+    - 验证服务已删除： 使用`docker service ls`命令再次检查服务列表，确保已删除的服务不再显示在列表中。
+
+    - 清理服务相关资源（可选）： 如果需要，你可以手动清理与删除的服务相关的其他资源，如网络或数据卷。可以使用`docker network rm`和`docker volume rm`命令来清理不再使用的网络和数据卷。
+
+### Swarm节点管理
+
+- 1.添加节点到Swarm集群
+
+    - 1.准备新节点： 在要添加到Swarm集群的新节点上，确保已经安装了Docker引擎，并且网络连接正常。你还需要确保新节点可以与现有Swarm集群的管理节点通信。
+
+    - 2.加入Swarm集群： 在新节点上运行以下命令，使用docker swarm join命令将新节点加入到Swarm集群：
+        ```sh
+        # 其中，<SWMTKN>是集群加入令牌，你可以在管理节点上生成。<MANAGER_IP>和<MANAGER_PORT>是Swarm管理节点的IP地址和端口号。
+        docker swarm join --token <SWMTKN> <MANAGER_IP>:<MANAGER_PORT>
+        ```
+
+    - 3.验证节点加入： 在管理节点上运行以下命令，查看新节点是否成功加入到Swarm集群：
+        ```sh
+        docker node ls
+        ```
+
+    - 4.标记节点（可选）： 根据需要，你可以为新节点添加标签，以便更好地管理和组织节点。例如，你可以使用标签来指定节点的角色或用途。
+
+- 2.移除节点
+
+    - 1.准备移除节点： 在移除节点之前，确保你已经决定了要移除的节点，并且可以在不影响生产环境的情况下进行操作。确保节点上没有运行重要的服务或数据，并且可以承受一段时间的停机时间。
+
+    - 2.标记节点为不可调度状态： 在开始移除节点之前，你可以将要移除的节点标记为不可调度状态，这样新的任务就不会在该节点上调度。你可以使用以下命令将节点标记为不可调度状态：
+        ```sh
+        # 其中，<NODE_ID>是要移除的节点的ID，你可以使用docker node ls命令获取节点ID。
+        docker node update --availability drain <NODE_ID>
+        ```
+
+    - 3.移除节点：请确保在移除节点之前，节点已经被标记为不可调度状态。
+        ```sh
+        docker node rm <NODE_ID>
+        ```
+
+    - 4.等待节点移除： Swarm管理节点接收到移除节点的请求后，会停止该节点上的所有服务，并从集群中移除该节点。这个过程可能需要一些时间，具体时间取决于节点上运行的服务数量和状态。
+
+    - 5.验证节点已移除： 在管理节点上运行以下命令，检查节点是否已从Swarm集群中移除：
+        ```sh
+        docker node ls
+        ```
+
+- 3.节点健康状态监控
+
+- 1.使用docker node ls命令： 运行以下命令可以列出Swarm集群中所有节点的健康状态以及其他相关信息：
+
+    ```sh
+    # 在输出中，你将看到每个节点的状态列，其中包括活动状态和状态描述。状态描述可能包括 "Ready"（节点处于正常状态）、"Down"（节点不可用）等信息。
+    docker node ls
+    ```
+
+
+    - 2.查看特定节点的详细信息，包括节点的健康状态。
+        ```sh
+        # 要查看节点node1的详细信息，可以运行
+        # 在输出中，你将看到有关节点健康状态的信息，包括健康检查的结果和最近的健康状态变更时间。
+        docker node inspect node1
+        ```
+
+
+    - 3.设置健康检查： 你可以在创建或更新服务时配置健康检查选项，以定期检查服务运行在节点上的健康状态。如果服务的健康状态不佳，Swarm将自动重新调度服务到其他健康的节点上。 你可以在创建服务时使用--health-cmd和--health-interval等选项来定义健康检查命令和检查间隔。
+
+    - 4.使用监控工具： 你还可以使用第三方监控工具，如Prometheus、Grafana等，来监控节点的健康状态，并设置警报以及执行自动化操作以应对节点健康问题。
+
+### Swarm网络
+
+- 1.Overlay网络
+
+    - 创建Overlay网络在Docker Swarm中，Overlay网络是一种用于跨多个节点连接容器的网络模型，它允许在Swarm集群中的不同节点上运行的容器之间进行通信。创建Overlay网络是在Swarm集群中部署分布式应用程序的关键步骤之一。以下是创建Overlay网络的步骤：
+
+    - 创建Overlay网络：
+
+        ```sh
+        # 需要指定网络的驱动程序为overlay，并可以选择性地指定其他配置选项，如子网、IP范围、子网掩码等
+        docker network create --driver overlay <network-name>
+
+        # 例如，要创建名为my_overlay_network的Overlay网络，可以运行以下命令：
+        docker network create --driver overlay my_overlay_network
+        ```
+
+    - 配置网络（可选）： 你可以选择性地配置Overlay网络，如设置子网、网关、IP范围等。这些配置选项可以在创建网络时通过命令行参数指定，也可以在创建网络后使用docker network update命令进行修改。
+
+    - 验证网络创建： 使用docker network ls命令查看所有网络列表，确保新创建的Overlay网络已经添加到集群中：
+        ```sh
+        docker network ls
+        ```
+
+- 2.连接服务到Overlay网络
+
+    - 创建服务并连接到Overlay网络
+
+        ```sh
+        docker service create --name <service-name> --network <network-name> <image>
+
+        # 例如，要将名为my_service的服务连接到名为my_overlay_network的Overlay网络，可以运行以下命令：
+        docker service create --name my_service --network my_overlay_network nginx
+        ```
+
+    - 更新服务并添加网络（可选）： 如果服务已经创建，你也可以使用docker service update命令更新服务并添加连接到Overlay网络。
+
+        ```sh
+        docker service update --network-add <network-name> <service-name>
+
+        # 例如，要将名为my_service的服务添加到名为my_overlay_network的Overlay网络，可以运行以下命令：
+        docker service update --network-add my_overlay_network my_service
+        ```
+
+    - 验证服务连接： 使用docker service inspect命令检查服务的详细信息，以确保服务已连接到Overlay网络：
+        ```sh
+        ocker service inspect <service-name>
+        ```
+
+- 3.路由Mesh
+
+    - Swarm中的路由Mesh是一种功能强大的网络模型，用于自动路由来自Swarm集群中的任何节点的请求到正确的目标服务。
+
+    - 这种自动化的路由机制使得跨多个节点的容器间通信变得非常简单。 要启用路由Mesh，你只需要将服务连接到Overlay网络，并且不需要进行额外的配置。一旦服务连接到Overlay网络，Swarm会自动处理路由和负载均衡。
+
+    - 路由Mesh的工作原理如下：
+        - 1.自动服务发现：当服务连接到Overlay网络时，Swarm会自动检测服务的实例，并维护有关服务的信息，包括IP地址和端口。
+        - 2.动态路由：一旦服务连接到Overlay网络，Swarm会根据服务的名称和端口号，动态地将来自集群中任何节点的请求路由到正确的服务实例。无需手动配置路由规则。
+        - 3.负载均衡：Swarm会自动负载均衡来自客户端的请求，将它们分发到连接到Overlay网络的不同服务实例上。这样，即使服务实例在不同的节点上运行，也能够实现负载均衡。
+
+- 4.网络插件
+
+    - 用于扩展Docker Swarm网络功能的第三方插件
+
+    - 常见网络插件：
+        - Calico：提供高级的网络功能，如网络策略、安全性增强和跨云网络连接。
+        - Weave：提供高性能、跨主机的容器通信，支持多种云平台和混合云场景。
+        - Flannel：提供简单易用的网络插件，适用于需要快速搭建网络的场景。
+        - VXLAN：提供基于VXLAN技术的网络插件，支持多租户网络和跨主机通信。
+        - Overlay2：提供Docker原生的Overlay网络功能，支持容器之间的跨主机通信。
+
+    - 安装和配置： 要使用网络插件，需要在Swarm集群中安装和配置相应的插件。通常，每个网络插件都有特定的安装和配置方法，可以参考插件的文档进行操作。
+
+    - 使用网络插件： 安装和配置网络插件后，可以在创建或更新服务时，通过--network选项指定要使用的网络插件。服务将连接到所选的网络插件提供的网络上，从而实现特定的网络功能。
+
+### Swarm存储
+
+- 1.存储驱动程序
+
+    - 存储驱动程序是用于管理容器数据卷的后端组件。它负责在主机上创建、管理和维护容器数据卷，并提供了与底层存储后端的交互。
+
+    - 常见存储驱动程序：
+        - local：本地存储驱动程序，用于在主机的本地文件系统上创建和管理数据卷。
+        - nfs：支持通过网络文件系统（NFS）挂载远程存储。
+        - vfs：提供简单的存储驱动程序，适用于开发和测试环境。
+        - ceph：与Ceph分布式存储集成，提供高可用性和可扩展性的存储解决方案。
+
+    - 安装和配置： 要使用特定的存储驱动程序，你需要在Docker Swarm集群中安装和配置相应的驱动程序。通常情况下，你可以在Docker引擎的配置文件中指定所需的存储驱动程序。
+    - 使用存储驱动程序： 安装和配置存储驱动程序后，你可以在创建或更新服务时，通过--mount选项将数据卷挂载到容器中。可以指定数据卷的名称、驱动程序和其他配置选项。
+    - 多节点存储： 对于Swarm集群中跨多个节点的存储需求，你可以选择支持多节点存储的存储驱动程序，如Ceph等。这些驱动程序提供了高可用性和可扩展性的存储解决方案，可以满足分布式应用程序的需求。
+
+- 2.使用存储：通过以下步骤实现
+
+    - 1.选择合适的存储驱动程序： 首先，你需要选择适合你需求的存储驱动程序。根据你的需求和环境，选择一个或多个适当的存储驱动程序，如本地存储、网络文件系统（NFS）、Ceph等。
+    - 2.在Swarm集群中安装和配置存储驱动程序： 在Swarm集群的每个节点上安装和配置所选的存储驱动程序。根据存储驱动程序的要求，可能需要进行特定的安装和配置步骤。确保每个节点都正确配置了所需的存储驱动程序。
+    - 3.创建存储卷： 使用所选的存储驱动程序，在Swarm集群中创建存储卷。你可以使用docker volume create命令创建存储卷，并选择指定所需的存储驱动程序和其他配置选项。
+    - 4.将存储卷挂载到服务： 在创建或更新服务时，通过--mount选项将存储卷挂载到服务中。指定存储卷的名称和所选的存储驱动程序。这样，服务中的容器就可以访问并使用挂载的存储卷。
+    - 5.使用存储卷： 容器内的应用程序可以通过挂载到服务的存储卷来访问和操作数据。使用存储卷可以实现容器之间的数据共享和持久化存储，从而满足应用程序的需求。
+
+### 高级主题
+
+- 1.Swarm模式
+
+    - Swarm模式是Docker Swarm的一种高级配置，它提供了一些额外的功能和特性，使得在生产环境中部署和管理容器化应用程序更加灵活和可靠。
+
+    - 1.集群管理： Swarm模式提供了集群管理的功能，使得在生产环境中轻松管理多个Docker主机。你可以使用Swarm模式来创建和管理一个由多个Docker节点组成的集群，统一管理和调度容器。
+    - 2.服务发现和负载均衡： Swarm模式自动提供了服务发现和负载均衡的功能。当你创建服务并将其连接到Swarm网络时，Swarm会自动处理服务的路由和负载均衡，确保来自客户端的请求被正确路由到服务实例上。
+    - 3.高可用性： Swarm模式提供了高可用性的容器部署和管理功能。通过在集群中运行多个副本，Swarm可以实现容器服务的自动故障恢复和容错处理，确保应用程序的可用性。
+    - 4.滚动更新： Swarm模式支持滚动更新，可以实现无缝的应用程序更新和版本管理。通过逐步替换服务的实例，Swarm可以确保在进行应用程序更新时不会导致服务中断或数据丢失。
+    - 5.安全性增强： Swarm模式提供了一些安全性增强功能，如TLS加密通信、角色基于访问控制和秘密管理等。这些功能可以帮助你保护集群和容器中的数据安全。
+    - 6.弹性伸缩： 通过Swarm模式，你可以轻松地实现应用程序的弹性伸缩。通过调整服务的副本数量，Swarm可以根据负载情况自动扩展或缩减服务的实例数量，以满足不同的性能需求。
+
+- 2.Swarm部署策略
+
+    - 部署策略指定了如何在集群中调度和管理服务的实例。通过选择适当的部署策略，你可以控制服务的副本在集群中的分布方式，实现负载均衡、高可用性和资源利用的优化。以下是一些常见的Swarm部署策略：
+
+    - 1.Replicated部署： Replicated部署策略是最常见的部署策略之一，它用于在集群中运行多个服务副本。你可以指定服务的副本数量，并且Swarm会自动在集群中的不同节点上创建并管理这些副本。
+    - 2.Global部署： Global部署策略用于在集群中的每个节点上运行一个服务副本。这种策略适用于需要在每个节点上运行单个实例的服务，例如监控代理或日志收集器。
+    - 3.Placement Constraints： 使用Placement Constraints可以根据节点的属性或标签，将服务实例部署到特定的节点上。这可以帮助你实现特定的部署需求，如将服务部署到特定的硬件、区域或数据中心。
+    - 4.资源限制： 你可以使用资源限制来限制服务实例使用的CPU、内存或其他资源的数量。这可以确保服务实例在集群中的资源利用合理，避免资源竞争和性能问题。
+    - 5.滚动更新： 滚动更新策略用于实现无缝的应用程序更新和版本管理。通过逐步替换服务的实例，Swarm可以确保在进行应用程序更新时不会导致服务中断或数据丢失。
+    - 6.弹性伸缩： 弹性伸缩策略允许根据负载情况自动扩展或缩减服务的实例数量。你可以设置自动伸缩的触发条件，并根据需要调整服务的副本数量，以满足不同的性能需求。
+
+- 3.Swarm故障恢复
+
+    - 1.自动故障检测： Swarm集群会定期检测节点和服务的健康状态。如果某个节点或服务出现故障，Swarm会自动检测并尝试恢复。对于节点故障，Swarm会重新调度受影响的服务到其他健康的节点上。
+    - 2.滚动更新： 在进行服务更新或升级时，Swarm可以使用滚动更新策略，逐步替换服务的实例，确保在更新过程中不会导致服务中断或数据丢失。如果某个服务实例出现故障，Swarm会尝试启动新的实例来替换。
+    - 3.自动容错： Swarm集群具有一定的自动容错能力，可以在节点或服务故障时自动恢复。通过在集群中运行多个副本，并使用负载均衡机制来分发请求，Swarm可以实现容器服务的高可用性和容错处理。
+    - 4.节点替换： 如果某个节点出现故障或失联，Swarm会自动将受影响的服务重新调度到其他健康的节点上。如果需要，Swarm还可以自动替换故障节点，以确保集群的稳定性和可用性。
+    - 5.监控和警报： 通过监控集群的健康状态和性能指标，可以及时发现并响应节点或服务的故障。使用警报系统可以及时通知运维人员，并采取适当的措施来处理故障情况。
+
+## 监控
+
+- 容器监控：
+    - 容器监控是指监视 Docker 容器本身的运行状况和资源使用情况。
+    - 关注容器内的进程、资源利用率（如 CPU、内存、磁盘、网络）、日志输出等指标。
+    - 容器监控可以帮助我们了解单个容器的性能特征和运行状况，有助于快速发现和解决容器级别的问题。
+    - 常见的容器监控工具包括 cAdvisor、Prometheus、Docker 自带的 Stats API 等。
+
+- 主机监控：
+    - 主机监控是指监视 Docker 宿主机的整体运行状态和资源利用情况。
+    - 包括监视宿主机的 CPU 利用率、内存使用、磁盘空间、网络负载等指标。
+    - 主机监控可以帮助我们了解 Docker 宿主机的整体健康状况，以及宿主机上运行的所有容器的总体性能。
+    - 常见的主机监控工具包括 Prometheus、Grafana、Sysdig、Datadog 等。
+
+- 监控指标：
+
+    - CPU 利用率：
+        - 用于度量 CPU 的使用情况，包括整个 Docker 主机或单个容器的 CPU 使用率。
+        - 高 CPU 利用率可能表示需要增加计算资源，或者存在 CPU 密集型的任务或进程。
+    - 内存利用率：
+        - 衡量系统内存的使用情况，包括 Docker 容器和宿主机的内存使用率。
+        - 高内存利用率可能导致性能下降和容器的意外终止，可能需要增加内存或优化容器内存使用。
+    - 磁盘 I/O：
+        - 衡量磁盘读写操作的速率和负载。
+        - 高磁盘 I/O 可能表示存储子系统存在瓶颈，可能需要优化容器的数据管理方式或增加存储容量。
+    - 网络流量：
+        - 监控容器和宿主机的网络传输速率和流量。
+        - 高网络流量可能表示网络带宽不足或网络配置问题，需要进一步调查和优化。
+    - 容器运行状态：
+        - 包括容器的健康状态、启动次数、重启次数等。
+        - 异常频繁的容器重启可能表示容器配置问题或应用程序错误，需要检查日志以解决问题。
+    - 容器日志：
+        - 监控容器的日志输出，包括错误日志、警告日志以及应用程序日志。
+        - 日志监控有助于及时发现和诊断容器中的问题，可以使用日志聚合工具对日志进行集中管理和分析。
+
+- 容器运行状态指标
+    - 容器启动次数：容器启动次数指示容器启动的频率。频繁的容器启动可能表示容器经常出现故障或崩溃，需要进一步调查和解决问题。
+    - 容器健康状态：容器健康状态表示容器的整体健康状况，通常以健康或不健康状态表示。
+    - 容器监控工具可以定期检查容器的健康状态，并在容器出现异常时触发警报或自动响应机制。
+    - 容器重启次数：容器重启次数指示容器被重新启动的次数。频繁的容器重启可能表示容器配置不稳定或应用程序错误，需要进一步调查原因。
+    - 容器日志：
+        - 容器日志记录了容器的运行日志，包括应用程序输出、错误日志、警告信息等。
+        - 监控容器日志有助于及时发现容器中的问题，并快速诊断和解决。
+
+- 集群管理指标
+
+    - 集群节点状态：
+        - 监控集群中所有节点的状态，包括节点的可用性、健康状况和负载情况。
+        - 可以检查节点的 CPU、内存、磁盘和网络利用率，以及节点的运行时间和负载均衡情况。
+        - 通过监控节点状态，可以及时发现节点故障或性能问题，并采取措施确保集群的稳定性和高可用性。
+    - 容器部署状态：
+        - 监控容器在集群中的部署状态，包括容器的数量、位置、运行状况和健康状态。
+        - 可以检查容器的部署位置和分布情况，以及容器的运行时间和重启次数。
+        - 通过监控容器部署状态，可以及时发现容器的异常运行或部署问题，并进行相应的调整和优化。
+    - 资源分配情况：
+        - 监控集群中资源的分配情况，包括 CPU、内存、磁盘和网络等资源的使用情况和分配情况。
+        - 可以检查集群中资源的分配比例和平衡性，以及是否存在资源不足或过度分配的情况。
+        - 通过监控资源分配情况，可以优化资源利用，避免资源浪费和性能瓶颈。
 
 ## 不同应用是否适合docker，以及性能对比
 
@@ -1123,20 +3322,26 @@ docker container exec -it opensuse_1 bash
         - 从性能的角度来看，数据库的基本部署原则当然是离硬件越近越好，额外的隔离与抽象不利于数据库的性能
         - 对于追求性能的场景，一些数据库选择绕开操作系统的页面管理机制直接操作磁盘，而一些数据库甚至会使用FPGA甚至GPU加速查询处理。
 
-## 第三方软件
+## 与裸机性能对比
+
+- [NGINX开源社区：比较裸机和虚拟环境中的 NGINX 性能]()
+
+    - 两个关键指标：
+
+        - 每秒请求数（RPS）：Kubernetes约为裸机值的 80%。 Kubernetes 环境中使用的底层容器网络堆栈，因此在 Kubernetes 中运行 NGINX Ingress Controller 会导致这种网络密集型操作的性能大幅下降。
+
+        - 每秒SSL/TLS 事务数 (TPS)：几乎无甚差异
+
+# 第三方软件
 
 - [awesome-docker：包含 docker 相关的文档资源和项目](https://github.com/veggiemonk/awesome-docker)
+
+## 服务端
 
 - [dockge：Docker Compose web管理平台。用于管理 docker-compose.yaml 文件。](https://github.com/louislam/dockge)
 
     - 支持交互式编辑 compose.yaml 文件
     - 更新 docker 镜像，以及启动、停止、重启、删除 docker 等操作。
-
-- [slim：优化docker容器体积](https://github.com/slimtoolkit/slim)
-
-    - 允许开发人员使用 xray , lint , build , debug , run , images , merge , registry , vulnerability （以及其他）命令来检查、优化和调试他们的容器。
-
-    - Slim 不但可以优化容器镜像大小，它还能帮助你理解和编写更好的容器镜像。
 
 - [pipework：容器自定义网络工具](https://github.com/jpetazzo/pipework)
 
@@ -1150,6 +3355,31 @@ docker run -d \
     -v /var/run/docker.sock:/var/run/docker.sock \
     containrrr/watchtower
 ```
+
+- [trivy：容器镜像安全漏洞扫描](https://github.com/aquasecurity/trivy)
+    - [云原生运维圈：容器镜像安全漏洞扫描-Trivy](https://mp.weixin.qq.com/s?__biz=MzUxNTg5NTQ0NA==&mid=2247483780&idx=1&sn=e3e14b8d6754f95073e25a1880df4f7d&chksm=f9aef87fced9716914995a9b1334ed73b9ba91251b7ea7a79e1910ab02ec6ee00eb2138fc20d&cur_album_id=2200317766446923776&scene=190#rd)
+
+- [Dedockify：Docker镜像逆向生成Dockerfile](https://github.com/mrhavens/Dedockify)
+    - [如何基于Docker镜像逆向生成Dockerfile](https://mp.weixin.qq.com/s/yUuo1IjeXY78_5u4QpkuTA)
+
+- [slim：优化docker容器体积](https://github.com/slimtoolkit/slim)
+
+    - 允许开发人员使用 xray , lint , build , debug , run , images , merge , registry , vulnerability （以及其他）命令来检查、优化和调试他们的容器。
+
+    - Slim 不但可以优化容器镜像大小，它还能帮助你理解和编写更好的容器镜像。
+
+- [Dive：探索 Docker 镜像、层内容，并发现缩小 Docker/OCI 镜像大小的方法的工具](https://github.com/wagoodman/dive)
+
+## 客户端
+
+- [Docker Desktop：官方的gui客户端](https://www.docker.com/products/docker-desktop/)
+
+    ```sh
+    # 启动
+    systemctl --user start docker-desktop
+    # 关闭
+    systemctl --user stop docker-desktop
+    ```
 
 - [cAdvisor](https://github.com/google/cadvisor)
   ![image](./Pictures/docker/cadvisor.avif)
@@ -1210,7 +3440,7 @@ docker run --rm -ti \
 trivy image redislabs/redismod
 ```
 
-## reference article(优秀文章)
+# reference article(优秀文章)
 
 - [docker 官方文档](https://docs.docker.com/engine/reference/run/)
 
@@ -1224,12 +3454,118 @@ trivy image redislabs/redismod
 
 - [gvistor 对比普通容器和 aliuk](https://mp.weixin.qq.com/s?src=11&timestamp=1613134736&ver=2886&signature=6e*T4ylvJCA--fGa-tb*ttJq3JArF7z-Wzs5eAPzlY813SG154AK1YyEgLv2MQSiIgP-pWSXHI2l*Fwri21PvvVMnlRoFkCEoiew-uvj8AFuYyM*dD5l83dQ2G5TriVb&new=1)
 
-# 与裸机性能对比
+# podman
 
-- [NGINX开源社区：比较裸机和虚拟环境中的 NGINX 性能]()
+- Podman 是一个 RedHat 公司发布的开源容器管理工具，初衷就是 Docker 的替代品，在使用上与 Docker 的相似，但又有着很大的不同。
 
-    - 两个关键指标：
+- podman 与 Docker 的最大区别是架构
+    - Docker 是以 C/S 架构运行的，我们平时使用的 docker 命令只是一个命令行前端，它需要调用 dockerd 来完成实际的操作，而 dockerd 默认是一个有 root 权限的守护进程。
+    - Podman 不需要守护进程，直接通过 fork/exec 的形式启动容器，不需要 root 权限。
 
-        - 每秒请求数（RPS）：Kubernetes约为裸机值的 80%。 Kubernetes 环境中使用的底层容器网络堆栈，因此在 Kubernetes 中运行 NGINX Ingress Controller 会导致这种网络密集型操作的性能大幅下降。
+- podman与docker的命令基本兼容，都包括容器运行时（run/start/kill/ps/inspect），本地镜像（images/rmi/build）、镜像仓库（login/pull/push）等几个方面。
+    - 因此podman的命令行工具与docker类似，比如构建镜像、启停容器等。甚至可以通过`alias docker=podman`可以进行替换。因此，即便使用了podman，仍然可以使用docker.io作为镜像仓库，这也是兼容性最关键的部分。
 
-        - 每秒SSL/TLS 事务数 (TPS)：几乎无甚差异
+
+- 三个主要的配置文件是`container.conf`、`storage.conf`、`registries.conf`
+
+    ```sh
+    cat /usr/share/containers/containers.conf
+    cat /etc/containers/containers.conf
+    cat ~/.config/containers/containers.conf  //优先级最高
+    ```
+
+
+- 添加以下内容到`/etc/containers/registries.conf`。不然无法`podman pull`
+    ```toml
+    [registries.search]
+    # 这个是查找，从这三个地方查找，如果只留一个，则只在一个源里查找
+    registries = ['registry.access.redhat.com', 'registry.redhat.io', 'docker.io']
+    unqualified-search-registries = ["registry.fedoraproject.org", "registry.access.redhat.com", "registry.centos.org", "docker.io"]
+    ```
+
+- 在普通用户环境中使用Podman时，建议使用`fuse-overlayfs`而不是VFS文件系统，至少需要版本0.7.6。现在新版本默认就是了。
+
+    ```sh
+    # 安装slirp4netns和fuse-overlayfs
+    yum -y install slirp4netns
+    yum -y install fuse-overlayfs
+    ```
+
+    在配置文件`/etc/containers/storage.conf`
+    ```
+    mount_program = "/usr/bin/fuse-overlayfs"     //取消注释
+    ```
+
+- 容器命令
+
+    ```sh
+    podman run         # 创建并启动容器
+    podman start       # 启动容器
+    podman ps          # 查看容器
+    podman stop        # 终止容器
+    podman restart     # 重启容器
+    podman attach      # 进入容器
+    podman exec        # 进入容器
+    podman export      # 导出容器
+    podman import      # 导入容器快照
+    podman rm          # 删除容器
+    podman logs        # 查看日志
+    ```
+
+- 镜像命令
+    ```sh
+    podman search             # 检索镜像
+    docke pull                # 获取镜像
+    podman images             # 列出镜像
+    podman image Is           # 列出镜像
+    podman rmi                # 删除镜像
+    podman image rm           # 删除镜像
+    podman save               # 导出镜像
+    podman load               # 导入镜像
+    podmanfile                # 定制镜像（三个）
+     podman build              # 构建镜像
+        podman run              # 运行镜像
+        podmanfile              # 常用指令（四个）
+         COPY                    # 复制文件
+            ADD                     # 高级复制
+            CMD                     # 容器启动命令
+            ENV                     # 环境变量
+            EXPOSE                  # 暴露端口
+    ```
+
+```sh
+# 运行nginx容器
+podman run -d --name nginx docker.io/library/nginx
+
+# 查看镜像
+podman images
+
+# 查看运行的容器
+podman ps
+
+# 查看ip地址
+podman inspect -l | grep -i 'IPAddress'
+              "IPAddress": "10.88.0.2",
+                        "IPAddress": "10.88.0.2",
+
+# 获取nginx的index.html
+curl 10.88.0.2
+
+# 查看运行中容器的日志
+podman logs --latest
+
+# top
+podman top nginx
+USER        PID         PPID        %CPU        ELAPSED           TTY         TIME        COMMAND
+root        1           0           0.000       21m40.989145709s  ?           0s          nginx: master process nginx -g daemon off;
+
+# 停止一个运行中的容器
+podman stop --latest
+
+# 删除一个容器
+podman rm --latest
+```
+
+## [Podman Desktop：一个管理容器的gui。兼容docker引擎](https://podman-desktop.io/)
+
+![image](./Pictures/docker/podman-desktop.avif)

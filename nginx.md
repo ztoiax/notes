@@ -17,7 +17,9 @@
             * [worker配置](#worker配置)
         * [events块配置](#events块配置)
         * [http块配置](#http块配置)
-            * [开启gzip压缩http传输](#开启gzip压缩http传输)
+            * [压缩](#压缩)
+                * [gzip压缩](#gzip压缩)
+                * [Brotli压缩](#brotli压缩)
         * [server块配置](#server块配置)
             * [server_name、location、root、alias、listen](#server_namelocationrootaliaslisten)
             * [重写规则。比较 return、rewrite 和 try_files 指令](#重写规则比较-returnrewrite-和-try_files-指令)
@@ -39,8 +41,13 @@
             * [安装（不需要编译，解压后mv到指定目录即可）](#安装不需要编译解压后mv到指定目录即可)
             * [nginx配置tomcat](#nginx配置tomcat)
             * [后台管理配置](#后台管理配置)
-            * [tomcat connector（连接器）](#tomcat-connector连接器)
             * [性能优化](#性能优化)
+                * [connector（连接器）和I/O模型](#connector连接器和io模型)
+                * [线程池的并发调优](#线程池的并发调优)
+                * [SpringBoot中调整Tomcat参数](#springboot中调整tomcat参数)
+                * [监控Tomcat的性能](#监控tomcat的性能)
+                    * [通过 JConsole 监控 Tomcat](#通过-jconsole-监控-tomcat)
+                    * [命令行查看 Tomcat 指标](#命令行查看-tomcat-指标)
             * [zrlog使用java开发的博客](#zrlog使用java开发的博客)
                 * [nginx 反向代理 zrlog](#nginx-反向代理-zrlog)
         * [php-fpm](#php-fpm)
@@ -105,7 +112,6 @@
         * [tengine](#tengine)
         * [Kong](#kong)
     * [reference](#reference)
-* [keepalived](#keepalived)
 
 <!-- vim-markdown-toc -->
 
@@ -118,6 +124,8 @@
 - [不同 web 服务器份额](https://news.netcraft.com/archives/2020/10/21/october-2020-web-server-survey.html)
 
 # [nginx](http://nginx.org/en/docs/)
+
+- [技术蛋老师：Nginx入门必须懂3大功能配置 - Web服务器/反向代理/负载均衡](https://www.bilibili.com/video/BV1TZ421b7SD)
 
 ## [安装nginx](http://nginx.org/en/linux_packages.html)
 
@@ -195,6 +203,9 @@ nginx: /etc/nginx /usr/local/nginx /usr/share/man/man8/nginx.8.gz
 
 # 添加PATH路径
 export PATH=$PATH:/usr/local/nginx/sbin
+
+# 或者。创建硬连接
+sudo ln /usr/local/nginx/sbin/nginx /bin/nginx
 ```
 
 ### yum安装
@@ -1037,7 +1048,16 @@ reset_timeout_connection off
 lingering_time 30s
 ```
 
-#### 开启gzip压缩http传输
+#### 压缩
+
+- HTML/CSS/JS：对于这类纯文本格式数据，我们在进行压缩时通常会去除其中多余的空格、换行和注释等元素。尽管压缩后的文本可能看起来比较混乱，对人类可读性较差，但这对计算机并不影响流畅阅读。
+
+    - 针对 HTTP 报文里的 body 的压缩方式，对于 header 的压缩在 HTTP/1 里是没有的（HTTP/2 才有）。
+    - 不过我们可以采取一些手段来减少 header 的大小，不必要的字段就尽量不发（例如 User-Agent、Server、X-Powered-By）
+
+- JPG/JPEG/PNG：对于这类图片格式数据，虽然它本身已经被压缩过了，不能被 gzip、brotli 处理，但仍然有优化的空间。
+
+##### gzip压缩
 
 - 目前绝大多数的网站都在使用 GZIP 传输 HTML、CSS、JavaScript 等资源文件。
 
@@ -1108,6 +1128,123 @@ http {
     }
     ```
 
+##### Brotli压缩
+
+- [Brotli](https://github.com/google/ngx_brotli)是Google推出的开源压缩算法，通过变种的LZ77算法、Huffman编码以及二阶文本建模等方式进行数据压缩，与其他压缩算法相比，它有着更高的压缩效率，性能也比我们目前常见的Gzip高17-25%
+
+- 浏览器支持情况
+    - Mozilla Firefox >= 44
+    - Google Chrome > 49
+    - Opera >= 38
+
+- 下载Brotli模块
+    ```sh
+    mkdir module && cd module
+
+    git clone --recurse-submodules -j8 https://github.com/google/ngx_brotli
+    cd ngx_brotli/deps/brotli
+    mkdir out && cd out
+    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_C_FLAGS="-Ofast -m64 -march=native -mtune=native -flto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections" -DCMAKE_CXX_FLAGS="-Ofast -m64 -march=native -mtune=native -flto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections" -DCMAKE_INSTALL_PREFIX=./installed ..
+    cmake --build . --config Release --target brotlienc
+    ```
+
+- 1.nginx安装编译，添加brotli模块（Statically compiled）
+    ```sh
+    cd nginx-1.x.x
+    # 检查模块支持。记得加入之前编译的选项，不然启动nginx时，nginx.conf会报错
+    ./configure --prefix=/usr/local/nginx \
+        --with-http_ssl_module \
+        --with-http_v2_module \
+        --with-http_realip_module \
+        --with-http_addition_module \
+        --with-http_sub_module \
+        --with-http_dav_module \
+        --with-http_flv_module \
+        --with-http_mp4_module \
+        --with-http_gunzip_module \
+        --with-http_gzip_static_module \
+        --with-http_auth_request_module \
+        --with-http_random_index_module \
+        --with-http_secure_link_module \
+        --with-http_degradation_module \
+        --with-http_slice_module \
+        --with-http_stub_status_module \
+        --with-mail \
+        --with-mail_ssl_module \
+        --with-stream \
+        --with-stream_ssl_module \
+        --with-stream_realip_module \
+        --with-stream_ssl_preread_module \
+        --with-threads \
+        --with-file-aio \
+        --with-stream  \
+        --add-module=/home/tz/Downloads/Programs/nginx-1.25.4/module/ngx_brotli \
+
+    # 编译。make后的nginx二进制文件在objs目录
+    make -j$(nproc)
+    # 安装。会生成/usr/local/nginx 目录
+    make install
+
+    # 创建硬连接
+    sudo ln /usr/local/nginx/sbin/nginx /bin/nginx
+
+    # 查看是否成功安装brotli模块
+    nginx -V | grep -i brotli
+    ```
+
+- 2.Dynamically loaded
+
+    - 如果不选择以上的Statically compiled。可以选择这个
+    ```sh
+    cd nginx-1.x.x
+    ./configure --with-compat --add-dynamic-module=/path/to/ngx_brotli
+
+    make modules
+    ```
+
+    - nginx.conf配置
+    ```nginx
+    load_module modules/ngx_http_brotli_filter_module.so;
+    load_module modules/ngx_http_brotli_static_module.so;
+    http {
+          ...
+    }
+    ```
+
+- nginx配置
+
+    - brotli和gzip可以共存
+
+    ```nginx
+    http {
+        brotli on;              # 启用
+        brotli_comp_level 6;    # 压缩等级，默认6，最高11，太高的压缩水平可能需要更多的CPU
+        brotli_buffers 16 8k;   # 请求缓冲区的数量和大小
+        brotli_min_length 20;   # 指定压缩数据的最小长度，只有大于或等于最小长度才会对其压缩。这里指定20字节
+        brotli_types text/plain text/css text/xml text/javascript application/json application/x-javascript application/xml application/xml+rss application/javascript application/font-woff application/vnd.ms-fontobject application/vnd.apple.mpegurl image/svg+xml image/x-icon image/jpeg image/gif image/png image/bmp; # 指定允许进行压缩类型
+        brotli_static always;   # 是否允许查找预处理好的、以.br结尾的压缩文件，可选值为on、off、always
+        brotli_window 512k;     # 窗口值，默认值为512k
+
+        server {
+        }
+    }
+    ```
+
+- 重启nginx
+    ```sh
+    nginx -s reload
+    ```
+
+- 测试
+
+    - 方法1.在chrome浏览器打开127.0.0.1。按F12，选择`Network`，点击具体文件查看`Headers`中的`Response Headers`中的是否为`Content-Encoding: br`
+
+    - 方法2
+        ```sh
+        # -I查看响应头部
+        curl -I 127.0.0.1
+        ```
+
 ### server块配置
 
 ```nginx
@@ -1123,8 +1260,8 @@ http {
       allow 172.168.33.44;  # 允许访问的 ip 地址，可以为 all
      }
 
-     error_page 500 502 503 504 /50x.html;  # 默认 50x 对应的访问页面
-     error_page 400 404 error.html;   # 同上
+     error_page 500 502 503 504 /50x.html;  # 自定义 50x 对应的访问页面
+     error_page 400 404 error.html;   # 自定义400 404页面
     }
 ```
 
@@ -1203,7 +1340,7 @@ http {
 
     - 匹配规则：
 
-        - 匹配优先级：= > ^~ > ~ > ~* > 不带任何字符。
+        - 匹配优先级：= > ^~ > ~ > ~* > ^~ > 普通匹配
 
         - `=` 精确匹配；
         - `~` 正则匹配，区分大小写；
@@ -1215,6 +1352,55 @@ http {
         # ...
     }
     ```
+
+    - location 中的反斜线：
+
+        ```nginx
+        location /test {
+         ...
+        }
+
+        location /test/ {
+         ...
+        }
+        ```
+
+        - 1.不带 / 的情况：Nginx 会找是否有 test 文件。
+        - 2.带 / 的情况：Nginx 会找是否有 test 目录，如果有则找 test 目录下的 html文件（不一定是index.html）
+
+            - 返回301 Moved Permanently
+            ```sh
+            curl 127.0.0.1/test
+            ```
+            - 可以匹配的路径，会成功返回。
+            ```sh
+            curl 127.0.0.1/test/
+            curl 127.0.0.1/test/index.html
+            curl 127.0.0.1/testasd/
+            curl 127.0.0.1/test/app/index.html
+            ```
+
+        - 可以看到带 / 容易会暴露服务器不公开的文件。如果要使uri和文件路径完全一对一建议使用 `=` 的意义
+            ```nginx
+            location = /test/ {
+             ...
+            }
+            ```
+
+            ```sh
+            # 返回404
+            curl 127.0.0.1/test/
+
+            # 成功
+            curl 127.0.0.1/test/index.html
+            ```
+
+        - 但 `=` 有时又不太灵活，可以使用 `~` 正则表达式
+            ```nginx
+            location ~ /test/index[0-9].html {
+             ...
+            }
+            ```
 
     ```nginx
     server {
@@ -1239,24 +1425,6 @@ http {
       }
     }
     ```
-
-    - location 中的反斜线
-
-        - 流程：
-            - 1.当访问www.nginx-test.com/test 时
-            - 2.Nginx 先找是否有 test 目录，如果有则找 test 目录下的 index.html，
-            - 3.不带 / 的情况：如果没有 test 目录，Nginx 则会找是否有 test 文件。
-            - 3.带 / 的情况：如果没有它也不会去找是否存在 test 文件。
-
-        ```nginx
-        location /test {
-         ...
-        }
-
-        location /test/ {
-         ...
-        }
-        ```
 
 - `root`指令：指定静态资源目录位置，它可以写在 http、server、location 等配置中。
     ```nginx
@@ -1900,6 +2068,8 @@ location /video/ {
 
     - 反向代理：后将请求转发给内部网络上的服务器，并将从服务器上得到的结果返回给 internet 上请求连接的客户端。
 
+        - 简单来说：访问不同的路径，就去不同的端口
+
         - 客户端无法察觉。隐藏真实服务器
 
         ```nginx
@@ -2341,7 +2511,105 @@ sudo /usr/local/tomcat/bin/shutdown.sh
 - 打开`127.0.0.1:8080/manager/html`
 ![image](./Pictures/nginx/tomcat-manager.avif)
 
-#### tomcat connector（连接器）
+#### 性能优化
+
+- [knowclub：深入理解Tomcat的I/O模型及性能调优策略](https://mp.weixin.qq.com/s/GlSuSCTuDtOsbCk-606lOw)
+
+- 修改配置文件`/usr/local/tomcat/conf/server.xml`
+
+    ```xml
+    <!-- 修改Connector -->
+    <Connector port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               connectionTimeout="20000"
+               redirectPort="8443"
+               maxParameterCount="5000"
+               minSpareThreads="20"
+               acceptCount="10000"
+               disableUploadTimeout="true"
+               enbaleLookups="false"
+               URIEncoding="UTF-8"
+               />
+    ```
+
+- 优化jvm内存参数。修改`/usr/local/tomcat/bin/catalina.sh`
+
+- [Tomcat9参数配置](https://tomcat.apache.org/tomcat-9.0-doc/)
+
+- 1.连接器参数：
+    - maxThreads：Tomcat 服务器能够创建的最大工作线程数。
+    - minSpareThreads：Tomcat 服务器保持的最小空闲工作线程数。
+    - acceptCount：在拒绝连接之前，连接器所允许的最大连接数。
+    - maxConnections：允许的最大连接数。
+    - connectionTimeout：等待客户端请求的超时时间。
+- 2.NIO 连接器参数（可选）：
+    - maxThreads：最大线程数。
+    - minSpareThreads：最小空闲线程数。
+    - selectorTimeout：选择器超时时间。
+    - acceptorThreadCount：接收线程数。
+- 3.HTTP 头部配置参数：
+    - compression：启用 HTTP 响应内容的压缩。
+    - compressionMinSize：启用压缩的最小字节阈值。
+    - compressableMimeType：需要进行压缩的 MIME 类型。
+    - useSendfile：是否使用 sendfile() 系统调用来传输文件。
+- 4.JVM 参数：
+    - 内存参数：-Xmx（最大堆内存）、-Xms（初始堆内存）、-XX:MaxPermSize（永久代最大内存）等。
+    - 垃圾收集器参数：-XX:+UseConcMarkSweepGC、-XX:+UseG1GC 等。
+    - 线程栈大小：-Xss。
+- 5.数据库连接池参数（如果使用）：
+    - maxActive：最大活动连接数。
+    - maxIdle：最大空闲连接数。
+    - minIdle：最小空闲连接数。
+    - maxWait：获取连接的最大等待时间。
+    - validationQuery：连接验证查询。
+- 6.应用程序配置参数：
+    - 缓存策略：控制静态资源的缓存时间。
+    - 日志级别：限制日志输出的详细程度。
+    - 调试模式：是否启用调试模式以进行详细的日志记录。
+- 7.操作系统参数：
+    - 文件描述符限制：调整操作系统的文件描述符限制以容纳更多的连接。
+    - 网络参数：调整 TCP 缓冲区大小、调整 TCP 连接超时时间等。
+- 8.监控和调优工具：
+    - JConsole、VisualVM、Glowroot 等用于监控 Tomcat 的工具，用于收集关键指标并进行性能调优。
+
+- 这些是常见的 Tomcat 性能调优参数，但实际配置可能因具体情况而异。在进行调优时，建议根据应用程序的特点、负载情况、硬件资源和操作系统环境等因素进行适当调整
+
+##### connector（连接器）和I/O模型
+
+Tomcat 支持的 I/O 模型有：
+
+| IO模型              | 描述                                                                                                                                                                                                                                                                                             |
+|---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| BIO （JIoEndpoint） | 同步阻塞式IO，即Tomcat使用传统的java.io进行操作。该模式下每个请求都会创建一个线程，对性能开销大，不适合高并发场景。优点是稳定，适合连接数目小且固定架构。Tomcat8.5.x开始移除BIO。                                                                                                               |
+| NIO（NioEndpoint）  | 同步非阻塞式IO，jdk1.4 之后实现的新IO。该模式基于多路复用选择器监测连接状态再同步通知线程处理，从而达到非阻塞的目的。比传统BIO能更好的支持并发性能。Tomcat 8.0之后默认采用该模式。NIO方式适用于连接数目多且连接比较短（轻操作） 的架构， 比如聊天服务器， 弹幕系统， 服务器间通讯，编程比较复杂 |
+| AIO (Nio2Endpoint)  | 异步非阻塞式IO，jdk1.7后之支持 。与nio不同在于不需要多路复用选择器，而是请求处理线程执行完成进行回调通知，继续执行后续操作。Tomcat 8之后支持。一般适用于连接数较多且连接时间较长的应用                                                                                                         |
+| APR（AprEndpoint）  | 全称是 Apache Portable Runtime/Apache可移植运行库)，是Apache HTTP服务器的支持库。AprEndpoint 是通过 JNI 调用 APR 本地库而实现非阻塞 I/O 的。使用需要编译安装APR 库                                                                                                                               |
+
+注意：Linux 内核没有很完善地支持异步 I/O 模型，因此 JVM 并没有采用原生的 Linux 异步 I/O，而是在应用层面通过 epoll 模拟了异步 I/O 模型。因此在 Linux 平台上，Java NIO 和 Java NIO2 底层都是通过 epoll 来实现的，但是 Java NIO 更加简单高效。
+
+- 在 Tomcat 中，EndPoint 组件的主要工作就是处理 I/O
+    - NioEndpoint 利用 Java NIO API 实现了多路复用 I/O 模型。
+    - Tomcat的NioEndpoint 是基于主从Reactor多线程模型设计的
+    ![image](./Pictures/nginx/tomcat-NioEndPoint.avif)
+    - LimitLatch 是连接控制器，它负责控制最大连接数，NIO 模式下默认是 10000(tomcat9中8192)，当连接数到达最大时阻塞线程，直到后续组件处理完一个连接后将连接数减 1。注意到达最大连接数后操作系统底层还是会接收客户端连接，但用户层已经不再接收。
+    - Acceptor 跑在一个单独的线程里，它在一个死循环里调用 accept 方法来接收新连接，一旦有新的连接请求到来，accept 方法返回一个 Channel 对象，接着把 Channel 对象交给 Poller 去处理。
+
+- NIO 和 NIO2 最大的区别是，一个是同步一个是异步。异步最大的特点是，应用程序不需要自己去触发数据从内核空间到用户空间的拷贝。
+
+    ![image](./Pictures/nginx/tomcat-Nio2EndPoint.avif)
+
+    - Nio2Endpoint 中没有 Poller 组件，也就是没有 Selector。在异步 I/O 模式下，Selector 的工作交给内核来做了。
+
+- 如何选I/O模型：
+
+    - I/O 调优实际上是连接器类型的选择，一般情况下默认都是 NIO，在绝大多数情况下都是够用的，除非你的 Web 应用用到了 TLS 加密传输，而且对性能要求极高，这个时候可以考虑 APR，因为 APR 通过 OpenSSL 来处理 TLS 握手和加密 / 解密。OpenSSL 本身用 C 语言实现，它还对 TLS 通信做了优化，所以性能比 Java 要高。
+
+    - 如果你的 Tomcat 跑在 Windows 平台上，并且 HTTP 请求的数据量比较大，可以考虑 NIO2，这是因为 Windows 从操作系统层面实现了真正意义上的异步 I/O，如果传输的数据量比较大，异步 I/O 的效果就能显现出来。
+        ```
+        <!-- 修改protocol属性, 使用NIO2 -->
+        <Connector port="8080" protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+                   connectionTimeout="20000"
+                   redirectPort="8443" />
+        ```
 
 - tomcat connector（连接器）有3种运行模式：
 
@@ -2412,25 +2680,142 @@ sudo /usr/local/tomcat/bin/shutdown.sh
                        />
             ```
 
-#### 性能优化
+##### 线程池的并发调优
 
-- 修改配置文件`/usr/local/tomcat/conf/server.xml`
+- 线程池调优指的是给 Tomcat 的线程池设置合适的参数，使得 Tomcat 能够又快又好地处理请求。
 
+![image](./Pictures/nginx/tomcat-线程池.avif)
+
+- `/usr/local/tomcat/conf/server.xml`配置线程池
     ```xml
-    <!-- 修改Connector -->
-    <Connector port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol"
+    <!--
+    namePrefix: 线程前缀
+    maxThreads: 最大线程数，默认设置 200，一般建议在 500 ~ 1000，根据硬件设施和业务来判断
+    minSpareThreads: 核心线程数，默认设置 25
+    prestartminSpareThreads: 在 Tomcat 初始化的时候就初始化核心线程
+    maxQueueSize: 最大的等待队列数，超过则拒绝请求 ，默认 Integer.MAX_VALUE
+    maxIdleTime: 线程空闲时间，超过该时间，线程会被销毁，单位毫秒
+    className: 线程实现类,默认org.apache.catalina.core.StandardThreadExecutor
+    -->
+    <Executor name="tomcatThreadPool" namePrefix="catalina-exec-Fox"
+              prestartminSpareThreads="true"
+              maxThreads="500" minSpareThreads="10"  maxIdleTime="10000"/>
+              
+    <Connector port="8080" protocol="HTTP/1.1"  executor="tomcatThreadPool"
                connectionTimeout="20000"
-               redirectPort="8443"
-               maxParameterCount="5000"
-               minSpareThreads="20"
-               acceptCount="10000"
-               disableUploadTimeout="true"
-               enbaleLookups="false"
-               URIEncoding="UTF-8"
-               />
+               redirectPort="8443" URIEncoding="UTF-8"/>
     ```
 
-- 优化jvm内存参数。修改`/usr/local/tomcat/bin/catalina.sh`
+- 这里面最核心的就是如何确定 maxThreads 的值，如果这个参数设置小了，Tomcat 会发生线程饥饿，并且请求的处理会在队列中排队等待，导致响应时间变长；如果 maxThreads 参数值过大，同样也会有问题，因为服务器的 CPU 的核数有限，线程数太多会导致线程在 CPU 上来回切换，耗费大量的切换开销。
+
+- 理论上我们可以通过公式 线程数 = CPU 核心数 *（1+平均等待时间/平均工作时间），计算出一个理想值，这个值只具有指导意义，因为它受到各种资源的限制，实际场景中，我们需要在理想值的基础上进行压测，来获得最佳线程数。
+
+##### SpringBoot中调整Tomcat参数
+
+- 方式1：yml中配置 （属性配置类：ServerProperties）
+
+    ```yml
+    server:
+      tomcat:
+        threads:
+          min-spare: 20
+          max: 500
+        connection-timeout: 5000ms
+    ```
+
+- SpringBoot中的TomcatConnectorCustomizer类可用于对Connector进行定制化修改。
+
+    ```java
+    @Configuration
+    public class MyTomcatCustomizer implements
+            WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
+     
+        @Override
+        public void customize(TomcatServletWebServerFactory factory) {
+            factory.setPort(8090);
+            factory.setProtocol("org.apache.coyote.http11.Http11NioProtocol");
+            factory.addConnectorCustomizers(connectorCustomizer());
+        }
+     
+        @Bean
+        public TomcatConnectorCustomizer connectorCustomizer(){
+            return new TomcatConnectorCustomizer() {
+                @Override
+                public void customize(Connector connector) {
+                    Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
+                    protocol.setMaxThreads(500);
+                    protocol.setMinSpareThreads(20);
+                    protocol.setConnectionTimeout(5000);
+                }
+            };
+        }
+     
+    }
+    ```
+
+##### 监控Tomcat的性能
+
+- Tomcat 的关键指标：吞吐量、响应时间、错误数、线程池、CPU 以及 JVM 内存。
+    - 前三个指标是我们最关心的业务指标，Tomcat 作为服务器，就是要能够又快有好地处理请求，因此吞吐量要大、响应时间要短，并且错误数要少。
+    - 后面三个指标是跟系统资源有关的，当某个资源出现瓶颈就会影响前面的业务指标，比如线程池中的线程数量不足会影响吞吐量和响应时间
+        - 但是线程数太多会耗费大量 CPU，也会影响吞吐量；当内存不足时会触发频繁地 GC，耗费 CPU，最后也会反映到业务指标上来。
+
+###### 通过 JConsole 监控 Tomcat
+
+- 1.开启 JMX 的远程监听端口
+
+    - 我们可以在 Tomcat 的 bin 目录`/usr/local/tomcat/bin/`下新建一个名为setenv.sh的文件（或者setenv.bat，根据你的操作系统类型），然后输入下面的内容：
+    ```sh
+    export JAVA_OPTS="${JAVA_OPTS} -Dcom.sun.management.jmxremote"
+    export JAVA_OPTS="${JAVA_OPTS} -Dcom.sun.management.jmxremote.port=8011"
+    export JAVA_OPTS="${JAVA_OPTS} -Djava.rmi.server.hostname=x.x.x.x"
+    export JAVA_OPTS="${JAVA_OPTS} -Dcom.sun.management.jmxremote.ssl=false"
+    export JAVA_OPTS="${JAVA_OPTS} -Dcom.sun.management.jmxremote.authenticate=false"
+    ```
+
+- 2.重启 Tomcat，这样 JMX 的监听tomcat端口（我这里为8080）就开启了，接下来通过 JConsole 来连接这个端口。
+    ```sh
+    # 启动jconsole监听tomcat。选择Local Process：选项
+    jconsole 127.0.0.1:8080
+    ```
+    ![image](./Pictures/nginx/jconsole.avif)
+
+- 在`MBeans`标签页：有Tomcat的统计信息。
+    ![image](./Pictures/nginx/jconsole-MBeans标签页.avif)
+
+- 在`Threads`标签页：可以看到当前 Tomcat 进程中有多少线程
+    ![image](./Pictures/nginx/jconsole-Threads标签页.avif)
+
+- 在`Memory`标签页：能看到 Tomcat 进程的 JVM 内存使用情况
+    ![image](./Pictures/nginx/jconsole-Memory标签页.avif)
+
+###### 命令行查看 Tomcat 指标
+
+- 极端情况下如果 Web 应用占用过多 CPU 或者内存，又或者程序中发生了死锁，导致 Web 应用对外没有响应，监控系统上看不到数据，这个时候需要我们登陆到目标机器，通过命令行来查看各种指标。
+
+```sh
+# ps 命令找到 Tomcat 进程，拿到进程 ID
+ps -ef|grep tomcat
+
+# 查看tomcat进程状态的大致信息。（我这里的tomcat进程pid为20316）
+cat /proc/20316/status
+
+# 监控进程的 CPU 和内存资源使用情况
+top -p 20316
+# or
+htop -p 20316
+
+# 查看 Tomcat 的网络连接，比如 Tomcat 在 8080 端口上监听连接请求
+netstat -na | grep 8080
+
+# 统计ESTAB、TIME_WAIT状态的连接数
+netstat -na | grep ESTAB | grep 8080 | wc -l
+netstat -na | grep TIME_WAIT | grep 8080 | wc -l
+
+# 通过 ifstat 来查看网络流量，大致可以看出 Tomcat 当前的请求数和负载状况。
+ifstat
+```
+
 
 #### zrlog使用java开发的博客
 
@@ -2734,14 +3119,14 @@ server {
 
     # stream不在http块里面
     stream {
-        upstream backend {              
+        upstream backend {
             # 转发到80端口
-            server 127.0.0.1:80;  
+            server 127.0.0.1:80;
         }
         server {
             # 监听90端口
             listen 90;
-            proxy_pass backend;    
+            proxy_pass backend;
         }
     }
 
@@ -2767,23 +3152,29 @@ server {
         - random 随机负载均衡算法；
 
     ```nginx
-    # 上下文：http
+    http {
+        upstream backend-servers {
+            server x1.google.com;    # 可以是域名
+            server x2.google.com;
+            # server 106.xx.xx.xxx;        可以是ip
+            # server 106.xx.xx.xxx:8080;   可以带端口号
+            # server unix:/tmp/xxx;        支出socket方式
 
-    upstream # 自定义组名 {
-        server x1.google.com;    # 可以是域名
-        server x2.google.com;
-        # server x3.google.com
-                                # down                不参与负载均衡
-                                # weight=5;           权重，越高分配越多
-                                # backup;             预留的备份服务器
-                                # max_fails=number    允许失败的次数
-                                # fail_timeout=time   超过失败次数后，服务暂停时间
-                                # max_coons=number    限制上游服务器的最大的接受的连接数
-                                # 根据服务器性能不同，配置适合的参数
+            # server x3.google.com
+                                    # down                不参与负载均衡
+                                    # weight=5;           权重，越高分配越多
+                                    # backup;             预留的备份服务器
+                                    # max_fails=number    允许失败的次数
+                                    # fail_timeout=time   超过失败次数后，服务暂停时间
+                                    # max_coons=number    限制上游服务器的最大的接受的连接数
+                                    # 根据服务器性能不同，配置适合的参数
+        }
 
-        # server 106.xx.xx.xxx;        可以是ip
-        # server 106.xx.xx.xxx:8080;   可以带端口号
-        # server unix:/tmp/xxx;        支出socket方式
+        server {
+            location / {
+                proxy_pass  http://backend-servers;
+            }
+        }
     }
     ```
 
@@ -3222,16 +3613,44 @@ server {
         --add-module=./module/echo-nginx-module \
     ```
 
+- 公钥、私钥常见扩展名
+    - 公钥：`.pub` `.pem` `ca.crt`
+    - 私钥：`.prv` `.pem` `ca.key` `.key`
+
 - 生成文件
 
     ```sh
-    # 生成example.csr文件和example.key文件
-    openssl req -new -newkey rsa:2048 -sha256 -nodes -out example.csr -keyout example.key -subj "/C=CN/ST=beijing/L=beijing/O=example Inc./OU=Web Security/CN=example.com"
+    # 生成ca.crt ca.key
+    openssl req -newkey rsa:2048 \
+        -new -nodes -x509 \
+        -days 365 \
+        -out ca.crt \
+        -keyout ca.key \
+        -subj "/C=CN/ST=beijing/L=beijing/O=example Inc./OU=Web Security/CN=example.com"
 
-    # 正确做法：将生成的csr文件提供给ca机构。签署完成后会发一个crt文件。
-    # 实验做法：生成crt。??最后的测试失败了，不知道是不是这个crt文件的问题
-    openssl x509 -req -days 365 -in example.csr -signkey example.key -out example.crt
+    # 生成example.key
+    openssl genrsa -out example.key 2048
+
+    # 生成example.csr
+    openssl req -new -key example.key -days 365 -out example.csr \
+        -subj "/C=CN/ST=Beijing/L=Haidian/O=CoolShell/OU=Test/CN=example.com"
+
+    # 生成extfile.cnf
+    echo "subjectAltName=DNS:example.com" > extfile.cnf
+
+    # 使用ca给example签名，生成example.crt
+    openssl x509 -req -in example.csr -extfile extfile.cnf -CA ca.crt -CAkey ca.key -days 365 -sha256 -CAcreateserial -out example.crt
+
+    # 删除extfile.cnf
+    rm extfile.cnf
+
+- 查看crt信息
+
+    ```sh
+    cat example.crt | openssl x509 -text
     ```
+
+    ![image](./Pictures/nginx/openssl-crt.avif)
 
 - 配置nginx
 
@@ -4466,6 +4885,3 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 
 - [开发内功修炼：万字多图，搞懂 Nginx 高性能网络工作原理！](https://mp.weixin.qq.com/s/AX6Fval8RwkgzptdjlU5kg)
 
-# keepalived
-
-- 配置高可用集群（双机热备）

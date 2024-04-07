@@ -106,6 +106,12 @@
 
 - [np管理器](https://github.com/githubXiaowangzi/NP-Manager)
 
+- [immich：照片和视频的备份解决方案](https://github.com/immich-app/immich)
+
+- [Nextcloud：私人云盘](https://github.com/nextcloud/android)
+
+    - [memories：Nextcloud的照片管理](https://github.com/pulsejet/memories)
+
 - [阅读](https://github.com/gedoor/MyBookshelf)
 
 - [unison：intel的手机电脑消息、文件传输]()

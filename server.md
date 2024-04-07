@@ -7,10 +7,18 @@
         * [关闭按Control-Alt-Delete就重启](#关闭按control-alt-delete就重启)
     * [su, sudo](#su-sudo)
     * [ssh](#ssh)
-        * [基本配置](#基本配置)
+        * [基本概念](#基本概念)
+        * [远程连接](#远程连接)
         * [/etc/ssh/sshd_config 配置文件](#etcsshsshd_config-配置文件)
         * [ssh-agent管理私钥的passphrase密码，日后不需要输入passphrase就可以远程连接](#ssh-agent管理私钥的passphrase密码日后不需要输入passphrase就可以远程连接)
         * [快速连接](#快速连接)
+        * [knowclub：史上最全 SSH 暗黑技巧详解](#knowclub史上最全-ssh-暗黑技巧详解)
+            * [内部堡垒机、跳板机都需要密码+动态码，太复杂了，怎么解？](#内部堡垒机跳板机都需要密码动态码太复杂了怎么解)
+            * [我有很多不同机房（或者说不同客户）的机器都需要跳板机来登录，能一次直接ssh上去吗？](#我有很多不同机房或者说不同客户的机器都需要跳板机来登录能一次直接ssh上去吗)
+            * [将隔离环境中的web端口映射到本地（本地代理）](#将隔离环境中的web端口映射到本地本地代理)
+            * [指定算法来强制client端使用某种和server一致的加密方式](#指定算法来强制client端使用某种和server一致的加密方式)
+            * [SSH 三大转发模式](#ssh-三大转发模式)
+        * [autossh：启动 ssh 服务并进行监控的命令行应用程序，可以在程序问题或者是网络问题的时候，重启 ssh 服务。](#autossh启动-ssh-服务并进行监控的命令行应用程序可以在程序问题或者是网络问题的时候重启-ssh-服务)
         * [ssh3：使用 QUIC + TLS 重新实现的 SSH 加密登陆工具，支持 UDP 端口转发](#ssh3使用-quic--tls-重新实现的-ssh-加密登陆工具支持-udp-端口转发)
         * [sshfs：ssh将远程目录挂载到本地](#sshfsssh将远程目录挂载到本地)
         * [pdsh(ssh 并行管理)](#pdshssh-并行管理)
@@ -26,11 +34,13 @@
             * [openvpn](#openvpn)
             * [wireguard](#wireguard)
     * [安全(security)](#安全security)
-        * [思路](#思路)
-            * [以redis为例的服务检查](#以redis为例的服务检查)
-            * [ssh](#ssh-1)
-            * [重要文件加锁chattr -i](#重要文件加锁chattr--i)
-            * [ntp(同步时间服务)](#ntp同步时间服务)
+        * [以redis为例的服务检查](#以redis为例的服务检查)
+        * [ssh](#ssh-1)
+            * [sshguard：阻止SSH暴力攻击](#sshguard阻止ssh暴力攻击)
+            * [fail2ban：阻止SSH暴力攻击](#fail2ban阻止ssh暴力攻击)
+            * [denyhosts：阻止SSH暴力攻击](#denyhosts阻止ssh暴力攻击)
+        * [重要文件加锁chattr -i](#重要文件加锁chattr--i)
+        * [ntp(同步时间服务)](#ntp同步时间服务)
         * [关闭 core dump](#关闭-core-dump)
         * [selinux](#selinux)
         * [tcp_wrappers: 第二层防火墙](#tcp_wrappers-第二层防火墙)
@@ -41,17 +51,21 @@
         * [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](#sqlmap-自动检测和利用-sql-注入漏洞获得数据库服务器的权限)
         * [beef: web渗透测试](#beef-web渗透测试)
         * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
+        * [hydra：密码破解](#hydra密码破解)
     * [系统监控](#系统监控)
         * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
     * [自动化任务](#自动化任务)
         * [cron](#cron)
         * [anacron](#anacron)
         * [jenkins](#jenkins)
-            * [jenkins-cli](#jenkins-cli)
-            * [插件](#插件)
+            * [安装](#安装)
+            * [插件与配置](#插件与配置)
+            * [新建任务 Maven项目](#新建任务-maven项目)
+            * [pipeline流水线](#pipeline流水线)
+            * [Jenkins：手把手教会你 Jenkins 备份与恢复](#jenkins手把手教会你-jenkins-备份与恢复)
         * [Gitlab-CI](#gitlab-ci)
     * [Gitlab-CE](#gitlab-ce)
-            * [安装](#安装)
+            * [安装](#安装-1)
     * [日志软件](#日志软件)
         * [logrotate（自带的日志分割工具）](#logrotate自带的日志分割工具)
         * [rsyslog](#rsyslog)
@@ -187,15 +201,49 @@ tz ALL = NOPASSWD: /bin/cat /etc/shadow
 
 ## ssh
 
-> 默认为22端口, 安全起见可更改为其它端口.如8022
+### 基本概念
 
-### 基本配置
+- 默认为22端口，安全起见可更改为其它端口，如8022
 
-- [技术蛋老师：OpenSSH核心操作 | GitHub SSH连接](https://www.bilibili.com/video/BV1Sx4y1y7B2)
+- 参数的优先级是：`命令行配置选项` > `~/.ssh/config` > `/etc/ssh/ssh_config`
+
+- SSH支持多种身份验证机制，它们的验证顺序如下：gssapi-with-mic,hostbased,publickey,keyboard-interactive,password
+
+    - 这些认证顺序可以通过ssh配置文件(注意，不是sshd的配置文件)中的指令PreferredAuthentications改变。
+
+    - 但常见的是密码认证机制(password)和公钥认证机制(public key). 当公钥认证机制未通过时，再进行密码认证机制的验证。
 
 - 服务器公钥保存路径：`~/.ssh/authorized_keys`
 
     - 注意:服务端`authorized_keys`和客户端`私钥文件`权限必须是**600**
+
+- debug：
+
+    ```sh
+    # 客户端debug：-vvv参数是debug，把所有流程在控制台显示出来。卡在哪个环节；密码不对还是key不对一看就知道
+    ssh -vvv centos7
+
+    # 服务端debug：看输出信息验证为什么pub key不能login等
+    /usr/sbin/sshd -ddd -p 2222
+    ```
+
+- 列出本地所支持默认的加密算法
+
+    ```sh
+    ssh -Q key
+    ssh -Q cipher       # List supported ciphers
+    ssh -Q mac          # List supported MACs
+    ssh -Q key          # List supported public key types
+    ssh -Q kex          # List supported key exchange algorithms
+    ```
+
+- 公钥、私钥常见扩展名
+    - 公钥：`.pub` `.pem` `ca.crt`
+    - 私钥：`.prv` `.pem` `ca.key` `.key`
+
+### 远程连接
+
+- [技术蛋老师：OpenSSH核心操作 | GitHub SSH连接](https://www.bilibili.com/video/BV1Sx4y1y7B2)
 
 - 服务器会保存曾经尝试连接（因为要输入密码，未必真的连接成功）的主机记录：`~/.ssh/known_hosts`
 
@@ -250,6 +298,9 @@ Port 22221
 
 # 不使用dns反查, 提高ssh连接速度
 UseDNS no
+
+# Banner指定用户登录后，sshd 向其展示的信息文件（Banner /usr/local/etc/warning.txt），默认不展示任何内容。/etc/ssh/my_banner 中可以放置提示内容
+Banner /etc/ssh/my_banner
 ```
 
 ### ssh-agent管理私钥的passphrase密码，日后不需要输入passphrase就可以远程连接
@@ -298,6 +349,251 @@ Host opensuse
 ```sh
 ssh centos7
 ssh opensuse
+```
+
+### [knowclub：史上最全 SSH 暗黑技巧详解](https://mp.weixin.qq.com/s/oqHV9lNfkHUH1X9QJp5ofA)
+
+#### 内部堡垒机、跳板机都需要密码+动态码，太复杂了，怎么解？
+
+- 在ssh配置文件`~/.ssh/config `增加以下参数：意味着72小时内登录同一台跳板机只有第一次需要输入密码，以后都是重用之前的连接，所以也就不再需要输入密码了。
+
+    ```
+    #reuse the same connection --关键配置
+    ControlMaster auto
+    ControlPath /tmp/ssh_mux_%h_%p_%r
+
+    #查了下ControlPersist是在OpenSSH5.6加入的，5.3还不支持
+    #不支持的话直接把这行删了，不影响功能
+    #keep one connection in 72hour
+    ControlPersist 72h
+    #复用连接的配置到这里，后面的配置与复用无关
+
+    #其它也很有用的配置
+    GSSAPIAuthentication=no
+    #这个配置在公网因为安全原因请谨慎关闭
+    StrictHostKeyChecking=no
+    TCPKeepAlive=yes
+    CheckHostIP=no
+    # "ServerAliveInterval [seconds]" configuration in the SSH configuration so that your ssh client sends a "dummy packet" on a regular interval so that the router thinks that the connection is active even if it's particularly quiet
+    ServerAliveInterval=15
+    #ServerAliveCountMax=6
+    ForwardAgent=yes
+
+    UserKnownHostsFile /dev/null
+    ```
+
+- 这个就是保存好的socket，下次可以重用，免密码。 in 259200 seconds 对应 72小时
+
+    ```sh
+    ssh -vvv centos7
+    OpenSSH_9.6p1, OpenSSL 3.2.1 30 Jan 2024
+    debug1: Reading configuration data /home/tz/.ssh/config
+    debug1: /home/tz/.ssh/config line 1: Applying options for centos7
+    debug1: Reading configuration data /etc/ssh/ssh_config
+    debug2: resolve_canonicalize: hostname 192.168.100.208 is address
+    debug1: auto-mux: Trying existing master at '/tmp/ssh_mux_192.168.100.208_22_root'
+    debug2: fd 3 setting O_NONBLOCK
+    debug2: mux_client_hello_exchange: master version 4
+    debug3: mux_client_forwards: request forwardings: 0 local, 0 remote
+    debug3: mux_client_request_session: entering
+    debug3: mux_client_request_alive: entering
+    debug3: mux_client_request_alive: done pid = 4169
+    debug3: mux_client_request_session: session request sent
+    debug1: mux_client_request_session: master session id: 2
+
+    # 查看文件类型
+    ls -l /tmp/ssh_mux_192.168.100.208_22_root
+    srw------- 1 - tz tz 27 Mar 16:46 /tmp/ssh_mux_192.168.100.208_22_root=
+    ```
+
+#### 我有很多不同机房（或者说不同客户）的机器都需要跳板机来登录，能一次直接ssh上去吗？
+
+- 比如有一批客户机房的机器IP都是192.168.., 然后需要走跳板机100.10.1.2才能访问到，那么我希望以后在笔记本上直接 ssh 192.168.1.5 就能直接连上
+
+- 方法1：ProxyCommand
+
+    - `/etc/ssh/ssh_config`配置
+
+        ```
+        Host 192.168.*.*
+            ProxyCommand ssh -l ali-renxijun -p 8022 100.10.1.2 exec /usr/bin/nc %h %p
+        ```
+
+    - 以上配置等价下面的命令
+
+        ```sh
+        ssh -o ProxyCommand="ssh -l root -p 8022 100.10.1.2 exec /usr/bin/nc %h %p" 192.168.1.5
+        # or 等价
+        ssh -o ProxyCommand="ssh -l root -p 8022 -W %h:%p 100.10.1.2 " 192.168.1.5
+        # or 等价。ProxyCommand和ProxyJump很类似，ProxyJump使用：
+        ssh -J root@100.10.1.2:8022 192.168.1.5
+        ```
+
+- 方法2：ProxyJump
+
+    - OpenSSH 7.3 以上版本才可以使用 ProxyJump, 相对 ProxyCommand 更简洁方便些
+
+    - `/etc/ssh/ssh_config`配置
+
+        ```
+        Host 192.168.*.*
+            ProxyJump root@100.10.1.2:8022
+        ```
+
+#### 将隔离环境中的web端口映射到本地（本地代理）
+
+- 192.168.100.208为开启了nginx的web服务器
+
+```sh
+# 映射到本地的8088端口
+ssh -CNfL 0.0.0.0:8088:192.168.100.208:80 root@192.168.100.208
+
+# 测试是否成功
+curl 127.0.0.1:8088
+```
+
+#### 指定算法来强制client端使用某种和server一致的加密方式
+
+- 连服务器报如下错误：
+
+    ```sh
+    # 表示服务端支持 diffie-hellman-group1-sha1,diffie-hellman-group14-sha1 加密，但是client端不支持
+    debug1: kex: algorithm: (no match)
+    Unable to negotiate with server port 22: no matching key exchange method found. Their offer: diffie-hellman-group1-sha1,diffie-hellman-group14-sha1
+    ```
+
+- 解决方法
+
+    ```sh
+    ssh  -oKexAlgorithms=+diffie-hellman-group14-sha1 -l user
+    ```
+
+    - 或者 ~/.ssh/config 配置
+
+    ```
+    host server_ip
+    KexAlgorithms +diffie-hellman-group1-sha1
+    ```
+
+    - 如果仍然报以下错误：
+
+        ```
+        debug2: first_kex_follows 0
+        debug2: reserved 0
+        debug1: kex: algorithm: diffie-hellman-group14-sha1
+        debug1: kex: host key algorithm: (no match)
+        Unable to negotiate with server_ip port 22: no matching host key type found. Their offer: ssh-rsa
+        ```
+
+    - 那么可以配置来解决：
+
+        ```
+        Host *
+            HostKeyAlgorithms +ssh-rsa
+            PubkeyAcceptedKeyTypes +ssh-rsa
+        ```
+
+#### SSH 三大转发模式
+
+- 三个转发模式的比较：
+    - 动态转发（socks5代理）：完全可以代替本地转发，只是动态转发是socks5协议，当科学上网用，本地转发是tcp协议
+    - 本地转发（正向代理）：完全是把动态转发特例化到访问某个固定目标的转发，类似 iptable 的 port forwarding
+    - 远程转发（反向代理）：是启动转端口的机器同时连上两端的两个机器，把本来不连通的两端拼接起来，中间显得多了个节点。
+
+    - 三个转发模式可以串联使用
+    - 动态转发常用来科学上网，本地转发用来打洞，这两种转发启动的端口都是在本地；远程转发也是打洞的一种，只不过启用的端口在远程机器上。
+
+    ![image](./Pictures/server/ssh三大转发模式.avif)
+
+- 动态转发 (-D) SOCKS5 协议
+
+    - 动态转发指的是，本机与 SSH 服务器之间创建了一个加密连接，然后本机内部针对某个端口的通信，都通过这个加密连接转发。它的一个使用场景就是，访问所有外部网站，都通过 SSH 转发。
+
+    - 动态转发需要把本地端口绑定到 SSH 服务器。至于 SSH 服务器要去访问哪一个网站，完全是动态的，取决于原始通信，所以叫做动态转发。
+
+    ![image](./Pictures/server/ssh动态转发.avif)
+
+    ```sh
+    # 注意，这种转发采用了 SOCKS5 协议。访问外部网站时，需要把 HTTP 请求转成 SOCKS5 协议，才能把本地端口的请求转发出去。-N参数表示，这个 SSH 连接不能执行远程命令，只能充当隧道。
+    ssh -D 4444 ssh-server -N
+    # 或者如下方式：
+    nohup ssh -qTfnN -D *:13658 root@192.168.100.208 vmstat 10  >/dev/null 2>&1
+    ```
+    ```sh
+    # 测试
+    curl -x socks5://localhost:4444 http://www.example.com
+    # or
+    curl --socks5-hostname localhost:4444 https://www.twitter.com
+    ```
+
+- 本地转发 (-L)
+
+    - SSH 服务器作为中介的跳板机，建立本地计算机与特定目标网站之间的加密连接。本地转发是在本地计算机的 SSH 客户端建立的转发规则。
+
+    - 典型使用场景就是，打洞，经过跳板机访问无法直接连通的服务。它会指定一个本地端口（local-port），所有发向那个端口的请求，都会转发到 SSH 跳板机（ssh-server），然后 SSH 跳板机作为中介，将收到的请求发到目标服务器（target-host）的目标端口（target-port）。
+
+    ![image](./Pictures/server/ssh本地转发.avif)
+
+    ```sh
+    # ssh -L :local-port:target-host:target-port ssh-server
+    # local-port是本地端口，target-host是你想要访问的目标服务器，target-port是目标服务器的端口，ssh-server是 SSH 跳板机。
+    # target-host是ssh-server的target-host, target-host 域名解析、路由都是由ssh-server完成
+
+    ssh -L 53682:remote-server:53682 ssh-server
+
+    # 测试。访问本机的53682端口，就是访问remote-server的53682端口.
+    curl http://localhost:53682
+    ```
+
+    - 将9900转发到5900(vnc端口), 实现更安全的vnc连接
+    ```sh
+    ssh 127.0.0.1 -L 9900:127.0.0.1:5900
+    ssh 127.0.0.1 -L 8080:192.168.100.208:80 root@192.168.100.208
+    ```
+
+    - 如果经常使用本地转发，可以将设置写入 ~/.ssh/config
+    ```
+    Host test.example.com
+    LocalForward client-IP:client-port server-IP:server-port
+    ```
+
+- 远程转发(-R)
+
+    - 远程端口指的是在远程 SSH 服务器建立的转发规则。主要是执行ssh转发的机器别人连不上，所以需要一台client能连上的机器当远程转发端口，要不就是本地转发了。
+
+    - 由于本机无法访问内网 SSH 跳板机，就无法从外网发起 SSH 隧道，建立端口转发。必须反过来，从 SSH 跳板机发起隧道，建立端口转发，这时就形成了远程端口转发。
+
+    ![image](./Pictures/server/ssh远程转发.avif)
+
+    - 注意远程转发需要：
+
+        - 1.sshd_config里要打开AllowTcpForwarding选项，否则-R远程端口转发会失败。
+
+        - 2.默认转发到远程主机上的端口绑定的是127.0.0.1，如要绑定0.0.0.0需要打开sshd_config里的GatewayPorts选项(然后ssh -R 后加上*:port )。这个选项如果由于权限没法打开也有办法，可配合ssh -L将端口绑定到0.0.0.0。
+
+    ```sh
+    # 首先需要注意，不是在30.1.2.3 或者166.100.64.1 上执行的，而是找一台能联通 30.1.2.3 和166.100.64.1的机器来执行，在执行前Remote clients能连上 30.1.2.3 但是 30.1.2.3 和 166.100.64.1 不通，所以需要一个中介将 30.1.2.3 和166.100.64.1打通
+    ssh -fNR 30.1.2.3:30081:166.100.64.1:3128 root@30.1.2.3 -p 2728
+
+    # 测试在Remote Client上执行下面的命令，命令就会输出服务器 166.100.64.1 的3128端口返回的内容。
+    curl http://30.1.2.3:30081
+
+    # 开通远程转发后，如果需要动态代理（比如访问所有web服务），那么可以在30081端口机器上(30.1.2.3)执行：表示在30081机器上(30.1.2.3)启动了一个socks5动态代理服务
+    nohup ssh -qTfnN -D *:13658 root@127.0.0.1 -p 30081 vmstat 10  >/dev/null 2>&1
+    ```
+
+    - 如果经常使用本地转发，可以将设置写入 ~/.ssh/config
+    ```
+    Host test.example.com
+    RemoteForward local-IP:local-port target-ip:target-port
+    ```
+
+### autossh：启动 ssh 服务并进行监控的命令行应用程序，可以在程序问题或者是网络问题的时候，重启 ssh 服务。
+
+```sh
+# -M 用于有问题时就会自动重连，服务器 echo 机制使用的端口。-D 动态转发
+ssh -vvv -N -D localhost:8527 [email protected] -p 8000
+autossh -M 5678 -vvv -N -D localhost:8527 [email protected] -p 8000
 ```
 
 ### [ssh3：使用 QUIC + TLS 重新实现的 SSH 加密登陆工具，支持 UDP 端口转发](https://github.com/francoismichel/ssh3)
@@ -673,9 +969,7 @@ openvpn --genkey secret /etc/openvpn/server/ta.key
 
 ## 安全(security)
 
-### 思路
-
-#### 以redis为例的服务检查
+### 以redis为例的服务检查
 
 - 检查端口是否有暴露
 
@@ -698,7 +992,7 @@ nmap -A -p 6379 -script redis-info 127.0.0.1
     requirepass password
     ```
 
-#### ssh
+### ssh
 
 - 修改密钥权限
 ```sh
@@ -721,7 +1015,149 @@ PermitRootLogin no
 UseDNS no
 ```
 
-#### 重要文件加锁chattr -i
+#### [sshguard：阻止SSH暴力攻击](https://www.sshguard.net/)
+
+- sshguard可以从标准输入中读取日志消息（适用于管道syslog）或监视一个或多个日志文件。日志消息被逐行解析以识别模式。如果检测到攻击，例如在几秒钟内多次登录失败，则会阻止有问题的IP。
+
+- SSHGuard最初旨在为OpenSSH服务提供额外的保护层，SSHGuard还保护范围广泛的服务，例如Vsftpd和Postfix。
+
+- SSHGuard 与 Fail2ban 非常相似，只是它是用C编写的（Fail2ban是用Python 编写的），更轻巧，提供的功能更少
+
+- centos安装
+
+    ```sh
+    yum install sshguard
+    # 复制配置文件
+    cp /usr/share/doc/sshguard-2.4.2/examples/sshguard.conf.sample /etc/sshguard.conf
+    ```
+
+    - 修改`/etc/sshguard.conf`配置文件，注销以下行。
+    ```
+    BACKEND="/usr/libexec/sshguard/sshg-fw-iptables"
+    FILES="/var/log/auth.log /var/log/authlog /var/log/maillog"
+    LOGREADER="LANG=C /usr/bin/journalctl -afb -p info -n1 -t sshd -t sendmail -o cat"
+
+    BLACKLIST_FILE=90:/etc/sshguard.blacklist
+    WHITELIST_FILE=/etc/sshguard.whitelist
+    ```
+
+    - 启动sshguard
+    ```sh
+    systemctl enable sshguard
+    systemctl start sshguard
+    systemctl status sshguard
+    ```
+
+    - 测试
+    ```sh
+    # 生成10000个密码。进行一个个尝试
+    for i in {1..10000}
+    do
+      echo $i >> /tmp/password
+    done
+
+    # 暴力破解
+    hydra -l root -P /tmp/password 192.168.100.208 ssh -v
+
+    # 查看阻断的IP
+    firewall-cmd --permanent --info-ipset="sshguard4"
+    ipset list sshguard4
+    ```
+
+#### [fail2ban：阻止SSH暴力攻击](https://github.com/fail2ban/fail2ban)
+
+- fail2ban可以监视你的系统日志，然后匹配日志的错误信息（正则式匹配）执行相应的屏蔽动作（一般情况下是调用防火墙屏蔽）
+
+- 当有人在试探你的HTTP、SSH、SMTP、FTP、nginx、apache密码，只要达到你预设的次数，fail2ban就会调用防火墙屏蔽这个IP，而且可以发送e-mail通知系统管理员，是一款很实用、很强大的安全工具
+
+- 在外网环境下，有很多的恶意扫描和密码猜测等恶意攻击行为，使用Fail2ban配合iptables/firewalld，实现动态防火墙是一个很好的解决方案
+
+- 所有配置文件保存在 `/etc/fail2ban/` 目录中
+    - 尽量不要修改主配置文件 `jail.conf`，它包含一组预定义的过滤器。
+    - 应该复制`jail.conf`创建一个名为 `jail.local` 的新配置文件，并根据您的意愿进行修改
+
+    ```sh
+    # 复制jail.conf，创建jail.local文件
+    cd /etc/fail2ban
+    cp jail.conf jail.local
+    ```
+
+- 修改`jail.local`配置文件
+
+    ```
+    # 启动sshd
+    [sshd]
+    enabled = true
+
+    # 本部分允许我们列出 IP 白名单地址列表，Fail2Ban 不会禁止与列表中的地址匹配的主机
+    ignoreip = 127.0.0.1/8 ::1
+
+    # 主机被禁止的秒数
+    bantime  = 300
+
+    # 如果在最近 findtime 秒期间已经发生了 maxretry 次重试，则主机会被禁止
+    findtime  = 300
+
+    # 是主机被禁止之前的失败次数
+    maxretry = 8
+    ```
+
+- 启动
+
+    ```sh
+    # 启动
+    systemctl start fail2ban.service
+    systemctl enable fail2ban.service
+
+    # 查看日志
+    tail -f /var/log/fail2ban.log
+    ```
+
+- 测试
+
+    ```sh
+    # 生成10000个密码。进行一个个尝试
+    for i in {1..10000}
+    do
+      echo $i >> /tmp/password
+    done
+
+    # 暴力破解
+    hydra -l root -P /tmp/password 192.168.100.208 ssh -v
+
+    # 查看阻断的IP
+    firewall-cmd --permanent --info-ipset="sshguard4"
+    ipset list sshguard4
+    ```
+
+- fail2ban相关命令用法
+
+    ```sh
+    # 查看启用的监狱列表
+    fail2ban-client status
+
+    # 获取sshd服务被禁止的 IP 地址
+    fail2ban-client status sshd
+    # or
+    fail2ban-client get sshd banip
+    # 可以看到iptables防火墙联动生成、被禁止IP对应的拒绝规则
+    iptables -nvL
+
+    # 从 Fail2Ban 中删除禁止的 IP 地址
+    fail2ban-client set ssh unbanip 104.218.13.80
+    ```
+
+#### [denyhosts：阻止SSH暴力攻击](https://github.com/denyhosts/denyhosts)
+
+- DenyHosts是Python语言写的一个程序，它会分析sshd的日志文件（/var/log/secure），当发现重复的攻击时就会记录IP到/etc/hosts.deny文件，从而达到自动屏IP的功能，以帮助阻止SSH 服务器攻击（也称为基于字典的攻击和暴力破解攻击）。
+
+- centos7安装
+```sh
+wget http://mirror.neu.edu.cn/fedora-epel/7/x86_64/d/denyhosts-2.9-4.el7.noarch.rpm
+rpm -ivh denyhosts-2.9-4.el7.noarch.rpm
+```
+
+### 重要文件加锁chattr -i
 
 - `chattr -i` 不能修改和删除文件
 ```sh
@@ -737,7 +1173,7 @@ chattr -i /etc/grub.conf
 chattr -i /var/log/lastlog
 ```
 
-#### ntp(同步时间服务)
+### ntp(同步时间服务)
 
 - 如果超过100台服务器, 建议搭建一台ntp服务器
 
@@ -889,6 +1325,8 @@ clamscan -r --remove /
 lynis audit system
 ```
 
+### [hydra：密码破解](https://github.com/vanhauser-thc/thc-hydra)
+
 ## 系统监控
 
 ### cockpit(系统监控的webui)
@@ -979,27 +1417,99 @@ anacron -d
 
 - 默认端口: `http://127.0.0.1:8090/`
 
+- 主目录: `/var/lib/jenkins`
 - 项目路径: `/var/lib/jenkins/workspace/项目名`
 
-#### jenkins-cli
+#### 安装
 
-```sh
-# 下载jenkins-cli.jar
-curl -LO http://127.0.0.1:8090/jnlpJars/jenkins-cli.jar
+- docker安装
 
-# 执行help命令
-java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd help
+    ```yml
+    version: '3.8'
+    # 执行脚本；docker-compose -f docker-compose-v1.0.yml up -d
+    services:
+      jenkins:
+        image: jenkins/jenkins:2.439
+        container_name: jenkins
+        privileged: true
+        user: root
+        ports:
+          - "9090:8080"
+          - "50001:50000"
+        volumes:
+          - ./jenkins_home:/var/jenkins_home # 如果不配置到云服务器路径下，则可以配置 jenkins_home 会创建一个数据卷使用
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /usr/bin/docker:/usr/local/bin/docker
+          - ./maven/conf/settings.xml:/usr/local/maven/conf/settings.xml # 这里只提供了 maven 的 settings.xml 主要用于修改 maven 的镜像地址
+          - ./jdk/jdk1.8.0_202:/usr/local/jdk1.8.0_202 # 提供了 jdk1.8，如果你需要其他版本也可以配置使用。
+        environment:
+          - JAVA_OPTS=-Djenkins.install.runSetupWizard=false # 禁止安装向导「如果需要密码则不要配置」docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+        restart: unless-stopped
 
-# 启动名为test的任务
-java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd enable-job test
+    volumes:
+      jenkins_home:
+    ```
 
-# 获取test任务的xml
-java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd get-job test
-```
+    ```sh
+    docker-compose -f docker-compose-v1.0.yml up -d
+    ```
 
-#### 插件
+#### 插件与配置
 
-- [插件搜索](https://plugins.jenkins.io/)
+- 换源：在http://127.0.0.1:8090/manage/pluginManager/advanced
+
+    - 原本是：`https://updates.jenkins.io/update-center.json`
+    - 替换成华为：`https://mirrors.huaweicloud.com/jenkins/updates/update-center.json`
+        - [其他源地址](https://www.jenkins-zh.cn/tutorial/management/plugin/update-center/)
+
+- 有用的插件：[插件搜索](https://plugins.jenkins.io/)
+
+    - locale 汉化插件
+        - 安装后，需要重启生效
+    - Git
+    - docker
+    - Maven Integration
+
+- 在[全局工具配置](http://localhost:8090/manage/configureTools/)里配置插件
+
+    - 用于构建部署的 SpringBoot 应用的环境，都需要在全局工具中配置好。包括；Maven、JDK、Git、Docker。注意这里的环境路径配置，如果配置了是会提示你没有对应的路径文件夹。
+
+        ![image](./Pictures/server/jenkins-全局工具配置.avif)
+
+- [添加凭证](http://localhost:8090/manage/credentials/store/system/domain/_/)
+    - 配置了Git仓库的连接凭证，才能从Git仓库拉取代码。
+    - 如果你还需要操作如 ssh 也需要配置凭证。
+
+    - 可以选择csdn的gitcode的用户和密码。新建任务时源码管理的git地址为你自己的gitcode仓库。
+
+        ![image](./Pictures/server/jenkins-添加凭证.avif)
+
+- jenkins-cli命令[说明和下载](http://127.0.0.1:8090/manage/cli/)
+    ```sh
+    # 下载jenkins-cli.jar
+    curl -LO http://127.0.0.1:8090/jnlpJars/jenkins-cli.jar
+
+    # 执行help命令
+    java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd help
+
+    # 启动名为test的任务
+    java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd enable-job test
+
+    # 获取test任务的xml
+    java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd get-job test
+    ```
+
+#### 新建任务 Maven项目
+
+- [bugstack虫洞栈：用上了 Jenkins，个人部署项目是真方便！](https://mp.weixin.qq.com/s/tWuse0ejDOTQho2182iYWw)
+
+#### pipeline流水线
+
+- [360技术工程：Jenkins实践——创建Pipeline的两种方式](https://mp.weixin.qq.com/s/Hh5IOjrF4XZse730XaCM_Q)
+
+- [阿里巴巴中间件：通过Jenkins构建CI/CD实现全链路灰度](https://mp.weixin.qq.com/s/JLuSqcYMwrqhyn1993t7lg)
+
+#### [Jenkins：手把手教会你 Jenkins 备份与恢复](https://mp.weixin.qq.com/s/fU7YFvJoaK2lX9yW_Q_IDw)
 
 ### Gitlab-CI
 

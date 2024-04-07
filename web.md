@@ -52,6 +52,8 @@
 
 - [李银城：前端与 SQL](https://www.rrfed.com/2017/06/11/sql/)
 
+- [Web 文件系统（OPFS 及工具）介绍](https://hughfenghen.github.io/posts/2024/03/14/web-storage-and-opfs/)
+
 # HTML
 
 - [Templating in HTML](https://kittygiraudel.com/2022/09/30/templating-in-html/)
@@ -111,6 +113,8 @@
 - [How to create high-performance CSS animations](https://web.dev/animations-guide/)
 
 - [Color Formats in CSS（详细介绍 CSS 颜色的各种格式）](https://www.joshwcomeau.com/css/color-formats/)
+
+- [按照 GitHub 的星星数量，为 CSS 框架排名](https://www.libhunt.com/css)
 
 - 图片优先选择avif
 ```css

@@ -6,7 +6,7 @@
 
 # 技术
 
-## Mojo（面向 AI 的编程语言）
+## [Mojo：面向 AI 的编程语言](https://github.com/modularml/mojo)
 
 - 目标是提供python的易用性，c语言的性能
 
@@ -42,6 +42,10 @@
 
 ## LLM
 
+- [畅游 LLM 的世界（英文）](https://www.bentoml.com/blog/navigating-the-world-of-large-language-models)
+    - 如果在家用电脑上安装 LLM（大型语言模型），应该选择哪一个模型？
+    - 本文分析并评价了目前最流行的几个 LLM 的基本情况和优缺点。
+
 - [awesome-LLMs-In-China](https://github.com/wgwang/awesome-LLMs-In-China)
 - [llama：facebook的llm](https://github.com/ggerganov/llama.cpp)
 
@@ -71,6 +75,15 @@
 ## 图片视频
 
 - [dandere2x：使用waifu2x提升视频质量](https://github.com/akai-katto/dandere2x)
+
+## 操作系统
+
+- [AIOS：LLM 代理操作系统](https://github.com/agiresearch/AIOS)
+    - 将大语言模型嵌入到操作系统中，使操作系统“有灵魂”。旨在优化资源分配，促进跨代理的上下文切换，实现代理的并发执行，为代理提供工具服务，维护代理的访问控制。
+
+## ai程序员
+
+- [devika：Devin 的开源替代品](https://github.com/stitionai/devika)
 
 # ai测试
 

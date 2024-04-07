@@ -33,6 +33,8 @@
             * [案例](#案例)
                 * [网易云音乐大量应用的部署流程](#网易云音乐大量应用的部署流程)
 * [第三方软件资源](#第三方软件资源)
+    * [服务端](#服务端)
+    * [客户端](#客户端)
     * [云原生](#云原生)
 * [在线网站工具](#在线网站工具)
 * [优秀文章](#优秀文章)
@@ -2189,6 +2191,8 @@ curl https://argocd.kubernets.cn -I
 
 - [awesome-k8s-resources](https://github.com/tomhuang12/awesome-k8s-resources)
 
+## 服务端
+
 - [kubernetes-network-policy-recipes：只需复制粘贴即可解决 K8s 网络问题的配方。该项目包含了 Kubernetes 网络策略的各种用例和示例 YAML 文件，可直接复制使用。](https://github.com/ahmetb/kubernetes-network-policy-recipes)
 
 - [pixie：性能监控](https://github.com/pixie-io/pixie)
@@ -2198,53 +2202,57 @@ curl https://argocd.kubernets.cn -I
 - [k0s](https://github.com/k0sproject/k0s)
   > k0s 是一个包含所有功能的单一二进制 Kubernetes 发行版，它预先配置了所有所需的 bell 和 whistle，使构建 Kubernetes 集群只需将可执行文件复制到每个主机并运行它即可。
 
+  - [retina：K8s 网络可观测平台](https://github.com/microsoft/retina)
+
+    - 微软开源的基于 eBPF 的云原生容器网络可观测性平台。它提供了一个集中查看、监控、分析应用和网络运行状况的中心平台，能够将收集的网络可观测性数据发送到 Prometheus 进行可视化，适用于调试 Pod 无法互连的问题、监控网络健康状况、收集遥测数据等场景。
+
 - [像tcpdump那样管理](https://github.com/up9inc/mizu)
 
 - [Tekton Pipelines：声明 CI/CD 样式管道的 k8s 样式资源]()
 
-- 客户端
+## 客户端
 
-    - [krew：kubectl的插件管理](https://github.com/kubernetes-sigs/krew)
+- [krew：kubectl的插件管理](https://github.com/kubernetes-sigs/krew)
 
-        - [krew的插件列表](https://krew.sigs.k8s.io/plugins/)
-        ```sh
-        # 安装tree插件
-        kubectl krew install tree
+    - [krew的插件列表](https://krew.sigs.k8s.io/plugins/)
+    ```sh
+    # 安装tree插件
+    kubectl krew install tree
 
-        # 使用tree
-        kubectl tree
+    # 使用tree
+    kubectl tree
 
 
-        # kubectx像git那样切换分支来管理集群
-        kubectl krew install kubectx
+    # kubectx像git那样切换分支来管理集群
+    kubectl krew install kubectx
 
-        # 证书管理
-        kubectl krew install cert-manager
-        ```
+    # 证书管理
+    kubectl krew install cert-manager
+    ```
 
-    - [k8sgpt](https://github.com/k8sgpt-ai/k8sgpt)
+- [k8sgpt](https://github.com/k8sgpt-ai/k8sgpt)
 
-    - [kubectx：像git那样切换分支](https://github.com/ahmetb/kubectx)
+- [kubectx：像git那样切换分支](https://github.com/ahmetb/kubectx)
 
-    - [kubecolor：让kubectl的输出有颜色](https://github.com/hidetatz/kubecolor)
+- [kubecolor：让kubectl的输出有颜色](https://github.com/hidetatz/kubecolor)
 
-    - [kube-shell：类似ipython的补全shell](https://github.com/cloudnativelabs/kube-shell)
+- [kube-shell：类似ipython的补全shell](https://github.com/cloudnativelabs/kube-shell)
 
-    - [Lens：k8s ide](https://github.com/lensapp/lens)
-    - [K8Studio：k8s ide](https://k8studio.io/)
+- [Lens：k8s ide](https://github.com/lensapp/lens)
+- [K8Studio：k8s ide](https://k8studio.io/)
 
-    - [k9s：tui管理pod](https://github.com/derailed/k9s)
+- [k9s：tui管理pod](https://github.com/derailed/k9s)
 
-    - [plural：web ui](https://github.com/pluralsh/plural)
+- [plural：web ui](https://github.com/pluralsh/plural)
 
-    - [stern：pods日志追踪](https://github.com/stern/stern)
-        ```sh
-        # all namespaces
-        stern . --all-namespaces
+- [stern：pods日志追踪](https://github.com/stern/stern)
+    ```sh
+    # all namespaces
+    stern . --all-namespaces
 
-        # kube-system namespace
-        stern . -n kube-system --tail 0
-        ```
+    # kube-system namespace
+    stern . -n kube-system --tail 0
+    ```
 
 ## 云原生
 
