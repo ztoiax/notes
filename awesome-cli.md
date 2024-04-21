@@ -720,7 +720,13 @@ xdotool type "Hello world"
 xdotool key ctrl+l
 ```
 
-- [vhs:命令行录制生成gif](https://github.com/charmbracelet/vhs)
+## [vhs:命令行录制生成gif](https://github.com/charmbracelet/vhs)
+
+## [silicon：对代码文件，生成图片](https://github.com/Aloxaf/silicon)
+
+```sh
+silicon test.py -o main.png
+```
 
 # 磁盘备份
 

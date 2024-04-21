@@ -66,6 +66,14 @@
 
 - [llm-course：免费的 LLM 课程，包含面向新手入门 LLM 的基础知识，面向程序员和科学家的 LLMs 产品和部署 LLM 应用的知识和笔记。](https://github.com/mlabonne/llm-course)
 
+- [nanoGPT：是用于训练/微调中等规模 GPT 模型的库。它是对 minGPT 的重写](https://github.com/karpathy/nanoGPT)
+
+- [llm.c：1k 行的 C 代码就完成了 GPT-2 模型的训练，代码纯手撸、不依赖任何机器学习框架。](https://github.com/karpathy/llm.c)
+
+    - 教学意义大于实用价值
+
+    - 作者曾就职于特斯拉的自动驾驶部门负责人、OpenAI 的创始成员。
+
 ## Transformer
 
 - [transformer-debugger](https://github.com/openai/transformer-debugger)

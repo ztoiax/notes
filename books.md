@@ -341,6 +341,8 @@
 
 - [how-query-engines-work](https://howqueryengineswork.com/)
 
+- [爱可生开源社区的课间、演讲、书籍如《Mysql大智小技》](https://github.com/actiontech/slides)
+
 ### 分布式
 
 - [《分布式系统模式》](https://github.com/dreamhead/patterns-of-distributed-systems)

@@ -2614,6 +2614,9 @@ Dockerfile:7 DL3020 error: Use COPY instead of ADD for files and folders
 
 ## registry仓库
 
+- 类似于 github 代码仓库，只不过registry是docker镜像仓库
+- 有官方的registry仓库dockerhub，我们也可以搭建私人的仓库
+
 创建本地 `registry`
 
 ```bash

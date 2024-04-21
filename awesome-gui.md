@@ -10,7 +10,7 @@
         * [gtk](#gtk)
 * [note](#note)
 * [other](#other)
-* [其他项目](#其他项目)
+* [类似项目](#类似项目)
 
 <!-- vim-markdown-toc -->
 
@@ -131,6 +131,8 @@
 
 - [gImageReader：ocr，但不太准确](https://github.com/manisandro/gImageReader)
 
-# 其他项目
+- [quivr：该项目利用生成式 AI 的能力，成为你的第二大脑。你可以将多种格式的文本、数据、语言和视频上传给它，之后再和它对话时，它会学习你上传的内容后回答你的问题，支持接入多种 LLM 和 Docker 一键部署。](https://github.com/QuivrHQ/quivr)
+
+# 类似项目
 
 - [linux 下的惬意生活](https://github.com/yangyangwithgnu/the_new_world_linux#%E7%9B%AE%E5%BD%95)
