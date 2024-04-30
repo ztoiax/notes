@@ -5,6 +5,7 @@
     * [性能指标](#性能指标)
 * [基本说明](#基本说明)
 * [all-have 综合](#all-have-综合)
+    * [top命令](#top命令)
     * [flent：可以同时运行多个 netperf/iperf/ping 实例并聚合结果，通过交互式 GUI 和可扩展的绘图功能展示数据，支持本地和远程主机，支持采集 CPU 使用率、WiFi、qdisc 和 TCP 套接字统计信息等。](#flent可以同时运行多个-netperfiperfping-实例并聚合结果通过交互式-gui-和可扩展的绘图功能展示数据支持本地和远程主机支持采集-cpu-使用率wifiqdisc-和-tcp-套接字统计信息等)
     * [sysbench](#sysbench)
     * [vmstat](#vmstat)
@@ -199,6 +200,58 @@ data from brendangregg book: [Systems Performance](http://www.brendangregg.com/s
 - strace
 
 # all-have 综合
+
+## top命令
+
+- [咸鱼运维杂谈：聊聊 Linux iowait](https://mp.weixin.qq.com/s/LMUp0IYrAzBf1QNIGXXq2A)
+
+- 进程状态
+
+    ![image](./Pictures/benchmark/进程状态.avif)
+
+    - 1.R：可执行状态（runnable），表示进程正在被 CPU 执行或者处在 CPU 队列中等待分配 CPU 时间片。
+    - 2.S：可中断睡眠状态（interrupted sleep），表示进程处于睡眠状态，当特定条件或者信号到达时，就会被唤醒，状态也由 S 变成 R。
+    - 3.D：不可中断睡眠状态（uninterrupted sleep），跟状态 S 类似，只是进程在接收到信号时不会被唤醒。这类状态的进程一般在等待 I/O 结束。
+    - 4.Z：僵尸状态（zombie），表示进程已经终止（死透了），但父进程还没有发出 wait4() 系统调用去读取它的结束信息。（可以理解为进程死【终止】后 父进程要给它收尸【获取该进程的终止状态】）
+    - 5.T：暂停状态（stopped），表示进程已经暂停（还没死透），是可以恢复的（比如我们给进程发送 SIGSTOP 或者按 CTRL+Z，就可以将进程置为暂停状态，可以通过 bg/fg 命令，或者发送 SIGCONT 信号恢复。）
+
+- CPU状态：user，sys，idle，iowait
+
+    - sar、top会用百分比表示 CPU 分别处于这四种状态的时间，这四种状态相加的结果是 100%。
+
+    - 上面提到的 4 种 CPU 状态，其实只有 2 种：
+
+        - 1.工作/忙碌（busy）
+        - 2.非工作/空闲（idle）
+
+    - 其中 busy 状态下又分成了：
+
+        - 1.user：表示 CPU 目前正在执行用户空间的代码
+        - 2.system：表示 CPU 目前正在执行内核空间的代码
+
+    - idle 状态下又分成了：
+
+        - idle：系统中没有 R 状态的进程了
+
+        - iowait：系统中没有 R 状态的进程但有进程卡在 I/O 上
+
+            - iowait 很低，不能代表进程没有阻塞在 I/O 上。
+
+            - 实验
+
+                - 假设有一个进程需要花 70% 的时间等待 I/O 完成，把它放到一个空闲的单 CPU 的系统中，显示的 iowait 是 70%。
+
+                - 但是我在这个系统中增加一个非 I/O 的计算任务，iowait 就变成 0 了。而我们之前的那个进程依然需要花 70% 的时间等待 I/O。
+
+                ```sh
+                # 使用dd命令，提高iowait。对应top中的wa
+                taskset 1 dd if=/dev/sda of=/dev/null bs=1MB
+
+                # 此时 CPU 就没有精力处理其他任务了呢？我们再输入下面这条命令：执行一个死循环，用于模拟计算密集型任务。
+                taskset 1 sh -c "while true; do true; done"
+
+                # 可以看到：CPU0 的 wa 降低为 0 了，与此同时 us 和 sy 的时间占比接近 100% 。CPU 在 iowait 状态的时候能执行了其他任务。但这就说明 dd 命令产生的进程没有阻塞在 I/O 上吗？并不是。
+                ```
 
 ## [flent：可以同时运行多个 netperf/iperf/ping 实例并聚合结果，通过交互式 GUI 和可扩展的绘图功能展示数据，支持本地和远程主机，支持采集 CPU 使用率、WiFi、qdisc 和 TCP 套接字统计信息等。](https://github.com/tohojo/flent)
 

@@ -130,6 +130,8 @@
 
 - [Winlator：使用 Wine 和 Box86/Box64 来运行 Windows 应用和游戏](https://github.com/brunodev85/winlator/releases/download/v5.1.0/Winlator.Development.apk)
 
+- [fdroidclient](https://github.com/f-droid/fdroidclient)免费、开源的 Android 应用商店。该项目是 F-Droid 的 Android 客户端，专门收集各类开源安卓软件（FOSS）的应用商店。
+
 ## 刷机
 
 - [xda](https://www.xda-developers.com/)

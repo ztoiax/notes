@@ -12,7 +12,7 @@
 
 - 创始人chris lattner是swift语言和llvm项目的发起者
 
-## ChatGPT
+## LLM
 
 ### 原理
 
@@ -21,6 +21,28 @@
 - [llm-viz：3D 可视化 GPT 大语言模型。](https://bbycroft.net/llm)
 
 - [wolfram作者：What Is ChatGPT Doing … and Why Does It Work?](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)
+
+### 在线模型
+
+- [LLM Pricing：AI 模型价格对比和试用链接](https://llmpricecheck.com/)
+
+- [chatgpt](https://chat.openai.com/)
+
+- [copilot：微软的gpt](https://copilot.microsoft.com/)
+
+- [gemini：谷歌的gpt](https://gemini.google.com/)
+
+- [meta.ai：Meta 公司发布自家的 AI 服务，免费使用，基于 Llama 3 模型，可以"文生文"和"文生图"](https://www.meta.ai/)
+
+- [llama.dev：Meta 公司还有一个专门的 Llama 聊天网站，可以选择该模型的不同版本。](https://llama3.dev/)
+
+- [DuckDuckGo 推出的免费 AI 聊天，底层是 GPT-3.5 Turbo 和 Claude 1.2](https://duckduckgo.com/?q=DuckDuckGo&ia=chat)
+
+- [coze：自定义gpt机器人，可以集成到telegram和discord](https://www.coze.com/home)
+
+- 国产
+    - [kimi](https://kimi.moonshot.cn/chat)
+    - [智谱清言](https://chatglm.cn/main/)
 
 ### 使用
 
@@ -51,6 +73,8 @@
 
     - [llama配置要求](http://www.bimant.com/blog/llama-consumer-hardware-requirements/)
     - [Llama2-Chinese：Llama中文社区](https://github.com/LlamaFamily/Llama-Chinese)
+- [llama：facebook2024年的llm](https://github.com/meta-llama/llama3)
+    - [llama3-chinese：以Meta-Llama-3-8B为底座，使用 DORA + LORA+ 的训练方法，在50w高质量中文多轮SFT数据 + 10w英文多轮SFT数据 + 2000单轮自我认知数据训练而来的大模型。](https://github.com/seanzhang-zhichen/llama3-chinese)
 
 - [Gemma：google的llm](https://github.com/google-deepmind/gemma)
 
@@ -59,6 +83,8 @@
 - [ChatGLM3：清华大学和智谱合作的llm](https://github.com/THUDM/ChatGLM3)
 
 - [Grok-1：马斯克的 xAI 公司开源的 314B 参数、MoE（混合专家模型）的大型语言模型](https://github.com/xai-org/grok-1)
+
+- [corenet：苹果手机端大模型](https://github.com/apple/corenet)
 
 - [LaWGPT：在通用中文基座模型（如 Chinese-LLaMA、ChatGLM 等）的基础上扩充法律领域专有词表、大规模中文法律语料预训练](https://github.com/pengxiao-song/LaWGPT)
 
@@ -74,11 +100,17 @@
 
     - 作者曾就职于特斯拉的自动驾驶部门负责人、OpenAI 的创始成员。
 
+- [storm](https://github.com/stanford-oval/storm)这是一个基于 LLM 的应用，可通过搜集网上的内容，从零编写类似维基百科的文章。使用者仅需提出问题，它便会上网收集资料并生成大纲，然后根据大纲和参考文献进行创作，生成的文章质量欠佳，还需要人为修改后才可以发布。
+
 ## Transformer
 
 - [transformer-debugger](https://github.com/openai/transformer-debugger)
 
     - OpenAI 开源了一款用于分析小型语言模型内部行为的工具：Transformer Debugger (TDB)，它将自动可解释性技术与稀疏自动编码器相结合，无需写代码就能快速探索模型。基于 Transformer 的语言模型就像个黑盒，该项目可以解密 Transfomer 的内部结构和预测行为。
+
+## Sora
+
+- [Open-Sora：生成图片或视频、图生视频、视频编辑](https://github.com/hpcaitech/Open-Sora)
 
 ## 图片视频
 

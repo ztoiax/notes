@@ -157,6 +157,26 @@ curl www.baidu.com | htmlq 'a' | bat --language html
 find . -type f | vidir -
 ```
 
+## [lnav：tui的vim模式，查看log、json文件](https://github.com/tstack/lnav)
+
+```sh
+# 查看nginx的access日志
+lnav /usr/local/nginx/logs/access.log
+
+# 查看json文集
+lnav file.json
+
+# 查看journalctl
+journalctl | lnav
+
+# 滚动模式
+journalctl -f | lnav
+
+# 设置输出模式
+journalctl -o short-iso | lnav
+journalctl -o json | lnav
+```
+
 # git
 
 ## [gh](https://github.com/cli/cli)
@@ -340,6 +360,13 @@ cat /etc/passwd | choose -f ':' -1
 
 ```sh
 ps aux | peco
+```
+
+## [grex：自动生成正则表达式](https://github.com/pemistahl/grex)
+
+```sh
+# 生成匹配haha和HAHA的正则表达式
+grex -c haha HAHA
 ```
 
 # disk
@@ -774,7 +801,22 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 - [mlc:检测markdown文件的连接](https://github.com/becheran/mlc)
 
 # ai
+
 - [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)
+
+- [ollama](https://github.com/ollama/ollama)
+
+- [oterm：Ollama客户端](https://github.com/ggozad/oterm)
+
+- [open-webui：ollama ui](https://github.com/open-webui/open-webui)
+- [reader：将网址放到https://r.jina.ai/便可获取markdown文档的总结](https://github.com/jina-ai/reader)
+    - [在线网址](https://jina.ai/reader/)
+
+    ```sh
+    curl -H "Accept: text/event-stream" https://r.jina.ai/https://www.bilibili.com/video/BV1bD421n7dg
+    ```
+
+- [aider](https://github.com/paul-gauthier/aider)这是一款运行在终端里的 AI 辅助编码工具，能够将你本地 git 仓库中的代码与 LLMs 结合起来。开发者通过 add 命令引入文件，然后用自然语言描述需求，它就可以对现有的代码进行修改并自动提交，支持接入多种大模型，包括 GPT 3.5、GPT-4 和 Claude 3 Opus 等。
 
 # reference
 

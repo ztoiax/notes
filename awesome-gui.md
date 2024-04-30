@@ -4,6 +4,7 @@
     * [文件传输](#文件传输)
     * [文件管理器](#文件管理器)
     * [文件清理](#文件清理)
+* [下载器](#下载器)
 * [图片](#图片)
     * [image viewer(图片查看器)](#image-viewer图片查看器)
         * [qt](#qt)
@@ -71,6 +72,13 @@
 
 - [czkawka：多功能文件清理工具](https://github.com/qarmin/czkawka)
 
+# 下载器
+
+- [Motrix](https://github.com/agalwood/Motrix)
+
+- [imfile：基于Motrix](https://github.com/imfile-io/imfile-desktop)
+    - 支持下载 HTTP、FTP、BitTorrent、Magnet 等
+
 # 图片
 
 - [upscayl：ai图片质量提升](https://github.com/upscayl/upscayl)
@@ -132,6 +140,8 @@
 - [gImageReader：ocr，但不太准确](https://github.com/manisandro/gImageReader)
 
 - [quivr：该项目利用生成式 AI 的能力，成为你的第二大脑。你可以将多种格式的文本、数据、语言和视频上传给它，之后再和它对话时，它会学习你上传的内容后回答你的问题，支持接入多种 LLM 和 Docker 一键部署。](https://github.com/QuivrHQ/quivr)
+
+- [lan-mouse：使用同一个鼠标和键盘，控制局域网的多台电脑](https://github.com/feschber/lan-mouse)
 
 # 类似项目
 

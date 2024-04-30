@@ -38,6 +38,10 @@
 
 - [wsl2-distro-manager：WSL 发行版图形管理工具。](https://github.com/bostrot/wsl2-distro-manager)
 
+- [g-helper](https://github.com/seerge/g-helper)一款轻量级的华硕奥创中心替代品。支持无缝切换显卡模式、调节屏幕刷新率、风扇曲线、电源功耗、键盘灯光等功能。
+
+- [WingetUI](https://github.com/marticliment/WingetUI)带界面的 Windows 包管理器。该项目是一个为 Windows 常用的命令行包管理工具设计的用户界面，如 Winget、Scoop、Pip、NPM、.NET Tool 等。它的界面友好、设计美观、支持中文，通过它你可以轻松下载、安装、更新和卸载包管理器上发布的任何软件以及其它日常应用，如浏览器、PDF 阅读器等。
+
 ## 手机与电脑交互
 
 - [intel unison：手机电脑消息、文件传输]()

@@ -61,6 +61,7 @@
             * [多tomcat的7层负载均衡](#多tomcat的7层负载均衡)
             * [配置缓存](#配置缓存)
         * [https](#https)
+            * [bugstack虫洞栈：爽了！免费的SSL，还能自动续期！??失败了](#bugstack虫洞栈爽了免费的ssl还能自动续期失败了)
             * [使用acme.sh生成证书。??失败了](#使用acmesh生成证书失败了)
             * [httpsok： 一行命令，轻松搞定SSL证书自动续期。??失败了](#httpsok-一行命令轻松搞定ssl证书自动续期失败了)
             * [http2](#http2)
@@ -3730,6 +3731,8 @@ server {
         return 301 https://$server_name$request_uri;
     }
     ```
+
+#### [bugstack虫洞栈：爽了！免费的SSL，还能自动续期！](https://mp.weixin.qq.com/s/ehitnClHcvstxFY-0oAoyw)??失败了
 
 #### 使用acme.sh生成证书。??失败了
 

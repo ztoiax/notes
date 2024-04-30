@@ -1,6 +1,6 @@
 <!-- vim-markdown-toc GFM -->
 
-* [Kubernetes 是希腊语中的船长(captain)](#kubernetes-是希腊语中的船长captain)
+* [Kubernetes](#kubernetes)
     * [service](#service)
         * [普通Service类型例子（??失败了）](#普通service类型例子失败了)
         * [Headless Service类型例子（??失败了）](#headless-service类型例子失败了)
@@ -41,7 +41,7 @@
 
 <!-- vim-markdown-toc -->
 
-# Kubernetes 是希腊语中的船长(captain)
+# Kubernetes
 
 - Kubernetes 是希腊语中的船长(captain)
 
