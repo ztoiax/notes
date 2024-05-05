@@ -143,6 +143,10 @@
 
 - [lan-mouse：使用同一个鼠标和键盘，控制局域网的多台电脑](https://github.com/feschber/lan-mouse)
 
+- [netease-cloud-music-gtk：网易云音乐gtk4版](https://github.com/gmg137/netease-cloud-music-gtk)
+
+- [drawio-desktop](https://github.com/jgraph/drawio-desktop)
+
 # 类似项目
 
 - [linux 下的惬意生活](https://github.com/yangyangwithgnu/the_new_world_linux#%E7%9B%AE%E5%BD%95)

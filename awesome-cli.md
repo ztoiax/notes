@@ -53,6 +53,8 @@ sudo make O_NERD=1
 支持鼠标操作
 ![image](./Pictures/awesomecli/13.avif)
 
+## [twf：vim模式的文件树](https://github.com/wvanlint/twf)
+
 # File
 
 ## [advcpmv: instead cp, my(https://github.com/jarun/advcpmv)
@@ -145,6 +147,29 @@ curl www.baidu.com | htmlq 'a' | bat --language html
 - [官方文档](https://mikefarah.gitbook.io/yq/)
 
 ## [xsv:csv查看器](https://github.com/BurntSushi/xsv)
+
+```sh
+# 查看csv文件
+xsv table test.csv
+
+# 查看第一行
+xsv headers test.csv
+
+# 统计长度
+xsv stats test.csv --everything | xsv table
+
+# 创建索引，可以提升速度。会在当前目录创建test.csv.idx文件
+xsv index test.csv
+
+# 只显示input列和显示input + output列
+xsv select input test.csv
+xsv select input,output test.csv
+
+# 只显示input列并且字符是包含0-4
+xsv search -s input '[0-4]' test.csv
+```
+
+## [csvlens：tui查看csv文件](https://github.com/YS-L/csvlens)
 
 ## [OctoSQL: sql语句查看文件](https://github.com/cube2222/octosql)
 
@@ -241,6 +266,8 @@ gh release list
 ![image](./Pictures/awesomecli/forgit.avif)
 
 ## [gitoxide:rust版git](https://github.com/Byron/gitoxide)
+
+## [delta：highlight git diff](https://github.com/dandavison/delta)
 
 # char
 
@@ -367,6 +394,27 @@ ps aux | peco
 ```sh
 # 生成匹配haha和HAHA的正则表达式
 grex -c haha HAHA
+```
+
+## [sd：instead sed](https://github.com/chmln/sd)
+
+```sh
+# sed和sd的对比
+sed -i -e 's/before/after/g' file.txt
+sd before after file.txt
+```
+
+## [sad：instead sed](https://github.com/ms-jpq/sad)
+
+```sh
+# 将filename 中的1替换成2
+ls filename | sad '1' '2'
+
+# 通过diff-so-fancy显示替换前后的不同。不进行替换
+ls filename | sad '1' '2' | diff-so-fancy | less
+
+# 通过delta显示替换前后的不同。不进行替换
+ls filename | sad '1' '2' | delta
 ```
 
 # disk
@@ -611,6 +659,8 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 
 ## [fav：b站收藏下载](https://github.com/kingwingfly/fav)
 
+## [netease-music-tui：网易云音乐tui](https://github.com/betta-cyber/netease-music-tui)
+
 # other
 
 ## [haxor-news: hacker new](https://github.com/donnemartin/haxor-news)
@@ -754,6 +804,10 @@ xdotool key ctrl+l
 ```sh
 silicon test.py -o main.png
 ```
+
+## [taskwarrior：任务管理](https://github.com/GothenburgBitFactory/taskwarrior)
+
+- [taskwarrior-tui：任务管理tui](https://github.com/kdheepak/taskwarrior-tui)
 
 # 磁盘备份
 

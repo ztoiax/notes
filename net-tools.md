@@ -794,6 +794,20 @@ websocat ws://127.0.0.1:1234
 ```
 ### dns
 
+```sh
+# 查看本地dns
+cat /etc/resolv.conf
+
+# 如果使用NetworkManager
+nmcli dev show | grep 'IP4.DNS'
+
+# nslookup中的Server
+nslookup www.baidu.com
+
+# dig命令中的SERVER
+dig
+```
+
 #### whois(查看域名注册信息)
 
 #### [dnspeep：记录程序的dns请求,响应](https://github.com/jvns/dnspeep)

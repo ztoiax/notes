@@ -131,6 +131,21 @@ git rm --cached <FILE>
 # 改名
 git mv <FILE>
 
+# 显示工作区与暂存区的不同
+git diff
+
+# 显示暂存区与最近的版本 (commit) 的不同
+git diff --cached
+
+# 显示工作区与最近的版本 (commit) 的不同
+git diff HEAD
+
+# 显示两个 commit 之间的文件变动
+git diff <commit-id> <commit-id>
+
+# 查看文件是谁写的。blame 的意思为 责怪
+git blame <file>
+
 # 提交
 git commit -m "commit name"
 
@@ -156,8 +171,14 @@ git gc --prune=now --aggressive
 - [Learn Git Branching](https://learngitbranching.js.org/?demo=&locale=zh_CN)
 
 ```sh
-# 显示分支
+# 显示本地分支
 git branch
+
+# 显示远程分支
+git branch -r
+
+# 显示本地和远程分支
+git branch -a
 
 # 新建分支
 git branch <name>
@@ -170,6 +191,9 @@ git branch -d <name>
 
 # 切换分支
 git checkout <name>
+
+# 新建一个log的commit的分支
+git checkout <hash>
 
 # 切换上一个分支
 git checkout -
@@ -246,9 +270,14 @@ git log --stat
 # 显示commit和hash的历史，以及每次commit发生变更的文件
 git whatchanged
 
+# 显示两个星期内的改动
+git whatchanged --since='2 weeks ago'
+
 # 显示远程仓库的commit和hash的历史
 git log --oneline
 
+# 显示简化的 commit 历史
+git log --pretty=oneline --graph --decorate --all
 
 # 将操作合并到最新一次commit
 git commit --amend -m <hash>
@@ -267,6 +296,9 @@ git restore <FILE>
 
 # 撤销到hash值所代表的commit(不保留文件)
 git reset --hard <HASD>
+
+# 撤销本地所有的修改，回到远程仓库的状态。
+git reset --hard origin/master
 
 # 撤销到hash值所代表的commit(保留文件)
 git reset --soft <HASD>
@@ -340,16 +372,28 @@ git rebase -i <hash>
 
 # 取消rebase
 git rebase --abort
+
+# 执行 rebase 之前自动 stash
+git rebase --autostash
 ```
 
 ## remote
 
 ```bash
+# 显示所有远程仓库
+git remote
+
+# 显示fetch和push的连接
+git remote -v
+
 # show remote
 git ls-remote
 
-# 显示所有远程仓库
-git remote -v
+# 增加远程仓库
+git remote add origin <remote-url>
+
+# 修改远程仓库的 url
+git remote set-url origin <URL>
 
 # 下载远程仓库的所有变动
 git fetch <REMOTE>
