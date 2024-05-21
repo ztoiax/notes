@@ -64,6 +64,20 @@
 
 ## LLM
 
+- OpenAI 的工程师，著名“文生图”模型 DALL-E 的第一作者 James Betker 的观点：模型不是关键，语料才是关键。
+
+    - 不需要说，你的模型多新颖、多强大，只需要告诉我，你用什么语料训练模型。
+
+        - 模型完美，但是语料垃圾，一样不行
+        - 反之，模型很平常，但是语料足够，那就 OK。
+
+    - 当你谈论 Lambda、ChatGPT、Bard 或Claude 时，指的并不是它们的模型，而是它们的语料集。
+
+    - 这告诉我们两点启示：
+
+        - 1.哪一家公司的语料的数量多、质量好，它的模型就会强于其他公司。
+        - 2.开源模型完全可以替代闭源模型，前提是训练语料要足够。
+
 - [畅游 LLM 的世界（英文）](https://www.bentoml.com/blog/navigating-the-world-of-large-language-models)
     - 如果在家用电脑上安装 LLM（大型语言模型），应该选择哪一个模型？
     - 本文分析并评价了目前最流行的几个 LLM 的基本情况和优缺点。
@@ -102,6 +116,10 @@
 
 - [storm](https://github.com/stanford-oval/storm)这是一个基于 LLM 的应用，可通过搜集网上的内容，从零编写类似维基百科的文章。使用者仅需提出问题，它便会上网收集资料并生成大纲，然后根据大纲和参考文献进行创作，生成的文章质量欠佳，还需要人为修改后才可以发布。
 
+### prompt提示词
+
+- [awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts)
+
 ## Transformer
 
 - [transformer-debugger](https://github.com/openai/transformer-debugger)
@@ -111,6 +129,8 @@
 ## Sora
 
 - [Open-Sora：生成图片或视频、图生视频、视频编辑](https://github.com/hpcaitech/Open-Sora)
+
+- [HunyuanDiT：腾讯的文生图](https://github.com/Tencent/HunyuanDiT)
 
 ## 图片视频
 

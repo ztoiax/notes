@@ -10,6 +10,8 @@
         * [qt](#qt)
         * [gtk](#gtk)
 * [note](#note)
+* [硬件](#硬件)
+* [ai](#ai)
 * [other](#other)
 * [类似项目](#类似项目)
 
@@ -105,6 +107,14 @@
 
 - [zotero-gpt](https://github.com/MuiseDestiny/zotero-gpt)
 
+# 硬件
+
+- [corectrl：查看cpu、gpu信息，显示监控曲线图](https://gitlab.com/corectrl/corectrl)
+
+- [LACT：amd gpu控制器](https://github.com/ilya-zlobintsev/LACT)
+
+# ai
+
 # other
 
 - [linux-wifi-hotspot](https://github.com/lakinduakash/linux-wifi-hotspot)
@@ -146,6 +156,11 @@
 - [netease-cloud-music-gtk：网易云音乐gtk4版](https://github.com/gmg137/netease-cloud-music-gtk)
 
 - [drawio-desktop](https://github.com/jgraph/drawio-desktop)
+
+- [etcher：USB/SD 启动盘制作工具](https://github.com/balena-io/etcher)
+
+- [stellarium：天象模拟软件](https://github.com/Stellarium/stellarium)
+    - 支持：windows、linux、macos、android、ios
 
 # 类似项目
 

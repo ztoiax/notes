@@ -40,6 +40,7 @@
     * [Dockerfile 创建容器镜像](#dockerfile-创建容器镜像)
         * [Dockerfile命令](#dockerfile命令)
         * [Dockerfile优化](#dockerfile优化)
+            * [未读](#未读)
         * [构建属于自己的 centos 容器](#构建属于自己的-centos-容器)
         * [hadolint：自动检查您的Dockerfile是否存在任何问题](#hadolint自动检查您的dockerfile是否存在任何问题)
     * [registry仓库](#registry仓库)
@@ -2559,6 +2560,10 @@ ip netns exec $pid ip route add default via 192.168.1.1
         package3
     ```
 
+#### 未读
+
+- [运维开发故事：关于Dockerfile的最佳实践技巧](https://mp.weixin.qq.com/s/_VMcrepMdgzPU9V6W8ZhgA)
+
 ### 构建属于自己的 centos 容器
 
 - 构建属于自己的 centos 容器:
@@ -3438,10 +3443,13 @@ docker run --rm -ti \
 
 - [trivy容器安全检测](https://github.com/aquasecurity/trivy)
 
-```sh
-# 检测容器安全
-trivy image redislabs/redismod
-```
+    ```sh
+    # 检测容器安全
+    trivy image redislabs/redismod
+    ```
+
+- [dive：查看docker文件系统的每一层（tui）](https://github.com/wagoodman/dive)
+  ![image](./Pictures/docker/dive.avif)
 
 # reference article(优秀文章)
 

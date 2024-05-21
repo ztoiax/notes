@@ -202,6 +202,13 @@ journalctl -o short-iso | lnav
 journalctl -o json | lnav
 ```
 
+## [mutagen：文件同步到远程服务器，也可以充当中间人在2个远程文件系统之间同步](https://github.com/mutagen-io/mutagen)
+
+## [zrok：端对端共享文件](https://github.com/openziti/zrok)
+```sh
+zrok share public localhost:8080
+```
+
 # git
 
 ## [gh](https://github.com/cli/cli)
@@ -348,12 +355,6 @@ fzf -e
 
 ### instead man
 
-## [glow](https://github.com/charmbracelet/glow)
-
-### markdown preview cli version
-
-![image](./Pictures/awesomecli/16.avif)
-
 ## [fx](https://github.com/antonmedv/fx)
 
 ### Command-line JSON processing tool
@@ -479,11 +480,33 @@ devbox shell
 
 ## [curlie: instead curl](https://github.com/rs/curlie)
 
-![image](./Pictures/awesomecli/curlie.avif)
+## [hurl：通过文件定义curl](https://github.com/Orange-OpenSource/hurl)
+
+- 新建文件：`/tmp/test`
+    ```
+    # Get home:
+    GET https://example.org
+    HTTP 200
+    [Captures]
+    csrf_token: xpath "string(//meta[@name='_csrf_token']/@content)"
+
+
+    # Do login!
+    POST https://example.org/login?user=toto&password=1234
+    X-CSRF-TOKEN: {{csrf_token}}
+    HTTP 302
+    ```
+
+```sh
+# 执行文件
+hurl /tmp/test
+```
 
 ## [dog: instead dig](https://github.com/ogham/dog)
 
 ![image](./Pictures/awesomecli/dog.avif)
+
+## [doggo：human doggo](https://github.com/mr-karan/doggo?ref=terminaltrove)
 
 ## [Termshark: wireshark cli](https://github.com/gcla/termshark)
 
@@ -494,6 +517,8 @@ devbox shell
 ## [neofetch](https://github.com/dylanaraps/neofetch)
 
 ![image](./Pictures/awesomecli/neofetch.avif)
+
+## [fastfetch：比neofetch更快，显示信息更多](https://github.com/fastfetch-cli/fastfetch)
 
 ## [cpufetch](https://github.com/Dr-Noob/cpufetch)
 
@@ -516,6 +541,10 @@ devbox shell
 ![image](./Pictures/awesomecli/colorscript.avif)
 
 ## [cmd-wrapped：读取你的命令行操作历史记录，并生成详细的分析报告。](https://github.com/YiNNx/cmd-wrapped)
+
+# 硬件
+
+## [amdgpu：tui](https://github.com/Umio-Yasuno/amdgpu_top)
 
 # Social media
 
@@ -703,8 +732,6 @@ cat test.py | curl -F 'f:1=<-' ix.io
 
 ## [croc: 文件传输](https://github.com/schollz/croc)
 
-## [slidev: markdown写ppt](https://github.com/slidevjs/slidev)
-
 ## [q: sql语法查询文件](https://github.com/harelba/q)
 ```sh
 q "SELECT * FROM mysql_slow.log"
@@ -745,8 +772,6 @@ pacman -S festival
     ```
 
 ## tokei(统计编程语言占比)
-
-## [markdown写ppt](https://github.com/webpro/reveal-md/)
 
 ## [sql语句检查](https://github.com/sqlfluff/sqlfluff)
 
@@ -809,6 +834,39 @@ silicon test.py -o main.png
 
 - [taskwarrior-tui：任务管理tui](https://github.com/kdheepak/taskwarrior-tui)
 
+## [ast-grep：结构化搜索与替换（SSR）](https://github.com/ast-grep/ast-grep)
+
+## [lazynpm：npm的tui](https://github.com/jesseduffield/lazynpm)
+
+## [sshs：ssh的tui](https://github.com/quantumsheep/sshs)
+
+## [termpscp：scp的tui](https://github.com/veeso/termscp)
+
+## [ugm：用户、组的tui](https://github.com/ariasmn/ugm)
+
+## [glance：自定义dashboard：rss、github release、twitch channel等](https://github.com/glanceapp/glance)
+
+# 系统相关
+
+## [kmon：内核模块、dmesg的tui](https://github.com/orhun/kmon)
+
+## [nemu：qemu的tui](https://github.com/nemuTUI/nemu)
+
+## [osqueryi：使用sql语句查询操作系统](https://github.com/osquery/osquery)
+
+```sql
+# 启动osqueryi
+osqueryi
+
+-- 查询用户
+select * from users;
+
+-- 进程名、监听端口、pid
+SELECT DISTINCT processes.name, listening_ports.port, processes.pid
+  FROM listening_ports JOIN processes USING (pid)
+  WHERE listening_ports.address = '0.0.0.0';
+```
+
 # 磁盘备份
 
 ## [restic](https://github.com/restic/restic)
@@ -852,7 +910,18 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 
 # markdown
 
+- [glow：markdown好看的浏览](https://github.com/charmbracelet/glow)
+    ![image](./Pictures/awesomecli/16.avif)
+
+- [mdcat：markdown好看的浏览](https://github.com/swsnr/mdcat)
+
+- [frogmouth：markdown浏览的文件管理器（tui）](https://github.com/Textualize/frogmouth)
+
 - [mlc:检测markdown文件的连接](https://github.com/becheran/mlc)
+
+- [slidev: markdown写ppt](https://github.com/slidevjs/slidev)
+
+- [markdown写ppt](https://github.com/webpro/reveal-md/)
 
 # ai
 
@@ -860,9 +929,15 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 
 - [ollama](https://github.com/ollama/ollama)
 
+- [LM Studio：ollama gui版](https://lmstudio.ai/)
+    - [lms：LM Studio command line](https://github.com/lmstudio-ai/lms)
+
 - [oterm：Ollama客户端](https://github.com/ggozad/oterm)
 
 - [open-webui：ollama ui](https://github.com/open-webui/open-webui)
+
+- [reor：ai私人助手](https://github.com/reorproject/reor)
+
 - [reader：将网址放到https://r.jina.ai/便可获取markdown文档的总结](https://github.com/jina-ai/reader)
     - [在线网址](https://jina.ai/reader/)
 
@@ -877,3 +952,5 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 - [现代版命令行基础工具](https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/)
 
 - [modern-unix: 类似项目](https://github.com/ibraheemdev/modern-unix)
+
+- [terminaltrove：专注于 CLI 和 TUI 工具的网站](https://terminaltrove.com/list/)

@@ -5,7 +5,7 @@
     * [安装nginx](#安装nginx)
         * [源码安装](#源码安装)
         * [yum安装](#yum安装)
-        * [安装echo模块](#安装echo模块)
+        * [安装第三方模块，以echo模块为例子](#安装第三方模块以echo模块为例子)
         * [Nginx版本热升级](#nginx版本热升级)
     * [基本命令](#基本命令)
     * [架构](#架构)
@@ -59,13 +59,20 @@
             * [7层负载均衡策略](#7层负载均衡策略)
             * [7层负载均衡基本配置](#7层负载均衡基本配置)
             * [多tomcat的7层负载均衡](#多tomcat的7层负载均衡)
-            * [配置缓存](#配置缓存)
+        * [缓存](#缓存)
+            * [服务端缓存](#服务端缓存)
+                * [配置缓存](#配置缓存)
+                    * [缓存相关指令](#缓存相关指令)
+                    * [缓存配置综合例子](#缓存配置综合例子)
+                    * [例子：配置缓存](#例子配置缓存)
+                    * [例子：负载均衡配置缓存](#例子负载均衡配置缓存)
         * [https](#https)
             * [bugstack虫洞栈：爽了！免费的SSL，还能自动续期！??失败了](#bugstack虫洞栈爽了免费的ssl还能自动续期失败了)
             * [使用acme.sh生成证书。??失败了](#使用acmesh生成证书失败了)
             * [httpsok： 一行命令，轻松搞定SSL证书自动续期。??失败了](#httpsok-一行命令轻松搞定ssl证书自动续期失败了)
             * [http2](#http2)
             * [http3](#http3)
+            * [websocket](#websocket)
         * [autoindex模块： 用户请求以 `/` 结尾时，列出目录结构，可以用于快速搭建静态资源下载网站。](#autoindex模块-用户请求以--结尾时列出目录结构可以用于快速搭建静态资源下载网站)
         * [配置跨域 CORS](#配置跨域-cors)
         * [跨域请求头部配置](#跨域请求头部配置)
@@ -81,6 +88,7 @@
         * [open_log_file_cache 日志缓存](#open_log_file_cache-日志缓存)
     * [第三方模块](#第三方模块)
         * [echo模块：可以 echo 变量](#echo模块可以-echo-变量)
+        * [开发第三方模块](#开发第三方模块)
     * [管理](#管理)
         * [auth_basic模块：对访问资源加密，需要用户权限认证](#auth_basic模块对访问资源加密需要用户权限认证)
         * [Stub Status模块：输出nginx的基本状态信息指标。](#stub-status模块输出nginx的基本状态信息指标)
@@ -261,7 +269,7 @@ yum install -y yum-utils
     systemctl restart firewalld.service
     ```
 
-### 安装echo模块
+### 安装第三方模块，以echo模块为例子
 <span id="echo"></span>
 
 ```sh
@@ -311,7 +319,32 @@ sudo nginx
 
 ### Nginx版本热升级
 
-- 1.备份：直接备份整个目录，可以剔除日志文件不备份
+- [Se7en的架构笔记：Nginx 平滑升级](https://mp.weixin.qq.com/s/zvcZ6uihFPi_xlA33z9vug)
+
+- 然而线上业务大多是 7*24 小时不间断运行的，我们需要在升级的时候保证不影响在线用户的访问。Nginx 的热升级功能可以解决上述问题，它允许新老版本灰度地平滑过渡，这受益于 Nginx 的多进程架构。
+
+- 热升级-程序热更
+
+    ![image](./Pictures/nginx/nginx架构-master进程-热升级.avif)
+
+    - 具体流程如下：
+        - 1.将旧Nginx文件换成新Nginx文件（注意备份旧的nginx二进制文件，配置文件）
+        - 2.向master(old)进程发送USR2信号，为了新的 Master 使用 pid.bin 这个文件名，master(old)会把老的 pid 文件改为 pid.oldbin。
+        - 3.master进程用新Nginx文件启动master(new)进程。到现在为止，会出现两个 Master 进程：Master(Old) 和 Master (New)
+            - 这里新的 Master (New) 进程是怎么样启动的呢？它其实是老的 Master(Old) 进程的子进程，不过这个子进程是使用了新的 binary 文件带入来启动的。
+
+        - 4.向master(old)发送WINCH信号，关闭旧worker进程，观察新worker进程工作情况。
+            - 若升级成功，则向老master进程发送QUIT信号，关闭老master进程
+            - 若升级失败，则需要回滚，向老master发送HUP信号（重读配置文件），向新master发送QUIT信号，关闭新master及worker。
+
+            - 在一个父进程退出，而它的一个或多个子进程还在运行时，那么这些子进程将成为孤儿进程。孤儿进程将被 init 进程(进程号为1)所收养，并由 init 进程对它们完成状态收集工作。所以老 Master(Old) 进程退出后，新的 Master(Old) 进程并不会退出。
+
+    - 如果想回滚，就需要再走一次热升级流程，用备份好的老 Nginx 文件作为新的热升级文件（因此建议备份旧的 Nginx 文件）。
+
+- 热升级主要用到了 USR2 和 WINCH/QUIT 信号。
+    ![image](./Pictures/nginx/nginx热升级用到的信号.avif)
+
+- 1.备份：直接备份整个目录（包括nginx二进制运行文件），可以剔除日志文件不备份
 
     ```sh
     # 打包压缩
@@ -334,12 +367,7 @@ sudo nginx
     make -j$(nproc)
     ```
 
-- 4.停止nginx进程
-    ```sh
-    ./nginx -s stop
-    ```
-
-- 5.复制新的nginx源码包中二进制文件，覆盖原来的文件
+- 4.复制新的nginx源码包中二进制文件，覆盖原来的文件
 
     ```sh
     # make后的nginx二进制文件在objs目录
@@ -349,11 +377,21 @@ sudo nginx
     cp nginx /bin/nginx
     ```
 
-- 6.启动nginx服务
+- 5.最关键的步骤：
+    - 通过 kill 命令向老 master 进程发送 USR2 信号，让老 master 生成新的子进程（新 master 进程），同时用 exec 函数载入新版本的 Nginx 二进制文件。
+        - 新 master 进程和新 worker 进程会继承老 master 进程的资源，因此它们也能监听 80 端口。
+    ```sh
+    # 新编译的 nginx, 替换旧 nginx(生成/usr/local/nginx/logs/nginx.pid.oldbin)
+    kill -s SIGUSR2 <nginx master pid>
+    # ps 查看 新旧两个版本的 nginx 都在运行
+    ps -ef | grep nginx
+    ```
+
+- 6.向老 master 进程发送 QUIT 信号，当它的 worker 子进程退出后，老 master 进程也会自行退出。
 
     ```sh
-    # -c指定配置文件
-     ./nginx -c /usr/local/nginx/conf/nginx.conf
+    # kill掉旧版本
+    kill -s SIGQUIT <nginx master old pid>
     ```
 
 - 7.验证nginx升级是否成功
@@ -361,10 +399,10 @@ sudo nginx
     ```sh
     # 查看nginx版本
     ./nginx -v
-
-    # 检查nginx配置是否有错误
-    ./nginx -t
     ```
+
+- 回滚
+    - 通过上述方式升级以后，只保留了新的 master 进程，这时如果需要从新版本回滚到老版本，就得重新执行一次“升级”。
 
 ## 基本命令
 
@@ -396,9 +434,30 @@ nginx -qt
 # -g 执行全局命令。不可与配置文件中的指令重复
 # 关闭后台运行
 nginx -g "daemon off;"
+```
 
-# -s 发送signal (类似于systemctl)
+- `-s` 发送signal (类似于systemctl)
 
+    - master进程支持的信号
+
+        | 信号      | 说明                                                                                        |
+        |-----------|---------------------------------------------------------------------------------------------|
+        | TERM，INT | 立刻退出，相当于 nginx -s stop。                                                            |
+        | QUIT      | 等待工作进程结束后再退出，优雅地退出，相当于 nginx -s quit。                                |
+        | HUP       | 重新加载配置文件，使用新的配置启动工作进程，并逐步关闭旧进程。相当于 nginx -s reload 命令。 |
+        | USR1      | 重新打开日志文件，相当于 nginx -s reopen。                                                  |
+        | USR2      | 启动新的主进程，实现热升级。                                                                |
+        | WINCH     | 逐步关闭工作进程                                                                            |
+
+    - worker进程支持的信号
+
+        | 信号      | 说明                     |
+        |-----------|--------------------------|
+        | TERM，INT | 立刻退出                 |
+        | QUIT      | 等待请求处理结束后再退出 |
+        | USR1      | 重新打开日志文件         |
+
+```sh
 # 关闭(立即退出)
 nginx -s stop
 kill -s SIGINT <nginx master pid>
@@ -555,24 +614,6 @@ systemctl status nginx   # 查看 Nginx 运行状态
 ）或执行`nginx -s reload`
             - Master进程使用新配置，启动新的worker进程，并向所有老的 Worker 进程发送信号，告诉他们可以光荣退休了。
             - 新的 Worker 在启动后，就开始接收新的请求，而老的 Worker 在收到来自 Master 的信号后就不再接收新的请求，并且在当前进程中的所有未处理完的请求处理完成后再退出。
-
-    - 2.热升级-程序热更
-
-        ![image](./Pictures/nginx/nginx架构-master进程-热升级.avif)
-
-        - 具体流程如下：
-            - 1.将旧Nginx文件换成新Nginx文件（注意备份旧的nginx二进制文件，配置文件）
-            - 2.向master(old)进程发送USR2信号，为了新的 Master 使用 pid.bin 这个文件名，master(old)会把老的 pid 文件改为 pid.oldbin。
-            - 3.master进程用新Nginx文件启动master(new)进程。到现在为止，会出现两个 Master 进程：Master(Old) 和 Master (New)
-                - 这里新的 Master (New) 进程是怎么样启动的呢？它其实是老的 Master(Old) 进程的子进程，不过这个子进程是使用了新的 binary 文件带入来启动的。
-
-            - 4.向master(old)发送WINCH信号，关闭旧worker进程，观察新worker进程工作情况。
-                - 若升级成功，则向老master进程发送QUIT信号，关闭老master进程
-                - 若升级失败，则需要回滚，向老master发送HUP信号（重读配置文件），向新master发送QUIT信号，关闭新master及worker。
-
-                - 在一个父进程退出，而它的一个或多个子进程还在运行时，那么这些子进程将成为孤儿进程。孤儿进程将被 init 进程(进程号为1)所收养，并由 init 进程对它们完成状态收集工作。所以老 Master(Old) 进程退出后，新的 Master(Old) 进程并不会退出。
-
-        - 如果想回滚，就需要再走一次热升级流程，用备份好的老 Nginx 文件作为新的热升级文件（因此建议备份旧的 Nginx 文件）。
 
 ### worker进程
 
@@ -1339,22 +1380,78 @@ http {
 
 - `location`指令：配置路径
 
+    - [Se7en的架构笔记：Nginx Location 匹配规则](https://mp.weixin.qq.com/s/Wq_z0eKPGq8b2pU4cxuyxA)
+
     - 匹配规则：
 
         - 匹配优先级：= > ^~ > ~ > ~* > ^~ > 普通匹配
 
         - `=` 精确匹配；
+            - 使用 `=` 精确匹配可以加快查找的顺序。
+        - `^~` 前缀匹配：匹配到即停止查找；
+
         - `~` 正则匹配，区分大小写；
         - `~*` 正则匹配，不区分大小写；
-        - `^~` 匹配到即停止搜索；
+        - `!~` 表示正则区分大小写不匹配。
+        - `!~*` 表示正则不区分大小写不匹配。
 
-    ```nginx
-    location [ = | ~ | ~* | ^~ ] uri {
-        # ...
-    }
-    ```
+        ![image](./Pictures/nginx/location匹配过程.avif)
 
-    - location 中的反斜线：
+    - 语法：
+
+        ```nginx
+        Syntax:	location [ = | ~ | ~* | ^~ ] uri { ... }
+        location @name { ... }
+        Default:	—
+        Context:	server, location
+        ```
+
+    - location匹配例子
+
+        ```nginx
+        location = / {
+            [ configuration A ]
+        }
+
+        location / {
+            [ configuration B ]
+        }
+
+        location /documents/ {
+            [ configuration C ]
+        }
+
+        location ^~ /images/ {
+            [ configuration D ]
+        }
+
+        location ~* \.(gif|jpg|jpeg)$ {
+            [ configuration E ]
+        }
+        ```
+
+        - 请求 / 精准匹配A，不再往下查找。
+        - 请求 /index.html 匹配 B。首先查找匹配的前缀字符，找到最长匹配是配置 B，接着又按照顺序查找匹配的正则。结果没有找到，因此使用先前标记的最长匹配，即配置 B。
+        - 请求 /documents/document.html 匹配 C。首先找到最长匹配 C，由于后面没有匹配的正则，所以使用最长匹配 C。
+        - 请求 /images/1.gif匹配 D。首先进行前缀字符的查找，找到最长匹配 D。但是，特殊的是它使用了 ^~ 修饰符，不再进行接下来的正则的匹配查找，因此使用 D。这里，如果没有前面的修饰符，其实最终的通过正则匹配的是 E。
+        - 请求 /documents/1.jpg 匹配 E。首先进行前缀字符的查找，找到最长匹配项 C，继续进行正则查找，找到匹配项 E。
+
+    - location 中的`@`：
+
+        - `@` 用来定义一个命名 location。主要用于内部重定向，不能用来处理正常的请求。其用法如下：
+
+            ```nginx
+            location / {
+                try_files $uri $uri/ @redirectUri
+            }
+            location @redirectUri {
+                # ...do something
+            }
+            ```
+
+        - 上例中，当尝试访问 url 找不到对应的文件就重定向到我们自定义的命名 location（此处为 @redirectUri）。命名 location 中不能再嵌套其它的命名 location。
+
+    - location 中的反斜线`/`：
 
         ```nginx
         location /test {
@@ -1402,30 +1499,6 @@ http {
              ...
             }
             ```
-
-    ```nginx
-    server {
-      listen 80;
-      server_name www.nginx-test.com;
-
-      # 只有当访问 www.nginx-test.com/match_all/ 时才会匹配到/usr/share/nginx/html/match_all/index.html
-      location = /match_all/ {
-          root /usr/share/nginx/html
-          index index.html
-      }
-
-      # 当访问 www.nginx-test.com/1.jpg 等路径时会去 /usr/share/nginx/images/1.jpg 找对应的资源
-      location ~ \.(jpeg|jpg|png|svg)$ {
-       root /usr/share/nginx/images;
-      }
-
-      # 当访问 www.nginx-test.com/bbs/ 时会匹配上 /usr/share/nginx/html/bbs/index.html
-      location ^~ /bbs/ {
-       root /usr/share/nginx/html;
-        index index.html index.htm;
-      }
-    }
-    ```
 
 - `root`指令：指定静态资源目录位置，它可以写在 http、server、location 等配置中。
     ```nginx
@@ -3415,19 +3488,57 @@ server {
 }
 ```
 
-#### 配置缓存
+### 缓存
 
-- upstream_cache_status变量：它存储了缓存是否命中的信息，会设置在响应头信息中，在调试中非常有用。
+- 缓存对于Web服务至关重要，尤其对于大型高负载Web站点。缓存作为性能优化的一个重要手段，可以在极大程度上减轻后端服务器的负载。通常对于静态资源，即不经常更新的资源，如图片，CSS或JS等进行缓存，而不用每次都向服务器请求，这样就可以减轻服务器的压力。
 
-    |              | 说明                       |
-    |--------------|----------------------------|
-    | MISS         | 未命中缓存                 |
-    | HIT          | 命中缓存                   |
-    | EXPIRED      | 缓存过期                   |
-    | STALE        | 命中了陈旧缓存             |
-    | REVALIDDATED | Nginx 验证陈旧缓存依然有效 |
-    | UPDATING     | 内容陈旧，但正在更新       |
-    | BYPASS       | X响应从原始服务器获取      |
+- 缓存可以分为客户端缓存和服务端缓存。
+
+    - 1.客户端缓存指的是浏览器缓存, 浏览器缓存是最快的缓存, 因为它直接从本地获取(但有可能需要发送一个协商缓存的请求), 它的优势是可以减少网络流量, 加快请求速度。
+
+    - 2.服务端缓存指的是反向代理服务器或CDN的缓存, 他的作用是用于减轻后端实际的Web Server的压力。
+
+- [客户端缓存（浏览器缓存）](https://github.com/ztoiax/notes/blob/master/net-kernel.md#客户端缓存（浏览器缓存）)
+
+#### 服务端缓存
+
+- [Se7en的架构笔记：Nginx缓存详解（二）之服务端缓存](https://mp.weixin.qq.com/s/MqH0PhK0fYdcTPySNqKzMg)
+
+- proxy cache属于服务端缓存，主要实现 nginx 服务器对客户端数据请求的快速响应。
+
+- nginx 服务器在接收到被代理服务器的响应数据之后
+    - 一方面将数据传递给客户端
+    - 另一方面根据proxy cache的配置将这些数据缓存到本地硬盘上。
+
+    - 当客户端再次访问相同的数据时，nginx服务器直接从硬盘检索到相应的数据返回给用户，从而减少与被代理服务器交互的时间。
+
+![image](./Pictures/nginx/缓存-服务端缓存.avif)
+
+##### 配置缓存
+
+- 缓存状态`$upstream_cache_status`变量：它存储了缓存是否命中的信息，会设置在响应头信息中，在调试中非常有用。
+
+    | 状态        | 说明                                                                         |
+    |-------------|------------------------------------------------------------------------------|
+    | MISS        | 未命中缓存，请求被传送到后端服务器。                                         |
+    | HIT         | 命中缓存，使用缓存响应客户端。                                               |
+    | EXPIRED     | 缓存已经过期，请求被传送到后端。                                             |
+    | UPDATING    | 正在更新缓存，nginx使用过期缓存的响应客户端。                                |
+    | STALE       | 当后端服务器出错时，nginx用缓存响应客户端。                                  |
+    | BYPASS      | 缓存被绕过了，请求被传送到后端服务器。                                       |
+    | REVALIDATED | nginx通过过期缓存中的Etag和Last-Modified字段的值向被代理服务器发起验证请求。 |
+
+- 缓存多久
+
+    | 参数（优先级从高到低） | 位置         |
+    |------------------------|--------------|
+    | inactive               | 代理服务器   |
+    | X-Accel-Expires        | 被代理服务器 |
+    | Cache-Control          | 被代理服务器 |
+    | expires                | 被代理服务器 |
+    | proxy_cache_valid      | 代理服务器   |
+
+###### 缓存相关指令
 
 - 指令
 
@@ -3456,17 +3567,9 @@ server {
         - keys_zone 设置共享内存；
         - inactive 在指定时间内没有被访问，缓存会被清理，默认10分钟；
 
-    - proxy_cache_key：设置缓存文件的 key
+- 指令：影响缓存的HTTP 响应
 
-        ```nginx
-        语法：proxy_cache_key
-
-        默认值：proxy_cache_key $scheme$proxy_host$request_uri;
-
-        上下文：http、server、location
-        ```
-
-    - proxy_cache_valid：配置什么状态码可以被缓存，以及缓存时长。
+    - proxy_cache_valid：配置什么状态码可以被缓存，以及缓存时长，可以配置多条。
 
         ```nginx
         语法：proxy_cache_valid [code...] time;
@@ -3475,6 +3578,8 @@ server {
 
         配置示例：proxy_cache_valid 200 304 2m;; # 说明对于状态为 200 和 304 的缓存文件的缓存时间是 2 分钟
         ```
+
+- 指令：通过nginx变量限制是否使用缓存
 
     - proxy_no_cache：定义相应保存到缓存的条件，如果字符串参数的至少一个值不为空且不等于“ 0”，则将不保存该响应到缓存。
 
@@ -3486,7 +3591,7 @@ server {
         示例：proxy_no_cache $http_pragma    $http_authorization;
         ```
 
-    - proxy_cache_bypass：定义条件，在该条件下将不会从缓存中获取响应。
+    - proxy_cache_bypass：该参数设定，什么情况下的请求不读取cache而是直接从后端的服务器上获取资源。这里的string通常为nginx的的一些内置变量或者自己定义的变量。
 
         ```nginx
         语法：proxy_cache_bypass string;
@@ -3496,74 +3601,537 @@ server {
         示例：proxy_cache_bypass $http_pragma    $http_authorization;
         ```
 
-- 例子：配置缓存
+        - 当客户端访问请求中带有nocache或者comment参数时，不使用缓存数据。
+        ```sh
+        ❯ curl http://192.168.1.134/cache/?nocache=1  -I
+        HTTP/1.1 200 OK
+        Server: nginx/1.14.2
+        Date: Sun, 10 Jan 2021 05:38:25 GMT
+        Content-Type: text/html
+        Content-Length: 26065
+        Connection: keep-alive
+        Last-Modified: Wed, 21 Oct 2020 14:17:08 GMT
+        ETag: "5f9042e4-65d1"
+        Cache-Control: max-age=10
+        cache: BYPASS
+        Accept-Ranges: bytes
 
-    - 121.42.11.34 服务器作为上游服务器
-
-        ```nginx
-        server {
-          listen 1010;
-          root /usr/share/nginx/html/1010;
-          location / {
-           index index.html;
-          }
-        }
-
-        server {
-          listen 1020;
-          root /usr/share/nginx/html/1020;
-          location / {
-           index index.html;
-          }
-        }
+        ❯ curl http://192.168.1.134/cache/?comment=3  -I
+        HTTP/1.1 200 OK
+        Server: nginx/1.14.2
+        Date: Sun, 10 Jan 2021 05:38:29 GMT
+        Content-Type: text/html
+        Content-Length: 26065
+        Connection: keep-alive
+        Last-Modified: Wed, 21 Oct 2020 14:17:08 GMT
+        ETag: "5f9042e4-65d1"
+        Cache-Control: max-age=10
+        cache: BYPASS
+        Accept-Ranges: bytes
         ```
 
-    - 121.5.180.193 服务器作为代理服务器
+- 指令：定义缓存与请求间匹配的关键字
+
+    - proxy_cache_key：设置nginx服务器在共享内存中为缓存数据建立索引时使用的关键字。
 
         ```nginx
-        # 可以在 /etc/nginx/cache_temp 路径下找到相应的缓存文件。
-        proxy_cache_path /etc/nginx/cache_temp levels=2:2 keys_zone=cache_zone:30m max_size=2g inactive=60m use_temp_path=off;
+        语法：proxy_cache_key
 
-        upstream cache_server{
-          server 121.42.11.34:1010;
-          server 121.42.11.34:1020;
+        默认值：proxy_cache_key $scheme$proxy_host$request_uri;
+
+        上下文：http、server、location
+        ```
+
+        ![image](./Pictures/nginx/缓存-proxy_cache_key指令.avif)
+
+- 指令：影响缓存的HTTP method
+
+    - proxy_cache_methods：设置可以缓存的HTTP请求方法。
+
+        ```nginx
+        Syntax:  proxy_cache_methods GET | HEAD | POST ...;
+        Default: proxy_cache_methods GET HEAD;
+        Context: http, server, location
+        This directive appeared in version 0.7.59.
+        ```
+
+    - proxy_cache_convert_head：当客户端一次使用HEAD方法请求时，nginx会通过GET方法向上游请求完整的header和body，只返回header给客户端。当客户端下次使用GET方法请求时，nginx会把缓存好的body返回给客户端，就不用去请求上游了。
+
+        ```nginx
+        Syntax:  proxy_cache_convert_head on | off;
+        Default: proxy_cache_convert_head on;
+        Context: http, server, location
+        This directive appeared in version 1.9.7.
+        ```
+
+- 指令：影响缓存的HTTP header
+
+    - proxy_ignore_headers：当被代理服务器的响应存在以下头部时，nginx不会缓存：
+
+        - Set-Cookie
+        - Cache-Control中存在以下项之一：
+            - private
+            - no-cache
+            - no-store
+
+    - 可以设置忽略被代理服务器的响应头。
+
+        ```nginx
+        Syntax:  proxy_ignore_headers field ...;
+        Default: —
+        Context: http, server, location
+
+        示例：proxy_ignore_headers Set-Cookie Cache-Control;
+        ```
+
+- 指令：缓存请求次数
+
+    - proxy_cache_min_uses：当客户端请求发送的次数达到设置次数后才会缓存该请求的响应数据，如果不想缓存低频请求可以设置此项。
+
+    ```nginx
+    Syntax:  proxy_cache_min_uses number;
+    Default: proxy_cache_min_uses 1;
+    Context: http, server, location
+    ```
+
+- 指令：缓冲区大小
+
+    - proxy_buffering：默认是开启状态，当关闭时，nginx将不会对任何响应做缓存。
+
+        ```nginx
+        Syntax:  proxy_buffering on | off;
+        Default: proxy_buffering on;
+        Context: http, server, location
+        ```
+
+    - proxy_buffers：
+
+        - 在内存中设置缓冲区存储被代理服务器响应的body所占用的buffer个数和每个buffer大小，默认情况下buffer size等于一个memory page，32为操作系统为4k,64位为8k。当buffer大小（内存）无法容纳被代理服务器响应数据时，会将响应数据存放在proxy_temp_path中定义的临时目录（硬盘）中。
+
+        ```nginx
+        Syntax:  proxy_buffers number size;
+        Default: proxy_buffers 8 4k|8k;
+        Context: http, server, location
+        ```
+
+- proxy_buffer_size
+
+    - proxy_buffer_size 用来接受被代理服务器响应头，如果响应头超过了这个长度，nginx会报upstream sent too big header错误，然后client收到的是502。
+
+    ```nginx
+    Syntax:  proxy_buffer_size size;
+    Default: proxy_buffer_size 4k|8k;
+    Context: http, server, location
+    ```
+
+- proxy_busy_buffers_size
+
+    - nginx将会尽可能的读取被代理服务器的数据到buffer，直到proxy_buffers设置的所有buffer被写满或者数据被读取完，此时nginx开始向客户端传输数据。如果数据很大的话，nginx会接收并把他们写入到temp_file里去，大小由proxy_max_temp_file_size 控制。当数据没有完全读完的时候,nginx同时向客户端传送的buffer大小不能超过 proxy_busy_buffers_size。
+
+    ```nginx
+    Syntax:  proxy_busy_buffers_size size;
+    Default: proxy_busy_buffers_size 8k|16k;
+    Context: http, server, location
+    ```
+
+- proxy_temp_path：定义proxy的临时文件存在目录以及目录的层级。
+
+    ```nginx
+    Syntax:  proxy_temp_path path [level1 [level2 [level3]]];
+    Default: proxy_temp_path proxy_temp;
+    Context: http, server, location
+    ```
+
+    - 例如：
+
+        ```nginx
+        proxy_temp_path /spool/nginx/proxy_temp 1 2;
+
+        那么临时文件将会类似：
+        /spool/nginx/proxy_temp/7/45/00000123457
+        ```
+
+    - proxy_temp_file_write_size：设置一次写入临时文件的数据的最大的大小。
+
+        ```nginx
+        Syntax:  proxy_temp_file_write_size size;
+        Default: proxy_temp_file_write_size 8k|16k;
+        Context: http, server, location
+        ```
+
+    - proxy_max_temp_file_size：设置临时文件的最大的大小。
+
+        ```nginx
+        Syntax:  proxy_max_temp_file_size size;
+        Default: proxy_max_temp_file_size 1024m;
+        Context: http, server, location
+        ```
+
+- 指令：超时时间
+
+    - proxy_connect_timeout：设置和被代理服务器建立连接超时时间。
+
+        ```nginx
+        Syntax:  proxy_connect_timeout time;
+        Default: proxy_connect_timeout 60s;
+        Context: http, server, location
+        ```
+
+    - proxy_read_timeout：设置从被代理服务器读取响应的时间。
+
+        ```nginx
+        Syntax:  proxy_read_timeout time;
+        Default: proxy_read_timeout 60s;
+        Context: http, server, location
+        ```
+
+    - proxy_send_timeout：设置发送请求给被代理服务器的超时时间。
+        ```nginx
+        Syntax:  proxy_send_timeout time;
+        Default: proxy_send_timeout 60s;
+        Context: http, server, location
+        ```
+
+- 指令：并发回源请求
+
+    - proxy_cache_lock：针对同一个key，仅允许一个请求回源去更新缓存，用于锁住并发回源请求。
+        ```nginx
+        Syntax:  proxy_cache_lock on | off;
+        Default: proxy_cache_lock off;
+        Context: http, server, location
+        This directive appeared in version 1.1.12.
+        ```
+
+    - proxy_cache_lock_timeout：锁住请求的最长等待时间，超时后直接回源，但不会以此响应更新缓存。
+        ```nginx
+        Syntax:  proxy_cache_lock_timeout time;
+        Default: proxy_cache_lock_timeout 5s;
+        Context: http, server, location
+        This directive appeared in version 1.1.12.
+        ```
+
+    - proxy_cache_lock_age：更新缓存的回源请求最大超时时间，超时后放行其他请求更新缓存。
+        ```nginx
+        Syntax:  proxy_cache_lock_age time;
+        Default: proxy_cache_lock_age 5s;
+        Context: http, server, location
+        This directive appeared in version 1.7.8.
+        ```
+
+- 指令：历史缓存
+
+    - proxy_cache_use_stale
+
+        - 如果nginx在访问被代理服务器过程中出现被代理服务器无法访问或者访问出错等现象时，nginx服务器可以使用历史缓存响应客户端的请求，这些数据不一定和被代理服务器上最新的数据相一致，但对于更新频率不高的后端服务器来说，nginx服务器的该功能在一定程度上能够为客户端提供不间断访问。该指令用来设置一些状态，当被代理服务器处于这些状态时，nginx服务器启用该功能。
+
+        ```nginx
+        Syntax:  proxy_cache_use_stale error | timeout | invalid_header | updating | http_500 | http_502 | http_503 | http_504 | http_403 | http_404 | http_429 | off ...;
+        Default: proxy_cache_use_stale off;
+        Context: http, server, location
+        ```
+
+    - 例如：配置当被代理服务器返回404 HTTP响应码时，nginx可以使用历史缓存来响应客户端。
+
+        ```nginx
+        proxy_cache_use_stale http_404;
+        ```
+
+    - 客户端访问测试：
+
+        ```sh
+        ❯ curl http://192.168.1.134/cache/index.html  -I
+        HTTP/1.1 200 OK
+        Server: nginx/1.14.2
+        Date: Mon, 11 Jan 2021 06:00:58 GMT
+        Content-Type: text/html
+        Content-Length: 26065
+        Connection: keep-alive
+        Last-Modified: Wed, 21 Oct 2020 14:17:08 GMT
+        ETag: "5f9042e4-65d1"
+        Expires: Mon, 11 Jan 2021 06:01:07 GMT
+        Cache-Control: max-age=10
+        cache: MISS  #第一次请求没有缓存
+        Accept-Ranges: bytes
+
+        ❯ curl http://192.168.1.134/cache/index.html  -I
+        HTTP/1.1 200 OK
+        Server: nginx/1.14.2
+        Date: Mon, 11 Jan 2021 06:01:01 GMT
+        Content-Type: text/html
+        Content-Length: 26065
+        Connection: keep-alive
+        Last-Modified: Wed, 21 Oct 2020 14:17:08 GMT
+        ETag: "5f9042e4-65d1"
+        Expires: Mon, 11 Jan 2021 06:01:07 GMT
+        Cache-Control: max-age=10
+        cache: HIT #第二次请求nginx使用缓存响应
+        Accept-Ranges: bytes
+
+        ❯ curl http://192.168.1.134/cache/index.html  -I
+        HTTP/1.1 200 OK
+        Server: nginx/1.14.2
+        Date: Mon, 11 Jan 2021 06:01:29 GMT
+        Content-Type: text/html
+        Content-Length: 26065
+        Connection: keep-alive
+        Last-Modified: Wed, 21 Oct 2020 14:17:08 GMT
+        ETag: "5f9042e4-65d1"
+        Expires: Mon, 11 Jan 2021 06:01:07 GMT
+        Cache-Control: max-age=10
+        cache: STALE #第三次请求之前先将被代理服务器上的index.html文件删除，nginx使用历史缓存响应
+        Accept-Ranges: bytes
+        ```
+
+- 指令：过期缓存
+
+    - proxy_cache_revalidate
+
+        - 当缓存过期时，当nginx构造上游请求时，添加If-Modified-Since和If-None-Match头部，值为过期缓存中的Last-Modified值和Etag值。
+
+        ```nginx
+        Syntax:  proxy_cache_revalidate on | off;
+        Default: proxy_cache_revalidate off;
+        Context: http, server, location
+        This directive appeared in version 1.5.7.
+        ```
+
+        - 当接收到被代理服务器的304响应时，且打开了proxy_cache_revalidate功能，则用缓存来响应客户端，并且更新缓存状态。
+
+            ```sh
+            ❯ curl http://192.168.1.134/cache/  -I
+            HTTP/1.1 200 OK
+            Server: nginx/1.14.2
+            Date: Sun, 10 Jan 2021 08:11:37 GMT
+            Content-Type: text/html
+            Content-Length: 26065
+            Connection: keep-alive
+            Last-Modified: Wed, 21 Oct 2020 14:17:08 GMT
+            ETag: "5f9042e4-65d1"
+            Expires: Sun, 10 Jan 2021 08:11:36 GMT
+            Cache-Control: max-age=10
+            cache: REVALIDATED  #表示nginx通过过期缓存中的Etag和Last-Modified字段的值向被代理服务器发起验证请求，并且被代理服务器返回了304
+            Accept-Ranges: bytes
+
+            ❯ curl http://192.168.1.134/cache/  -I
+            HTTP/1.1 200 OK
+            Server: nginx/1.14.2
+            Date: Sun, 10 Jan 2021 08:11:38 GMT
+            Content-Type: text/html
+            Content-Length: 26065
+            Connection: keep-alive
+            Last-Modified: Wed, 21 Oct 2020 14:17:08 GMT
+            ETag: "5f9042e4-65d1"
+            Expires: Sun, 10 Jan 2021 08:11:36 GMT
+            Cache-Control: max-age=10
+            cache: HIT
+            Accept-Ranges: bytes
+            ```
+
+###### 缓存配置综合例子
+
+```nginx
+user nginx;
+events{
+ worker_connections 1024;
+}
+http {
+    #设置缓存路径和相关参数（必选）
+    proxy_cache_path  /tmp/nginx/cache levels=1:2  keys_zone=mycache:10m max_size=10g;
+    server {
+        listen 80;
+        location /cache  {
+            proxy_pass http://192.168.1.135:8080;
+
+            #引用缓存配置（必选）
+            proxy_cache mycache;
+
+            #对响应状态码为200 302的响应缓存100s
+            proxy_cache_valid 200 302 100s;
+            #对响应状态码为404的响应缓存200
+            proxy_cache_valid 404 200s;
+
+            #请求参数带有nocache或者comment时不使用缓存
+            proxy_cache_bypass $arg_nocache $arg_comment;
+
+            #忽略被代理服务器设置的"Cache-Control"头信息
+            proxy_ignore_headers "Cache-Control";
+
+            #对GET HEAD POST方法进行缓存
+            proxy_cache_methods GET HEAD POST;
+
+            #当缓存过期时，当构造上游请求时，添加If-Modified-Since和If-None-Match头部，值为过期缓存中的Last-Modified值和Etag值。
+            proxy_cache_revalidate on;
+
+            #当被代理服务器返回403时，nginx可以使用历史缓存来响应客户端，该功能在一定程度上能能够为客户端提供不间断访问
+            proxy_cache_use_stale http_403;
+
+            #默认开启，开启代理缓冲区（内存）
+            proxy_buffering on;
+            #设置响应头的缓冲区设为8k
+            proxy_buffer_size 8k;
+            #设置网页内容缓冲区个数为8，单个大小为8k
+            proxy_buffers 8 8k;
+            #设置当nginx还在读取被代理服务器的数据响应的同时间一次性向客户端响应的数据的最大为16k
+            proxy_busy_buffers_size 16k;
+            #临时文件最大为1024m
+            proxy_max_temp_file_size 1024m;
+            #设置一次往临时文件的大小最大为16k
+            proxy_temp_file_write_size 16k;
+            #设置临时文件存放目录
+            proxy_temp_path /tmp/proxy_temp;
+
+            #设置和被代理服务器连接的超时时间为60s
+            proxy_connect_timeout 60;
+            #设置向被代理服务器发送请求的超时时间为60s
+            proxy_send_timeout 60;
+            #设置从被代理服务器读取响应的超时时间为60s
+            proxy_read_timeout 60;
+
+            #添加缓存状态参数，方便测试是否命中缓存
+            add_header cache $upstream_cache_status;
         }
+    }
+}
+```
 
+###### 例子：配置缓存
+
+- 被代理服务器配置
+
+    - 被代理服务器上需要通知代理服务器缓存内容的时间，否则代理服务器不会对内容进行缓存
+    - 通过X-Accel-Expires，expires，Cache-Control "max-age="其中一个参数指定时间。
+    - 如果代理服务器上配置了proxy_cache_valid的时间，那么被代理服务器可以不指定缓存内容的时间。
+
+    ```nginx
+    server {
+      listen 8080;
+      location /cache {
+        alias /www/html/docs/ ;
+
+        add_header X-Accel-Expires 100; #通知代理服务器缓存100s
+        # expires 50;   #通知代理服务器缓存50s
+        # add_header Cache-Control "max-age=50"; #通知代理服务器缓存50s
+      }
+    }
+    ```
+
+- 反向代理nginx配置
+
+    ```nginx
+    http {
+      proxy_cache_path /tmp/nginx/cache levels=1:2 inactive=60s keys_zone=mycache:10m max_size=10g;
+      server {
+        listen 80;
+        location /cache {
+          proxy_pass http://192.168.1.135:8080;
+          #proxy_cache_valid 200 302 80s; #代理服务器本身设置对200 302响应缓存80s
+          proxy_cache mycache; #引用前面定义的proxy_cache_path
+          add_header cache $upstream_cache_status; #这个不是必须的，只是方便我们测试的时候查看是否命中缓存
+        }
+      }
+    }
+    ```
+
+- 验证
+    - 客户端连续两次去访问代理服务器，可以看到第一次请求未命中缓存，第二次请求命中缓存。
+    ```sh
+    ❯ curl http://192.168.1.134/cache/  -I
+    HTTP/1.1 200 OK
+    Server: nginx/1.14.2
+    Date: Sat, 09 Jan 2021 16:09:38 GMT
+    Content-Type: text/html
+    Content-Length: 26065
+    Connection: keep-alive
+    Last-Modified: Wed, 21 Oct 2020 14:17:08 GMT
+    ETag: "5f9042e4-65d1"
+    Expires: Sat, 09 Jan 2021 16:10:27 GMT
+    Cache-Control: max-age=50
+    cache: MISS  #第一次请求未命中缓存
+    Accept-Ranges: bytes
+
+    ❯ curl http://192.168.1.134/cache/  -I
+    HTTP/1.1 200 OK
+    Server: nginx/1.14.2
+    Date: Sat, 09 Jan 2021 16:09:39 GMT
+    Content-Type: text/html
+    Content-Length: 26065
+    Connection: keep-alive
+    Last-Modified: Wed, 21 Oct 2020 14:17:08 GMT
+    ETag: "5f9042e4-65d1"
+    Expires: Sat, 09 Jan 2021 16:10:27 GMT
+    Cache-Control: max-age=50
+    cache: HIT  #第二次请求命中缓存
+    Accept-Ranges: bytes
+    ```
+
+###### 例子：负载均衡配置缓存
+
+- 121.42.11.34 服务器作为上游服务器
+
+    ```nginx
+    server {
+      listen 1010;
+      root /usr/share/nginx/html/1010;
+      location / {
+       index index.html;
+      }
+    }
+
+    server {
+      listen 1020;
+      root /usr/share/nginx/html/1020;
+      location / {
+       index index.html;
+      }
+    }
+    ```
+
+- 121.5.180.193 服务器作为代理服务器
+
+    ```nginx
+    # 可以在 /etc/nginx/cache_temp 路径下找到相应的缓存文件。
+    proxy_cache_path /etc/nginx/cache_temp levels=2:2 keys_zone=cache_zone:30m max_size=2g inactive=60m use_temp_path=off;
+
+    upstream cache_server{
+      server 121.42.11.34:1010;
+      server 121.42.11.34:1020;
+    }
+
+    server {
+      listen 80;
+      server_name cache.lion.club;
+      location / {
+        proxy_cache cache_zone; # 设置缓存内存。cache_zone为上面proxy_cache_path定义好的
+        proxy_cache_valid 200 5m; # 缓存状态为 200 的请求，缓存时长为 5 分钟
+        proxy_cache_key $request_uri; # 缓存文件的 key 为请求的URI
+        add_header Nginx-Cache-Status $upstream_cache_status # 把缓存状态设置为头部信息，响应给客户端
+        proxy_pass http://cache_server; # 代理转发
+      }
+    }
+    ```
+
+    - 实时性要求非常高的页面或数据来说，就不应该去设置缓存
+
+        ```nginx
         server {
           listen 80;
           server_name cache.lion.club;
+
+          # URI 中后缀为 .txt 或 .text 的设置变量值为 "no cache"
+          if ($request_uri ~ \.(txt|text)$) {
+           set $cache_name "no cache"
+          }
+
           location / {
-            proxy_cache cache_zone; # 设置缓存内存，上面配置中已经定义好的
-            proxy_cache_valid 200 5m; # 缓存状态为 200 的请求，缓存时长为 5 分钟
-            proxy_cache_key $request_uri; # 缓存文件的 key 为请求的URI
+            proxy_no_cache $cache_name; # 判断该变量是否有值，如果有值则不进行缓存，如果没有值则进行缓存
+            proxy_cache cache_zone; # 设置缓存内存
+            proxy_cache_valid 200 5m; # 缓存状态为  200的请求，缓存时长为 5 分钟
+            proxy_cache_key $request_uri; # 缓存文件的 key 为请求的 URI
             add_header Nginx-Cache-Status $upstream_cache_status # 把缓存状态设置为头部信息，响应给客户端
             proxy_pass http://cache_server; # 代理转发
           }
         }
         ```
-
-        - 实时性要求非常高的页面或数据来说，就不应该去设置缓存
-
-            ```nginx
-            server {
-              listen 80;
-              server_name cache.lion.club;
-
-              # URI 中后缀为 .txt 或 .text 的设置变量值为 "no cache"
-              if ($request_uri ~ \.(txt|text)$) {
-               set $cache_name "no cache"
-              }
-
-              location / {
-                proxy_no_cache $cache_name; # 判断该变量是否有值，如果有值则不进行缓存，如果没有值则进行缓存
-                proxy_cache cache_zone; # 设置缓存内存
-                proxy_cache_valid 200 5m; # 缓存状态为  200的请求，缓存时长为 5 分钟
-                proxy_cache_key $request_uri; # 缓存文件的 key 为请求的 URI
-                add_header Nginx-Cache-Status $upstream_cache_status # 把缓存状态设置为头部信息，响应给客户端
-                proxy_pass http://cache_server; # 代理转发
-              }
-            }
-            ```
 
 ### https
 
@@ -3618,6 +4186,13 @@ server {
     - 公钥：`.pub` `.pem` `ca.crt`
     - 私钥：`.prv` `.pem` `ca.key` `.key`
 
+- 生成文件（快速方法）
+
+    ```sh
+    openssl req -newkey rsa:2048 -nodes -keyout example.key -x509 -days 365 -out example.crt
+    # 以下信息自行添加，可以随意
+    ```
+
 - 生成文件
 
     ```sh
@@ -3644,6 +4219,7 @@ server {
 
     # 删除extfile.cnf
     rm extfile.cnf
+    ```
 
 - 查看crt信息
 
@@ -3658,7 +4234,7 @@ server {
     ```sh
     server {
         listen 443;
-        server_name example.com;
+        server_name test.example.com;
 
         # root /usr/local/nginx/html/;
         # index index.html index.htm index.php;
@@ -3696,12 +4272,18 @@ server {
     }
     ```
 
+- 配置`/etc/hosts`
+    ```
+    127.0.0.1 test.example.com
+    ```
+
 - 测试：
 
     ```sh
     openssl s_client -connect 127.0.0.1:443
     curl --tlsv1.2 https://127.0.0.1
     curl http://127.0.0.1:443
+    curl test.example.com
     ```
 
     - 浏览器测试
@@ -3817,6 +4399,84 @@ http {
     }
 }
 ```
+
+#### websocket
+
+- [Se7en的架构笔记:Nginx Websocket 配置](https://mp.weixin.qq.com/s/aN3-JHd-iPhHjUKQlc_Rzw)
+
+Nginx 监听 80 端口用于 Http 和 ws 服务，监听 443 端口用于 Https 和 wss 服务。wss 就是加密的 ws 服务。
+
+- nginx配置（失败了??）
+```nginx
+http {
+    upstream websocket {
+        server 192.168.1.141:80; # 后端服务器地址
+    }
+
+    server {
+      listen 443 ssl;
+
+      # websocket相关配置
+      location / {
+             proxy_pass http://websocket;
+             # 添加 WebSocket 协议升级 Http 头部
+             proxy_set_header Upgrade $http_upgrade;
+             proxy_set_header Connection "upgrade";
+      }
+
+      # ssl 相关配置
+      ssl_certificate      example.crt;
+      ssl_certificate_key  example.key;
+
+      # 安全链接可选的加密协议
+      ssl_protocols TLSv1 TLSv1.1 TLSv1.2 SSLv3 SSlv2;
+   }
+    server {
+        listen 80;
+        location / {
+            proxy_pass http://websocket;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
+    }
+}
+```
+
+- 测试（失败了??）
+
+    ```sh
+    wscat --connect ws://192.168.1.13
+    Connected (press CTRL+C to quit)
+    < Websocket Send: Hello World
+    > send hello
+    ```
+
+    ```sh
+    curl -i \
+         --header "Upgrade: websocket" \
+         --header "Sec-WebSocket-Key: MlRAR6bQZi07587UD4H8oA==" \
+         --header "Sec-WebSocket-Version: 13" \
+         http://192.168.1.134
+    HTTP/1.1 101 Switching Protocols
+    Server: nginx/1.14.2
+    Date: Thu, 25 Mar 2021 08:18:48 GMT
+    Connection: upgrade
+    Upgrade: websocket
+    Sec-WebSocket-Accept: iURIl3uIT+tsPMmZ0x1IVH7EL98=
+
+    # wss 连接，由于是自签名证书需要 -k 参数，表示不检验证书
+    curl -i \
+         --header "Upgrade: websocket" \
+         --header "Sec-WebSocket-Key: MlRAR6bQZi07587UD4H8oA==" \
+         --header "Sec-WebSocket-Version: 13" \
+         https://192.168.1.134 -k
+    HTTP/1.1 101 Switching Protocols
+    Server: nginx/1.14.2
+    Date: Thu, 25 Mar 2021 08:20:20 GMT
+    Connection: upgrade
+    Upgrade: websocket
+    Sec-WebSocket-Accept: iURIl3uIT+tsPMmZ0x1IVH7EL98=
+    ```
 
 ### autoindex模块： 用户请求以 `/` 结尾时，列出目录结构，可以用于快速搭建静态资源下载网站。
 
@@ -4207,6 +4867,8 @@ open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;
 
 ## 第三方模块
 
+- [官方收录的第三方模块列表](https://www.nginx.com/resources/wiki/modules/)
+
 ### echo模块：可以 echo 变量
 
 [跳转至 echo 模块安装](#echo)
@@ -4223,6 +4885,10 @@ open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;
     ```
 
 - 测试：http://127.0.0.1/echo
+
+### 开发第三方模块
+
+- [Se7en的架构笔记：Nginx 第三方模块使用与开发](https://mp.weixin.qq.com/s/u1O6LyhFivHr1QclJhABGg)
 
 ## 管理
 

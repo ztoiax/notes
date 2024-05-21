@@ -321,22 +321,9 @@
 
 - [《数据库系统概念第7版》课件(英文)](https://www.db-book.com/slides-dir/index.html)
 
-- [《Efficient MySQL Performance](https://hackmysql.com/)
-
-- [《Redis 使用手册》](http://redisdoc.com/)
-
-- [《Redis 设计与实现》部分试读](http://redisbook.com/)
-
-- [《Redis 实战》部分试读](http://redisinaction.com/)
-
-- [《Redis核心原理与实践》部分试读](https://www.yuque.com/binecy/redis)
-    > redis6.0源代码分析
-
 - [《Build Your Own Redis with C/C++》](https://build-your-own.org/redis/)
 
 - [《Build Your Own Database From Scratch》](https://build-your-own.org/database/)
-
-- [《postgresql 14 internals》](https://postgrespro.com/community/books/internals)
 
 - [MiniOB 是 OceanBase 团队基于华中科技大学数据库课程原型。从 0 到 1 数据库内核实战教程](https://github.com/oceanbase/miniob)
 
@@ -347,7 +334,32 @@
 - [db-tutorial：是一个数据库教程](https://github.com/dunwu/db-tutorial)
     - 包含分布式, mysql, redis, mongodb, hbase, elasticsearch
 
+### mysql
+
 - [爱可生开源社区的课间、演讲、书籍如《Mysql大智小技》](https://github.com/actiontech/slides)
+
+- [《Efficient MySQL Performance](https://hackmysql.com/)
+
+### redis
+
+- [《Redis 使用手册》](http://redisdoc.com/)
+
+- [《Redis 设计与实现》部分试读](http://redisbook.com/)
+
+- [《Redis 实战》部分试读](http://redisinaction.com/)
+
+- [《Redis核心原理与实践》部分试读](https://www.yuque.com/binecy/redis)
+    > redis6.0源代码分析
+
+### postgresql
+
+- [国内postgresql大会汇总、各种学习资料、思考](https://github.com/digoal/blog/blob/master/README.md)
+
+- [《postgresql 14 internals》](https://postgrespro.com/community/books/internals)
+
+- [《The Internals of PostgreSQL》](https://www.interdb.jp/pg/)
+
+- [源代码](https://doxygen.postgresql.org/)
 
 ### 分布式
 
@@ -938,3 +950,34 @@
 - 一家公司需要多少工程师？这与软件功能的数量有关，与软件用户的数量无关。
 
     - 如果软件要添加更多功能，就需要更多工程师。如果软件功能单一，但是规模很大，甚至有几亿用户，事实上并不需要很多工程师。
+
+# 优质的b站up主、微信公众号等
+
+## 计算机
+
+- 综合
+
+    - dbaplus社群
+        > 数据库、云原生、各种IT事故梳理
+
+- 数据库：
+
+    - AustinDatabases
+        > 主要是dba和数据库行业发展的内容
+
+    - 爱可生开源社区
+
+        > mysql故障和原理的讲解
+
+    - 白鳝的洞穴
+
+        > 白鳝 1992 年参加工作，从 DEC 深圳研发中心的码农，到自己创业，后来进入联想，最后离开联想再次创业，成立一家提供数据库优化服务的公司。前面 10 年在不断变化，后来的 10 年，工作以 Oracle 为核心，最近 10 年聚焦在如何让使用 Oracle 数据库的系统升级为国产数据库。白鳝说，自己“有一颗永远折腾的心”。
+
+    - PostgreSQL码农集散地
+        > postgresql相关
+
+- Prometheus：
+    - 蜀道运维
+
+- 架构：
+    - 二马读书：从事电商行业十几年，经历过大大小小的促销活动和秒杀上百次，每次做秒杀瞬时访问量会翻数十倍，甚至数百倍。对系统架构是巨大的考验，期间也曾经历过系统宕机，甚至整体雪崩。

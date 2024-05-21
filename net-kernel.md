@@ -4,7 +4,7 @@
     * [应用层](#应用层)
         * [HTTP](#http)
             * [状态码](#状态码)
-            * [Cache](#cache)
+            * [客户端缓存（浏览器缓存）](#客户端缓存浏览器缓存)
             * [Cookie](#cookie)
             * [压缩算法](#压缩算法)
             * [HTTP1.1 keepalive](#http11-keepalive)
@@ -21,6 +21,8 @@
         * [DNS](#dns)
             * [基本概念](#基本概念)
             * [knowclub：localhost和127.0.0.1的区别](#knowclublocalhost和127001的区别)
+            * [CDN架构（Content Delivery Network）](#cdn架构content-delivery-network)
+                * [基于DNS解析](#基于dns解析)
         * [FTP](#ftp)
         * [DHCP](#dhcp)
     * [表示层](#表示层)
@@ -159,39 +161,98 @@
 
 - `500` (Internal Server Error)
 
-#### Cache
+#### 客户端缓存（浏览器缓存）
 
-- [腾讯技术工程：彻底弄懂浏览器缓存策略](https://cloud.tencent.com/developer/article/1660735)
+- [Se7en的架构笔记：Nginx缓存详解（一）之客户端缓存](https://mp.weixin.qq.com/s/v4oI6KO4M2bNNKI91ioUvg)
 
-    ![image](./Pictures/net-kernel/cache.avif)
+- 浏览器缓存可以分为两种模式，强缓存和协商缓存。
 
-- `Cache-Control: `：
+    - 1.强缓存（无HTTP请求，无需协商）
 
-    - `private`：只能浏览器缓存，代理服务器不能缓存
+        - 直接读取本地缓存，无需向服务端发送请求确认，HTTP返回状态码是200（from memory cache或者from disk cache ，不同浏览器返回的信息不一致的）。
 
-    - `no-cache`：浏览器可以缓存，但每次都需要向服务器确认；代理服务器不能缓存
+        - 相关的HTTP Header有:
+            - `Cache-Control`
+            - `Expires`
 
-    - `no-store`：不能缓存
+    - 2.协商缓存（有HTTP请求，需协商）
 
-    - `max-age=604800`：可以缓存；根据`Date: ` 字段的时间算起，604800秒后过期。
+        - 浏览器虽然发现了本地有该资源的缓存，但是缓存已经过期，于是向服务器询问缓存内容是否还可以使用，若服务器认为浏览器的缓存内容还可用，那么便会返回304（Not Modified）HTTP状态码，告诉浏览器读取本地缓存；如果服务器认为浏览器的缓存内容已经改变，则返回新的请求的资源。
 
-    - `Expires: Tue, 28 Feb 2022 22:22:22 GMT`：过期时间
+        - 相关的HTTP Header有:
 
-    - `Expires` 和 `max-age`同时存在优先使用`max-age`
+            - `Last-Modified`
+            - `ETag`
 
-- `Last-Modified`(Response Header)与`If-Modified-Since`(Request Header)是一对报文头：
+- 缓存校验流程
 
-    - 当带着If-Modified-Since头访问服务器请求资源时，服务器会检查Last-Modified，如果Last-Modified的时间早于或等于If-Modified-Since则会返回一个不带主体的304响应，否则将重新返回资源。
+    - 由于网站内容的经常变化，为了保持缓存的内容与网站服务器的内容一致
+        - 客户端会通过内容缓存的有效期（强制缓存）
+        - Web服务器提供的访问请求的校验（协商缓存），快速判断请求的内容是否已经更新。
 
-    - 注意：在 Chrome 的 devtools中勾选 `Disable cache` 选项后，发送的请求会去掉If-Modified-Since这个 Header。
+        ![image](./Pictures/net-kernel/缓存-客户端缓存校验流程图.avif)
 
-- `ETag`(Response Header)与`If-None-Match`(Request Header)是一对报文头：
+- 强制缓存原理：浏览器在加载资源的时候，会先根据本地缓存资源的header中的信息(Expires 和 Cache-Control)来判断缓存是否过期。如果缓存没有过期，则会直接使用缓存中的资源；否则，会向服务端发起协商缓存的请求。
 
-    - 一致时返回不带实体的304，不然就是带有所请求资源实体的200响应
+    - 客户端判断缓存是否过期和先前请求时服务端返回的HTTP消息头字段有关：
 
-    ![image](./Pictures/net-kernel/http_cache_etag.avif)
+        | 服务端返回字段           | 作用                                                                                                                                                                               |
+        |--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+        | Cache-Control: max-age=x | 客户端缓存时间超出x秒后则缓存过期。                                                                                                                                                |
+        | Cache-Control: no-cache  | 客户端不能直接使用本地缓存的响应，需要进行协商缓存，发送请求到服务器确认是否可以使用缓存。如果Web服务器返回304，则客户端使用本地缓存，如果返回200，则使用Web服务器返回的新的数据。 |
+        | Cache-Control: no-store  | 客户端不能对响应进行缓存。                                                                                                                                                         |
+        | Cache-Control: public    | 可以被所有的用户缓存，包括终端用户和 CDN 等中间代理服务器。                                                                                                                        |
+        | Cache-Control:private    | 只能被终端用户的浏览器缓存，不允许 CDN 等中继缓存服务器对其缓存。                                                                                                                  |
+        | expires x                | 客户端缓存时间超出x秒后则缓存过期，优先级比Cache-Control: max-age=x低。                                                                                                            |
+- 协商缓存原理：
 
-- `ETag` 和 `Last-Modified`同时存在优先使用`ETag`
+    - 当客户端向服务端发起请求时，服务端会检查请求中是否有对应的标识（`If-Modified-Since`或`Etag`），如果没有对应的标识，服务器端会返回标识给客户端，客户端下次再次请求的时候，把该标识带过去，然后服务器端会验证该标识
+        - 如果验证通过了，则会响应304，告诉浏览器读取缓存。
+        - 如果标识没有通过，则返回请求的资源。
+
+    - `Last-Modified`(Response Header)与`If-Modified-Since`(Request Header)是一对报文头，属于HTTP/1.0：
+
+        - 当带着If-Modified-Since头访问服务器请求资源时，服务器会检查Last-Modified
+            - 如果Last-Modified的时间早于或等于If-Modified-Since则会返回一个不带主体的304响应
+            - 否则将重新返回资源。
+
+        - 注意：在 Chrome 的 devtools中勾选 `Disable cache` 选项后，发送的请求会去掉If-Modified-Since这个 Header。
+
+    - `ETag`(Response Header)与`If-None-Match`(Request Header)是一对报文头。属于HTTP/1.1：优先级高于Last-Modified的验证
+
+        ![image](./Pictures/net-kernel/http_cache_etag.avif)
+
+        - Etag类似于身份指纹，是一个可以与Web资源关联的记号。当客户端第一次发起请求时，Etag的值在响应头中传递给客户端；当客户端再次发起请求时，如果验证完本地内容缓存后需要发起服务端验证，Etag的值将由请求消息头的If-None-Match字段传递给服务端。
+            - 如果服务端验证If-None-Match的值与服务端的Etag值不匹配，则认为请求的内容已经更新，服务端将会返回新的内容
+            - 否则返回响应状态码304，客户端将使用本地缓存。
+
+- 用户行为对浏览器缓存的影响
+
+    - 当按下F5或者刷新时，客户端浏览器会添加请求消息头字段Cache-Control: max-age=0，该请求不进行内容缓存的本地验证，会直接向Web服务器发起请求，服务端根据If-Modified-Since或者If-None-Match的值进行验证。
+
+    - 当按下Ctrl+F5或者强制刷新时，客户端浏览器会添加请求消息头字段Cache-Control: no-cache，并且忽略所有服务端验证的消息头字段(Etag和Last-Modified)，该请求不进行内容缓存的本地验证，它会直接向Web服务器发起请求，因为请求中没有携带服务端验证的消息头字段，服务端会直接返回新的内容。
+
+- Cache-Control字段在请求和响应中的含义
+
+    - 客户端请求
+        - `max-age`：不想要在代理服务器中缓存了太长时间(>max-age seconds)的资源。
+        - `max-stale`：可以接收代理服务器上的过期缓存。若max-stable后没有值，则表示无论过期多久客户端都可以使用。
+        - `min-fresh`：要求服务器使用其缓存时，至少保证在min-fresh秒内不会过期。
+        - `no-cache`：告诉代理服务器，不能直接使用已有缓存作为响应返回，除非带着缓存条件到上游服务端得到 304 验证返回码才可使用现有缓存。
+        - `no-store`：告诉各代理服务器不得缓存这个请求及其相应。
+        - `no-transform`：告诉代理服务器不要修改消息包体的内容。
+        - `only-if-cached`：告诉代理服务器仅能返回缓存，没有缓存的话就返回 504。
+
+    - 服务端响应
+        - `max-age`：告诉客户端缓存 Age 超出 max-age 秒后则缓存过期。
+        - `s-maxage：`与max-age相似，但仅针对共享缓存，且优先级高于max-age和Expires。
+        - `public`：可以被所有的用户缓存，包括终端用户和 CDN 等中间代理服务器。
+        - `private`：只能被终端用户的浏览器缓存，不允许 CDN 等中继缓存服务器对其缓存。
+        - `no-store`：告诉所有下游节点不能对响应进行缓存。
+        - `no-cache`：告诉客户端不能直接使用缓存的响应，使用前必须在源服务器验证得到304返回码。
+        - `no-transform`：告诉代理服务器不能修改消息包体的内容。
+        - `must-revalidate`：告诉客户端一旦缓存过期，必须向服务器验证后才可使用。
+        - `proxy-revalidate`：与 must-revalidate 类似，但它仅对代理服务器的共享缓存有效。
 
 - `X-Cache-Lookup:`：
 
@@ -449,13 +510,20 @@
 
 - [ruanyifeng:WebSocket 教程](https://www.ruanyifeng.com/blog/2017/05/websocket.html)
 
-    ![image](./Pictures/net-kernel/websocket.avif)
+- [Se7en的架构笔记:Nginx Websocket 配置](https://mp.weixin.qq.com/s/aN3-JHd-iPhHjUKQlc_Rzw)
 
-- 与http的区别
+![image](./Pictures/net-kernel/websocket.avif)
 
-    - 全双工：服务端可以主动向客户端发送数据；不像http客户端发送request，服务端response
+- 和 Http 相比，WebSocket有以下优点:
 
-    - 不需要发送http header
+    - 全双工：
+        - WebSocket 是双向通信协议，可以双向发送或接受信息。
+        - HTTP是单向的，只能由客户端发起请求时，服务器才能响应，服务器不能主动向客户端发送数据。
+
+    - WebSocket 可以和 HTTP Server 共享相同端口。
+    - WebSocket 协议可以更好的支持二进制，可以直接传送二进制数据。
+    - 同时WebSocket协议的头部非常小，服务器发到客户端的数据包的包头，只有2~10个字节(取决于数据包的长度)，客户端发送服务端的包头稍微大一点，因为其要进行掩码加密，所以还要加上4个字节的掩码。总得来说，头部不超过14个字节。
+    - 支持扩展，用户可以扩展协议实现自己的子协议。
 
 - [小林coding：既然有 HTTP 协议，为什么还要有 WebSocket？](https://www.xiaolincoding.com/network/2_http/http_websocket.html)
 
@@ -473,6 +541,60 @@
         - 相比前者可以减少请求次数。每隔30秒，在这 30 秒内只要服务器收到了扫码请求，就立马返回给客户端网页。
 
             - 例子：百度网盘的扫码登陆
+
+- Websocket 建立过程
+
+- 客户端: 申请协议升级
+
+    - 首先由客户端发起协议升级请求, 根据WebSocket协议规范, 请求头必须包含如下的内容：
+    ```
+    GET / HTTP/1.1
+    Host: localhost:8080
+    Origin: http://127.0.0.1:3000
+    Connection: Upgrade
+    Upgrade: websocket
+    Sec-WebSocket-Version: 13
+    Sec-WebSocket-Key: w4v7O6xFTi36lq3RNcgctw==
+    ```
+
+    - 请求行: 请求方法必须是GET, HTTP版本至少是1.1。
+    - 请求必须含有Host。
+    - 如果请求来自浏览器客户端, 必须包含Origin。
+    - 请求必须含有 Connection, 其值必须含有 "Upgrade" 记号。
+    - 请求必须含有 Upgrade, 其值必须含有 "websocket" 关键字。
+    - 请求必须含有 Sec-Websocket-Version, 其值必须是 13。
+    - 请求必须含有 Sec-Websocket-Key, 用于提供基本的防护, 比如无意的连接。
+
+- 服务器: 响应协议升级
+
+    - 服务器返回的响应头必须包含如下的内容:
+    ```
+    HTTP/1.1 101 Switching Protocols
+    Connection:Upgrade
+    Upgrade: websocket
+    Sec-WebSocket-Accept: Oy4NRAQ13jhfONC7bP8dTKb4PTU=
+    ```
+
+    - 响应行: HTTP/1.1 101 Switching Protocols。
+    - 响应必须含有 Upgrade, 其值为 "weboscket"。
+    - 响应必须含有 Connection, 其值为 "Upgrade"。
+    - 响应必须含有 Sec-Websocket-Accept, 根据请求首部的 Sec-Websocket-key计算出来。。
+
+- Sec-WebSocket-Key/Accept的计算
+
+    - Sec-WebSocket-Key 值由一个随机生成的16字节的随机数通过 base64（见 RFC4648 的第四章）编码得到的。例如, 随机选择的16个字节为:
+
+    ```
+    // 十六进制 数字1~16
+    0x01 0x02 0x03 0x04 0x05 0x06 0x07 0x08 0x09 0x0a 0x0b 0x0c 0x0d 0x0e 0x0f 0x10
+    ```
+
+    - Sec-WebSocket-Key的作用：
+        - Key 可以避免服务器收到非法的 WebSocket 连接, 比如 Http 请求连接到 Websocket, 此时服务端可以直接拒绝。
+        - Key 可以用来初步确保服务器认识 ws 协议, 但也不能排除有的 Http服务器只处理 Sec-WebSocket-Key, 并不实现ws协议。
+        - Key可以避免反向代理缓存。
+        - 在浏览器中发起 ajax 请求, Sec-Websocket-Key 以及相关 header 是被禁止的, 这样可以避免客户端发送 ajax 请求时, 意外请求协议升级。
+        - 最终需要强调的是: Sec-WebSocket-Key/Accept 并不是用来保证数据的安全性, 因为其计算/转换公式都是公开的, 而且非常简单, 最主要的作用是预防一些意外的情况。
 
 ### DNS
 
@@ -551,6 +673,90 @@
     - 这是错误的！
 
 - localhost 会按[dns 解析流程进行解析]，然后和 127.0.0.1 一样
+
+#### CDN架构（Content Delivery Network）
+
+- [yes的练级攻略：面试官：你懂 CDN 吗？](https://mp.weixin.qq.com/s/kdhVCNc5YtUdR869WpQbrQ)
+
+- 这其实就是所谓的“热点”问题，该如何解决这个问题呢？可以采取类似分流的操作。
+
+- 基础原理
+
+    - 如果网站服务器部署在北京，香港的用户访问该网站，由于物理距离的缘故（网络的传输时间受距离影响），时延相对而言会比较大，导致体验上并不是很好。
+
+        ![image](./Pictures/net-kernel/cdn.avif)
+
+        - 并且当用户量比较大的时候，全国各地所有的请求都涌向北京的服务器，网络的主干道就会被阻塞。这个应该很好理解，就好比国庆假期的网红打卡点，大家都想去那里打卡，那么前往这个打卡点的道路不就都被堵满了吗？
+
+    - 当香港的用户想去访问网站的时候，根据就近原则，选择一个距离它最近的缓存站，比如有个深圳站：
+
+        - 主服务器部署在北京不变，但是全国各地都建立一些缓存站，这些缓存站可以缓存一些主服务器上变化不频繁的资源，比如一些 css/js/图片等静态资源。
+
+        ![image](./Pictures/net-kernel/cdn1.avif)
+
+        - 那么先去这个站上看看有没有资源，如果有就直接就从缓存站要到资源了，这个流量就被深圳站拦截了，由于距离很近，响应时延也很低，且不占用请求北京的主干道流量，也减轻了北京服务器的负担，一举多得！
+
+        - 如果缓存站找不到，那么就回源到源站，也就是缓存站会去北京的服务器去要数据，然后将这些数据缓存到本地且返回给用户，用户的感觉可能就是网站卡了一下，然后就好了。
+            - 这次操作后，别的香港用户访问同样的内容由于缓存站缓存了，因此不需要再次回源，直接从深圳站就返回数据了。
+
+- 动态数据：上面我说的是静态资源，如果是提交订单这样的操作怎么缓存呢？
+
+    - 确实如此，很多业务场景涉及到存储层面是有状态的，如果我们让缓存站也能处理这些业务场景，就得将一些业务数据存储下来，那么就又会涉及数据同步问题。
+
+    - 这种数据同步机制又会带来另一个高复杂度的挑战，也就是数据一致性问题，很复杂。
+
+    - 所以现在很多云厂商提供的全站 CDN， 一般指的是 CDN 厂商会自动识别你网站资源哪些是静态的，哪些是动态的。
+
+    - 静态的按照我们上面说的路子走，动态的则是根据内部的一些调度算法，智能地选择最优回源路径去请求源站，节省请求的时间。
+
+    - 这就好比我们自驾从香港开到北京，路线有很多，然后有个导航很智能，它可以实时监控计算当前道路信息，给我们提供一条路径最短、最不堵的路。
+
+- CDN 基础架构
+
+    ![image](./Pictures/net-kernel/cdn架构.avif)
+
+    - 所谓的 CDN 缓存节点就是我上面说的缓存站，然后还是一个很重要的 GSLB （全局负载均衡器）。
+
+    - 这个 GSLB 的主要功能就是实现我上面说的 ：当香港的用户想去访问网站的时候，根据就近原则，选择一个距离它最近的缓存站。
+        - 它最主要的功能就是用户访问网站的时候，根据用户请求的 ip、url 选择最近的节点，让用户直接请求最近的节点即可。
+
+    - GSLB 转发机制有三种实现：
+
+        - 基于 DNS 解析
+        - 基于 HTTP 重定向（主流应用层协议为 HTTP）
+        - 基于 IP 路由。
+
+    - HTTP 重定向去实现转发的问题：
+
+        - 301 永久重定向和 302 临时重定向都可以实现转发功能。
+
+        - 那么 301 合适吗？永久重定向好像不合适，比如重定向的缓存站挂了咋办，迁移了咋办？GSLB 叫全局负载均衡，就均衡一次完事儿啦？
+
+            - 所以只能 302 ，而 302 的流程每次还得访问 GSLB，那不就等于所有请求每次都得经过 GSLB 操作？因此 GSLB 可能会成为性能瓶颈。
+
+    - 解决方法：DNS解析
+        - 用户通过域名解析定位到 GSLB ，通过负载均衡返回用户最近的一个缓存站 ip，后续浏览器、本地 DNS 服务器等都会将本次域名解析得到的 ip 结果缓存一段时间。
+        - 那么这个时间段内用户再次请求这个域名，压根不会打到 GSLB 而是直接访问对应的缓存站，这不就解决瓶颈问题了吗？
+
+##### 基于DNS解析
+
+- 基于 DNS 解析具体有三种实现方式：
+    - 1.利用 CNAME 实现负载均衡
+        - 业界最多是使用 CNAME 方式来实现负载均衡，实现简单且不需要修改公共 DNS 系统配置。
+    - 2.将 GSLB 作为权威 DNS 服务器
+    - 3.将 GSLB 作为权威 DNS 服务器的代理服务器
+
+- 实现方法1：利用 CNAME
+    - 比如之前网站网址是 www.netitv.com.cn，此时进行要 cdn 改造，那么将之前的网站网址作为 GSLB  服务域名的 CNAME，用户访问 www.netitv.com.cn，经过 CNAME 解析会映射到 GSLB 地址 www.netitv.cdn.com.cn 上，然后 GSLB 基于 DNS 协议可以进行后续的负载均衡操作，选择合适的 IP 返回给用户。
+    ![image](./Pictures/net-kernel/cdn-CNAME实现.avif)
+
+- 实现方法2：将 GSLB 作为一个域的权威 DNS 服务器
+    - 那么对于这个域来说，正常域名解析的过程不就可以为所欲为了？负载均衡就都由 GSLB 来把控了
+    - 至于如何才能成为一个域的权威 DNS 服务器？这个我不清楚，听起来好像有点难度。
+
+- 实现方法3：在权威 DNS 服务器前面做一个代理
+    - 差别就是不需要实现一个功能完整的权威 DNS 服务器，仅需对个别需要 GSLB 操作的请求进行修改转发即可
+    - 不过这其实也得将对外公布的权威 DNS 服务器的地址变成代理服务器地址，这个难度和第二点一致。
 
 ### FTP
 

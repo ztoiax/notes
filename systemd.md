@@ -9,6 +9,8 @@
         * [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](#咸鱼运维杂谈运维排查--systemd-之服务停止后状态为-failed)
     * [systemctl](#systemctl)
         * [unmask](#unmask)
+        * [常见启动问题](#常见启动问题)
+            * [爱可生开源社区：故障分析 | MySQL 通过 systemd 启动时 hang 住了……](#爱可生开源社区故障分析--mysql-通过-systemd-启动时-hang-住了)
     * [hostnamectl, localectl, timedatectl, loginctl命令](#hostnamectl-localectl-timedatectl-loginctl命令)
     * [journalctl（日志）](#journalctl日志)
         * [实战调试](#实战调试)
@@ -561,6 +563,40 @@ systemd 支持 mask 操作，如果一个服务被 mask 了，那么它无法被
 systemctl unmask httpd.service
 ```
 
+### 常见启动问题
+
+#### [爱可生开源社区：故障分析 | MySQL 通过 systemd 启动时 hang 住了……](https://mp.weixin.qq.com/s/vNA9Hny9wmF5ZFCAJfEXXQ)
+
+- 问题：正如题目所述，在自动化测试场景下，通过 systemd 无法启动 MySQL。连续 kill -9 结束实例进程，检测 mysqld 在退出后是否会被正确拉起。
+
+- 原因：
+
+    - systemd 启动 mysqld 的过程中，会先根据 service 模板中的配置，执行：
+        - 1.ExecStart（启动 mysqld）
+        - 2.mysqld 启动创建 pid 文件
+        - 3.ExecStartPost（自定义的一些后置脚本：调整权限、将 pid 写入 cgroup 等）
+
+        - 在 步骤 2-3 的中间态，也就是 pid 文件刚创建出来时，主机上接收到了自动化测试下发的命令：`sudo -S kill -9 $(cat /opt/mysql/data/11690/mysqld.pid)`
+
+        - 由于这个 pid 文件和 pid 进程确实存在（如果不存在 kill 命令或 cat 会报错）
+            - 自动化的 CASE 认为 kill 操作已成功结束。
+            - 但由于 mysqld.pid 这个文件是由 MySQL 自身维护的，在 systemd 的视角中，还需要继续等待 步骤 3 完成，才认为启动成功。
+
+        - 在 systemd 使用 forking 模式时，会根据子进程的 PID 值判断服务是否成功启动。
+
+            - 如果子进程成功启动，并且没有发生意外退出，则 systemd 会认为服务已启动，并将子进程的 PID 作为 MAIN PID。
+            - 而如果子进程启动失败或意外退出，则 systemd 会认为服务未能成功启动。
+
+    - 总结：在执行 ExecStartPost 时，由于子进程 ID 31036 已经被 kill 掉，后置 shell 缺少了启动参数，但 ExecStart 步骤已完成，导致 MAIN PID 31036 成为了只存在于 systemd 里的 僵尸进程。
+
+- 排除过程和复现过程（省略...）
+- 解决方法：
+
+    - 先 kill 掉 hang 住的 systemctl start 命令，执行 systemctl stop mysqld_11690.service，这可以让 systemd 主动结束僵尸进程，虽然 stop 命令可能会报错但这并不影响。
+
+    - 等待 stop 执行完成后再次使用 start 命令启动，恢复正常。
+
+- 虽然文章跟 MySQL 没太大关系，但重要的是分析偶发故障的思考过程 :)
 ## hostnamectl, localectl, timedatectl, loginctl命令
 
 - `hostnamectl`

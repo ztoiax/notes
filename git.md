@@ -14,6 +14,7 @@
             * [回退单个文件](#回退单个文件)
             * [stash(暂存)](#stash暂存)
     * [rebase](#rebase)
+    * [bisect](#bisect)
     * [remote](#remote)
     * [一些问题](#一些问题)
     * [第三方git工具](#第三方git工具)
@@ -29,6 +30,7 @@
     * [api](#api)
     * [github工作流](#github工作流)
     * [code action](#code-action)
+    * [第三方github工具](#第三方github工具)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
 * [关于 Git 的书](#关于-git-的书)
@@ -368,6 +370,7 @@ git stash clear
 ## rebase
 
 ```sh
+# -i 交互执行
 git rebase -i <hash>
 
 # 取消rebase
@@ -375,6 +378,30 @@ git rebase --abort
 
 # 执行 rebase 之前自动 stash
 git rebase --autostash
+```
+
+## bisect
+
+- 对提交历史记录进行二分查找来分离出特定的提交记录。该命令在帮助我们找出是哪个提交引入了 bug 时非常有用。
+
+    - 这为开发人员快速追踪 bug 的源头提供了一种方法，因为每次将提交历史记录分成两半，可以指数级地减少需要手动检查的提交记录数量。
+
+```sh
+# 启动bisect
+git bisect start
+
+# 要运行这个命令，需要先找到一个问题未发生的过去提交记录，这里称之为 "good_commit_id"。
+
+# Git 会对提交记录进行二分查找，它会检查当前提交和上一个好的提交之间的提交记录。此时，开发人员需要检查或测试代码，以确定 bug 是否仍然存在。
+
+## 如果 bug 仍然存在，则运行 git bisect bad 命令；
+git bisect bad
+
+## 如果 bug 不存在，则运行 git bisect good 命令。
+git bisect good <good_commit_id>
+
+# 将分支恢复到执行搜索之前的状态。一旦找到了引入 bug 的提交记录，搜索就会返回第一个坏的提交记录的 commit ID。从这里开始，用户可以检查引入 bug 的提交记录。然后可以执行reset
+git bisect reset
 ```
 
 ## remote
@@ -503,6 +530,18 @@ curl -s https://api.github.com/repos/prometheus/mysqld_exporter/releases/latest 
 ## code action
 
 - [GitHub Actions by Example](https://www.actionsbyexample.com/?utm_source=hackernewsletter&utm_medium=email&utm_term=code)
+
+## 第三方github工具
+
+- [gh-dash](https://github.com/dlvhdr/gh-dash?ref=terminaltrove)
+    ![image](./Pictures/git/gh-dash.gif)
+    ```sh
+    # 安装
+    gh extension install dlvhdr/gh-dash
+
+    # 使用
+    gh dash
+    ```
 
 # reference
 

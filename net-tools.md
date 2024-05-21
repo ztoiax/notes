@@ -30,6 +30,7 @@
             * [h2spec：测试服务器 http2 一致性](#h2spec测试服务器-http2-一致性)
             * [grpcurl：类似 cURL 但用于 gRPC 的工具](#grpcurl类似-curl-但用于-grpc-的工具)
         * [websocket](#websocket)
+            * [wscat](#wscat)
         * [websocat:创建websocat](#websocat创建websocat)
         * [websocketd:创建websocket服务执行命令](#websocketd创建websocket服务执行命令)
         * [dns](#dns)
@@ -45,9 +46,11 @@
         * [tshark、editcap、capinfos](#tsharkeditcapcapinfos)
         * [nmap](#nmap)
         * [zmap](#zmap)
+        * [RustScan：端口扫描](#rustscan端口扫描)
         * [nping(代替 ping)](#nping代替-ping)
         * [hping](#hping)
         * [ngrok：内网穿透（端口转发）](#ngrok内网穿透端口转发)
+        * [portr：python写的ngrok代替品](#portrpython写的ngrok代替品)
     * [网络层](#网络层)
         * [ifconfig(net-tools)](#ifconfignet-tools)
         * [ip(iproute2)](#ipiproute2)
@@ -762,6 +765,12 @@ grpcurl grpc.server.com:443 my.custom.server.Service/Method
 
 ### websocket
 
+#### [wscat](https://github.com/websockets/wscat)
+
+```sh
+wscat --connect ws://127.0.0.1
+```
+
 ### [websocat:创建websocat](https://github.com/vi/websocat)
 
 ```sh
@@ -1173,6 +1182,8 @@ nmap -PA 192.168.1.1
 
 - 比nmap速度要快 [ZMap 为什么能在一个小时内就扫描整个互联网？](https://www.zhihu.com/question/21505586/answer/18443313)
 
+### [RustScan：端口扫描](https://github.com/RustScan/RustScan)
+
 ### nping(代替 ping)
 
 | 参数 | 操作       |
@@ -1245,6 +1256,8 @@ hping3 --traceroute -V -1 www.baidu.com
 ```
 
 ### [ngrok：内网穿透（端口转发）](https://github.com/inconshreveable/ngrok)
+
+### [portr：python写的ngrok代替品](https://github.com/amalshaji/portr)
 
 ## 网络层
 

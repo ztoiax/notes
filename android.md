@@ -2,6 +2,10 @@
 
 - [Android学习路线](https://roadmap.sh/android)
 
+# 原理
+
+- [FlashCorpa：[系统进阶支线 Vol.7]如何防止设备格机](https://www.bilibili.com/video/BV1zM4m1Z7Wj)
+
 # 第三方优秀资源
 
 ## cli
@@ -252,6 +256,7 @@
 
             - 注意：数据人民币app会残留未隐藏时检测的数据，记得清除全部数据
 
+        - [ZygiskNext：替换内置的zygisk](https://github.com/Dr-TSNG/ZygiskNext)
         - [ssh服务器](https://github.com/Magisk-Modules-Repo/ssh)
         - [universal-gms-doze：减少google play服务耗电](https://github.com/gloeyisk/universal-gms-doze)
 
