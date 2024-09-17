@@ -13,6 +13,15 @@
             * [爱可生开源社区：故障分析 | MySQL 通过 systemd 启动时 hang 住了……](#爱可生开源社区故障分析--mysql-通过-systemd-启动时-hang-住了)
     * [hostnamectl, localectl, timedatectl, loginctl命令](#hostnamectl-localectl-timedatectl-loginctl命令)
     * [journalctl（日志）](#journalctl日志)
+        * [systemd-journald的进程服务](#systemd-journald的进程服务)
+        * [持久化存储or内存存储](#持久化存储or内存存储)
+        * [速率限制](#速率限制)
+        * [日志接收和转发](#日志接收和转发)
+            * [rsyslog](#rsyslog)
+            * [kmsg](#kmsg)
+            * [console](#console)
+            * [wall](#wall)
+        * [基本使用](#基本使用-1)
         * [实战调试](#实战调试)
             * [查看错误](#查看错误)
             * [解决办法](#解决办法)
@@ -663,15 +672,227 @@ loginctl show-user tz
 
 ## journalctl（日志）
 
-- journal的服务为`systemd-journald.service`，它只保存在内存上。因此还需要另一个把日志写入硬盘的服务`systemd-journal-flush.service`，这个服务会在`systemd-journald.service`服务After后启动
+- [鹅厂架构师：走进systemd | 日志服务解析](https://zhuanlan.zhihu.com/p/702242748)
+
+### systemd-journald的进程服务
+
+- `systemd-journald.service`，是systemd的核心日志服务，作为系统日志的记录者，在系统启动时会第一个启动，这样如果后面服务出现问题，也会被记录在案。它只保存在内存上。
+
+    ![image](./Pictures/systemd/systemd-journald.avif)
+
+- `systemd-journal-flush.service`：将内存中的日志数据刷新到磁盘上，确保日志数据的持久化存储。
+
+    - 如果创建了 `/var/log/journal` 目录，该服务会在系统启动时启动，执行 `journalctl --flush` 命令。将 journal 切换到 persistent 也就是持久化模式。
+
+
+    - 这个服务会在`systemd-journald.service`服务After后启动
+
+        ```sh
+        systemctl cat systemd-journal-flush.service | grep -i After=
+        # output
+        After=systemd-journald.service systemd-remount-fs.service
+        ```
+
+- systemd-journal-remote.service 、systemd-journal-gatewayd.service 和 systemd-journal-upload.service
+
+    - 这三个服务之间的关系，可以理解为：
+        - systemd-journal-remote.service 是服务器
+        - systemd-journal-gatewayd.service 是类似网关的存在，可以将获取到的日志打包成网络传输格式
+        - systemd-journal-upload.service 则是本地的一个客户端，会采集本地的日本，上传至指定url（remote或者gatewayd）。
+
+- systemd-journal-catalog-update.service
+
+    - 用于更新systemd日志目录，这是一种包含预定义消息的数据库，可以用来增强日志消息的可读性和有用性。
+
+    - 很多包会包含自己的catalog文件，例如dbus-broker
+
+        ```sh
+        [root@linux ~]# rpm -ql dbus-broker | grep catalog
+        /usr/lib/systemd/catalog/dbus-broker-launch.catalog
+        /usr/lib/systemd/catalog/dbus-broker.catalog
+        ```
+
+        - `catalog` 文件中包含了消息的标识符、主题、文档链接、以及消息背景等信息
+
+- systemd-journald-audit.socket 和 systemd-journald-dev-log.socket
+
+    - 专门用于接收来自 `auditd` 和 `/dev/log` 的日志消息，通过直接监听 `/dev/log` 以及内核审计系统接受日志。
 
     ```sh
-    systemctl cat systemd-journal-flush.service | grep -i After=
-    # output
-    After=systemd-journald.service systemd-remount-fs.service
+    ListenDatagram=/run/systemd/journal/dev-log
+    PassCredentials=yes
+    PassSecurity=yes
+    Service=systemd-journald.service
+    SocketMode=0666
+    Symlinks=/dev/log
     ```
 
-- 基本使用
+### 持久化存储or内存存储
+
+- journald默认使用`violatile`也就是内存存储。
+
+    - 如果想要切换到持久化存储需要以下几个条件：
+
+        - `/var/log/journal`被创建
+        - `journalctl --flush`命令被执行（给journald发送 SIGUSR1 信号）
+
+        - 然后，每次系统启动时，`systemd-journal-flush.service`服务会在启动时候判断是否存在`/var/log/journal`目录，如果存在，就执行`journalctl --flush`给journald刷到`persistent`模式。
+
+- 存储大小以及转储
+
+    - journald有几个配置项用来控制存储的日志大小。
+
+        ```
+        SystemMaxUse=, SystemKeepFree=, SystemMaxFileSize=, SystemMaxFiles=, RuntimeMaxUse=, RuntimeKeepFree=, RuntimeMaxFileSize=, RuntimeMaxFiles=
+        ```
+
+        - System 开头的用来限制持久化的日志
+        - Runtime 开头的用来限制内存存储的日志。
+        - MaxUse：用来控制的是journal日志可以占用的最大空间，默认是10%（磁盘）、15%（内存），但是有一个最大上限 4G。
+        - KeepFree：用来控制需要留下多少空间
+        - MaxFileSize：用来控制每个journal日志文件大小，默认为1/8的MaxUse，上限为128M 
+        - MaxFiles：用来控制最多保存的journal日志个数，只有打包（压缩）的日志会被删除，正在活动的日志文件不会删除，默认值为100。
+
+    - 还有其他一些选项也可以控制日志转储：
+        - MaxFileSec：控制每个日志文件中条目跨越的最大时间，例如10day，就是开始到结束不能超过10天
+        - MaxRetentionSec：控制所有日志文件的时间跨度，同上
+
+    - 同时也可以直接通过命令转储journalctl --rotate配合下面几个选项控制转储的条件
+
+        ```
+        --vacuum-size=, --vacuum-time=, --vacuum-files=
+        ```
+
+### 速率限制
+
+- 因为journal接受的是系统中所有服务的日志，所以有时候面临打日志速度太快的问题，对磁盘以及内存的压力会非常大。因此，journal也支持对日志速率进行限制。
+
+- 这两个就是常用的限制速率的配置：
+
+    - `RateLimitIntervalSec=`：控制时间
+    - `RateLimitBurst=`：控制数量
+
+- 两者相结合就是控制一定时间内记录的日志条目。 如果日志速率超过了这个限制，则会直接被丢弃，并且，在日志中会打印一条提示
+
+    ```
+    Suppressed XXX messages from XXX
+    ```
+
+    - 这和rsyslog中的速率限制机制类似，在rsyslog中，会看到这样的提示
+
+        ```
+        XXX messages lost due to rate-limiting (20000 allowed within 600 seconds)
+        ```
+### 日志接收和转发
+
+- 一图总结：几个系统级别日志概念的联系
+
+    - dmesg、/var/log/message、 journal、rsyslog(syslog) 等这几个都是系统中常用的日志，它们之间的关系如下图所示。
+
+    ![image](./Pictures/systemd/journal的日志接受和转发.avif)
+
+- 日志接收
+
+    - journal日志主要来自于以下几个地方：
+
+        - 内核日志，通过kmsg
+        - libc 的 syslog 接口
+        - 本地 journal 接口，sd_journal_print等
+        - 服务的标准输出和错误
+        - 内核 audit 子系统
+
+- 日志转发
+
+    - journald可以将日志转发到 syslog、kmsg、console、wall这些最终日志呈现端口。
+
+    - 下面几个选项控制着是否将日志转发给他们。
+
+        ```
+        ForwardToSyslog=, ForwardToKMsg=, ForwardToConsole=, ForwardToWall=
+        ```
+
+    - 以及控制转发的最大的等级日志：
+
+        ```
+        MaxLevelStore=, MaxLevelSyslog=, MaxLevelKMsg=, MaxLevelConsole=, MaxLevelWall=
+        ```
+
+#### rsyslog
+
+- 如果设置了 `ForwardToSyslog=` （默认开启），则journald会将从/dev/log接收到的日志转发给rsyslog
+
+- 需要注意的是，虽然rsyslog支持直接从/dev/log中读取日志，但是当前上游以及发行版都关闭了此选项，默认从journal获取日志，防止与journal争夺/dev/log的所有权。
+
+- rsyslog采用了模块式的功能，可以灵活控制其中模块能力的启用和关闭，这里与journal的对接也进行了模块化，见如下`/etc/rsyslog.conf`配置：
+
+    ```
+    module(load="imuxsock"    # provides support for local system logging (e.g. via logger command)
+           SysSock.Use="off") # Turn off message reception via local log socket; 
+                              # local messages are retrieved through imjournal now.
+    module(load="imjournal"             # provides access to the systemd journal
+           StateFile="imjournal.state") # File to store the position in the journal
+    ```
+
+#### kmsg
+
+- kmsg 相比于 rsyslog 稍微简单一点，因为他是一个独立的缓冲区，内核代码中 printk 的内容就输出到这里。 例如，在 `/dev/kmsg` 里面的一条内核日志
+
+    ```sh
+    lsof /dev/kmsg
+    COMMAND      PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+    systemd        1 root    3w   CHR   1,11      0t0   10 /dev/kmsg
+    systemd-j 705019 root   23w   CHR   1,11      0t0   10 /dev/kmsg
+    systemd-j 705019 root   25u   CHR   1,11      0t0   10 /dev/kmsg
+    ```
+
+#### console
+
+- 当我们用 ssh 或者 vnc 这类软件连接到一个服务器，出现的一个可以键盘输入的地方，就是俗话说的 终端。 /dev/console 是一个虚拟设备，他需要与终端设备进行映射，我们在系统启动时的启动参数中，一般会将 tty0 和 ttyS0 与其进行映射。
+
+    ```sh
+    cat /proc/cmdline  | grep console
+    ... console=ttyS0,115200 console=tty0 console=ttyS0,115200....
+    ```
+
+- 可以通过/proc/consoles查看当前与console映射的串口。
+
+    ```sh
+    cat /proc/consoles 
+    ttyS0                -W- (EC p a)    4:64
+    tty0                 -WU (E  p  )    4:1
+    ```
+
+- 当我们向 tty0 中输入字符时，控制台也会打印相同的字符
+    ```sh
+    echo 123 > /dev/tty0
+    ```
+
+    - 这里 systemd-journal 其实也是相同的操作，将需要打印到控制台的日志写入 /dev/console，内容就会在控制台显示。
+
+        ```
+        fd = open_terminal(tty, O_WRONLY|O_NOCTTY|O_CLOEXEC);
+        if (writev(fd, iovec, n) < 0)
+        ```
+
+#### wall
+
+- 如果有使用过 wall 这个命令，那就应该对 wall 有所了解，这个 wall 其实指的是 write to all， 也就是向所有人通知的意思，他被经常用来作为管理员向系统中的所有其他用户发送通知消息。
+
+- 同理，systemd的代码中的也是类似的实现，通过从`utmp`文件中逐条读取当前系统中有哪些用户，他们的终端是哪个，然后向对应的终端写入消息来完成。
+
+- utmp就是`/var/run/utmp`文件，可以通过`utmpdump`工具读取，可以看到，utmp文件记录的就是登录的用户、终端、ip、时间等信息。
+
+    ```sh
+    utmpdump /var/run/utmp 
+    Utmp dump of /var/run/utmp
+    [2] [00000] [~~  ] [reboot  ] [~           ] [6.1.41-2303.1.1.ocs23.x86_64] [0.0.0.0        ] [2023-08-24T04:50:27,580823+00:00]
+    [1] [00053] [~~  ] [runlevel] [~           ] [6.1.41-2303.1.1.ocs23.x86_64] [0.0.0.0        ] [2023-08-24T04:51:29,999747+00:00]
+    [6] [01697] [tyS0] [LOGIN   ] [ttyS0       ] [                    ] [0.0.0.0        ] [2023-08-24T04:51:30,006922+00:00]
+    [7] [3316382] [tty1] [root    ] [tty1        ] [                    ] [0.0.0.0        ] [2024-05-30T11:10:27,607175+00:00]
+    ...
+    ```
+
+### 基本使用
 
 ```sh
 # 查看日志

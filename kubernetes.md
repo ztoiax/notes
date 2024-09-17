@@ -43,6 +43,8 @@
 
 # Kubernetes
 
+- [（视频）小白debug：Kubernetes(k8s)是什么? 架构是怎么样的？](https://www.bilibili.com/video/BV1Qy411q7ot)
+
 - Kubernetes 是希腊语中的船长(captain)
 
 - Kubenetes是一款由Google开发的开源的容器编排工具，在Google已经使用超过15年（Kubernetest前身是Google的内部工具Borg）。

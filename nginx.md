@@ -70,6 +70,7 @@
             * [bugstack虫洞栈：爽了！免费的SSL，还能自动续期！??失败了](#bugstack虫洞栈爽了免费的ssl还能自动续期失败了)
             * [使用acme.sh生成证书。??失败了](#使用acmesh生成证书失败了)
             * [httpsok： 一行命令，轻松搞定SSL证书自动续期。??失败了](#httpsok-一行命令轻松搞定ssl证书自动续期失败了)
+            * [ssltest：验证tls，并且有评分](#ssltest验证tls并且有评分)
             * [http2](#http2)
             * [http3](#http3)
             * [websocket](#websocket)
@@ -3077,6 +3078,12 @@ server
 
 #### nginx配置fastcgi
 
+- C/C++ FastCGI常用apache的`mod_fastcgi`模块，PHP常用`spawn-fcgi`和`PHP-FPM`。
+
+- 现在更多是用nginx的反向代理功能，把HTTP请求转发到后端的trpc服务直接处理。这里的trpc服务就有点FastCGI的感觉，但不用与nginx部署在一起了。
+
+- 配置`php-fpm`：
+
 ```nginx
 server {
     listen 80;
@@ -4167,6 +4174,13 @@ http {
             - 公钥
         - 第三方证书颁发机构拿到csr文件后，会用其根证书私钥对证书进行加密，并生成crt证书
 
+- 证书有两种
+
+    - 1.ECC 证书（内置公钥是 ECDSA 公钥）
+    - 2.RSA 证书（内置 RSA 公钥）
+
+    - 简单来说，同等长度 ECC 比 RSA 更安全,也就是说在具有同样安全性的情况下，ECC 的密钥长度比 RSA 短得多（加密解密会更快）。
+        - 但问题是 ECC 的兼容性会差一些，Android 4.x 以下和 Windows XP 不支持。只要您的设备不是非常老的老古董，建议使用 ECC 证书。
 
 - [Nginx 安装 SSL 配置 HTTPS 超详细完整教程全过程](https://developer.aliyun.com/article/766958)
 
@@ -4340,6 +4354,8 @@ acme.sh --install-cert -d example.com \
 ```
 
 #### [httpsok： 一行命令，轻松搞定SSL证书自动续期。](https://github.com/httpsok/httpsok)??失败了
+
+#### [ssltest：验证tls，并且有评分](https://www.ssllabs.com/ssltest/index.html)
 
 #### http2
 

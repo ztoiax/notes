@@ -1,11 +1,20 @@
 <!-- vim-markdown-toc GFM -->
 
+* [分析方法](#分析方法)
+    * [CPU 使用有问题？](#cpu-使用有问题)
+    * [内存使用有问题？](#内存使用有问题)
+    * [磁盘 I/O 使用有问题？](#磁盘-io-使用有问题)
+    * [网络 I/O 使用有问题？](#网络-io-使用有问题)
 * [性能](#性能)
     * [基准测试](#基准测试)
     * [性能指标](#性能指标)
+    * [性能调优](#性能调优)
+        * [tuned性能调优工具](#tuned性能调优工具)
+        * [cpu优化](#cpu优化)
 * [基本说明](#基本说明)
 * [all-have 综合](#all-have-综合)
     * [top命令](#top命令)
+        * [逐行解释top命令](#逐行解释top命令)
     * [flent：可以同时运行多个 netperf/iperf/ping 实例并聚合结果，通过交互式 GUI 和可扩展的绘图功能展示数据，支持本地和远程主机，支持采集 CPU 使用率、WiFi、qdisc 和 TCP 套接字统计信息等。](#flent可以同时运行多个-netperfiperfping-实例并聚合结果通过交互式-gui-和可扩展的绘图功能展示数据支持本地和远程主机支持采集-cpu-使用率wifiqdisc-和-tcp-套接字统计信息等)
     * [sysbench](#sysbench)
     * [vmstat](#vmstat)
@@ -17,9 +26,10 @@
     * [below](#below)
     * [tiptop](#tiptop)
     * [bottom](#bottom)
+    * [Remotery：cpu和gpu](#remoterycpu和gpu)
 * [CPU](#cpu)
     * [cpu info](#cpu-info)
-    * [mpstat(sysstat)](#mpstatsysstat)
+    * [mpstat(sysstat)：单独监测单个 CPU 情况](#mpstatsysstat单独监测单个-cpu-情况)
     * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
     * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
     * [hyperfine: 高级time命令](#hyperfine-高级time命令)
@@ -29,7 +39,7 @@
     * [KSM](#ksm)
     * [base](#base)
     * [pmap](#pmap)
-    * [slabtop](#slabtop)
+    * [slabtop：内核内存](#slabtop内核内存)
     * [bytehound](#bytehound)
 * [Net](#net)
     * [TCP/UDP](#tcpudp)
@@ -44,6 +54,7 @@
     * [speedometer](#speedometer)
     * [httpstat](#httpstat)
     * [bandwhich: tui](#bandwhich-tui)
+    * [iptraf-ng：统计端口收发包（tui）](#iptraf-ng统计端口收发包tui)
 * [Web](#web)
     * [ab：web 压力测试](#abweb-压力测试)
     * [httperf](#httperf)
@@ -58,7 +69,7 @@
         * [fileslower(bcc)](#fileslowerbcc)
     * [File system](#file-system)
     * [Block devices interface](#block-devices-interface)
-        * [iostat(sysstat)](#iostatsysstat)
+        * [iostat(sysstat)：显示各个进程、线程的磁盘读取实时速率](#iostatsysstat显示各个进程线程的磁盘读取实时速率)
         * [biosnoop(bcc)](#biosnoopbcc)
 * [Disk](#disk)
     * [inotify-tools](#inotify-tools)
@@ -70,14 +81,14 @@
     * [agedu](#agedu)
         * [只统计.conf 文件](#只统计conf-文件)
 * [Process](#process)
-    * [top](#top)
+    * [ps命令](#ps命令)
     * [htop](#htop)
     * [bpytop](#bpytop)
     * [btop](#btop)
     * [bottom](#bottom-1)
     * [Procmon](#procmon)
     * [SysMonTask](#sysmontask)
-    * [pidstat](#pidstat)
+    * [pidstat：对某个进程进行全面具体的追踪](#pidstat对某个进程进行全面具体的追踪)
 * [开机](#开机)
     * [bootchart](#bootchart)
 * [Special file system](#special-file-system)
@@ -112,6 +123,129 @@
 * [reference](#reference)
 
 <!-- vim-markdown-toc -->
+
+# 分析方法
+
+- [腾讯云开发者：程序员必备Linux性能分析工具和方法](https://mp.weixin.qq.com/s/B845AYy-TjOU2IXOgsRcSQ)
+
+## CPU 使用有问题？
+
+- 使用 top 等命令查看 CPU 使用率和负载是否过高。
+
+- 1.内核空间占了大多数 CPU？
+
+    - 通过 `top` 命令查看内核占用 CPU 比例是否过大。
+
+- 2.内核处理了很多中断吗？
+
+    - 使用 `procinfo` 或 `cat /proc/interrupts` 查看中断次数和频率，以及造成中断数量较高的设备。
+
+- 3.内核的时间花在哪了？
+
+    - 使用 `oprofile` 分析哪些内核函数消耗大量时间，并查询这些函数的功能，确定它们处于哪个子系统（内存、网络、磁盘等）并了解可能被调用的原因。如果这些函数是设备特定的，尝试着找出为什么需要使用这种特定的设备（尤其是在1.2中造成高中断的设备），或许就可以判断出哪里出了问题。
+
+- 4.用户空间占了大多是 CPU？
+
+    - 通过 `top` 命令查看用户态是否占了大量 CPU。
+
+- 5.哪个进程占用了大多数 CPU？
+
+    - 通过 `top` 命令进程排序列表确定占用大量 CPU 的进程。
+
+- 6.进程在内核还是用户空间花费了时间？
+
+    - 使用 `time` 命令查看进程在内核和用户空间花费的时间，这里不一定非得任意一方非得占大多数时间。如进程在内核占用超过25%以上的时间，说明内核也排查是重点。
+
+- 7.进程在哪些系统调用上花费了较多时间？
+
+    - 使用 `strace` `oprofile` 查看进程调用了哪些系统调用和找出主要耗时时长的系统调用，通过减少系统调用次数或者更改性能更好的系统调用来提升性能。
+
+- 8.进程在哪些函数上花费了时间？
+
+    - 使用 `ltrace` `oprofile` 确定哪些函数消耗了大多数时间。如果函数调用次数过多，则检查是否存在不必要的调用次数，如 for 循环判断条件里不断调用某个函数或者 debug 日志里调某个函数得到一个字符串序列。如果单次调用就已经很耗时，使用 oprofile/cachegrind 分析函数是否存在热点代码大量 cache 缺失，通过调整数据结构或调整代码提高热点代码 cache 命中。
+
+## 内存使用有问题？
+
+- 通过 top/vmstat/procinfo 等确定内存使用是否过高，内存交换空间不断增加。
+
+- 1.内核使用内存在增加？
+
+    - 使用 `slabtop` 查看内核使用内存是否增加或者使用量过大。
+
+- 2.内核使用的内存类型是什么？
+
+    - 使用 `slabtop` 排序内核使用内存情况，找出使用内存较大的对象名字。通过搜索或查询相关分配对象名字（如 inode_cache），确定它用于哪些文件或属于哪个子系统，就有可能弄清楚内存分配的原因。
+
+- 3.进程使用内存在增加？
+
+    - 使用 `top` `ps` 按内存使用量排序并观察 rss 等字段看进程使用物理内存是否增加。
+
+- 4.进程使用的内存类型是什么？
+
+    - 通过 /proc/<pid>/status 查看内存使用情况。
+        - VmExe 值很大，则说明可执行文件本身很大，需要确定哪些函数文本比较大。
+        - VmLib 很大，则说明应用程序使用了大量或者体积比较大的共享库，需要确定哪些库导致了 VmLib 很大。
+        - VmData 较大并在增加，说明进程的数据区或堆在增加。
+
+- 5.哪些函数使用大量的栈空间？
+
+    - 使用 `gdb attach` 进程，根据调用栈信息计算当前栈指针和前一个栈指针的差值，这个差值即为函数的栈容量，找到栈容量比较大的函数。
+
+- 6.哪些函数分配大量的堆内存？
+
+    - 使用`memprof`找到哪些函数分配了堆内存并观察哪些进程的堆内存在增加，确定是否存在不合理的分配或者内存泄漏问题。
+
+- 7.哪些库比较大？
+
+    - 通过 /proc/<pid>/maps 查看进程使用了哪些共享库和以及这些库的大小，对于太大的共享库是否可能替换成大小更小的版本。或者某个库已经被其他进程加载到内存使用，只是版本不同，则可以改成共用一个版本。
+
+- 8.哪些函数文本较大？
+
+    - 如果进程的可执行文件本身比较大，加载到内存后会占用更多的空间。可以通过 `nm` 命令排序符号大小，找出文本段较大的函数看是否可以删除或者减小其大小。
+
+- 9.共享内存使用量在增加？
+
+    - 使用 `ipcs` 查看共享内存信息，是否存在过大或者共享内存数量不断增加。
+
+- 10.哪个进程在使用共享内存？
+
+    - 使用 `ipcs -p` 查看哪些进程创建和使用了共享内存。对于共享内存过大问题，可以查看其程序代码看分配是否合理。对于共享内存数不断增加，是否存在创建后未删除等问题。
+
+## 磁盘 I/O 使用有问题？
+
+- 运行 iostat，查看 await 平均等待时间，await 越高则说明磁盘负荷越大。
+
+- 1.哪个进程访问了磁盘？
+
+    - 通过 `iotop` 找到产生大量 IO 的进程。
+
+- 2.进程访问了哪些文件？
+
+    - 通过 strace 跟踪高 IO 进程与文件操作相关的系统调用，查看其调用详情和耗时时长，找到耗时长的读写操作。并通过其操作的文件描述符 fd 映射回磁盘上的文件，了解为什么需要读写这些文件，进而查看是否可以优化。
+
+## 网络 I/O 使用有问题？
+
+- 使用 ethool 查看网卡的最大流量限制 ，并通过 iptraf-ng 查看流经端口的流量是否饱和。
+
+- 1.网络设备产生了大量错误？
+
+    - 使用 `ifconfig` `ip` 命令查看网络接口是否产生大量错误，如果是可能是硬件配置的有问题，联系网管帮忙排查解决。
+
+- 2.网络设备存流量类型是什么？
+
+    - 使用 `iptraf-ng` 查看流量类型（协议/端口号）。
+
+是否有进程处理该类型的流量？
+
+使用 netstat 查看是否有进程在流经该网络端口的流量。
+
+哪个远程系统发送了流量？
+
+如果没有指定进程在处理这个流量，可能来自网络上其他系统的流量攻击。可使用 etherape/wireshark 尝试跟踪或者找网管咨询。
+
+哪个套接字在处理流量？
+
+在确定了处理流量的进程后，使用 strace/lsof 找到是哪个套接字产生了这些通信流量。
 
 # 性能
 
@@ -154,6 +288,100 @@
     - 当并发数达到一定的数量后，系统的吞吐量开始呈现平稳的趋势，当压力持续增大，并超过系统负荷之后，吞吐量反而会降低，此时也伴随着响应时间的增大
 
     ![image](./Pictures/benchmark/基准测试.avif)
+
+## 性能调优
+
+### tuned性能调优工具
+
+- tuned是RedHat开发的一个性能调优工具，它会根据不同的需求、参数提供“最合适”的效能，如省电方案、高网络吞吐方案、低延迟方案等，例如使用它的客户端可以看到所有支持的策略。
+
+- 查看所有策略。最后一行代表，当前使用的策略（默认为balanced）
+```sh
+tuned-adm  list
+```
+
+- 查看balanced的配置
+
+    ```sh
+    cat /usr/lib/tuned/profiles/balanced/tuned.conf
+    [cpu]
+    priority=10
+    governor=conservative|powersave
+    energy_perf_bias=normal
+    energy_performance_preference=balance_performance
+    ```
+
+    - `energy_perf_bias` 参数决定了 CPU 性能和功率的平衡。
+
+        - `performance` 模式下，CPU 会倾向于提供更高的性能，这意味着它会消耗更多的功率。
+
+        - `normal` 模式下，CPU 会倾向于更多地考虑功率节约，这会导致性能稍微降低。
+
+### cpu优化
+
+- [Redis开发运维实战：Redis机器CPU异常降频问题梳理](https://mp.weixin.qq.com/s/s98d9KL2t7PkZJLFqqQjFA)
+
+- CPU功耗管理有以下几种模式：
+
+| 模式         | 说明                                                                                            |
+|--------------|-------------------------------------------------------------------------------------------------|
+| performance  | 运行于最大频率                                                                                  |
+| powersave    | 运行于最小频率                                                                                  |
+| userspace    | 运行于用户指定的频率                                                                            |
+| ondemand     | 按需快速动态调整CPU频率， 一有cpu计算量的任务，就会立即达到最大频率运行，空闲时间增加就降低频率 |
+| conservative | 按需快速动态调整CPU频率， 比 ondemand 的调整更保守                                              |
+| schedutil    | 基于调度程序调整 CPU 频率                                                                       |
+
+- 查看当前使用模式：
+    ```sh
+    cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
+    performance powersave
+    ```
+
+- 修改使用模式：例如修改为performance
+    ```sh
+    cpupower frequency-set -g performance
+    ```
+
+- 查看详情
+    ```sh
+    cpupower frequency-info
+    ```
+
+- 优化cpu
+
+    ```sh
+    cpupower frequency-set -g performance
+    cpupower idle-set -D 0
+    ```
+
+    - 在rc.local中添加：
+
+        ```sh
+        cpupower frequency-set -g performance
+        cpupower idle-set -D 0
+        tuned-adm profile throughput-performance
+        ```
+
+    - 以防万一tuned被重启
+
+        - 修改/etc/tuned/tuned-main.conf
+            ```
+            dynamic_tuning = 0 #禁用动态调整。
+            recommend_command = 0 #禁用推荐功能。
+            ```
+
+    - 修改/usr/lib/tuned/balanced/tuned.conf中改为
+
+        ```
+        governor=performance
+        energy_perf_bias=performance
+        ```
+
+    - 修改`/usr/lib/tuned/recommend.conf`
+        ```
+        只保留[throughput-performance]，其他删除或者注释掉
+        ```
 
 # 基本说明
 
@@ -205,7 +433,120 @@ data from brendangregg book: [Systems Performance](http://www.brendangregg.com/s
 
 - [咸鱼运维杂谈：聊聊 Linux iowait](https://mp.weixin.qq.com/s/LMUp0IYrAzBf1QNIGXXq2A)
 
-- 进程状态
+- top命令实时显示系统中各个进程的资源占用情况，包括CPU使用率、内存占用、运行时间等信息。
+
+```sh
+# 看到多个核，每个核的cpu的使用情况
+top -1
+
+# 查看某个进程下的线程资源使用情况
+top -H -p pid值
+```
+### 逐行解释top命令
+
+- [鹅厂架构师：性能分析入门：使用top命令分析Linux系统性能](https://zhuanlan.zhihu.com/p/685911924)
+
+```sh
+top - 11:22:43 up  2:21,  2 users,  load average: 0.70, 0.80, 0.96
+Tasks: 374 total,   2 running, 372 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.5 us,  0.6 sy,  0.0 ni, 98.4 id,  0.0 wa,  0.5 hi,  0.0 si,  0.0 st
+MiB Mem :  12774.9 total,    539.1 free,   7911.2 used,   4979.5 buff/cache
+MiB Swap:   4096.0 total,   4095.7 free,      0.2 used.   4863.7 avail Mem
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+   1499 tz        20   0 5018652 282796 184412 S   6.6   2.2   7:24.33 netease-cloud+
+    903 root      20   0 1183828 146996  97512 S   3.0   1.1   6:37.93 Xorg
+```
+
+- 第一行：`top - 11:22:43 up  2:21,  2 users,  load average: 0.70, 0.80, 0.96`
+    - 显示当前时间，系统运行时间，登录用户数，以及过去1分钟、5分钟和15分钟的系统负载平均值。
+
+- 第二行： `Tasks: 374 total,   2 running, 372 sleeping,   0 stopped,   0 zombie`
+    - 统计了系统的任务状态信息
+        - running 很自然不必多说，包括正在 CPU 上运行的和将要被调度运行的；
+        - sleeping 通常是等待事件(比如 IO 操作)完成的任务
+            - 细分可以包括 interruptible 和 uninterruptible 的类型；
+        - stopped 是一些被暂停的任务，通常发送 SIGSTOP 或者对一个前台任务操作 Ctrl-Z 可以将其暂停；
+        - zombie 僵尸任务，虽然进程终止资源会被自动回收，但是含有退出任务的 task descriptor 需要父进程访问后才能释放，这种进程显示为 defunct 状态，无论是因为父进程提前退出还是未 wait 调用，出现这种进程都应该格外注意程序是否设计有误。
+
+
+- 第三行： `%Cpu(s):  0.5 us,  0.6 sy,  0.0 ni, 98.4 id,  0.0 wa,  0.5 hi,  0.0 si,  0.0 st`
+
+
+    | 参数 | 说明              |
+    |------|-------------------|
+    | us   | "user CPU time"   |
+    | sy   | "system CPU time" |
+    | ni   | "nice CPU time"   |
+    | id   | "idle"            |
+    | wa   | "iowait"          |
+    | hi   | "hardware irq"    |
+    | si   | "software irq"    |
+    | st   | "steal time"      |
+
+    | 参数 | 说明                                                                                                                                                                                                                                                                                     |
+    |------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | us   | 用户空间占用CPU百分比                                                                                                                                                                                                                                                                    |
+    | sy   | 内核空间占用CPU百分比 --sy比较大的时候，是否有多线程操作，排查有没有死锁，当服务器执行的 IO 比较密集的时候，该值会比较大                                                                                                                                                                                                                 |
+    | ni   | 用户进程空间内改变过优先级的进程占用CPU百分比 --nice值是用于调整进程优先级的参数，范围从-20到+19，其中-20表示最高优先级，+19表示最低优先级，只影响CPU调度的优先级，而不是实际的性能。它只是一种相对的优先级调整机制，具体的CPU时间分配还受到其他因素的影响，如系统负载、实时性要求等。 |
+    | id   | 空闲CPU百分比，表示CPU在这段时间内没有执行任何任务。                                                                                                                                                                                                                                     |
+    | wa   | 等待输入输出的CPU时间百分比 如果wa%>5,IO已经成为瓶颈                                                                                                                                                                                                                                     |
+    | hi   | 硬件中断 硬中断是由硬件设备（例如网络适配器或磁盘驱动器）发出的信号，通知CPU有紧急任务需要处理                                                                                                                                                                                           |
+    | si   | 软件中断 软中断是由内核产生的信号，用于处理非紧急任务，如网络数据包的处理。记住软中断分为 softirqs、tasklets (其实是前者的特例)、work queues，不知道这里是统计的是哪些的时间，毕竟 work queues 的执行已经不是中断上下文了                                                                                                                                                                                                              |
+    | st   | 在虚拟化环境中才有意义，表示虚拟CPU在等待真实CPU的时间。                                                                                                                                                                                                                   |
+
+
+- 第四行： `MiB Mem :  12774.9 total,    539.1 free,   7911.2 used,   4979.5 buff/cache`
+
+
+    | 参数           | 说明                           |
+    |----------------|--------------------------------|
+    | "total"        | 表示系统的总内存大小           |
+    | "used"         | 表示当前已使用的内存大小       |
+    | "free"         | 表示当前可用的空闲内存大小     |
+    | "buffer/cache" | 表示被系统用于缓冲区的内存大小 |
+
+    - total = free + used + buff/cache
+
+    - buffers和cached Mem 对应 `/proc/meminfo` 中的 Buffers 和 Cached 字段
+
+        - Buffers 是针对 raw disk 的块缓存，主要是以 raw block 的方式缓存文件系统的元数据(比如超级块信息等)，这个值一般比较小(20M左右)；
+        - Cached 是针对于某些具体的文件进行读缓存，以增加文件的访问效率而使用的，可以说是用于文件系统中文件缓存使用。
+
+    - avail Mem 大致和 free + buff/cached 相当
+        - 用于指示在不进行交换的情况下，可以给新开启的程序多少内存空间，
+
+- 第五行： `MiB Swap:   4096.0 total,   4095.7 free,      0.2 used.   4863.7 avail Mem`
+
+    - "KiB Swap: 0 total"：表示系统的总交换空间大小为0 KiB，即没有设置交换空间。
+    - "0 free"：表示当前可用的空闲交换空间大小为0 KiB，即没有可用的交换空间。
+    - "0 used"：表示当前已使用的交换空间大小为0 KiB，即没有使用交换空间。
+    - "6291892 avail Mem"：表示系统可用的内存大小为6291892 KiB，即系统当前可用的物理内存大小。
+
+    - 缓冲区（buffer）是磁盘虚拟出来的一个缓冲区，用于临时存储数据的内存区域。它用于在数据传输过程中临时存储数据，以提高数据传输的效率和性能
+    - 缓存（cache）是一种用于存储临时数据的高速存储器，通常位于内存和CPU之间。它的目的是提高数据访问的速度和效率；
+    - 交互分区（swap partition）是一种在硬盘上划分的用于交换内存空间的特定分区，它也是由磁盘虚拟而来，一般为物理内存的1.5倍到2倍
+    - 任何一个程序启动，都会在内存中占用：虚拟内存和 物理内存
+
+
+- 第七行以下：各进程（任务）的状态监控，列信息说明如下：
+
+    | 参数    | 说明                                                                            |
+    |---------|---------------------------------------------------------------------------------|
+    | PID     | 进程ID，唯一标识一个进程                                                        |
+    | USER    | 进程所有者，即运行该进程的用户                                                  |
+    | PR      | 进程优先级，表示进程在调度时的优先级，PR值是根据进程的nice值计算 越小优先级越高
+    | NI      | nice值，用于调整进程的优先级                                                    | 负值表示高优先级，正值表示低优先级                                                         |
+    | VIRT    | 进程使用的虚拟内存总量，以千字节（KB）为单位                                    | VIRT = SWAP + RES                                                                          |
+    | RES     | 进程使用的未被换出的物理内存大小，以千字节（KB）为单位                          | RES = CODE + DATA                                                                          |
+    | SHR     | 共享内存大小，以千字节（KB）为单位                                              |
+    | S       | 进程状态                                                                        | 常见的状态包括D（不可中断的睡眠状态）、R（运行）、S（睡眠）、T（跟踪/停止）和Z（僵尸进程） |
+    | %CPU    | 进程在上次更新到现在的CPU时间占用百分比                                         |
+    | %MEM    | 进程使用的物理内存占总内存的百分比                                              |
+    | TIME+   | 进程占用的CPU时间总计，以1/100秒为单位                                          |
+    | COMMAND | 进程名称，即进程的命令名或命令行                                                |
+
+- 进程状态（S）
 
     ![image](./Pictures/benchmark/进程状态.avif)
 
@@ -315,6 +656,8 @@ vmstat 1 -Sm
 ```
 
 ## [dstat](http://dag.wiee.rs/home-made/dstat/)
+
+- 已经被[dool](https://github.com/scottchiefbaker/dool)取代
 
 | 参数          | 监控选项                     |
 | ------------- | ---------------------------- |
@@ -485,6 +828,9 @@ sysbench --test=fileio --file-total-size=5G prepare
 
 ## [bottom](https://github.com/ClementTsang/bottom)
 
+## [Remotery：cpu和gpu](https://github.com/Celtoys/Remotery)
+
+![image](./Pictures/benchmark/Remotery.gif)
 
 # CPU
 
@@ -519,7 +865,7 @@ lstopo:
 grep nx /proc/cpuinfo
 ```
 
-## mpstat(sysstat)
+## mpstat(sysstat)：单独监测单个 CPU 情况
 
 | 参数    | 内容                               |
 | ------- | ---------------------------------- |
@@ -714,7 +1060,7 @@ top -c -b -o +%MEM | head -n 20 | tail -15
 pmap -x $(pgrep -of nvim)
 ```
 
-## slabtop
+## slabtop：内核内存
 
 ## [bytehound](https://github.com/koute/bytehound)
 
@@ -815,6 +1161,15 @@ sudo setcap cap_sys_ptrace,cap_dac_read_search,cap_net_raw,cap_net_admin+ep `whi
 # 只查看firefox的网络流量
 bandwhich --raw | grep firefox
 ```
+
+## [iptraf-ng：统计端口收发包（tui）](https://github.com/iptraf-ng/iptraf-ng)
+
+![image](./Pictures/benchmark/iptraf-ng.avif)
+![image](./Pictures/benchmark/iptraf-ng1.avif)
+![image](./Pictures/benchmark/iptraf-ng2.avif)
+![image](./Pictures/benchmark/iptraf-ng3.avif)
+![image](./Pictures/benchmark/iptraf-ng4.avif)
+![image](./Pictures/benchmark/iptraf-ng5.avif)
 
 # Web
 
@@ -928,11 +1283,8 @@ fileslower 1
 
 ## Block devices interface
 
-### iostat(sysstat)
+### iostat(sysstat)：显示各个进程、线程的磁盘读取实时速率
 
-**局限性:**
-
-- 错误 I/O
 
 ```bash
 # -p 指定刷新秒数，每秒刷新
@@ -1165,12 +1517,14 @@ agedu -w
 
 # Process
 
-## top
+## ps命令
 
-```sh
-# 监控进程pid的 CPU 和内存资源使用情况
-top -p 20316
-```
+- 基本命令
+
+    ```sh
+    # 显示进程树结构，显示效果比pstree详细美观的多
+    ps axjf
+    ```
 
 ## [htop](https://github.com/hishamhm/htop)
 
@@ -1184,6 +1538,8 @@ htop -p 20316
 ## [bpytop](https://github.com/aristocratos/bpytop)
 
 > instead bashtop
+
+![image](./Pictures/benchmark/bpytop.avif)
 
 ## [btop](https://github.com/aristocratos/btop)
 
@@ -1201,78 +1557,171 @@ htop -p 20316
 
 > windows process monitor for linux
 
-## pidstat
+## pidstat：对某个进程进行全面具体的追踪
 
-> 监控单个进程的 CPU,MEM,I/O,上下文切换
+> 监控单个进程的 CPU,MEM,I/O,上下文切换等。如果查看单个尤其是多线程的任务时候，pidstat比常用的ps更好使！
 
-![image](./Pictures/benchmark/bpytop.avif)
+- 基本使用
 
-```bash
-# 每秒输出
-pidstat 1
+    ```sh
+    # 每秒输出
+    pidstat 1
 
-# 每秒输出十次
-pidstat 1 10
+    # 每秒输出十次
+    pidstat 1 10
 
-# --human 自动转换单位
-pidstat --human 1
+    # --human 自动转换单位
+    pidstat --human 1
 
-# -C 指定程序名
-pidstat -C nvim 1
+    # -C 指定程序名
+    pidstat -C nvim 1
 
-# -t 显示线程
-pidstat -t -C nvim 1
+    # -t 显示线程
+    pidstat -t -C nvim 1
 
-# -l show command line
-pidstat -l -C nvim  1
+    # -l可以显示完整的程序名和参数
+    pidstat -l -C nvim  1
 
-# -p 指定pid
-pidstat -p 1234 1
+    # -p 指定pid
+    pidstat -p 1234 1
 
-# 监控CPU,MEM,I/O,上下文切换
-pidstat --human -udrw -C nvim 1
-```
+    # 监控CPU,MEM,I/O,上下文切换
+    pidstat --human -udrw -C nvim 1
+    ```
 
-`-u` cpu(default option):
+- `-u` cpu(default option):
 
-```bash
-# %usr    - 用户的百分比
-# %system - 内核的百分比
-# %guest  - 虚拟程序的百分比
-# %wait   - 等待的CPU百分比
-# %CPU    - 总CPU用时
-# CPU     - 程序运行具体的CPU number*
-```
+    | 参数    | 说明                      |
+    |---------|---------------------------|
+    | %usr    | 用户的百分比              |
+    | %system | 内核的百分比              |
+    | %guest  | 虚拟程序的百分比          |
+    | %wait   | 等待的CPU百分比           |
+    | %CPU    | 总CPU用时                 |
+    | CPU     | 程序运行具体的CPU number* |
 
-`-d` I/O:
+    ```sh
+    pidstat -u -t -C nvim 1
+    05:14:16 PM   UID      TGID       TID    %usr %system  %guest   %wait    %CPU   CPU  Command
+    05:14:17 PM  1000      3221         -   58.00   10.00    0.00    0.00   68.00     4  nvim
+    05:14:17 PM  1000         -      3221   58.00    8.00    0.00    0.00   66.00     4  |__nvim
+    05:14:17 PM  1000         -      3330    0.00    1.00    0.00    0.00    1.00     5  |__nvim
 
-```bash
-# kB_rd/s - 任务从硬盘上的读取速度（kb）
-# kB_wr/s - 任务向硬盘中的写入速度（kb）
-# kB_ccwr/s - 任务写入磁盘被取消的速率（kb）
+    05:14:17 PM   UID      TGID       TID    %usr %system  %guest   %wait    %CPU   CPU  Command
+    05:14:18 PM  1000      3221         -    8.00    5.00    0.00    0.00   13.00    12  nvim
+    05:14:18 PM  1000         -      3221    8.00    6.00    0.00    0.00   14.00    12  |__nvim
 
-# 监控指定程序I/O
-pidstat -d -C nvim 1
-# 或者
-pidstat -d -p $(pgrep nvim) 1
-```
+    Average:      UID      TGID       TID    %usr %system  %guest   %wait    %CPU   CPU  Command
+    Average:     1000      3219         -    0.00    0.11    0.00    0.00    0.11     -  nvim
+    Average:     1000         -      3219    0.00    0.11    0.00    0.00    0.11     -  |__nvim
+    Average:     1000      3221         -   21.26    3.63    0.00    0.00   24.89     -  nvim
+    Average:     1000         -      3221   21.15    3.52    0.00    0.00   24.67     -  |__nvim
+    Average:     1000         -      3330    0.11    0.11    0.00    0.00    0.22     -  |__nvim
+    Average:     1000         -      3333    0.11    0.11    0.00    0.00    0.22     -  |__nvim
+    ```
 
-`-r` memory:
+- `-d` I/O:
 
-```bash
-# 监控指定程序mem
-pidstat -r -C nvim 1
-```
+    | 参数      | 说明                           |
+    |-----------|--------------------------------|
+    | kB_rd/s   | 任务从硬盘上的读取速度（kb）   |
+    | kB_wr/s   | 任务向硬盘中的写入速度（kb）   |
+    | kB_ccwr/s | 任务写入磁盘被取消的速率（kb） |
 
-`-w` 上下文切换:
+    ```sh
+    # 监控指定程序I/O
+    pidstat -d -t -C nvim 1
+    # 或者
+    pidstat -d -t -p $(pgrep nvim) 1
 
-```bash
-# cswch/s   - 每秒自愿的上下文切换
-# nvcswch/s - 每秒非自愿的上下文切换
+    05:16:04 PM   UID      TGID       TID   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command
+    05:16:05 PM  1000      3221         -      0.00     92.00      0.00       0  nvim
+    05:16:05 PM  1000         -      3221      0.00     92.00      0.00       0  |__nvim
 
-# 监控指定程序switch
-pidstat -w -C nvim 1
-```
+    05:16:06 PM   UID      TGID       TID   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command
+    05:16:07 PM  1000      3221         -      0.00      4.00      0.00       0  nvim
+    05:16:07 PM  1000         -      3221      0.00      4.00      0.00       0  |__nvim
+
+    Average:      UID      TGID       TID   kB_rd/s   kB_wr/s kB_ccwr/s iodelay  Command
+    Average:     1000      3221         -      0.00     10.33      0.00       0  nvim
+    Average:     1000         -      3221      0.00     10.33      0.00       0  |__nvim
+    ```
+
+- `-r`：显示缺页错误和内存使用状况
+
+    - 缺页错误是程序需要访问映射在虚拟内存空间中但是还尚未被加载到物理内存中的一个分页，缺页错误两个主要类型是：
+
+        - 1.minflt/s 指的 minor faults，当需要访问的物理页面因为某些原因(比如共享页面、缓存机制等)已经存在于物理内存中了，只是在当前进程的页表中没有引用，MMU 只需要设置对应的 entry 就可以了，这个代价是相当小的
+
+        - 2.majflt/s 指的 major faults，MMU 需要在当前可用物理内存中申请一块空闲的物理页面(如果没有可用的空闲页面，则需要将别的物理页面切换到交换空间去以释放得到空闲物理页面)，然后从外部加载数据到该物理页面中，并设置好对应的 entry，这个代价是相当高的，和前者有几个数据级的差异
+
+    ```bash
+    # 监控指定程序mem
+    pidstat -r -t -C nvim 1
+    05:17:09 PM   UID      TGID       TID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+    05:17:10 PM  1000      3221         -   8469.00      0.00  473436  173820   1.33  nvim
+    05:17:10 PM  1000         -      3221   8469.00      0.00  473436  173820   1.33  |__nvim
+    05:17:10 PM  1000         -      3330      0.00      0.00  473436  173820   1.33  |__nvim
+    05:17:10 PM  1000         -      3331      0.00      0.00  473436  173820   1.33  |__nvim
+    05:17:10 PM  1000         -      3332      0.00      0.00  473436  173820   1.33  |__nvim
+    05:17:10 PM  1000         -      3333      0.00      0.00  473436  173820   1.33  |__nvim
+
+    05:17:10 PM   UID      TGID       TID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+    05:17:11 PM  1000      3221         -   2589.00      0.00  473436  173820   1.33  nvim
+    05:17:11 PM  1000         -      3221   2589.00      0.00  473436  173820   1.33  |__nvim
+
+    Average:      UID      TGID       TID  minflt/s  majflt/s     VSZ     RSS   %MEM  Command
+    Average:     1000      3221         -  22539.55      0.00  472878  173262   1.32  nvim
+    Average:     1000         -      3221  22168.93      0.00  472878  173262   1.32  |__nvim
+    Average:     1000         -      3330     96.89      0.00  472878  173262   1.32  |__nvim
+    Average:     1000         -      3331     86.16      0.00  472878  173262   1.32  |__nvim
+    Average:     1000         -      3332     80.79      0.00  472878  173262   1.32  |__nvim
+    Average:     1000         -      3333    106.78      0.00  472878  173262   1.32  |__nvim
+    ```
+
+- `-s`：栈使用状况
+    - 包括 StkSize 为线程保留的栈空间，以及 StkRef 实际使用的栈空间。
+    - 使用`ulimit -s`发现CentOS 6.x上面默认栈空间是10240K，而 CentOS 7.x、Ubuntu系列默认栈空间大小为8196K
+
+    ```sh
+    pidstat -s -t -C nvim 1
+    ```
+
+- `-w` 上下文切换:
+
+    | 参数      | 说明                   |
+    |-----------|------------------------|
+    | cswch/s   | 每秒自愿的上下文切换   |
+    | nvcswch/s | 每秒非自愿的上下文切换 |
+
+    ```sh
+    # 监控指定程序switch
+    pidstat -w -t -C nvim 1
+    05:18:20 PM   UID      TGID       TID   cswch/s nvcswch/s  Command
+    05:18:21 PM  1000      3219         -     17.00      2.00  nvim
+    05:18:21 PM  1000         -      3219     17.00      2.00  |__nvim
+    05:18:21 PM  1000      3221         -     26.00      2.00  nvim
+    05:18:21 PM  1000         -      3221     26.00      2.00  |__nvim
+    05:18:21 PM  1000         -      3330      2.00      0.00  |__nvim
+
+    05:18:21 PM   UID      TGID       TID   cswch/s nvcswch/s  Command
+    05:18:22 PM  1000      3219         -     11.00      0.00  nvim
+    05:18:22 PM  1000         -      3219     11.00      0.00  |__nvim
+    05:18:22 PM  1000      3221         -     45.00      3.00  nvim
+    05:18:22 PM  1000         -      3221     45.00      3.00  |__nvim
+    05:18:22 PM  1000         -      3331      1.00      0.00  |__nvim
+    05:18:22 PM  1000         -      3332      1.00      1.00  |__nvim
+
+    Average:      UID      TGID       TID   cswch/s nvcswch/s  Command
+    Average:     1000      3219         -     10.35      0.33  nvim
+    Average:     1000         -      3219     10.35      0.33  |__nvim
+    Average:     1000      3221         -     38.66      5.18  nvim
+    Average:     1000         -      3221     38.66      5.18  |__nvim
+    Average:     1000         -      3330      0.77      0.00  |__nvim
+    Average:     1000         -      3331      0.33      0.00  |__nvim
+    Average:     1000         -      3332      0.33      0.11  |__nvim
+    Average:     1000         -      3333      0.33      0.00  |__nvim
+    ```
 
 # 开机
 
@@ -1500,11 +1949,109 @@ strace -o file ls
 
 - [官方文档](https://ebpf.io/)
 
-- `eBPF` 和 `perf` 都是 linux kernel 代码的一部分,
-
-- `eBPF` 比 `perf` 更容易地在内核执行,效率更高,开销更低
+- [鹅厂架构师：eBPF介绍及HTTPS明文抓包分析](https://zhuanlan.zhihu.com/p/687679080)
 
 - `eBPF` 可以在不修改内核代码,和不加载内核模块的情况下, 在内核运行sandbox程序
+
+- eBPF（Extended Berkeley Packet Filter）是一种基于内核的轻量级虚拟机，它允许用户在内核中运行自定义的程序，以实现对系统事件的实时监控和分析。eBPF程序通常以C语言编写，并通过专用的编译器将其编译为eBPF字节码。然后，这些字节码将被加载到内核中，并在eBPF虚拟机上运行。
+
+- 由于eBPF程序运行在内核空间，它能够实现对系统事件的实时监控，同时避免了频繁的内核态与用户态切换，从而大大降低了性能开销。
+
+- 此外，eBPF程序在加载到内核之前需要经过严格的验证过程，以确保其不会对系统安全和稳定性产生负面影响。
+
+- 最后，eBPF技术具有良好的可扩展性，可以通过编写不同类型的eBPF程序来实现多种功能，如性能监控、网络安全策略控制、故障排查等。
+
+- 随着eBPF技术的不断发展，越来越多的Linux发行版开始支持eBPF，同时也涌现出了一系列基于eBPF的开源项目和工具，如BCC（BPF Compiler Collection）、bpftrace、Cilium等。这些工具和项目为eBPF技术的普及和应用提供了有力支持，使其在Linux系统中的地位日益稳固。
+
+- eBPF核心组件
+
+    > eBPF技术的核心组件包括eBPF虚拟机、程序类型、映射（Maps）、加载和验证机制以及助手函数（Helper Functions）：
+
+    - eBPF虚拟机：是一种轻量级的内核虚拟机，它允许用户在内核空间运行自定义的eBPF程序。eBPF虚拟机具有独立的寄存器集、堆栈空间和指令集，支持基本的算术、逻辑、条件跳转和内存访问等操作。由于eBPF虚拟机运行在内核空间，它能够实现对系统事件的实时监控，同时避免了频繁的内核态与用户态切换，从而大大降低了性能开销。
+
+    - eBPF程序类型：
+
+        > eBPF程序根据其功能和挂载点可以分为多种类型，包括：
+
+        | 类型                    | 说明                                   |
+        |-------------------------|----------------------------------------|
+        | kprobe                  | 用于监控内核函数的调用和返回事件       |
+        | uprobes                 | 用于监控用户空间函数的调用和返回事件   |
+        | tracepoints             | 用于监控内核预定义的静态追踪点         |
+        | perf events             | 用于监控硬件和软件性能计数器事件       |
+        | XDP (Express Data Path) | 用于实现高性能的数据包处理和过滤       |
+        | cgroup                  | 用于实现基于cgroup的网络和资源控制策略 |
+        | socket filters          | 用于实现套接字级别的数据包过滤和分析   |
+
+        - 通过组合不同类型的eBPF程序，用户可以实现多种功能，如性能监控、网络安全策略控制、故障排查等。
+
+
+    - eBPF映射（Maps）：是一种内核态与用户态之间共享数据的机制。它允许eBPF程序在内核空间存储和检索数据，同时也可以通过用户态工具对这些数据进行访问和修改。eBPF映射支持多种数据结构，如哈希表、数组、队列等，可以满足不同场景下的数据存储和检索需求。
+
+    - eBPF加载和验证机制：
+
+        - eBPF程序在加载到内核之前需要经过严格的验证过程，以确保其不会对系统安全和稳定性产生负面影响。验证过程主要包括以下几个方面：
+
+        | 验证过程     | 说明                                           |
+        |--------------|------------------------------------------------|
+        | 语法检查     | 确保eBPF程序的字节码符合指令集规范             |
+        | 控制流检查   | 确保eBPF程序不包含无限循环和非法跳转等风险操作 |
+        | 内存访问检查 | 确保eBPF程序不会访问非法的内存地址和敏感数据   |
+        | 助手函数检查 | 确保eBPF程序只调用允许的内核助手函数           |
+
+        - 只有通过验证的eBPF程序才能被加载到内核并在eBPF虚拟机上运行。
+
+    - eBPF辅助函数（Helper Functions）
+
+        -  eBPF助手函数（Helper Functions）是一组内核提供的API，用于帮助eBPF程序实现与内核和用户态之间的交互。eBPF助手函数支持多种操作，如读写eBPF映射、获取系统时间、发送网络数据包等。通过调用助手函数，eBPF程序可以实现更加复杂和强大的功能，从而为系统提供更高效和灵活的性能监控、网络安全、负载均衡等方面的解决方案。
+
+- eBPF的功能与应用
+
+    - 从图中可以看到eBPF技术具有广泛的功能与应用，主要包括性能监控与优化、网络安全与策略控制以及故障排查与诊断。
+
+    ![image](./Pictures/benchmark/eBPF的功能与应用.avif)
+
+    - 性能监控与优化
+
+        > eBPF技术可以实现对Linux系统的实时性能监控和优化，包括CPU利用率分析、内存使用监控和I/O性能调优等。
+
+        - CPU利用率分析：eBPF可以通过kprobe、uprobes和tracepoints等程序类型实时监控内核和用户空间函数的调用和返回事件，从而分析CPU利用率和热点函数。这有助于发现性能瓶颈，优化程序代码和系统配置，提高CPU利用率。
+
+        - 内存使用监控：eBPF可以实时监控内核和用户空间的内存分配和释放事件，以分析内存使用情况、内存泄漏和碎片化等问题。这有助于优化内存管理策略，提高内存利用率和系统稳定性。
+
+        - I/O性能调优：eBPF可以通过监控内核I/O子系统的事件，如磁盘I/O、网络I/O和文件系统操作等，来分析I/O性能瓶颈和异常行为。这有助于优化I/O调度策略，提高I/O吞吐量和响应时间。
+
+    - 网络安全与策略控制
+
+        > eBPF技术在网络安全与策略控制领域具有广泛的应用，包括流量监控与分析、防火墙策略与访问控制以及负载均衡与服务发现等。
+
+        - 流量监控与分析：eBPF可以通过XDP和socket filters等程序类型实时监控和分析网络数据包，从而实现对网络流量的统计、审计和异常检测等功能。这有助于发现网络攻击、滥用和故障，提高网络安全和可用性。
+
+        - 防火墙策略与访问控制：eBPF可以实现基于IP地址、端口号、协议类型等条件的数据包过滤和转发，从而实现灵活的防火墙策略和访问控制功能。这有助于保护内部网络资源，阻止未经授权的访问和攻击。
+
+        - 负载均衡与服务发现：eBPF可以实现基于四层（L4）或七层（L7）的负载均衡和服务发现功能，以实现高可用、高性能和可扩展的网络服务架构。这有助于提高服务响应时间，降低故障风险，提高资源利用率。
+
+    - 故障排查与诊断
+
+        > eBPF技术在故障排查与诊断领域具有重要应用，包括系统调用追踪、应用程序性能分析和内核调试与故障排查等。
+
+        - 系统调用追踪：eBPF可以通过kprobe和uprobes等程序类型实时监控内核和用户空间的系统调用事件，以分析系统调用的性能和异常行为。这有助于发现程序错误、资源泄漏和内核故障，提高系统稳定性和可靠性。
+
+        - 应用程序性能分析：eBPF可以通过uprobes和tracepoints等程序类型实时监控应用程序的函数调用和性能指标，如延迟、吞吐量和错误率等。这有助于发现应用程序的瓶颈、异常和优化点，提高应用程序的性能和用户体验。
+
+        - 内核调试与故障排查：eBPF可以通过kprobe、tracepoints和perf events等程序类型实时监控内核的事件和性能指标，以分析内核的性能瓶颈、异常行为和故障原因。这有助于优化内核配置和代码，提高内核的性能和稳定性。
+
+- eBPF工作流程
+
+    ![image](./Pictures/benchmark/eBPF工作流程.avif)
+
+    - eBPF的工作流程图如上，这里使用C/C++语言开发，其他语言也是类似，总的来说大概可以分为4个步骤：
+        - 1.编写、编译eBPF程序，程序主要用来处理上面介绍的不同类型应用。
+        - 2.加载eBPF程序：将eBPF程序编译成字节码，一般由应用程序通过bpf系统调用加载到内核中。
+        - 3.执行eBPF程序：事件触发时执行，处理数据保存到Maps中。
+        - 4.消费数据：eBPF应用程序从BPF Maps中读出数据并处理。
+
+    - 目前eBPF程序开发（eBPF+应用）支持多种开发语言，主流的有C+C（libxdp、libbpf），C+Golang（Cllium、libbpfgo）和Rust（Aya）等
 
 ### [bcc](https://github.com/iovisor/bcc)
 

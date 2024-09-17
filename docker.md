@@ -2,9 +2,13 @@
 
 * [docker](#docker)
     * [容器与虚拟机对比](#容器与虚拟机对比)
+    * [容器与其他进程不同](#容器与其他进程不同)
+    * [基本概念](#基本概念)
+    * [深入docker内部运行逻辑](#深入docker内部运行逻辑)
     * [without sudo](#without-sudo)
+    * [换源](#换源)
     * [基本命令](#基本命令)
-    * [docker run](#docker-run)
+    * [docker run创建容器](#docker-run创建容器)
         * [--link 连接容器](#--link-连接容器)
         * [--gpus](#--gpus)
         * [--cap-add。Capability](#--cap-addcapability)
@@ -31,12 +35,18 @@
         * [容器数据卷之间的备份恢复](#容器数据卷之间的备份恢复)
     * [containerd](#containerd)
     * [runc管理容器](#runc管理容器)
-    * [network](#network)
-        * [cnm model(容器网络模型)](#cnm-model容器网络模型)
+    * [network网络](#network网络)
+        * [Docker的网络架构CNM](#docker的网络架构cnm)
+            * [网桥和Overlay详解](#网桥和overlay详解)
+        * [容器之间的网络连通性](#容器之间的网络连通性)
         * [容器之间的网络隔离](#容器之间的网络隔离)
         * [容器与宿主机同一网段](#容器与宿主机同一网段)
             * [方法 1: 使用第三方工具 pipework](#方法-1-使用第三方工具-pipework)
             * [方法 2: 手动设置](#方法-2-手动设置)
+    * [docker中的init进程](#docker中的init进程)
+        * [把Bash当作PID 1呢？](#把bash当作pid-1呢)
+        * [tini当作PID 1](#tini当作pid-1)
+        * [为什么docker中会有僵尸进程？](#为什么docker中会有僵尸进程)
     * [Dockerfile 创建容器镜像](#dockerfile-创建容器镜像)
         * [Dockerfile命令](#dockerfile命令)
         * [Dockerfile优化](#dockerfile优化)
@@ -69,50 +79,11 @@
 
 # [docker](https://github.com/moby/moby)
 
-- 容器和其它进程的不同之处在于,容器使用 namespace,cgroup 等技术,为进程创造出资源隔离,限制的环境
-
-  > 容器和进程是共享 host(宿主机)内核
-
-  > 也就是在 windows,macos 上的 docker,无法使用 centos,opensuse 这些依赖 linux 内核的容器
-
-  ![image](./Pictures/docker/docker.avif)
-
-- Capability 对 root 权限,分成多个子权限 [详细文档](https://man7.org/linux/man-pages/man7/capabilities.7.html)
-
-  - 对容器授予某些子权限,而不是整个 root 权限,以此实现安全
-
-  - 通过 `capsh --print` 命令查看权限
-    ![image](./Pictures/docker/capability.avif)
-
-- docker 采用 `client/server` 结构进行通信交互 [官方文档](https://docs.docker.com/get-started/overview/#docker-architecture)
-
-  > docker(cli)/dockerd(daemon). 它们都是 docker engine(docker 开源容器技术) 的组成部分
-
-  - client 使用 `REST API` 通过 `unix socket` 与 daemon 进行通信
-
-    - REST API 最简单的例子是浏览器:通过 url 使用不同的动作(get,push)请求资源(可以是图片,文字,视频),而服务器会对请求返回不同的状态(200,404)
-
-      ![image](./Pictures/docker/cs1.avif)
-      ![image](./Pictures/docker/cs.svg)
-
-- 配置文件 `/var/lib/docker`
-
-  | 内容    | 目录                    |
-  | ------- | ----------------------- |
-  | volumes | /var/lib/docker/volumes |
-
-  | image                                                | /var/lib/docker/image/overlay2 |
-  | ---------------------------------------------------- | ------------------------------ |
-  | 仓库(镜像名和 hash 值)                               | repositories.json              |
-  | 镜像元数据(docker 版本,创建时间)                     | imagedb                        |
-  | 容器层 元数据                                        | layerdb/mounts                 |
-  | 镜像层(layer) 元数据(没有 parent 的镜像层为子镜像层) | layerdb/sha256                 |
-
-  | container         | /var/lib/docker/containers    |
-  | ----------------- | ----------------------------- |
-  | volume 的具体情况 | <container_id>/config.v2.json |
+![image](./Pictures/docker/docker.avif)
 
 ## 容器与虚拟机对比
+
+![image](./Pictures/docker/docker_vs_虚拟机.avif)
 
 - 同一台机器上的所有容器，都共享宿主机操作系统的内核。
     - 如果你的应用程序需要配置内核参数、加载额外的内核模块，以及跟内核进行直接的交互，你就需要注意了，这些操作和依赖的对象，都是宿主机操作系统的内核，它对于该机器上的所有容器来说是一个“全局变量”，牵一发而动全身。
@@ -124,6 +95,87 @@
 - 将软件和操作系统一起打包成虚拟机部署，运行一个完整的虚拟机，太重了。只打包软件和系统依赖库加配置就好了，也就是容器。
 
 - docker除了有ubuntu、centos等操作系统镜像，还有nginx、httpd应用镜像。
+
+## 容器与其他进程不同
+
+- 容器使用 namespace,cgroup 等技术,为进程创造出资源隔离,限制的环境
+
+    - 容器和进程是共享 host(宿主机)内核
+
+        - 也就是在 windows,macos 上的 docker,无法使用 centos,opensuse 这些依赖 linux 内核的容器
+
+## 基本概念
+
+- 配置文件 `/var/lib/docker`
+
+  | 内容                                                 | 目录                           |
+  |------------------------------------------------------|--------------------------------|
+  | volumes                                              | /var/lib/docker/volumes        |
+  | image                                                | /var/lib/docker/image/overlay2 |
+  | ---------------------------------------------------- | ------------------------------ |
+  | 仓库(镜像名和 hash 值)                               | repositories.json              |
+  | 镜像元数据(docker 版本,创建时间)                     | imagedb                        |
+  | 容器层 元数据                                        | layerdb/mounts                 |
+  | 镜像层(layer) 元数据(没有 parent 的镜像层为子镜像层) | layerdb/sha256                 |
+
+  | container         | /var/lib/docker/containers    |
+  | ----------------- | ----------------------------- |
+  | volume 的具体情况 | <container_id>/config.v2.json |
+
+- Capability 对 root 权限,分成多个子权限
+
+    - 对容器授予某些子权限,而不是整个 root 权限,以此实现安全
+
+    - 通过 `capsh --print` 命令查看权限
+    ![image](./Pictures/docker/capability.avif)
+
+## 深入docker内部运行逻辑
+
+- [鹅厂架构师：【后台技术】Docker基础篇](https://zhuanlan.zhihu.com/p/683330478)
+
+- docker引擎 采用 `c/s` 架构。分别是`docker(cli)/dockerd(daemon)`
+
+    ![image](./Pictures/docker/docker引擎.avif)
+
+    - Docker容器架构经过几次演进，随着OCI规范的制定和老的架构问题，现在Docker的架构如上图
+        - 1.Docker Client主要是命令行，比如在终端上执行`docker ps -a`；
+        - 2.Daemon接收CURD指令，主要是与Containerd交互；
+        - 3.Containerd是容器的生命周期管理，主要功能：
+            - 管理容器的生命周期（从创建容器到销毁容器）
+            - 拉取/推送容器镜像
+            - 存储管理（管理镜像及容器数据的存储）
+            - 调用runc运行容器（与runc等容器运行时交互）
+            - 管理容器网络接口及网络
+        - 4.containerd-shim是runc启动的中间层；
+        - 5.runc是OCI容器运行时的规范参考实现，runc是从Docker的 libcontainer中迁移而来的，实现了容器启停、资源隔离等功能；
+
+    - client 使用 `REST API` 通过 `unix socket` 与 daemon 进行通信
+
+        - REST API 最简单的例子是浏览器:通过 url 使用不同的动作(get,push)请求资源(可以是图片,文字,视频),而服务器会对请求返回不同的状态(200,404)
+
+          ![image](./Pictures/docker/cs1.avif)
+          ![image](./Pictures/docker/cs.svg)
+
+- 容器创建流程
+
+    - 1.Docker容器启动时候，Docker Daemon并不能直接创建，而是请求 containerd来创建容器；
+
+    - 2.当containerd收到请求后，也不会直接去操作容器，而是创建containerd-shim的进程，让这个进程去操作容器，指定容器进程是需要一个父进程来做状态收集、维持stdin等fd打开等工作的，假如这个父进程就是containerd，那如果containerd挂掉的话，整个宿主机上所有的容器都得退出，而引入containerd-shim中间层规避这个问题；
+
+    - 3.创建容器需要做一些namespaces和cgroups的配置，以及挂载root文件系统等操作，runc就可以按照OCI文档来创建一个符合规范的容器；
+
+    - 4.真正启动容器是通过containerd-shim去调用runc来启动容器的，runc启动完容器后本身会直接退出，containerd-shim则会成为容器进程的父进程, 负责收集容器进程的状态, 上报给containerd, 并在容器中pid=1的进程退出后接管容器中的子进程进行清理, 确保不会出现僵尸进程；
+
+    - 尝试执行命令 `docker container run --name test -it alpine:latest sh` ，进入容器：
+
+    ```sh
+    [root@VM-16-16-centos ~]# docker container run --name test -it alpine:latest sh
+    Unable to find image 'alpine:latest' locally
+    latest: Pulling from library/alpine
+    7264a8db6415: Pull complete
+    Digest: sha256:7144f7bab3d4c2648d7e59409f15ec52a18006a128c733fcff20d3a4a54ba44a
+    Status: Downloaded newer image for alpine:latest
+    ```
 
 ## without sudo
 
@@ -144,7 +196,51 @@ sudo systemctl restart docker
 logout
 ```
 
+## 换源
+
+- 新闻：[国内多个Docker hub镜像加速器被下架](https://mp.weixin.qq.com/s/o9OwEkNzR3gzFBI_ruY8tQ)
+
+- 解决方法1：
+
+    - 修改`/etc/docker/daemon.json`
+
+        ```json
+        {
+          "registry-mirrors": [
+            "https://hub-mirror.c.163.com",
+            "https://registry.cn-hangzhou.aliyuncs.com",
+            "https://docker.m.daocloud.io",
+            "https://docker.1panel.live"
+          ]
+        }
+        ```
+
+    - 重启docker
+
+        ```sh
+        systemctl daemon-reload
+        systemctl restart docker
+        ```
+
+- 解决方法2：在`docker.io`前面加上`m.daocloud.io`
+
+    ```sh
+    docker pull m.daocloud.io/docker.io/library/nginx:latest
+    ```
+
 ## 基本命令
+
+- 容器的生命周期
+
+    - 容器有一个PID为1的进程，这个进程是容器的主进程，主进程挂掉，整个容器也会退出
+    - 容器的退出，可以使用`docker stop <Container ID>`，但是容器退出有时候需要保留容器内运行的文件
+        - 在Linux下，docker stop是先向容器的PID 1进程发送SIGTERM的信号，如果10s内进程没有终止，就会发送SIGKILL的信号
+    - 容器的删除，可以使用`docker rm <Container ID>`，不过删除之前可以先停止容器
+    - 容器在整个生命周期的数据是安全的，即使容器被删除，容器的数据存储在卷中，这些数据也会保存下来
+    - 容器自动重启策略包括--restart always，--restart unless-stopped和--restart on-failed，分别表示如下：
+        - `--restart always`是容器被kill掉后会自动重启或者是Docker daemon重启的时候也会重启
+        - `--restart unless-stopped`是容器被kill掉后会自动重启，但是Docker daemon重启的时候不会重启
+        - `--restart on-failed`是容器退出时返回不为0则重启
 
 ![image](./Pictures/docker/cmd_logic.avif)
 
@@ -219,7 +315,7 @@ docker cp nginx:/etc/nginx/nginx.conf .
 docker cp test nginx:/opt
 ```
 
-## docker run
+## docker run创建容器
 
 - [docker run 官方文档](https://docs.docker.com/engine/reference/commandline/run/)
 
@@ -1824,6 +1920,7 @@ docker run -u=1000 \
 
 - 在 Docker 中，镜像相当于是容器的模板，一个镜像可以衍生出多个容器。
     - 镜像利用 UnionFS 技术来实现，就可以利用其 分层的特性 来进行镜像的继承，基于基础镜像，制作出各种具体的应用镜像，不同容器就可以直接 共享基础的文件系统层 ，同时再加上自己独有的改动层，大大提高了存储的效率。
+    ![image](./Pictures/docker/UnionFS.avif)
 
 - 以下面dockerfile为例，介绍UnionFS原理
 
@@ -2178,79 +2275,331 @@ sudo runc list
 
 ![image](./Pictures/docker/runc.avif)
 
-## network
+## network网络
 
 - [视频（技术蛋老师）：【入门篇】Docker网络模式Linux - Bridge | Host | None](https://www.bilibili.com/video/BV1Aj411r71b)
 
-### cnm model(容器网络模型)
+### Docker的网络架构CNM
 
-- sandbox(沙盒),通过 namespace 实现
+- [鹅厂架构师：【后台技术】Docker网络篇](https://zhuanlan.zhihu.com/p/683336819)
 
-  - 一个 sandbox 可以有多个 endpoint 和 网络
+- 1.CNM规定了基本组成要素：
 
-- endpoint(端点),通过 veth 实现
+    ![image](./Pictures/docker/cnm网络架构.avif)
 
-- 网络,通过 brictl,vlan 实现
+    - 1.sandbox(沙盒)：通过 namespace 实现。是一种独立的网络栈，包括以太网接口，端口，路由以及DNS配置
 
-  - 一个网络可以有多个端点
+        - 一个 sandbox 可以有多个 endpoint 和 网络
 
-下图 3 个容器的连通性:
+    - 2.endpoint(端点)：通过 veth 实现。虚拟网络接口，负责创建连接，将沙盒连接到网络
 
-- 左边和右边能和中间 ping 通
+    - 3.网络：通过 brictl、vlan 实现
 
-- 左边与右边不通
+        - 一个网络可以有多个端点
 
-![image](./Pictures/docker/cnm-model.avif)
+- 2.Libnetwork
 
-```bash
-# 创建两个btrctl网络
-docker network create backend
-docker network create frontend
+    - Libnetwork是CNM的标准实现，支持跨平台，3个标准的组件和服务发现，基于Ingress的容器负载均衡，以及网络控制层和管理层的功能。
 
-# 也可以指定网段
-docker network create --subnet=172.18.0.0/16 backend
+    ![image](./Pictures/docker/Libnetwork.avif)
 
-# 查看网络
-docker network ls
-```
+- 3.网络模式
 
-通过 `ip a` 命令,查看刚才创建的网络的 ip 地址
-![image](./Pictures/docker/cnm.avif)
+    - 1.网桥（Bridge）：Docker默认的容器网络驱动，容器通过一对veth pair连接到docker0网桥上，由Docker为容器动态分配IP及配置路由、防火墙规则等
 
-```bash
-# 启动3个容器,并配置图片上的网络
+    - 2.Host：容器与主机共享同一Network Namespace，共享同一套网络协议栈、路由表及iptables规则等，执行docker run --net=host centos:7 python -m SimpleHTTPServer 8081，然后查看看网络情况(netstat -tunpl) :
 
-docker run --net backend \
- -h backend1 --name backend1 --rm -it centos
+        ```sh
+        [root@VM-16-16-centos ~]# netstat -tunpl
+        Active Internet connections (only servers)
+        Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+        tcp        0      0 0.0.0.0:8081            0.0.0.0:*               LISTEN      1409899/python
+        ```
 
-docker run --net frontend \
- -h frontend1 --name frontend1 --rm -it centos
+        - 可以看出host模型下，和主机上启动一个端口没有差别，也不会做端口映射，所以不同的服务在主机端口范围内不能冲突；
 
-docker run --net backend \
- -h middle --name middle --rm -it centos
+    - 3.Overlay：多机覆盖网络是Docker原生的跨主机多子网网络方案，主要通过使用Linux bridge和vxlan隧道实现，底层通过类似于etcd或consul的KV存储系统实现多机的信息同步
 
-# 将容器 middle 加入到 frontend
-docker network connect frontend middle
+    - 4.Remote：Docker网络插件的实现，可以借助Libnetwork实现网络自己的网络插件；
 
-# 也可以指定ip
-docker run --net backend --ip "172.18.0.10" \
- -h backend1 --name backend1 --rm -it centos
-```
+    - None：模式是最简单的网络模式，它会使得Docker容器完全隔离，无法访问外部网络。在None模式下，容器不会被分配IP地址，也无法与其他容器和主机通信，可以尝试执行`docker run --net=none centos:7 python -m SimpleHTTPServer 8081`，然后`curl xxx.com`应该是无法访问的。
 
-此时再次通过 `ip a` 命令查看
+#### 网桥和Overlay详解
 
-发现一共多出 4 个 `veth` 的网络接口
+- Docker中最常用的两种网络是：网桥和Overlay
+    - 1.网桥：是解决主机内多容器通讯
+    - 2.Overlay：是解决跨主机多子网网络
 
-- veth 是 namespace 之间的互联的虚拟网络设备,会**成对的出现**,宿主机一个,namespace 一个
+- 1.网桥（Bridge）
 
-- btrctl 相当与交换机,而 veth 设备 相当于交换机的端口
+    - 网桥是什么？同tap/tun、veth-pair一样，网桥是一种虚拟网络设备，所以具备虚拟网络设备的所有特性，比如可以配置IP、MAC等，除此之外，网桥还是一个二层交换机，具有交换机所有的功能。
 
-- veth 设备工作在第二层,因此没有 ip 地址
+    - 1.创建
 
-- 当一方 down 后,链接关闭
+        - Docker daemon启动时会在主机创建一个Linux网桥（默认为docker0），容器启动时，Docker会创建一对veth-pair（虚拟网络接口）设备，veth设备的特点是成对存在，从一端进入的数据会同时出现在另一端，Docker会将一端挂载到docker0网桥上，另一端放入容器的Network Namespace内，从而实现容器与主机通信的目的。
 
-  下图为 `ip link | grep veth` 命令的结果,比 `ip a` 更直观
-  ![image](./Pictures/docker/cnm1.avif)
+        ![image](./Pictures/docker/网络-网桥Bridge.avif)
+
+    - 2.查看网桥
+
+        ```sh
+        docker network ls
+        NETWORK ID     NAME              DRIVER    SCOPE
+        839c78d16e66   bridge            bridge    local
+        7865e8dc7489   host              host      local
+        e904b639a46d   k3d-k3d-private   bridge    local
+        e6e4904ea322   none              null      local
+        ```
+
+    - 3.查看网桥的详细信息
+
+        ```sh
+        # 先执行
+        docker run -d --name busybox-1 busybox echo "1"
+        docker run -d --name busybox-2 busybox echo "2"
+
+        # 再执行，可以看到输出网桥IPv4Address，MacAddress和EndpointID等：
+        docker inspect bridge
+        "Containers": {
+            "bbd7d0775081dd9a9d026ca4c8e3ec2e1a4b19bead122eac94cd58f1fa118827": {
+                "Name": "busybox-2",
+                "EndpointID": "a82be8a01e25f5267fd6286c10eb1c72a1dd1c1933dcc84a82b286162767923c",
+                "MacAddress": "02:42:ac:11:00:03",
+                "IPv4Address": "172.17.0.3/16",
+                "IPv6Address": ""
+            },
+            "fa14fa3e167d17922a94153c0e0eb83e244ef7b20f9fc04d05db2589828e747c": {
+                "Name": "busybox-1",
+                "EndpointID": "90f614cc4b2e4c5d2baa75facfa8e493d287cbb9ae39edaecb3ec67915d2df2b",
+                "MacAddress": "02:42:ac:11:00:02",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+            }
+        }
+        ```
+
+    - 4.检查网桥是否正常
+
+        - 可以进入busybox-2容器，执行ping 172.17.0.2，输出（可见是可以通的）：
+
+        ```sh
+        PING 172.17.0.2 (172.17.0.2): 56 data bytes
+        64 bytes from 172.17.0.2: seq=0 ttl=64 time=0.115 ms
+        64 bytes from 172.17.0.2: seq=1 ttl=64 time=0.079 ms
+        64 bytes from 172.17.0.2: seq=2 ttl=64 time=0.051 ms
+        64 bytes from 172.17.0.2: seq=3 ttl=64 time=0.066 ms
+        64 bytes from 172.17.0.2: seq=4 ttl=64 time=0.051 ms
+        ^C
+        --- 172.17.0.2 ping statistics ---
+        5 packets transmitted, 5 packets received, 0% packet loss
+        round-trip min/avg/max = 0.051/0.072/0.115 ms
+        ```
+
+    - 5.端口映射
+
+        - 可以看出这里是借助iptables实现的。
+
+        ```sh
+        # 先建立映射关系
+        docker run -d -p 8000:8000 centos:7 python -m SimpleHTTPServer
+
+        # 再查看 iptables
+        iptables -t nat -nvL
+        Chain DOCKER (2 references)
+         pkts bytes target     prot opt in     out     source               destination
+            0     0 RETURN     0    --  docker0 *       0.0.0.0/0            0.0.0.0/0
+            0     0 DNAT       6    --  !docker0 *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8000 to:172.17.0.2:8000
+        ```
+
+    - 6.网桥模式下的Docker网络流程
+
+        - 容器与容器之前通讯是通过Network Namespace, bridge和veth pair这三个虚拟设备实现一个简单的二层网络，不同的namespace实现了不同容器的网络隔离让他们分别有自己的ip，通过veth pair连接到docker0网桥上实现了容器间和宿主机的互通；
+
+        - 容器与外部或者主机通过端口映射通讯是借助iptables，通过路由转发到docker0，容器通过查询CAM表，或者UDP广播获得指定目标地址的MAC地址，最后将数据包通过指定目标地址的连接在docker0上的veth pair设备，发送到容器内部的eth0网卡上；
+
+        - 容器与外部或者主机通过端口映射通讯对应的限制是相同的端口不能在主机下重复映射；
+
+- 2.Overlay
+
+    - 在云原生下集群通讯是必须的，当然Docker提供多种方式，包括借助Macvlan接入VLAN网络，另一种是Overlay。
+    - 那什么是Overlay呢？指的就是在物理网络层上再搭建一层网络，通过某种技术再构建一张相同的逻辑网络。
+    ![image](./Pictures/docker/网络-overlay.avif)
+
+    - 1.什么VXLAN网络？VXLAN全称是Visual eXtensible Local Area Network
+
+        - 本质上是一种隧道封装技术，它使用封装/解封装技术，将L2的以太网帧（Ethernet frames）封装成L4的UDP数据报（datagrams），然后在L3的网络中传输，效果就像L2的以太网帧在一个广播域中传输一样，实际上是跨越了L3网络，但却感知不到L3网络的存在。 那么容器B发送请求给容器A（ping）的具体流程是怎样的？
+
+        ![image](./Pictures/docker/网络-vxlan.avif)
+
+        - 1.容器B执行ping，流量通过BridgeA的veth接口发送出去，但是这个时候BridgeB并不知道要发送到哪里（BridgeB没有MAC与容器A的IP映射表），所以BridgeB将通过VTEP解析ARP协议，确定MAC和IP以后，将真正的数据包转发给VTEP，带上VTEP的MAC地址
+        - 2.VTEP-B收到数据包，通过Swarm的集群的网络信息中知道目标IP是容器B
+        - 3.VTEP-B将数据包封装为VXLAN格式（数据包中存储了VXLAN的ID，记录其映射关系）
+        - 4.实际底层VTEP-B将数据包通过主机B的UDP物理通道将VXLAN数据包封装为UDP发送出去
+        - 5-6.通过隧道传输（UDP端口：4789），数据包到达VTEP-A，VTEP-A解析数据包读取其中的VXLAN的ID，确定发送到哪个网桥
+        - 7.VTEP-A继续解包和封包，将数据从UDP中拆解出来，重新组装网络协议包，发送给BridgeA
+        - 8.BridgeA收到数据，通过veth发给容器A，回包的过程就是反向处理
+
+    - 2.创建
+        ```sh
+        docker swarm init
+
+        # 创建test-net
+        docker network create --subnet=10.1.1.0/24 --subnet=11.1.1.0/24 -d overlay test-net
+
+        # 查看
+        docker network ls
+        NETWORK ID     NAME              DRIVER    SCOPE
+        dfd2f3cef3d9   bridge            bridge    local
+        6da75632cc82   docker_gwbridge   bridge    local
+        ba41f6cef47f   host              host      local
+        ivia1zri4tdw   ingress           overlay   swarm
+        78f8aa199af8   none              null      local
+        smlwbn2yjjlm   test-net          overlay   swarm
+        ```
+
+    - 3.查看网络详情
+
+        ```sh
+        # 创建一个sevice，replicas等于2来看看网络情况
+        docker service create --name test --network test-net --replicas 2 centos:7 sleep infinity
+
+        # 查看运行情况
+        docker ps -a
+    CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS                      PORTS                                       NAMES
+    c8e4063ed9b2   centos:7        "sleep infinity"         3 minutes ago    Up 3 minutes                                                            test.1.o6c8up8jykjzv4qtav8kylb18
+    15a9b4eedaea   centos:7        "sleep infinity"         3 minutes ago    Up 3 minutes                                                            test.2.iiozzdyksf2a2i82uos8j7a8n
+
+        # 查看test-net详情
+        docker network inspect test-net
+        [
+            {
+                "Name": "test-net",
+                "Id": "smlwbn2yjjlmb7s76k5cep94h",
+                "Created": "2024-06-09T14:32:00.247463459+08:00",
+                "Scope": "swarm",
+                "Driver": "overlay",
+                "EnableIPv6": false,
+                "IPAM": {
+                    "Driver": "default",
+                    "Options": null,
+                    "Config": [
+                        {
+                            "Subnet": "11.1.1.0/24",
+                            "Gateway": "11.1.1.1"
+                        },
+                        {
+                            "Subnet": "10.1.1.0/24",
+                            "Gateway": "10.1.1.1"
+                        }
+                    ]
+                },
+                "Internal": false,
+                "Attachable": false,
+                "Ingress": false,
+                "ConfigFrom": {
+                    "Network": ""
+                },
+                "ConfigOnly": false,
+                "Containers": {
+                    "15a9b4eedaeaeea710658ec4ff5611978b0f419863f620f68044105956e05fd6": {
+                        "Name": "test.2.iiozzdyksf2a2i82uos8j7a8n",
+                        "EndpointID": "a804dec0ceeedfd5874b99033f44b1d77ebd1eff9d31c26e50f8375cea54adfb",
+                        "MacAddress": "02:42:0b:01:01:03",
+                        "IPv4Address": "11.1.1.3/24",
+                        "IPv6Address": ""
+                    },
+                    "c8e4063ed9b2d331d6c86477ba920c8b1f8d84b55810191b3a0696a2d71a939d": {
+                        "Name": "test.1.o6c8up8jykjzv4qtav8kylb18",
+                        "EndpointID": "465f6d1aa9d5acee53ae97dab00a2f148221326e820b1bb2af987319852c46fc",
+                        "MacAddress": "02:42:0b:01:01:04",
+                        "IPv4Address": "11.1.1.4/24",
+                        "IPv6Address": ""
+                    },
+                    "lb-test-net": {
+                        "Name": "test-net-endpoint",
+                        "EndpointID": "66ca707443c103c7bf03dada893f413fae53cceb61b00cc9948698cd4e75250c",
+                        "MacAddress": "02:42:0b:01:01:05",
+                        "IPv4Address": "11.1.1.5/24",
+                        "IPv6Address": ""
+                    }
+                },
+                "Options": {
+                    "com.docker.network.driver.overlay.vxlanid_list": "4097,4098"
+                },
+                "Labels": {},
+                "Peers": [
+                    {
+                        "Name": "499dc7333f68",
+                        "IP": "192.168.1.222"
+                    }
+                ]
+            }
+        ]
+
+        # 停止test服务，并删除
+        docker service scale test=0
+        docker service rm test
+        ```
+
+### 容器之间的网络连通性
+
+- 实验：下图 3 个容器的连通性:
+
+    - 左边和右边能和中间 ping 通
+
+    - 左边与右边不通
+
+    ![image](./Pictures/docker/cnm-model.avif)
+
+- 创建btrctl网络
+
+    ```bash
+    # 创建两个btrctl网络
+    docker network create backend
+    docker network create frontend
+
+    # 也可以指定网段
+    docker network create --subnet=172.18.0.0/16 backend
+
+    # 查看网络
+    docker network ls
+    ```
+
+    通过 `ip a` 命令,查看刚才创建的网络的 ip 地址
+    ![image](./Pictures/docker/cnm.avif)
+
+- 启动3个容器，并配置图片上的网络
+
+    ```bash
+    docker run --net backend \
+     -h backend1 --name backend1 --rm -it centos
+
+    docker run --net frontend \
+     -h frontend1 --name frontend1 --rm -it centos
+
+    docker run --net backend \
+     -h middle --name middle --rm -it centos
+
+    # 将容器 middle 加入到 frontend
+    docker network connect frontend middle
+
+    # 也可以指定ip
+    docker run --net backend --ip "172.18.0.10" \
+     -h backend1 --name backend1 --rm -it centos
+    ```
+
+- 此时再次通过 `ip a` 命令查看。发现一共多出 4 个 `veth` 的网络接口
+
+    - veth 是 namespace 之间的互联的虚拟网络设备,会**成对的出现**,宿主机一个,namespace 一个
+
+    - btrctl 相当与交换机,而 veth 设备 相当于交换机的端口
+
+    - veth 设备工作在第二层,因此没有 ip 地址
+
+    - 当一方 down 后,链接关闭
+
+    - 下图为 `ip link | grep veth` 命令的结果,比 `ip a` 更直观
+    ![image](./Pictures/docker/cnm1.avif)
 
 ### 容器之间的网络隔离
 
@@ -2420,7 +2769,80 @@ ip netns exec $pid ip addr add 192.168.1.233/24 dev eth0
 ip netns exec $pid ip route add default via 192.168.1.1
 ```
 
+## docker中的init进程
+
+- [运维开发故事：容器中的一号进程](https://mp.weixin.qq.com/s/FwgbPIz6N_NnSkKqu2CNRg)
+
+- 在 Linux 上有了容器的概念之后，一旦容器建立了自己的 Pid Namespace（进程命名空间），这个 Namespace 里的进程号也是从 1 开始标记的。所以，容器的 init 进程也被称为 1 号进程。你只需要记住：1 号进程是第一个用户态的进程，由它直接或者间接创建了 Namespace 中的其他进程。
+
+    - 每个Docker容器都是一个PID命名空间，这意味着容器中的进程与主机上的其他进程是隔离的。PID命名空间是一棵树，从PID 1开始，通常称为init。
+
+    - 注意：当你运行一个Docker容器时，镜像的ENTRYPOINT就是你的根进程，即PID 1（如果你没有ENTRYPOINT，那么CMD就会作为根进程，你可能配置了一个shell脚本，或其他的可执行程序，容器的根进程具体是什么，完全取决于你的配置）。
+
+### 把Bash当作PID 1呢？
+
+- 每个基础镜像都有这个是Bash 。Bash 正确地收割了采用的子进程。Bash 可以运行任何东西。所以在你的Dockerfile中，你肯定会用这个：
+
+    ```dockerfile
+    CMD ["/bin/bash", "-c", "/path-to-your-app"]
+    ```
+
+- Bash默认不会处理SIGTERM信号，因此这将会导致如下的问题：
+
+    - 1.如果将Bash作为PID 1运行，那么发送到Docker容器docker stop的信号，最终都是将 SIGTERM信号发送到Bash，但是Bash默认不会处理SIGTERM信号，也不会将它们转发到任何地方（除非您自己编写代码实现）。
+
+        - docker stop命令执行后，容器会有一个关闭的时限，默认为10秒，超过十秒则用kill强制关闭。换句话说，给 Bash发送SIGTERM信号终止时，会等待十秒钟，然后被内核强制终止包含所有进程的整个容器。
+
+            - 这些进程通过 SIGKILL 信号不正常地终止。SIGKILL是特权信号，无法被捕获，因此进程无法干净地终止。假设服务正在运行的应用程序正忙于写入文件；如果应用程序在写入过程中不干净地终止，文件可能会损坏。不干净的终止是不好的。这几乎就像从服务器上拔下电源插头一样。
+
+    - 2.一旦进程退出，Bash也会继续退出。如果程序出了bug退出了，Bash会退出，退出代码为0，而进程实际上崩溃了（但0表示“一切正常”；这将导致Docker或者k8s上重启策略不符合预期）。因为真正想要的可能是Bash返回与的进程相同的退出代码。
+
+- 请注意，我们对bash进行修改，编写一个 EXIT 处理程序，它只是向子进程发送信号：
+
+    ```sh
+    #!/bin/bash
+    function cleanup()
+    {
+        local pids=`jobs -p`
+        if [[ "$pids" != "" ]]; then
+            kill $pids >/dev/null 2>/dev/null
+        fi
+    }
+
+    trap cleanup EXIT
+    /path-to-your-app
+    ```
+
+    - 不幸的是，这并不能解决问题。向子进程发送信号是不够的：init 进程还必须等待子进程终止，然后才能终止自己。如果 init 进程过早终止，那么所有子进程都会被内核不干净地终止。
+
+- 很明显，需要一个更复杂的解决方案，但是像 Upstart、Systemd 和 SysV init 这样的完整 init 系统对于轻量级 Docker 容器来说太过分了。幸运的是，我们有很多在容器中使用的init程序。我们这里推荐使用简单的tini。
+
+### tini当作PID 1
+
+- 我们在容器中启动一个init 系统有很多种，这里推荐使用 tini，它是专用于容器的轻量级 init 系统，使用方法也很简单：
+
+    ```dockerfile
+    FROM openjdk8:8u201-jdk-alpine3.9
+    RUN apk add --no-cache tini wget \
+        && mkdir -p /opt/arthas \
+        && cd /opt/arthas \
+        && wget https://arthas.aliyun.com/arthas-boot.jar
+    ENTRYPOINT ["/sbin/tini", "--"]
+    ```
+
+- 请注意，Tini中还有一些额外的功能，在Bash或Java中很难实现（例如，Tini可以注册为“子收割者”，因此它实际上不需要作为PID 1运行来完成“僵尸进程”收割工作），但是这些功能对于一些高级应用场景来说非常有用。
+
+### 为什么docker中会有僵尸进程？
+
+- 使用容器的理想境界是一个容器只启动一个进程，但这在现实应用中有时是做不到的。
+
+    - 比如说，在一个容器中除了主进程之外，我们可能还会启动辅助进程，做监控或者 rotate logs；再比如说，我们需要把原来运行在虚拟机（VM）的程序移到容器里，这些原来跑在虚拟机上的程序本身就是多进程的。
+
+- 一旦我们启动了多个进程，那么容器里就会出现一个 pid 1，也就是我们常说的 1 号进程或者 init 进程，然后由这个进程创建出其他的子进程。比如我们在部署java服务的时候，我们需要部署一个Arthas（阿尔萨斯），来做为java程序的诊断工具。
+
 ## Dockerfile 创建容器镜像
+
+![image](./Pictures/docker/Docker镜像的构建流程.avif)
 
 - [告别手写烦恼！一键生成Dockerfile，轻松搞定容器化部署！](https://mp.weixin.qq.com/s/ZkfR7zfHIiygyjXYbPOl_A)
 
@@ -3450,6 +3872,22 @@ docker run --rm -ti \
 
 - [dive：查看docker文件系统的每一层（tui）](https://github.com/wagoodman/dive)
   ![image](./Pictures/docker/dive.avif)
+
+- [dozzle：Docker 日志查看工具](https://github.com/amir20/dozzle)
+
+- [buildg：交互式的 Dockerfile 调试工具。](https://github.com/ktock/buildg)
+    - 该项是基于 BuildKit 的交互式调试 Dockerfile 的工具，支持设置断点、单步执行和非 root 模式，并且可以在 VSCode、neovim、emacs 等编辑器中使用。
+
+- [cdebug：容器调试工具。支持Docker 容器、Kubernetes Pod，还是其他类型的容器](https://github.com/iximiuz/cdebug)
+
+    - [奇妙的Linux世界：cdebug: 容器调试界的瑞士军刀，5 个超能力让你成为调试大师](https://mp.weixin.qq.com/s/i-C3ZIcGpXKYFWZzQD0Cfw)
+
+- find-container-process：根据你输入的进程 ID (PID)，找到对应的 Docker 容器
+
+    ```sh
+    # 启动find-container-process
+    docker run --rm -it --name find-container-process -v /var/run/docker.sock:/var/run/docker.sock --pid=host --net=host --privileged 80imike/find-container-process
+    ```
 
 # reference article(优秀文章)
 

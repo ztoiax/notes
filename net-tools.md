@@ -22,8 +22,12 @@
     * [应用层](#应用层)
         * [http](#http)
             * [curl](#curl)
-                * [POST PATCH DELETE](#post-patch-delete)
-            * [curl作者的新作品trurl](#curl作者的新作品trurl)
+                * [其他协议](#其他协议)
+                * [发送/上传数据 POST PATCH DELETE](#发送上传数据-post-patch-delete)
+                * [.curlrc配置文件](#curlrc配置文件)
+                * [格式化输出和变量](#格式化输出和变量)
+            * [trurl：curl作者的新作品](#trurlcurl作者的新作品)
+            * [posting：tui版的postman](#postingtui版的postman)
             * [webhook（微信机器人）](#webhook微信机器人)
             * [httpie](#httpie)
                 * [nghttp（测试是否支持 http2）](#nghttp测试是否支持-http2)
@@ -31,22 +35,26 @@
             * [grpcurl：类似 cURL 但用于 gRPC 的工具](#grpcurl类似-curl-但用于-grpc-的工具)
         * [websocket](#websocket)
             * [wscat](#wscat)
-        * [websocat:创建websocat](#websocat创建websocat)
-        * [websocketd:创建websocket服务执行命令](#websocketd创建websocket服务执行命令)
+            * [websocat:创建websocat](#websocat创建websocat)
+            * [websocketd:创建websocket服务执行命令](#websocketd创建websocket服务执行命令)
         * [dns](#dns)
             * [whois(查看域名注册信息)](#whois查看域名注册信息)
             * [dnspeep：记录程序的dns请求,响应](#dnspeep记录程序的dns请求响应)
             * [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](#dns-detector从-dns-服务器获取某个网站的所有-ip-地址逐一进行延迟测试)
+        * [socks](#socks)
+            * [tun2socks：将tcp/udp等流量转换为socks](#tun2socks将tcpudp等流量转换为socks)
     * [表示层](#表示层)
         * [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](#testssl测试网站是否支持ssltls以及检测漏洞)
     * [传输层](#传输层)
-        * [tcpdump](#tcpdump)
+        * [tcpdump：抓包](#tcpdump抓包)
             * [基本命令](#基本命令)
             * [捕抓 TCP SYN，ACK 和 FIN 包](#捕抓-tcp-synack-和-fin-包)
-        * [tshark、editcap、capinfos](#tsharkeditcapcapinfos)
+        * [tshark、editcap、capinfos：抓包](#tsharkeditcapcapinfos抓包)
+        * [ptcpdump：抓包](#ptcpdump抓包)
         * [nmap](#nmap)
         * [zmap](#zmap)
         * [RustScan：端口扫描](#rustscan端口扫描)
+        * [vmessping：可以ping vmess://的地址](#vmessping可以ping-vmess的地址)
         * [nping(代替 ping)](#nping代替-ping)
         * [hping](#hping)
         * [ngrok：内网穿透（端口转发）](#ngrok内网穿透端口转发)
@@ -610,6 +618,8 @@ sudo tailscale file get .
 
 - [curl book](https://everything.curl.dev/)
 
+- [奇妙的Linux世界：10 个你不知道的高级 cURL 实用技巧](https://mp.weixin.qq.com/s/mvHlLi3KabNIyvsyROZ2aw)
+
 注意 url 目录后要有`/`
 
 ```bash
@@ -657,6 +667,66 @@ curl http://www.example.com -i -H "Range: bytes=0-50, 100-150"
 curl http://i.imgur.com/z4d4kWk.jpg -i -H "Range: bytes=0-1023"
 ```
 
+- 测试与故障排除
+    ```sh
+    # 使用指定网络接口
+    curl --interface wlan0 https://example.com
+
+    # 使用指定dns
+    curl --dns-ipv4-addr 1.1.1.1 https://example.com
+    ```
+
+- 可以测试超时并捕获退出代码（退出代码）：
+
+    ```sh
+    curl --connect-timeout 30 --silent --output /dev/null \
+      --show-error -w '总时间: %{time_total}s\n' http://baidu.com/ || EXIT_CODE=$?
+
+    if [ $EXIT_CODE = 28 ]
+    then
+      echo "无法连接（超时）。"
+    else
+      echo "可以连接。"
+    fi
+    ```
+
+- 正则表达式
+
+    ```sh
+    # 用一个 curl 命令发出多个请求
+
+    # 对 .../users/1、.../users/2 和 .../users/3 的请求
+    curl -s "https://jsonplaceholder.typicode.com/users/[1-3]" | jq -s .
+
+    # 使用步长选项，产生 2、4、6、8 和 10 的请求
+    curl -s "https://jsonplaceholder.typicode.com/users/[0-10:2]" | jq -s .
+
+    # 使用了特定数字的列表而不是范围，这也适用于字符和单词
+    curl -s "https://jsonplaceholder.typicode.com/photos/{1,6,35}" | jq -s .
+
+    # 文件名中的 #1 变量指的是范围 [1-3]。这将生成 file_1.json、file_2.json 和 file_3.json
+    curl -s "https://jsonplaceholder.typicode.com/users/[1-3]" -o "file_#1.json"
+    ```
+
+- `--parallel` 并行请求
+
+    > curl 将打开最多 50 个并行连接
+
+    ```sh
+    curl -I --parallel --parallel-immediate --parallel-max 3 www.baidu.com www.bilibili.com www.example.com
+    ```
+
+    - `websites.txt`文件
+        ```
+        url = "www.baidu.com"
+        url = "www.bilibili.com"
+        url = "www.example.com"
+        ```
+
+        ```sh
+        curl -I --parallel --parallel-immediate --parallel-max 3 --config websites.txt
+        ```
+
 - [可以curl的在线服务](https://github.com/chubin/awesome-console-services)
 
 ```py
@@ -670,7 +740,31 @@ curl ip-api.com
 curl https://corona-stats.online
 ```
 
-##### POST PATCH DELETE
+##### 其他协议
+
+- 通常我们只会使用 HTTP 或 HTTPS，但 curl 支持 很多协议。
+
+- 如果你在一台没有安装也不能安装 telnet 的服务器/机器上怎么办？只需使用 curl
+    ```sh
+    # 同 telnet example.com 1234
+    curl telnet://example.com:1234
+    ```
+
+- 电子邮件的 IMAP、POP3 和 SMTP，这意味着你可以使用 curl 阅读和发送电子邮件。
+
+    ```sh
+    # 阅读
+    curl --url "imaps://imap.gmail.com:993/Inbox;UID=1" --user "[email protected]:PASSWORD"
+
+    # 发送。这里的 message.txt 是实际的电子邮件，需要遵循[特定格式](https://everything.curl.dev/usingcurl/smtp.html)
+    curl smtp://mail.example.com \
+      --mail-from [email protected] \
+      --mail-rcpt [email protected] \
+      --upload-file message.txt \
+      -u "[email protected]:PASSWORD"
+    ```
+
+##### 发送/上传数据 POST PATCH DELETE
 
 - `POST`
 
@@ -682,6 +776,12 @@ curl -d "userId=100&title=post test" -X POST 'https://jsonplaceholder.typicode.c
 
 # post 当前目录下的json文件
 curl -d "@./file.json" -X POST 'https://jsonplaceholder.typicode.com/todos'
+
+# 发送json数据，但这样发送 JSON，需要在单引号和双引号之间切换
+curl -X POST "https://httpbin.org/post" -H "accept: application/json" --json '{"key": "value"}'
+
+# 更好的发送json数据的方法
+jo -p key=value | curl -X POST "https://httpbin.org/post" -H "accept: application/json" --json @-
 ```
 
 - `PATCH`
@@ -696,7 +796,136 @@ curl -d "title=patch test" -X PATCH 'https://jsonplaceholder.typicode.com/todos/
 curl -X DELETE 'https://jsonplaceholder.typicode.com/todos/321'
 ```
 
-#### [curl作者的新作品trurl](https://github.com/curl/trurl)
+##### .curlrc配置文件
+
+- `~/.curlrc`
+
+    ```
+    # ~/.curlrc
+
+    # 一些头信息
+    -H "Upgrade-Insecure-Requests: 1"
+    -H "Accept-Language: en-US,en;q=0.8"
+
+    # 跟随重定向
+    --location
+    ```
+
+    ```sh
+    curl -K .curlrc https://www.baidu.com
+    ```
+
+- `.netrc`
+
+    ```
+    # ~/.netrc
+    machine https://authenticationtest.com/HTTPAuth/
+    login user
+    password pass
+    ```
+
+    ```sh
+    curl --netrc-file .netrc https://authenticationtest.com/HTTPAuth/
+    ```
+
+##### 格式化输出和变量
+
+- curl 可以输出很多东西，有时会让人不知所措、冗长且不必要。幸运的是，我们可以使用输出格式化只打印我们感兴趣的内容：
+
+- `-w` 选项并传递一个格式文件来实现这一点
+
+    - 每个变量都用 `%{...}` 包围。它们可以是简单变量，如 `response_code`，也可以是 `url.<NAME>` 的一部分，指的是 URL 组件，如主机或端口。
+
+    ```
+    # format.txt
+    类型: %{content_type}\n代码: %{response_code}\n\n
+
+    从 8.1.0:\n\n
+
+    协议: %{url.scheme}\n
+    主机: %{url.host}\n
+    端口: %{url.port}\n
+
+    读取头信息内容 (v7.83.0):\n
+    %header{date}
+    ```
+
+    ```sh
+    curl --silent --output /dev/null --show-error -w @format.txt http://example.com/
+
+    # format.txt类型: text/html; charset=UTF-8
+    代码: 200
+
+    从 8.1.0:
+
+    协议: http
+    主机: example.com
+    端口: 80
+    读取头信息内容 (v7.83.0):
+    Wed, 07 Aug 2024 01:14:58 GMT%
+    ```
+
+- 格式化的一个很好的用途是测量请求/响应时间，可以用以下格式来实现：
+
+    ```
+    # format.txt
+         域名解析时间:  %{time_namelookup}s\n
+            连接时间:  %{time_connect}s\n
+         应用连接时间:  %{time_appconnect}s\n
+           预传输时间:  %{time_pretransfer}s\n
+           重定向时间:  %{time_redirect}s\n
+          开始传输时间: %{time_starttransfer}s\n
+                    ----------\n
+              总时间:  %{time_total}s\n
+
+    # 输出:
+         域名解析时间:  0.000765s
+            连接时间:  0.111908s
+         应用连接时间:  0.000000s
+           预传输时间:  0.111967s
+           重定向时间:  0.000000s
+         开始传输时间:  0.223373s
+                    ----------
+              总时间:  0.223992s
+    ```
+
+#### [trurl：curl作者的新作品](https://github.com/curl/trurl)
+
+- trurl 是一个用于解析 URL 的专用工具
+
+```sh
+# 提取 URL 组件，这里是路径，但也可以是如 url、scheme、user、password、options 或 host 等。
+trurl --url https://example.com/some/path/to/file.html --get '{path}'
+/some/path/to/file.html
+
+# 使用 append 功能，向 URL 添加查询参数
+trurl --url "https://example.com/?name=hello" --append query=key=value
+https://example.com/?name=hello&key=value
+
+# 解析为 JSON：
+trurl --url "https://example.com/?name=hello" --json
+[
+  {
+    "url": "https://example.com/?name=hello",
+    "parts": {
+      "scheme": "https",
+      "host": "example.com",
+      "path": "/",
+      "query": "name=hello"
+    },
+    "params": [
+      {
+        "key": "name",
+        "value": "hello"
+      }
+    ]
+  }
+]
+```
+
+#### [posting：tui版的postman](https://github.com/darrenburns/posting)
+
+![image](./Pictures/net-tools/posting.avif)
 
 #### webhook（微信机器人）
 
@@ -771,7 +1000,7 @@ grpcurl grpc.server.com:443 my.custom.server.Service/Method
 wscat --connect ws://127.0.0.1
 ```
 
-### [websocat:创建websocat](https://github.com/vi/websocat)
+#### [websocat:创建websocat](https://github.com/vi/websocat)
 
 ```sh
 # 连接ws服务器，
@@ -792,7 +1021,7 @@ websocat --oneshot -b ws-l:127.0.0.1:1234 tcp:127.0.0.1:22&
 websocat --oneshot -b tcp-l:127.0.0.1:1236 ws://127.0.0.1:1234/&
 ```
 
-### [websocketd:创建websocket服务执行命令](https://github.com/joewalnes/websocketd)
+#### [websocketd:创建websocket服务执行命令](https://github.com/joewalnes/websocketd)
 
 ```sh
 # 创建websocket服务，客户端连接就执行ls命令
@@ -801,6 +1030,7 @@ websocketd --port=1234 ls
 # 使用websocat连接
 websocat ws://127.0.0.1:1234
 ```
+
 ### dns
 
 ```sh
@@ -824,6 +1054,10 @@ dig
 
 #### [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](https://github.com/sun0day/dns-detector)
 
+### socks
+
+#### [tun2socks：将tcp/udp等流量转换为socks](https://github.com/xjasonlyu/tun2socks)
+
 ## 表示层
 
 ### [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](https://github.com/drwetter/testssl.sh)
@@ -834,7 +1068,7 @@ testssl --parallel https://www.tsinghua.edu.cn/
 
 ## 传输层
 
-### tcpdump
+### tcpdump：抓包
 
 | 参数 | 操作                                           |
 | ---- | ---------------------------------------------- |
@@ -919,7 +1153,7 @@ tcpdump -i eth0 not port 22 and "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0"
 tcpdump -i ens3 not port 22 and not port 80 and "tcp[tcpflags] & (tcp-syn|tcp-ack) != 0"
 ```
 
-### tshark、editcap、capinfos
+### tshark、editcap、capinfos：抓包
 
 - [一文读懂网络报文分析神器Tshark： 100+张图、100+个示例轻松掌握原创](https://cloud.tencent.com/developer/article/2312883)
 
@@ -1108,6 +1342,13 @@ tshark -q -n -r test.pcapng -z ip_hosts,tree
 tshark -q -n -r test.pcapng -z ip_srcdst,tree
 ```
 
+### [ptcpdump：抓包](https://github.com/mozillazg/ptcpdump)
+
+- [奇妙的Linux世界：ptcpdump: 新一代抓包神器，可捕获任何进程、容器或 Pod 的网络流量](https://mp.weixin.qq.com/s/CbOyeQ42D776XuCOTj4Pow)
+
+- 可捕获任何进程、容器或 Pod 的网络流量
+
+- 基于ebpf
 
 ### nmap
 
@@ -1183,6 +1424,8 @@ nmap -PA 192.168.1.1
 - 比nmap速度要快 [ZMap 为什么能在一个小时内就扫描整个互联网？](https://www.zhihu.com/question/21505586/answer/18443313)
 
 ### [RustScan：端口扫描](https://github.com/RustScan/RustScan)
+
+### [vmessping：可以ping vmess://的地址](https://github.com/v2fly/vmessping)
 
 ### nping(代替 ping)
 

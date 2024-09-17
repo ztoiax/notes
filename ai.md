@@ -14,6 +14,10 @@
 
 ## LLM
 
+- [chatbot-arena-leaderboard：LLM性能排行](https://lmsys-chatbot-arena-leaderboard.hf.space/)
+
+- [ZeroEval：LLM性能排行](https://github.com/yuchenlin/ZeroEval)
+
 ### 原理
 
 - [llm-course](https://github.com/mlabonne/llm-course)
@@ -21,6 +25,10 @@
 - [llm-viz：3D 可视化 GPT 大语言模型。](https://bbycroft.net/llm)
 
 - [wolfram作者：What Is ChatGPT Doing … and Why Does It Work?](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)
+
+- [腾讯技术工程：一文带你了解大模型——智能体（Agent）](https://mp.weixin.qq.com/s/oMIPPgHjvJDyf98K9yNQbQ)
+
+- [腾讯云开发者：一文搞懂大模型！基础知识、 LLM 应用、 RAG 、 Agent 与未来发展](https://mp.weixin.qq.com/s/groI097gj0w7XMHIy3eERA)
 
 ### 在线模型
 
@@ -45,8 +53,6 @@
     - [智谱清言](https://chatglm.cn/main/)
 
 ### 使用
-
-- [腾讯云开发者：我问了鹅厂程序员：你们工作中怎么用ChatGPT？如何高效Prompt？](https://blog.csdn.net/QcloudCommunity/article/details/130143855)
 
 - [腾讯技术工程：如何与ChatGPT4结对编程提升研发效率](https://www.163.com/dy/article/I13L6MEP0518R7MO.html)
 
@@ -100,6 +106,9 @@
 
 - [corenet：苹果手机端大模型](https://github.com/apple/corenet)
 
+- [ChatPilot：支持Google搜索、文件网址对话（RAG）、代码解释器功能，复现了Kimi Chat(文件，拖进来；网址，发出来)](https://github.com/shibing624/ChatPilot)
+
+
 - [LaWGPT：在通用中文基座模型（如 Chinese-LLaMA、ChatGLM 等）的基础上扩充法律领域专有词表、大规模中文法律语料预训练](https://github.com/pengxiao-song/LaWGPT)
 
 - [DB-GPT（部署数据库交互llm。防止数据隐私上传平台）](https://github.com/eosphoros-ai/DB-GPT)
@@ -120,17 +129,51 @@
 
 - [awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts)
 
+- [腾讯云开发者：我问了鹅厂程序员：你们工作中怎么用ChatGPT？如何高效Prompt？](https://blog.csdn.net/QcloudCommunity/article/details/130143855)
+
+- [腾讯云开发者：一文掌握Prompt：万能框架+优化技巧+常用指标](https://mp.weixin.qq.com/s/oKB8m_wX6p8SHNMx1R_hzw)
+
+### RAG框架
+
+- [RAG_Techniques：检索增强生成（RAG）教程集合。该项目提供了 20 多种先进的 RAG 技术教程，包含实现指南和示例代码，并定期更新。内容涵盖检索查询、上下文增强、融合检索（Fusion Retrieval）、分层索引、上下文压缩、知识图谱整合等多种 RAG 技术。](https://github.com/NirDiamant/RAG_Techniques)
+
+- [graphrag：微软RAG框架](https://github.com/microsoft/graphrag)
+
 ## Transformer
 
 - [transformer-debugger](https://github.com/openai/transformer-debugger)
 
     - OpenAI 开源了一款用于分析小型语言模型内部行为的工具：Transformer Debugger (TDB)，它将自动可解释性技术与稀疏自动编码器相结合，无需写代码就能快速探索模型。基于 Transformer 的语言模型就像个黑盒，该项目可以解密 Transfomer 的内部结构和预测行为。
 
-## Sora
+## ai编程，代码生成和代码补全
+
+- [CodeGeeX4：清华大学的模型](https://github.com/THUDM/CodeGeeX4)
+
+## 图片与视频等多媒体相关
+
+### 图片和视频理解
+
+- [MiniCPM-V：只需8b参数的模型，就可以实现图片和视频理解，并宣称超越GPT-4V](https://github.com/OpenBMB/MiniCPM-V)
+
+### 文生成图片
+
+- [HunyuanDiT：腾讯的文生图](https://github.com/Tencent/HunyuanDiT)
+
+### 文生成视频
 
 - [Open-Sora：生成图片或视频、图生视频、视频编辑](https://github.com/hpcaitech/Open-Sora)
 
-- [HunyuanDiT：腾讯的文生图](https://github.com/Tencent/HunyuanDiT)
+- [可灵AI：快手的](https://klingai.kuaishou.com/text-to-video/new)
+
+- [CogVideo：清华大学的](https://github.com/THUDM/CogVideo)
+
+## SAM
+
+- 对图片和视频一键抠图
+
+- [segment-anything：mata的sam](https://github.com/facebookresearch/segment-anything)
+
+- [segment-anything-2：mata的sam](https://github.com/facebookresearch/segment-anything-2)
 
 ## 图片视频
 

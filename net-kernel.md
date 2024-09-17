@@ -18,6 +18,8 @@
                 * [合并请求 vs 并行请求](#合并请求-vs-并行请求)
         * [RPC](#rpc)
         * [WebSocket](#websocket)
+            * [Websocket建立过程](#websocket建立过程)
+            * [websocket报文格式](#websocket报文格式)
         * [DNS](#dns)
             * [基本概念](#基本概念)
             * [knowclub：localhost和127.0.0.1的区别](#knowclublocalhost和127001的区别)
@@ -25,12 +27,21 @@
                 * [基于DNS解析](#基于dns解析)
         * [FTP](#ftp)
         * [DHCP](#dhcp)
+        * [代理](#代理)
+            * [Tachyon：漫谈各种黑科技式 DNS 技术在代理环境中的应用](#tachyon漫谈各种黑科技式-dns-技术在代理环境中的应用)
+                * [各种代理的dns请求](#各种代理的dns请求)
+                * [内置的dns模块](#内置的dns模块)
+                    * [基本配置](#基本配置)
+                    * [DNS outbound](#dns-outbound)
+                    * [Fake DNS](#fake-dns)
+                    * [DNS fallback](#dns-fallback)
     * [表示层](#表示层)
         * [密钥算法](#密钥算法)
         * [数字签名和数字证书](#数字签名和数字证书)
         * [tls](#tls)
             * [为什么我抓不到 baidu 的数据包？](#为什么我抓不到-baidu-的数据包)
             * [Session](#session)
+        * [基于TLS1.3的微信安全通信协议mmtls介绍](#基于tls13的微信安全通信协议mmtls介绍)
     * [Session layer（会话层）](#session-layer会话层)
         * [RTP](#rtp)
     * [传输层](#传输层)
@@ -504,7 +515,75 @@
 
 - [小林coding：既然有 HTTP 协议，为什么还要有 RPC？](https://www.xiaolincoding.com/network/2_http/http_rpc.html)
 
-    - gRPC底层用的是HTTP2
+- RPC（Remote Procedure Call），又叫做远程过程调用。它本身并不是一个具体的协议，而是一种调用方式。
+
+    - RPC可以像调用本地方法那样调用远端方法
+
+    - 举个例子，我们平时调用一个本地方法就像下面这样。
+        ```
+        res = localFunc(req)
+        ```
+
+    - 基于这个思路，大佬们造出了非常多款式的RPC协议，比如比较有名的`gRPC`，`thrift`。
+
+        - 虽然大部分RPC协议底层使用TCP，但实际上它们不一定非得使用TCP，改用UDP或者HTTP，其实也可以做到类似的功能。
+
+        - gRPC底层用的是HTTP2
+
+- HTTP和RPC
+
+    - HTTP是browser/server(b/s)架构：浏览器（browser），不管是chrome还是IE，它们不仅要能访问自家公司的服务器（server），还需要访问其他公司的网站服务器，因此它们需要有个统一的标准，不然大家没法交流。
+
+    - RPC是client/server (c/s)架构：现在电脑上装的各种联网软件，比如xx管家，xx卫士，它们都作为客户端（client）需要跟服务端（server）建立连接收发消息，可以使用自家造的RPC协议，因为它只管连自己公司的服务器就ok了。
+
+    - HTTP主要用于b/s架构，而RPC更多用于c/s架构。但现在其实已经没分那么清了，b/s和c/s在慢慢融合。
+
+        - 很多软件同时支持多端，比如某度云盘，既要支持网页版，还要支持手机端和pc端，如果通信协议都用HTTP的话，那服务器只用同一套就够了。而RPC就开始退居幕后，一般用于公司内部集群里，各个微服务之间的通讯。
+
+        - 问题：都用HTTP得了，还用什么RPC？那这就要从它们之间的区别开始说起。
+
+- HTTP和RPC区别比较明显的几个点
+
+    - 1.服务发现
+
+        > 首先要向某个服务器发起请求，你得先建立连接，而建立连接的前提是，你得知道IP地址和端口。这个找到服务对应的IP端口的过程，其实就是服务发现。
+
+        - HTTP：你知道服务的域名，就可以通过DNS服务去解析得到它背后的IP地址，默认80端口。
+
+        - RPC：就有些区别，一般会有专门的中间服务去保存服务名和IP信息
+            - 比如consul或者etcd，甚至是redis。想要访问某个服务，就去这些中间服务去获得IP和端口信息。
+            - 由于dns也是服务发现的一种，所以也有基于dns去做服务发现的组件，比如CoreDNS。
+
+        - 可以看出服务发现这一块，两者是有些区别，但不太能分高低。
+
+    - 2.底层连接形式
+
+        - HTTP1.1：其默认在建立底层TCP连接之后会一直保持这个连接（keep alive），之后的请求和响应都会复用这条连接。
+
+        - RPC：也跟HTTP类似，也是通过建立TCP长链接进行数据交互，但不同的地方在于，RPC协议一般还会再建个连接池，在请求量大的时候，建立多条连接放在池内，要发数据的时候就从池里取一条连接出来，用完放回去，下次再复用，可以说非常环保。
+            ![image](./Pictures/net-kernel/RPC连接池.avif)
+
+            - 由于连接池有利于提升网络请求性能，所以不少编程语言的网络库里都会给HTTP加个连接池，比如go就是这么干的。
+
+        - 可以看出这一块两者也没太大区别，所以也不是关键。
+
+    - 3.传输的内容
+
+        > 基于TCP传输的消息，说到底，无非都是消息头header和消息体body。
+
+        - HTTP1.1：支持音频视频，但HTTP设计初是用于做网页文本展示的，所以它传的内容以字符串为主。header和body都是如此。在body这块，它使用json来序列化结构体数据。
+            - 像header里的那些信息，其实如果我们约定好头部的第几位是content-type，就不需要每次都真的把`content-type`这个字段都传过来，类似的情况其实在body的json结构里也特别明显。
+
+        - RPC：因为它定制化程度更高
+            - 可以采用体积更小的protobuf或其他序列化协议去保存结构体数据
+            - 同时也不需要像HTTP那样考虑各种浏览器行为，比如302重定向跳转啥的。
+            - 因此性能也会更好一些，这也是在公司内部微服务中抛弃HTTP，选择使用RPC的最主要原因。
+        ![image](./Pictures/net-kernel/http原理.avif)
+        ![image](./Pictures/net-kernel/RPC原理.avif)
+
+        - 当然上面说的HTTP，其实特指的是现在主流使用的HTTP1.1，HTTP2在前者的基础上做了很多改进，所以性能可能比很多RPC协议还要好，甚至连gRPC底层都直接用的HTTP2。
+
+            - 为什么既然有了HTTP2，还要有RPC协议？这个是由于HTTP2是2015年出来的。那时候很多公司内部的RPC协议都已经跑了好些年了，基于历史原因，一般也没必要去换了。
 
 ### WebSocket
 
@@ -512,7 +591,42 @@
 
 - [Se7en的架构笔记:Nginx Websocket 配置](https://mp.weixin.qq.com/s/aN3-JHd-iPhHjUKQlc_Rzw)
 
-![image](./Pictures/net-kernel/websocket.avif)
+- [小林coding：既然有 HTTP 协议，为什么还要有 WebSocket？](https://www.xiaolincoding.com/network/2_http/http_websocket.html)
+
+    - http的缺点：服务器从来就不会主动给客户端发一次消息
+
+    - 1.http定时轮询：
+
+        - 网页的前端代码里不断定时发 HTTP 请求到服务器，服务器收到请求后给客户端响应消息
+
+            - 例子：扫码登录。前端网页根本不知道用户扫没扫，于是不断去向后端服务器询问，看有没有人扫过这个码。
+
+                ![image](./Pictures/net-kernel/http定时轮询.avif)
+
+                - 点击[微信公众号官网](https://mp.weixin.qq.com/)，打开F12会发现每隔2秒发送一次请求
+
+                    ![image](./Pictures/net-kernel/http定时轮询1.avif)
+
+                    - 缺点：用户会感到明显的卡顿
+
+
+    - 2.http长轮询：
+
+        > HTTP请求发出后，一般会给服务器留一定的时间做响应，比如3s，规定时间内没返回，就认为是超时。如果我们的HTTP请求将超时设置的很大，比如30s，在这30s内只要服务器收到了扫码请求，就立马返回给客户端网页。如果超时，那就立马发起下一次请求。
+
+        - 优点：相比http定时轮询可以减少请求次数。每隔30秒，在这 30 秒内只要服务器收到了扫码请求，就立马返回给客户端网页。
+
+            ![image](./Pictures/net-kernel/http长轮询.avif)
+
+            - 例子：百度网盘的扫码登陆
+
+                ![image](./Pictures/net-kernel/http长轮询1.avif)
+
+        - 常用的消息队列RocketMQ中，消费者去取数据时，也用到了这种方式。
+
+    - 上面提到的2种解决方案，本质上，其实还是客户端主动去取数据。
+
+        - 对于像扫码登录这样的简单场景还能用用。但如果是网页游戏呢，游戏一般会有大量的数据需要从服务器主动推送到客户端。这就得说下websocket了。
 
 - 和 Http 相比，WebSocket有以下优点:
 
@@ -525,24 +639,20 @@
     - 同时WebSocket协议的头部非常小，服务器发到客户端的数据包的包头，只有2~10个字节(取决于数据包的长度)，客户端发送服务端的包头稍微大一点，因为其要进行掩码加密，所以还要加上4个字节的掩码。总得来说，头部不超过14个字节。
     - 支持扩展，用户可以扩展协议实现自己的子协议。
 
-- [小林coding：既然有 HTTP 协议，为什么还要有 WebSocket？](https://www.xiaolincoding.com/network/2_http/http_websocket.html)
+- websocket应用场景：
 
-    - http轮询：
+    > 适用于需要服务器和客户端（浏览器）频繁交互的大部分场景。
 
-        - 网页的前端代码里不断定时发 HTTP 请求到服务器，服务器收到请求后给客户端响应消息
+    - 网页/小程序游戏
+        - 怪物移动以及攻击玩家的行为是服务器逻辑产生的，对玩家产生的伤害等数据，都需要由服务器主动发送给客户端，客户端获得数据后展示对应的效果。
+    - 网页聊天室
+    - 一些类似飞书这样的网页协同办公软件。
 
-            - 例子：扫码登录。前端网页根本不知道用户扫没扫，于是不断去向后端服务器询问，看有没有人扫过这个码。
+#### Websocket建立过程
 
-                - 点击[微信公众号官网](https://mp.weixin.qq.com/)，打开F12会发现每隔2秒发送一次请求
+- websocket和HTTP一样都是基于TCP的协议。经历了三次TCP握手之后，利用HTTP协议升级为websocket协议。
 
-
-    - http长轮询：
-
-        - 相比前者可以减少请求次数。每隔30秒，在这 30 秒内只要服务器收到了扫码请求，就立马返回给客户端网页。
-
-            - 例子：百度网盘的扫码登陆
-
-- Websocket 建立过程
+    ![image](./Pictures/net-kernel/websocket.avif)
 
 - 客户端: 申请协议升级
 
@@ -565,6 +675,16 @@
     - 请求必须含有 Sec-Websocket-Version, 其值必须是 13。
     - 请求必须含有 Sec-Websocket-Key, 用于提供基本的防护, 比如无意的连接。
 
+    - 这些header头的意思是，浏览器想升级协议（Connection: Upgrade），并且想升级成websocket协议（Upgrade: websocket）。
+
+    - 同时带上一段随机生成的base64码（`Sec-WebSocket-Key`），发给服务器。
+
+        - 如果服务器正好支持升级成websocket协议。就会走websocket握手流程，同时根据客户端生成的base64码，用某个公开的算法变成另一段字符串，放在HTTP响应的 `Sec-WebSocket-Accept` 头里，同时带上`101`状态码，发回给浏览器。
+
+            - 之后，浏览器也用同样的公开算法将base64码转成另一段字符串，如果这段字符串跟服务器传回来的字符串一致，那验证通过。
+
+            ![image](./Pictures/net-kernel/Sec-WebSocket-Key.avif)
+
 - 服务器: 响应协议升级
 
     - 服务器返回的响应头必须包含如下的内容:
@@ -579,6 +699,12 @@
     - 响应必须含有 Upgrade, 其值为 "weboscket"。
     - 响应必须含有 Connection, 其值为 "Upgrade"。
     - 响应必须含有 Sec-Websocket-Accept, 根据请求首部的 Sec-Websocket-key计算出来。。
+
+- 服务器响应的第二次TCP握手，并使用websocket通信
+
+    - 可以看到这也是个HTTP类型的报文，返回的状态码是101。同时可以看到返回的报文header中也带有各种`websocket`相关的信息，比如`Sec-WebSocket-Accept`
+
+    ![image](./Pictures/net-kernel/websocket服务器响应的第二次TCP握手.avif)
 
 - Sec-WebSocket-Key/Accept的计算
 
@@ -595,6 +721,45 @@
         - Key可以避免反向代理缓存。
         - 在浏览器中发起 ajax 请求, Sec-Websocket-Key 以及相关 header 是被禁止的, 这样可以避免客户端发送 ajax 请求时, 意外请求协议升级。
         - 最终需要强调的是: Sec-WebSocket-Key/Accept 并不是用来保证数据的安全性, 因为其计算/转换公式都是公开的, 而且非常简单, 最主要的作用是预防一些意外的情况。
+
+#### websocket报文格式
+
+![image](./Pictures/net-kernel/websocket报文格式.avif)
+
+    - 这里面字段很多，但我们只需要关注下面这几个。
+
+    - `opcode`字段：这个是用来标志这是个什么类型的数据帧。比如。
+
+        - 等于1时是指text类型（string）的数据包
+        - 等于2是二进制数据类型（[]byte）的数据包
+        - 等于8是关闭连接的信号
+
+    - `payload`字段：存放的是我们真正想要传输的数据的长度，单位是字节。比如你要发送的数据是字符串"111"，那它的长度就是3。
+
+        ![image](./Pictures/net-kernel/websocket报文格式-payload字段.avif)
+
+        - 另外，可以看到，我们存放payload长度的字段有好几个，我们既可以用最前面的7bit, 也可以用后面的`7+16bit`或`7+64bit`。
+
+        - websocket会用最开始的7bit做标志位。不管接下来的数据有多大，都先读最先的7个bit，根据它的取值决定还要不要再读个16bit或64bit。
+
+            - 1.如果最开始的7bit的值是 0~125，那么它就表示了 payload 全部长度，只读最开始的7个bit就完事了。
+                ![image](./Pictures/net-kernel/payload长度在0到125之间.avif)
+
+            - 2.如果是126（0x7E）。那它表示payload的长度范围在 126~65535 之间，接下来还需要再读16bit。这16bit会包含payload的真实长度。
+                ![image](./Pictures/net-kernel/payload长度在126到65535之间.avif)
+
+            - 3.如果是127（0x7F）。那它表示payload的长度范围&gt;=65536，接下来还需要再读64bit。这64bit会包含payload的长度。这能放2的64次方byte的数据，换算一下好多个TB，肯定够用了。
+                ![image](./Pictures/net-kernel/payload长度大于等于65536的情况.avif)
+
+    - `payload data`字段：这里存放的就是真正要传输的数据，在知道了上面的payload长度后，就可以根据这个值去截取对应的数据。
+
+- 大家有没有发现一个小细节，websocket的数据格式也是  `数据头（内含payload长度） + payload data` 的形式。
+
+    - 之前写的《既然有HTTP协议，为什么还要有RPC》提到过，TCP协议本身就是全双工，但直接使用纯裸TCP去传输数据，会有粘包的"问题"。为了解决这个问题，上层协议一般会用消息头+消息体的格式去重新包装要发的数据。
+
+    - 而消息头里一般含有消息体的长度，通过这个长度可以去截取真正的消息体。
+
+    - HTTP协议和大部分RPC协议，以及我们今天介绍的websocket协议，都是这样设计的。
 
 ### DNS
 
@@ -768,6 +933,637 @@
 
 - [视频（技术蛋老师）：DHCP运作原理和握手过程](https://www.bilibili.com/video/BV1Gd4y1n7Xz)
 
+### 代理
+
+- [新 V2Ray 白话文指南](https://guide.v2fly.org/)
+
+- [官方的配置文件文档](https://www.v2fly.org/config/overview.html)
+
+- [官方的开发文档](https://www.v2fly.org/developer/intro/compile.html)
+
+- V2Ray 的工作方式：一般来说，流量从 inbound 进入到 V2Ray，再进入到路由匹配过程，找到匹配到的 outbound，然后流量就给到这个 outbound 处理。
+    - V2Ray 虽然有多种 inbound，多种 outbound，以及很灵活的路由匹配规则。
+
+#### [Tachyon：漫谈各种黑科技式 DNS 技术在代理环境中的应用](https://tachyondevel.medium.com/%E6%BC%AB%E8%B0%88%E5%90%84%E7%A7%8D%E9%BB%91%E7%A7%91%E6%8A%80%E5%BC%8F-dns-%E6%8A%80%E6%9C%AF%E5%9C%A8%E4%BB%A3%E7%90%86%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8-62c50e58cbd0)
+
+- Windows 系统的用户需要注意，系统代理里直接设置 SOCKS 代理有可能用的不是 SOCKS 5，而是 SOCKS 4，SOCKS 4 是不支持远程 DNS 解析的，想要设置 SOCKS 5 的话要用 PAC 文件，PAC 文件内容可以这么写：
+
+    ```
+    function FindProxyForURL(url, host) {
+        return "SOCKS5 127.0.0.1:1086; SOCKS 127.0.0.1:1086";
+        return“SOCKS5 127.0.0.1：1086; SOCKS 127.0.0.1:1086”;
+    }
+    ```
+##### 各种代理的dns请求
+
+- 不开启代理的dns请求
+    - 1.浏览器地址栏输入 www.bilibili.com，敲下 Enter
+    - 2.浏览器发起针对 "www.bilibili.com" 这个域名的 DNS 请求
+    - 3.假设系统 DNS 设置了 114.114.114.114
+    - 4.承载 DNS 请求的 UDP 流量就会从你本机直接发到 114.114.114.114
+    - 5.114.114.114.114 接收了这些 UDP 流量
+    - 6.114.114.114.114 从这些 UDP 流量中解析出请求的域名 "www.bilibili.com"
+    - 7.114.114.114.114 尝试从自己缓存里找结果，有的话返回结果
+    - 8.114.114.114.114 如果没缓存，会向其它 DNS 服务器要结果，拿到后返回
+    - 9.浏览器收到 114.114.114.114 返回的结果
+    - 10.浏览器开始真正地对 Bilibili 的服务器发起 HTTP/HTTPS 连接
+
+- 开启代理的dns请求
+
+    - v2ray配置
+
+        ```json
+        {
+            "dns": {
+                "servers": [
+                    "223.5.5.5",
+                    "8.8.8.8"
+                ]
+            },
+            "outbounds": [
+                {
+                    "protocol": "freedom",
+                    "settings": {}
+                }
+            ],
+            "inbounds": [
+                {
+                    "domainOverride": [
+                        "http",
+                        "tls"
+                    ],
+                    "port": 1086,
+                    "listen": "127.0.0.1",
+                    "protocol": "socks",
+                    "settings": {
+                        "auth": "noauth",
+                        "udp": true,
+                        "ip": "127.0.0.1"
+                    }
+                }
+            ]
+        }
+        ```
+
+    - 1.浏览器地址栏输入 www.bilibili.com，敲下 Enter
+    - 2.浏览器发现设置了 SOCKS 代理，因为 SOCKS 代理可以把域名传给服务器处理
+    - 3.所以浏览器不需要做 DNS 请求，直接把域名放进 SOCKS 请求中发给代理服务器
+    - 4.我们的代理服务器(V2Ray) 127.0.0.1:1086 收到了这个 SOCKS 代理请求
+    - 5.代理服务器(V2Ray) 从 SOCKS 请求中解析出 "www.bilibili.com" 这个域名
+    - 6.代理服务器(V2Ray) 要代理这个请求，但因为只有一个 Freedom outbound
+    - 7.于是就用 Freedom outbound 向 www.bilibili.com 发起 TCP 连接
+    - 8.Freedom outbound 要向一个域名发 TCP 连接，得先解析域名
+    - 9.承载 DNS 请求的 UDP 流量就会从你本机直接发到 114.114.114.114
+    - 10.114.114.114.114 接收了这些 UDP 流量
+    - 11.114.114.114.114 从这些 UDP 流量中解析出请求的域名 "www.bilibili.com"
+    - 12.114.114.114.114 尝试从自己缓存里找结果，有的话返回结果
+    - 13.114.114.114.114 如果没缓存，会向其它 DNS 服务器要结果，拿到后返回
+    - 14.程序(V2Ray)收到 114.114.114.114 返回的结果
+    - 15.程序(V2Ray)开始真正地对 Bilibili 的服务器发起 TCP 连接
+    - 16.连接一旦建立，代理服务器(V2Ray) 就可以真正地代理客户端(浏览器)的请求流量
+
+
+    - 上面设置不涉及任何远程代理服务器，由本地的 V2Ray 充当代了理服务器，代理的 www.bilibili.com 请求是采用直连方式，也一样有向 114.114.114.114 发出了 DNS 请求。
+        - 但可以看到在后一个例子发起 DNS 请求的是 V2Ray（而不是浏览器），而从 Bilibili 的服务器看来，跟它连接是 V2Ray（而不是浏览器）。
+
+    - 加了这么一层代理，看起来什么都没发生，只是换了角色，其实不然，角色这么一换，可做的事情就相当多了。
+        - 拿 DNS 来说，原来是浏览器发起的 DNS 请求，我们没办法控制浏览器怎么去发这个 DNS 请求（你不可能去改浏览器的源代码自己编译一个来用吧？），但换成由 V2Ray 来发这个 DNS 请求后，我们就可以做很多事情。
+
+- 稍微改一下上面的v2ray配置，在 `Freedom oubound` 中加入 `"domainStrategy": "UseIP" `
+
+    - [V2Ray 文档](https://v2ray.com/chapter_02/protocols/freedom.html) 中对 domainStrategy 的说明是这样的：
+
+        > 在目标地址为域名时，Freedom 可以直接向此域名发出连接（"AsIs"），或者将域名解析为 IP 之后再建立连接（"UseIP"、"UseIPv4"、"UseIPv6"）。解析 IP 的步骤会使用 V2Ray 内建的 DNS。默认值为"AsIs"。
+
+    ```json
+    {
+        "dns": {
+            "servers": [
+                "223.5.5.5",
+                "8.8.8.8"
+            ]
+        },
+        "outbounds": [
+            {
+                "protocol": "freedom",
+                "settings": {
+                    "domainStrategy": "UseIP"
+                }
+            }
+        ],
+        "inbounds": [
+            {
+                "domainOverride": [
+                    "http",
+                    "tls"
+                ],
+                "port": 1086,
+                "listen": "127.0.0.1",
+                "protocol": "socks",
+                "settings": {
+                    "auth": "noauth",
+                    "udp": true,
+                    "ip": "127.0.0.1"
+                }
+            }
+        ]
+    }
+    ```
+
+    - 原本默认为 `AsIs` 的话，直接向域名发出连接就是说会用系统 DNS 来做 DNS 解析，但如果我们设置为 `UseIP` ，步骤就会变成这样
+
+        ```
+        ...
+        8.Freedom outbound 要向一个域名发 TCP 连接，得先解析域名
+            * Freedom outbound 用了 UseIP 策略，所以使用内置 DNS 来解析域名
+            * 内置 DNS 按顺序第一个是 223.5.5.5
+            * 内置 DNS 请求会按路由规则走，因为没有任何规则，且只有一个 Freedom outbound
+            * 内置 DNS 发到 223.5.5.5 的请求走 Freedom outbound
+        9.承载 DNS 请求的 UDP 流量就会从你本机直接发到 223.5.5.5
+        10.223.5.5.5 接收了这些 UDP 流量
+        11.223.5.5.5 从这些 UDP 流量中解析出请求的域名 "www.bilibili.com"
+        12.223.5.5.5 尝试从自己缓存里找结果，有的话返回结果
+        13.223.5.5.5 如果没缓存，会向其它 DNS 服务器要结果，拿到后返回
+        14.程序(V2Ray)收到 223.5.5.5 返回的结果
+        ...
+        ```
+
+    - 所以这里我们改了一个 domainStrategy 参数，就相当于覆盖了系统的 DNS，本来应该走 114.114.114.114（系统 DNS）的 DNS 请求现在走 223.5.5.5（V2Ray 内置 DNS）了。
+
+- 简单描述下面配置：
+    - 内置 DNS 用 8.8.8.8 做首选服务器，localhost 作备用
+    - 路由中首先来一条规则让 8.8.8.8 的流量一定走 proxy，匹配了 geosite:cn 中的域名的请求走 direct
+    - 如果没匹配任何规则，则走主 outbound，也即 outbounds 中的第一个，也即 proxy。
+
+    ```json
+    {
+        "dns": {
+            "servers": [
+                "8.8.8.8",
+                "localhost"
+            ]
+        },
+        "outbounds": [
+            {
+                "protocol": "vmess",
+                "settings": {
+                    "vnext": [
+                        {
+                            "users": [
+                                {
+                                    "id": "xxx-x-x-x-xx-x-x-x-x"
+                                }
+                            ],
+                            "address": "1.2.3.4",
+                            "port": 10086
+                        }
+                    ]
+                },
+                "streamSettings": {
+                    "network": "tcp"
+                },
+                "tag": "proxy"
+            },
+            {
+                "tag": "direct",
+                "protocol": "freedom",
+                "settings": {}
+            }
+        ],
+        "inbounds": [
+            {
+                "domainOverride": [
+                    "http",
+                    "tls"
+                ],
+                "port": 1086,
+                "listen": "127.0.0.1",
+                "protocol": "socks",
+                "settings": {
+                    "auth": "noauth",
+                    "udp": true,
+                    "ip": "127.0.0.1"
+                }
+            }
+        ],
+        "routing": {
+            "domainStrategy": "IPIfNonMatch",
+            "rules": [
+                {
+                    "type": "field",
+                    "ip": [
+                        "8.8.8.8"
+                    ],
+                    "outboundTag": "proxy"
+                },
+                {
+                    "type": "field",
+                    "domain": [
+                        "geosite:cn"
+                    ],
+                    "outboundTag": "direct"
+                }
+            ]
+        }
+    }
+    ```
+
+    - 假设浏览器请求 https://www.bilibili.com
+        - 1.浏览器发 SOCKS 请求到 V2Ray
+        - 2.请求来到 V2Ray 的 inbound，再到路由过程
+        - 3.很明显 www.bilibili.com 这个域名包括在 geosite:cn 中，走 direct
+        - 4.Freedom outbound (direct) 对 www.bilibili.com 发起 TCP 连接
+        - 5.Freedom outbound 解析域名，因为这次没有用 UseIP，用的是系统 DNS
+        - 6.直接发 DNS 请求到 114.114.114.114
+        - 7.得到结果后可以跟 Bilibili 服务器建立连接，准备代理浏览器发过来的 HTTPS 流量
+
+    - 再假设浏览器请求 https://www.google.com
+        - 1.浏览器发 SOCKS 请求到 V2Ray
+        - 2.请求来到 V2Ray 的 inbound，再到路由过程
+        - 3.www.google.com 不在 gesoite:cn，也没匹配任何规则，本来应该直接走主 outbound: proxy，但因为我们用了 IPIfNonMatch 策略，V2Ray 会去尝试使用内置的 DNS 把 www.google.com 的 IP 解析出来
+        - 4.V2Ray 使用内置 DNS 向 8.8.8.8 发起针对 www.google.com 的 DNS 请求，这个请求的流量将会是 UDP 流量
+        - 5.内置 DNS 发出的 DNS 请求会按路由规则走，因为 8.8.8.8 匹配了路由中的第一条规则，这个 DNS 请求的流量会走 proxy
+        - 6.proxy 向远端代理服务器发起 TCP 代理连接（因为 "network": "tcp"）
+        - 7.建立起 TCP 连接后，proxy 向远端代理服务器发出 udp:8.8.8.8:53 这样的代理请求
+        - 8.远端服务器表示接受这个代理请求后，proxy 用建立好的 TCP 连接向远端服务器发送承载了 DNS 请求的 UDP 流量（所以 V2Ray/VMess 目前是 UDP over TCP）
+        - 9.远端代理服务器接收到这些承载 DNS 请求的 UDP 流量后，发送给最终目标 udp:8.8.8.8:53
+        - 10.8.8.8.8 返回给远端代理服务器 DNS 结果后，远端代理服务器原路返回至本地 V2Ray 的内置 DNS，至此，从步骤 5 ~ 11，整个 DNS 解析过程完成。
+
+
+        - 11.接上面步骤 4，V2Ray 得到 www.google.com 的 IP，再进行一次规则匹配，很明显路由规则中没有相关的 IP 规则，所以还是没匹配到任何规则，最终还是走了主 outbound: proxy
+        - 12.proxy 向远端代理服务器发起 TCP 代理连接（因为 "network": "tcp"）
+        - 13.连接建立后，因为 proxy 中所用的 VMess 协议可以像 SOCKS 那样把域名交给代理服务器处理，所以本地的 V2Ray 不需要自己解析 www.google.com，把域名放进 VMess 协议的参数中一并交给代理服务器来处理
+        - 14.远端的 V2Ray 代理服务器收到这个代理请求后，它可能自己做域名解析，也可能继续交给下一级代理处理，只要后续代理都支持类 SOCKS 的域名处理方式，这个 DNS 请求就可以一推再推，推给最后一个代理服务器来处理，这个超出本文范围不作讨论，反正这个域名不需要我们本地去解析
+        - 15.远端代理服务器最后会发出针对 www.google.com 的 DNS 请求（至于究竟是如何发，发到哪个 DNS 服务器，我们不一定能知道，也不关心这个）
+        - 16.远端代理服务器得到 DNS 结果后，可以真正地向 Google 的服务器建立 TCP 连接18. 远端的 V2Ray 做好准备后告诉本地 V2Ray 连接建立好了，可以传数据了
+        - 18.本地 V2Ray 就告诉浏览器连接好了，可以传数据了，浏览器就可以把 HTTPS 流量顺着这个代理链发送至 Google 的服务器
+
+
+        - 步骤 5 ~ 11 做了次 DNS 请求，采用代理转发 DNS 请求流量的方式，而在步骤 14 中，又说可以不解析域名，交给远端服务器来解析，这两者其实并不冲突。
+            - 一般来说，前者的处理方式就是实实在在的 UDP 流量代理而已，后者一般叫作远程 DNS 解析。
+
+        - 用了 `IPIfNonMatch` ，对域名做一次 DNS 解析要经过 5 ~ 11 这么多步骤，看起来效率很慢，但如果代理服务器不慢的话，这个过程一般是很快的，最重要的是 V2Ray 内置 DNS 对 DNS 结果有一个缓存，所以并不需要每次都去做 DNS 请求。不管怎么说，毕竟还是做了额外的事情，而且有可能涉及到一个 UDP over TCP 的代理请求，的确会相对地慢点。
+
+##### 内置的dns模块
+
+- V2Ray 的内置 DNS 其实也只是一个很简单的功能模块，它为 V2Ray 内部其它模块提供 DNS 功能，它接受一个域名作为输入，返回一个 IP 列表作为输出。
+
+    - 内置dns模块代码：输入参数是域名，输出是 IP 列表以及一个错误信息；如果正常返回，错误信息会是空的，IP 列表可以同时有 IPv4 和 IPv6 地址：
+
+        ```go
+        LookupIP(domain string) ([]net.IP, error)
+        LookupIP（domain string）（[]net.IP，error）
+        ```
+
+    - 至于内置 DNS 内部是否做域名分流，内部向哪个 DNS 服务器发出 DNS 请求，用何种方式发这个 DNS 请求，其它模块是管不着的，也完全不知情的。这样看内置 DNS 功能就很简单，其它模块，比如上面提到路由模块用内置 DNS 来解析域名后用 IP 再次进行匹配（或者后面会提到的 DNS outbound 模块），其实就是这样调用了内置 DNS：
+
+        ```
+        路由模块：我有一个域名，给你（内置 DNS 模块），帮我查查它的 IP 地址是什么
+        内置 DNS 模块按照自己的配置，做了各种处理，最终得到 IP 地址
+        内置 DNS 模块：这就是它（域名）的 IP，给你（路由模块）
+        ```
+
+###### 基本配置
+
+- 下面的例子中所说的都是路由模块去调用内置 DNS，但路由模块仅仅是用它的结果来做规则匹配，而且是当配置了 IPIfNonMatch/IPOnDemand ，而且没有匹配任何域名规则的情况下，才用得到它，当下各种域名列表盛行，它的应用范围实际上是很窄的。
+
+- 内置 DNS 支持 `hosts`
+
+    - 例子：路由模块要查 www.google.com 的 IP，传它给内置 DNS，但如果内置 DNS 根本就不发任何 DNS 请求，不做任何额外处理，直接就返回一个 127.0.0.1 给路由模块
+
+    ```json
+    "dns": {
+      "hosts": {
+        "www.google.com": "127.0.0.1"
+      }
+    }
+    ```
+
+- 内置 DNS 的 `servers`
+
+    - 例子：路由模块传入 www.bilibili.com 这个域名，想要它的 IP 地址，内置 DNS 会从上至下按顺序，向 servers 里每个 DNS 服务器发 DNS 请求，一个一个地来，直到有结果返回，然后再把结果返回给路由模块。
+
+    ```json
+    "dns": {
+        "servers": [
+            "8.8.8.8",
+            "223.5.5.5",
+            "localhost"
+        ]
+    }
+    ```
+
+    - 内置 DNS 在向 servers 列表中的 `localhost` 发 DNS 请求时，不会用任何 outbound 来发（甚至不用 Freedom outbound），而是直接从本机发出，就像任何其它程序做 DNS 请求那样，直接调用系统的 DNS API，用系统 DNS 中配置的 DNS 服务器。
+
+    - 从内置 DNS 向 servers 列表中的 DNS 服务器发出的 DNS 请求的流量，并不是从本机直接发到对应的服务器（localhost 除外），而是会通过 outbound 发出去，假如是 Freedom outbound，的确还是会从本机直接发到相应 DNS 服务器，但假如是一个 VMess outbound，DNS 请求的流量就会被代理到 VMess 代理服务器上，由代理服务器发到相应的 DNS 服务器。
+
+        ```
+        内置 DNS -> 通过路由功能选择了 Freedom outbound -> 8.8.8.8
+        内置 DNS -> 通过路由功能选择了 VMess outbound -> VMess 代理服务器 -> 8.8.8.8
+        ```
+
+- `DNS 分流`功能
+
+    - 问题：查的域名是 www.bilibili.com，一般来说是不太合适向 8.8.8.8 查这个域名。所以无论路由模块判断走 Freedom outbound 还是 VMess outbound，都不合适。
+        - 走 Freedom outbound 发到 8.8.8.8，恐怕返回结果是假的
+        - 走 VMess outbound，恐怕返回结果是国外 CDN 的。
+
+        - 我们只想这个 DNS 请求能够合理地发出，很明显的一个选择就是让这个 www.bilibili.com 的 DNS 请求发到 223.5.5.5，且走 Freedom outbound。
+
+    - 解决方法：这样配置内置 DNS，虽然 8.8.8.8 在第一，但因为要查询的域名 www.bilibili.com 匹配了第二项中的域名规则，内置 DNS 就会优先向第二个 DNS 服务器发出 DNS 请求。
+
+        ```json
+        "dns": {
+            "servers": [
+                "8.8.8.8",
+                {
+                    "address": "223.5.5.5",
+                    "port": 53,
+                    "domains": [
+                        "domain:www.bilibili.com"
+                    ]
+                },
+                "localhost"
+            ]
+        }
+        ```
+
+    - 问题：就算 DNS 分流配置好了，如果路由规则配置不当，让 udp:223.5.5.5:53 的流量走了 proxy，就有可能发生上面第二个线路，返回的 IP 地址就有可能是 Bilibili 在国外 CDN 的 IP。（IP 结果是真的，只是…）
+
+        - 所以千万不能忘记，除了配置好 DNS 分流域名，还要为各个 DNS 服务器配置路由规则：
+
+        ```json
+        "routing": {
+            "domainStrategy": "IPIfNonMatch",
+            "rules": [
+                {
+                    "type": "field",
+                    "ip": [
+                        "8.8.8.8"
+                    ],
+                    "outboundTag": "proxy"
+                },
+                {
+                    "type": "field",
+                    "ip": [
+                        "223.5.5.5"
+                    ],
+                    "outboundTag": "direct"
+                }
+            ]
+        }
+        ```
+
+- 内置 DNS 的 `clientIp`
+
+    - 问题：不太建议去依赖这个选项，但如果你想知道它的作用，是这样的，假如上面例子中真的在路由规则上配置错了，出现了这个线路的情况：
+
+        ```
+        内置 DNS 查询 www.bilibili.com -> 内置 DNS 通过分流功能选择了 223.5.5.5 -> 通过路由功能选择了 VMess outbound -> VMess 代理服务器 -> 223.5.5.5
+        ```
+
+    - 解决方法：那 `clientIP` 是 DNS 请求中可以带上的一个参数，它用来提示 DNS 服务器（223.5.5.5）你所在的地理位置，223.5.5.5 就知道你在哪，就 有可能 会返回一个合适你所在的地理位置的 CDN 的 IP（也即 Bilibili 国内 CDN 的 IP）。
+
+###### DNS outbound
+
+- DNS outbound：可以说是一个把内置 DNS 的功能真正地开放出来，让各种程序、各种模块可以更加方便地使用得上内置 DNS 的一个功能。
+
+    - 为什么要把内置 DNS 开放出来呢？很明显啊，因为现在它支持 `DNS 分流`
+
+- DNS outbound 的配置，它目前就只有那么 3 （network, address, port）个配置项：
+
+    ```json
+    "outbounds": [
+        {
+            "tag": "dns-out",
+            "protocol": "dns",
+            "settings": {
+                "network": "tcp",
+                "address": "1.1.1.1",
+                "port": 53
+            }
+        }
+    ]
+    ```
+
+- DNS outbound 最重要的功能是它的默认行为：对进来的 DNS 流量进行拦截、解析，以及对 A, AAAA 类型的 DNS 查询做重新转发。
+
+    - 一般这种 DNS 请求都是明文（我们也只讨论这种 DNS），它们所流经的各种设备，各种程序都可以看到，可以修改里面的内容，发出的请求可以修改，返回的结果也可以修改，甚至修改过后毫无痕迹，就是说，对于发出的请求，DNS 服务器没办法知道它是否在中间链路被修改过，对于返回的结果，应用程序也没办法知道它是否在中间链路被修改过。
+
+    - DNS 劫持：DNS outbound 本身的工作原理相信已经比较清晰了，它只是劫持了进来的 DNS 请求的流量，然后找内置 DNS 模块帮忙解析 DNS，然后假装啥事没发生，返回结果而已。
+        - 1.某个应用程序发了一个 DNS 查询
+        - 2.这个 DNS 查询的流量通过某种方式进入了 DNS outbound（这里暂时不讨论究竟是通过什么方式进入 DNS outbound 的）
+        - 3.如果这个流量是个明文 DNS 请求，DNS outbound 肯定看得到里面内容，可以拿出里面的域名
+        - 4.DNS outbound 调用内置 DNS 模块，把拿到的域名传进去
+        - 5.内置 DNS 模块根据它的配置去查这个域名的 IP，具体怎么查的，DNS outbound 并不知道，它只管要结果
+        - 6.内置 DNS 返回一些 IP 给 DNS outbound 后，DNS outbound 用这些 IP 生成了一个 DNS 回复
+        - 7.DNS outbound 把这个 DNS 回复若无其事地返回给应用程序
+        - 8.应用程序当然不知道这个 DNS 回复具体是怎么来的，它没办法，只能相信中间链路，相信这个回复就是它想要的回复
+
+- SOCKS5 协议可以带上域名给远端解析（SOCKS4不支持），根本不需要本地去解析域名。但假如不是用浏览器的情况呢？比如运行一个 `nslookup` 命令，默认它也不会用系统设置的代理，它是直接向系统设置的 DNS 服务器发 DNS 请求，怎么把这个请求的流量引导到 V2Ray 的 DNS outbound 呢？
+
+    - 这个配置让 V2Ray 的 `dokodemo-door` inbound 监听在本地 53 端口，对于任何进来的流量，会因为我们的路由规则，而被送到 DNS outbound 处理，然后我们把系统 DNS 设置为 127.0.0.1，相当于说 V2Ray 的 `dokodemo-door` inbound 就是一个 DNS 服务器。
+
+        ```json
+        {
+            "inbounds": [
+                {
+                    "port": 53,
+                    "tag": "dns-in",
+                    "protocol": "dokodemo-door",
+                    "settings": {
+                        "address": "1.1.1.1",
+                        "port": 53,
+                        "network": "tcp,udp"
+                    }
+                }
+            ],
+            "dns": {
+                "hosts": {
+                    "domain:www.bilibili.com": "1.2.3.4"
+                }
+            },
+            "outbounds": [
+                {
+                    "protocol": "dns",
+                    "tag": "dns-out"
+                },
+                {
+                    "protocol": "freedom",
+                    "tag": "direct",
+                    "settings": {}
+                }
+            ],
+            "routing": {
+                "rules": [
+                    {
+                        "type": "field",
+                        "inboundTag": ["dns-in"],
+                        "outboundTag": "dns-out"
+                    }
+                ],
+                "strategy": "rules"
+            }
+        }
+        ```
+
+    - 1.命令行执行 nslookup www.bilibili.com
+    - 2.因为系统 DNS 设置为 127.0.0.1
+    - 3.DNS 请求发到 dokodemo-door inbound
+    - 4.因为 "dns-in" -> "dns-out" 路由规则，流量传给 DNS outbound
+    - 5.DNS outbound 识别到是个 DNS 请求，拿到域名 www.bilibili.com，调用内置 DNS
+    - 6.这个域名匹配到内置 DNS 的一条 hosts 规则，返回结果 1.2.3.4
+    - 7.于是 nslookup 查询 www.bilibili.com 的结果是 1.2.3.4
+
+    - 让 V2Ray 充当 DNS 服务器，设置系统 DNS 是其中一个把 DNS 流量引导到 DNS outbound 中的方式。但今天我们大部分的上网操作都是在浏览器上进行了，浏览器用了 SOCKS5 代理的话也不需要本地去解析 DNS，所以这个应用场景不常见。
+
+- DNS outbound 开放出来后，最重要的应用场景，是在移动端和路由器上。
+
+    - 在讨论移动端和路由器之前，先看看桌面系统上怎样可以做真正的全局代理。前面也说了，一般的浏览器代理，只代理浏览器的流量，要把 DNS 流量也代理了，就需要像上面那样更改系统 DNS 为 127.0.0.1，*当我们需要真正的全局代理时（VPN 就是真正的全局代理）*，这种方便显然不合适，也不可能做得到真正全局代理。
+
+
+    - tun2socks：能够把所有本机应用程序发出的流量都交给 V2Ray/SOCKS/Shadowsocks，从而达到全局 TCP/UDP 代理（对，只是 TCP/UDP，ICMP 等等是不支持的，全局性还是不比真正的 VPN）。
+
+        - tun2socks 就是这么一种可以把所有应用程序的 TCP/UDP 流量都交给 V2Ray 的方式，当然其中包括 DNS 的流量，所以用了 tun2socks 后，我们甚至不需要更改系统的 DNS 设置，所有 DNS 请求的流量都能够被引导到 V2Ray，然后我们可以在 V2Ray 里加一条路由规则，识别出 DNS 的流量，把这些流量转给 DNS outbound：
+
+    - 配置做了简化，真拿来用的话要自己补上其它部分。配置中没有 inbound，因为我们所用的 tun2socks 软件：[go-tun2socks](https://github.com/eycorsican/go-tun2socks) 本身把 tun2socks 内置为 V2Ray 的一个 inbound 了。
+
+        ```json
+        {
+            "dns": {
+                "hosts": {
+                    "domain:www.bilibili.com": "1.2.3.4"
+                }
+            },
+            "outbounds": [
+                {
+                    "protocol": "dns",
+                    "tag": "dns-out"
+                },
+                {
+                    // VMess outbound
+                }
+            ],
+            "routing": {
+                "rules": [
+                    {
+                        "type": "field",
+                        "network": "udp",
+                        "port": 53,
+                        "outboundTag": "dns-out"
+                    }
+                ],
+                "strategy": "rules"
+            }
+        }
+        ```
+
+    - 说白了，目的还是之前所说的，找到一种方法把 DNS 请求的流量引导到 DNS outbound 中。
+
+        - `go-tun2socks` 是一个命令行工具，要使用的话还要自己创建 TUN 接口，配置路由表等，比较繁琐
+
+        - `Mellow `：对 go-tun2socks 进行了包装，可以自动完成这些繁琐的步骤，实际使用起来的效果就相当于 Proxifier、SSTap、Surge for Mac 等软件，可以把所有流量都代理了：
+
+        - 在移动端系统方面，iOS 既可以像桌面系统用 tun2socks 那样把所有 TCP/UDP 流量引导到 V2Ray，也可以设置一个 HTTP 代理把 HTTP 请求代理到 V2Ray 的 HTTP inbound 里；而 Android，只能以 tun2socks 那样的方式把 TCP/UDP 流量引导进去。
+
+            - iOS 的 HTTP/S 代理跟 SOCKS5 代理比较相似，应用程序不需要自己解析 DNS，可以把域名带上交给 V2Ray，然后如果请求匹配到代理的路由规则，这个域名就通过代理协议（VMess/Shadowsocks/SOCKS5）交给代理服务器自己去解析，所以本地不需要做任何 DNS 解析。问题是很明显这个只适用于 HTTP/S 请求（而且并不是所有的 HTTP/S 请求，貌似应用程序还必须要用 iOS 系统提供的 HTTP 库来做请求才会被代理到）。
+
+            - 假如你使用的 Android 客户端是 [Kitsunebi](https://play.google.com/store/apps/details?id=fun.kitsunebi.kitsunebi4android)，那大致上可以这么配置：
+
+                ```json
+                {
+                    "dns": {
+                        "hosts": {
+                            "domain:www.bilibili.com": "1.2.3.4"
+                        },
+                        "servers": [
+                            "114.114.114.114",
+                            {
+                                "address": "8.8.8.8",
+                                "domains": [
+                                    "google"
+                                ],
+                                "port": 53
+                            }
+                        ]
+                    },
+                    "outbounds": [
+                        {
+                            "protocol": "vmess",
+                            "tag": "proxy"
+                        },
+                        {
+                            "protocol": "freedom",
+                            "settings": {},
+                            "tag": "direct"
+                        },
+                     {
+                         "protocol": "dns",
+                         "tag": "dns-out"
+                     }
+                    ],
+                    "routing": {
+                        "rules": [
+                            {
+                                "inboundTag": ["tun2socks"],
+                                "network": "udp",
+                                "port": 53,
+                                "outboundTag": "dns-out",
+                                "type": "field"
+                            },
+                            {
+                                "ip": [
+                                    "8.8.8.8/32"
+                                ],
+                                "outboundTag": "proxy",
+                                "type": "field"
+                            }
+                        ],
+                        "strategy": "rules"
+                    }
+                }
+                ```
+
+            - 配置中的 inboundTag tun2socks 是必须的，虽然单凭 53 端口 和 network udp 大致达到识别出 UDP 流量的目的，但因为在 V2Ray 中 UDP 流量并不只从 tun2socks inbound 进来，还会从 内置 DNS 那边过来，如果不加上 inboundTag tun2socks 这个限制，内置 DNS 那边过来的流量就会被转到 DNS outbound，接着有可能又被转给 内置 DNS，造成环路。
+
+###### Fake DNS
+
+- 虽然现在已经可以完全利用 V2Ray 的 DNS 功能模块对 DNS 的 UDP 流量做各种处理，可以对 DNS 请求按域名做分流，但仔细想想，分流时不管是发到 freedom outbound 直连还是发到 VMess outbound 代理，这些 DNS 请求终究是要以实际的流量形式从本地发送到互联网上，是否有方法可以在利用 tun2socks 获取所有 TCP/UDP 流量的同时，又可以像 HTTP/S 和 SOCKS5 代理那样，本地完全不发出 DNS 请求流量，只把域名交给代理服务器，让代理服务器自己去解析呢？
+
+    - 答案是有的，那就是 Fake DNS
+
+- 大致工作原理如下：
+
+    - 1.手机上某个 app 想发出 https://www.google.com 请求
+    - 2.app 发出 www.google.com 的 DNS 查询
+    - 3.DNS 请求的 UDP 流量来到 tun2socks，被 tun2socks 交到 Fake DNS 模块
+    - 4.Fake DNS 模块选择一个伪造的 IP 地址，比如 244.0.0.3，并把这个地址跟 www.google.com 关联起来
+    - 5.Fake DNS 根据 DNS 请求，生成相应的 DNS 答复，并把 244.0.0.3 当作 DNS 结果放进答复中，通过 tun2socks 把这个伪造的 DNS 答复返回给 app
+    - 6.app 得到 www.google.com 的 DNS 查询结果是 244.0.0.3
+    - 7.app 向 244.0.0.3 发出 HTTP 请求流量
+    - 8.HTTP 请求流量来到 tun2socks，tun2socks 向 Fake DNS 模块查询目的地址 244.0.0.3 是否是一个伪造的 IP 地址，如果是，向 Fake DNS 查询这个 IP 所关联的 域名，也即 www.google.com
+    - 9.tun2socks 现在已经得到 HTTP 请求流量的域名，把流量以及域名一并交给 V2Ray
+    - 10.V2Ray 有了域名，接下来路由什么的该怎么处理就怎么处理了
+
+    - 上面过程中，虽然 app 是发出了 DNS 请求流量，但这个流量被拦截下来了，并没有真正地发到互联网上；最终 V2Ray 也拿到了域名，如果这个域名匹配到代理规则，就会交到代理服务器来解析，也就是所谓的 远程 DNS 解析。
+
+    - 上面过程中，Fake DNS 模块如果没有对域名做过滤，对任何域名都返回伪造的 IP 地址，则可能会引起一些问题，有一种做法是在 Fake DNS 模块里内置一个域名列表，只对匹配到列表的域名返回 伪造 DNS 答复。
+
+- Fake DNS 不管是原理上还是实现上都是非常简单的，如果有兴趣可以看一下 [这里的实现代码](https://github.com/eycorsican/leaf/blob/master/leaf/src/app/fake_dns.rs)
+。
+###### DNS fallback
+
+- 需要说明的是，如果用了 V2Ray 的技术，或者 Fake DNS，那 DNS fallback 是没必要的，DNS fallback 也是一种处理 DNS 相关问题技术，这里只是想把这种技术也列举出来
+
+- DNS fallback 是一种可以强制让应用程序把 DNS 请求以 TCP 流量发送出去的技术。
+
+    - 众所周知一般的 DNS 请求都是用 UDP 发的，但 DNS 的 UDP 报文的大小会被限制在大概 512 字节，如果某个 DNS 答复很长，超过了这个限制，就不能通过 UDP 来传输了，为此 DNS 规范中提出，对于这种超过限制大小的 DNS 请求，DNS 服务器可以在答复中设置一个 flag（truncated），来告诉客户端这个答复太长，你不能用 UDP 来做这个 DNS 请求，请用 TCP，于是客户端就会用 TCP 来重新请求 DNS。
+
+    - DNS fallback 正是利用了这一点，在 tun2socks 给过来的 UDP 流量中识别出 DNS 请求，然后伪造一个设置了 truncated flag 的答复返回给客户端，客户端就会转用 TCP 来做 DNS 请求了。
+
+- DNS fallback 的实现也是非常简单的，有兴趣可以看一下 [这里的代码](https://github.com/eycorsican/go-tun2socks/blob/master/proxy/dnsfallback/udp.go)。
+
+
 ## 表示层
 
 ### 密钥算法
@@ -931,6 +1727,8 @@
 
 - 重放攻击：如果中间人截获了某个客户端的 Session ID 或 Session Ticket 以及 POST 报文，而一般 POST 请求会改变数据库的数据，中间人就可以利用此截获的报文，不断向服务器发送该报文，这样就会导致数据库的数据被中间人改变了。因此需要对会话密钥设定一个合理的过期时间。
 
+### [基于TLS1.3的微信安全通信协议mmtls介绍](https://mp.weixin.qq.com/s/tvngTp6NoTZ15Yc206v8fQ)
+
 ## Session layer（会话层）
 
 - [Session and Presentation layers in the OSI model](https://www.ictshore.com/free-ccna-course/session-and-presentation-layers/)
@@ -971,13 +1769,27 @@
 
 - [李银城：WebSocket与TCP/IP](https://www.rrfed.com/2017/05/20/websocket-and-tcp-ip/)
 
-- 不可靠的网络：网络是不同节点间共享信息的唯一途径，数据的传输主要通过以太网进行传输，这是一种异步网络，也就是网络本身并不保证发出去的数据包一定能被接到或是何时被收到。
-    - 请求丢失
-    - 请求正在某个队列中等待
-    - 远程节点已经失效
-    - 远程节点无法响应
-    - 远程节点已经处理完请求，但在ack的时候丢包
-    - 远程接收节点已经处理完请求，但回复处理很慢
+- TCP是有三个特点，面向连接、可靠、基于字节流。
+
+    - 字节流：可以理解为一个双向的通道里流淌的数据，这个数据其实就是我们常说的二进制数据，简单来说就是一大堆 01 串。纯裸TCP收发的这些 01 串之间是没有任何边界的，你根本不知道到哪个地方才算一条完整消息。
+
+        - 粘包问题：使用TCP发送"夏洛"和"特烦恼"的时候，接收端收到的就是"夏洛特烦恼"，这时候接收端没发区分你是想要表达"夏洛"+"特烦恼"还是"夏洛特"+"烦恼"。
+
+            - 因此纯裸TCP是不能直接拿来用的，你需要在这个基础上加入一些自定义的规则，用于区分消息边界。
+
+            - 于是我们会把每条要发送的数据都包装一下，比如加入消息头，消息头里写清楚一个完整的包长度是多少，根据这个长度可以继续接收数据，截取出来后它们就是我们真正要传输的消息体。
+
+            - 而这里头提到的消息头，还可以放各种东西，比如消息体是否被压缩过和消息体格式之类的，只要上下游都约定好了，互相都认就可以了，这就是所谓的协议。
+
+                - 于是基于TCP，就衍生了非常多的协议，比如HTTP和RPC。
+
+    - 不可靠的网络：网络是不同节点间共享信息的唯一途径，数据的传输主要通过以太网进行传输，这是一种异步网络，也就是网络本身并不保证发出去的数据包一定能被接到或是何时被收到。
+        - 请求丢失
+        - 请求正在某个队列中等待
+        - 远程节点已经失效
+        - 远程节点无法响应
+        - 远程节点已经处理完请求，但在ack的时候丢包
+        - 远程接收节点已经处理完请求，但回复处理很慢
 
 #### header(头部)
 
@@ -1029,15 +1841,23 @@
 
     - PAWS（防回绕序列号）：PAWS 假设接收到的每个 TCP 包中的 TSval 都是随时间单调增的，基本思想就是如果接收到的一个 TCP 包中的 TSval 小于刚刚在这个连接上接收到的报文的 TSval，则可以认为这个报文是一个旧的重复包而丢掉。
 
-- [MTU and TCP MSS](https://www.imperva.com/blog/mtu-mss-explained/)
+- MTU 和 MSS
 
-    ![image](./Pictures/net-kernel/MTU.avif)
+    ![image](./Pictures/net-kernel/MSS和MTU的区别.avif)
+
+    - MTU: Maximum Transmit Unit，最大传输单元。 由网络接口层（数据链路层）提供给网络层最大一次传输数据的大小；一般 MTU=1500 Byte。
+
+        - 假设IP层有 <= 1500 byte 需要发送，只需要一个 IP 包就可以完成发送任务；
+        - 假设 IP 层有> 1500 byte 数据需要发送，需要分片才能完成发送，分片后的 IP Header ID 相同。
+
+    - MSS：Maximum Segment Size 。TCP 提交给 IP 层最大分段大小，不包含 TCP Header 和  TCP Option，只包含 TCP Payload ，MSS 是 TCP 用来限制应用层最大的发送字节数。
+
+        - 假设 MTU= 1500 byte，那么 MSS = 1500- 20(IP Header) -20 (TCP Header) = 1460 byte
+        - 如果应用层有 2000 byte 发送，那么需要两个切片才可以完成发送，第一个 TCP 切片 = 1460，第二个 TCP 切片 = 540。
+
+    - 如果一个 IP 分片丢失，整个 IP 报文的所有分片都得重传。经过 TCP 层分片后，如果一个 TCP 分片丢失后，进行重发时也是以 MSS 为单位，而不用重传所有的分片
 
     - 3次握手建立连接时：双方互相告知自己期望接收到的MSS大小。内核的TCP模块在tcp_sendmsg方法里，会按照对方告知的MSS来分片，把消息流分为多个网络分组（如图1中的3个网络分组），再调用IP层的方法发送数据。
-
-    - [小林coding：既然 IP 层会分片，为什么 TCP 层还需要 MSS 呢？](https://www.xiaolincoding.com/network/3_tcp/tcp_interview.html#%E6%97%A2%E7%84%B6-ip-%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87-%E4%B8%BA%E4%BB%80%E4%B9%88-tcp-%E5%B1%82%E8%BF%98%E9%9C%80%E8%A6%81-mss-%E5%91%A2)
-
-        - 如果一个 IP 分片丢失，整个 IP 报文的所有分片都得重传。经过 TCP 层分片后，如果一个 TCP 分片丢失后，进行重发时也是以 MSS 为单位，而不用重传所有的分片
 
 ##### Header Compression(头部压缩)
 
@@ -1960,27 +2780,69 @@ listen 80 fastopen=256
 
 ##### Nagle算法
 
-- Nagle算法：发送端不要立即发送数据，攒多了再发。但是也不能一直攒，否则就会造成程序的延迟上升。
+- Nagle算法：发送端不要立即发送数据，攒多了再发。但是也不能一直攒，否则就会造成程序的延迟上升。目的是为了避免发送小的数据包。
 
-    - 像 nc 和 ssh 这样的交互式程序，你按下一个字符，就发出去一个字符给 Server 端。每通过 TCP 发送一个字符都需要额外包装 20 bytes IP header 和 20 bytes TCP header，发送 1 bytes 带来额外的 40 bytes 的流量，不是很不划算吗？
+    - 比喻：小白爸让小白出门给买一瓶酱油，小白出去买酱油回来了。小白妈又让小白出门买一瓶醋回来。小白前后结结实实跑了两趟，影响了打游戏的时间。
 
-    - 还有一种情况是应用代码写的不好。TCP 实际上是由 Kernel 封装然后通过网卡发送出去的，用户程序通过调用 write syscall 将要发送的内容送给 Kernel。有些程序的代码写的不好，每次调用 write 都只写一个字符（发送端糊涂窗口综合症）。如果 Kernel 每收到一个字符就发送出去，那么有用数据和 overhead 占比就是 1/41。
+        - 优化的方法也比较简单。当小白爸让小白去买酱油的时候，小白先等待，继续打会游戏，这时候如果小白妈让小白买瓶醋回来，小白可以一次性带着两个需求出门，再把东西带回来。这其实就是TCP的 Nagle 算法
 
-- 算法的伪代码：简单来说，就是如果要发送的内容足够一个 MSS 了，就立即发送。否则，每次收到对方的 ACK 才发送下一次数据。
+    - 例子：像 nc 和 ssh 这样的交互式程序，你按下一个字符，就发出去一个字符给 Server 端。每通过 TCP 发送一个字符都需要额外包装 20 bytes IP header 和 20 bytes TCP header，发送 1 bytes 带来额外的 40 bytes 的流量，不是很不划算吗？
 
-    ```
-    if there is new data to send then
-        if the window size ≥ MSS and available data is ≥ MSS then
-            send complete MSS segment now
-        else
-            if there is unconfirmed data still in the pipe then
-                enqueue data in the buffer until an acknowledge is received
-            else
-                send data immediately
-            end if
-        end if
-    end if
-    ```
+    - 例子：还有一种情况是应用代码写的不好。TCP 实际上是由 Kernel 封装然后通过网卡发送出去的，用户程序通过调用 write syscall 将要发送的内容送给 Kernel。有些程序的代码写的不好，每次调用 write 都只写一个字符（发送端糊涂窗口综合症）。如果 Kernel 每收到一个字符就发送出去，那么有用数据和 overhead 占比就是 1/41。
+
+- Nagle算法，数据包在以下两个情况会被发送：
+
+    - 1.如果包长度达到MSS（或含有Fin包），立刻发送，否则等待下一个包到来；如果下一包到来后两个包的总长度超过MSS的话，就会进行拆分发送；
+
+    - 2.等待超时（一般为200ms），第一个包没到MSS长度，但是又迟迟等不到第二个包的到来，则立即发送。
+
+    ![image](./Pictures/net-kernel/Nagle算法.avif)
+
+        - 1.由于启动了Nagle算法，msg1 小于 mss ，此时等待`200ms`内来了一个 msg2
+            - msg1 + msg2 > MSS，因此把 msg2 分为 msg2(1) 和 msg2(2)，msg1 + msg2(1) 包的大小为`MSS`。此时发送出去。
+
+        - 2.剩余的 msg2(2) 也等到了 msg3，同样 msg2(2) + msg3 > MSS，因此把 msg3分为msg3(1) 和 msg3(2)，msg2(2) + msg3(1) 作为一个包发送。
+
+        - 3.剩余的 msg3(2) 长度不足mss，同时在200ms内没有等到下一个包，等待超时，直接发送。
+
+        - 此时三个包虽然在图里颜色不同，但是实际场景中，他们都是一整个 01 串，如果处理开发者把第一个收到的 msg1 + msg2(1) 就当做是一个完整消息进行处理，就会看上去就像是两个包粘在一起，没有解决TCP的粘包问题。
+
+            - 粘包问题：使用TCP发送"夏洛"和"特烦恼"的时候，接收端收到的就是"夏洛特烦恼"，这时候接收端没发区分你是想要表达"夏洛"+"特烦恼"还是"夏洛特"+"烦恼"。
+
+- Nagle算法其实是个有些年代的东西了，诞生于 1984 年。
+
+    - 但是今天网络环境比以前好太多，Nagle 的优化帮助就没那么大了。而且它的延迟发送，有时候还可能导致调用延时变大，比如打游戏的时候，你操作如此丝滑，但却因为 Nagle 算法延迟发送导致慢了一拍，就问你难受不难受。
+
+    - 所以现在**一般也会把它关掉**。
+
+    - 关掉Nagle算法后依然有粘包问题
+
+        ![image](./Pictures/net-kernel/关闭Nagle后依然有粘包问题.avif)
+
+        - 1.接受端应用层在收到 msg1 时立马就取走了，那此时 msg1 没粘包问题
+
+        - 2.**msg2 **到了后，应用层在忙，没来得及取走，就呆在 TCP Recv Buffer 中了
+
+        - 3.**msg3 **此时也到了，跟 msg2 和 msg3 一起放在了 TCP Recv Buffer 中
+
+        - 这时候应用层忙完了，来取数据，图里是两个颜色作区分，但实际场景中都是 01 串，此时一起取走，发现还是粘包。粘包出现的根本原因是不确定消息的边界。
+
+        - 解决方法：
+
+            - 1.加入特殊标志
+                - 可以通过特殊的标志作为头尾，比如当收到了`0xfffffe`或者回车符，则认为收到了新消息的头，此时继续取数据，直到收到下一个头标志`0xfffffe`或者尾部标记，才认为是一个完整消息。
+                - 类似的像 HTTP 协议里当使用 chunked 编码 传输时，使用若干个 chunk 组成消息，最后由一个标明长度为 0 的 chunk 结束。
+                ![image](./Pictures/net-kernel/加入特殊标志解决粘包问题.avif)
+
+                - 问题：采用`0xfffffe`标志位，用来标志一个数据包的开头，你就不怕你发的某个数据里正好有这个内容吗？
+                - 解决方法：是的，怕，所以一般除了这个标志位，发送端在发送时还会加入各种校验字段（`校验和`或者对整段完整数据进行 `CRC` 之后获得的数据）放在标志位后面，在接收端拿到整段数据后校验下确保它就是发送端发来的完整数据。
+                ![image](./Pictures/net-kernel/加入特殊标志解决粘包问题1.avif)
+
+            - 2.加入消息长度信息
+                - 在实际场景中，HTTP 中的`Content-Length`就起了类似的作用，当接收端收到的消息长度小于 `Content-Length` 时，说明还有些消息没收到。那接收端会一直等，直到拿够了消息或超时
+
+
+
 - Delay ACK 和 Nagle 算法：这两个方法看似都能解决一些问题。但是如果一起用就很糟糕了。
 
     ![image](./Pictures/net-kernel/TCP_delay-ack1.avif)
@@ -2288,15 +3150,35 @@ net.ipv4.tcp_congestion_control = bbr
 
 ### UDP
 
+- UDP是面向无连接，不可靠的，基于数据报
+
+    - 基于数据报：是指无论应用层交给 UDP 多长的报文，UDP 都照样发送，即一次发送一个报文。
+        - 至于如果数据包太长，需要分片，那也是IP层的事情，大不了效率低一些。
+
+        - UDP 对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界。而接收方在接收数据报的时候，也不会像面对 TCP 无穷无尽的二进制流那样不清楚啥时候能结束。
+
+        - UDP基于数据报和TCP基于字节流的差异
+            - TCP 发送端发 10 次字节流数据，而这时候接收端可以分 100 次去取数据，每次取数据的长度可以根据处理能力作调整；
+            -  UDP 发送端发了 10 次数据报，那接收端就要在 10 次收完，且发了多少，就取多少，确保每次都是一个完整的数据报。
+
+        - 没有粘包问题：在报头中有`16bit`用于指示 UDP 数据报文的长度，假设这个长度是 n ，以此作为数据边界。因此在接收端的应用层能清晰地将不同的数据报文区分开，从报头开始取 n 位，就是一个完整的数据报，从而避免粘包和拆包的问题。
+
+            - 跟 UDP 不同在于，TCP 发送端在发的时候就不保证发的是一个完整的数据报，仅仅看成一连串无结构的字节流，这串字节流在接收端收到时哪怕知道长度也没用，因为它很可能只是某个完整消息的一部分。
+
+            - 因此 UDP 头的这个长度其实跟 TCP 为了防止粘包而在消息体里加入的边界信息是起一样的作用的。
+
+            ![image](./Pictures/net-kernel/udp没有粘包问题.avif)
+
+    - udp也无法重排段（segment）
+
 - header(头部)
 
     ![image](./Pictures/net-kernel/UDP_header.avif)
 
-    - `source port` 和 `checksum` 是可选域（fields）
+    - `source port`（源端口） 和 `checksum`（检验和） 是可选域（fields）
 
     - udp的header比tcp的header要小；因此单个段（segment）可以更大/
 
-- udp不可靠，也无法重排段（segment）
 
 ### [KCP](https://github.com/skywind3000/kcp)
 
@@ -2308,6 +3190,24 @@ net.ipv4.tcp_congestion_control = bbr
 ## Network Layer（网络层）
 
 - [traceroute and ttl](https://netbeez.net/blog/traceroute/)
+
+- header(头部)
+
+    ![image](./Pictures/net-kernel/ip_header.avif)
+
+- ip层的切片分包
+
+    ![image](./Pictures/net-kernel/ip层的切片分包.avif)
+
+    - 1.如果消息过长，IP层会按 MTU 长度把消息分成 N 个切片，每个切片带有自身在包里的位置（offset）和同样的IP头信息。
+
+    - 2.各个切片在网络中进行传输。每个数据包切片可以在不同的路由中流转，然后在最后的终点汇合后再组装。
+
+    - 3.在接收端收到第一个切片包时会申请一块新内存，创建IP包的数据结构，等待其他切片分包数据到位。
+
+    - 4.等消息全部到位后就把整个消息包给到上层（传输层）进行处理。
+
+- ip层的切片分包，没有粘包问题：ip层从按长度切片到把切片组装成一个数据包的过程中，都只管运输，都不需要在意消息的边界和内容，都不在意消息内容了，那就不会有粘包一说了。
 
 - 网络层收发包逻辑：
 

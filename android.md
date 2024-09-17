@@ -25,6 +25,8 @@
 
 ## app
 
+- [GmsCore：谷歌服务框架的开源替代品。该项目是一个开源的替代 Google Play 服务的解决方案，它可以让无法安装或不想用 Google 服务的用户，运行依赖谷歌服务的 Android 应用。](https://github.com/microg/GmsCore)
+
 - [busybox](https://github.com/meefik/busybox)
 
 - [ZeroTermux](https://github.com/hanxinhao000/ZeroTermux)
@@ -73,6 +75,9 @@
 - [将 Python 程序变成 Android APK](https://github.com/kivy/python-for-android)
 
 - [f-droid：只上架开源app的应用商店](https://f-droid.org/)
+    - [f-droid clinet](https://github.com/Droid-ify/client)
+
+- [mgit：git客户端](https://github.com/maks/MGit)
 
 - [AuroraStore：匿名googleplay商店](https://github.com/whyorean/AuroraStore)
 
@@ -125,6 +130,11 @@
 - [KernelFlasher：刷、备份、恢复内核](https://github.com/capntrips/KernelFlasher)
 
 - [自定义屏幕点击](https://github.com/gkd-kit/gkd)
+    - [GKD第三方订阅](https://github.com/Adpro-Team/GKD_THS_List)
+
+- [Shizuku：为其他app解锁高级权限](https://github.com/RikkaApps/Shizuku)
+
+- [AppOps：权限管理](https://github.com/RikkaApps/App-Ops-issue-tracker/releases/tag/files)
 
 - [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
 
@@ -134,9 +144,55 @@
 
 - [Winlator：使用 Wine 和 Box86/Box64 来运行 Windows 应用和游戏](https://github.com/brunodev85/winlator/releases/download/v5.1.0/Winlator.Development.apk)
 
+- [Lemuroid：游戏机模拟器](https://github.com/Swordfish90/Lemuroid)
+    - [Lemuroid游戏ROM](https://www.emulatorgames.net/roms/)
+
 - [fdroidclient](https://github.com/f-droid/fdroidclient)免费、开源的 Android 应用商店。该项目是 F-Droid 的 Android 客户端，专门收集各类开源安卓软件（FOSS）的应用商店。
 
-## 刷机
+- [AfuseKt：视频播放器](https://github.com/AttemptD/AfuseKt-release)支持协议：Alist，SMB，Webdav，Emby（直连），Local，jellyfin（直连），阿里网盘
+
+- [feeel：锻炼动作教学](https://github.com/EnjoyingFOSS/feeel)
+
+- [ReadYou：rss订阅](https://github.com/Ashinch/ReadYou)
+
+- [FocusReader：rss订阅](https://github.com/allentown521/FocusReader)
+
+- [Acode：代码编辑工具](https://github.com/deadlyjack/Acode)轻量级的 Web IDE，具有即时预览、控制台和丰富的插件等特点
+
+    ![image](./Pictures/android/Acode.avif)
+
+- [immich：immich图片和视频管理服务的客户端](https://github.com/immich-app/immich)
+
+- [xbmc：kodi服务端](https://github.com/xbmc/xbmc)
+- [Kore：kodi客户端](https://github.com/xbmc/Kore)
+
+- [jellyfin-android：jellyfin视频服务的客户端](https://github.com/jellyfin/jellyfin-android)
+
+    - [jellyfin-androidtv：电视客户端](https://github.com/jellyfin/jellyfin-androidtv)
+
+- [ente](https://github.com/ente-io/ente)：提供端到端加密的服务，内含基于此服务（Ente）的两款产品，它们分别是云相册（免费试用）和 2FA 验证器（永久免费）。永久免费的 Ente Auth，它可帮助你在移动设备上生成并存储两步验证 (2FA) 令牌。
+
+- [RTranslator：实时翻译](https://github.com/niedev/RTranslator)
+
+- [shell360：ssh客户端](https://github.com/shell360)
+
+- [WiFiAnalyzer：WiFi 分析工具](https://github.com/VREMSoftwareDevelopment/WiFiAnalyzer)
+
+- [dart_simple_live：一个 APP 上看各种主流直播平台](https://github.com/xiaoyaocz/dart_simple_live)
+
+- [Android-DataBackup：数据备份](https://github.com/XayahSuSuSu/Android-DataBackup)
+
+- [Ente Auth：一个开源的双因素认证码管理器](https://github.com/ente-io/ente)
+
+- [tvbox手机版](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile)
+
+- [GoGoGo：地图定位修改](https://github.com/ZCShou/GoGoGo)
+
+- [NewPipe：youtube客户端，免广告、免登陆订阅、有下载功能、免会员观看](https://github.com/TeamNewPipe/NewPipe)
+
+- [EtchDroid：无需root，将img写入插入otg线的u盘](https://github.com/EtchDroid/EtchDroid)
+
+# 刷机
 
 - [xda](https://www.xda-developers.com/)
 
@@ -165,7 +221,7 @@
     fastboot oem edl
     ```
 
-### 刷入recovery、magisk、lsposed
+## 刷入recovery、magisk、lsposed
 
 - 步骤
 
@@ -266,6 +322,8 @@
         - [FingerprintPay：指纹支付](https://github.com/eritpchy/FingerprintPay)
         - [Fingerface：面部识别](https://github.com/topjohnwu/Fingerface)
 
+        - [Xray4Magisk：xray core](https://github.com/Asterisk4Magisk/Xray4Magisk)
+
         - [ZygiskFrida](https://github.com/lico-n/ZygiskFrida)
 
     - 5.xposed
@@ -307,7 +365,7 @@
 
         - [Jshook：对应用程序注入rhino/frida，你只需要会js就可以快速实现hook](https://github.com/Xposed-Modules-Repo/me.jsonet.jshook)
 
-### [frida](https://frida.re/docs/home/)
+## [frida](https://frida.re/docs/home/)
 
 - pc上安装frida
     ```sh
@@ -339,3 +397,92 @@
         - 2.使用小米手机自带的recovery安全模式，使用有root权限的文件管理器
 
 - 提取当前刷机包的boot.img，进入fastboot刷入
+
+# 电视app
+
+- 论坛
+    - [智能电视网](https://www.znds.com/)
+
+    - [当贝市场：bilibili主页](https://space.bilibili.com/13359751)
+
+
+- 应用商店
+    - 当贝市场
+        - [当贝市场在线地址](https://www.dangbei.com/app/)
+    - emoton store：相当于海外版当贝商店
+    - [电视猫在线地址](https://www.tvmao.com/tv/)
+    - [黑域基地在线地址](https://www.hybase.com/shouji/tv/)
+
+- 文件管理
+    - File Manager Pro+
+    - es文件管理器
+    - X-plore
+
+- 浏览器
+    - emoton浏览器
+    - via浏览器TV版
+
+- 视频
+    - [tvbox：这个项目包含tvbox的其他版本和各种配置](https://github.com/qist/tvbox)
+        - https://ghp.ci/https://raw.githubusercontent.com/xianyuyimu/TVBOX-/main/TVBox/%E4%B8%80%E6%9C%A8%E5%A4%9A%E7%BA%BF%E8%B7%AF.json
+
+    - [OK影视：类似于tvbox](https://github.com/FongMi/Release)
+
+    - 影视仓：类似于tvbox
+
+    - [mytv-android](https://github.com/yaoxieyoulei/mytv-android)
+
+    - BesTV粤视厅
+
+    - [BBLL：第三方bilibili](https://github.com/xiaye13579/BBLL)
+    - [smarttube：第三方youtube，没有广告](https://github.com/yuliskov/SmartTube)
+    - YouTube for Fire TV：无需google服务
+
+- 播放器
+    - [kodi](https://kodi.tv/download/)
+    - [nova](https://github.com/nova-video-player/aos-AVP)
+    - 当贝播放
+
+- nas
+    - jellyfin
+    - emby
+    - plex
+
+- ui
+    - projectivy_launcher
+    - emotn ui
+    - 当贝桌面
+    - 吾爱出品
+
+- 云盘
+
+    - 阿里云盘第三方
+        - 小白云盘TV版：播放4k没问题，有自动挂载云盘功能，能解析所有音轨，支持kodi、nplayer、mx player播放器。
+        - 阿里云盘TV版：在线搜索资源最丰富，字幕资源最丰富。只支持调用kodi播放器
+        - 蜗牛云盘TV版：支持kodi、mx player播放器
+
+    - 天翼云盘TV
+    - 夸克网盘TV版
+    - 中国移动云盘
+
+- 游戏机模拟器
+    - 爱吾游戏宝盒
+    - 小鸡模拟器
+    - 酷咖游戏
+
+- ktv
+    - iktv
+    - 想唱就唱KTV
+
+- 投屏
+    - 当贝投屏
+
+- adb
+    - 手机使用甲壳虫ADB助手
+    - 手机使用atvTools
+
+- 其他
+    - AIDA64：查看硬件参数
+    - 米家TV版：控制小米生态链设备
+    - 搜狗输入法海信提取版
+    - 东方财富通tv版

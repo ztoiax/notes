@@ -18,6 +18,7 @@
                 * [通过修改dhcp配置文件default，自定义ip地址](#通过修改dhcp配置文件default自定义ip地址)
         * [克隆虚拟机](#克隆虚拟机)
     * [KSM(Kernel Samepage Merging)](#ksmkernel-samepage-merging)
+    * [gpu虚拟化](#gpu虚拟化)
 * [第三方软件资源](#第三方软件资源)
 * [优秀文章](#优秀文章)
 
@@ -694,6 +695,98 @@ systemctl restart network.service
 systemctl enable ksmtuned
 systemctl start ksmtuned
 ```
+
+## gpu虚拟化
+
+- [了不起的云计算：一文读懂GPU虚拟化：除了直通、全虚拟化 (vGPU)，还有谁？](https://mp.weixin.qq.com/s/WVAs9Tren91Q3ouXxsZn9Q)
+
+- GPU虚拟化大类上一般分为三种：
+    - 软件模拟
+    - 直通独占(类似网卡独占、显卡独占)
+    - 直通共享（如vGPU、MIG）
+
+- 1.软件模拟（eg sGPU）， 又被叫半虚拟化。
+
+    - 这种方式主要通过软件模拟来完成，也就是大部分的KVM在用，主要原理就是在Host操作系统层面上建立一些比较底层的API，让Guest看上去好像就是真的硬件一样。
+
+    - 优点：是比较灵活，而且并不需要有实体GPU
+    - 缺点：
+        - 模拟出来的东西运行比较慢。
+        - 没有官方研发，因此产品质量肯参差不齐。
+
+    - 结论：几乎没法用在生产环境，毕竟性能损失太多。
+
+- 2.直通独占 (pGPU)
+
+    - 直通是最早出现，即技术上最简单和成熟的方案。直通主要是利用PCIe Pass-through技术
+
+    - 将物理主机上的整块GPU显卡直通挂载到虚拟机上使用，与市场网卡直通的原理类似，但是这种方式需要主机支持IOMMU。
+
+    - 优点：
+        - 性能损耗最小
+        - 没有对GPU功能性做阉割
+        - 硬件驱动无需修改
+
+    - 缺点：
+        - 是一张GPU卡不能同时直通给多个虚拟机使用，相当于虚拟机独占了GPU卡。
+            - 如果多个虚拟机需要同时使用GPU，需要在服务器中安装多块GPU卡，分别直通给不同的虚拟机使用。
+        - 直通GPU的虚拟机不支持在线迁移。
+
+    - 为了应对GPU直通不能共享GPU的限制，第三种方式直通共享的虚拟化方式出现了。直通共享在技术上分类叫全虚拟化 。实现原理是物理GPU虚拟化为多个虚拟机GPU，每个虚拟GPU直接分配给虚拟机使用，通过软件调度的方式在Host与计算机的Guest之间提供一个中间设备来允许Guest虚拟机访问Host中的物理GPU。
+
+- 3.GPU全虚拟化技术先后有SR-IOV(开源技术) ，API转发、MPS还有vGPU 、MIG等
+
+    - 1.PCIe SR-IOV(Single Root Input/Output Virtualization)：是一种更高级的虚拟化技术，允许一个PCIe设备在多个虚拟机之间共享，同时保持较高的性能。
+
+        ![image](./Pictures/kvm/GPU全虚拟化-PCIe_SR-IOV.avif)
+
+        - PCIe SR-IOV通过在物理设备(Physical Functions，PF)上创建多个虚拟功能(Virtual Functions，VF)来实现的，每个虚拟功能可以被分配给一个虚拟机，让虚拟机直接访问和控制这些虚拟功能，从而实现高效的I/O虚拟化。
+        - 基于PCIe SR-IOV的GPU虚拟化方案，本质是把一个物理GPU显卡设备(PF)拆分成多份虚拟(VF)的显卡设备，而且VF 依然是符合 PCIe 规范的设备。
+
+        - 优点：就是真正实现了真正实现了1：N，一个PCIe设备提供给多个VM使用
+        - 缺点：
+            - 是灵活性较差，无法进行更细粒度的分割与调度
+            - 不支持热迁移。
+
+    - 2.API转发
+
+        - 在苦等PCIe SR-IOV期间，业界出现了基于API转发的GPU虚拟化方案。
+        - API转发分为被调方和调用方，两方对外提供同样的接口(API)：
+            - 被调方API实现是真实的渲染、计算处理逻辑
+            - 调用方API实现仅仅是转发，转发给被调方。
+
+        - 在GPU API层的转发，业界有针对OpenGL的AWS Elastic GPU，OrionX，有针对CUDA的腾讯vCUDA，瓦伦西亚理工大学rCUDA；在GPU驱动层的转发，有针对CUDA的阿里云cGPU和腾讯云pGPU。
+
+        ![image](./Pictures/kvm/GPU全虚拟化-API转发.avif)
+
+        - 优点：
+            - API转发方案的优点是实现了1：N，并且N是可以自行设定，灵活性高。
+            - 不依赖GPU硬件厂商。
+
+        - 缺点：
+            - 复杂度极高：同一功能有多套 API(渲染的 DirectX 和 OpenGL)，同一套 API 还有不同版本(如 DirectX 9 和 DirectX 11)，兼容性非常复杂。
+            - 并且功能不完整：如不支持媒体编解码，并且，编解码甚至还不存在业界公用的 API。
+
+    - 3.MPS方案
+
+        - MPS基于C/S架构，配置成MPS模式的GPU上运行的所有进程，会动态的将其启动的内核发送给MPS server，MPS Server借助CUDA stream，实现多个内核同时启动执行。除此之外，MPS还可配置各个进程对GPU的使用占比。
+
+        - 优点：该方案和PCIe SR-IOV方案相比，配置很灵活，并且和docker适配良好。
+        - 缺点：各个服务进程依赖MPS，一旦MPS进程出现问题，所有在该GPU上的进程直接受影响，需要使用Nvidia-smi重置GPU 的方式才能恢复。
+
+    - 4.MIG技术
+
+        - MIG是Nvidia 搞出的新技术，可将单个 GPU 分区为最多7个完全的隔离vGPU实例，每个实例均完全独立于各自的高带宽显存、缓存和计算核心。
+
+        - 优点：减少资源争抢的延时，提高物理 GPU 利用率。
+        - 缺点：
+            - 由于MIG 是基于 NVIDIA Ampere GPU 架构引入的，仅有 Ampere 架构的 GPU 型号才能使用 MIG 方式。
+                - 但可惜目前仅昂贵和国内禁售的NVIDIA A100 GPU支持。
+
+- 4.Time-sliced GPU
+
+    - 这种方式是把本来再空间上并行（时间独占）的成百上千的GPU流水线进行的时间维度的分割和共享。各个GPU厂家都有类似的技术。Time-sliced 切分方式是按时间切分 GPU，每个 vGPU 对应物理 GPU 一段时间内的使用权。
+    - 在此方式下，vGPU 上运行的进程被调度为串行运行，当有进程在某个 vGPU 上运行时，此 vGPU 会独占 GPU 引擎，其他 vGPU 都会等待。所有支持 vGPU 技术 GPU 卡都能支持 Time-sliced 的切分方式。
 
 # 第三方软件资源
 

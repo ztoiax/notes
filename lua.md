@@ -159,6 +159,8 @@ file.close()
 ## [函数式编程库](https://github.com/luafun/luafun)
 ## [OOP库](https://github.com/kikito/middleclass)
 
+## [腾讯技术工程：Lua进程内存优化方案总结](https://mp.weixin.qq.com/s/jXGD8d-ZZHteIsHF212w5Q)
+
 # reference
 
 - [深入理解 Lua 虚拟机]()

@@ -1,5 +1,7 @@
 <!-- vim-markdown-toc GFM -->
 
+* [常用](#常用)
+* [操作系统](#操作系统)
 * [file](#file)
     * [文件传输](#文件传输)
     * [文件管理器](#文件管理器)
@@ -9,13 +11,25 @@
     * [image viewer(图片查看器)](#image-viewer图片查看器)
         * [qt](#qt)
         * [gtk](#gtk)
+        * [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](#caesium-image-compressor图片压缩配备了实时预览和批量处理的功能)
+    * [截图](#截图)
 * [note](#note)
+* [ide](#ide)
 * [硬件](#硬件)
-* [ai](#ai)
 * [other](#other)
 * [类似项目](#类似项目)
 
 <!-- vim-markdown-toc -->
+
+# 常用
+
+- [SPlayer：网易云音乐](https://github.com/imsyy/SPlayer)
+
+# 操作系统
+
+- [LibreELEC：基于KODI，适合用于电视；有docker等功能；复古游戏模拟器；自带smb](https://github.com/LibreELEC/LibreELEC.tv)
+
+- [CoreELEC：基于KODI，适合用于电视](https://github.com/CoreELEC/CoreELEC)
 
 # file
 
@@ -40,6 +54,8 @@
 - [sioyek: pdf阅读器](https://github.com/ahrm/sioyek)
 
 - [zathura: pdf, epub阅读器](https://github.com/pwmt/zathura)
+
+- [foliate: pdf, epub阅读器](https://github.com/johnfactotum/foliate)
 
 - [aliyunpan(阿里云盘)](https://github.com/liupan1890/aliyunpan)
 
@@ -81,6 +97,10 @@
 - [imfile：基于Motrix](https://github.com/imfile-io/imfile-desktop)
     - 支持下载 HTTP、FTP、BitTorrent、Magnet 等
 
+- [tribler：bt搜索和下载工具](https://www.tribler.org/download.html)：国内用户要设置无匿名，不然可能会出现资源下不动。
+
+- [rats-search：bt搜索和下载工具，可以打开别的客户端下载](https://github.com/DEgITx/rats-search)
+
 # 图片
 
 - [upscayl：ai图片质量提升](https://github.com/upscayl/upscayl)
@@ -101,19 +121,33 @@
 
 - [gthumb](https://github.com/GNOME/gthumb)
 
+### [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](caesium-image-compressor)
+
+![image](./Pictures/awesomegui/caesium-image-compressor.avif)
+
+## 截图
+
+- [deepin-screen-recorder：deepin的截图软件。支持录屏，长截图](https://github.com/linuxdeepin/deepin-screen-recorder)
+
+- [Snipaste：windows很出名的截图软件。支持窗口识别，固定截图](https://github.com/Snipaste)
+
+- [flameshot：火焰截图](https://github.com/flameshot-org/flameshot)
+
 # note
 
 - [zotero：文献管理工具](https://github.com/zotero/zotero)
 
 - [zotero-gpt](https://github.com/MuiseDestiny/zotero-gpt)
 
+# ide
+
+- [positron：数据科学 IDE](https://github.com/posit-dev/positron)基于 VSCode 构建了一个可复制的编写和发布的桌面开发环境，支持运行 Python 和 R 代码、自动补全等功能
+
 # 硬件
 
 - [corectrl：查看cpu、gpu信息，显示监控曲线图](https://gitlab.com/corectrl/corectrl)
 
 - [LACT：amd gpu控制器](https://github.com/ilya-zlobintsev/LACT)
-
-# ai
 
 # other
 
@@ -161,6 +195,20 @@
 
 - [stellarium：天象模拟软件](https://github.com/Stellarium/stellarium)
     - 支持：windows、linux、macos、android、ios
+
+- [input-overlay：显示用户操作输入的 OBS 直播插件。该项目是用来在直播中显示键盘按键、鼠标移动和游戏手柄按钮的插件](https://github.com/univrsal/input-overlay)
+
+![image](./Pictures/awesomegui/input-overlay.avif)
+
+- [rubick：工具箱、启动框](https://github.com/rubickCenter/rubick)
+
+- [shell360：ssh客户端](https://github.com/shell360)
+
+- [xpipe：ssh客户端](https://github.com/xpipe-io/xpipe)
+
+- [neko：该项目是运行在 Docker 容器中的自托管虚拟浏览器环境，为用户提供安全、隔离和功能齐全的虚拟浏览器。](https://github.com/m1k1o/neko)
+
+- [fluent-reader：rss订阅和阅读器](https://github.com/yang991178/fluent-reader)
 
 # 类似项目
 

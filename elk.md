@@ -96,9 +96,28 @@ curl -LO https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.13
     - 上述每个用例都利用了 Elasticsearch 的优势（如可扩展性、速度和灵活性）来处理不同的数据类型和复杂的查询，为数据驱动型应用提供了重要价值。
 
 # 未读
+
+- [鹅厂架构师：高性能分布式搜索引擎Elasticsearch](https://zhuanlan.zhihu.com/p/698817997)
+
+- [程序员半支烟：5000字详说Elasticsearch入门(一)](https://mp.weixin.qq.com/s/bVhZ40ddB_Ke_2kzC6GgdA)
+
+- [Se7en的架构笔记：Elastic Stack 实战教程 1：Elastic Stack 8 快速上手](https://mp.weixin.qq.com/s/MZcO_wUTPWoOgQKIuQXXYA)
+
+- [Se7en的架构笔记：使用 Ansible 部署 Elasticsearch 集群](https://mp.weixin.qq.com/s/nsXGJ6rZNTuunPutKo1nWQ)
+
+- [云原生运维圈：ELK构建MySQL慢日志收集平台详解](https://mp.weixin.qq.com/s/W2l9jminOflJO28EqyNJSA)
+
+- [铭毅天下Elasticsearch：Elasticsearch 电商场景：明明有这个关键词，但是搜不出来，怎么办？](https://mp.weixin.qq.com/s/eTHZZTQWFaxgReNpa2mNaw)
+
+- [铭毅天下Elasticsearch：6 幅图，通透理解 Elasticsearch 的六大顶级核心应用场景](https://mp.weixin.qq.com/s/cZw1ltk2Ar5UPeX1pJfhgA)
+
 - [用ElasticSearch时，必须先搞明白这几个基础](https://mp.weixin.qq.com/s/L8_lXuodCpObokybX6xtlw)
 
 - [knowclub：你真的懂Elasticsearch分布式原理和高级聚合查询吗？](https://mp.weixin.qq.com/s/MfDuIVai3yc9A63f7siiXQ)
+
+- [程序员半支烟：巧记Elasticsearch常用DSL语法](https://mp.weixin.qq.com/s/X2qjkkrN0moUVWlJHSXX8w)
+
+- [程序员半支烟：Elasticsearch与文件描述符的恩恩怨怨](https://mp.weixin.qq.com/s/3_Pti61GppMa9CzUy9CXRg)
 
 - [腾讯技术工程：万字超全 ElasticSearch 监控指南](https://mp.weixin.qq.com/s/mO3TkKw3U9QZe_IoLV_Y_Q)
 

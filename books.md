@@ -133,6 +133,8 @@
 
 - [Go 语言实战: 编写可维护 Go 语言代码建议](https://github.com/llitfkitfk/go-best-practice)
 
+- [超全golang面试题合集+golang学习指南+golang知识图谱+入门成长路线](https://github.com/xiaobaiTech/golangFamily)
+
 ### Rust
 
 - [《Rust 程序设计语言》](https://kaisery.github.io/trpl-zh-cn/)
@@ -158,6 +160,10 @@
 
 - [zero-to-production一书的配套代码，并没有提供书](https://github.com/LukeMathWalker/zero-to-production)
     - 这本书是介绍如何用 Rust 从零构建一个电子邮件通信服务，包含开发环境配置、持续集成流程、后端 API 开发、错误处理以及部署的全过程。
+
+- [100-exercises-to-learn-rust：学习 Rust 的 100 个练习。](https://github.com/mainmatter/100-exercises-to-learn-rust)
+
+- [Build-lua-in-rust：用Rust写个Lua解释器](https://github.com/WuBingzheng/build-lua-in-rust)
 
 ### Lisp
 
@@ -242,6 +248,8 @@
 
 - [Official Matplotlib cheat sheets](https://github.com/matplotlib/cheatsheets)
 
+- [《Data Science at the Command Line》（命令行中的数据科学）](https://jeroenjanssens.com/dsatcl/)
+
 #### 框架
 
 - [flask/sanic/asyncio/bottle/webpy 源码阅读注释合集](https://github.com/hhstore/annotated-py-projects)
@@ -257,6 +265,8 @@
 ### php
 
 - [《PHP 之道》](https://learnku.com/docs/php-the-right-way/PHP8.0)
+
+- [php-nginx：用php开发的类似nginx的web服务器,可用于学习](https://github.com/lovefc/php-nginx)
 
 ### julia
 
@@ -308,6 +318,8 @@
 - [LeetCode solutions in any programming language | 多种编程语言实现 LeetCode、《剑指 Offer（第 2 版）》、《程序员面试金典（第 6 版）》题解](https://github.com/doocs/leetcode)
 
 ## 图形学
+
+- [《Ray Tracing in One Weekend》](raytracing.github.io)教你用 C++ 实现一个光线追踪器
 
 - [3D编程模式](https://yyc-git.github.io/3dProgramPattern/docs/%E5%89%8D%E8%A8%80/)
 
@@ -385,6 +397,8 @@
 
 - [图说设计模式](https://design-patterns.readthedocs.io/zh_CN/latest/index.html#)
 
+- [Clean-Code-Notes:写出简洁、易读、易维护代码的书](https://github.com/JuanCrg90/Clean-Code-Notes)
+
 ## 软件工程
 
 - [《高并发的哲学原理》](https://github.com/johnlui/PPHC)
@@ -405,6 +419,8 @@
 
 - [《一个64位操作系统的设计与实现》学习笔记](https://yifengyou.gitbooks.io/the-design-and-implementation-of-a-64-bit-os/content/)
 
+- [布加勒斯特理工大学的 Linux 内核教学课程](https://github.com/linux-kernel-labs-zh/docs-linux-kernel-labs-zh-cn)
+
 - [rCore-Tutorial-Book-v3:用 Rust 语言从零开始写一个基于 RISC-V 架构的类 Unix 内核。清华大学开源的中文教程](https://github.com/rcore-os/rCore-Tutorial-Book-v3)
 
 - [osdev: 操作系统相关知识的wiki](https://wiki.osdev.org/Main_Page)
@@ -423,6 +439,10 @@
 
 - [《从零创建虚拟机管理程序》](https://github.com/SinaKarvandi/Hypervisor-From-Scratch)
 
+- [腾讯技术工程：20种不同并发模型示例，带你深入理解并发模型](https://mp.weixin.qq.com/s/aTYie9PHcoXRYYmmIGaOXA)
+
+- [lkmpg：为 Linux 内核编写模块的指南，包含了针对最新的 5.x 和 6.x 内核版本的示例。](https://github.com/sysprog21/lkmpg)
+
 ## architecture(体系结构)
 
 - [《计算机体系结构基础 第3版(龙芯)》](https://foxsen.github.io/archbase/)
@@ -432,6 +452,8 @@
 - [【译】CPU 高速缓存原理和应用](https://segmentfault.com/a/1190000022785358)
 
 - [程序员需要知道的延迟](https://colin-scott.github.io/personal_website/research/interactive_latency.html)
+
+- [Hypervisor-From-Scratch:从零创建虚拟机管理程序](https://github.com/SinaKarvandi/Hypervisor-From-Scratch)
 
 ## compile(编译)
 
@@ -526,11 +548,15 @@
 
 - [《鸟哥的 Linux 私房菜》](http://cn.linux.vbird.org/linux_basic/linux_basic.php)
 
+- [《unix-and-linux-sysadmin-notes》](https://github.com/abdoufermat5/unix-and-linux-sysadmin-notes)
+
 - [《The AWK Programming Language》](https://github.com/wuzhouhui/awk)
 
 - [Learn Makefiles](https://makefiletutorial.com/)
 
 - [跟我一起写Makefile](https://seisman.github.io/how-to-write-makefile/)
+
+- [我爱上了 Makefile](https://gagor.pro/2024/02/how-i-stopped-worrying-and-loved-makefiles/)
 
 - [运维实践指南](https://billwang139967.gitbooks.io/op_practice_book/content/)
 
@@ -539,6 +565,8 @@
 - [《Pro Git第二版》](https://git-scm.com/book/zh/v2)
 
 - [图解Git](https://marklodato.github.io/visual-git-guide/index-zh-cn.html)
+
+- [introduction-to-git-and-github-ebook](https://github.com/bobbyiliev/introduction-to-git-and-github-ebook)
 
 - [《Spring 实战》 (第6版)](https://leonli0102.github.io/spring-in-action-v6/)
 
@@ -569,6 +597,8 @@
 - [《Docker — 从入门到实践》](https://vuepress.mirror.docker-practice.com/)
 
 - [《凤凰架构 构建可靠的大型分布式系统》](https://icyfenix.cn/)
+
+- [深入架构原理与实践](https://www.thebyte.com.cn/)
 
 - [《前端架构：从入门到微前端》](https://github.com/phodal/microfrontends)
 
@@ -630,11 +660,17 @@
 
 - [《TensorFlow 内核剖析》(英文)](https://github.com/horance-liu/tensorflow-internals)
 
+- [PyTorch-Tutorial-2nd：《PyTorch实用教程》（第二版）](https://github.com/TingsongYu/PyTorch-Tutorial-2nd)
+
 - [《Machine Learning Yearning》(中文)](https://deeplearning-ai.github.io/machine-learning-yearning-cn/)
+
+- [《Understanding Deep Learning》](https://udlbook.github.io/udlbook/)
 
 - [《概率机器学习》。该项目包含凯文·墨菲的三本书籍，分别为《机器学习：概率视角》、《概率机器学习：简介》、《概率机器学习：高级》](https://github.com/probml/pml-book)
 
 - [《动手实战人工智能 AI By Doing》](https://aibydoing.com/intro)
+
+- [《大语言模型》](https://llmbook-zh.github.io/)
 
 - [machine-learning-roadmap](https://github.com/mrdbourke/machine-learning-roadmap)
 
@@ -662,6 +698,10 @@
 - [《大语言模型》](https://llmbook-zh.github.io/)
 
 - [llm-universe：本项目是一个面向小白开发者的大模型应用开发教程](https://datawhalechina.github.io/llm-universe/#/)
+
+- [OpenAI 的前首席科学家 Ilya Sutskever 开出了一份论文清单，一共包含30篇论文。](https://arc.net/folder/D0472A20-9C20-4D3F-B145-D2865C0A9FEE)他说："如果你真正学会了所有这些，你就会知道当今 AI 的 90% 重要内容。"
+
+- [Pml-book:概率机器学习](https://github.com/probml/pml-book)
 
 ## 机器人
 
@@ -710,17 +750,35 @@
 
 - [矩阵是图，图是矩阵（英文）](https://thepalindrome.org/p/matrices-and-graphs)
 
-- [矩阵力量》。该书介绍了向量、矩阵、向量空间、矩阵分解、微积分、空间几何等知识，内含全彩图解和 Python 示例代码](https://github.com/Visualize-ML/Book4_Power-of-Matrix)
+- [《矩阵力量》。该书介绍了向量、矩阵、向量空间、矩阵分解、微积分、空间几何等知识，内含全彩图解和 Python 示例代码](https://github.com/Visualize-ML/Book4_Power-of-Matrix)
 
 - [统计学习方法（第二版）习题解答](https://datawhalechina.github.io/statistical-learning-method-solutions-manual/#/)
 
 - [微积分](https://www.geogebra.org/m/x39ys4d7)
 
+- [傅里叶级数的动画介绍](https://www.andreinc.net/2024/04/24/from-the-circle-to-epicycles)一篇长文，从最简单的圆的方程开始，介绍傅里叶级数的概念，包含大量动画。
+
+- [矩阵力量](https://github.com/Visualize-ML/Book4_Power-of-Matrix)
+
 ## 英语
+
+- [grammar-club：《语法俱乐部》。这是旋元佑老师写的一本英语语法书籍，旨在帮助读者建立扎实的语法基础，适合各个水平的英语学习者。](https://github.com/llwslc/grammar-club)
 
 - [离谱的英语学习指南/英语学习教程](https://github.com/byoungd/English-level-up-tips)
 
 - [中国程序员容易发音错误的单词](https://github.com/shimohq/chinese-programmer-wrong-pronunciation)
+
+- [薄冰英语语法](https://oldwestenglish.github.io/grammar/#/)
+
+- [让你上瘾的英语学习工具](https://earthworm.cuixueshe.com/)：
+
+    - 使用 连词成句 、 i + 1 、 以终为始 等学习理论来帮助你习得英语
+
+    - 通过不断的 重复 形成肌肉记忆
+
+    - 最重要的是 游戏化 的形式让学习英语从此不再痛苦
+
+- [DictionaryByGPT4](https://github.com/Ceelog/DictionaryByGPT4)：一本 GPT4 生成的单词书📚，超过 8000 个单词分析，涵盖了词义、例句、词根词缀、变形、文化背景、记忆技巧和小故事
 
 ## 文档
 
@@ -830,6 +888,10 @@
 - [papers-we-love(计算机论文和课程)](https://github.com/papers-we-love/papers-we-love)
 
 - [1000+份计算机paper](https://github.com/0voice/computer_expert_paper)
+
+# rss源
+
+- [top-rss-list](https://github.com/weekend-project-space/top-rss-list)
 
 # 职业和面试
 
@@ -957,27 +1019,1188 @@
 
 - 综合
 
+    - 腾讯技术工程
+        > 有深度的好文
+
+    - 腾讯云开发者
+        > 有深度的好文
+
+    - 鹅厂架构师
+        > 有深度的好文
+
+    - 字节跳动技术团队
+
+    - 阿里云云栖号
+
+    - 阿里云开发者
+
+    - 小红书技术REDtech
+
+    - 网易云音乐技术团队
+
+    - 微信客户端技术团队
+
+    - 微信后台团队
+
+    - 百度开发者中心
+
+    - 百度智能云技术站
+
+    - 哔哩哔哩技术
+
+    - 京东技术
+
+    - 得物技术
+
+    - 闲鱼技术
+
+    - 滴滴技术
+
+    - 三七互娱技术团队
+
+    - 360技术工程
+
+    - OPPO大数据
+
+    - 小米技术
+
+    - 美图技术
+
+    - infoQ
+
+    - 中国计算机学会
+
+    - 小林coding
+        > 图文+代码的底层技术科普
+
     - dbaplus社群
         > 数据库、云原生、各种IT事故梳理
 
+    - bugstack虫洞栈
+        > cicd、DDD架构
+
+    - 崔亮的博客
+        > cicd、elk
+
+    - alitrack
+        > duckdb数据库、ai相关
+
+    - 持续交付2.0
+
+    - 神独自在的技术生活
+
+    - 后端研究所
+
+    - Se7en的架构笔记
+        > elk、go、k8s
+
 - 数据库：
 
-    - AustinDatabases
-        > 主要是dba和数据库行业发展的内容
+    - 综合：
 
-    - 爱可生开源社区
+        - AustinDatabases
+            > 主要是dba和数据库行业发展的内容
 
-        > mysql故障和原理的讲解
+        - 白鳝的洞穴
 
-    - 白鳝的洞穴
+            > 白鳝 1992 年参加工作，从 DEC 深圳研发中心的码农，到自己创业，后来进入联想，最后离开联想再次创业，成立一家提供数据库优化服务的公司。前面 10 年在不断变化，后来的 10 年，工作以 Oracle 为核心，最近 10 年聚焦在如何让使用 Oracle 数据库的系统升级为国产数据库。白鳝说，自己“有一颗永远折腾的心”。
 
-        > 白鳝 1992 年参加工作，从 DEC 深圳研发中心的码农，到自己创业，后来进入联想，最后离开联想再次创业，成立一家提供数据库优化服务的公司。前面 10 年在不断变化，后来的 10 年，工作以 Oracle 为核心，最近 10 年聚焦在如何让使用 Oracle 数据库的系统升级为国产数据库。白鳝说，自己“有一颗永远折腾的心”。
+        - 瑞典马工
+            > 数据库行业分析
+        - 非法加码
+            > 数据库行业分析、PostgreSQL相关
 
-    - PostgreSQL码农集散地
-        > postgresql相关
+        - 韩锋频道
+            > 数据库半月谈（数据库新闻）
+
+        - 摩天轮
+            > 国产的dbengine
+
+        - 木鸟杂记
+            > 数据库基础知识科普
+
+        - 腾讯数据库技术
+
+        - 云数据库技术
+            > 数据库相关
+
+        - JiekeXu DBA之路
+
+        - DBA札记
+
+        - DBA随笔
+
+    - PostgreSQL：
+
+        - PostgreSQL码农集散地
+            > postgresql相关
+
+        - PostgreSQl学徒
+
+        - 红石PG
+
+    - MySQL：
+
+        - 爱可生开源社区
+
+            > mysql故障和原理的讲解
+
+        - 一树一溪
+            > 爱可生开源社区写稿人之一
+
+        - bisal个人杂货铺
+            > mysql相关
+
+        - MySQL解决方案工程师
+
+        - Mysql数据库联盟
+
+        - Mysql学习
+
+        - 数据库运维札记
+
+        - MySQL内核剖析
+
+        - InsideMySQL
+
+        - 我们都是小青蛙
+            > 《MySQL是怎样使用的：快速入门MySQL》和《MySQL是怎样运行的：从根儿上理解MySQL》作者
+
+- nosql
+
+    - Redis开发运维实战
+        > 快手redis工程师、《Redis开发与运维》作者
+
+    - binecy
+        > 《Redis核心原理与实践》作者、kafka相关
+
+    - 铭毅天下Elasticsearch
+        > 《一本书讲透Elasticsearch：原理、进阶与工程实践》作者
+
+- 云原生
+
+    - 腾讯云原生
+    - 云原生AI百宝箱
+    - 云原生运维圈
+    - 云原生社区动态
+    - knowclub
+    - 胡说云原生
+    - 云原生技术栈
+    - k8s技术圈
+    - 真没什么逻辑
+        > go语言、k8s、微架构
 
 - Prometheus：
+
     - 蜀道运维
+    - 网络小斐
+        > 网络监控
+
+- linux底层
+
+    - 开发内功修炼
+    - bin的技术小屋
+    - LoyenWang
+    - 奇伢云存储
+        > 存储、文件系统、linux编程、go语言
+
+- 网络
+
+    - 网工手艺
+        > 《网络工程师的Python之路》作者
+
+    - 网络技术风云汇
+
+    - 鲜枣课堂
+
+- 安全
+
+    - 信息安全与通信保密杂志社
+
+- 编程语言
+
+    - java：
+
+        - 美码师
+            > springboot
+
+    - python：
+
+        - 李辉greyli
+            > flask
+
+        - Pychina
+            > python大会
+
+        - 爬虫：
+
+            - 进击的Coder
+                > 《Python3网络爬虫开发实战》作者崔庆才
+
+            - 逆向与爬虫的故事
+
+            - NightTeam
+
+- ai
+
+    - 中国人工智能学会
+    - 腾讯CDC体验设计
+        > 设计、ai
+
+    - 走向未来
+    - AI光影社
+    - 程序员半支烟
+        > flink、ai prompt提示词
+    - 张铁蕾
+        > 分布式、ai
 
 - 架构：
-    - 二马读书：从事电商行业十几年，经历过大大小小的促销活动和秒杀上百次，每次做秒杀瞬时访问量会翻数十倍，甚至数百倍。对系统架构是巨大的考验，期间也曾经历过系统宕机，甚至整体雪崩。
+
+    - 二马读书
+        > 从事电商行业十几年，经历过大大小小的促销活动和秒杀上百次，每次做秒杀瞬时访问量会翻数十倍，甚至数百倍。对系统架构是巨大的考验，期间也曾经历过系统宕机，甚至整体雪崩。
+
+    - 岁寒博客
+        > 高并发架构
+
+- debug：
+
+    - [盛格塾](https://space.bilibili.com/2080622547)
+    - [r0ysue](https://space.bilibili.com/31025974)
+
+    - 格友
+
+- 运维
+
+    - 咸鱼运维杂谈
+    - 运维记事
+    - 云巅论剑
+    - SRE运维进阶之路
+    - SRE说
+    - Jenkins
+    - 朱小厮的博客
+        > 《深入理解Kafka：核心设计与实践原理》和《
+RabbitMQ实战指南》作者
+
+- 折腾linux相关
+
+    - [阮一峰的网络日志](https://www.ruanyifeng.com/blog/)
+    - [Koala聊开源](https://space.bilibili.com/489667127)
+    - [北京大学Linux俱乐部](https://space.bilibili.com/3461562830424779)
+    - [glepnir](https://space.bilibili.com/321783076)
+    - [LitterHouge](https://space.bilibili.com/2041146642)
+    - [PegasusWang](https://space.bilibili.com/288339968)
+    - [TheCW](https://space.bilibili.com/13081489)
+    - [Houge_Langley](https://space.bilibili.com/40420441)
+
+    - HelloGithub
+    - Python猫
+    - 奇妙的Linux世界
+
+- 折腾android相关：
+
+    - [派大宝UI](https://space.bilibili.com/130103648)
+    - [FlashCorpa](https://space.bilibili.com/1396636900)
+
+
+- 硬件
+
+    - UEFI社区
+        > intel工程师
+
+    - [老石谈芯](https://space.bilibili.com/612932327)
+        > 芯片相关、fpga芯片
+
+    - 大话存储
+        > 《大话存储》作者
+
+    - 企业存储技术
+        > cpu、gpu、存储
+
+    - 了不起的云计算
+        > 科普硬件技术知识
+
+    - 布鲁斯的读书圈
+        > 《linux高性能网络详解：从DPDK、RDMA到XDP》作者
+
+- 科普：
+
+    - [奇乐编程学院](https://space.bilibili.com/372313671)
+    - [技术蛋老师](https://space.bilibili.com/327247876)
+    - [小白debug](https://space.bilibili.com/100785033)
+    - [epcdiy](https://space.bilibili.com/12590)
+    - [小刘不是程序员](https://space.bilibili.com/519550178)
+
+    - 腾讯大讲堂
+        > 各种计算机技术、架构、管理等
+
+    - 小白debug
+        > 优秀的图文科普
+
+    - 小许code
+        > 优秀的图文科普
+
+    - ByteByteGo
+        > 优秀的图文科普
+
+    - 程序员小灰
+        > 优秀的图文算法科普
+
+    - 无聊的内容
+        > 《码农翻身》作者
+
+    - Taraaa
+        > 逻辑思维
+
+    - 世民谈云计算
+
+    - 路人zhang
+        > it面试相关
+
+    - DF创客社区
+        > 开源硬件
+
+## 科技
+
+- bilibili
+
+    - ai大模型评测
+        - [檀东东Tango](https://space.bilibili.com/14739873)
+
+    - 笔记本评测：
+        - [笔吧评测室](https://space.bilibili.com/367877)
+        - [中正评测](https://space.bilibili.com/178047796)
+
+    - 芯片性能评测：
+        - [极客湾Geekerwan](https://space.bilibili.com/25876945)
+
+    - 安卓搞机和路由器：
+        [晨钟酱Official](https://space.bilibili.com/251013709)
+
+    - 手机评测：
+
+        - [先看评测：一加和爱否的前员工厉害，对各种产品的深度评测](https://space.bilibili.com/483311105)
+
+        - [爱否科技](https://space.bilibili.com/7458285)
+
+        - [大米评测：手机评测](https://space.bilibili.com/8372353)
+
+        - [小白测评：手机评测](https://space.bilibili.com/8969156)
+
+        - [花生説：手机评测](https://space.bilibili.com/25480023)
+
+        - [微机分WekiHome：手机拆解](https://space.bilibili.com/347441270)
+
+    - app评测：
+
+        - [玄离199：app评测](https://space.bilibili.com/67079745)
+
+        - [苏星河牛通：常见app评测](https://space.bilibili.com/598464467)
+
+    - 电视评测：
+
+        - [筒隐陆奥Official：电视评测](https://space.bilibili.com/2959905)
+
+        - [知乎蓝大仙人：电视评测。智能电视选购网创始人](https://space.bilibili.com/34586446)
+
+    - [硬件茶谈：数码知识科普。三维动画做得好](https://space.bilibili.com/14871346)
+
+    - [短的发布会：手机发布会搞笑式介绍](https://space.bilibili.com/287795639)
+
+    - [六分超超：旧手机和系统交互评测](https://space.bilibili.com/652137183)
+
+    - [STRAY_数码：手机ui动画评测](https://space.bilibili.com/275678731)
+
+    - [橙红Iris：先看评测出来的](https://space.bilibili.com/19226160)
+
+    - [陈抱一：物联网评测](https://space.bilibili.com/3530725)
+
+    - [在下莫老师：折腾pe系统，游戏模拟器](https://space.bilibili.com/1995424953)
+
+    - [技术爬爬虾：linux服务折腾](https://space.bilibili.com/316183842)
+
+    - [司波图：硬件nas、kodi影音搞机](https://space.bilibili.com/28457)
+
+    - [芯板坊：开发板](https://space.bilibili.com/2097113874)
+
+    - [立创开发板](https://space.bilibili.com/3493269579237436)
+
+    - [单毅讲装修：家电、装修](https://space.bilibili.com/222157543)
+
+- 微信公众号
+
+    - 电脑吧评测室
+    - 笔吧评测室
+    - 路由器评测
+
+## 汽车
+
+- bilibili
+
+    - [三驱兄弟：购车指南](https://space.bilibili.com/690820158)
+
+- 微信公众号
+
+    - 中国汽车流通协会
+        > 汽车行业和数据
+
+    - 中国汽车流通协会有形市场分会
+        > 汽车行业和数据
+
+    - 精真估
+        > 二手车保值率数据
+
+## 地理和气象
+
+- bilibili
+
+    - [地球知识局](https://space.bilibili.com/100785033)
+
+    - [中气爱](https://space.bilibili.com/547072854)：天气预报员+背后气象原理科普
+
+    - [星球研究所](https://space.bilibili.com/326427334)：风景和动画做得好
+
+- 微信公众号
+
+    - 地球知识局
+    - 腔调地图
+
+## 运动
+
+- [零天赋射手](https://space.bilibili.com/319522796)
+
+- [黄老师的体育课](https://space.bilibili.com/695276945)
+
+- [跑步的子章老师](https://space.bilibili.com/451645162)
+
+## 健康
+
+- 微信公众号
+
+    - 人卫健康
+    - 生命时报
+    - 腾讯医典
+    - 广东卫生信息
+    - 健康时报
+    - 曾哥每日科普
+
+    - 营养师顾中一
+    - 营养素王思露
+
+## 食品和食品安全
+
+- bilibili
+
+    - [中国食品安全报](https://space.bilibili.com/439478093)
+
+    - [大雷的食品科普日常](https://space.bilibili.com/35195926)
+
+    - [少伟博士话饮食](https://space.bilibili.com/515059146)
+
+- 微信公众号
+    - 刘少伟教授
+    - 南都鉴定评测实验室
+        > 各种评测
+
+## 美食探店
+
+- [大兵探店](https://space.bilibili.com/477273422)
+
+- [品城记本地版](https://space.bilibili.com/429582883)
+
+- [吃货顺德花师奶](https://space.bilibili.com/493373443)
+
+- [特厨魏味](https://space.bilibili.com/1781681364)
+    > 会美食点评
+
+- [Dishtravel](https://space.bilibili.com/549772766)
+    > 广东城市旅游体验，会有各种文化介绍
+
+## 买菜
+
+- [市场博物](https://space.bilibili.com/470747758)
+    > 广州菜市场价格浏览
+
+- [觅大叔](https://space.bilibili.com/604083858)
+    > 水产科普
+
+## 做菜
+
+- [猪肉婆吴素芬](https://space.bilibili.com/3493271997253876)
+    > 顺德美食
+
+- [张小妹美食](https://space.bilibili.com/397700767)
+    > 简单的膳食制作
+
+- [硬核料理男子Tiger](https://space.bilibili.com/12383027)
+
+- [吉尔的小灯塔](https://space.bilibili.com/2013555)
+
+- [猫哥揾食](https://space.bilibili.com/1501001552)
+
+## 农业和水产
+
+- 微信公众号
+
+    - 新农观
+        > 粮食价格
+
+    - 农财宝典 大国渔业
+        > 南方农村报社、水产价格
+
+    - 通威农牧
+        > 水产价格
+
+    - 水产前沿
+        > 水产价格
+
+## 纺织
+
+- bilibili
+
+    - [姚蔚铭](https://space.bilibili.com/296951626)
+
+    - [特要挑](https://space.bilibili.com/435297713)
+
+- 微信公众号
+
+    - 中国流行面料FabricsChina
+
+## 预防诈骗
+
+- bilibili
+
+    - [反诈特工-宇哥](https://space.bilibili.com/3735279)
+
+- 微信公众号
+
+    - 北京反洗钱研究
+    - 中信建设反洗钱
+
+## 影视
+
+- [弓手冬郎](https://space.bilibili.com/35857776)：西游记和三国演义解说
+- [木鱼水心](https://space.bilibili.com/927587)：经典影视长视频解说
+- [非花映镜](https://space.bilibili.com/2810464)：黑泽明电影解说
+- [培根悖论唠唠嗑](https://space.bilibili.com/386869863)：长视频影视解说，善于开脑洞、挖细节。
+
+- [边江说](https://space.bilibili.com/424170847)：《冰与火之歌》解说，自己也是个小说家
+
+- [貔柴](https://space.bilibili.com/70942172)：宫斗剧
+
+## 音乐
+
+- bilibili
+
+    - [陈博士说古琴](https://space.bilibili.com/3494375080331944)
+        > 古琴博士
+
+    - [孟晓洁Jae](https://space.bilibili.com/339781938)
+        > 竹笛博士
+
+    - [音樂家的無聊人生](https://space.bilibili.com/1794321502)
+
+    - [鹿哥来了](https://space.bilibili.com/472387555)
+
+- 微信公众号
+
+    - 人民音乐杂志
+    - 杨燕迪音乐人文笔录
+
+## 科学
+
+- 微信公众号
+
+    - 中科院物理所
+    - 格致论道论坛
+    - 华院计算
+
+    - 复杂性科学：
+        - 集智俱乐部
+        - 城市复杂系统研究中心
+        - 系统科学
+            > 北京师范大学系统科学学院
+        - 八号研讨厅
+            > 钱学森的系统科学
+
+        - 网络科学研究速递
+            > 网络科学论文
+
+## 哲学
+
+- bilibili
+
+    - [北大杨立华讲庄子](https://space.bilibili.com/1072908652)
+
+    - [余明锋的哲学课](https://space.bilibili.com/630972858)
+
+    - [嘉映哲学](https://space.bilibili.com/3546574904887937)
+
+    - [复旦大学哲学学院](https://space.bilibili.com/591443038)
+
+    - [格奥尔特](https://space.bilibili.com/5411951)
+
+    - [幽灵漫游指南](https://space.bilibili.com/56730666)
+
+    - [文艺复兴与近代哲学](https://space.bilibili.com/4847428)
+
+    - [早啊Chloe](https://space.bilibili.com/35939246)
+        > 胡塞尔、海德格尔
+
+    - [人大刘海龙](https://space.bilibili.com/2021254363)
+
+    - [做播可梦的橙子](https://space.bilibili.com/1902706043)
+        > 罗兰巴特
+
+    - [麻辣老师讲艺术](https://space.bilibili.com/505496153)
+        > 美学、艺术
+
+    - [生活读书新知三联书店](https://space.bilibili.com/519584281/video)
+        > 文学、历史、哲学五人谈
+
+- 微信公众号
+
+    - 哲学研究
+    - 哲学分析
+    - 现代哲学杂志
+    - 世界哲学杂志
+    - 哲学动态杂志
+    - 岭南观念论
+    - 实践哲学研究
+    - 文史哲杂志
+    - 伦理学术
+    - 英国观念论研究
+    - 清华西方哲学研究
+    - 外国哲学研究
+    - 现代外国哲学
+    - 哲学探索辑刊
+    - 思想与文化
+        > 华东师范大学 中国现代思想文化研究所
+    - 艺术学研究
+    - 发现莫尔特曼
+    - 基督教文化学刊JSCC
+    - 文艺理论研究杂志
+    - 走近韦伯
+    - 当代文化哲学研究会
+    - 想当国师的哲学家
+    - 逻各斯与空间
+    - 漫道文苑
+    - 思庐哲学
+    - 青年美学论坛
+    - 北京大学教育评论
+    - 张文举的哲思观
+    - 陈荣刚
+        > 国外优秀学者文章翻译
+    - 林中鹿中路
+        > 国外优秀学者文章翻译
+    - 黑夜批判公社
+    - 视灵者之梦
+    - 事实与事态
+    - 熙屿文化
+
+    - 嘉映哲学
+        > 陈嘉映
+    - 阅读晓芒
+        > 邓晓芒
+    - 古典学研究
+        > 刘小枫
+
+    - 文艺：
+        - 文艺研究
+        - 文艺争鸣
+        - 文艺理论与批判
+
+    - 科学哲学：
+        - 中国科学院哲学研究所
+        - 自然辩证法通讯
+
+    - 德国哲学：
+        - 现象学
+        - 现象学与德国古典哲学
+        - 陈直Dharma
+
+    - 马克思：
+        - 实践与文本
+        - 当代马克思主义评论
+        - 马伦研究动态
+        - 马美研究
+        - 马克思主义哲学研究
+        - 马克思主义与现实
+        - 思想史考古与MEGA
+        - iMarx
+        - 欧陆思想联萌
+        - 布尔乔亚粉碎机
+        - 安那其文库
+        - 晕眩Schwindel
+        - 乾乾文史
+        - Kritik人文社
+        - 毛邓理论研究
+        - 湘大毛研中心
+
+    - 国学
+        - 人文新陈来
+            > 陈来
+        - 船山学社
+        - 孔子研究杂志
+        - 孟子研究院
+        - 中国文化研究
+        - 中国文化书院
+        - 华夏文化书院
+        - 天水伏羲故里国学院
+
+## 美术
+
+    - [玩艺术的吴雅琳](https://space.bilibili.com/637679816)
+        > 美术、雕塑
+
+    - [孙乃树](https://space.bilibili.com/1348664019)
+        > 美术
+## 文学
+
+- bilibili
+
+    - [可可周老师](https://space.bilibili.com/513531271)
+
+    - [钱理群讲鲁迅](https://space.bilibili.com/1892359255)
+
+- 微信公众号
+
+    - 现当代文学研究动态
+    - 文学思想史
+    - 文学评论
+    - 外国文学评论
+    - 外国文学研究
+    - 德语文学研究
+    - 人大德国文学
+    - 鲁迅研究月刊
+    - 鲁迅研究界
+    - 蔡丹君
+
+## 历史
+
+- bilibili
+
+    - [吴启讷](https://space.bilibili.com/1190493829)
+        > 台湾大学老师
+
+    - [安州牧](https://space.bilibili.com/7481602)
+        > 地图讲解历史
+
+    - [杜茹慧](https://space.bilibili.com/1105349912)
+        > 魏晋南北朝
+
+    - [历史作家邙山野人](https://space.bilibili.com/67143342)
+
+    - [烽火照东南](https://space.bilibili.com/1434017378)
+
+- 微信公众号
+
+    - 史学理论研究官方公众号
+    - 史学史研究编辑部
+    - 施展世界
+    - 全球研究Global Studies Forum
+    - 新史学丛刊
+
+## 政治
+
+- bilibili
+
+    - [傅正](https://space.bilibili.com/1522003987)
+
+    - [包刚升教授](https://space.bilibili.com/701220372)
+
+    - [李筠教授](https://space.bilibili.com/1593690059)
+
+    - [某骜](https://space.bilibili.com/394071888)
+
+    - [王骁Albert](https://space.bilibili.com/52165725)
+
+    - [施展世界](https://space.bilibili.com/1136919246)
+
+- 微信公众号
+
+    - 政治学人
+    - 政治学家
+    - 政治科学研究
+    - 公共管理与政策评论
+    - 美国研究
+    - 公共管理共同体
+    - 比较政治学研究集刊CSSCI
+    - 行政论坛编辑部
+    - 中大行政评论
+    - 岳麓公管学术之窗
+        > 湖南大学
+    - 中共中央党校（国家行政学院）学报
+    - 北大政治学评论
+    - PKURCCP
+        > 北京大学政治学研究中心官方
+
+    - 王骁Albert
+    - 中国现代国际关系研究院
+    - 大湾区评论
+        > 郑永年
+    - 科社共运动态+
+    - 阶级与哲学
+    - 世界观察局
+
+## 军事
+
+- 微信公众号
+
+    - 邱贞玮
+
+## 社会
+
+- 微信公众号
+
+    - 开放时代杂志
+    - 探索与争鸣
+    - 实践历史与社科研究
+    - 社会CJS
+    - 社会学研究杂志
+    - 质化研究
+    - 中国青年研究
+    - 性研究ing
+    - 华中科技大学学报社会科学版
+    - 社会学会社
+    - 国际新闻界
+    - 国家现代化建设研究
+    - 国外理论动态
+    - 社会科学杂志
+    - 国外社会科学前沿
+    - 学习与探索
+    - 学习与实践杂志
+    - QHSHKX
+        > 清华社会科学
+
+    - 秦川雁塔
+        > 秦晖
+    - 新乡土
+    - 乡村发现
+    - 国仁乡村发展中心
+    - 国仁乡建
+    - 中国农村调查
+
+    - 回到2049
+    - 大浪淘沙
+    - 文化纵横
+        > 和时事相关的论文
+    - 修院基金会
+        > 和时事相关的论文
+
+## 法律
+
+- 微信公众号
+
+    - 基层法治
+    - 罗翔说刑法
+    - 劳动法学习
+    - 辽沈法律帮
+    - 青鸟法援服务团
+
+## 心理
+
+- 微信公众号
+
+    - 京师心理大学堂
+
+    - 家姻心理
+
+## 经济
+
+- bilibili
+
+    - [国仁全球大学堂](https://space.bilibili.com/679619486)
+
+    - [翟东升老师](https://space.bilibili.com/596299260)
+
+    - [卢麒元视角](https://space.bilibili.com/1446926098)
+
+    - [徐高_经济学家](https://space.bilibili.com/129146667)
+
+    - [货币法则研习社](https://space.bilibili.com/24559221)
+
+    - [付鹏的财经世界](https://space.bilibili.com/662660667)
+
+- 微信公众号
+
+    - 中国人民银行
+    - 国家金融与发展实验室
+    - 经济研究
+    - 经济学报
+    - 债劵杂志
+    - 税务研究
+    - 财政研究
+    - 证劵时报
+    - 当代经济学基金会
+    - 西京研究所
+    - 西京投资管理
+    - 西京洞察
+    - 奥地利经济学评论
+    - 横琴智慧金融研究院
+    - 中国金融地产会
+    - 北大国发院
+    - 复旦大学中国研究院
+    - 人大重阳
+    - 人大财税研究所
+    - IMI财经观察
+    - 财经智库CASS
+    - 经济学管理学刊
+    - 国际金融研究
+    - 金融监管研究院
+    - 金融研究杂志
+    - CPEER
+        > 中国政治经济学四十人论坛
+
+    - 人口规模与美好生活
+    - 育娲人口研究
+
+    - Global U
+        > 国仁全球大学堂
+
+    - 智本社
+
+    - 伊洛
+
+    - 泽平宏观
+        > 任泽平
+
+    - 铭心而论
+        > 陆铭
+
+    - 勤思堂
+        > 卢麒元
+
+    - 卢麒元笔录
+        > 卢麒元
+
+    - 翟东升的全球政治经济研究
+        > 翟东升
+
+    - 天勇谈经济
+        > 周天勇
+
+    - 张明宏观金融研究
+        > 中国社会科学院金融研究所副所长
+
+    - 徐高经济观察
+        > 徐高
+
+    - 贾根良经济学
+        > 贾根良
+
+    - 王永利
+    - 奇霖宏观
+    - 郑后成宏观研究
+    - 熊园观察
+
+    - 宅门读书会
+        > 货币法则研习社的公众号
+
+    - 东方证劵财富研究
+
+    - 粤开志恒宏观
+        > 粤开证劵首席罗志恒
+
+    - 一瑜中的
+        > 华创证劵首席张瑜
+
+    - 付鹏的财经世界
+        > 东北证劵首席付鹏
+
+## 金融
+
+- bilibili
+
+    - [汤山老王](https://space.bilibili.com/1112568165)
+
+    - [祯相实验室](https://space.bilibili.com/3493293451118739)
+
+    - [硬核姬老板：基金](https://space.bilibili.com/2117498259)
+
+    - [淘沙博士：A股](https://space.bilibili.com/289706107)
+
+    - [圆镜保险insurance](https://space.bilibili.com/3546564784031894/video)
+
+    - [南半球聊财经](https://space.bilibili.com/517986781)
+
+    - [刘纪鹏：股市](https://space.bilibili.com/3493280140495350)
+
+    - [投研部杨摸鱼](https://space.bilibili.com/13611123)
+
+- 微信公众号
+
+    - 房地产
+        - 中国房地产报
+        - 毅哥广州共有产权房公租房
+        - 善毅讲装修
+
+    - 汤山老王
+    - 硬核姬老板
+    - 发财老博士
+    - 爱思考的老梨
+    - 丹江湖上的钓鱼翁
+    - 唐书房
+        > 股票
+    - 财经时差
+    - 李国飞哲学与投资笔记
+        > 复杂性科学思维看待it企业
+
+    - 清科研究
+        > 投资
+
+    - 爱选科技
+        > 保险
+
+## 城市规划
+
+- bilibili
+
+    - [小佛爷说](https://space.bilibili.com/3493121314786096)
+        > 城市发展
+
+- 微信公众号
+
+    - 小佛爷说
+        > 城市发展
+
+    - 存量规划前沿
+        > 赵燕箐学派的城市规划
+
+    - 规划师杂志
+
+    - 城市八部
+
+    - 城市中国杂志
+
+    - 中国青年规划师联盟
+
+    - 城市交通
+
+## 产业
+
+- bilibili
+
+    - [老猫鱼不吃鱼](https://space.bilibili.com/238365787)
+        > 快递物流、城市产业
+
+    - [老罗真会装](https://space.bilibili.com/2078210872)
+        > 家居、装修、瓷砖
+
+- 微信公众号
+
+    - 灰糖家居
+        > 老罗真会装微信公众号
+
+    - 企业预警通
+    - 管理世界杂志
+    - 中外企业史评析
+    - 中国产业史研究
+
+    - 清华大学互联网产业研究员
+        > 互联网产业政策
+
+    - 幻影视界
+        > ai产业研究
+
+    - 中国信通院CAICT
+        > 信息产业化、产业信息化
+
+    - 中山大学企业研究院
+
+    - 黑天鹅书摘
+        > 企业案例和访谈
+
+    - 餐企老板内参
+
+    - 行业报告：
+
+        - 美团研究院
+            > 各种行业的消费报告
+
+        - 中商产业研究院
+
+        - 华经产业研究院
+
+        - 艾媒咨询
+
+        - 未来智库
+
+## 新闻
+
+- bilibili
+
+    - [馬督工](https://space.bilibili.com/3546582158936774)
+
+    - [马督丄](https://space.bilibili.com/354636600)
+
+    - [高剑犁](https://space.bilibili.com/59104725)
+
+    - [小黛晨读](https://space.bilibili.com/1556651916)
+
+- 微信公众号
+
+    - 中国政府网
+        > 官方
+
+    - 职场故事荟
+        > it职场
+
+    - 云头条
+        > it项目，it职场
+
+    - 睡前人间
+        > 睡前消息文字版
+
+    - 睡前消息编辑部
+        > 睡前消息文字版
+
+    - 中环陆羽
+        > 香港
+
+    - WorldCommunistParties
+        > 共运
+
+    - 禁止右转
+
+    - 无法可说
+
+    - 罗文益
+    - 原子智库-腾讯新闻
+        > 什么都有
+
+- bilibili
+
+    - [粤地诡录](https://space.bilibili.com/1844371398)
+
+    - [溪山野行：广州花鸟鱼虫](https://space.bilibili.com/479060651)
+
+- 广东相关的微信公众号
+
+    - 正研智库
+        > 广东省智库
+
+- 广州相关的微信公众号
+
+    - 广州市发展和改革委员会
+
+    - 广州市城市更新规划研究院
+
+    - 广州统计
+
+    - 广州政法
+
+    - 广州市规划院
+
+    - 广州旧闻
+
+    - 羊城纵览
+
+# 数据
+
+- [审计署](https://www.audit.gov.cn/n5/index.html)
+
+    - 2024年第1号公告：中央部门单位2023年预算执行等情况审计结果[06-25]
+        - 可以看到各部门腐败信息
+
+    - 国务院关于2023年度中央预算执行和其他财政收支的审计工作报告
+        - 腐败现象

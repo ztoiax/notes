@@ -55,6 +55,10 @@ sudo make O_NERD=1
 
 ## [twf：vim模式的文件树](https://github.com/wvanlint/twf)
 
+## [superfile](https://github.com/yorukot/superfile)
+
+![image](./Pictures/awesomecli/superfile.avif)
+
 # File
 
 ## [advcpmv: instead cp, my(https://github.com/jarun/advcpmv)
@@ -182,26 +186,6 @@ xsv search -s input '[0-4]' test.csv
 find . -type f | vidir -
 ```
 
-## [lnav：tui的vim模式，查看log、json文件](https://github.com/tstack/lnav)
-
-```sh
-# 查看nginx的access日志
-lnav /usr/local/nginx/logs/access.log
-
-# 查看json文集
-lnav file.json
-
-# 查看journalctl
-journalctl | lnav
-
-# 滚动模式
-journalctl -f | lnav
-
-# 设置输出模式
-journalctl -o short-iso | lnav
-journalctl -o json | lnav
-```
-
 ## [mutagen：文件同步到远程服务器，也可以充当中间人在2个远程文件系统之间同步](https://github.com/mutagen-io/mutagen)
 
 ## [zrok：端对端共享文件](https://github.com/openziti/zrok)
@@ -321,9 +305,10 @@ fzf
 # -e 取消模糊搜索
 fzf -e
 ```
-## [skim](https://github.com/lotabout/skim)
 
-### rust 版fzf
+## [skim：rust 版fzf](https://github.com/lotabout/skim)
+
+## [zf：zig版fzf](https://github.com/natecraddock/zf)
 
 ## [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy)
 
@@ -446,6 +431,8 @@ ls filename | sad '1' '2' | delta
 
 ![image](./Pictures/awesomecli/dust.avif)
 
+## [gdu：tui模式的du](https://github.com/dundee/gdu)
+
 # process
 
 ## [procs](https://github.com/dalance/procs)
@@ -520,6 +507,8 @@ hurl /tmp/test
 
 ## [fastfetch：比neofetch更快，显示信息更多](https://github.com/fastfetch-cli/fastfetch)
 
+## [onefetch：显示git仓库信息](https://github.com/o2sh/onefetch)
+
 ## [cpufetch](https://github.com/Dr-Noob/cpufetch)
 
 ![image](./Pictures/awesomecli/cpufetch.avif)
@@ -564,7 +553,7 @@ hurl /tmp/test
 svgo file.svg -o newfile.svg
 ```
 
-# 图片工具
+# 多媒体
 
 ## cwebp
 
@@ -665,7 +654,32 @@ timg --loops=3 filename.gif
 
 ## [imgdiff:图片对比](https://github.com/n7olkachev/imgdiff)
 
+## [video2x：视频和图像无损放大工具。该项目集成了多种超分辨率算法（如 Waifu2x、Anime4K、Real-ESRGAN），能够有效提高视频和图像的分辨率，并提供了图形界面（GUI）、Docker 和命令行界面（CLI）的使用方式](https://github.com/k4yt3x/video2x)
+
+- [官方文档](https://github.com/k4yt3x/video2x/wiki/CLI)
+
+```sh
+python -m video2x \               # execute the video2x module
+    -i input.mp4 -o output.mp4 \  # input and output file path
+    upscale \                     # set mode to upscale
+    -h 1080 \                     # set output height to 720px (aspect ratio is preserved)
+    -a waifu2x \                  # use waifu2x to upscale
+    -n3                           # set noise level to 3
+```
+
 # downloader
+
+## [cobalt：下载视频、音频](https://github.com/imputnet/cobalt)
+
+- 1、bilibili.com 和 bilibili.tv：支持视频 + 音频、仅音频、仅视频下载，提供丰富的文件名。
+
+- 2、dailymotion：支持视频 + 音频、仅音频、仅视频下载，提供元数据和丰富的文件名。
+
+- 3、Instagram 帖子和故事：支持视频 + 音频、仅音频、仅视频下载。
+
+- 4、Instagram Reels：支持视频 + 音频、仅音频、仅视频下载。
+
+- 5、其他支持的服务包括 ok 视频、Pinterest、Reddit、rutube、SoundCloud、Streamable、TikTok、Tumblr、Twitch Clips、Twitter 等。
 
 ## [lux: 视频下载器](https://github.com/iawia002/lux)
 
@@ -690,7 +704,15 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 
 ## [netease-music-tui：网易云音乐tui](https://github.com/betta-cyber/netease-music-tui)
 
+# 游戏相关
+
+## [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)
+
 # other
+
+## [chsrc：全平台通用换源工具与框架](https://github.com/RubyMetric/chsrc)
+
+## [progress：显示cp、mv进度条](https://github.com/Xfennec/progress)
 
 ## [haxor-news: hacker new](https://github.com/donnemartin/haxor-news)
 
@@ -846,6 +868,8 @@ silicon test.py -o main.png
 
 ## [glance：自定义dashboard：rss、github release、twitch channel等](https://github.com/glanceapp/glance)
 
+## [amber：编译成bash的编程语言，包含类型安全](https://amber-lang.com/)
+
 # 系统相关
 
 ## [kmon：内核模块、dmesg的tui](https://github.com/orhun/kmon)
@@ -904,6 +928,33 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 
 ## [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](https://github.com/drunkdream/weread-exporter)
 
+## [zerox：pdf转markdown](https://github.com/getomni-ai/zerox)
+
+## [Stirling-PDF：自部署 PDF 处理工具](https://github.com/Stirling-Tools/Stirling-PDF)
+
+# log
+
+## [lnav：tui的vim模式，查看log、json文件](https://github.com/tstack/lnav)
+
+```sh
+# 查看nginx的access日志
+lnav /usr/local/nginx/logs/access.log
+
+# 查看json文集
+lnav file.json
+
+# 查看journalctl
+journalctl | lnav
+
+# 滚动模式
+journalctl -f | lnav
+
+# 设置输出模式
+journalctl -o short-iso | lnav
+journalctl -o json | lnav
+```
+
+## [logdy](https://github.com/logdyhq/logdy-core)
 # modern unix
 
 - [tailspin](https://github.com/bensadeh/tailspin)
@@ -934,6 +985,8 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 
 - [oterm：Ollama客户端](https://github.com/ggozad/oterm)
 
+- [hollama：ollama web客户端](https://github.com/fmaclen/hollama)
+
 - [open-webui：ollama ui](https://github.com/open-webui/open-webui)
 
 - [reor：ai私人助手](https://github.com/reorproject/reor)
@@ -946,6 +999,8 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
     ```
 
 - [aider](https://github.com/paul-gauthier/aider)这是一款运行在终端里的 AI 辅助编码工具，能够将你本地 git 仓库中的代码与 LLMs 结合起来。开发者通过 add 命令引入文件，然后用自然语言描述需求，它就可以对现有的代码进行修改并自动提交，支持接入多种大模型，包括 GPT 3.5、GPT-4 和 Claude 3 Opus 等。
+
+- [exo：组建ai集群](https://github.com/exo-explore/exo)
 
 # reference
 

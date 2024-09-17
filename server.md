@@ -7,6 +7,7 @@
         * [关闭按Control-Alt-Delete就重启](#关闭按control-alt-delete就重启)
     * [su, sudo](#su-sudo)
     * [ssh](#ssh)
+        * [ByteByteGo：SSH 是如何工作的？](#bytebytegossh-是如何工作的)
         * [基本概念](#基本概念)
         * [远程连接](#远程连接)
         * [/etc/ssh/sshd_config 配置文件](#etcsshsshd_config-配置文件)
@@ -49,9 +50,12 @@
         * [rkhunter: 检查 rookit](#rkhunter-检查-rookit)
         * [clamav: 病毒扫描](#clamav-病毒扫描)
         * [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](#sqlmap-自动检测和利用-sql-注入漏洞获得数据库服务器的权限)
+        * [ghauri：自动检测和利用 SQL 注入漏洞](#ghauri自动检测和利用-sql-注入漏洞)
         * [beef: web渗透测试](#beef-web渗透测试)
         * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
         * [hydra：密码破解](#hydra密码破解)
+        * [fscan：开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。](#fscan开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描它使用方便功能全面支持端口扫描常见的服务器爆破web-应用漏洞扫描netbios-嗅探等功能)
+        * [clamav：cisco的反病毒引擎](#clamavcisco的反病毒引擎)
     * [系统监控](#系统监控)
         * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
     * [自动化任务](#自动化任务)
@@ -200,6 +204,77 @@ tz ALL = NOPASSWD: /bin/cat /etc/shadow
 
 
 ## ssh
+
+### [ByteByteGo：SSH 是如何工作的？](https://mp.weixin.qq.com/s/oC3cD_xo5mWK-jYPtU_uhQ)
+
+- SSH 的三个主要层： 传输层、验证层和连接层
+
+    ![image](./Pictures/server/ssh是如何工作的.gif)
+
+- 传输层
+
+    > 传输层提供加密、完整性和数据保护，确保客户端和服务器之间的通信安全。
+
+    - 1.建立 TCP 连接
+        - 客户端启动与 SSH 服务器的 TCP 连接，通常是在 22 端口。
+
+    - 2.协议版本交换
+        - 客户端和服务器交换包含各自支持的 SSH 协议版本的标识字符串。
+
+    - 3.算法协商
+        - 客户端和服务器就加密、密钥交换、MAC（消息验证码）和压缩所使用的加密算法达成一致。
+
+    - 4.密钥交换
+        - 密钥交换算法（如 Diffie-Hellman）用于安全生成共享秘密。这一过程可确保双方在不直接传输的情况下获得相同的会话密钥。
+
+    - 5.会话密钥推导
+        - 会话密钥是从共享秘密和其他交换信息中推导出来的。这些密钥用于加密和解密通信。
+
+    - 6.密码初始化
+        - 双方使用导出的会话密钥初始化各自选择的加密和 MAC 算法。
+
+    - 7.数据完整性和加密
+        - 传输层为客户端和服务器之间的所有后续通信提供数据完整性检查和加密。
+
+- 验证层
+
+    > 验证层验证客户端的身份，确保只有授权用户才能访问服务器。
+
+    - 1.服务请求
+        - 客户端请求 "ssh-userauth "服务。
+
+    - 2.身份验证方法广告
+    服务器公布可用的身份验证方法（如密码、公钥、键盘交互）。
+
+    - 3.客户端身份验证
+
+        - 客户端尝试使用一种或多种可用方法进行身份验证。常见方法包括：
+
+        - 密码验证：客户端向服务器发送密码，由服务器进行验证。
+        - 公钥验证：客户端证明拥有与先前注册的公钥相对应的私钥。
+        - 键盘交互式身份验证：服务器向客户端发送提示，客户端回复所需的信息（如 OTP、安全问题）。
+
+    - 4.身份验证成功/失败
+        - 如果客户端的凭据有效，服务器将允许访问。否则，客户端可尝试其他认证方法或关闭连接。
+
+- 连接层
+
+    > 连接层将加密和认证通信复用为多个逻辑通道。
+
+    - 1.创建通道
+        - 客户端请求为各种类型的通信（如 shell 会话、文件传输、端口转发）打开通道。
+
+    - 2.信道请求
+        - 每个通道请求包括所需服务类型和任何附加参数等详细信息。
+
+    - 3.信道数据传输
+        - 数据通过已建立的信道传输。每个通道独立运行，允许多个服务在一个 SSH 连接上同时运行。
+
+    - 4.关闭通道
+        - 通道可以相互独立关闭，而不会影响整个 SSH 连接。关闭所有通道后，客户端即可终止 SSH 会话。
+
+    - 5.全局请求
+        - 连接层还支持全局请求，全局请求会影响整个连接而不是单个通道（例如，重新加密钥会话）。
 
 ### 基本概念
 
@@ -1316,6 +1391,19 @@ clamscan -r --remove /
 
 ### [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](https://github.com/sqlmapproject/sqlmap)
 
+### [ghauri：自动检测和利用 SQL 注入漏洞](https://github.com/r0oth3x49/ghauri)
+
+- 支持布尔注入、错误注入、时间注入、堆叠注入
+- 支持 MySQL、Microsoft SQL Server、Postgres、Oracle、Microsoft Access 的注入
+- 支持基于 GET/POST的注入、基于 Header 注入、基于 Cookie 注入、表单数据注入、基于 JSON 注入
+- 支持代理选项
+- 支持从 txt 文件解析请求
+- 支持针对数据库、表、列和转储数据提取
+- 支持操作阶段恢复
+- 支持 urlencoding 跳过
+- 支持基于布尔值/时间注入的提取字符验证
+- 支持根据用户需求处理重定向
+
 ### [beef: web渗透测试](https://github.com/beefproject/beef)
 
 ### lynis（安全审计以及加固工具）
@@ -1326,6 +1414,132 @@ lynis audit system
 ```
 
 ### [hydra：密码破解](https://github.com/vanhauser-thc/thc-hydra)
+
+### [fscan：开源的内网安全扫描工具](https://github.com/shadow1ng/fscan)提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。
+
+### [clamav：cisco的反病毒引擎](https://github.com/Cisco-Talos/clamav)
+
+- [KubeSec：ClamAV开源的反病毒引擎](https://mp.weixin.qq.com/s/iaTz7YqbkteaGo4XuX9lHg)
+
+- 它广泛应用于邮件网关、文件服务器和终端设备上，用于检测和删除各种恶意软件，包括病毒、木马、间谍软件等。
+
+
+- 特征
+
+    - ClamAV 旨在快速扫描文件。
+
+    - 实时保护（仅限 Linux）
+
+    - ClamAV 可检测数百万种病毒、蠕虫、木马和其他恶意软件，包括 Microsoft Office 宏病毒、移动恶意软件和其他威胁。
+
+    - ClamAV 的字节码签名运行时由 LLVM 或我们自定义的字节码解释器提供支持，允许 ClamAV 签名编写者创建和分发非常复杂的检测例程并远程增强扫描仪的功能。
+
+    - 签名的签名数据库确保 ClamAV 只执行受信任的签名定义。
+
+    - ClamAV 不仅扫描档案和压缩文件，还能防御档案炸弹。内置档案提取功能包括：
+
+        - Zip（包括 SFX，不包括一些较新或较复杂的扩展）
+        - RAR（包括 SFX，大多数版本）
+        - 7Zip
+        - ARJ (including SFX)
+        - Tar
+        - CPIO
+        - Gzip
+        - Bzip2
+        - DMG
+        - IMG
+        - ISO 9660
+        - PKG
+        - HFS+ partition
+        - HFSX partition
+        - APM disk image
+        - GPT disk image
+        - MBR disk image
+        - XAR
+        - XZ
+        - Microsoft OLE2 (Office documments)
+        - Microsoft OOXML (Office documments)
+        - Microsoft Cabinet Files (including SFX)
+        - Microsoft CHM (Compiled HTML)
+        - Microsoft SZDD compression format
+        - HWP (Hangul Word Processor documents)
+        - BinHex
+        - SIS (SymbianOS packages)
+        - AutoIt
+        - InstallShield
+        - ESTsoft EGG
+
+    - 支持 32/64 位 Windows 可执行文件解析，也称为可移植可执行文件 (PE)，包括压缩或混淆的 PE 文件：
+
+        - AsPack
+        - UPX
+        - FSG
+        - Petite
+        - PeSpin
+        - NsPack
+        - wwpack32
+        - MEW
+        - Upack
+        - Y0da Cryptor
+
+- 支持 ELF 和 Mach-O 文件（32 位和 64 位）
+
+- 支持几乎所有邮件文件格式
+
+- 对其他特殊文件/格式的支持包括：
+
+    - HTML
+    - RTF
+    - PDF
+
+- 使用 CryptFF 和 ScrEnc 加密的文件
+
+    - uuencode
+    - TNEF（winmail.dat）
+
+- 高级数据库更新程序，支持脚本更新、数字签名和基于 DNS 的数据库版本查询
+
+```sh
+# 启动服务
+systemctl start clamav-daemon
+# 查看服务
+systemctl status clamav-daemon
+```
+
+- ClamAV工具
+
+    - `clamd`：是ClamAV的守护进程，为病毒扫描提供一个长期运行的服务，可以通过TCP或Unix套接字与客户端通信
+    - `clamdscan`：是一个命令行工具，通过clamd守护进程进程病毒扫描，扫描速度比clamscan更快
+    - `clamscan`：是一个独立的命令行病毒扫描工具，直接加载病毒库进行扫描，而不需要clamd
+    - `clamdtop`：是一个实时监控工具，用于显示clamd的活动状态，包括内存使用、线程状态等。
+    - `freshclamd`: 是CLamAV的病毒库更新工具
+
+- 配置ClamAV
+
+    - 配置文件是 `/etc/clamav/clamd.conf` 和 `/etc/clamav/freshclam.conf`
+
+    - 启用TCPSocket
+
+    ```
+    vim /etc/clamav/clamd.conf
+    # Comment out or remove the LocalSocket line if it exists
+    # LocalSocket /var/run/clamav/clamd.ctl
+
+    # Uncomment and set the TCPSocket to your desired port number
+    TCPSocket 3310
+
+    # Uncomment and set the TCPAddr to your desired IP address (usually 127.0.0.1 for local access)
+    TCPAddr 0.0.0.0
+    ```
+
+    ```sh
+    # 重启clamd服务
+    systemctl restart clamav-daemon
+
+    # 验证clamd是否启用了TCP socket
+    ss -tulnp | grep clamd
+    tcp   LISTEN 0      15           0.0.0.0:3310      0.0.0.0:*    users:(("clamd",pid=895,fd=4))
+    ```
 
 ## 系统监控
 
@@ -1719,7 +1933,29 @@ include /etc/logrotate.d
 
 - [前端日志展示工具 loganalyzer，其利用的工具有 httpd，php和mysql。](https://github.com/rsyslog/loganalyzer)
 
+- 需要注意的是，虽然rsyslog支持直接从/dev/log中读取日志，但是当前上游以及发行版都关闭了此选项，默认从journal获取日志，防止与journal争夺/dev/log的所有权。
+
 - rsyslog 是syslog 的升级版
+
+- rsyslog负责/var/log/下大部分日志文件的日志生产，当前在/etc/rsyslog.conf中这些日志文件都有默认的配置。
+
+    ```
+    *.info;mail.none;authpriv.none;cron.none                /var/log/messages <== 记录除了mail、authpriv、cron之外，所有的info等级以上的日志
+    authpriv.*                                              /var/log/secure <== 记录权限相关日志pam
+    mail.*                                                  -/var/log/maillog <== 记录邮件相关日志
+    cron.*                                                  /var/log/cron <== 记录定时任务相关日志
+    *.emerg                                                 :omusrmsg:* <== omusrmsg：后的*表示所有用户都会接收到emerg等级的消息，这里可以指定用户
+    uucp,news.crit                                          /var/log/spooler  <== 新闻相关日志
+    local7.*                                                /var/log/boot.log <== 启动相关的所有等级日志(local*用来实现灵活配置设施，local7用于记录系统启动和关机)
+    ```
+
+- rsyslog中，日志按严重程度从低到高，分为下面11类
+
+    ```
+    debug, info, notice, warning, warn (same as warning), err, error (same as err), crit, alert, emerg, panic (same as emerg)
+    ```
+
+    - 以 systemd 中打印日志为例，打印emerg等级的日志函数log_emergency_errno最后就是通过给journal socket发送消息完成，后续日志的回显和打印都是交给journal操作。
 
 - 两种配置模式：
 
