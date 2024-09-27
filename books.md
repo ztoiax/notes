@@ -1,64 +1,109 @@
+<!-- mtoc-start -->
+
 * [免费在线书籍](#免费在线书籍)
-    * [计算理论](#计算理论)
-    * [Program Language(编程语言)](#program-language编程语言)
-        * [汇编](#汇编)
-        * [C/C++](#cc)
-        * [Java](#java)
-        * [Go](#go)
-        * [Rust](#rust)
-        * [Lisp](#lisp)
-        * [Haskell](#haskell)
-        * [Python](#python)
-            * [数据科学](#数据科学)
-            * [框架](#框架)
-        * [Lua](#lua)
-        * [php](#php)
-        * [julia](#julia)
-        * [vim](#vim)
-    * [algorithm(算法)](#algorithm算法)
-        * [算法题](#算法题)
-    * [图形学](#图形学)
-    * [database(数据库)](#database数据库)
-        * [分布式](#分布式)
-    * [软件开发](#软件开发)
-    * [软件工程](#软件工程)
-    * [Operating System(操作系统)](#operating-system操作系统)
-    * [architecture(体系结构)](#architecture体系结构)
-    * [compile(编译)](#compile编译)
-    * [调试](#调试)
-    * [network(网络)](#network网络)
-    * [web](#web)
-        * [Javascript](#javascript)
-            * [框架](#框架-1)
-        * [TypeScript](#typescript)
-        * [nodejs](#nodejs)
-    * [运维](#运维)
-        * [cloud](#cloud)
-        * [Devops](#devops)
-    * [存储](#存储)
-    * [区块链](#区块链)
-    * [数据科学](#数据科学-1)
-    * [game(游戏)](#game游戏)
-    * [AI(人工智能)](#ai人工智能)
-    * [硬件](#硬件)
-    * [数据科学](#数据科学-2)
-    * [文档](#文档)
-    * [编码](#编码)
-    * [数学](#数学)
-    * [英语](#英语)
-    * [文档](#文档-1)
-    * [健康](#健康)
-    * [gps](#gps)
-    * [视频](#视频)
+  * [计算理论](#计算理论)
+  * [Program Language(编程语言)](#program-language编程语言)
+    * [汇编](#汇编)
+    * [C/C++](#cc)
+    * [Java](#java)
+    * [Go](#go)
+    * [Rust](#rust)
+    * [Lisp](#lisp)
+    * [Haskell](#haskell)
+    * [Python](#python)
+      * [数据科学](#数据科学)
+      * [框架](#框架)
+    * [Lua](#lua)
+    * [php](#php)
+    * [julia](#julia)
+    * [vim](#vim)
+  * [algorithm(算法)](#algorithm算法)
+    * [算法题](#算法题)
+  * [图形学](#图形学)
+  * [database(数据库)](#database数据库)
+    * [mysql](#mysql)
+    * [redis](#redis)
+    * [postgresql](#postgresql)
+    * [分布式](#分布式)
+  * [软件开发](#软件开发)
+  * [软件工程](#软件工程)
+  * [Operating System(操作系统)](#operating-system操作系统)
+  * [architecture(体系结构)](#architecture体系结构)
+  * [compile(编译)](#compile编译)
+  * [调试](#调试)
+  * [network(网络)](#network网络)
+  * [web](#web)
+    * [Javascript](#javascript)
+      * [框架](#框架-1)
+    * [TypeScript](#typescript)
+    * [nodejs](#nodejs)
+  * [运维](#运维)
+    * [cloud](#cloud)
+    * [Devops](#devops)
+  * [存储](#存储)
+  * [区块链](#区块链)
+  * [数据科学](#数据科学-1)
+  * [game(游戏)](#game游戏)
+  * [AI(人工智能)](#ai人工智能)
+  * [机器人](#机器人)
+  * [硬件](#硬件)
+    * [GPU](#gpu)
+  * [数据科学](#数据科学-2)
+  * [文档](#文档)
+  * [编码](#编码)
+  * [数学](#数学)
+  * [英语](#英语)
+  * [文档](#文档-1)
+  * [健康](#健康)
+  * [gps](#gps)
+  * [视频](#视频)
 * [学术期刊/学会](#学术期刊学会)
 * [其他相似项目](#其他相似项目)
 * [免费在线书籍阅读](#免费在线书籍阅读)
 * [笔记](#笔记)
 * [大学课程](#大学课程)
 * [论文](#论文)
+* [rss源](#rss源)
 * [职业和面试](#职业和面试)
-    * [裁员](#裁员)
+  * [美国互联网企业](#美国互联网企业)
+    * [小林coding：在美国投了五百份简历，没人理我。。](#小林coding在美国投了五百份简历没人理我)
+  * [裁员](#裁员)
 * [有趣的言论](#有趣的言论)
+* [优质的b站up主、微信公众号等](#优质的b站up主微信公众号等)
+  * [计算机](#计算机)
+  * [科技](#科技)
+  * [汽车](#汽车)
+  * [地理和气象](#地理和气象)
+  * [运动](#运动)
+  * [健康](#健康-1)
+  * [食品和食品安全](#食品和食品安全)
+  * [美食探店](#美食探店)
+  * [买菜](#买菜)
+  * [做菜](#做菜)
+  * [农业和水产](#农业和水产)
+  * [纺织](#纺织)
+  * [预防诈骗](#预防诈骗)
+  * [游戏](#游戏)
+  * [影视](#影视)
+  * [音乐](#音乐)
+  * [科学](#科学)
+  * [哲学](#哲学)
+  * [美术](#美术)
+  * [文学](#文学)
+  * [历史](#历史)
+  * [政治](#政治)
+  * [军事](#军事)
+  * [社会](#社会)
+  * [法律](#法律)
+  * [心理](#心理)
+  * [经济](#经济)
+  * [金融](#金融)
+  * [城市规划](#城市规划)
+  * [产业](#产业)
+  * [新闻](#新闻)
+* [数据](#数据)
+
+<!-- mtoc-end -->
 
 # 免费在线书籍
 
@@ -123,6 +168,8 @@
 - [《Go 入门指南》](https://github.com/unknwon/the-way-to-go_ZH_CN/blob/master/eBook/directory.md)
 
 - [《Go语言高级编程》](https://chai2010.cn/advanced-go-programming-book/)
+
+- [Go 语言必知必会](https://golang.dbwu.tech/)
 
 - [《Mastering GO》(玩转 GO)](https://wskdsgcf.gitbook.io/mastering-go-zh-cn/)
 
@@ -393,6 +440,8 @@
 
 - [system design（系统设计）](https://github.com/karanpratapsingh/system-design)
 
+- [《系统设计面试：内幕指南》（《System Design Interview: An Insider’s Guide》的翻译）](https://github.com/Admol/SystemDesign)
+
 - [设计模式,图解+代码](https://refactoringguru.cn/design-patterns)
 
 - [图说设计模式](https://design-patterns.readthedocs.io/zh_CN/latest/index.html#)
@@ -558,6 +607,8 @@
 
 - [我爱上了 Makefile](https://gagor.pro/2024/02/how-i-stopped-worrying-and-loved-makefiles/)
 
+- [《CLI text processing with GNU Coreutils》](https://learnbyexample.github.io/cli_text_processing_coreutils/)
+
 - [运维实践指南](https://billwang139967.gitbooks.io/op_practice_book/content/)
 
 - [《微服务：从设计到部署》](https://docshome.gitbook.io/microservices/)
@@ -605,6 +656,10 @@
 - [深入架构原理与实践](https://www.thebyte.com.cn/)
 
 - [《Istio 服务网格进阶实战》](https://www.servicemesher.com/istio-handbook/)
+
+- [istio 实践指南](https://imroc.cc/istio)
+
+- [Istio 运维实战](https://istio-operation-bible.aeraki.net/docs/)
 
 - [k8s_PaaS：教你用 K8s 部署一套完整服务的教程](通过该教程你可以学习到如何部署 Kubernetes 集群，以及在此基础上搭建由 Apollo、Jenkins、Prometheus 等服务组成的完整的软件研发和部署平台。)
 
@@ -729,6 +784,8 @@
 
 - [腾讯技术工程：数据序列化工具Protobuf编码&避坑指南](https://cloud.tencent.com/developer/article/2302699)
 
+- [mermaid：思维导图](https://mermaid.js.org/intro/)
+
 ## 编码
 
 - [浮点数二进制表示](https://devtool.tech/double-type)
@@ -763,6 +820,8 @@
 ## 英语
 
 - [grammar-club：《语法俱乐部》。这是旋元佑老师写的一本英语语法书籍，旨在帮助读者建立扎实的语法基础，适合各个水平的英语学习者。](https://github.com/llwslc/grammar-club)
+
+- [DictionaryByGPT4：用 GPT-4 生成的英语单词书。该项目通过 GPT-4 分析中考、高考、及四六级考试中的 8000 多个英语单词，生成了一本英语词汇书。书中详细介绍了每个单词的词义、词根、词缀、例句，以及发展历史和文化背景等。](https://github.com/Ceelog/DictionaryByGPT4)
 
 - [离谱的英语学习指南/英语学习教程](https://github.com/byoungd/English-level-up-tips)
 
@@ -1190,6 +1249,9 @@
     - 真没什么逻辑
         > go语言、k8s、微架构
 
+    - 洋芋编程
+        > k8s、tcp网络原理、go语言
+
 - Prometheus：
 
     - 蜀道运维
@@ -1359,6 +1421,9 @@ RabbitMQ实战指南》作者
     - DF创客社区
         > 开源硬件
 
+    - 低并发编程
+        > linux相关
+
 ## 科技
 
 - bilibili
@@ -1402,6 +1467,8 @@ RabbitMQ实战指南》作者
 
         - [知乎蓝大仙人：电视评测。智能电视选购网创始人](https://space.bilibili.com/34586446)
 
+    - [TESTV官方频道：各种数码产品体验](https://space.bilibili.com/11336264)
+
     - [硬件茶谈：数码知识科普。三维动画做得好](https://space.bilibili.com/14871346)
 
     - [短的发布会：手机发布会搞笑式介绍](https://space.bilibili.com/287795639)
@@ -1417,6 +1484,10 @@ RabbitMQ实战指南》作者
     - [在下莫老师：折腾pe系统，游戏模拟器](https://space.bilibili.com/1995424953)
 
     - [技术爬爬虾：linux服务折腾](https://space.bilibili.com/316183842)
+
+    - [无情开评：服务器硬件评测](https://space.bilibili.com/514160575)
+
+    - [索拉里斯风：硬件nas折腾](https://space.bilibili.com/15392425)
 
     - [司波图：硬件nas、kodi影音搞机](https://space.bilibili.com/28457)
 
@@ -1575,6 +1646,10 @@ RabbitMQ实战指南》作者
 
     - 北京反洗钱研究
     - 中信建设反洗钱
+
+## 游戏
+
+- [芒果冰OL：游戏史](https://space.bilibili.com/617285)
 
 ## 影视
 
@@ -2007,6 +2082,9 @@ RabbitMQ实战指南》作者
     - 付鹏的财经世界
         > 东北证劵首席付鹏
 
+    - 彭文生视点
+        > 中金首席彭文生
+
 ## 金融
 
 - bilibili
@@ -2047,6 +2125,9 @@ RabbitMQ实战指南》作者
 
     - 清科研究
         > 投资
+
+    - Nick聊投资
+        > 投资，看财报
 
     - 爱选科技
         > 保险

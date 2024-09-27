@@ -107,6 +107,8 @@
 
 - [pot-desktop：划词翻译，并支持ocr](https://github.com/pot-app/pot-desktop)
 
+- [PicGo：图床上传下载](https://github.com/Molunerfinn/PicGo)
+
 ## image viewer(图片查看器)
 
 ### qt
@@ -132,6 +134,11 @@
 - [Snipaste：windows很出名的截图软件。支持窗口识别，固定截图](https://github.com/Snipaste)
 
 - [flameshot：火焰截图](https://github.com/flameshot-org/flameshot)
+
+# 视频
+- [pyvideotrans：视频配音转换语言](https://github.com/jianchang512/pyvideotrans)
+
+- [lossless-cut：视频剪切软件，目标是成为 FFmpeg 的图形前端。](https://github.com/mifi/lossless-cut)
 
 # note
 
@@ -209,6 +216,54 @@
 - [neko：该项目是运行在 Docker 容器中的自托管虚拟浏览器环境，为用户提供安全、隔离和功能齐全的虚拟浏览器。](https://github.com/m1k1o/neko)
 
 - [fluent-reader：rss订阅和阅读器](https://github.com/yang991178/fluent-reader)
+
+- [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
+
+- [waydroid：安卓系统。并不是模拟器，而是直接构建](https://github.com/waydroid/waydroid)
+
+    - [在下莫老师：在PC上满速运行Android应用，WayDroid安装使用指南](https://www.bilibili.com/video/BV18z421B7YB)
+
+    - 不支持英伟达gpu，只支持intel和amd
+    - 运行在wayland，但x11也可以运行可以安装`weston`，然后在`weston`下启动waydroid
+        ```sh
+        # 打开weston
+        weston
+
+        # 打开终端
+
+        # 设置环境为wayland，避免报错
+        export XDG_SESSION_TYPE=wayland
+
+        # 启动waydroid
+        sudo systemctl restart waydroid-container.service
+
+        # 显示界面
+        waydroid show-full-ui
+        ```
+
+    - 需要内核需要安装binder模块。可以直接安装`linux-zen`内核，也可以安装`binder_linux-dkms`
+
+    - [waydroid_script：安装gapp、面具、arm转移层等脚本](https://github.com/casualsnek/waydroid_script)
+        - arm转移层，amd推荐使用`libndk`；intel推荐使用`libhoudini`
+
+    - 剪切板需要安装`python-pyclip`
+
+    ```sh
+    # 设置多窗口
+    waydroid prop set persist.waydroid.multi_windows true
+    # 防止多窗口时，出现多个鼠标指针
+    waydroid prop set persist.waydroid.cursor_on_subsurface true
+    # 鼠标模拟触控
+    waydroid prop set persist.waydroid.fake_touch com.hypergryph.arknights
+
+    # 将Download文件夹挂载到waydroid里
+    sudo mount --bind ~/Downloads ~/.local/share/waydroid/data/media/0/Download
+    ```
+
+    ```sh
+    # 下载waydroid脚本
+    git clone https://github.com/casualsnek/waydroid_script
+    ```
 
 # 类似项目
 

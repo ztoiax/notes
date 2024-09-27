@@ -186,11 +186,19 @@
 
 - [tvbox手机版](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile)
 
+- [mytv-android：电视直播](https://github.com/yaoxieyoulei/mytv-android)
+
 - [GoGoGo：地图定位修改](https://github.com/ZCShou/GoGoGo)
 
 - [NewPipe：youtube客户端，免广告、免登陆订阅、有下载功能、免会员观看](https://github.com/TeamNewPipe/NewPipe)
 
 - [EtchDroid：无需root，将img写入插入otg线的u盘](https://github.com/EtchDroid/EtchDroid)
+
+- [AListFlutter：alist安卓版，局域网视频观看](https://github.com/jing332/AListFlutter)
+
+    - [在下莫老师：旧手机变网盘！无需代码，在手机上快速部署Alist](https://www.bilibili.com/video/BV1vq421c7kW)
+
+- [ImageToolbox：Android 设计的图像编辑工具。它完全免费，支持批量处理、滤镜、背景移除、尺寸调整和裁剪等多种功能。](https://github.com/T8RIN/ImageToolbox)
 
 # 刷机
 

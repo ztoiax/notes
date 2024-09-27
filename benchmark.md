@@ -594,6 +594,8 @@ MiB Swap:   4096.0 total,   4095.7 free,      0.2 used.   4863.7 avail Mem
                 # 可以看到：CPU0 的 wa 降低为 0 了，与此同时 us 和 sy 的时间占比接近 100% 。CPU 在 iowait 状态的时候能执行了其他任务。但这就说明 dd 命令产生的进程没有阻塞在 I/O 上吗？并不是。
                 ```
 
+## [sampler：通过yaml文件自定义监控的指标。还支持mysql、kafka等](https://github.com/sqshq/sampler)
+
 ## [flent：可以同时运行多个 netperf/iperf/ping 实例并聚合结果，通过交互式 GUI 和可扩展的绘图功能展示数据，支持本地和远程主机，支持采集 CPU 使用率、WiFi、qdisc 和 TCP 套接字统计信息等。](https://github.com/tohojo/flent)
 
 - [官方文档](https://flent.org/contents.html)
@@ -2101,6 +2103,8 @@ stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
 **reference:**
 
 - [Memory Leak (and Growth) Flame Graphs](http://www.brendangregg.com/FlameGraphs/memoryflamegraphs.html)
+
+### [0xtools](https://github.com/tanelpoder/0xtools)
 
 ## [perf-tool](http://www.brendangregg.com/perf.html)
 

@@ -65,6 +65,8 @@
 
 - [GestureSign：触控板手势](https://github.com/TransposonY/GestureSign)
 
+- [glazewm：平铺窗口管理器，类似i3](https://github.com/glzr-io/glazewm)
+
 ## 手机与电脑交互
 
 - [intel unison：手机电脑消息、文件传输]()

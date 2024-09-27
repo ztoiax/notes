@@ -5463,7 +5463,9 @@ location / {
 
 ### 客户端
 
-#### [ngxtop 日志监控](https://github.com/lebinh/ngxtop)
+#### [nginx-ui：Nginx 在线管理平台，它开箱即用、功能丰富，支持流量统计、在线查看 Nginx 日志、编辑 Nginx 配置文件、自动检查和重载配置文件等功能。](https://github.com/0xJacky/nginx-ui)
+
+#### [ngxtop：日志监控](https://github.com/lebinh/ngxtop)
 
 ```sh
 sudo ngxtop -l /usr/local/nginx/logs/access/80.access.log

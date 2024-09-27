@@ -123,6 +123,8 @@ curl -LO https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.13
 
 - [崔亮的博客：ELK Stack生产实践——性能压测工具esrally](https://mp.weixin.qq.com/s/05wgfsXD5KTjwkjiCSjnpw)
 
+- [鹅厂架构师：【万字长文】ES搜索优化实践](https://zhuanlan.zhihu.com/p/720931769)
+
 ## FSCrawler
 
 - [铭毅天下Elasticsearch：Elasticsearch FSCrawler 文档爬虫学习，请先看这一篇！](https://mp.weixin.qq.com/s/5_bvwUQdqUOQj76CNu4ZAQ)

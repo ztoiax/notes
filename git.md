@@ -792,6 +792,12 @@ git commit -m "..."
 
 ### [gitbutler：git的gui](https://github.com/gitbutlerapp/gitbutler)
 
+### [diffnav：增强git diff功能](https://github.com/dlvhdr/diffnav)
+
+```sh
+git diff | diffnav
+```
+
 # repo：google的git
 
 - 要解决存放 Android 源代码的需求，Google 有个工具叫“repo”。它可以管理多个 git repo，就好像一个巨大的 repo 一样。这个工具支持 Linux 和 macOS，但是 Windows 上基本没法用。
@@ -843,6 +849,22 @@ curl -s https://api.github.com/repos/prometheus/mysqld_exporter/releases/latest 
 ## code action
 
 - [GitHub Actions by Example](https://www.actionsbyexample.com/?utm_source=hackernewsletter&utm_medium=email&utm_term=code)
+
+- [（视频）技术爬爬虾：Github的王炸功能，但很少人知道怎么用？免费运行程序，流水线编译部署，天气推送 签到薅羊毛 领京豆 CI/CD持续集成持续部署](https://www.bilibili.com/video/BV11e411i7Xx)
+
+## 个人网站
+
+- [（视频）技术爬爬虾：Github王炸功能Pages,免费免服务器上线网站,详细教程](https://www.bilibili.com/video/BV12H4y1N7Q4)
+
+
+## clone下载子目录
+
+- [github-dlr](https://github.com/rocktimsaikia/github-dlr)
+
+```sh
+# 只clone下载ags目录
+github-dlr https://github.com/Aylur/dotfiles/tree/main/ags
+```
 
 ## 第三方github工具
 

@@ -173,7 +173,9 @@ xsv select input,output test.csv
 xsv search -s input '[0-4]' test.csv
 ```
 
-## [csvlens：tui查看csv文件](https://github.com/YS-L/csvlens)
+## [tabiew：tui查看csv、tsv、json](https://github.com/shshemi/tabiew)
+
+## [csvlens：tui查看csv、json](https://github.com/YS-L/csvlens)
 
 ## [OctoSQL: sql语句查看文件](https://github.com/cube2222/octosql)
 
@@ -262,6 +264,9 @@ gh release list
 
 # char
 
+## [tp：tui实时输出基础命令。如find、grep、jq等](https://github.com/minefuto/tp)
+
+## [docfd：tui的grep。支持fuzzy](https://github.com/darrenldl/docfd)
 ## [viddy:instead watch](https://github.com/sachaos/viddy)
 
 ## [eza：highlight ls](https://github.com/eza-community/eza)
@@ -870,6 +875,8 @@ silicon test.py -o main.png
 
 ## [amber：编译成bash的编程语言，包含类型安全](https://amber-lang.com/)
 
+## [trufflehog：发现和验证 Git 仓库中泄露的凭证和敏感信息。](https://github.com/trufflesecurity/trufflehog)
+
 # 系统相关
 
 ## [kmon：内核模块、dmesg的tui](https://github.com/orhun/kmon)
@@ -961,6 +968,8 @@ journalctl -o json | lnav
 
 # markdown
 
+- [see：markdown好看的浏览](https://github.com/guilhermeprokisch/see)
+
 - [glow：markdown好看的浏览](https://github.com/charmbracelet/glow)
     ![image](./Pictures/awesomecli/16.avif)
 
@@ -973,6 +982,13 @@ journalctl -o json | lnav
 - [slidev: markdown写ppt](https://github.com/slidevjs/slidev)
 
 - [markdown写ppt](https://github.com/webpro/reveal-md/)
+
+- [rucola：markdown管理tui](https://github.com/Linus-Mussmaecher/rucola)
+
+- [mermaid-cli：markdown转思维导图](https://github.com/mermaid-js/mermaid-cli)
+    ```sh
+    mmdc -i input.mmd -o output.svg
+    ```
 
 # ai
 
