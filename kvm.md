@@ -1,28 +1,29 @@
-<!-- vim-markdown-toc GFM -->
+
+<!-- mtoc-start -->
 
 * [虚拟化](#虚拟化)
-    * [kvm: 内核模块](#kvm-内核模块)
-    * [qemu: 硬件模拟器](#qemu-硬件模拟器)
-        * [qemu-img(查看镜像信息)](#qemu-img查看镜像信息)
-        * [qemu-system-x86_64 安装](#qemu-system-x86_64-安装)
-        * [qemu monitor](#qemu-monitor)
-            * [virtio](#virtio)
-            * [hugepage](#hugepage)
-    * [libvirt: 虚拟机管理接口](#libvirt-虚拟机管理接口)
-        * [普通用户连接 qemu:///system](#普通用户连接-qemusystem)
-        * [vnc打开虚拟机](#vnc打开虚拟机)
-        * [virsh](#virsh)
-            * [基本命令](#基本命令)
-            * [快照snapshot](#快照snapshot)
-            * [网络](#网络)
-                * [通过修改dhcp配置文件default，自定义ip地址](#通过修改dhcp配置文件default自定义ip地址)
-        * [克隆虚拟机](#克隆虚拟机)
-    * [KSM(Kernel Samepage Merging)](#ksmkernel-samepage-merging)
-    * [gpu虚拟化](#gpu虚拟化)
+  * [kvm: 内核模块](#kvm-内核模块)
+  * [qemu: 硬件模拟器](#qemu-硬件模拟器)
+    * [qemu-img(查看镜像信息)](#qemu-img查看镜像信息)
+    * [qemu-system-x86_64 安装](#qemu-system-x86_64-安装)
+    * [qemu monitor](#qemu-monitor)
+      * [virtio](#virtio)
+      * [hugepage](#hugepage)
+  * [libvirt: 虚拟机管理接口](#libvirt-虚拟机管理接口)
+    * [普通用户连接 qemu:///system](#普通用户连接-qemusystem)
+    * [vnc打开虚拟机](#vnc打开虚拟机)
+    * [virsh](#virsh)
+      * [基本命令](#基本命令)
+      * [快照snapshot](#快照snapshot)
+      * [网络](#网络)
+        * [通过修改dhcp配置文件default，自定义ip地址](#通过修改dhcp配置文件default自定义ip地址)
+    * [克隆虚拟机](#克隆虚拟机)
+  * [KSM(Kernel Samepage Merging)](#ksmkernel-samepage-merging)
+  * [gpu虚拟化](#gpu虚拟化)
 * [第三方软件资源](#第三方软件资源)
 * [优秀文章](#优秀文章)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
 # 虚拟化
 

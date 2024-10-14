@@ -1,10 +1,11 @@
-<!-- vim-markdown-toc GFM -->
+
+<!-- mtoc-start -->
 
 * [yum](#yum)
-    * [yum源](#yum源)
-    * [repo](#repo)
+  * [yum源](#yum源)
+  * [repo](#repo)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
 # yum
 

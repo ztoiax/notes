@@ -1342,6 +1342,8 @@
     - 朱小厮的博客
         > 《深入理解Kafka：核心设计与实践原理》和《
 RabbitMQ实战指南》作者
+    - 运维如诗
+        > prometheus、k8s
 
 - 折腾linux相关
 
@@ -1353,6 +1355,8 @@ RabbitMQ实战指南》作者
     - [PegasusWang](https://space.bilibili.com/288339968)
     - [TheCW](https://space.bilibili.com/13081489)
     - [Houge_Langley](https://space.bilibili.com/40420441)
+
+    - [unixchad：linux不常用软件折腾](https://space.bilibili.com/34569411)
 
     - HelloGithub
     - Python猫
@@ -1423,6 +1427,9 @@ RabbitMQ实战指南》作者
 
     - 低并发编程
         > linux相关
+
+    - AIGC开放社区
+        > ai大模型
 
 ## 科技
 
@@ -1497,6 +1504,14 @@ RabbitMQ实战指南》作者
 
     - [单毅讲装修：家电、装修](https://space.bilibili.com/222157543)
 
+    - [飞蚊话：linux桌面](https://space.bilibili.com/268630727)
+
+    - [LuvLetter：安卓、ios技术科普](https://space.bilibili.com/546418)
+
+    - [二进制的老王：硬盘评测、硬盘数据恢复](https://space.bilibili.com/18731657)
+
+    - [钱韦德：硬盘评测、nas体验](https://space.bilibili.com/20274090)
+
 - 微信公众号
 
     - 电脑吧评测室
@@ -1537,11 +1552,25 @@ RabbitMQ实战指南》作者
 
 ## 运动
 
-- [零天赋射手](https://space.bilibili.com/319522796)
+- 力量训练：
 
-- [黄老师的体育课](https://space.bilibili.com/695276945)
+    - [MuscleUp街头健身](https://space.bilibili.com/260509354)
 
-- [跑步的子章老师](https://space.bilibili.com/451645162)
+- 跑步：
+
+    - [尚跑圈](https://space.bilibili.com/1020817820)
+
+    - [跑步的子章老师](https://space.bilibili.com/451645162)
+
+    - [零天赋射手](https://space.bilibili.com/319522796)
+
+- 跳跃：
+
+    - [黄老师的体育课](https://space.bilibili.com/695276945)
+
+- 格斗
+
+    - [TonyJeffries：08年北京奥运会拳击铜牌得主、世界第一拳击教育家](https://space.bilibili.com/3546373657987544)
 
 ## 健康
 
@@ -1661,6 +1690,10 @@ RabbitMQ实战指南》作者
 - [边江说](https://space.bilibili.com/424170847)：《冰与火之歌》解说，自己也是个小说家
 
 - [貔柴](https://space.bilibili.com/70942172)：宫斗剧
+
+- [1900影剧室](https://space.bilibili.com/17223352)
+
+- [电影最TOP](https://space.bilibili.com/17819768)
 
 ## 音乐
 
@@ -1810,6 +1843,8 @@ RabbitMQ实战指南》作者
         - Kritik人文社
         - 毛邓理论研究
         - 湘大毛研中心
+        - 设计-建筑与现代性
+            > 现代性、数字资本主义
 
     - 国学
         - 人文新陈来
@@ -1836,6 +1871,8 @@ RabbitMQ实战指南》作者
     - [可可周老师](https://space.bilibili.com/513531271)
 
     - [钱理群讲鲁迅](https://space.bilibili.com/1892359255)
+
+    - [二二酸酸](https://space.bilibili.com/106685726)
 
 - 微信公众号
 
@@ -2084,6 +2121,9 @@ RabbitMQ实战指南》作者
 
     - 彭文生视点
         > 中金首席彭文生
+
+    - 凭澜观涛
+        > 中银证劵首席、曾任国家外汇管理局国际收支司司长管涛
 
 ## 金融
 

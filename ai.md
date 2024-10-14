@@ -1,3 +1,34 @@
+<!-- mtoc-start -->
+
+* [思想](#思想)
+* [技术](#技术)
+  * [Mojo：面向 AI 的编程语言](#mojo面向-ai-的编程语言)
+  * [LLM](#llm)
+    * [原理](#原理)
+    * [在线模型](#在线模型)
+    * [使用](#使用)
+    * [商业](#商业)
+* [项目](#项目)
+  * [LLM](#llm-1)
+    * [prompt提示词](#prompt提示词)
+    * [RAG框架](#rag框架)
+  * [Transformer](#transformer)
+  * [ai编程，代码生成和代码补全](#ai编程代码生成和代码补全)
+  * [图片与视频等多媒体相关](#图片与视频等多媒体相关)
+    * [图片和视频理解](#图片和视频理解)
+    * [文生成图片](#文生成图片)
+    * [文生成视频](#文生成视频)
+  * [SAM](#sam)
+  * [图片视频](#图片视频)
+  * [语音转文字](#语音转文字)
+* [文字传语音](#文字传语音)
+  * [操作系统](#操作系统)
+  * [ai程序员](#ai程序员)
+* [ai测试](#ai测试)
+* [在线ai工具](#在线ai工具)
+
+<!-- mtoc-end -->
+
 # 思想
 
 - [Sam Altman：Moore's Law for Everything](https://moores.samaltman.com/)
@@ -178,6 +209,18 @@
 ## 图片视频
 
 - [dandere2x：使用waifu2x提升视频质量](https://github.com/akai-katto/dandere2x)
+
+- [ProPainter：通过ai移除物体（可以很好的去水印）](https://github.com/sczhou/ProPainter)
+
+- [UVR5：分离人声和背景音乐](https://github.com/Anjok07/ultimatevocalremovergui)
+
+## 语音转文字
+
+- [whisper：openai的模型](https://github.com/openai/whisper)
+
+# 文字传语音
+
+- [edge-tts：微软的模型](https://github.com/rany2/edge-tts)
 
 ## 操作系统
 

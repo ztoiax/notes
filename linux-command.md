@@ -1,70 +1,73 @@
-<!-- vim-markdown-toc GFM -->
+
+<!-- mtoc-start -->
 
 * [常用命令](#常用命令)
-    * [file (文件操作)](#file-文件操作)
-        * [create file](#create-file)
-        * [paste(合并文件列)](#paste合并文件列)
-        * [diff,patch 使用](#diffpatch-使用)
-        * [make](#make)
-            * [Note: 每行命令之前必须有一个 tab 键,不然会报错](#note-每行命令之前必须有一个-tab-键不然会报错)
-            * [Note: 需要注意的是，每行命令在一个单独的 shell 中执行。这些 Shell 之间没有继承关系。(make var-lost），取不到 foo 的值。因为两行命令在两个不同的进程执行。一个解决办法是将两行命令写在一行，中间用分号分隔。](#note-需要注意的是每行命令在一个单独的-shell-中执行这些-shell-之间没有继承关系make-var-lost取不到-foo-的值因为两行命令在两个不同的进程执行一个解决办法是将两行命令写在一行中间用分号分隔)
-            * [checkmake检查makefile](#checkmake检查makefile)
-        * [lsof](#lsof)
-        * [rsync](#rsync)
-            * [UDR模式](#udr模式)
-        * [scp](#scp)
-        * [split](#split)
-        * [fsarchiver](#fsarchiver)
-        * [find](#find)
-        * [fselect: sql语句的ls](#fselect-sql语句的ls)
-        * [locate:定位文件](#locate定位文件)
-        * [shred：安全地抹去磁盘数据。代替rm](#shred安全地抹去磁盘数据代替rm)
-    * [char (字符串操作)](#char-字符串操作)
-        * [column](#column)
-        * [tr](#tr)
-        * [cut](#cut)
-        * [sed](#sed)
-        * [awk](#awk)
-        * [tac(反转行)](#tac反转行)
-        * [paste](#paste)
-        * [perl5](#perl5)
-        * [perl6(Raku)](#perl6raku)
-            * [module](#module)
-            * [个人觉得perl6中有趣的设计](#个人觉得perl6中有趣的设计)
-    * [other](#other)
-        * [xargs](#xargs)
-        * [date](#date)
-        * [fuser](#fuser)
-        * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
-        * [openssl](#openssl)
-        * [gnuplot](#gnuplot)
-        * [shellcheck](#shellcheck)
-        * [pandoc 文档转换](#pandoc-文档转换)
-        * [jobs, fg, bg, nohup, disown, reptyr](#jobs-fg-bg-nohup-disown-reptyr)
-    * [expect交互](#expect交互)
-    * [调整分区大小](#调整分区大小)
-    * [mdadm(RAID)](#mdadmraid)
-        * [创建 RAID5](#创建-raid5)
-        * [创建 RAID5,并设置备份磁盘](#创建-raid5并设置备份磁盘)
-        * [保存配置文件](#保存配置文件)
-        * [性能测试](#性能测试)
-        * [硬盘装载](#硬盘装载)
-        * [卸载 RAID](#卸载-raid)
-    * [视频/图片](#视频图片)
-        * [ffmpeg](#ffmpeg)
-            * [-vf视频过滤器](#-vf视频过滤器)
-            * [音频操作](#音频操作)
-            * [图片操作](#图片操作)
-            * [录屏](#录屏)
-            * [plotbitrate](#plotbitrate)
-        * [gif](#gif)
-            * [gifview](#gifview)
-            * [gifdiff](#gifdiff)
-            * [convert(gif制作)](#convertgif制作)
-            * [gifsicle:gif工具支持压缩、合并、编辑帧、减少帧](#gifsiclegif工具支持压缩合并编辑帧减少帧)
+  * [file (文件操作)](#file-文件操作)
+    * [create file](#create-file)
+    * [paste(合并文件列)](#paste合并文件列)
+    * [diff,patch 使用](#diffpatch-使用)
+    * [make](#make)
+      * [Note: 每行命令之前必须有一个 tab 键,不然会报错](#note-每行命令之前必须有一个-tab-键不然会报错)
+      * [Note: 需要注意的是，每行命令在一个单独的 shell 中执行。这些 Shell 之间没有继承关系。(make var-lost），取不到 foo 的值。因为两行命令在两个不同的进程执行。一个解决办法是将两行命令写在一行，中间用分号分隔。](#note-需要注意的是每行命令在一个单独的-shell-中执行这些-shell-之间没有继承关系make-var-lost取不到-foo-的值因为两行命令在两个不同的进程执行一个解决办法是将两行命令写在一行中间用分号分隔)
+      * [checkmake检查makefile](#checkmake检查makefile)
+    * [lsof](#lsof)
+    * [rsync](#rsync)
+      * [UDR模式](#udr模式)
+    * [scp](#scp)
+    * [split](#split)
+    * [fsarchiver](#fsarchiver)
+    * [find](#find)
+    * [fselect: sql语句的ls](#fselect-sql语句的ls)
+    * [locate:定位文件](#locate定位文件)
+    * [shred：安全地抹去磁盘数据。代替rm](#shred安全地抹去磁盘数据代替rm)
+  * [char (字符串操作)](#char-字符串操作)
+    * [column](#column)
+    * [tr](#tr)
+    * [cut](#cut)
+    * [sed](#sed)
+    * [awk](#awk)
+    * [tac(反转行)](#tac反转行)
+    * [paste](#paste)
+    * [perl5](#perl5)
+    * [perl6(Raku)](#perl6raku)
+      * [module](#module)
+      * [个人觉得perl6中有趣的设计](#个人觉得perl6中有趣的设计)
+    * [shred：安全删除文件](#shred安全删除文件)
+    * [加密文件](#加密文件)
+  * [other](#other)
+    * [xargs](#xargs)
+    * [date](#date)
+    * [fuser](#fuser)
+    * [列出子目录的大小，并计总大小](#列出子目录的大小并计总大小)
+    * [openssl](#openssl)
+    * [gnuplot](#gnuplot)
+    * [shellcheck](#shellcheck)
+    * [pandoc 文档转换](#pandoc-文档转换)
+    * [jobs, fg, bg, nohup, disown, reptyr](#jobs-fg-bg-nohup-disown-reptyr)
+  * [expect交互](#expect交互)
+  * [调整分区大小](#调整分区大小)
+  * [mdadm(RAID)](#mdadmraid)
+    * [创建 RAID5](#创建-raid5)
+    * [创建 RAID5,并设置备份磁盘](#创建-raid5并设置备份磁盘)
+    * [保存配置文件](#保存配置文件)
+    * [性能测试](#性能测试)
+    * [硬盘装载](#硬盘装载)
+    * [卸载 RAID](#卸载-raid)
+  * [视频/图片](#视频图片)
+    * [ffmpeg](#ffmpeg)
+      * [-vf视频过滤器](#-vf视频过滤器)
+      * [音频操作](#音频操作)
+      * [图片操作](#图片操作)
+      * [录屏](#录屏)
+      * [plotbitrate](#plotbitrate)
+    * [gif](#gif)
+      * [gifview](#gifview)
+      * [gifdiff](#gifdiff)
+      * [convert(gif制作)](#convertgif制作)
+      * [gifsicle:gif工具支持压缩、合并、编辑帧、减少帧](#gifsiclegif工具支持压缩合并编辑帧减少帧)
 * [reference](#reference)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
 # 常用命令
 
@@ -932,6 +935,29 @@ say @final-array;
 [+] 0..5
 
 [+] ^6
+```
+
+### shred：安全删除文件
+
+```sh
+# 默认是覆盖3次，每次产生随机数据。
+shred file.txt
+
+# 指定次数为5次
+shred -n 5 file.txt
+
+# 确保文件的目录项也被删除，这样文件就不会存在于文件系统的快照或备份中。
+shred -u file.txt
+```
+
+### 加密文件
+
+```sh
+# 生成新的加密文件
+gpg -c --cipher-algo aes256 file
+
+# 解密
+gpg -d file
 ```
 
 ## other

@@ -1,10 +1,27 @@
+<!-- mtoc-start -->
+
+* [Android](#android)
+* [原理](#原理)
+* [第三方优秀资源](#第三方优秀资源)
+  * [cli](#cli)
+  * [gui](#gui)
+  * [app](#app)
+* [刷机](#刷机)
+  * [刷入recovery、magisk、lsposed](#刷入recoverymagisklsposed)
+  * [frida](#frida)
+  * [救砖](#救砖)
+    * [magisk模块变砖](#magisk模块变砖)
+* [电视app](#电视app)
+
+<!-- mtoc-end -->
+
 # Android
 
 - [Android学习路线](https://roadmap.sh/android)
 
 # 原理
 
-- [FlashCorpa：[系统进阶支线 Vol.7]如何防止设备格机](https://www.bilibili.com/video/BV1zM4m1Z7Wj)
+- [FlashCorpa：系统进阶支线 Vol.7如何防止设备格机](https://www.bilibili.com/video/BV1zM4m1Z7Wj)
 
 # 第三方优秀资源
 
@@ -19,9 +36,13 @@
 
 - [sndcpy：将手机音频转发到电脑](https://github.com/rom1v/sndcpy)
 
+- [android_aircrack：wifi破解](https://github.com/kriswebdev/android_aircrack)
+
 ## gui
 
 - [kite：小米性能监控工具](https://kite.mi.com/#/documents/instructions/quickstart?id=%e5%bf%ab%e9%80%9f%e5%bc%80%e5%a7%8b)
+
+- [ADB ToolboX：adb gui只支持windows](https://qx.wysteam.cn/download/)
 
 ## app
 
@@ -200,6 +221,16 @@
 
 - [ImageToolbox：Android 设计的图像编辑工具。它完全免费，支持批量处理、滤镜、背景移除、尺寸调整和裁剪等多种功能。](https://github.com/T8RIN/ImageToolbox)
 
+- [MaterialFiles：文件管理器](https://github.com/zhanghai/MaterialFiles)
+
+- [kdeconnect：文件传输、剪切板同步、远程控制等](https://github.com/KDE/kdeconnect-android)
+
+- [LibChecker：查看应用的服务、活动、广播接收器等](https://github.com/LibChecker/LibChecker)
+
+- [AnLinux-App：安装linux](https://github.com/EXALAB/AnLinux-App)
+    - [在下莫老师：坏了，这回给手机装Linux更简单了，利用Anlinux来手机变电脑](https://www.bilibili.com/video/BV1sK2nYpEEg)
+
+
 # 刷机
 
 - [xda](https://www.xda-developers.com/)
@@ -273,6 +304,7 @@
     - 4.[Apatch](https://github.com/bmax121/APatch)
 
         - [派大宝UI：速通全新内核级ROOT方案APatch，隐藏效果堪比KSU](https://www.bilibili.com/list/watchlater?bvid=BV1wb4y1P74d)
+            - android13以上版本的，APatch刷`boot.img`文件，而面具需要刷的是`init_boot.img`
 
         - [Android-Kernel-Tutorials](https://github.com/ravindu644/Android-Kernel-Tutorials)
 
@@ -448,8 +480,15 @@
 
 - 播放器
     - [kodi](https://kodi.tv/download/)
+        - 插件：
+            - PVR：iptv客户端
+            - opensubtitles：字幕
+            - 豆瓣刮削器
+            - speed test：测网速
     - [nova](https://github.com/nova-video-player/aos-AVP)
     - 当贝播放
+
+    - [SmartTube](https://github.com/yuliskov/SmartTube)
 
 - nas
     - jellyfin

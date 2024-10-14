@@ -1,3 +1,19 @@
+
+<!-- mtoc-start -->
+
+* [lua](#lua)
+  * [数据类型](#数据类型)
+    * [string(字符串)](#string字符串)
+      * [string库](#string库)
+    * [table(表)](#table表)
+  * [io](#io)
+  * [函数式编程库](#函数式编程库)
+  * [OOP库](#oop库)
+  * [腾讯技术工程：Lua进程内存优化方案总结](#腾讯技术工程lua进程内存优化方案总结)
+* [reference](#reference)
+
+<!-- mtoc-end -->
+
 # lua
 
 ## 数据类型

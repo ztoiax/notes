@@ -1,15 +1,16 @@
-<!-- vim-markdown-toc GFM -->
+
+<!-- mtoc-start -->
 
 * [windows](#windows)
-    * [系统](#系统)
-    * [系统相关](#系统相关)
-    * [app](#app)
-    * [手机与电脑交互](#手机与电脑交互)
-    * [多媒体](#多媒体)
-    * [游戏相关](#游戏相关)
-    * [pe系统](#pe系统)
+  * [系统](#系统)
+  * [系统相关](#系统相关)
+  * [app](#app)
+  * [手机与电脑交互](#手机与电脑交互)
+  * [多媒体](#多媒体)
+  * [游戏相关](#游戏相关)
+  * [pe系统](#pe系统)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
 # windows
 
@@ -52,6 +53,8 @@
 - [OFGB](https://github.com/xM4ddy/OFGB)修改 Windows 注册表来禁用 Windows 11 系统自带的各种广告，比如开始菜单、文件资源管理器、锁屏、搜索、任务栏等位置的个性化广告。
 
 - [OpenArk：恶意程序分析与清理工具](https://github.com/BlackINT3/OpenArk)
+
+- [SteamTools：Steam 工具箱。可以加速steam和github网络](https://github.com/BeyondDimension/SteamTools)
 
 ## app
 

@@ -1,9 +1,8 @@
-# dmenu 的正确使用方式
 
-<!-- vim-markdown-toc GFM -->
+<!-- mtoc-start -->
 
-* [Get information with regux in chaos](#get-information-with-regux-in-chaos)
-    * [Create a messy file](#create-a-messy-file)
+* [dmenu 的正确使用方式](#dmenu-的正确使用方式)
+  * [Create a messy file](#create-a-messy-file)
     * [Get url head](#get-url-head)
     * [Get url tail](#get-url-tail)
     * [-o cut](#-o-cut)
@@ -11,12 +10,12 @@
     * [For dir regux](#for-dir-regux)
     * [Copy the path in the same way](#copy-the-path-in-the-same-way)
     * [当然也以行为单位，复制命令的输出](#当然也以行为单位复制命令的输出)
-* [通过 dmenu menu 二级菜单，可快速获取并复制文件内容，代替 grep](#通过-dmenu-menu-二级菜单可快速获取并复制文件内容代替-grep)
-* [建一个搜索引擎合集脚本，配合 dmenu 使用](#建一个搜索引擎合集脚本配合-dmenu-使用)
+  * [通过 dmenu menu 二级菜单，可快速获取并复制文件内容，代替 grep](#通过-dmenu-menu-二级菜单可快速获取并复制文件内容代替-grep)
+  * [建一个搜索引擎合集脚本，配合 dmenu 使用](#建一个搜索引擎合集脚本配合-dmenu-使用)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
-## Get information with regux in chaos
+# dmenu 的正确使用方式
 
 ### Create a messy file
 

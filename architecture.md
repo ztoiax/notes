@@ -1,12 +1,13 @@
-<!-- vim-markdown-toc GFM -->
+
+<!-- mtoc-start -->
 
 * [体系结构](#体系结构)
-    * [RISC-V](#risc-v)
+  * [RISC-V](#risc-v)
 * [GPU](#gpu)
 * [RDMA](#rdma)
 * [FPGA](#fpga)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
 # 体系结构
 

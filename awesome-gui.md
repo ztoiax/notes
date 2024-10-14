@@ -1,25 +1,28 @@
-<!-- vim-markdown-toc GFM -->
+
+<!-- mtoc-start -->
 
 * [常用](#常用)
 * [操作系统](#操作系统)
 * [file](#file)
-    * [文件传输](#文件传输)
-    * [文件管理器](#文件管理器)
-    * [文件清理](#文件清理)
+  * [文件传输](#文件传输)
+  * [文件管理器](#文件管理器)
+  * [文件清理](#文件清理)
 * [下载器](#下载器)
 * [图片](#图片)
-    * [image viewer(图片查看器)](#image-viewer图片查看器)
-        * [qt](#qt)
-        * [gtk](#gtk)
-        * [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](#caesium-image-compressor图片压缩配备了实时预览和批量处理的功能)
-    * [截图](#截图)
+  * [image viewer(图片查看器)](#image-viewer图片查看器)
+    * [qt](#qt)
+    * [gtk](#gtk)
+    * [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](#caesium-image-compressor图片压缩配备了实时预览和批量处理的功能)
+  * [截图](#截图)
+* [视频](#视频)
+* [远程控制](#远程控制)
 * [note](#note)
 * [ide](#ide)
 * [硬件](#硬件)
 * [other](#other)
 * [类似项目](#类似项目)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
 # 常用
 
@@ -78,7 +81,7 @@
 
 - [localsend](https://github.com/localsend/localsend)
 
-- [kdeconnect](https://github.com/KDE/kdeconnect-kde)
+- [kdeconnect：还可以控制手机](https://github.com/KDE/kdeconnect-kde)
 
 ## 文件管理器
 
@@ -100,6 +103,14 @@
 - [tribler：bt搜索和下载工具](https://www.tribler.org/download.html)：国内用户要设置无匿名，不然可能会出现资源下不动。
 
 - [rats-search：bt搜索和下载工具，可以打开别的客户端下载](https://github.com/DEgITx/rats-search)
+
+- [persepolis：aria2 gui](https://persepolisdm.github.io/)
+
+- [fdm](https://www.freedownloadmanager.org/zh/)
+
+- [xdman](https://xtremedownloadmanager.com/)
+
+- [mediago：视频下载器，支持m3u8](https://github.com/caorushizi/mediago)
 
 # 图片
 
@@ -136,9 +147,16 @@
 - [flameshot：火焰截图](https://github.com/flameshot-org/flameshot)
 
 # 视频
-- [pyvideotrans：视频配音转换语言](https://github.com/jianchang512/pyvideotrans)
+
+- [pyvideotrans：给视频配音、翻译配音、添加字幕](https://github.com/jianchang512/pyvideotrans)
 
 - [lossless-cut：视频剪切软件，目标是成为 FFmpeg 的图形前端。](https://github.com/mifi/lossless-cut)
+
+# 远程控制
+
+- [rustdesk](https://github.com/rustdesk/rustdesk)
+
+- [ToDesk](https://github.com/ji4ozhu/ToDesk)
 
 # note
 
@@ -162,8 +180,6 @@
 
 - [noti: 任务完成后通知](https://github.com/variadico/noti)
 
-- [ToDesk(手机电脑投屏幕)](https://github.com/ji4ozhu/ToDesk)
-
 - [sunloginclient(向日葵运程控制gui版)](https://sunlogin.oray.com/download)
 
 - [keynav：键盘控制鼠标](https://github.com/jordansissel/keynav)
@@ -185,8 +201,6 @@
 - [bitwarden：密码管理器](https://bitwarden.com/download/)
 
 - [timeshift](https://github.com/teejee2008/timeshift)
-
-- [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
 
 - [gImageReader：ocr，但不太准确](https://github.com/manisandro/gImageReader)
 
@@ -221,10 +235,13 @@
 
 - [waydroid：安卓系统。并不是模拟器，而是直接构建](https://github.com/waydroid/waydroid)
 
+    - [waydroid-helper：gui配置waydroid](https://github.com/ayasa520/waydroid-helper)
+
     - [在下莫老师：在PC上满速运行Android应用，WayDroid安装使用指南](https://www.bilibili.com/video/BV18z421B7YB)
 
     - 不支持英伟达gpu，只支持intel和amd
     - 运行在wayland，但x11也可以运行可以安装`weston`，然后在`weston`下启动waydroid
+
         ```sh
         # 打开weston
         weston

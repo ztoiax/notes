@@ -1,28 +1,28 @@
-<!-- vim-markdown-toc GFM -->
+<!-- mtoc-start -->
 
 * [ansible](#ansible)
-    * [架构](#架构)
-    * [运行原理](#运行原理)
-    * [基本命令](#基本命令)
-    * [配置文件](#配置文件)
-    * [优化执行速度](#优化执行速度)
-        * [优化/etc/ansible/ansible.cfg](#优化etcansibleansiblecfg)
-        * [playbook文件中的task优化](#playbook文件中的task优化)
-    * [ansible命令和内置模块的使用](#ansible命令和内置模块的使用)
-    * [ansible-playbook](#ansible-playbook)
-        * [变量](#变量)
-        * [fact](#fact)
-        * [template模板](#template模板)
-        * [handlers和notify 触发器](#handlers和notify-触发器)
-        * [tags标签](#tags标签)
-        * [逻辑实现：when、迭代](#逻辑实现when迭代)
-        * [roles（角色）](#roles角色)
-    * [ansible-galaxy](#ansible-galaxy)
-        * [ansible-vault：加密yml文件](#ansible-vault加密yml文件)
+  * [架构](#架构)
+  * [运行原理](#运行原理)
+  * [基本命令](#基本命令)
+  * [配置文件](#配置文件)
+  * [优化执行速度](#优化执行速度)
+    * [优化/etc/ansible/ansible.cfg](#优化etcansibleansiblecfg)
+    * [playbook文件中的task优化](#playbook文件中的task优化)
+  * [ansible命令和内置模块的使用](#ansible命令和内置模块的使用)
+  * [ansible-playbook](#ansible-playbook)
+    * [变量](#变量)
+    * [fact](#fact)
+    * [template模板](#template模板)
+    * [handlers和notify 触发器](#handlers和notify-触发器)
+    * [tags标签](#tags标签)
+    * [逻辑实现：when、迭代](#逻辑实现when迭代)
+    * [roles（角色）](#roles角色)
+  * [ansible-galaxy](#ansible-galaxy)
+    * [ansible-vault：加密yml文件](#ansible-vault加密yml文件)
 * [第三方软件](#第三方软件)
 * [reference](#reference)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
 # [ansible](https://github.com/ansible/ansible)
 

@@ -1,24 +1,25 @@
-<!-- vim-markdown-toc GFM -->
+
+<!-- mtoc-start -->
 
 * [编译内核](#编译内核)
-    * [General setup](#general-setup)
-        * [Kernel compression mode (内核压缩算法)](#kernel-compression-mode-内核压缩算法)
-        * [preemption model (线程抢占模型)](#preemption-model-线程抢占模型)
-    * [Power management and ACPI options](#power-management-and-acpi-options)
-        * [CPU Frequency scaling](#cpu-frequency-scaling)
-    * [reference](#reference)
+  * [General setup](#general-setup)
+    * [Kernel compression mode (内核压缩算法)](#kernel-compression-mode-内核压缩算法)
+    * [preemption model (线程抢占模型)](#preemption-model-线程抢占模型)
+  * [Power management and ACPI options](#power-management-and-acpi-options)
+    * [CPU Frequency scaling](#cpu-frequency-scaling)
+  * [reference](#reference)
 * [modprobe(模块)](#modprobe模块)
-    * [基本命令](#基本命令)
-    * [rmmod](#rmmod)
-    * [lsmod](#lsmod)
-    * [modinfo](#modinfo)
-    * [reference](#reference-1)
+  * [基本命令](#基本命令)
+  * [rmmod](#rmmod)
+  * [lsmod](#lsmod)
+  * [modinfo](#modinfo)
+  * [reference](#reference-1)
 * [fs(文件系统)](#fs文件系统)
 * [core dump](#core-dump)
-    * [crash命令](#crash命令)
-        * [一次kernel core dump使用crash分析的案例](#一次kernel-core-dump使用crash分析的案例)
+  * [crash命令](#crash命令)
+    * [一次kernel core dump使用crash分析的案例](#一次kernel-core-dump使用crash分析的案例)
 
-<!-- vim-markdown-toc -->
+<!-- mtoc-end -->
 
 # 编译内核
 
