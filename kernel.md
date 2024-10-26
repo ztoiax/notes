@@ -2,11 +2,7 @@
 <!-- mtoc-start -->
 
 * [编译内核](#编译内核)
-  * [General setup](#general-setup)
-    * [Kernel compression mode (内核压缩算法)](#kernel-compression-mode-内核压缩算法)
-    * [preemption model (线程抢占模型)](#preemption-model-线程抢占模型)
-  * [Power management and ACPI options](#power-management-and-acpi-options)
-    * [CPU Frequency scaling](#cpu-frequency-scaling)
+  * [General setup（内核选项）](#general-setup内核选项)
   * [reference](#reference)
 * [modprobe(模块)](#modprobe模块)
   * [基本命令](#基本命令)
@@ -18,6 +14,7 @@
 * [core dump](#core-dump)
   * [crash命令](#crash命令)
     * [一次kernel core dump使用crash分析的案例](#一次kernel-core-dump使用crash分析的案例)
+* [从0创建linux](#从0创建linux)
 
 <!-- mtoc-end -->
 
@@ -105,43 +102,44 @@ reboot
 uname -a
 ```
 
-## General setup
+## General setup（内核选项）
 
-### [Kernel compression mode (内核压缩算法)](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/Kconfig?id=aefcf2f4b58155d27340ba5f9ddbe9513da8286d#n200)
+- [Kernel compression mode (内核压缩算法)](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/init/Kconfig?id=aefcf2f4b58155d27340ba5f9ddbe9513da8286d#n200)
 
-![image](./Pictures/kernel/compression.avif)
+    ![image](./Pictures/kernel/compression.avif)
 
-- 压缩速度只影响编译内核
-- 解压速度只影响每次开机
-- 压缩大小只影响磁盘空间
+    - 压缩速度只影响编译内核
+    - 解压速度只影响每次开机
+    - 压缩大小只影响磁盘空间
 
-  1.对于大多数情况下解压速度才是第一优先考虑
+      1.对于大多数情况下解压速度才是第一优先考虑
 
-  - [x] `LZ4`
+      - [x] `LZ4`
 
-    2.综合解压,压缩比
+        2.综合解压,压缩比
 
-  - [x] `zstd`
+      - [x] `zstd`
 
-    3.对于小磁盘空间
+        3.对于小磁盘空间
 
-  - [x] `xz`
+      - [x] `xz`
 
-[详情](https://lwn.net/Articles/817134/)
+    - [详情](https://lwn.net/Articles/817134/)
 
-### [preemption model (线程抢占模型)](https://devarea.com/understanding-linux-kernel-preemption/)
+- [preemption model (线程抢占模型)](https://devarea.com/understanding-linux-kernel-preemption/)
 
-![image](./Pictures/kernel/preemption.avif)
+    ![image](./Pictures/kernel/preemption.avif)
 
-1.如果是服务器选择不强制抢占,减少切换上下文
+    1.如果是服务器选择不强制抢占,减少切换上下文
 
-- [x] `No Forced Preemption`
+    - [x] `No Forced Preemption`
 
-[实时强制抢占内核补丁](https://rt.wiki.kernel.org/index.php/Main_Page)
+    - [实时强制抢占内核补丁](https://rt.wiki.kernel.org/index.php/Main_Page)
 
-## Power management and ACPI options
 
-### CPU Frequency scaling
+- [EFISTUB](https://wiki.archlinux.org/title/EFI_boot_stub)：不需要grub等中间引导程序，直接从EFI引导
+    - archlinux默认开启
+    - `CONFIG_EFI_STUB=y`
 
 ## reference
 
@@ -464,4 +462,8 @@ lsmod | wc -l
     - 在客户端更新许可文件时，会先停止防病毒客户端进程（更新完许可文件后，再启动进程），停止进程会导致vmsecmod驱动模块的卸载，由于有bug，清理动作不完善，残留了无主的slab内存。
 
     - 而服务器上部署的自动化工具，会定时执行ss命令，ss遍历slabinfo信息时，读取了在野的指针，引发page fault，内核崩溃。
+
+# 从0创建linux
+
+- [小刘不是程序员：从头制作一个基于 Busybox 的小型 Linux 系统](https://www.bilibili.com/video/BV1wg411k7J1)
 

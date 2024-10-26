@@ -1556,6 +1556,8 @@ RabbitMQ实战指南》作者
 
     - [MuscleUp街头健身](https://space.bilibili.com/260509354)
 
+    - [刘圣雄](https://space.bilibili.com/390668605)
+
 - 跑步：
 
     - [尚跑圈](https://space.bilibili.com/1020817820)
@@ -1694,6 +1696,8 @@ RabbitMQ实战指南》作者
 - [1900影剧室](https://space.bilibili.com/17223352)
 
 - [电影最TOP](https://space.bilibili.com/17819768)
+
+- [扁豆看电影](https://space.bilibili.com/33488229)
 
 ## 音乐
 
@@ -2125,6 +2129,9 @@ RabbitMQ实战指南》作者
     - 凭澜观涛
         > 中银证劵首席、曾任国家外汇管理局国际收支司司长管涛
 
+    - 酷温
+        > bilibili的酷温Coolwin的微信号
+
 ## 金融
 
 - bilibili
@@ -2144,6 +2151,8 @@ RabbitMQ实战指南》作者
     - [刘纪鹏：股市](https://space.bilibili.com/3493280140495350)
 
     - [投研部杨摸鱼](https://space.bilibili.com/13611123)
+
+    - [小Lin说](https://space.bilibili.com/520819684)
 
 - 微信公众号
 

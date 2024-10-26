@@ -1844,6 +1844,9 @@
 
 - MTU 和 MSS
 
+    - [（视频）技术蛋老师：IPv4分片问题 | MTU和MSS的核心区别
+](https://www.bilibili.com/video/BV14GyGY8ENw)
+
     ![image](./Pictures/net-kernel/MSS和MTU的区别.avif)
 
     - MTU: Maximum Transmit Unit，最大传输单元。 由网络接口层（数据链路层）提供给网络层最大一次传输数据的大小；一般 MTU=1500 Byte。

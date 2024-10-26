@@ -7,6 +7,7 @@
   * [文件传输](#文件传输)
   * [文件管理器](#文件管理器)
   * [文件清理](#文件清理)
+  * [云盘](#云盘)
 * [下载器](#下载器)
 * [图片](#图片)
   * [image viewer(图片查看器)](#image-viewer图片查看器)
@@ -60,20 +61,7 @@
 
 - [foliate: pdf, epub阅读器](https://github.com/johnfactotum/foliate)
 
-- [aliyunpan(阿里云盘)](https://github.com/liupan1890/aliyunpan)
-
 - [syncthing：文件同步](https://github.com/syncthing/syncthing)
-
-- [alist:可添加各种网盘的网页文件管理器](https://github.com/alist-org/alist)
-    - 使用davfs2挂载
-    ```sh
-    # 安装davfs2
-    sudo pacman -S davfs2
-
-    # mount到yun目录
-    mkdir yun
-    sudo mount -t davfs http://127.0.0.1:5244/dav yun
-    ```
 
 - [photoprism：ai相册管理](https://github.com/photoprism/photoprism)
 
@@ -85,13 +73,36 @@
 
 ## 文件管理器
 
+- [dolphin](https://github.com/KDE/dolphin)
+
 - pcmanfm(文件管理器)
 
 - [sigma-file-manager](https://github.com/aleksey-hoffman/sigma-file-manager)
 
+- [xplorer](https://github.com/kimlimjustin/xplorer)
+
 ## 文件清理
 
 - [czkawka：多功能文件清理工具](https://github.com/qarmin/czkawka)
+
+## 云盘
+
+- [蜗牛云盘：阿里云盘第三方](https://github.com/liupan1890/aliyunpan/issues/901)
+
+- [aliyunpan：阿里云盘第三方](https://github.com/liupan1890/aliyunpan)
+
+- [clouddrive：云盘管理](https://github.com/cloud-fs/cloud-fs.github.io/releases)
+
+- [alist:可添加各种网盘的网页文件管理器](https://github.com/alist-org/alist)
+    - 使用davfs2挂载
+    ```sh
+    # 安装davfs2
+    sudo pacman -S davfs2
+
+    # mount到yun目录
+    mkdir yun
+    sudo mount -t davfs http://127.0.0.1:5244/dav yun
+    ```
 
 # 下载器
 
@@ -111,6 +122,8 @@
 - [xdman](https://xtremedownloadmanager.com/)
 
 - [mediago：视频下载器，支持m3u8](https://github.com/caorushizi/mediago)
+
+- [ab-download-manager：类似idm的下载器](https://github.com/amir1376/ab-download-manager)
 
 # 图片
 
@@ -146,6 +159,8 @@
 
 - [flameshot：火焰截图](https://github.com/flameshot-org/flameshot)
 
+- [Umi-OCR：ocr](https://github.com/hiroi-sora/Umi-OCR)
+
 # 视频
 
 - [pyvideotrans：给视频配音、翻译配音、添加字幕](https://github.com/jianchang512/pyvideotrans)
@@ -157,6 +172,12 @@
 - [rustdesk](https://github.com/rustdesk/rustdesk)
 
 - [ToDesk](https://github.com/ji4ozhu/ToDesk)
+
+- [lan-mouse：键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/feschber/lan-mouse)
+
+- [deskflow：键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/deskflow/deskflow)
+
+- [linkandroid：连接android](https://github.com/modstart-lib/linkandroid)
 
 # note
 
@@ -206,8 +227,6 @@
 
 - [quivr：该项目利用生成式 AI 的能力，成为你的第二大脑。你可以将多种格式的文本、数据、语言和视频上传给它，之后再和它对话时，它会学习你上传的内容后回答你的问题，支持接入多种 LLM 和 Docker 一键部署。](https://github.com/QuivrHQ/quivr)
 
-- [lan-mouse：使用同一个鼠标和键盘，控制局域网的多台电脑](https://github.com/feschber/lan-mouse)
-
 - [netease-cloud-music-gtk：网易云音乐gtk4版](https://github.com/gmg137/netease-cloud-music-gtk)
 
 - [drawio-desktop](https://github.com/jgraph/drawio-desktop)
@@ -232,6 +251,28 @@
 - [fluent-reader：rss订阅和阅读器](https://github.com/yang991178/fluent-reader)
 
 - [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
+
+- [redroid：docker上跑安卓](https://github.com/remote-android/redroid-doc)
+
+    - [ReDroid教學：用Docker跑Android系統，在x86電腦玩ARM手機遊戲](https://ivonblog.com/posts/redroid-android-docker/)
+
+    ```sh
+    # android15
+    docker run -itd --rm --privileged \
+        --pull always \
+        -v ~/.config/redroid/data15:/data \
+        -p 5555:5555 \
+        --name redroid15 \
+        redroid/redroid:15.0.0-latest
+    ```
+
+    ```sh
+    # adb连接
+    adb connect localhost:5555
+
+    # scrcpy投屏
+    scrcpy -s localhost:5555
+    ```
 
 - [waydroid：安卓系统。并不是模拟器，而是直接构建](https://github.com/waydroid/waydroid)
 

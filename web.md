@@ -12,6 +12,7 @@
 * [HTML](#html)
 * [CSS](#css)
 * [js](#js)
+* [浏览器指纹](#浏览器指纹)
 
 <!-- mtoc-end -->
 
@@ -61,6 +62,12 @@
 - [code-box：CSDN/知乎/脚本之家/博客园/博客园/51CTO博客/php中文网等网站,实现无需登录一键复制代码](https://github.com/027xiguapi/code-box)
 
 - [cat-catch：嗅探视频](https://github.com/xifangczy/cat-catch)
+
+- [materialYouNewTab：标签页](https://github.com/XengShi/materialYouNewTab)
+
+- [微信网页版](https://github.com/lqzhgood/wechat-need-web)
+
+- [All Fingerprint Defender：Fingerprint防御](https://chromewebstore.google.com/detail/all-fingerprint-defender/meojnmfhjkahlfcecpdcdgjclcilmaij)
 
 # CGI和FastCGI
 
@@ -283,3 +290,7 @@
         ![image](./Pictures/web/v8-new1.avif)
 
         - 假设优化后的热点代码一直传递的是int类型，如果下一次传递的是其它类型，就需要`deoptimization` 返回解析器生成bytecode运行，这样执行速度就会变慢。因此每次传递的参数最好保持同一类型。
+
+# 浏览器指纹
+
+- [技术爬爬虾：浏览器指纹是什么？14种指纹背后的技术原理](https://www.bilibili.com/video/BV1VmmNYAE53)

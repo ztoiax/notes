@@ -2,16 +2,29 @@
 
 * [Android](#android)
 * [原理](#原理)
+  * [apk](#apk)
 * [第三方优秀资源](#第三方优秀资源)
   * [cli](#cli)
   * [gui](#gui)
   * [app](#app)
+    * [应用管理](#应用管理)
+      * [android四大组件](#android四大组件)
+    * [文件管理器、云盘](#文件管理器云盘)
+    * [文件互传、远程控制](#文件互传远程控制)
+    * [数据备份](#数据备份)
+    * [网络相关](#网络相关)
+    * [隐藏检查](#隐藏检查)
+    * [游戏相关](#游戏相关)
 * [刷机](#刷机)
   * [刷入recovery、magisk、lsposed](#刷入recoverymagisklsposed)
   * [frida](#frida)
   * [救砖](#救砖)
     * [magisk模块变砖](#magisk模块变砖)
+  * [rom](#rom)
+  * [GSI](#gsi)
+  * [小刘不是程序员：如何挂载安卓系统镜像？](#小刘不是程序员如何挂载安卓系统镜像)
 * [电视app](#电视app)
+* [类似项目](#类似项目)
 
 <!-- mtoc-end -->
 
@@ -19,9 +32,17 @@
 
 - [Android学习路线](https://roadmap.sh/android)
 
+- [Awesome-Android-Performance](https://github.com/JsonChao/Awesome-Android-Performance)
+
 # 原理
 
-- [FlashCorpa：系统进阶支线 Vol.7如何防止设备格机](https://www.bilibili.com/video/BV1zM4m1Z7Wj)
+- [（视频）FlashCorpa：系统进阶支线 Vol.7如何防止设备格机](https://www.bilibili.com/video/BV1zM4m1Z7Wj)
+
+- [（视频）小刘不是程序员：Android系统是如何启动的？](https://www.bilibili.com/video/BV1rg4y1M7mh)
+
+## apk
+
+- [（视频）Janwrice：关于Apks的一切|MT管理器|NP管理器|SAI](https://www.bilibili.com/video/BV1Xe4y1M7v9)
 
 # 第三方优秀资源
 
@@ -114,39 +135,13 @@
 
 - [AndroidBitmapMonitor：图片内存分析工具](https://github.com/shixinzhang/AndroidBitmapMonitor)
 
-- [tailscale：WireGuard vpn](https://github.com/tailscale/tailscale-android)
-
-- [syncthing：文件同步](https://github.com/syncthing/syncthing-android)
-
-- [ApplistDetector：隐藏检测英文](https://github.com/Dr-TSNG/ApplistDetector)
-
-- [ruru：隐藏检测中文](https://github.com/byxiaorun/Ruru/releases)
-
-- [session：加密通信](https://github.com/oxen-io/session-android)
-
-- [Shadowsocks（写轮眼）论坛](https://bbs.letitfly.me/)
-
 - [bitwarden：密码管理器](https://bitwarden.com/download/)
 
 - [Android-Touch-Helper：跳过广告](https://github.com/zfdang/Android-Touch-Helper)
 
 - [李跳跳：跳过广告](https://litiaotiao.cn/)
 
-- [幸运破解器](https://www.luckypatchers.com/)
-
-- [np管理器](https://github.com/githubXiaowangzi/NP-Manager)
-
-- [immich：照片和视频的备份解决方案](https://github.com/immich-app/immich)
-
-- [Nextcloud：私人云盘](https://github.com/nextcloud/android)
-
-    - [memories：Nextcloud的照片管理](https://github.com/pulsejet/memories)
-
 - [阅读](https://github.com/gedoor/MyBookshelf)
-
-- [unison：intel的手机电脑消息、文件传输]()
-
-- [localsend](https://github.com/localsend/localsend)
 
 - [KernelFlasher：刷、备份、恢复内核](https://github.com/capntrips/KernelFlasher)
 
@@ -155,18 +150,7 @@
 
 - [Shizuku：为其他app解锁高级权限](https://github.com/RikkaApps/Shizuku)
 
-- [AppOps：权限管理](https://github.com/RikkaApps/App-Ops-issue-tracker/releases/tag/files)
-
-- [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
-
 - [SmsForwarder（短信转发器）：备用机监控，如应用，短信通知等](https://github.com/pppscn/SmsForwarder)
-
-- [network_proxy_flutter：支持手机端的免费抓包工具](https://github.com/wanghongenpin/network_proxy_flutter)
-
-- [Winlator：使用 Wine 和 Box86/Box64 来运行 Windows 应用和游戏](https://github.com/brunodev85/winlator/releases/download/v5.1.0/Winlator.Development.apk)
-
-- [Lemuroid：游戏机模拟器](https://github.com/Swordfish90/Lemuroid)
-    - [Lemuroid游戏ROM](https://www.emulatorgames.net/roms/)
 
 - [fdroidclient](https://github.com/f-droid/fdroidclient)免费、开源的 Android 应用商店。该项目是 F-Droid 的 Android 客户端，专门收集各类开源安卓软件（FOSS）的应用商店。
 
@@ -182,8 +166,6 @@
 
     ![image](./Pictures/android/Acode.avif)
 
-- [immich：immich图片和视频管理服务的客户端](https://github.com/immich-app/immich)
-
 - [xbmc：kodi服务端](https://github.com/xbmc/xbmc)
 - [Kore：kodi客户端](https://github.com/xbmc/Kore)
 
@@ -197,11 +179,7 @@
 
 - [shell360：ssh客户端](https://github.com/shell360)
 
-- [WiFiAnalyzer：WiFi 分析工具](https://github.com/VREMSoftwareDevelopment/WiFiAnalyzer)
-
 - [dart_simple_live：一个 APP 上看各种主流直播平台](https://github.com/xiaoyaocz/dart_simple_live)
-
-- [Android-DataBackup：数据备份](https://github.com/XayahSuSuSu/Android-DataBackup)
 
 - [Ente Auth：一个开源的双因素认证码管理器](https://github.com/ente-io/ente)
 
@@ -215,21 +193,112 @@
 
 - [EtchDroid：无需root，将img写入插入otg线的u盘](https://github.com/EtchDroid/EtchDroid)
 
-- [AListFlutter：alist安卓版，局域网视频观看](https://github.com/jing332/AListFlutter)
-
-    - [在下莫老师：旧手机变网盘！无需代码，在手机上快速部署Alist](https://www.bilibili.com/video/BV1vq421c7kW)
-
 - [ImageToolbox：Android 设计的图像编辑工具。它完全免费，支持批量处理、滤镜、背景移除、尺寸调整和裁剪等多种功能。](https://github.com/T8RIN/ImageToolbox)
-
-- [MaterialFiles：文件管理器](https://github.com/zhanghai/MaterialFiles)
-
-- [kdeconnect：文件传输、剪切板同步、远程控制等](https://github.com/KDE/kdeconnect-android)
-
-- [LibChecker：查看应用的服务、活动、广播接收器等](https://github.com/LibChecker/LibChecker)
 
 - [AnLinux-App：安装linux](https://github.com/EXALAB/AnLinux-App)
     - [在下莫老师：坏了，这回给手机装Linux更简单了，利用Anlinux来手机变电脑](https://www.bilibili.com/video/BV1sK2nYpEEg)
 
+- [DualBootPatcher：多重引导。手机多系统启动](https://github.com/chenxiaolong/DualBootPatcher)
+
+- [Apk.1-Installer：apk.1安装，针对微信传apk文件](https://github.com/Ium-Lab/Apk.1-Installer)
+
+- [KernelFlasher：刷内核](https://github.com/capntrips/KernelFlasher)
+
+### 应用管理
+
+- [AppManager](https://github.com/MuntashirAkon/AppManager)
+
+- [Inure](https://github.com/Hamza417/Inure)
+
+- [Hail：冻结应用](https://github.com/aistra0528/Hail)
+
+- [AppOps：权限管理](https://github.com/RikkaApps/App-Ops-issue-tracker/releases/tag/files)
+
+- [island：应用隔离、分身](https://play.google.com/store/apps/details?id=com.oasisfeng.island)
+
+- [幸运破解器：破解](https://www.luckypatchers.com/)
+
+#### android四大组件
+
+- [（写轮眼）论坛](https://bbs.letitfly.me/)
+
+- [LibChecker：查看应用的四大组件等](https://github.com/LibChecker/LibChecker)
+
+- [blocker：一键关闭广告相关的四大组件](https://github.com/lihenggui/blocker)
+
+- [Thanox：需要xposed或magisk安装。可以修改四大组件](https://github.com/Tornaco/Thanox)
+    - [官方文档](https://tornaco.github.io/Thanox-Docs/zh/)
+
+### 文件管理器、云盘
+
+- [np管理器：模仿mt文件管理器](https://github.com/githubXiaowangzi/NP-Manager)
+
+- [syncthing：文件同步](https://github.com/syncthing/syncthing-android)
+
+- [MaterialFiles：文件管理器](https://github.com/zhanghai/MaterialFiles)
+
+- [mixplorer](https://mixplorer.com)
+
+- [AListFlutter：alist安卓版，局域网视频观看](https://github.com/jing332/AListFlutter)
+
+    - [在下莫老师：旧手机变网盘！无需代码，在手机上快速部署Alist](https://www.bilibili.com/video/BV1vq421c7kW)
+
+- [蜗牛云盘](https://github.com/liupan1890/aliyunpan/issues/901)
+
+- [clouddrive：云盘管理](https://github.com/cloud-fs/cloud-fs.github.io/releases)
+
+### 文件互传、远程控制
+
+- [unison：intel的手机电脑消息、文件传输]()
+
+- [localsend：文件互传](https://github.com/localsend/localsend)
+
+- [kdeconnect：文件传输、剪切板同步、远程控制等](https://github.com/KDE/kdeconnect-android)
+
+- [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
+
+### 数据备份
+
+- [Android-DataBackup：数据备份](https://github.com/XayahSuSuSu/Android-DataBackup)
+
+- [Neo-Backup](https://github.com/NeoApplications/Neo-Backup)
+
+- [immich：照片和视频的备份解决方案](https://github.com/immich-app/immich)
+
+- [Nextcloud：私人云盘](https://github.com/nextcloud/android)
+
+    - [memories：Nextcloud的照片管理](https://github.com/pulsejet/memories)
+
+### 网络相关
+
+- [WiFiAnalyzer：WiFi 分析工具](https://github.com/VREMSoftwareDevelopment/WiFiAnalyzer)
+
+- [tailscale：WireGuard vpn](https://github.com/tailscale/tailscale-android)
+
+- [session：加密通信](https://github.com/oxen-io/session-android)
+
+- [network_proxy_flutter：支持手机端的免费抓包工具](https://github.com/wanghongenpin/network_proxy_flutter)
+
+- [afwall：对每个应用的iptable gui版](https://github.com/ukanth/afwall)
+
+### 隐藏检查
+
+- [root等隐藏检查app清单](https://github.com/rushiranpise/detection)
+
+- [NativeDetector：牛头人](https://github.com/Dr-TSNG/NativeDetector)
+
+- [ApplistDetector：隐藏检测（英文）](https://github.com/Dr-TSNG/ApplistDetector)
+
+- [ruru：隐藏检测（中文）](https://github.com/byxiaorun/Ruru/releases)
+
+### 游戏相关
+
+- [ppsspp：psp模拟器](https://github.com/hrydgard/ppsspp)
+
+- [Winlator：使用 Wine 和 Box86/Box64 来运行 Windows 应用和游戏](https://github.com/brunodev85/winlator/releases/download/v5.1.0/Winlator.Development.apk)
+
+- [Lemuroid：游戏机模拟器](https://github.com/Swordfish90/Lemuroid)
+    - [Lemuroid游戏ROM](https://www.emulatorgames.net/roms/)
 
 # 刷机
 
@@ -237,6 +306,7 @@
 
 - [miui下载](https://xiaomifirmwareupdater.com/)
 - [miui下载](https://xiaomirom.com/series/)
+- [miui下载：小米社区](https://web.vip.miui.com/page/info/mio/mio/detail?postId=18371653&fromPathname=mioSingleBoard&app_version=dev.20051)
 
 - [pixelexperience](https://get.pixelexperience.org/)
 
@@ -272,6 +342,7 @@
 
         - [twrp官网下载](https://twrp.me/Devices/)
         - [orangefox官网](https://orangefox.download/zh-CN)
+        - [Xiaomi Mi 10 PBRP Recovery](https://xdaforums.com/t/xiaomi-mi-10-pbrp-recovery.4664760/)
 
         - fastboot安装
         ```sh
@@ -280,6 +351,9 @@
 
         # 查看设备
         fastboot devices
+
+        # 关闭avb分区。vbmeta.img需要从rom中提取
+        fastboot --disable-verity --disable-verification flash vbmeta vbmeta.img
 
         # 刷入twrp
         fastboot flash recovery twrp-3.7.0_12-0-umi.img
@@ -305,8 +379,13 @@
 
         - [派大宝UI：速通全新内核级ROOT方案APatch，隐藏效果堪比KSU](https://www.bilibili.com/list/watchlater?bvid=BV1wb4y1P74d)
             - android13以上版本的，APatch刷`boot.img`文件，而面具需要刷的是`init_boot.img`
+            ```sh
+            # 刷入修补后的boot.img文件
+            fastboot flash boot ./apatch_patched_10763_0.10.7_vneh.img
 
-        - [Android-Kernel-Tutorials](https://github.com/ravindu644/Android-Kernel-Tutorials)
+            # 重启手机
+            fastboot reboot
+            ```
 
     - 4.[KernelSU](https://github.com/tiann/KernelSU)
 
@@ -343,16 +422,23 @@
 
         - [Magisk和xposed模块资源分享](https://magisk.suchenqaq.club/)
 
+        - [MMRL：magisk、kernelSU、APatch的模块管理](https://github.com/DerGoogler/MMRL)
+
         - 隐藏：
 
+            - [Zygisk-Assistant：隐藏root](https://github.com/snake-4/Zygisk-Assistant)
             - [MagiskHide：隐藏root](https://github.com/HuskyDG/MagiskHide/releases/download/v1.10.3/magiskhide-release.zip)
                 - 不依赖`zygisk`，与shamiko冲突
             - [shamiko：隐藏root](https://github.com/LSPosed/LSPosed.github.io/releases)
+
             - [safetynet-fix魔改版：隐藏bootloader锁](https://github.com/PaperStrike/safetynet-fix/releases)
 
             - 注意：数据人民币app会残留未隐藏时检测的数据，记得清除全部数据
 
         - [ZygiskNext：替换内置的zygisk](https://github.com/Dr-TSNG/ZygiskNext)
+
+        - [liveboot：magisk模块版。修改开机启动动画为显示logcat、dmensg](https://github.com/symbuzzer/livebootmodule)
+
         - [ssh服务器](https://github.com/Magisk-Modules-Repo/ssh)
         - [universal-gms-doze：减少google play服务耗电](https://github.com/gloeyisk/universal-gms-doze)
 
@@ -374,6 +460,7 @@
         - [xposed模块列表](https://github.com/Xposed-Modules-Repo)
 
         - [核心破解：降级安装](https://github.com/LSPosed/CorePatch)
+        - [Hide-My-Applist：隐藏xposed](https://github.com/Dr-TSNG/Hide-My-Applist)
 
         - [解除地区限制](https://github.com/Xposed-Modules-Repo/cn.cyanc.xposed.noregionlimits)
         - [虚拟定位](https://github.com/Lerist/FakeLocation)
@@ -438,6 +525,18 @@
 
 - 提取当前刷机包的boot.img，进入fastboot刷入
 
+## rom
+
+- [crdroid：类原生](https://xdaforums.com/t/crdroid-stable-xiaomi-mi-10.4660391/)
+
+## GSI
+
+- [TrebleInfo：检查是否支持GSI](https://gitlab.com/TrebleInfo/TrebleInfo)
+
+- [ErfanGSIs：制作GSI](https://github.com/erfanoabdi/ErfanGSIs)
+
+## [小刘不是程序员：如何挂载安卓系统镜像？](https://www.bilibili.com/video/BV1gL411D7hE)
+
 # 电视app
 
 - 论坛
@@ -454,6 +553,8 @@
     - [黑域基地在线地址](https://www.hybase.com/shouji/tv/)
 
 - 文件管理
+    - 小白文件管理器
+    - [猫头鹰文件](https://www.skyjos.cn/owlfiles/publishing/android_tv/)
     - File Manager Pro+
     - es文件管理器
     - X-plore
@@ -479,13 +580,18 @@
     - YouTube for Fire TV：无需google服务
 
 - 播放器
+
     - [kodi](https://kodi.tv/download/)
         - 插件：
             - PVR：iptv客户端
             - opensubtitles：字幕
             - 豆瓣刮削器
             - speed test：测网速
+
     - [nova](https://github.com/nova-video-player/aos-AVP)
+
+    - [vlc](https://www.videolan.org/vlc/download-android.html)
+
     - 当贝播放
 
     - [SmartTube](https://github.com/yuliskov/SmartTube)
@@ -533,3 +639,7 @@
     - 米家TV版：控制小米生态链设备
     - 搜狗输入法海信提取版
     - 东方财富通tv版
+
+# 类似项目
+
+- [awesome-android-root](https://github.com/fynks/awesome-android-root)

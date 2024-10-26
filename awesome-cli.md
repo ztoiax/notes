@@ -14,6 +14,7 @@
   * [nnn](#nnn)
   * [lf: go ranger](#lf-go-ranger)
   * [joshuto: rust ranger](#joshuto-rust-ranger)
+  * [yazi：rust ranger](#yazirust-ranger)
   * [mc](#mc)
   * [twf：vim模式的文件树](#twfvim模式的文件树)
   * [superfile](#superfile)
@@ -41,6 +42,7 @@
   * [vidir: 编辑器批量改名](#vidir-编辑器批量改名)
   * [mutagen：文件同步到远程服务器，也可以充当中间人在2个远程文件系统之间同步](#mutagen文件同步到远程服务器也可以充当中间人在2个远程文件系统之间同步)
   * [zrok：端对端共享文件](#zrok端对端共享文件)
+  * [termscp：ftp、scp等的tui](#termscpftpscp等的tui)
 * [git](#git)
   * [gh](#gh)
     * [github-cli官方文档](#github-cli官方文档)
@@ -271,6 +273,7 @@ sudo make O_NERD=1
 
 ## [lf: go ranger](https://github.com/gokcehan/lf)
 ## [joshuto: rust ranger](https://github.com/kamiyaa/joshuto)
+## [yazi：rust ranger](https://github.com/sxyazi/yazi)
 ## [mc](https://github.com/MidnightCommander/mc)
 
 支持鼠标操作
@@ -417,6 +420,8 @@ find . -type f | vidir -
 ```sh
 zrok share public localhost:8080
 ```
+
+## [termscp：ftp、scp等的tui](https://github.com/veeso/termscp)
 
 # git
 

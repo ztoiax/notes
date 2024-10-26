@@ -20,6 +20,7 @@
     * [socat](#socat)
     * [tc(traffic control队列控制)](#tctraffic-control队列控制)
     * [tailscale：WireGuard vpn](#tailscalewireguard-vpn)
+    * [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](#chisel在-http-通信上建立-tcpudp-隧道)
   * [应用层](#应用层)
     * [http](#http)
       * [curl](#curl)
@@ -607,6 +608,8 @@ sudo tailscale file cp filename ip:
 # 设置接受文件的目录
 sudo tailscale file get .
 ```
+
+### [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](https://github.com/jpillora/chisel)
 
 ## 应用层
 
