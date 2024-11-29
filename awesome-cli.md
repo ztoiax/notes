@@ -98,6 +98,7 @@
   * [grex：自动生成正则表达式](#grex自动生成正则表达式)
   * [sd：instead sed](#sdinstead-sed)
   * [sad：instead sed](#sadinstead-sed)
+  * [CopyQ：剪切板管理，支持图片](#copyq剪切板管理支持图片)
 * [disk](#disk)
   * [dfc](#dfc)
     * [instead df](#instead-df)
@@ -212,6 +213,7 @@
   * [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](#weread-exporter将微信读书中的书籍导出成epubpdfmobi等格式)
   * [zerox：pdf转markdown](#zeroxpdf转markdown)
   * [Stirling-PDF：自部署 PDF 处理工具](#stirling-pdf自部署-pdf-处理工具)
+  * [PDFMathTranslate：pdf翻译中文](#pdfmathtranslatepdf翻译中文)
 * [log](#log)
   * [lnav：tui的vim模式，查看log、json文件](#lnavtui的vim模式查看logjson文件)
   * [logdy](#logdy)
@@ -635,6 +637,8 @@ ls filename | sad '1' '2' | diff-so-fancy | less
 # 通过delta显示替换前后的不同。不进行替换
 ls filename | sad '1' '2' | delta
 ```
+
+## [CopyQ：剪切板管理，支持图片](https://hluk.github.io/CopyQ/)
 
 # disk
 
@@ -1174,6 +1178,8 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 ## [zerox：pdf转markdown](https://github.com/getomni-ai/zerox)
 
 ## [Stirling-PDF：自部署 PDF 处理工具](https://github.com/Stirling-Tools/Stirling-PDF)
+
+## [PDFMathTranslate：pdf翻译中文](https://github.com/Byaidu/PDFMathTranslate)
 
 # log
 

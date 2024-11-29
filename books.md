@@ -49,11 +49,11 @@
   * [硬件](#硬件)
     * [GPU](#gpu)
   * [数据科学](#数据科学-2)
-  * [文档](#文档)
+  * [文本、文档](#文本文档)
   * [编码](#编码)
   * [数学](#数学)
   * [英语](#英语)
-  * [文档](#文档-1)
+  * [文档](#文档)
   * [健康](#健康)
   * [gps](#gps)
   * [视频](#视频)
@@ -524,6 +524,8 @@
 
 - [张银奎调试工具官网](https://www.nanocode.cn/wiki/)
 
+- [逆向工程教程（Reverse Engineering For Everyone）](https://0xinfection.github.io/reversing/)
+
 ## network(网络)
 
 - [《计算机网络：系统方法》(英文)](https://github.com/SystemsApproach/book)
@@ -719,7 +721,7 @@
 
 - [《Machine Learning Yearning》(中文)](https://deeplearning-ai.github.io/machine-learning-yearning-cn/)
 
-- [《Understanding Deep Learning》](https://udlbook.github.io/udlbook/)
+- [《Understanding Deep Learning》：理解深度学习。该书是由 Simon J.D. Prince 编写的一本关于深度学习的专业书籍，内容涵盖深度学习的理论基础、性能评估、卷积网络、Transformers、图神经网络、生成对抗网络（GANs）、扩散模型（Diffusion Models）、强化学习等主题，并附有大量练习题。](https://udlbook.github.io/udlbook/)
 
 - [《概率机器学习》。该项目包含凯文·墨菲的三本书籍，分别为《机器学习：概率视角》、《概率机器学习：简介》、《概率机器学习：高级》](https://github.com/probml/pml-book)
 
@@ -738,6 +740,8 @@
 - [ai知识库搜索](https://easyai.tech/)
 
 - [提示工程指南](https://www.promptingguide.ai/zh)
+
+- [Prompt-Engineering-Guide：全面的提示工程实战指南。这份教程致力于帮助用户掌握与大型语言模型（LLM）沟通的技巧。内容涵盖从基础到高级的提示工程技术，附有详细的实现指南和示例代码。](https://github.com/dair-ai/Prompt-Engineering-Guide)
 
 - [Awesome-AIGC-Tutorials](https://github.com/luban-agi/Awesome-AIGC-Tutorials)
 
@@ -776,11 +780,13 @@
 
     > 作者之一霍普克洛夫特(John Hopcroft)是图灵奖得主。本书提到了计算机科学的发展可以分为三个阶段：早期、中期和当今。早期就是让计算机可以运行起来，其重点在于开发程序语言、编译技术、操作系统，以及研究支撑它们的数学理论。中期是让计算机变得有用，变得高效，重点在于研究算法和数据结构。第三个阶段是让计算机具有更广泛的应用，发展重点从离散类数学转到概率和统计。
 
-## 文档
+## 文本、文档
 
 - [PDF Explained （译作《PDF 解析》）](https://github.com/zxyle/PDF-Explained)
 
 - [YAML 语言教程](https://www.ruanyifeng.com/blog/2016/07/yaml.html)
+
+- [腾讯技术工程：为什么大厂这么爱用protobuf？](https://mp.weixin.qq.com/s/COQu3rckfZJUelSVBV6IMA)
 
 - [腾讯技术工程：数据序列化工具Protobuf编码&避坑指南](https://cloud.tencent.com/developer/article/2302699)
 
@@ -812,6 +818,8 @@
 - [统计学习方法（第二版）习题解答](https://datawhalechina.github.io/statistical-learning-method-solutions-manual/#/)
 
 - [微积分](https://www.geogebra.org/m/x39ys4d7)
+
+- [看见概率论](https://probability.visualized.fun/)
 
 - [傅里叶级数的动画介绍](https://www.andreinc.net/2024/04/24/from-the-circle-to-epicycles)一篇长文，从最简单的圆的方程开始，介绍傅里叶级数的概念，包含大量动画。
 
@@ -1598,6 +1606,8 @@ RabbitMQ实战指南》作者
 
     - [少伟博士话饮食](https://space.bilibili.com/515059146)
 
+    - [老爸评测](https://space.bilibili.com/347667464)
+
 - 微信公众号
     - 刘少伟教授
     - 南都鉴定评测实验室
@@ -1624,6 +1634,9 @@ RabbitMQ实战指南》作者
 
 - [觅大叔](https://space.bilibili.com/604083858)
     > 水产科普
+
+- [老郭美食](https://space.bilibili.com/1206156500)
+    > 水产解剖、挑选
 
 ## 做菜
 
@@ -1688,6 +1701,10 @@ RabbitMQ实战指南》作者
 - [木鱼水心](https://space.bilibili.com/927587)：经典影视长视频解说
 - [非花映镜](https://space.bilibili.com/2810464)：黑泽明电影解说
 - [培根悖论唠唠嗑](https://space.bilibili.com/386869863)：长视频影视解说，善于开脑洞、挖细节。
+
+- [CC琦先生](https://space.bilibili.com/90445151/)：金庸武侠
+
+- [狗大蛋子](https://space.bilibili.com/18982710/video)：笑傲江湖
 
 - [边江说](https://space.bilibili.com/424170847)：《冰与火之歌》解说，自己也是个小说家
 
@@ -1898,6 +1915,9 @@ RabbitMQ实战指南》作者
     - [吴启讷](https://space.bilibili.com/1190493829)
         > 台湾大学老师
 
+    - [武黎嵩讲先秦两汉史](https://space.bilibili.com/402985507)
+        > 南京大学老师，先秦两汉史。
+
     - [安州牧](https://space.bilibili.com/7481602)
         > 地图讲解历史
 
@@ -1915,6 +1935,7 @@ RabbitMQ实战指南》作者
     - 施展世界
     - 全球研究Global Studies Forum
     - 新史学丛刊
+    - 张宏杰讲历史
 
 ## 政治
 
@@ -2131,6 +2152,9 @@ RabbitMQ实战指南》作者
 
     - 酷温
         > bilibili的酷温Coolwin的微信号
+
+    - 乡村建设研究
+        > 温铁军
 
 ## 金融
 

@@ -17,6 +17,7 @@
   * [截图](#截图)
 * [视频](#视频)
 * [远程控制](#远程控制)
+  * [ssh客户端](#ssh客户端)
 * [note](#note)
 * [ide](#ide)
 * [硬件](#硬件)
@@ -179,6 +180,12 @@
 
 - [linkandroid：连接android](https://github.com/modstart-lib/linkandroid)
 
+## ssh客户端
+
+- [shell360](https://github.com/shell360)
+
+- [xpipe](https://github.com/xpipe-io/xpipe)
+
 # note
 
 - [zotero：文献管理工具](https://github.com/zotero/zotero)
@@ -241,10 +248,6 @@
 ![image](./Pictures/awesomegui/input-overlay.avif)
 
 - [rubick：工具箱、启动框](https://github.com/rubickCenter/rubick)
-
-- [shell360：ssh客户端](https://github.com/shell360)
-
-- [xpipe：ssh客户端](https://github.com/xpipe-io/xpipe)
 
 - [neko：该项目是运行在 Docker 容器中的自托管虚拟浏览器环境，为用户提供安全、隔离和功能齐全的虚拟浏览器。](https://github.com/m1k1o/neko)
 

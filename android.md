@@ -15,6 +15,7 @@
     * [网络相关](#网络相关)
     * [隐藏检查](#隐藏检查)
     * [游戏相关](#游戏相关)
+    * [第三方客户端](#第三方客户端)
 * [刷机](#刷机)
   * [刷入recovery、magisk、lsposed](#刷入recoverymagisklsposed)
   * [frida](#frida)
@@ -204,6 +205,8 @@
 
 - [KernelFlasher：刷内核](https://github.com/capntrips/KernelFlasher)
 
+- [KeyMapper：可以自定义 Android 设备的按键、指纹和手势操作。无需 ROOT 权限，支持蓝牙和有线键盘，提供灵活的按键重映射体验。](https://github.com/keymapperorg/KeyMapper)
+
 ### 应用管理
 
 - [AppManager](https://github.com/MuntashirAkon/AppManager)
@@ -299,6 +302,10 @@
 
 - [Lemuroid：游戏机模拟器](https://github.com/Swordfish90/Lemuroid)
     - [Lemuroid游戏ROM](https://www.emulatorgames.net/roms/)
+
+### 第三方客户端
+
+- [pilipala：bilibili](https://github.com/guozhigq/pilipala)
 
 # 刷机
 

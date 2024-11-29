@@ -3801,6 +3801,8 @@ docker run -d \
 
 - [Dive：探索 Docker 镜像、层内容，并发现缩小 Docker/OCI 镜像大小的方法的工具](https://github.com/wagoodman/dive)
 
+- [dockerc：将 Docker 镜像编译为独立可执行文件的工具。该项目能将 Docker 镜像转化为二进制可执行文件，无需配置 Docker 环境或安装依赖，简化了软件的分发和运行流程。](https://github.com/NilsIrl/dockerc)
+
 ## 客户端
 
 - [Docker Desktop：官方的gui客户端](https://www.docker.com/products/docker-desktop/)
@@ -3840,6 +3842,9 @@ docker run -d \
     --privileged \
     rancher/rancher
 ```
+
+- [beszel：轻量级高颜值的 Docker 监控平台。这是一个轻量级的服务器监控平台，包括 Docker 统计、历史数据和警报功能。它拥有友好的 Web 界面，配置简单、开箱即用，支持自动备份、多用户、OAuth 认证和 API 访问等功能。](https://github.com/henrygd/beszel)
+  ![image](./Pictures/docker/beszel.avif)
 
 - [docker-ui](https://github.com/kevana/ui-for-docker)
   ![image](./Pictures/docker/ui.avif)
@@ -3882,6 +3887,8 @@ docker run --rm -ti \
 - [cdebug：容器调试工具。支持Docker 容器、Kubernetes Pod，还是其他类型的容器](https://github.com/iximiuz/cdebug)
 
     - [奇妙的Linux世界：cdebug: 容器调试界的瑞士军刀，5 个超能力让你成为调试大师](https://mp.weixin.qq.com/s/i-C3ZIcGpXKYFWZzQD0Cfw)
+
+- [trayce：查看docker容器http通信](https://trayce.dev/)
 
 - find-container-process：根据你输入的进程 ID (PID)，找到对应的 Docker 容器
 

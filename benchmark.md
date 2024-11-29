@@ -35,6 +35,7 @@
   * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
   * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
   * [hyperfine: 高级time命令](#hyperfine-高级time命令)
+  * [CPU-X：类似windows的cpu-z](#cpu-x类似windows的cpu-z)
 * [Memory](#memory)
   * [smem](#smem)
   * [hugepage(巨型页)](#hugepage巨型页)
@@ -85,12 +86,14 @@
 * [Process](#process)
   * [ps命令](#ps命令)
   * [htop](#htop)
+  * [neohtop](#neohtop)
   * [bpytop](#bpytop)
   * [btop](#btop)
   * [bottom](#bottom-1)
   * [Procmon](#procmon)
   * [SysMonTask](#sysmontask)
   * [pidstat：对某个进程进行全面具体的追踪](#pidstat对某个进程进行全面具体的追踪)
+  * [Mission Center：类似windows的任务管理器](#mission-center类似windows的任务管理器)
 * [开机](#开机)
   * [bootchart](#bootchart)
 * [Special file system](#special-file-system)
@@ -931,6 +934,9 @@ echo <pid> > tasks
 
 ## [hyperfine: 高级time命令](https://github.com/sharkdp/hyperfine)
 
+
+## [CPU-X：类似windows的cpu-z](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X)
+
 # Memory
 
 - [内存的基本知识](https://blog.heroix.com/blog/linux-memory-use)
@@ -1540,6 +1546,8 @@ agedu -w
 htop -p 20316
 ```
 
+## [neohtop](https://github.com/Abdenasser/neohtop)
+
 ## [bpytop](https://github.com/aristocratos/bpytop)
 
 > instead bashtop
@@ -1728,6 +1736,7 @@ htop -p 20316
     Average:     1000         -      3333      0.33      0.00  |__nvim
     ```
 
+## [Mission Center：类似windows的任务管理器](https://missioncenter.io/)
 # 开机
 
 ## bootchart

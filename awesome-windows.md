@@ -56,6 +56,8 @@
 
 - [SteamTools：Steam 工具箱。可以加速steam和github网络](https://github.com/BeyondDimension/SteamTools)
 
+- [Bulk-Crap-Uninstaller：Windows 软件卸载工具，能够快速删除大量不需要的应用程序。它完全免费、开箱即用，支持批量和强制卸载、清理残留文件、检测隐藏或受保护的已注册应用等功能。](https://github.com/Klocman/Bulk-Crap-Uninstaller)
+
 ## app
 
 - [TortoiseGit：windows最好的git gui客户端](https://github.com/TortoiseGit/TortoiseGit)
@@ -71,6 +73,12 @@
 - [glazewm：平铺窗口管理器，类似i3](https://github.com/glzr-io/glazewm)
 
 - [ab-download-manager：类似idm的下载器](https://github.com/amir1376/ab-download-manager)
+
+- [Macro-Deck：变成类似 Stream Deck 的远程自定义按键板，实现一键执行单步或多步操作，适用于直播和简化日常任务等场景。](https://github.com/Macro-Deck-App/Macro-Deck)
+
+- [OFGB：广告滚蛋 - 删除 Win11 各处广告的小工具](https://github.com/zetaloop/OFGB)
+
+- [TinySSH：ssh客户端](https://github.com/chenjiaxing6/TinySSH)
 
 ## 手机与电脑交互
 

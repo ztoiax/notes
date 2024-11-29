@@ -88,6 +88,7 @@
   * [压力测试](#压力测试)
     * [wrk](#wrk)
     * [wrk2: wrp的变种](#wrk2-wrp的变种)
+    * [oth：Rust 驱动的 HTTP 压测工具。这是一个用 Rust 开发的 HTTP 请求压测工具，它操作简单、带 TUI 动画界面，支持生成请求延迟、吞吐量等指标的报告，以及动态 URL 和更灵活的请求间隔（burst-delay）等功能。](#othrust-驱动的-http-压测工具这是一个用-rust-开发的-http-请求压测工具它操作简单带-tui-动画界面支持生成请求延迟吞吐量等指标的报告以及动态-url-和更灵活的请求间隔burst-delay等功能)
     * [lighthouse(chrome 网页性能测试)](#lighthousechrome-网页性能测试)
 * [优秀文章](#优秀文章)
 * [在线工具](#在线工具)
@@ -2296,6 +2297,35 @@ wrk -t 6 -c 30000 -d 60s https://127.0.0.1:80
 ```
 
 ### [wrk2: wrp的变种](https://github.com/giltene/wrk2)
+
+### [oth：Rust 驱动的 HTTP 压测工具。这是一个用 Rust 开发的 HTTP 请求压测工具，它操作简单、带 TUI 动画界面，支持生成请求延迟、吞吐量等指标的报告，以及动态 URL 和更灵活的请求间隔（burst-delay）等功能。](https://github.com/hatoo/oha)
+
+- `oth`性能对比`hey`
+
+    ```sh
+    # 使用hyperfine命令（高级版time命令）测试
+    hyperfine 'oha --no-tui http://127.0.0.1:80'  'hey http://127.0.0.1:80'
+
+    Benchmark 1: oha --no-tui http://127.0.0.1:80
+      Time (mean ± σ):      20.0 ms ±  10.0 ms    [User: 8.9 ms, System: 30.6 ms]
+      Range (min … max):    12.1 ms …  51.3 ms    55 runs
+
+
+    Benchmark 2: hey http://127.0.0.1:80
+      Time (mean ± σ):       5.9 ms ±   0.8 ms    [User: 14.2 ms, System: 16.7 ms]
+      Range (min … max):     4.4 ms …  14.2 ms    337 runs
+    ```
+
+```sh
+# 不使用tui模式
+oha --no-tui http://127.0.0.1:80
+
+# 每2秒将处理4个请求，6秒后将处理总共10个请求。
+oha -n 10 --burst-delay 2s --burst-rate 4 http://127.0.0.1:80
+
+# 正则表达式
+oha --rand-regex-url http://127.0.0.1/[a-z][a-z][0-9]
+```
 
 ### [lighthouse(chrome 网页性能测试)](https://github.com/GoogleChrome/lighthouse)
 

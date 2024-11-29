@@ -111,6 +111,7 @@
     * [假定只有一台服务器（因此没有必要使用`upstream`负载均衡命令）。然而`upstream`可以提升性能](#假定只有一台服务器因此没有必要使用upstream负载均衡命令然而upstream可以提升性能)
     * [NGINX 默认启用代理缓冲（`proxy_buffering off` 指令）](#nginx-默认启用代理缓冲proxy_buffering-off-指令)
     * [过多的健康检查](#过多的健康检查)
+  * [故障](#故障)
   * [第三方软件](#第三方软件)
     * [服务端](#服务端)
       * [njs：是 JavaScript 语言的一个子集，它允许扩展 nginx 的功能](#njs是-javascript-语言的一个子集它允许扩展-nginx-的功能)
@@ -119,6 +120,7 @@
       * [ngxtop：日志监控](#ngxtop日志监控)
       * [goaccess 日志监控](#goaccess-日志监控)
       * [rhit:日志浏览器](#rhit日志浏览器)
+      * [ngtop：日志查看器](#ngtop日志查看器)
   * [在线工具](#在线工具)
   * [第三方nginx](#第三方nginx)
     * [Openresty](#openresty)
@@ -5460,6 +5462,10 @@ location / {
     }
     ```
 
+## 故障
+
+- [ 运维记事：执行nginx -t会导致文件所有者权限变为nobody，你知道吗？](https://mp.weixin.qq.com/s/R2TVm79UHMjgeK1SDVYSaA)
+
 ## 第三方软件
 
 ### 服务端
@@ -5515,6 +5521,8 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 ![image](./Pictures/nginx/goaccess1.gif)
 
 #### [rhit:日志浏览器](https://github.com/Canop/rhit)
+
+#### [ngtop：日志查看器](https://github.com/facundoolano/ngtop)
 
 ## 在线工具
 

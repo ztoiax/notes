@@ -69,6 +69,10 @@
 
 - [All Fingerprint Defender：Fingerprint防御](https://chromewebstore.google.com/detail/all-fingerprint-defender/meojnmfhjkahlfcecpdcdgjclcilmaij)
 
+- [BilibiliSponsorBlock：自动跳过 B 站视频中恰饭片段和开场、结尾动画的浏览器插件](https://github.com/hanydd/BilibiliSponsorBlock)
+
+- [dimmer：黑夜模式](https://github.com/slc3a2/dimmer)
+
 # CGI和FastCGI
 
 - Web服务器能解析HTTP请求，返回静态资源（HTML页、图片等），但要输出动态内容，必须得PHP/C#/Ruby/Java/Python/C/C++这些外部程序来实现。
