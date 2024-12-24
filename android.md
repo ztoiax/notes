@@ -205,6 +205,8 @@
 
 - [KernelFlasher：刷内核](https://github.com/capntrips/KernelFlasher)
 
+- [Amarok-Hider：隐藏私人文件和应用](https://github.com/deltazefiro/Amarok-Hider)
+
 - [KeyMapper：可以自定义 Android 设备的按键、指纹和手势操作。无需 ROOT 权限，支持蓝牙和有线键盘，提供灵活的按键重映射体验。](https://github.com/keymapperorg/KeyMapper)
 
 ### 应用管理

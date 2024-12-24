@@ -14,6 +14,7 @@
       * [文件服务器](#文件服务器)
       * [http转https](#http转https)
       * [tls](#tls)
+    * [frpc-desktop：跨平台的 frp 桌面客户端。](#frpc-desktop跨平台的-frp-桌面客户端)
     * [mtr](#mtr)
     * [ngrep（抓包）](#ngrep抓包)
     * [mitmproxy(代理http, 并抓包)](#mitmproxy代理http-并抓包)
@@ -453,6 +454,8 @@ remote_port = 8081
 ```sh
 xdg-open http://127.0.0.1:8081/dir/
 ```
+
+### [frpc-desktop：跨平台的 frp 桌面客户端。](https://github.com/luckjiawei/frpc-desktop)
 
 ### mtr
 
@@ -1356,72 +1359,102 @@ tshark -q -n -r test.pcapng -z ip_srcdst,tree
 
 ### nmap
 
+- [（视频）技术蛋老师：许多Nmap课程都缺乏的入门理论知识](https://www.bilibili.com/video/BV18kqhYKEPK)
+
 - zenmap(gui版nmap)
 
-端口状态:
+- 一般先扫描ip网段（主机发现），再扫描端口
 
-| STATE      | 内容         |
-| ---------- | ------------ |
-| open       | 开启         |
-| closed     | 关闭         |
-| filtered   | 被防火墙屏蔽 |
-| unfiltered | 不确定状态   |
+- 主机发现，扫描ip网段
+    > 扫描本地使用arp，扫描远程使用tcp和icmp
 
-```bash
-# 扫描指定ip端口
-nmap 127.0.0.1
+    ```sh
+    # 扫描整个192.168.1.0网段的主机
+    nmap -sn "192.168.1.*"
+    # 或者
+    nmap -sn 192.168.1.0/24
 
-# 详细扫描
-nmap -v 127.0.0.1
+    # 扫描整个192.168.1.0网段的端口
+    nmap "192.168.1.*"
 
-# 扫描系统消息
-nmap -A 127.0.0.1
+    # 扫描192.168.1.0网段,排除192.168.1.1
+    nmap "192.168.1.*" --exclude 192.168.1.1
 
-# 扫描整个192.168.1.0网段的主机
-nmap -sn "192.168.1.*"
-# 或者
-nmap -sn 192.168.1.0/24
+    # 扫描192.168.1.200-254
+    nmap 192.168.1.200-254
 
-# 扫描整个192.168.1.0网段的端口
-nmap "192.168.1.*"
+    # 不使用icmp，这个命令比较耗时。windows server防火墙默认会屏蔽icmp包
+    nmap -Pn <目标网段>
 
-# 扫描192.168.1.0网段,排除192.168.1.1
-nmap "192.168.1.*" --exclude 192.168.1.1
+    # 扫描文件内的 ip 地址
+    cat > nmapfile << 'EOF'
+    127.0.0.1
+    192.168.1.1
+    192.168.100.208
+    EOF
 
-# 扫描192.168.1.200-254
-nmap 192.168.1.200-254
+    nmap -iL nmapfile
+    ```
 
-# 扫描特定端口
-nmap -p 80 127.0.0.1
 
-# 显示本机网络，路由信息
-nmap --iflist
 
-# 扫描文件内的 ip 地址
-cat > nmapfile << 'EOF'
-127.0.0.1
-192.168.1.1
-192.168.100.208
-EOF
+- 扫描TCP
 
-nmap -iL nmapfile
-```
+    - tcp端口状态:
 
-- 使用 tmp 扫描
+        | STATE      | 内容         | 详细描述                                                |
+        | ---------- | ------------ | ------------------------------------------------------- |
+        | open       | 开启         | 会完成3次握手，完成后会发送RST，而不是正常关闭的FIN。   |
+        | closed     | 关闭         | 发送第一次握手SYN后，没有收到SYN ACK，而是直接收到RST。 |
+        | filtered   | 被防火墙屏蔽 | 发送第一次握手SYN后，既没有收到SYN ACK，也没有收到RST。 |
+        | unfiltered | 不确定状态   |                                                         |
+    ```sh
+    # 扫描TCP。以下2条命令相等。注意只扫描常用的tcp的1000个端口，而tcp最多可以有65535个端口，并且不扫描udp。所以这条命令是很多入门教程的误区。
+    nmap 127.0.0.1
+    nmap -sT 127.0.0.1
 
-```bash
-# TCP connect scan
-nmap -sT 192.168.1.1
+    # 扫描TCP。扫描的端口和上面一样，只是多了扫描时间等信息
+    nmap -v 127.0.0.1
 
-# TCP SYN
-nmap -sS 192.168.1.1
+    # 扫描TCP所有端口。注意：只扫描tcp端口，而不扫描udp
+    nmap -p- 127.0.0.1
+    # 扫描指定ip和端口
+    nmap -p 80 127.0.0.1
 
-# UDP
-nmap -sU 192.168.1.1
+    # 扫描TCP SYN。open状态：不会走完3次握手，在收到SYN ACK后，直接发送RST。可能会导致目标主机重传。
+    sudo nmap -sS 192.168.1.1
+    # 和上面命令一样，使用sudo默认是扫描TCP SYN。
+    sudo nmap 127.0.0.1
 
-# TCP ACK
-nmap -PA 192.168.1.1
-```
+    # TCP ACK
+    nmap -PA 192.168.1.1
+    ```
+
+- 扫描udp
+  > udp端口扫描比较慢
+    ```sh
+    # 扫描udp。默认没有负载，所以很可能没有回复，或被防火墙拦截。所以状态有时会显示open|filtered，表示有可能开放只是被防火墙拦截。
+    nmap -sU 127.0.0.1
+
+    # 会根据版本，进一步确认open|filtered
+    nmap -sUV 127.0.0.1
+
+    # 扫描常用的端口
+    nmap -sUV --top-ports 127.0.0.1
+    # 扫描常用的100端口
+    nmap -sUV --top-ports 100 127.0.0.1
+    # 扫描常用的1000端口
+    nmap -sUV --top-ports 1000 127.0.0.1
+    ```
+
+- 扫描其他
+    ```sh
+    # 扫描系统消息
+    nmap -A 127.0.0.1
+
+    # 显示本机网络，路由信息
+    nmap --iflist
+    ```
 
 ### [zmap](https://github.com/zmap/zmap)
 

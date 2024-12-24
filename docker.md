@@ -3869,6 +3869,9 @@ docker run --rm -ti \
 - [lazydocker](https://github.com/jesseduffield/lazydocker)
   ![image](./Pictures/docker/lazydocker.avif)
 
+- [dpanel：轻量级的 Docker 可视化管理面板。这是一款专为国内用户设计的 Docker 可视化管理面板，采用全中文界面。](https://github.com/donknap/dpanel)
+  ![image](./Pictures/docker/dpanel.avif)
+
 - [trivy容器安全检测](https://github.com/aquasecurity/trivy)
 
     ```sh

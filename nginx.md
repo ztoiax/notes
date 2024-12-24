@@ -4335,6 +4335,8 @@ http {
 
 #### [bugstack虫洞栈：爽了！免费的SSL，还能自动续期！](https://mp.weixin.qq.com/s/ehitnClHcvstxFY-0oAoyw)??失败了
 
+- [（技术爬爬虾）：三行命令，免费申请https加密证书，一次配置，永久生效。NAS/家庭内网服务配置TLS加密，自建网站配置SSL/TLS加密](https://www.bilibili.com/video/BV1UNzmYpEZz)
+
 #### 使用acme.sh生成证书。??失败了
 
 - [官网](https://github.com/acmesh-official/acme.sh)

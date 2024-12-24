@@ -58,6 +58,8 @@
 
 - [Bulk-Crap-Uninstaller：Windows 软件卸载工具，能够快速删除大量不需要的应用程序。它完全免费、开箱即用，支持批量和强制卸载、清理残留文件、检测隐藏或受保护的已注册应用等功能。](https://github.com/Klocman/Bulk-Crap-Uninstaller)
 
+- [FileConverter：右键轻松转换和压缩文件的工具。](https://github.com/Tichau/FileConverter)
+
 ## app
 
 - [TortoiseGit：windows最好的git gui客户端](https://github.com/TortoiseGit/TortoiseGit)
@@ -94,6 +96,8 @@
     - 它开箱即用且功能强大，支持创建、调整、同步和翻录字幕，还提供了自动翻译、字幕格式转换和语音识别等功能。
 
 - [video2x：视频和图像无损放大工具。该项目集成了多种超分辨率算法（如 Waifu2x、Anime4K、Real-ESRGAN），能够有效提高视频和图像的分辨率，并提供了图形界面（GUI）、Docker 和命令行界面（CLI）的使用方式](https://github.com/k4yt3x/video2x)
+
+- [Screenbox：视频播放器](https://github.com/huynhsontung/Screenbox)
 
 ## 游戏相关
 
