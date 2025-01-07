@@ -7,6 +7,8 @@
   * [ttyd: 浏览器terminal](#ttyd-浏览器terminal)
   * [termpair: 网页操作终端](#termpair-网页操作终端)
   * [sshx：通过浏览器远程访问，共享的终端。体验有点卡](#sshx通过浏览器远程访问共享的终端体验有点卡)
+  * [ghostty：用zig写的](#ghostty用zig写的)
+  * [waveterm：ts写的，支持ai提醒](#wavetermts写的支持ai提醒)
 * [File Browser](#file-browser)
   * [ranger](#ranger)
   * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
@@ -214,11 +216,21 @@
   * [zerox：pdf转markdown](#zeroxpdf转markdown)
   * [Stirling-PDF：自部署 PDF 处理工具](#stirling-pdf自部署-pdf-处理工具)
   * [PDFMathTranslate：pdf翻译中文](#pdfmathtranslatepdf翻译中文)
+  * [ebook2audiobook：电子书转为有声书](#ebook2audiobook电子书转为有声书)
+* [markdown](#markdown)
+  * [浏览markdown文件](#浏览markdown文件)
+  * [mdBook：markdown转book，可以在线浏览](#mdbookmarkdown转book可以在线浏览)
+  * [markitdown：微软官方推出的工具，将各种格式的文件（主要是 Office 文件）转成 Markdown 格式。](#markitdown微软官方推出的工具将各种格式的文件主要是-office-文件转成-markdown-格式)
+  * [mlc:检测markdown文件的连接](#mlc检测markdown文件的连接)
+  * [slidev: markdown写ppt](#slidev-markdown写ppt)
+  * [markdown写ppt](#markdown写ppt)
+  * [rucola：markdown管理tui](#rucolamarkdown管理tui)
+  * [mermaid-cli：markdown转思维导图](#mermaid-climarkdown转思维导图)
 * [log](#log)
   * [lnav：tui的vim模式，查看log、json文件](#lnavtui的vim模式查看logjson文件)
   * [logdy](#logdy)
 * [modern unix](#modern-unix)
-* [markdown](#markdown)
+* [邮件](#邮件)
 * [ai](#ai)
   * [llm大模型](#llm大模型)
 * [reference](#reference)
@@ -247,6 +259,10 @@
 ## [termpair: 网页操作终端](https://github.com/cs01/termpair)
 
 ## [sshx：通过浏览器远程访问，共享的终端。体验有点卡](https://github.com/ekzhang/sshx?tab=readme-ov-file)
+
+## [ghostty：用zig写的](https://github.com/ghostty-org/ghostty)
+
+## [waveterm：ts写的，支持ai提醒](https://github.com/wavetermdev/waveterm)
 
 # File Browser
 
@@ -1181,6 +1197,81 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 
 ## [PDFMathTranslate：pdf翻译中文](https://github.com/Byaidu/PDFMathTranslate)
 
+## [ebook2audiobook：电子书转为有声书](https://github.com/DrewThomasson/ebook2audiobook)
+
+# markdown
+
+## 浏览markdown文件
+
+- [see：markdown好看的浏览](https://github.com/guilhermeprokisch/see)
+
+- [glow：markdown好看的浏览](https://github.com/charmbracelet/glow)
+    ![image](./Pictures/awesomecli/16.avif)
+
+- [mdcat：markdown好看的浏览](https://github.com/swsnr/mdcat)
+
+- [frogmouth：markdown浏览的文件管理器（tui）](https://github.com/Textualize/frogmouth)
+
+- [grip：GitHub README 文件本地预览工具。这是一款用于本地预览 GFM（GitHub Flavored Markdown）文件的工具。它通过 Flask 和 GitHub Markdown API，能在本地环境中渲染并显示与 GitHub 完全一致的 Markdown 文件效果。](https://github.com/joeyespo/grip)
+
+    ```sh
+    grip ai.md
+    ```
+
+## [mdBook：markdown转book，可以在线浏览](https://github.com/rust-lang/mdBook)
+
+- [官方文档](https://rust-lang.github.io/mdBook/guide/creating.html)
+
+- 初始化
+
+    ```sh
+    # 初始化，并创建my-first-book目录
+    mdbook init my-first-book
+    cd my-first-book
+
+    # 开启服务，自定义端口
+    mdbook serve --open -p 8000 -n 127.0.0.1
+    ```
+
+- 打开`/src/SUMMARY.md`，编辑书本目录
+    ```md
+    # Summary
+    [Introduction](README.md)
+
+    - [nginx](nginx.md)
+    - [awesome-cli](awesome-cli.md)
+        - [awesome-gui](awesome-gui.md)
+    ```
+
+- 最后发布书本
+    ```sh
+    mdbook build
+    ```
+
+## [markitdown：微软官方推出的工具，将各种格式的文件（主要是 Office 文件）转成 Markdown 格式。](https://github.com/microsoft/markitdown)
+
+```sh
+# 安装
+pip install markitdown
+
+# pdf传md
+markitdown path-to-file.pdf > document.md
+```
+
+## [mlc:检测markdown文件的连接](https://github.com/becheran/mlc)
+
+## [slidev: markdown写ppt](https://github.com/slidevjs/slidev)
+
+## [markdown写ppt](https://github.com/webpro/reveal-md/)
+
+## [rucola：markdown管理tui](https://github.com/Linus-Mussmaecher/rucola)
+
+## [mermaid-cli：markdown转思维导图](https://github.com/mermaid-js/mermaid-cli)
+
+```sh
+mmdc -i input.mmd -o output.svg
+```
+
 # log
 
 ## [lnav：tui的vim模式，查看log、json文件](https://github.com/tstack/lnav)
@@ -1208,29 +1299,9 @@ journalctl -o json | lnav
 
 - [tailspin](https://github.com/bensadeh/tailspin)
 
-# markdown
+# 邮件
 
-- [see：markdown好看的浏览](https://github.com/guilhermeprokisch/see)
-
-- [glow：markdown好看的浏览](https://github.com/charmbracelet/glow)
-    ![image](./Pictures/awesomecli/16.avif)
-
-- [mdcat：markdown好看的浏览](https://github.com/swsnr/mdcat)
-
-- [frogmouth：markdown浏览的文件管理器（tui）](https://github.com/Textualize/frogmouth)
-
-- [mlc:检测markdown文件的连接](https://github.com/becheran/mlc)
-
-- [slidev: markdown写ppt](https://github.com/slidevjs/slidev)
-
-- [markdown写ppt](https://github.com/webpro/reveal-md/)
-
-- [rucola：markdown管理tui](https://github.com/Linus-Mussmaecher/rucola)
-
-- [mermaid-cli：markdown转思维导图](https://github.com/mermaid-js/mermaid-cli)
-    ```sh
-    mmdc -i input.mmd -o output.svg
-    ```
+- [himalaya：邮件tui](https://github.com/pimalaya/himalaya)
 
 # ai
 
@@ -1245,6 +1316,15 @@ journalctl -o json | lnav
     - [oterm：Ollama cli客户端](https://github.com/ggozad/oterm)
 
     - [MaxKB：ollama web ui，知识库](https://github.com/1Panel-dev/MaxKB)
+
+    ```sh
+    # 启动ollama
+    sudo systemctl restart ollama
+
+    # 所有可供下载的模型 https://ollama.com/search
+    # 下载并运行deepseek-v3（被称为拼多多版大模型）
+    ollama run nezahatkorkmaz/deepseek-v3
+    ```
 
 - [LM Studio：ollama gui版](https://lmstudio.ai/)
     - [lms：LM Studio command line](https://github.com/lmstudio-ai/lms)

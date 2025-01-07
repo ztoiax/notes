@@ -60,6 +60,10 @@
 
 - [FileConverter：右键轻松转换和压缩文件的工具。](https://github.com/Tichau/FileConverter)
 
+- [qttabbar：文件资源管理器添加标签](https://github.com/indiff/qttabbar)
+
+- [filepilot：第三方文件资源管理器](https://filepilot.tech/)
+
 ## app
 
 - [TortoiseGit：windows最好的git gui客户端](https://github.com/TortoiseGit/TortoiseGit)

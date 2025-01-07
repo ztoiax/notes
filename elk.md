@@ -110,6 +110,8 @@ curl -LO https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.13
 
 # 未读
 
+- [崔亮的博客：es学习笔记](https://m.cuiliangblog.cn/catalog/10898409)
+
 - [鹅厂架构师：高性能分布式搜索引擎Elasticsearch](https://zhuanlan.zhihu.com/p/698817997)
 
 - [程序员半支烟：5000字详说Elasticsearch入门(一)](https://mp.weixin.qq.com/s/bVhZ40ddB_Ke_2kzC6GgdA)

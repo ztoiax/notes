@@ -38,7 +38,12 @@
   * [runc管理容器](#runc管理容器)
   * [network网络](#network网络)
     * [Docker的网络架构CNM](#docker的网络架构cnm)
-      * [网桥和Overlay详解](#网桥和overlay详解)
+      * [网络模式（网络驱动）](#网络模式网络驱动)
+        * [网桥（Bridge）](#网桥bridge)
+        * [Overlay](#overlay)
+        * [host](#host)
+        * [none](#none)
+        * [container](#container)
     * [容器之间的网络连通性](#容器之间的网络连通性)
     * [容器之间的网络隔离](#容器之间的网络隔离)
     * [容器与宿主机同一网段](#容器与宿主机同一网段)
@@ -2278,37 +2283,28 @@ sudo runc list
 
 ## network网络
 
-- [视频（技术蛋老师）：【入门篇】Docker网络模式Linux - Bridge | Host | None](https://www.bilibili.com/video/BV1Aj411r71b)
+- [（视频）技术蛋老师：【入门篇】Docker网络模式Linux - Bridge | Host | None](https://www.bilibili.com/video/BV1Aj411r71b)
+
+- [洋芋编程：Docker 网络原理概述](https://mp.weixin.qq.com/s/U6cnU6ReOyUL62qY995Hkw)
 
 ### Docker的网络架构CNM
 
 - [鹅厂架构师：【后台技术】Docker网络篇](https://zhuanlan.zhihu.com/p/683336819)
+- [洋芋编程： Docker 网络原理概述](https://mp.weixin.qq.com/s/U6cnU6ReOyUL62qY995Hkw)
 
-- 1.CNM规定了基本组成要素：
+- Docker 原生网络是基于 Linux 的 网络命名空间（`net namespace`） 和 虚拟网络设备（`veth pair`）实现的。
 
-    ![image](./Pictures/docker/cnm网络架构.avif)
+- 网络模式（网络驱动）
 
-    - 1.sandbox(沙盒)：通过 namespace 实现。是一种独立的网络栈，包括以太网接口，端口，路由以及DNS配置
-
-        - 一个 sandbox 可以有多个 endpoint 和 网络
-
-    - 2.endpoint(端点)：通过 veth 实现。虚拟网络接口，负责创建连接，将沙盒连接到网络
-
-    - 3.网络：通过 brictl、vlan 实现
-
-        - 一个网络可以有多个端点
-
-- 2.Libnetwork
-
-    - Libnetwork是CNM的标准实现，支持跨平台，3个标准的组件和服务发现，基于Ingress的容器负载均衡，以及网络控制层和管理层的功能。
-
-    ![image](./Pictures/docker/Libnetwork.avif)
-
-- 3.网络模式
+    > Docker 的网络子系统支持插拔式的驱动程序，默认存在多个驱动程序，并提供核心网络功能。
 
     - 1.网桥（Bridge）：Docker默认的容器网络驱动，容器通过一对veth pair连接到docker0网桥上，由Docker为容器动态分配IP及配置路由、防火墙规则等
 
-    - 2.Host：容器与主机共享同一Network Namespace，共享同一套网络协议栈、路由表及iptables规则等，执行docker run --net=host centos:7 python -m SimpleHTTPServer 8081，然后查看看网络情况(netstat -tunpl) :
+    - 2.Host：容器不会获得一个独立的网络命名空间（Network Namespace），而是和宿主机共用一个，共享同一套网络协议栈，容器不会虚拟出自己的网卡，配置自己的IP、路由表及iptables规则等等，而是直接使用宿宿主机的。
+
+        - 但是容器的其他方面，如文件系统、进程列表等还是和宿宿主机隔离的，容器对外界是完全开放的，能够访问到宿主机，就能访问到容器。
+
+        - 执行`docker run --net=host centos:7 python -m SimpleHTTPServer 8081`，然后查看看网络情况`netstat -tunpl` :
 
         ```sh
         [root@VM-16-16-centos ~]# netstat -tunpl
@@ -2319,228 +2315,397 @@ sudo runc list
 
         - 可以看出host模型下，和主机上启动一个端口没有差别，也不会做端口映射，所以不同的服务在主机端口范围内不能冲突；
 
-    - 3.Overlay：多机覆盖网络是Docker原生的跨主机多子网网络方案，主要通过使用Linux bridge和vxlan隧道实现，底层通过类似于etcd或consul的KV存储系统实现多机的信息同步
+    - 3.Overlay：将多个容器连接，并使集群服务能够相互通信。主要通过使用Linux bridge和vxlan隧道实现，底层通过类似于etcd或consul的KV存储系统实现多机的信息同步
 
     - 4.Remote：Docker网络插件的实现，可以借助Libnetwork实现网络自己的网络插件；
+    - 5.ipvlan	使用户可以完全控制 IPv4 和 IPv6 寻址
+    - 6.macvlan	可以为容器分配 MAC 地址
+    - 7.None：容器拥有自己的 Network Namespace，但是并不进行任何网络配置。Docker容器完全隔离，无法访问外部网络，容器中只有 lo 这个 loopback（回环网络）网卡用于进程通信。该容器没有网卡、IP、路由等信息，需要手动为容器添加网卡、配置 IP 等，也无法与其他容器和主机通信
+        - 可以尝试执行`docker run --net=none centos:7 python -m SimpleHTTPServer 8081`，然后`curl xxx.com`应该是无法访问的。
 
-    - None：模式是最简单的网络模式，它会使得Docker容器完全隔离，无法访问外部网络。在None模式下，容器不会被分配IP地址，也无法与其他容器和主机通信，可以尝试执行`docker run --net=none centos:7 python -m SimpleHTTPServer 8081`，然后`curl xxx.com`应该是无法访问的。
+    - 8.其他第三方网络插件
 
-#### 网桥和Overlay详解
+- Docker daemon 通过调用 `libnetwork` 提供的 API 完成网络的创建和管理等功能。`libnetwork` 中使用了 `CNM` 来完成网络功能
 
-- Docker中最常用的两种网络是：网桥和Overlay
-    - 1.网桥：是解决主机内多容器通讯
+    ![image](./Pictures/docker/docker_网络架构1.avif)
+
+    - 1.CNM规定了基本组成要素：主要有3种组件
+
+        ![image](./Pictures/docker/cnm网络架构.avif)
+
+        - 1.sandbox(沙盒)：一个沙盒包含了一个容器网络栈的信息。可以对以太网接口，端口，路由以及DNS配置
+
+            - 一个 sandbox 可以有多个 endpoint 和 多个网络
+            - sandbox实现：linux通过 namespace ；FreeBSD 通过Jail
+
+        - 2.endpoint(端点)：虚拟网络接口，负责创建连接，将沙盒连接到网络
+
+            - 一个端点可以加入一个沙盒和一个网络。一个端点只属于一个网络和一个沙盒
+            - endpoint的实现：通过 veth pair、Open vSwitch 内部端口或者相似的设备
+
+        - 3.网络：
+
+            - 一个网络可以有多个端点
+            - 实现：通过 bridge、vlan
+
+    - 2.Libnetwork
+
+        - Libnetwork是CNM的标准实现，支持跨平台，3个标准的组件和服务发现，基于Ingress的容器负载均衡，以及网络控制层和管理层的功能。
+
+        ![image](./Pictures/docker/Libnetwork.avif)
+
+#### 网络模式（网络驱动）
+
+- Docker中最常用的两种网络是：网桥（Bridge）和Overlay
+    - 1.网桥（Bridge）：是解决主机内多容器通讯
     - 2.Overlay：是解决跨主机多子网网络
 
-- 1.网桥（Bridge）
+- 当需要多个容器在同一台宿主机上进行通信时，使用 bridge
+- 当网络栈不应该与宿主机隔离，但是希望容器的其他方面被隔离时，使用 host
+- 当需要在不同宿主机上运行的容器进行通信时，使用 overlay
+- 当从虚拟机迁移或需要使容器看起来像物理宿主机时，使用 Macvlan, 每个容器都有一个唯一的 MAC 地址
+- 当需要将 Docker 与专门的网络栈集成，使用 Third-party
 
-    - 网桥是什么？同tap/tun、veth-pair一样，网桥是一种虚拟网络设备，所以具备虚拟网络设备的所有特性，比如可以配置IP、MAC等，除此之外，网桥还是一个二层交换机，具有交换机所有的功能。
+##### 网桥（Bridge）
 
-    - 1.创建
+- 网桥（Bridge）：默认的网络模式
 
-        - Docker daemon启动时会在主机创建一个Linux网桥（默认为docker0），容器启动时，Docker会创建一对veth-pair（虚拟网络接口）设备，veth设备的特点是成对存在，从一端进入的数据会同时出现在另一端，Docker会将一端挂载到docker0网桥上，另一端放入容器的Network Namespace内，从而实现容器与主机通信的目的。
+- 网桥是什么？同tap/tun、veth-pair一样，网桥是一种虚拟网络设备，所以具备虚拟网络设备的所有特性，比如可以配置IP、MAC等，除此之外，网桥还是一个二层交换机，具有交换机所有的功能。
+    - 使用该模式的所有容器都是连接到 docker0 这个网桥
 
-        ![image](./Pictures/docker/网络-网桥Bridge.avif)
+- 1.创建
 
-    - 2.查看网桥
+    - 当 Docker 进程启动时，会在宿主机上创建一个名称为 `docker0` 的 虚拟网桥，在该宿主机上启动的 Docker 容器会连接到这个虚拟网桥上。
 
         ```sh
-        docker network ls
-        NETWORK ID     NAME              DRIVER    SCOPE
-        839c78d16e66   bridge            bridge    local
-        7865e8dc7489   host              host      local
-        e904b639a46d   k3d-k3d-private   bridge    local
-        e6e4904ea322   none              null      local
+        ifconfig
+        docker0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+                inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
+                ether 02:42:16:37:44:c4  txqueuelen 0  (Ethernet)
+                RX packets 0  bytes 0 (0.0 B)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 0  bytes 0 (0.0 B)
+                TX errors 0  dropped 5 overruns 0  carrier 0  collisions 0
         ```
 
-    - 3.查看网桥的详细信息
+    - 虚拟网桥的工作方式和物理交换机类似，宿主机上所有的容器通过虚拟网桥连接在一个二层网络中。
+        - 从 `docker0` 子网中分配一个 IP 给容器使用，并设置 `docker0` 的 IP 地址为容器的默认网关。在宿主机上创建一对虚拟网卡 `veth pair` 设备， Docker 将 `veth pair` 设备的一端放在新创建的容器中，并命名为 `eth0`（容器的网卡）， 另一端放在宿主机中，以 vethxxx 类似的名字命名， 并将这个网络设备连接到 `docker0` 网桥中。
+
+        - Docker 会自动配置 iptables 规则和配置 NAT，便于连通宿主机上的 `docker0` 网桥，完成这些操作之后，容器就可以使用它的 `eth0` 虚拟网卡，来连接其他容器和访问外部网络
+            - 虚拟网桥 docker0 通过 iptables 配置与宿主机器上的网卡相连，符合条件的请求都会通过 iptables 转发到 docker0, 然后分发给对应的容器。
+
+            ```sh
+            # 查看 docker 的 iptables 配置
+            iptables -t nat -L
+            Chain POSTROUTING (policy ACCEPT)
+            target     prot opt source               destination
+            MASQUERADE  all  --  172.17.0.0/16        anywhere
+            ```
+
+        - Docker 中的网络接口默认都是虚拟的接口，Linux 在内核中通过 `数据复制` 实现接口之间的数据传输，可以充分发挥数据在不同 Docker 容器或容器与宿主机之间的转发效率， 发送接口发送缓存中的数据包，将直接复制到接收接口的缓存中，**无需通过物理网络设备进行交换**。
 
         ```sh
-        # 先执行
-        docker run -d --name busybox-1 busybox echo "1"
-        docker run -d --name busybox-2 busybox echo "2"
+        # 查看主机上 veth 设备
+        ifconfig | grep veth
+        ```
 
-        # 再执行，可以看到输出网桥IPv4Address，MacAddress和EndpointID等：
-        docker inspect bridge
-        "Containers": {
-            "bbd7d0775081dd9a9d026ca4c8e3ec2e1a4b19bead122eac94cd58f1fa118827": {
-                "Name": "busybox-2",
-                "EndpointID": "a82be8a01e25f5267fd6286c10eb1c72a1dd1c1933dcc84a82b286162767923c",
-                "MacAddress": "02:42:ac:11:00:03",
-                "IPv4Address": "172.17.0.3/16",
-                "IPv6Address": ""
-            },
-            "fa14fa3e167d17922a94153c0e0eb83e244ef7b20f9fc04d05db2589828e747c": {
-                "Name": "busybox-1",
-                "EndpointID": "90f614cc4b2e4c5d2baa75facfa8e493d287cbb9ae39edaecb3ec67915d2df2b",
-                "MacAddress": "02:42:ac:11:00:02",
-                "IPv4Address": "172.17.0.2/16",
-                "IPv6Address": ""
-            }
+    ![image](./Pictures/docker/网络-网桥Bridge.avif)
+
+- 2.查看网桥
+
+    ```sh
+    docker network ls
+    NETWORK ID     NAME              DRIVER    SCOPE
+    839c78d16e66   bridge            bridge    local
+    7865e8dc7489   host              host      local
+    e904b639a46d   k3d-k3d-private   bridge    local
+    e6e4904ea322   none              null      local
+    ```
+
+- 3.查看网桥的详细信息
+
+    ```sh
+    # 先执行
+    docker run -d --name busybox-1 busybox echo "1"
+    docker run -d --name busybox-2 busybox echo "2"
+
+    # 再执行，可以看到输出网桥IPv4Address，MacAddress和EndpointID等：
+    docker inspect bridge
+    "Containers": {
+        "bbd7d0775081dd9a9d026ca4c8e3ec2e1a4b19bead122eac94cd58f1fa118827": {
+            "Name": "busybox-2",
+            "EndpointID": "a82be8a01e25f5267fd6286c10eb1c72a1dd1c1933dcc84a82b286162767923c",
+            "MacAddress": "02:42:ac:11:00:03",
+            "IPv4Address": "172.17.0.3/16",
+            "IPv6Address": ""
+        },
+        "fa14fa3e167d17922a94153c0e0eb83e244ef7b20f9fc04d05db2589828e747c": {
+            "Name": "busybox-1",
+            "EndpointID": "90f614cc4b2e4c5d2baa75facfa8e493d287cbb9ae39edaecb3ec67915d2df2b",
+            "MacAddress": "02:42:ac:11:00:02",
+            "IPv4Address": "172.17.0.2/16",
+            "IPv6Address": ""
         }
-        ```
+    }
 
-    - 4.检查网桥是否正常
+    # 查看其中一个容器其网络类型和配置。可以看到，虚拟网桥 的 IP 地址就是 bridge 网络类型的容器的网关地址。
+    docker inspect 容器ID
+    ```
 
-        - 可以进入busybox-2容器，执行ping 172.17.0.2，输出（可见是可以通的）：
+- 4.检查网桥是否正常
 
-        ```sh
-        PING 172.17.0.2 (172.17.0.2): 56 data bytes
-        64 bytes from 172.17.0.2: seq=0 ttl=64 time=0.115 ms
-        64 bytes from 172.17.0.2: seq=1 ttl=64 time=0.079 ms
-        64 bytes from 172.17.0.2: seq=2 ttl=64 time=0.051 ms
-        64 bytes from 172.17.0.2: seq=3 ttl=64 time=0.066 ms
-        64 bytes from 172.17.0.2: seq=4 ttl=64 time=0.051 ms
-        ^C
-        --- 172.17.0.2 ping statistics ---
-        5 packets transmitted, 5 packets received, 0% packet loss
-        round-trip min/avg/max = 0.051/0.072/0.115 ms
-        ```
+    - 可以进入busybox-2容器，执行ping 172.17.0.2，输出（可见是可以通的）：
 
-    - 5.端口映射
+    ```sh
+    PING 172.17.0.2 (172.17.0.2): 56 data bytes
+    64 bytes from 172.17.0.2: seq=0 ttl=64 time=0.115 ms
+    64 bytes from 172.17.0.2: seq=1 ttl=64 time=0.079 ms
+    64 bytes from 172.17.0.2: seq=2 ttl=64 time=0.051 ms
+    64 bytes from 172.17.0.2: seq=3 ttl=64 time=0.066 ms
+    64 bytes from 172.17.0.2: seq=4 ttl=64 time=0.051 ms
+    ^C
+    --- 172.17.0.2 ping statistics ---
+    5 packets transmitted, 5 packets received, 0% packet loss
+    round-trip min/avg/max = 0.051/0.072/0.115 ms
+    ```
 
-        - 可以看出这里是借助iptables实现的。
+- 5.端口映射
 
-        ```sh
-        # 先建立映射关系
-        docker run -d -p 8000:8000 centos:7 python -m SimpleHTTPServer
+    - 可以看出这里是借助iptables实现的。
 
-        # 再查看 iptables
-        iptables -t nat -nvL
-        Chain DOCKER (2 references)
-         pkts bytes target     prot opt in     out     source               destination
-            0     0 RETURN     0    --  docker0 *       0.0.0.0/0            0.0.0.0/0
-            0     0 DNAT       6    --  !docker0 *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8000 to:172.17.0.2:8000
-        ```
+    ```sh
+    # 先建立映射关系
+    docker run -d -p 8000:8000 centos:7 python -m SimpleHTTPServer
 
-    - 6.网桥模式下的Docker网络流程
+    # 再查看 iptables
+    iptables -t nat -nvL
+    Chain DOCKER (2 references)
+     pkts bytes target     prot opt in     out     source               destination
+        0     0 RETURN     0    --  docker0 *       0.0.0.0/0            0.0.0.0/0
+        0     0 DNAT       6    --  !docker0 *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8000 to:172.17.0.2:8000
+    ```
 
-        - 容器与容器之前通讯是通过Network Namespace, bridge和veth pair这三个虚拟设备实现一个简单的二层网络，不同的namespace实现了不同容器的网络隔离让他们分别有自己的ip，通过veth pair连接到docker0网桥上实现了容器间和宿主机的互通；
+- 6.网桥模式下的Docker网络流程
 
-        - 容器与外部或者主机通过端口映射通讯是借助iptables，通过路由转发到docker0，容器通过查询CAM表，或者UDP广播获得指定目标地址的MAC地址，最后将数据包通过指定目标地址的连接在docker0上的veth pair设备，发送到容器内部的eth0网卡上；
+    - 容器与容器之前通讯是通过Network Namespace, bridge和veth pair这三个虚拟设备实现一个简单的二层网络，不同的namespace实现了不同容器的网络隔离让他们分别有自己的ip，通过veth pair连接到docker0网桥上实现了容器间和宿主机的互通；
 
-        - 容器与外部或者主机通过端口映射通讯对应的限制是相同的端口不能在主机下重复映射；
+    - 容器与外部或者主机通过端口映射通讯是借助iptables，通过路由转发到docker0，容器通过查询CAM表，或者UDP广播获得指定目标地址的MAC地址，最后将数据包通过指定目标地址的连接在docker0上的veth pair设备，发送到容器内部的eth0网卡上；
 
-- 2.Overlay
+    - 容器与外部或者主机通过端口映射通讯对应的限制是相同的端口不能在主机下重复映射；
+
+##### Overlay
+
+- Overlay
 
     - 在云原生下集群通讯是必须的，当然Docker提供多种方式，包括借助Macvlan接入VLAN网络，另一种是Overlay。
     - 那什么是Overlay呢？指的就是在物理网络层上再搭建一层网络，通过某种技术再构建一张相同的逻辑网络。
     ![image](./Pictures/docker/网络-overlay.avif)
 
-    - 1.什么VXLAN网络？VXLAN全称是Visual eXtensible Local Area Network
+- 1.什么VXLAN网络？VXLAN全称是Visual eXtensible Local Area Network
 
-        - 本质上是一种隧道封装技术，它使用封装/解封装技术，将L2的以太网帧（Ethernet frames）封装成L4的UDP数据报（datagrams），然后在L3的网络中传输，效果就像L2的以太网帧在一个广播域中传输一样，实际上是跨越了L3网络，但却感知不到L3网络的存在。 那么容器B发送请求给容器A（ping）的具体流程是怎样的？
+    - 本质上是一种隧道封装技术，它使用封装/解封装技术，将L2的以太网帧（Ethernet frames）封装成L4的UDP数据报（datagrams），然后在L3的网络中传输，效果就像L2的以太网帧在一个广播域中传输一样，实际上是跨越了L3网络，但却感知不到L3网络的存在。 那么容器B发送请求给容器A（ping）的具体流程是怎样的？
 
-        ![image](./Pictures/docker/网络-vxlan.avif)
+    ![image](./Pictures/docker/网络-vxlan.avif)
 
-        - 1.容器B执行ping，流量通过BridgeA的veth接口发送出去，但是这个时候BridgeB并不知道要发送到哪里（BridgeB没有MAC与容器A的IP映射表），所以BridgeB将通过VTEP解析ARP协议，确定MAC和IP以后，将真正的数据包转发给VTEP，带上VTEP的MAC地址
-        - 2.VTEP-B收到数据包，通过Swarm的集群的网络信息中知道目标IP是容器B
-        - 3.VTEP-B将数据包封装为VXLAN格式（数据包中存储了VXLAN的ID，记录其映射关系）
-        - 4.实际底层VTEP-B将数据包通过主机B的UDP物理通道将VXLAN数据包封装为UDP发送出去
-        - 5-6.通过隧道传输（UDP端口：4789），数据包到达VTEP-A，VTEP-A解析数据包读取其中的VXLAN的ID，确定发送到哪个网桥
-        - 7.VTEP-A继续解包和封包，将数据从UDP中拆解出来，重新组装网络协议包，发送给BridgeA
-        - 8.BridgeA收到数据，通过veth发给容器A，回包的过程就是反向处理
+    - 1.容器B执行ping，流量通过BridgeA的veth接口发送出去，但是这个时候BridgeB并不知道要发送到哪里（BridgeB没有MAC与容器A的IP映射表），所以BridgeB将通过VTEP解析ARP协议，确定MAC和IP以后，将真正的数据包转发给VTEP，带上VTEP的MAC地址
+    - 2.VTEP-B收到数据包，通过Swarm的集群的网络信息中知道目标IP是容器B
+    - 3.VTEP-B将数据包封装为VXLAN格式（数据包中存储了VXLAN的ID，记录其映射关系）
+    - 4.实际底层VTEP-B将数据包通过主机B的UDP物理通道将VXLAN数据包封装为UDP发送出去
+    - 5-6.通过隧道传输（UDP端口：4789），数据包到达VTEP-A，VTEP-A解析数据包读取其中的VXLAN的ID，确定发送到哪个网桥
+    - 7.VTEP-A继续解包和封包，将数据从UDP中拆解出来，重新组装网络协议包，发送给BridgeA
+    - 8.BridgeA收到数据，通过veth发给容器A，回包的过程就是反向处理
 
-    - 2.创建
-        ```sh
-        docker swarm init
+- 2.创建
+    ```sh
+    docker swarm init
 
-        # 创建test-net
-        docker network create --subnet=10.1.1.0/24 --subnet=11.1.1.0/24 -d overlay test-net
+    # 创建test-net
+    docker network create --subnet=10.1.1.0/24 --subnet=11.1.1.0/24 -d overlay test-net
 
-        # 查看
-        docker network ls
-        NETWORK ID     NAME              DRIVER    SCOPE
-        dfd2f3cef3d9   bridge            bridge    local
-        6da75632cc82   docker_gwbridge   bridge    local
-        ba41f6cef47f   host              host      local
-        ivia1zri4tdw   ingress           overlay   swarm
-        78f8aa199af8   none              null      local
-        smlwbn2yjjlm   test-net          overlay   swarm
-        ```
+    # 查看
+    docker network ls
+    NETWORK ID     NAME              DRIVER    SCOPE
+    dfd2f3cef3d9   bridge            bridge    local
+    6da75632cc82   docker_gwbridge   bridge    local
+    ba41f6cef47f   host              host      local
+    ivia1zri4tdw   ingress           overlay   swarm
+    78f8aa199af8   none              null      local
+    smlwbn2yjjlm   test-net          overlay   swarm
+    ```
 
-    - 3.查看网络详情
+- 3.查看网络详情
 
-        ```sh
-        # 创建一个sevice，replicas等于2来看看网络情况
-        docker service create --name test --network test-net --replicas 2 centos:7 sleep infinity
+    ```sh
+    # 创建一个sevice，replicas等于2来看看网络情况
+    docker service create --name test --network test-net --replicas 2 centos:7 sleep infinity
 
-        # 查看运行情况
-        docker ps -a
+    # 查看运行情况
+    docker ps -a
     CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS                      PORTS                                       NAMES
     c8e4063ed9b2   centos:7        "sleep infinity"         3 minutes ago    Up 3 minutes                                                            test.1.o6c8up8jykjzv4qtav8kylb18
     15a9b4eedaea   centos:7        "sleep infinity"         3 minutes ago    Up 3 minutes                                                            test.2.iiozzdyksf2a2i82uos8j7a8n
 
-        # 查看test-net详情
-        docker network inspect test-net
-        [
-            {
-                "Name": "test-net",
-                "Id": "smlwbn2yjjlmb7s76k5cep94h",
-                "Created": "2024-06-09T14:32:00.247463459+08:00",
-                "Scope": "swarm",
-                "Driver": "overlay",
-                "EnableIPv6": false,
-                "IPAM": {
-                    "Driver": "default",
-                    "Options": null,
-                    "Config": [
-                        {
-                            "Subnet": "11.1.1.0/24",
-                            "Gateway": "11.1.1.1"
-                        },
-                        {
-                            "Subnet": "10.1.1.0/24",
-                            "Gateway": "10.1.1.1"
-                        }
-                    ]
-                },
-                "Internal": false,
-                "Attachable": false,
-                "Ingress": false,
-                "ConfigFrom": {
-                    "Network": ""
-                },
-                "ConfigOnly": false,
-                "Containers": {
-                    "15a9b4eedaeaeea710658ec4ff5611978b0f419863f620f68044105956e05fd6": {
-                        "Name": "test.2.iiozzdyksf2a2i82uos8j7a8n",
-                        "EndpointID": "a804dec0ceeedfd5874b99033f44b1d77ebd1eff9d31c26e50f8375cea54adfb",
-                        "MacAddress": "02:42:0b:01:01:03",
-                        "IPv4Address": "11.1.1.3/24",
-                        "IPv6Address": ""
-                    },
-                    "c8e4063ed9b2d331d6c86477ba920c8b1f8d84b55810191b3a0696a2d71a939d": {
-                        "Name": "test.1.o6c8up8jykjzv4qtav8kylb18",
-                        "EndpointID": "465f6d1aa9d5acee53ae97dab00a2f148221326e820b1bb2af987319852c46fc",
-                        "MacAddress": "02:42:0b:01:01:04",
-                        "IPv4Address": "11.1.1.4/24",
-                        "IPv6Address": ""
-                    },
-                    "lb-test-net": {
-                        "Name": "test-net-endpoint",
-                        "EndpointID": "66ca707443c103c7bf03dada893f413fae53cceb61b00cc9948698cd4e75250c",
-                        "MacAddress": "02:42:0b:01:01:05",
-                        "IPv4Address": "11.1.1.5/24",
-                        "IPv6Address": ""
-                    }
-                },
-                "Options": {
-                    "com.docker.network.driver.overlay.vxlanid_list": "4097,4098"
-                },
-                "Labels": {},
-                "Peers": [
+    # 查看test-net详情
+    docker network inspect test-net
+    [
+        {
+            "Name": "test-net",
+            "Id": "smlwbn2yjjlmb7s76k5cep94h",
+            "Created": "2024-06-09T14:32:00.247463459+08:00",
+            "Scope": "swarm",
+            "Driver": "overlay",
+            "EnableIPv6": false,
+            "IPAM": {
+                "Driver": "default",
+                "Options": null,
+                "Config": [
                     {
-                        "Name": "499dc7333f68",
-                        "IP": "192.168.1.222"
+                        "Subnet": "11.1.1.0/24",
+                        "Gateway": "11.1.1.1"
+                    },
+                    {
+                        "Subnet": "10.1.1.0/24",
+                        "Gateway": "10.1.1.1"
                     }
                 ]
-            }
-        ]
+            },
+            "Internal": false,
+            "Attachable": false,
+            "Ingress": false,
+            "ConfigFrom": {
+                "Network": ""
+            },
+            "ConfigOnly": false,
+            "Containers": {
+                "15a9b4eedaeaeea710658ec4ff5611978b0f419863f620f68044105956e05fd6": {
+                    "Name": "test.2.iiozzdyksf2a2i82uos8j7a8n",
+                    "EndpointID": "a804dec0ceeedfd5874b99033f44b1d77ebd1eff9d31c26e50f8375cea54adfb",
+                    "MacAddress": "02:42:0b:01:01:03",
+                    "IPv4Address": "11.1.1.3/24",
+                    "IPv6Address": ""
+                },
+                "c8e4063ed9b2d331d6c86477ba920c8b1f8d84b55810191b3a0696a2d71a939d": {
+                    "Name": "test.1.o6c8up8jykjzv4qtav8kylb18",
+                    "EndpointID": "465f6d1aa9d5acee53ae97dab00a2f148221326e820b1bb2af987319852c46fc",
+                    "MacAddress": "02:42:0b:01:01:04",
+                    "IPv4Address": "11.1.1.4/24",
+                    "IPv6Address": ""
+                },
+                "lb-test-net": {
+                    "Name": "test-net-endpoint",
+                    "EndpointID": "66ca707443c103c7bf03dada893f413fae53cceb61b00cc9948698cd4e75250c",
+                    "MacAddress": "02:42:0b:01:01:05",
+                    "IPv4Address": "11.1.1.5/24",
+                    "IPv6Address": ""
+                }
+            },
+            "Options": {
+                "com.docker.network.driver.overlay.vxlanid_list": "4097,4098"
+            },
+            "Labels": {},
+            "Peers": [
+                {
+                    "Name": "499dc7333f68",
+                    "IP": "192.168.1.222"
+                }
+            ]
+        }
+    ]
 
-        # 停止test服务，并删除
-        docker service scale test=0
-        docker service rm test
-        ```
+    # 停止test服务，并删除
+    docker service scale test=0
+    docker service rm test
+    ```
+
+##### host
+
+- Host：容器不会获得一个独立的网络命名空间（Network Namespace），而是和宿主机共用一个，共享同一套网络协议栈，容器不会虚拟出自己的网卡，配置自己的IP、路由表及iptables规则等等，而是直接使用宿宿主机的。
+
+    - 但是容器的其他方面，如文件系统、进程列表等还是和宿宿主机隔离的，容器对外界是完全开放的，能够访问到宿主机，就能访问到容器。
+
+- host 模式降低了容器与容器之间、容器与宿主机之间网络层面的隔离性，虽然有性能上的优势，但是引发了网络资源的竞争与冲突，因此适用于容器集群规模较小的场景。
+
+```sh
+# 启动一个网络类型为 host 的 Nginx 容器：
+docker run -d --net host nginx
+
+# 查看网络类型为 host 的容器列表：
+docker network inspect host
+
+# 查看 Nginx 容器网络类型和配置：
+# Nginx 容器使用的网络类型是 host，没有独立的 IP。
+docker inspect <容器-id>
+```
+
+- Nginx 容器内部并没有独立的 IP，而是使用了宿主机的 IP。
+```sh
+# 查看 Nginx 容器 IP 地址：
+
+# 进入容器内部 shell
+docker exec -it <容器-id> /bin/bash
+
+# 安装 ip 命令
+apt update && apt install -y iproute2
+
+# 查看 IP 地址
+ip a
+
+# 退出容器，查看宿主机 IP 地址
+exit
+ip a
+
+# 查看宿主机的端口监听状态：监听 80 端口的进程为 nginx, 而不是 docker-proxy。
+sudo netstat -ntpl
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      8550/nginx: master
+```
+
+##### none
+
+- None：容器拥有自己的 Network Namespace，但是并不进行任何网络配置。Docker容器完全隔离，无法访问外部网络，容器中只有 lo 这个 loopback（回环网络）网卡用于进程通信。该容器没有网卡、IP、路由等信息，需要手动为容器添加网卡、配置 IP 等，也无法与其他容器和主机通信
+
+- none 模式为容器做了最少的网络设置，在没有网络配置的情况下，通过自定义配置容器的网络，提供了最高的灵活性。
+
+```sh
+# 启动一个网络类型为 host 的 Nginx 容器：
+docker run -d --net none nginx
+
+# 查看网络类型为 none 的容器列表：
+docker network inspect none
+
+# 查看 Nginx 容器网络类型和配置：
+docker inspect <容器-id>
+```
+
+- 查看 Nginx 容器 IP 地址：
+
+```sh
+# 进入容器内部 shell
+docker exec -it <容器-id> /bin/bash
+
+# 访问公网链接
+curl -I "https://www.docker.com"
+curl: (6) Could not resolve host: www.docker.com
+
+# 为什么会报错呢？ 这是因为当前容器没有网卡、IP、路由等信息，是完全独立的运行环境，所以没有办法访问公网链接。
+
+# 查看 IP 地址。没有任何输出，该容器没有 IP 地址
+hostname -I
+```
+
+- 查看宿主机的端口监听状态：
+
+```sh
+# 没有任何输出
+docker port <容器-id>
+
+# 没有任何输出，Nginx 进程运行在容器中，端口没有映射到宿主机
+sudo netstat -ntpl | grep :80
+```
+
+##### container
+
+- 与 host 模式类似，容器与指定的容器共享网络命名空间。这两个容器之间不存在网络隔离，但它们与宿主机以及其他的容器存在网络隔离。该模式下的容器可以通过 localhost 来访问同一网络命名空间下的其他容器，传输效率较高，且节约了一定的网络资源。在一些特殊的场景中非常有用，例如 k8s 的 Pod。
 
 ### 容器之间的网络连通性
 
@@ -2552,10 +2717,10 @@ sudo runc list
 
     ![image](./Pictures/docker/cnm-model.avif)
 
-- 创建btrctl网络
+- 创建网络网桥
 
     ```bash
-    # 创建两个btrctl网络
+    # 创建两个网络网桥
     docker network create backend
     docker network create frontend
 
@@ -3898,6 +4063,23 @@ docker run --rm -ti \
     ```sh
     # 启动find-container-process
     docker run --rm -it --name find-container-process -v /var/run/docker.sock:/var/run/docker.sock --pid=host --net=host --privileged 80imike/find-container-process
+    ```
+
+- [runlike：自动生成对应的docker run命令](https://github.com/lavie/runlike)
+
+    ```sh
+    runlike -p redis
+
+    docker run \
+        --name=redis \
+        -e "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+        -e "REDIS_VERSION=2.8.9" \
+        -e "REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-2.8.9.tar.gz" \
+        -e "REDIS_DOWNLOAD_SHA1=003ccdc175816e0a751919cf508f1318e54aac1e" \
+        -p 0.0.0.0:6379:6379/tcp \
+        --detach=true \
+        myrepo/redis:7860c450dbee9878d5215595b390b9be8fa94c89 \
+        redis-server --slaveof 172.31.17.84 6379
     ```
 
 # reference article(优秀文章)

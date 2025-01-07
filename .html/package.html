@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<title>package</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">yum</a>
+<ul>
+<li><a href=".html">yum源</a></li>
+<li><a href=".html">repo</a></li>
+</ul>
+</li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>yum</h1>
+<ul>
+<li>自动解决增加或删除rpm包时，遇到的依赖问题</li>
+<li>配置文件：<code>/etc/yum.conf</code>, <code>/etc/yum.repos.d/CentOS-Base-repo</code></li>
+<li>yum会自动下载所有所需的升级包，放在<code>/var/cache/yum</code>下</li>
+<li>第一次使用yum和yum资源库更新时，软件升级所需的时间可能比较长</li>
+</ul>
+<pre><code class="language-sh"># 更新kernel。完全可以用yum install代替yum update进行升级
+yum update kernel
+
+# 大规模版本升级，与yum update不同的是，陈旧的包也会升级
+yum upgrade
+
+# 查看资源库可以安装、更新或已经安装的rpm包
+yum list
+yum list gcc
+
+# 查看所有可以更新的rpm包
+yum list updates
+
+# 查看已经安装的rpm包
+yum list installed
+
+# 查看从其他网站下载安装的rpm包
+yum list extras
+
+# list与info不同的是。list只查看包，info查看包的信息
+# 查看所有可以安装或更新的rpm包的信息
+yum info
+
+# 查看已经安装的rpm包的信息
+yum info installed
+
+# 查看从其他网站下载安装的rpm包的信息
+yum info extras
+
+# 查看指定包的信息
+yum info zsh
+yum info perl*
+
+# 搜索包
+yum search zsh
+
+# 清楚暂存的rpm包
+yum clean packages
+
+# 清楚暂存的rpm头文件
+yum clean headers
+
+# 清楚暂存的rpm包和头文件。相当于 yum clean packages || yum clean headers
+yum clean all
+</code></pre>
+<h2>yum源</h2>
+<ul>
+<li>
+<p>EPEL（企业版linux附加软件包）：epel不会与官方源发生冲突或者互相替换文件，因此可以放心使用</p>
+</li>
+<li>
+<p>RPMForge：第三方软件源仓库。官方社区推荐的第三方yum源</p>
+</li>
+<li>
+<p>可以使用以下shell函数，更换阿里源。并安装epel</p>
+</li>
+</ul>
+<pre><code class="language-sh">yumsource(){
+    echo &quot; Replacing yum aliyun source...&quot;
+    release=$(awk '{ print $4 }' /etc/redhat-release | cut -c1)
+    dir=/etc/yum.repos.d
+    backup=/etc/yum.repos.d.bak
+
+    if [ ! -f &quot;$backup&quot; ];then
+        echo &quot;This is red hat $release version&quot;
+        mv $dir $backup
+        mkdir $dir
+        cd $dir
+        curl -LO https://mirrors.aliyun.com/repo/Centos-$release.repo
+    fi
+
+    echo &quot;install epel source&quot;
+    yum install -y epel-release
+
+    echo &quot; Replacing epel aliyun source...&quot;
+    cp $dir/epel.repo $backup/epel.repo.bak
+    cp $dir/epel-testing.repo $backup/epel-testing.repo.bak
+
+    if [ &quot;$release&quot; == &quot;8&quot; ];then
+        sed -i 's|^#baseurl=https://download.fedoraproject.org/pub|baseurl=https://mirrors.aliyun.com|' /etc/yum.repos.d/epel*
+        sed -i 's|^metalink|#metalink|' /etc/yum.repos.d/epel*
+    else
+        wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-$release.repo
+    fi
+
+    yum clean all
+    yum makecache
+}
+</code></pre>
+<h2>repo</h2>
+<ul>
+<li>新建一个gitlab的repo</li>
+</ul>
+<pre><code class="language-sh">cat &gt; /etc/yum.repos.d/gitlab-ce.repo &lt;&lt; EOF
+[gitlab-ce]
+name=Gitlab CE Repository
+# 清华源
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el\$releasever/
+gpgcheck=0
+enabled=1
+EOF
+</code></pre>
+<pre><code class="language-sh"># 查找yum源中gitlab-ce的版本
+yum list gitlab-ce --showduplicates
+
+# 安装需要的版本
+yum install gitlab-ce-16.8.1
+</code></pre>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<title>lua</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">lua</a>
+<ul>
+<li><a href=".html">数据类型</a>
+<ul>
+<li><a href=".html">string(字符串)</a>
+<ul>
+<li><a href=".html">string库</a></li>
+</ul>
+</li>
+<li><a href=".html">table(表)</a></li>
+</ul>
+</li>
+<li><a href=".html">io</a></li>
+<li><a href=".html">函数式编程库</a></li>
+<li><a href=".html">OOP库</a></li>
+<li><a href=".html">腾讯技术工程：Lua进程内存优化方案总结</a></li>
+</ul>
+</li>
+<li><a href=".html">reference</a></li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>lua</h1>
+<h2>数据类型</h2>
+<h3>string(字符串)</h3>
+<ul>
+<li><code>..</code> 连接字符串. 由于字符串是不可变类型, 连接字符串实际是新建一个新的字符串</li>
+</ul>
+<pre><code class="language-lua">print('hello'..'world') -- helloworld
+</code></pre>
+<h4>string库</h4>
+<ul>
+<li>
+<p>5.3：string库支持utf-8</p>
+<ul>
+<li>
+<p>string库的函数<code>reverse</code> <code>upper</code> <code>lower</code> <code>byte</code> <code>char</code> 只支持1bit的字符编码（也就是不支持中文）</p>
+</li>
+<li>
+<p><code>len</code> 函数支持utf-8字符串（支持中文）</p>
+</li>
+</ul>
+</li>
+<li>
+<p>string.sub(): 删除字符串里的字符</p>
+</li>
+</ul>
+<pre><code class="language-lua">str1 = 'hello'
+-- 实际上是创建新字符串
+str2 = string.sub(str1, 2, -2)
+print(str2) -- 'ell'
+</code></pre>
+<h3>table(表)</h3>
+<ul>
+<li>
+<p>lua既可以是数组，也可以是hash表</p>
+</li>
+<li>
+<p>lua用表来存储全局变量</p>
+</li>
+<li>
+<p>未赋值的变量为<code>nil</code></p>
+<ul>
+<li>假设有10000个节点的邻居图, 也就是10000 * 10000, 一亿个元素. 设置每个节点最多只有5个邻居, 也就是只有5万个元素不为nil. 对于lua来说, nil值不占用内存</li>
+</ul>
+<pre><code class="language-lua">t = {}
+print(t[1]) -- nil
+</code></pre>
+</li>
+<li>
+<p>也可以对以赋值的变量赋值<code>nil</code> 表示删除此变量</p>
+<pre><code class="language-lua">t = {}
+t[1] = 10
+print(t[1]) -- 10
+t[1] = nil
+print(t[1]) -- nil
+</code></pre>
+</li>
+<li>
+<p>stack(栈)</p>
+</li>
+</ul>
+<pre><code class="language-lua">table1 = {}
+
+-- push
+table.insert(table1, i)
+
+-- pop
+table.remove(table1)
+</code></pre>
+<ul>
+<li>queue(队列)</li>
+</ul>
+<pre><code class="language-lua">table1 = {}
+
+-- enqueue
+table.insert(table1, 1, i)
+
+-- denqueue
+table.remove(table1, 1)
+</code></pre>
+<ul>
+<li>unpack()：提取table指定范围的元素</li>
+</ul>
+<pre><code class="language-lua">table1 = {1, 2, 3, 4, 5}
+
+function unpack(t, i, n)
+    if i &lt;= n then
+        return t[i], unpack(t, i+1, n)
+    end
+end
+
+-- 提取前两个元素
+print(unpack(table1, 1, 2)) -- 1, 2
+</code></pre>
+<ul>
+<li>链表</li>
+</ul>
+<pre><code class="language-lua">link = nil
+link = {next = link, data = data}
+
+local link1 = link
+
+local l = link1
+for i = 1, 10 do
+    link1.data = i
+    l = link1.next
+end
+
+local l = link1
+while l do
+    print(l.data)
+    l = l.next
+end
+</code></pre>
+<ul>
+<li>双向链表</li>
+</ul>
+<pre><code class="language-lua">function doubleLink()
+    return {first = 1, last = -1}
+end
+
+-- push
+function pushFirst(link, data)
+    local first = frist - 1
+    link.first = first
+    link[first] = data
+end
+
+function pushLast(link, data)
+    local last = last + 1
+    link.last = last
+    link[last] = data
+end
+
+-- pop
+function popFirst(link)
+    local first = link.first
+    local data = link[first].data
+    if first &gt; link.last then error('link is empty') end
+    link[first] = nil
+    link.first = first + 1
+    return data
+end
+
+function popLast(link)
+    local last = link.last
+    wlocal data = link[last].data
+    if link.first &gt; last then error('link is empty') endw
+    link[last] = nil
+    link.last = last - 1
+    return data
+end
+</code></pre>
+<h2>io</h2>
+<pre><code class="language-lua">file = io.open(&quot;/tmp/test&quot;, &quot;r&quot;)
+print(file:read())
+
+file.close()
+</code></pre>
+<h2><a href="https://github.com/luafun/luafun">函数式编程库</a></h2>
+<h2><a href="https://github.com/kikito/middleclass">OOP库</a></h2>
+<h2><a href="https://mp.weixin.qq.com/s/jXGD8d-ZZHteIsHF212w5Q">腾讯技术工程：Lua进程内存优化方案总结</a></h2>
+<h1>reference</h1>
+<ul>
+<li><a href=".html">深入理解 Lua 虚拟机</a></li>
+</ul>

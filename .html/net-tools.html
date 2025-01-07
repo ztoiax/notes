@@ -1,0 +1,2345 @@
+<!DOCTYPE html>
+<title>net-tools</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">OSI 7层</a>
+<ul>
+<li><a href=".html">综合工具</a>
+<ul>
+<li><a href=".html">nmcli</a>
+<ul>
+<li><a href=".html">交互模式</a></li>
+</ul>
+</li>
+<li><a href=".html">netstat</a></li>
+<li><a href=".html">ss (iproute2)</a></li>
+<li><a href=".html">nc（连接服务器）</a></li>
+<li><a href=".html">frp: 反向代理(内网穿透)</a>
+<ul>
+<li><a href=".html">端口</a></li>
+<li><a href=".html">sock</a></li>
+<li><a href=".html">文件服务器</a></li>
+<li><a href=".html">http转https</a></li>
+<li><a href=".html">tls</a></li>
+</ul>
+</li>
+<li><a href=".html">frpc-desktop：跨平台的 frp 桌面客户端。</a></li>
+<li><a href=".html">mtr</a></li>
+<li><a href=".html">ngrep（抓包）</a></li>
+<li><a href=".html">mitmproxy(代理http, 并抓包)</a></li>
+<li><a href=".html">socat</a></li>
+<li><a href=".html">tc(traffic control队列控制)</a></li>
+<li><a href=".html">tailscale：WireGuard vpn</a></li>
+<li><a href=".html">chisel：在 HTTP 通信上建立 TCP/UDP 隧道</a></li>
+</ul>
+</li>
+<li><a href=".html">应用层</a>
+<ul>
+<li><a href=".html">http</a>
+<ul>
+<li><a href=".html">curl</a>
+<ul>
+<li><a href=".html">其他协议</a></li>
+<li><a href=".html">发送/上传数据 POST PATCH DELETE</a></li>
+<li><a href=".html">.curlrc配置文件</a></li>
+<li><a href=".html">格式化输出和变量</a></li>
+</ul>
+</li>
+<li><a href=".html">trurl：curl作者的新作品</a></li>
+<li><a href=".html">posting：tui版的postman</a></li>
+<li><a href=".html">webhook（微信机器人）</a></li>
+<li><a href=".html">httpie</a>
+<ul>
+<li><a href=".html">nghttp（测试是否支持 http2）</a></li>
+</ul>
+</li>
+<li><a href=".html">h2spec：测试服务器 http2 一致性</a></li>
+<li><a href=".html">grpcurl：类似 cURL 但用于 gRPC 的工具</a></li>
+</ul>
+</li>
+<li><a href=".html">websocket</a>
+<ul>
+<li><a href=".html">wscat</a></li>
+<li><a href=".html">websocat:创建websocat</a></li>
+<li><a href=".html">websocketd:创建websocket服务执行命令</a></li>
+</ul>
+</li>
+<li><a href=".html">dns</a>
+<ul>
+<li><a href=".html">whois(查看域名注册信息)</a></li>
+<li><a href=".html">dnspeep：记录程序的dns请求,响应</a></li>
+<li><a href=".html">dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）</a></li>
+</ul>
+</li>
+<li><a href=".html">socks</a>
+<ul>
+<li><a href=".html">tun2socks：将tcp/udp等流量转换为socks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">表示层</a>
+<ul>
+<li><a href=".html">testssl(测试网站是否支持ssl/tls，以及检测漏洞)</a></li>
+</ul>
+</li>
+<li><a href=".html">传输层</a>
+<ul>
+<li><a href=".html">tcpdump：抓包</a>
+<ul>
+<li><a href=".html">基本命令</a></li>
+<li><a href=".html">捕抓 TCP SYN，ACK 和 FIN 包</a></li>
+</ul>
+</li>
+<li><a href=".html">tshark、editcap、capinfos：抓包</a></li>
+<li><a href=".html">ptcpdump：抓包</a></li>
+<li><a href=".html">nmap</a></li>
+<li><a href=".html">zmap</a></li>
+<li><a href=".html">RustScan：端口扫描</a></li>
+<li><a href=".html">vmessping：可以ping vmess://的地址</a></li>
+<li><a href=".html">nping(代替 ping)</a></li>
+<li><a href=".html">hping</a></li>
+<li><a href=".html">ngrok：内网穿透（端口转发）</a></li>
+<li><a href=".html">portr：python写的ngrok代替品</a></li>
+</ul>
+</li>
+<li><a href=".html">网络层</a>
+<ul>
+<li><a href=".html">ifconfig(net-tools)</a></li>
+<li><a href=".html">ip(iproute2)</a></li>
+<li><a href=".html">ipcalc(ip二进制显示)</a></li>
+<li><a href=".html">nali(ip地址离线数据库)</a></li>
+<li><a href=".html">traceroute</a></li>
+<li><a href=".html">tcptraceroute</a></li>
+<li><a href=".html">防火墙</a>
+<ul>
+<li><a href=".html">iptables</a>
+<ul>
+<li><a href=".html">基本命令</a></li>
+<li><a href=".html">过滤命令</a></li>
+<li><a href=".html">通过iptables实现nat功能</a></li>
+</ul>
+</li>
+<li><a href=".html">nftables</a>
+<ul>
+<li><a href=".html">iptables 转换成 nftables</a></li>
+</ul>
+</li>
+<li><a href=".html">firewalld</a>
+<ul>
+<li><a href=".html">基本命令</a></li>
+<li><a href=".html">复杂规则</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">ethtool</a></li>
+<li><a href=".html">arp</a></li>
+<li><a href=".html">arpwatch</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">性能监控</a>
+<ul>
+<li><a href=".html">观察工具</a>
+<ul>
+<li><a href=".html">查看吞吐率，PPS（Packet Per Second 包 / 秒）</a></li>
+<li><a href=".html">wondershaper：Linux 限制网络带宽的工具</a></li>
+</ul>
+</li>
+<li><a href=".html">压力测试</a>
+<ul>
+<li><a href=".html">wrk</a></li>
+<li><a href=".html">wrk2: wrp的变种</a></li>
+<li><a href=".html">oth：Rust 驱动的 HTTP 压测工具。这是一个用 Rust 开发的 HTTP 请求压测工具，它操作简单、带 TUI 动画界面，支持生成请求延迟、吞吐量等指标的报告，以及动态 URL 和更灵活的请求间隔（burst-delay）等功能。</a></li>
+<li><a href=".html">lighthouse(chrome 网页性能测试)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">优秀文章</a></li>
+<li><a href=".html">在线工具</a></li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>OSI 7层</h1>
+<ul>
+<li>
+<p>[ ] net-tools</p>
+<blockquote>
+<p>使用 <code>ioctl</code> 系统调用,和通过 <code>/proc</code> 目录读取数据</p>
+</blockquote>
+</li>
+<li>
+<p>[x] iproute2(推荐)</p>
+<blockquote>
+<p>使用 <code>netlink</code> 内核接口获取数据,比 <code>ioctl</code> 要好</p>
+</blockquote>
+</li>
+</ul>
+<p>| net-tools        | iproute2                |
+| ---------------- | ----------------------- |
+| ifconfig         | ip addr, ip link, ip -s |
+| route            | ip route                |
+| arp              | ip neigh                |
+| iptunnel         | ip tunnel               |
+| nameif, ifrename | ip link set name        |
+| ipmaddr          | ip maddr                |
+| netstat          | ip -s, ss, ip route     |
+| brctl            | bridge                  |
+|                  | tc(qos)                 |</p>
+<h2>综合工具</h2>
+<h3>nmcli</h3>
+<pre><code class="language-bash"># 显示连接
+nmcli connection show
+
+# 显示活跃连接
+nmcli connection show --active
+
+# 添加eth2新连接
+nmcli connection add type ethernet ifname eth2
+
+# 开启，关闭 &quot;Wired Connection&quot;为 device name
+nmcli connection down &quot;Wired Connection&quot;
+nmcli connection up &quot;Wired Connection&quot;
+
+# 修改ip 需要重启网卡.电脑重启依然生效
+nmcli connection modify &quot;Wired Connection&quot; ipv4.method manual
+nmcli connection modify &quot;Wired Connection&quot; ipv4.address 192.168.100.2/24
+
+# 修改为dhcp
+nmcli connection modify &quot;Wired Connection&quot; ipv4.method auto
+
+# 修改dns
+nmcli connection modify &quot;Wired Connection&quot; ipv4.dns &quot;114.114.114.114 223.5.5.5&quot;
+
+# 查看网卡配置
+nmcli device show
+</code></pre>
+<h4>交互模式</h4>
+<pre><code class="language-bash"># 进入交互模式
+nmcli connection edit eth0
+
+# 修改ip
+goto ipv4
+set ipv4.address 192.168.100.2/24
+save
+</code></pre>
+<h3>netstat</h3>
+<ul>
+<li>建议使用 <code>ss</code> 参数差不多,更快,信息更全</li>
+<li>建议开启 <code>sudo</code> 不然不会显示端口对应的程序命令</li>
+</ul>
+<p>| 参数   | 操作                  |
+| ----   | --------------------- |
+| -a     | 所有                  |
+| -t     | tcp                   |
+| -u     | udp                   |
+| -n     | 不解析域名(提高速度)  |
+| -p     | 进程                  |
+| -c     | 实时监控              |
+| -l     | LISTEN                |
+| -s     | 查看 TCP/UDP 状态     |
+| -i     | 查看 每个接口的包统计 |
+| -s     |显示网络统计信息       |
+| --unix | unix sockets          |</p>
+<pre><code class="language-sh"># 统计 tcp 数量
+netstat -t | wc -l
+
+# 显示 LISTEM 状态 tcp
+netstat -lt
+
+# 不解析地址(提高速度)
+netstat -lnt
+
+# 显示所有 LISTEM 状态 tcp,udp 进程。 进程显示 `-` 表示该连接为内核处理
+netstat -tunlp
+
+# 显示所有 tcp,udp 进程
+netstat -tunap
+#or
+netstat -ap | grep -v unix
+
+# 统计本地 tcp 链接数量
+netstat -tn | awk '{print $4}' | awk -F &quot;:&quot; '{print $1}' | sort | uniq -c
+
+# 查看本地unix socket的连接
+netstat -a -p --unix
+</code></pre>
+<ul>
+<li>
+<p>查看统计信息</p>
+<pre><code class="language-sh"># 比ss -s输出的信息更丰富
+netstat -s
+</code></pre>
+<p>| ss -s没有的统计信息         |       内容             |
+|-----------------------------|--------------------|
+| active connections openings | TCP 协议的主动连接 |
+| passive connection openings | 被动连接           |
+| failed connection attempts  | 失败重试           |
+| segments send out           | 发送分段的数量     |
+| segments received           | 接收分段的数量     |</p>
+</li>
+</ul>
+<h3>ss (iproute2)</h3>
+<blockquote>
+<p>基本等同于 <code>netstat</code> 工作在 <code>socket</code> 层,没有 <code>-n</code> 选项,因此不能显示域名</p>
+</blockquote>
+<p>| 参数 | 操作                      |
+|------|-----------------------|
+| -l   | listening状态的socket |
+| -t   | 只显示tcp socket      |</p>
+<ul>
+<li>
+<p>接收队列（Recv-Q）和发送队列（Send-Q），在不同的 socket 状态有所不同</p>
+<ul>
+<li>
+<p>在LISTEN状态下的Recv-Q：当前全连接队列的大小，也就是当前已完成三次握手并等待server端 accept() 的 TCP 连接</p>
+</li>
+<li>
+<p>在LISTEN状态下的Send-Q：当前全连接最大队列长度：<code>net.core.somaxconn</code>的值或<code>nginx backlog</code>的值（nginx backlog默认为511）</p>
+</li>
+<li>
+<p>在Established状态下的Recv-Q：已收到但未被应用进程读取的字节数</p>
+</li>
+<li>
+<p>在Established状态下的Send-Q：已发送但未收到确认的字节数</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-bash"># 显示所有 LISTEM 状态 tcp,udp 进程
+ss -tulp
+
+# 显示所有 tcp,udp 进程
+ss -tuap
+
+# 查看ESTABLISHED状态的连接
+ss -tuap state ESTABLISHED
+
+# 查看目标ip的cwnd、rtt、rto等网络参数
+ss -itmpn dst 104.18.3.111
+
+# 查看统计信息。比netstat -s要少
+ss -s
+</code></pre>
+<h3>nc（连接服务器）</h3>
+<ul>
+<li>连接服务器</li>
+</ul>
+<pre><code class="language-sh">nc 0.0.0.0 38359
+</code></pre>
+<ul>
+<li>文件传输</li>
+</ul>
+<pre><code class="language-sh"># 接受文件
+nc -l -p 1234 &gt; received_file
+
+# 发送文件:端口为1234
+nc 127.0.0.1 1234 &lt; file_to_send
+</code></pre>
+<h3><a href="https://github.com/fatedier/frp/blob/dev/README_zh.md">frp: 反向代理(内网穿透)</a></h3>
+<ul>
+<li>web monitor</li>
+</ul>
+<pre><code class="language-ini"># frps.ini
+[common]
+bind_port = 7000
+
+dashboard_port = 7500
+# dashboard's username and password are both optional
+dashboard_user = admin
+dashboard_pwd = admin
+</code></pre>
+<ul>
+<li>开启加密和压缩</li>
+</ul>
+<pre><code class="language-ini"># frpc.ini
+[ssh]
+type = tcp
+local_port = 22
+remote_port = 6000
+
+use_encryption = true
+use_compression = true
+</code></pre>
+<h4>端口</h4>
+<ul>
+<li>
+<p>将8081的流量, 通过服务器的7000端口, 转发到8080</p>
+</li>
+<li>
+<p>server</p>
+</li>
+</ul>
+<pre><code class="language-ini"># frps.ini
+[common]
+bind_port = 7000
+</code></pre>
+<ul>
+<li>client</li>
+</ul>
+<pre><code class="language-ini"># frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[web]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 8080
+remote_port = 8081
+</code></pre>
+<pre><code class="language-sh"># 启动server
+frps -c frps.ini
+
+# 启动client
+frpc -c frpc.ini
+</code></pre>
+<h4>sock</h4>
+<ul>
+<li>client</li>
+</ul>
+<pre><code class="language-ini"># frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[unix_domain_socket]
+type = tcp
+remote_port = 8081
+plugin = unix_domain_socket
+plugin_unix_path = /var/run/docker.sock
+</code></pre>
+<pre><code class="language-sh">curl http://127.0.0.1:8081/version
+</code></pre>
+<h4>文件服务器</h4>
+<ul>
+<li>client</li>
+</ul>
+<pre><code class="language-ini"># frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[test_static_file]
+type = tcp
+remote_port = 8081
+plugin = static_file
+plugin_local_path = /tmp/dir
+plugin_strip_prefix = dir
+plugin_http_user = abc
+plugin_http_passwd = abc
+</code></pre>
+<pre><code class="language-sh">xdg-open http://127.0.0.1:8081/dir/
+</code></pre>
+<h4>http转https</h4>
+<ul>
+<li>生成ssl证书</li>
+</ul>
+<pre><code class="language-sh">openssl req -newkey rsa:4096 \
+            -x509 \
+            -sha256 \
+            -days 3650 \
+            -nodes \
+            -out server.crt \
+            -keyout server.key
+</code></pre>
+<ul>
+<li>client</li>
+</ul>
+<pre><code class="language-ini"># frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[web]
+type = tcp
+local_ip = 127.0.0.1
+remote_port = 8081
+
+plugin = https2http
+plugin_local_addr = 127.0.0.1:8080
+plugin_crt_path = ./server.crt
+plugin_key_path = ./server.key
+plugin_host_header_rewrite = 127.0.0.1
+plugin_header_X-From-Where = frp
+</code></pre>
+<pre><code class="language-sh">curl https://127.0.0.1:8081
+</code></pre>
+<h4>tls</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fatedier/frp#tls">生成tls密钥</a></p>
+</li>
+<li>
+<p>server</p>
+</li>
+</ul>
+<pre><code class="language-ini"># frps.ini
+[common]
+bind_port = 7000
+
+tls_only = true
+tls_enable = true
+tls_cert_file = server.crt
+tls_key_file = server.key
+tls_trusted_ca_file = ca.crt
+</code></pre>
+<ul>
+<li>client</li>
+</ul>
+<pre><code class="language-ini"># frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+tls_enable = true
+tls_cert_file = client.crt
+tls_key_file = client.key
+tls_trusted_ca_file = ca.crt
+
+[web]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 8080
+remote_port = 8081
+</code></pre>
+<pre><code class="language-sh">xdg-open http://127.0.0.1:8081/dir/
+</code></pre>
+<h3><a href="https://github.com/luckjiawei/frpc-desktop">frpc-desktop：跨平台的 frp 桌面客户端。</a></h3>
+<h3>mtr</h3>
+<pre><code class="language-sh"># 查看连接baidu的丢包率，默认用icmp包
+mtr --report www.baidu.com
+
+# 使用udp包
+mtr -u -r www.baidu.com
+</code></pre>
+<h3>ngrep（抓包）</h3>
+<pre><code class="language-bash"># icmp(ping)包
+ngrep -q '.' 'icmp'
+
+# 包含百度的
+ngrep -q '.' 'host www.baidu.com'
+
+# http1.0 or 1.1
+ngrep -q 'HTTP/1.[01]'
+
+# http1.0 or 1.1的get请求
+ngrep -q '^GET .* HTTP/1.[01]'
+
+# 22端口
+ngrep port 22
+
+# 在80端口,任何包含&quot;error&quot;信息
+ngrep -d any 'error' port 80
+
+# -W byline 文本友好显示
+ngrep -W byline port 80
+
+# -t 显示时间
+ngrep -t -W byline port 80
+</code></pre>
+<h3><a href="https://docs.mitmproxy.org/stable/overview-getting-started/">mitmproxy(代理http, 并抓包)</a></h3>
+<pre><code class="language-sh"># 启动mitmproxy(默认为8080端口)
+mitmproxy
+# 以socks5代理, 启动mitmproxy(默认为8080端口)
+mitmproxy --mode socks5
+
+# 使用8080代理访问百度
+curl --proxy http://127.0.0.1:8080 www.baidu.com
+# socks5
+curl --proxy socks5://127.0.0.1:8080 www.baidu.com
+
+# ~/.mitmproxy目录下有虚拟的CA证书
+curl --proxy http://127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem www.baidu.com
+</code></pre>
+<h3>socat</h3>
+<ul>
+<li><a href="https://www.zhihu.com/people/tzxiao">韦一笑</a></li>
+</ul>
+<pre><code class="language-bash"># 测试两台机器的tcp连接
+socat - TCP-LISTEN:8080    # server listen
+socat - TCP:localhost:8080 # client connect
+
+# 允许多条连接
+socat - TCP-LISTEN:8080,fork,reuseaddr
+
+# 连接后执行命令
+socat TCP-LISTEN:8081,fork,reuseaddr  EXEC:/usr/bin/ls
+socat TCP-LISTEN:8080,fork,reuseaddr  EXEC:/usr/bin/bash
+
+# 远程登陆
+socat TCP-LISTEN:8080,fork,reuseaddr  EXEC:/usr/bin/bash,pty,stderr # server
+socat file:`tty`,raw,echo=0 TCP:localhost:8080 # client
+
+# 8080端口转发到80
+socat TCP-LISTEN:8080,fork,reuseaddr  TCP:127.0.0.1:80
+
+# sock代理,将1234流量,通过127.0.0.1:10808,连接到google.com:80
+socat TCP-LISTEN:1234,fork SOCKS4A:127.0.0.1:google.com:80,socksport=10808
+# http代理
+socat TCP-LISTEN:1234,fork PROXY:127.0.0.1:google.com:80,socksport=10808
+
+# 文件下载
+socat /etc/fstab TCP4-LISTEN:8080,reuseaddr
+# fork允许多条连接
+socat /etc/fstab TCP4-LISTEN:8080,fork,reuseaddr
+
+# 服务端接收文件
+socat -u TCP-LISTEN:8080 open:FILE_NAME,create
+# 客户端发送文件
+socat -u open:FILE_NAME TCP:localhost:8080
+
+# 测试两台机器的udp连接
+socat - UDP-LISTEN:8080
+socat - UDP:localhost:8080
+socat - UDP-LISTEN:8080,fork,reuseaddr
+</code></pre>
+<ul>
+<li>socket 抓包</li>
+</ul>
+<pre><code class="language-sh"># 抓mysql
+sudo mv /run/mysqld/mysqld.sock /run/mysqld/mysqld.sock.original
+sudo socat -t100 -x -v UNIX-LISTEN:/run/mysqld/mysqld.sock,mode=777,reuseaddr,fork UNIX-CONNECT:mysqld.sock.original
+</code></pre>
+<h3>tc(traffic control队列控制)</h3>
+<p>qdisc:</p>
+<pre><code class="language-bash"># 查看队列
+tc -d qdisc
+
+# 查看队列流量
+tc -s qdisc
+
+# 设置根队列 1000 MBit/s
+tc qdisc add dev ens3 root handle 1: \
+    cbq avpkt 1000 bandwidth 1000Mbit
+
+# 分别设置3类,1M,10M,100M
+tc class add dev ens3 parent 1: classid 1:1 \
+    cbq rate 1Mbit allot 1500 bounded
+
+tc class add dev ens3 parent 1: classid 1:2 \
+    cbq rate 10Mbit allot 1500 bounded
+
+tc class add dev ens3 parent 1: classid 1:3 \
+    cbq rate 100Mbit allot 1500 bounded
+
+# 过滤5001目标端口
+tc filter add dev ens3 parent 1: \
+    protocol ip u32 match ip dport 5001 0xffff flowid 1:1
+
+tc filter add dev ens3 parent 1: \
+    protocol ip u32 match ip protocol 6 0xff \
+    match ip dport 5001 0xffff flowid 1:2
+
+tc filter add dev ens3 parent 1: \
+    protocol ipv6 u32 match ip6 protocol 6 0xff \
+    match ip6 dport 5001 0xffff flowid 1:3
+</code></pre>
+<h3><a href="https://github.com/tailscale/tailscale">tailscale：WireGuard vpn</a></h3>
+<pre><code class="language-sh"># 发送文件
+sudo tailscale file cp filename ip:
+
+# 设置接受文件的目录
+sudo tailscale file get .
+</code></pre>
+<h3><a href="https://github.com/jpillora/chisel">chisel：在 HTTP 通信上建立 TCP/UDP 隧道</a></h3>
+<h2>应用层</h2>
+<h3>http</h3>
+<h4>curl</h4>
+<ul>
+<li>
+<p><a href="https://www.httpbin.org/">各种curl命令</a></p>
+</li>
+<li>
+<p><a href="https://everything.curl.dev/">curl book</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/mvHlLi3KabNIyvsyROZ2aw">奇妙的Linux世界：10 个你不知道的高级 cURL 实用技巧</a></p>
+</li>
+</ul>
+<p>注意 url 目录后要有<code>/</code></p>
+<pre><code class="language-bash"># 错误
+curl http://tzlog.com:8081/zrlog
+
+# 正确
+curl http://tzlog.com:8081/zrlog/
+</code></pre>
+<pre><code class="language-bash"># 包含响应头部
+curl -i www.baidu.com
+
+# 只显示响应头部
+curl -I www.baidu.com
+
+# 查看请求过程
+curl -v www.baidu.com
+
+# 显示2进制报文
+curl --trace - www.baidu.com
+
+# 发送用户名:tz 密码:12345
+curl -u 'tz:12345' 127.0.0.1:80
+
+# 指定 HTTP 请求的代理。如果没有指定代理协议，默认为 HTTP。
+curl -x socks5://james:cats@myproxy.com:8080 https://www.example.com
+
+# 下载回应文件(类似于wget)
+curl -O https://st.suckless.org/patches/font2/st-font2-20190416-ba72400.diff
+
+# 查看 TTFB(首字节延迟)
+curl -o /dev/null \
+     -H 'Cache-Control: no-cache' \
+     -s \
+     -w &quot;Connect: %{time_connect} TTFB: %{time_starttransfer} Total time: %{time_total} \n&quot; \
+     https://www.baidu.com
+
+# 查看 包含tls的请求过程,和是否支持http2
+curl -vso /dev/null --http2 https://www.bilibili.com
+
+# 范围请求206
+curl http://www.example.com -i -H &quot;Range: bytes=0-50, 100-150&quot;
+curl http://i.imgur.com/z4d4kWk.jpg -i -H &quot;Range: bytes=0-1023&quot;
+</code></pre>
+<ul>
+<li>
+<p>测试与故障排除</p>
+<pre><code class="language-sh"># 使用指定网络接口
+curl --interface wlan0 https://example.com
+
+# 使用指定dns
+curl --dns-ipv4-addr 1.1.1.1 https://example.com
+</code></pre>
+</li>
+<li>
+<p>可以测试超时并捕获退出代码（退出代码）：</p>
+<pre><code class="language-sh">curl --connect-timeout 30 --silent --output /dev/null \
+  --show-error -w '总时间: %{time_total}s\n' http://baidu.com/ || EXIT_CODE=$?
+
+if [ $EXIT_CODE = 28 ]
+then
+  echo &quot;无法连接（超时）。&quot;
+else
+  echo &quot;可以连接。&quot;
+fi
+</code></pre>
+</li>
+<li>
+<p>正则表达式</p>
+<pre><code class="language-sh"># 用一个 curl 命令发出多个请求
+
+# 对 .../users/1、.../users/2 和 .../users/3 的请求
+curl -s &quot;https://jsonplaceholder.typicode.com/users/[1-3]&quot; | jq -s .
+
+# 使用步长选项，产生 2、4、6、8 和 10 的请求
+curl -s &quot;https://jsonplaceholder.typicode.com/users/[0-10:2]&quot; | jq -s .
+
+# 使用了特定数字的列表而不是范围，这也适用于字符和单词
+curl -s &quot;https://jsonplaceholder.typicode.com/photos/{1,6,35}&quot; | jq -s .
+
+# 文件名中的 #1 变量指的是范围 [1-3]。这将生成 file_1.json、file_2.json 和 file_3.json
+curl -s &quot;https://jsonplaceholder.typicode.com/users/[1-3]&quot; -o &quot;file_#1.json&quot;
+</code></pre>
+</li>
+<li>
+<p><code>--parallel</code> 并行请求</p>
+<blockquote>
+<p>curl 将打开最多 50 个并行连接</p>
+</blockquote>
+<pre><code class="language-sh">curl -I --parallel --parallel-immediate --parallel-max 3 www.baidu.com www.bilibili.com www.example.com
+</code></pre>
+<ul>
+<li>
+<p><code>websites.txt</code>文件</p>
+<pre><code>url = &quot;www.baidu.com&quot;
+url = &quot;www.bilibili.com&quot;
+url = &quot;www.example.com&quot;
+</code></pre>
+<pre><code class="language-sh">curl -I --parallel --parallel-immediate --parallel-max 3 --config websites.txt
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/chubin/awesome-console-services">可以curl的在线服务</a></p>
+</li>
+</ul>
+<pre><code class="language-py"># 查看ip
+curl l2.io/ip
+
+# 查看定位
+curl ip-api.com
+
+# 查看新冠疫情
+curl https://corona-stats.online
+</code></pre>
+<h5>其他协议</h5>
+<ul>
+<li>
+<p>通常我们只会使用 HTTP 或 HTTPS，但 curl 支持 很多协议。</p>
+</li>
+<li>
+<p>如果你在一台没有安装也不能安装 telnet 的服务器/机器上怎么办？只需使用 curl</p>
+<pre><code class="language-sh"># 同 telnet example.com 1234
+curl telnet://example.com:1234
+</code></pre>
+</li>
+<li>
+<p>电子邮件的 IMAP、POP3 和 SMTP，这意味着你可以使用 curl 阅读和发送电子邮件。</p>
+<pre><code class="language-sh"># 阅读
+curl --url &quot;imaps://imap.gmail.com:993/Inbox;UID=1&quot; --user &quot;[email protected]:PASSWORD&quot;
+
+# 发送。这里的 message.txt 是实际的电子邮件，需要遵循[特定格式](https://everything.curl.dev/usingcurl/smtp.html)
+curl smtp://mail.example.com \
+  --mail-from [email protected] \
+  --mail-rcpt [email protected] \
+  --upload-file message.txt \
+  -u &quot;[email protected]:PASSWORD&quot;
+</code></pre>
+</li>
+</ul>
+<h5>发送/上传数据 POST PATCH DELETE</h5>
+<ul>
+<li><code>POST</code></li>
+</ul>
+<pre><code class="language-sh">curl -d &quot;param1=value1&amp;param2=value2&quot; -X POST http://localhost:3000/data
+
+# restful 测试
+curl -d &quot;userId=100&amp;title=post test&quot; -X POST 'https://jsonplaceholder.typicode.com/todos'
+
+# post 当前目录下的json文件
+curl -d &quot;@./file.json&quot; -X POST 'https://jsonplaceholder.typicode.com/todos'
+
+# 发送json数据，但这样发送 JSON，需要在单引号和双引号之间切换
+curl -X POST &quot;https://httpbin.org/post&quot; -H &quot;accept: application/json&quot; --json '{&quot;key&quot;: &quot;value&quot;}'
+
+# 更好的发送json数据的方法
+jo -p key=value | curl -X POST &quot;https://httpbin.org/post&quot; -H &quot;accept: application/json&quot; --json @-
+</code></pre>
+<ul>
+<li><code>PATCH</code></li>
+</ul>
+<pre><code class="language-sh">curl -d &quot;title=patch test&quot; -X PATCH 'https://jsonplaceholder.typicode.com/todos/123'
+</code></pre>
+<ul>
+<li><code>DELETE</code></li>
+</ul>
+<pre><code class="language-sh">curl -X DELETE 'https://jsonplaceholder.typicode.com/todos/321'
+</code></pre>
+<h5>.curlrc配置文件</h5>
+<ul>
+<li>
+<p><code>~/.curlrc</code></p>
+<pre><code># ~/.curlrc
+
+# 一些头信息
+-H &quot;Upgrade-Insecure-Requests: 1&quot;
+-H &quot;Accept-Language: en-US,en;q=0.8&quot;
+
+# 跟随重定向
+--location
+</code></pre>
+<pre><code class="language-sh">curl -K .curlrc https://www.baidu.com
+</code></pre>
+</li>
+<li>
+<p><code>.netrc</code></p>
+<pre><code># ~/.netrc
+machine https://authenticationtest.com/HTTPAuth/
+login user
+password pass
+</code></pre>
+<pre><code class="language-sh">curl --netrc-file .netrc https://authenticationtest.com/HTTPAuth/
+</code></pre>
+</li>
+</ul>
+<h5>格式化输出和变量</h5>
+<ul>
+<li>
+<p>curl 可以输出很多东西，有时会让人不知所措、冗长且不必要。幸运的是，我们可以使用输出格式化只打印我们感兴趣的内容：</p>
+</li>
+<li>
+<p><code>-w</code> 选项并传递一个格式文件来实现这一点</p>
+<ul>
+<li>每个变量都用 <code>%{...}</code> 包围。它们可以是简单变量，如 <code>response_code</code>，也可以是 <code>url.&lt;NAME&gt;</code> 的一部分，指的是 URL 组件，如主机或端口。</li>
+</ul>
+<pre><code># format.txt
+类型: %{content_type}\n代码: %{response_code}\n\n
+
+从 8.1.0:\n\n
+
+协议: %{url.scheme}\n
+主机: %{url.host}\n
+端口: %{url.port}\n
+
+读取头信息内容 (v7.83.0):\n
+%header{date}
+</code></pre>
+<pre><code class="language-sh">curl --silent --output /dev/null --show-error -w @format.txt http://example.com/
+
+# format.txt类型: text/html; charset=UTF-8
+代码: 200
+
+从 8.1.0:
+
+协议: http
+主机: example.com
+端口: 80
+读取头信息内容 (v7.83.0):
+Wed, 07 Aug 2024 01:14:58 GMT%
+</code></pre>
+</li>
+<li>
+<p>格式化的一个很好的用途是测量请求/响应时间，可以用以下格式来实现：</p>
+<pre><code># format.txt
+     域名解析时间:  %{time_namelookup}s\n
+        连接时间:  %{time_connect}s\n
+     应用连接时间:  %{time_appconnect}s\n
+       预传输时间:  %{time_pretransfer}s\n
+       重定向时间:  %{time_redirect}s\n
+      开始传输时间: %{time_starttransfer}s\n
+                ----------\n
+          总时间:  %{time_total}s\n
+
+# 输出:
+     域名解析时间:  0.000765s
+        连接时间:  0.111908s
+     应用连接时间:  0.000000s
+       预传输时间:  0.111967s
+       重定向时间:  0.000000s
+     开始传输时间:  0.223373s
+                ----------
+          总时间:  0.223992s
+</code></pre>
+</li>
+</ul>
+<h4><a href="https://github.com/curl/trurl">trurl：curl作者的新作品</a></h4>
+<ul>
+<li>trurl 是一个用于解析 URL 的专用工具</li>
+</ul>
+<pre><code class="language-sh"># 提取 URL 组件，这里是路径，但也可以是如 url、scheme、user、password、options 或 host 等。
+trurl --url https://example.com/some/path/to/file.html --get '{path}'
+/some/path/to/file.html
+
+# 使用 append 功能，向 URL 添加查询参数
+trurl --url &quot;https://example.com/?name=hello&quot; --append query=key=value
+https://example.com/?name=hello&amp;key=value
+
+# 解析为 JSON：
+trurl --url &quot;https://example.com/?name=hello&quot; --json
+[
+  {
+    &quot;url&quot;: &quot;https://example.com/?name=hello&quot;,
+    &quot;parts&quot;: {
+      &quot;scheme&quot;: &quot;https&quot;,
+      &quot;host&quot;: &quot;example.com&quot;,
+      &quot;path&quot;: &quot;/&quot;,
+      &quot;query&quot;: &quot;name=hello&quot;
+    },
+    &quot;params&quot;: [
+      {
+        &quot;key&quot;: &quot;name&quot;,
+        &quot;value&quot;: &quot;hello&quot;
+      }
+    ]
+  }
+]
+</code></pre>
+<h4><a href="https://github.com/darrenburns/posting">posting：tui版的postman</a></h4>
+<p><img src="./Pictures/net-tools/posting.avif" alt="image" /></p>
+<h4>webhook（微信机器人）</h4>
+<p><a href="https://work.weixin.qq.com/api/doc/90000/90136/91770">企业微信群机器人配置说明</a></p>
+<pre><code class="language-sh">curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=693axxx6-7aoc-4bc4-97a0-0ec2sifa5aaa' \
+   -H 'Content-Type: application/json' \
+   -d '
+   {
+        &quot;msgtype&quot;: &quot;text&quot;,
+        &quot;text&quot;: {
+            &quot;content&quot;: &quot;此消息由达哥发送&quot;
+        }
+   }'
+
+# markdown格式
+curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=841b95e2-12d6-4bff-af35-4a67c3c8ca59' \
+   -H 'Content-Type: application/json' \
+   -d '
+{
+    &quot;msgtype&quot;: &quot;markdown&quot;,
+    &quot;markdown&quot;: {
+        &quot;content&quot;: &quot;# 标题1
+        ## 标题2
+        &gt; 引用
+
+        - 圆点
+        **粗体**, `代码段（暂不支持跨行）`,
+        [连接](https://work.weixin.qq.com/api/doc/90000/90136/91770)&quot;
+    }
+}'
+</code></pre>
+<h4>httpie</h4>
+<pre><code class="language-sh"># 获取头部
+http --header www.baidu.com
+</code></pre>
+<h5>nghttp（测试是否支持 http2）</h5>
+<p>在线测试网站:</p>
+<ul>
+<li><a href="https://www.ssllabs.com/ssltest/">ssltest</a></li>
+</ul>
+<pre><code class="language-bash">nghttp -nva https://www.bilibili.com
+
+# -t timeout
+nghttp -nva -t 1 https://www.bilibili.com
+</code></pre>
+<h4><a href="https://github.com/summerwind/h2spec">h2spec：测试服务器 http2 一致性</a></h4>
+<pre><code class="language-bash">h2spec -t -S -h www.bilibili.com -p 443
+</code></pre>
+<h4><a href="https://github.com/fullstorydev/grpcurl">grpcurl：类似 cURL 但用于 gRPC 的工具</a></h4>
+<pre><code class="language-sh">grpcurl grpc.server.com:443 my.custom.server.Service/Method
+</code></pre>
+<h3>websocket</h3>
+<h4><a href="https://github.com/websockets/wscat">wscat</a></h4>
+<pre><code class="language-sh">wscat --connect ws://127.0.0.1
+</code></pre>
+<h4><a href="https://github.com/vi/websocat">websocat:创建websocat</a></h4>
+<pre><code class="language-sh"># 连接ws服务器，
+websocat ws://ws.vi-server.org/mirror
+
+# 创建客户端-服务器通信服务
+websocat -s 1234
+# 连接刚才创建的服务，输入字符服务器可以收到
+websocat ws://127.0.0.1:1234
+
+# 创建客户端-客户端通信服务
+websocat -t ws-l:127.0.0.1:1234 broadcast:mirror:
+# 客户端A、B连接服务后，可以互相通信
+websocat ws://127.0.0.1:1234
+
+# 代理
+websocat --oneshot -b ws-l:127.0.0.1:1234 tcp:127.0.0.1:22&amp;
+websocat --oneshot -b tcp-l:127.0.0.1:1236 ws://127.0.0.1:1234/&amp;
+</code></pre>
+<h4><a href="https://github.com/joewalnes/websocketd">websocketd:创建websocket服务执行命令</a></h4>
+<pre><code class="language-sh"># 创建websocket服务，客户端连接就执行ls命令
+websocketd --port=1234 ls
+
+# 使用websocat连接
+websocat ws://127.0.0.1:1234
+</code></pre>
+<h3>dns</h3>
+<pre><code class="language-sh"># 查看本地dns
+cat /etc/resolv.conf
+
+# 如果使用NetworkManager
+nmcli dev show | grep 'IP4.DNS'
+
+# nslookup中的Server
+nslookup www.baidu.com
+
+# dig命令中的SERVER
+dig
+</code></pre>
+<h4>whois(查看域名注册信息)</h4>
+<h4><a href="https://github.com/jvns/dnspeep">dnspeep：记录程序的dns请求,响应</a></h4>
+<h4><a href="https://github.com/sun0day/dns-detector">dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）</a></h4>
+<h3>socks</h3>
+<h4><a href="https://github.com/xjasonlyu/tun2socks">tun2socks：将tcp/udp等流量转换为socks</a></h4>
+<h2>表示层</h2>
+<h3><a href="https://github.com/drwetter/testssl.sh">testssl(测试网站是否支持ssl/tls，以及检测漏洞)</a></h3>
+<pre><code class="language-bash">testssl --parallel https://www.tsinghua.edu.cn/
+</code></pre>
+<h2>传输层</h2>
+<h3>tcpdump：抓包</h3>
+<p>| 参数 | 操作                                           |
+| ---- | ---------------------------------------------- |
+| -D   | 显示可捕抓的接口                               |
+| -i   | 指定接口                                       |
+| -c   | 只抓多少个包                                   |
+| -w   | 写入文件                                       |
+| -r   | 读取文件                                       |
+| -v   | 包的细节——越多的 v，越详细(一般 3 个 v 就足够) |
+| -A   | 以 ascii 显示内容                              |
+| -X   | 以 ascii 和 16 进制显示内容                    |
+| -n   | 不解析域名                                     |</p>
+<p><strong>可通过逻辑门组合</strong></p>
+<ul>
+<li>and</li>
+<li>or</li>
+<li>not</li>
+</ul>
+<p>| 参数      | 操作                       |
+| --------- | -------------------------- |
+| tcp       | tcp                        |
+| udp       | udp                        |
+| port      | 端口                       |
+| portrange | 端口范围                   |
+| host      | 指定地址                   |
+| src       | 源                         |
+| dst       | 目标                       |
+| greater   | 只捕抓大于指定字节的流量   |
+| less      | 只捕抓小于于指定字节的流量 |</p>
+<ul>
+<li><a href="https://github.com/gcla/termshark">termshark</a></li>
+<li><a href="https://github.com/wireshark/wireshark">wireshark</a></li>
+</ul>
+<h4>基本命令</h4>
+<pre><code class="language-bash"># 捕抓 192.168.1.1 的包
+sudo tcpdump -vv host 192.168.1.1
+
+# 捕抓 eth0 网卡的 icmp 流量
+sudo tcpdump -ni eth0 icmp
+
+# 捕抓源是 192.168.1.1 的 icmp 流量
+sudo tcpdump -ni eth0 icmp -n and src 192.168.1.1
+
+# 捕抓 eth0 源端口是 80 的 10 个数据包,保存至 packets.pcap
+sudo tcpdump -c 10 -i eth0 src port 80 -w packets.pcap
+
+# 捕抓目标端口 80 的数据流量
+tcpdump -ni eth0 dst port 80
+
+# 捕抓目标ip 192.168.1.1 端口 22 的数据流量
+tcpdump -ni eth0 dst 192.168.1.1 and port 22
+
+# 捕抓 1-1024 端口(不包含 443 端口),并且包大于 1000 字节的流量
+sudo tcpdump -n not port 443 and portrange 1-1024 and greater 1000
+</code></pre>
+<h4>捕抓 TCP SYN，ACK 和 FIN 包</h4>
+<pre><code class="language-bash"># 只捕抓TCP syn包：
+tcpdump -i eth0 &quot;tcp[tcpflags] &amp; (tcp-syn) != 0&quot;
+
+# 只捕抓目标是百度的TCP syn包：
+tcpdump -ni eth0 dst www.baidu.com and &quot;tcp[tcpflags] &amp; (tcp-syn) != 0&quot;
+
+# 只捕抓TCP ack包：
+tcpdump -i eth0 &quot;tcp[tcpflags] &amp; (tcp-ack) != 0&quot;
+
+# 只捕抓TCP FIN包：
+tcpdump -i eth0 &quot;tcp[tcpflags] &amp; (tcp-fin) != 0&quot;
+
+# 只捕抓TCP SYN或ACK包：
+tcpdump -i eth0 &quot;tcp[tcpflags] &amp; (tcp-syn|tcp-ack) != 0&quot;
+
+# 只捕抓TCP SYN或ACK包(不包含22端口)：
+tcpdump -i eth0 not port 22 and &quot;tcp[tcpflags] &amp; (tcp-syn|tcp-ack) != 0&quot;
+
+# 只捕抓TCP SYN或ACK包(不包含22,80端口)：
+tcpdump -i ens3 not port 22 and not port 80 and &quot;tcp[tcpflags] &amp; (tcp-syn|tcp-ack) != 0&quot;
+</code></pre>
+<h3>tshark、editcap、capinfos：抓包</h3>
+<ul>
+<li>
+<p><a href="https://cloud.tencent.com/developer/article/2312883">一文读懂网络报文分析神器Tshark： 100+张图、100+个示例轻松掌握原创</a></p>
+</li>
+<li>
+<p>capinfos：查看被抓包的文件信息</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 可以看到包的数量、平均包大小、抓包的时间段
+capinfos test.pcapng
+
+# 获取文件中数据包的个数
+total=$(capinfos -c -M src.pcap | awk 'NR==2 {print $NF}')
+</code></pre>
+<ul>
+<li>editcap将pcap文件切割成多个小文件</li>
+</ul>
+<pre><code class="language-sh"># 过滤出特定时间段的数据包
+editcap -A &quot;2024-04-06 11:58:00&quot; -B &quot;2024-04-06 11:58:10&quot; src.pcap -F pcap dst.pcap
+# 查看时间段进行确认
+capinfos dst.pcap
+
+# 把抓包切小，每个文件20万个包，保证wireshark打开不太慢
+editcap -c 200000 src.pcap dst.pcap
+</code></pre>
+<ul>
+<li>tshark：wireshark命令行版</li>
+</ul>
+<pre><code class="language-sh"># 读取test.pcapng文件
+tshark -r test.pcapng
+# -n禁止域名解析
+tshark -n -r test.pcapng
+# -V显示完整报文
+tshark -n -r test.pcapng -V -Y 'tcp.flags.syn==1&amp;&amp;tcp.flags.ack==0&amp;&amp;frame.number&lt;=5'
+# -w保存报文
+tshark -n -r test.pcapng -V -Y 'tcp.flags.syn==1&amp;&amp;tcp.flags.ack==0&amp;&amp;frame.number&lt;=5' -w test1.pcapng
+
+# 通过正则来拿到我们想要的直播流URL：
+tshark -n -r test.pcapng -Y 'http.request.method eq GET' -V | grep -Po '(?&lt;=Full request URI:\s).*m3u8(?=])' |&amp; sort -u
+
+# 输出成json格式
+tshark -r test.pcapng -T json
+# 输出成ek格式。Elasticsearch bulk，代表批量写入Elasticsearch的格式。
+tshark -r test.pcapng -T ek
+
+# -e输出报文指定字段
+tshark -n -r test.pcapng -e 'frame.number' -e 'ip.addr' -e 'tcp.port' -e tcp -T json
+
+# -Y过滤报文
+# 只保留http host为某个值的包
+tshark -n -r test.pcapng -Y 'http.host == &quot;web-server1&quot;'
+# 只保留TCP重传、快速重传、DUP ACK的包
+tshark -n -r test.pcapng -Y 'tcp.stream eq 2 &amp;&amp; ( tcp.analysis.retransmission or tcp.analysis.fast_retransmission or tcp.analysis.duplicate_ack )' -t d
+
+# 只保留第一次握手的请求
+tshark -n -r test.pcapng -Y 'tcp.flags.syn==1&amp;&amp;tcp.flags.ack==0'
+
+# 统计重传数据包的个数
+tshark -n -r test.pcapng -Y &quot;tcp.analysis.retransmission&quot; -T fields -e tcp.stream | wc -l
+
+# 统计分析报文（-z）
+# 查看支持的统计分析选项。
+tshark -z help
+
+# 会话统计需要用到'conv,'作为前缀，表示的是conversation。
+tshark -n -r test.pcapng -z 'conv,ip'
+# -q参数来让它只输出统计结果，不显示报文
+tshark -q -n -r test.pcapng -z 'conv,ip'
+# ipv6
+tshark -q -n -r test.pcapng -z 'conv,ipv6'
+
+# conv,ip 统计IP层，那么conv,tcp则统计tcp头部
+tshark -n -q -r test.pcapng -z conv,tcp
+# 也支持过滤选项：
+tshark -n -q -r test.pcapng -z conv,tcp,tcp.port==443
+# 只统计第一条流的结果
+tshark -n -q -r test.pcapng -z conv,ip,tcp.stream==0
+# 只想要第三个的流的统计数据
+tshark -n -q -r test.pcapng -z conv,ip,tcp.stream==2
+tshark -n -q -r test.pcapng -z conv,tcp,'tcp.stream eq 2'
+
+# 统计udp
+tshark -n -q -r test.pcapng -z conv,udp
+# 过滤规则如果有多条或者空格，可以通过单引号引起来：
+tshark -n -q -r test.pcapng -z conv,udp,'udp.port in {8000,8803}'
+
+# 统计分析DNS层次结构
+tshark -n -q -r test.pcapng -z dns,tree
+# 过滤选项
+tshark -n -q -r test.pcapng -z dns,tree,dns.'qry.name == baidu.com'
+
+# 统计分析UDP端点数据
+tshark -n -q -r test.pcapng -z endpoints,udp
+================================================================================
+UDP Endpoints
+Filter:&lt;No Filter&gt;
+                       |  Port  ||  Packets  | |  Bytes  | | Tx Packets | | Tx Bytes | | Rx Packets | | Rx Bytes |
+101.226.4.6                  53        112         13905         56            9425          56            4480
+192.168.1.222             22000          9           666          9             666           0               0
+198.211.120.59             3478          9           666          0               0           9             666
+
+# 指定过滤规则，只过滤涉及到DNS的数据：
+tshark -n -q -r test.pcapng -z endpoints,udp,dns
+
+# 对应wireshark的专家信息功能
+tshark -n -q -r test.pcapng -z expert
+# 只分析第3个流
+tshark -n -q -r test.pcapng -z expert,'tcp.stream==2'
+
+# 对应wireshark的Flow Graph功能，即流量图显示功能，可以把整个通信过程画出一个通信图出来，在wireshark上的显示如下：
+tshark -q -n -r test.pcapng -z flow,tcp,network
+tshark -q -2 -n -r test.pcapng -z flow,icmp,network
+tshark -q -2 -n -r test.pcapng -z flow,icmp,network,icmp.seq==3
+
+# 以“十六进制”格式显示第一个TCP流的内容
+tshark -q -n -r test.pcapng -z &quot;follow,tcp,hex,0&quot;
+# 在第一个TCP连接中显示第一个HTTP的内容
+tshark -q -n -r test.pcapng -z &quot;follow,http,hex,0,1&quot;
+# 第一个HTTP为GET，那么第二个HTTP为response：
+tshark -q -n -r test.pcapng -z &quot;follow,http,hex,0,2&quot;
+
+# 统计分析HTTP的状态码以及请求方法
+tshark -q -n -r test.pcapng -z http,stat
+# 统计分析HTTP树状结构
+tshark -q -n -r test.pcapng -z http,tree
+# http2协议
+tshark -q -n -r test.pcapng -z http2,tree
+# 只会统计请求涉及到的URI资源路径，不关注响应
+tshark -q -n -r test.pcapng -z http_req,tree
+# 只过滤第一条TCP连接的数据：
+tshark -q -n -r test.pcapng -z http_req,tree,'tcp.stream==0'
+# 和http_req,tree的区别是，它会自动补齐请求的服务器，以URL路径方式呈现出来
+tshark -q -n -r test.pcapng -z http_seq,tree
+# 对于HTTP request，显示的值是目的端服务器IP地址和服务器主机名。对于HTTP response，显示的值是目的端服务器IP地址及状态：
+tshark -q -n -r test.pcapng -z http_srv,tree
+
+# 统计ICMP回显请求总数、回复、丢失和丢失百分比，以及ping返回的最小、最大、平均、中值和样本标准差SRT统计信息。
+tshark -q -n -r test.pcapng -z icmp,srt
+# 过滤某个ip
+tshark -q -n -r test.pcapng -z icmp,srt,'ip.addr==xxx'
+# icmpv6
+tshark -q -n -r test.pcapng -z icmpv6,srt
+
+# 统计协议层次结构及包量（io,phs）
+tshark -q -n -r test.pcapng -z io,phs
+===================================================================
+Protocol Hierarchy Statistics
+Filter:
+
+eth                                      frames:1782 bytes:1021701
+  ip                                     frames:1775 bytes:1020512
+    tcp                                  frames:1648 bytes:1004942
+      tls                                frames:390 bytes:396690
+        tcp.segments                     frames:110 bytes:185541
+          tls                            frames:83 bytes:150929
+    udp                                  frames:126 bytes:15516
+      dns                                frames:112 bytes:13905
+      data                               frames:2 bytes:476
+      stun                               frames:9 bytes:666
+      mdns                               frames:3 bytes:469
+    igmp                                 frames:1 bytes:54
+  ipv6                                   frames:6 bytes:1147
+    udp                                  frames:6 bytes:1147
+      mdns                               frames:4 bytes:631
+      data                               frames:2 bytes:516
+  arp                                    frames:1 bytes:42
+===================================================================
+# 只统计第一条TCP流
+tshark -q -n -r test.pcapng -z io,phs,'tcp.stream==0'
+# 统计分析包量和字节大小
+tshark -q -n -r test.pcapng -z io,stat,0
+# 如果想指定间隔为10s统计一次，且只统计第一条TCP流则可以是：
+tshark -q -n -r test.pcapng -z io,stat,10,'tcp.stream==0'
+
+# 统计分析某个字段的最大最小平均值等。io,stat,interval,&quot;COUNT|SUM|MIN|MAX|AVG|LOAD(field)filter&quot;
+tshark -q -n -r test.pcapng -z io,stat,0,'MAX(icmp.data_time_relative)icmp.data_time_relative,'ip.addr==192.168.1.1''
+# 统计第一条TCP连接中，距离它上一个包间隔时间最长的为：
+tshark -q -n -r test.pcapng -z io,stat,0,'MAX(tcp.time_delta)tcp.time_delta,tcp.stream==0'
+# 统计第一条TCP流中，HTTP响应时间的平均值和最大值，分别为：
+tshark -q -n -r test.pcapng -z io,stat,0,'AVG(http.time)http.time,tcp.stream==0'
+tshark -q -n -r test.pcapng -z io,stat,0,'MAX(http.time)http.time,tcp.stream==0'
+# 只统计返回了200 OK状态码的http最大响应时间
+tshark -q -n -r test.pcapng -z io,stat,0,'MAX(http.time)http.time and http.response.code == 200'
+
+# 统计IP地址占比
+tshark -q -n -r test.pcapng -z ip_hosts,tree
+
+# 统计源地址和目标地址占比
+tshark -q -n -r test.pcapng -z ip_srcdst,tree
+</code></pre>
+<h3><a href="https://github.com/mozillazg/ptcpdump">ptcpdump：抓包</a></h3>
+<ul>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/CbOyeQ42D776XuCOTj4Pow">奇妙的Linux世界：ptcpdump: 新一代抓包神器，可捕获任何进程、容器或 Pod 的网络流量</a></p>
+</li>
+<li>
+<p>可捕获任何进程、容器或 Pod 的网络流量</p>
+</li>
+<li>
+<p>基于ebpf</p>
+</li>
+</ul>
+<h3>nmap</h3>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/video/BV18kqhYKEPK">（视频）技术蛋老师：许多Nmap课程都缺乏的入门理论知识</a></p>
+</li>
+<li>
+<p>zenmap(gui版nmap)</p>
+</li>
+<li>
+<p>一般先扫描ip网段（主机发现），再扫描端口</p>
+</li>
+<li>
+<p>主机发现，扫描ip网段</p>
+<blockquote>
+<p>扫描本地使用arp，扫描远程使用tcp和icmp</p>
+</blockquote>
+<pre><code class="language-sh"># 扫描整个192.168.1.0网段的主机
+nmap -sn &quot;192.168.1.*&quot;
+# 或者
+nmap -sn 192.168.1.0/24
+
+# 扫描整个192.168.1.0网段的端口
+nmap &quot;192.168.1.*&quot;
+
+# 扫描192.168.1.0网段,排除192.168.1.1
+nmap &quot;192.168.1.*&quot; --exclude 192.168.1.1
+
+# 扫描192.168.1.200-254
+nmap 192.168.1.200-254
+
+# 不使用icmp，这个命令比较耗时。windows server防火墙默认会屏蔽icmp包
+nmap -Pn &lt;目标网段&gt;
+
+# 扫描文件内的 ip 地址
+cat &gt; nmapfile &lt;&lt; 'EOF'
+127.0.0.1
+192.168.1.1
+192.168.100.208
+EOF
+
+nmap -iL nmapfile
+</code></pre>
+</li>
+<li>
+<p>扫描TCP</p>
+<ul>
+<li>
+<p>tcp端口状态:</p>
+<p>| STATE      | 内容         | 详细描述                                                |
+| ---------- | ------------ | ------------------------------------------------------- |
+| open       | 开启         | 会完成3次握手，完成后会发送RST，而不是正常关闭的FIN。   |
+| closed     | 关闭         | 发送第一次握手SYN后，没有收到SYN ACK，而是直接收到RST。 |
+| filtered   | 被防火墙屏蔽 | 发送第一次握手SYN后，既没有收到SYN ACK，也没有收到RST。 |
+| unfiltered | 不确定状态   |                                                         |</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 扫描TCP。以下2条命令相等。注意只扫描常用的tcp的1000个端口，而tcp最多可以有65535个端口，并且不扫描udp。所以这条命令是很多入门教程的误区。
+nmap 127.0.0.1
+nmap -sT 127.0.0.1
+
+# 扫描TCP。扫描的端口和上面一样，只是多了扫描时间等信息
+nmap -v 127.0.0.1
+
+# 扫描TCP所有端口。注意：只扫描tcp端口，而不扫描udp
+nmap -p- 127.0.0.1
+# 扫描指定ip和端口
+nmap -p 80 127.0.0.1
+
+# 扫描TCP SYN。open状态：不会走完3次握手，在收到SYN ACK后，直接发送RST。可能会导致目标主机重传。
+sudo nmap -sS 192.168.1.1
+# 和上面命令一样，使用sudo默认是扫描TCP SYN。
+sudo nmap 127.0.0.1
+
+# TCP ACK
+nmap -PA 192.168.1.1
+</code></pre>
+</li>
+<li>
+<p>扫描udp</p>
+<blockquote>
+<p>udp端口扫描比较慢</p>
+</blockquote>
+<pre><code class="language-sh"># 扫描udp。默认没有负载，所以很可能没有回复，或被防火墙拦截。所以状态有时会显示open|filtered，表示有可能开放只是被防火墙拦截。
+nmap -sU 127.0.0.1
+
+# 会根据版本，进一步确认open|filtered
+nmap -sUV 127.0.0.1
+
+# 扫描常用的端口
+nmap -sUV --top-ports 127.0.0.1
+# 扫描常用的100端口
+nmap -sUV --top-ports 100 127.0.0.1
+# 扫描常用的1000端口
+nmap -sUV --top-ports 1000 127.0.0.1
+</code></pre>
+</li>
+<li>
+<p>扫描其他</p>
+<pre><code class="language-sh"># 扫描系统消息
+nmap -A 127.0.0.1
+
+# 显示本机网络，路由信息
+nmap --iflist
+</code></pre>
+</li>
+</ul>
+<h3><a href="https://github.com/zmap/zmap">zmap</a></h3>
+<ul>
+<li>比nmap速度要快 <a href="https://www.zhihu.com/question/21505586/answer/18443313">ZMap 为什么能在一个小时内就扫描整个互联网？</a></li>
+</ul>
+<h3><a href="https://github.com/RustScan/RustScan">RustScan：端口扫描</a></h3>
+<h3><a href="https://github.com/v2fly/vmessping">vmessping：可以ping vmess://的地址</a></h3>
+<h3>nping(代替 ping)</h3>
+<p>| 参数 | 操作       |
+| ---- | ---------- |
+| -c   | 发送多少次 |</p>
+<pre><code class="language-bash"># icmp echo request(等同于ping)
+nping --icmp -c 3 www.baidu.com
+
+# tcp连接(三次握手)
+nping --tcp-connect -c 3 -p 80,443 baidu.com
+
+# tcp syn
+nping --tcp -c 2 --flags syn -p 80 baidu.com
+
+# --ttl 设置ttl
+nping --tcp -c 2 --flags syn --ttl 10 -p 80 baidu.com
+
+# --win指定tcp窗口大小
+nping --tcp -c 2 --win 1600 -p 80 baidu.com
+</code></pre>
+<h3><a href="http://www.hping.org/">hping</a></h3>
+<ul>
+<li>
+<p><a href="https://iphelix.medium.com/hping-tips-and-tricks-85698751179f">Hping Tips and Tricks</a></p>
+</li>
+<li>
+<p>tcp</p>
+</li>
+</ul>
+<p>| tcp flag | 操作              |
+|----------|-------------------|
+| -S       | syn flags=s SYN   |
+| -A       | ack flags=a ACK   |
+| -R       | rst flags=r RST   |
+| -F       | fin flags=f FIN   |
+| -P       | push flags=p PUSH |
+| -U       | urg flags=u URG   |
+| -X       | xmas flags=x Xmas |
+| -Y       | ymas flags=y Tmas |</p>
+<pre><code class="language-sh"># -c 表示只发送一次syn.返回的flags=SA, 即包含syn,ack
+hping3 -S www.baidu.com -p 80 -c 1
+
+# 从50端口开始递增，每个端口都发送(扫描)
+hping3 -S www.baidu.com -p ++50
+
+# 模拟SYN flood攻击
+hping3 -S -p 80 --flood 127.0.0.1
+</code></pre>
+<ul>
+<li>udp</li>
+</ul>
+<pre><code class="language-sh">hping3 -2 127.0.0.1 -p 80 -c 1
+</code></pre>
+<ul>
+<li>扫描网段</li>
+</ul>
+<pre><code class="language-sh">hping3 -1 192.168.1.x --rand-dest -I enp27s0
+</code></pre>
+<ul>
+<li>icmp ping</li>
+</ul>
+<pre><code class="language-sh"># -1 icmp模式
+hping3 --traceroute -V -1 www.baidu.com
+</code></pre>
+<h3><a href="https://github.com/inconshreveable/ngrok">ngrok：内网穿透（端口转发）</a></h3>
+<h3><a href="https://github.com/amalshaji/portr">portr：python写的ngrok代替品</a></h3>
+<h2>网络层</h2>
+<h3>ifconfig(net-tools)</h3>
+<ul>
+<li>
+<p>以下这些指标不为 0 时，则说明网络发送或者接收出问题了</p>
+<p>| 字段       | 表示                                                                                                                                                            |
+|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| errors     | 发生错误的数据包数，比如校验错误、帧同步错误等                                                                                                                  |
+| dropped    | 丢弃的数据包数，即数据包已经收到了 Ring Buffer（这个缓冲区是在内核内存中，更具体一点是在网卡驱动程序里），但因为系统内存不足等原因而发生的丢包                  |
+| overruns   | 超限数据包数，即网络接收/发送速度过快，导致 Ring Buffer 中的数据包来不及处理，而导致的丢包，因为过多的数据包挤压在 Ring Buffer，这样 Ring Buffer 很容易就溢出了 |
+| carrier    | 发生 carrirer 错误的数据包数，比如双工模式不匹配、物理电缆出现问题等                                                                                            |
+| collisions | 冲突、碰撞数据包数                                                                                                                                              |</p>
+</li>
+</ul>
+<h3>ip(iproute2)</h3>
+<p>| 参数    | 简写 | 内容     |
+| ------- | ---- | -------- |
+| link    | l    | 接口     |
+| address | a    | 地址     |
+| route   | r    | 路由     |
+| neigh   | n    | arp      |
+| netns   |      | 命名空间 |</p>
+<pre><code class="language-bash"># 只查看ip地址
+ip -brief -c address
+
+# 只查看mac地址
+ip -br -c link
+</code></pre>
+<ul>
+<li>ip address</li>
+</ul>
+<pre><code class="language-bash"># 查看 interface
+ip address
+# 或者
+ip a
+
+# 查看eth0
+ip a show dev eth0
+
+# -s 查看详细信息,类似ifconfig
+ip -s a
+
+# 以json格式显示
+ip --json addr show
+
+# jq命令过滤, 查看ip地址
+ip --json addr show | jq '.[].addr_info[].local'
+
+# watch命令每秒监控
+watch -d -n 1 ip -s a
+
+# 新增 ip 为 1.1.1.1
+ip a add 1.1.1.1/24 dev eth0
+
+# 新增 ip 为 2.2.2.2 并添加标签eth0:0
+ip a add 2.2.2.2/24 dev eth0 label eth0:0
+
+# 删除刚才新增的ip
+ip a del 2.2.2.2/24 dev eth0:0
+ip a del 1.1.1.1/24 dev eth0
+</code></pre>
+<ul>
+<li>ip route</li>
+</ul>
+<pre><code class="language-bash"># 查看默认路由
+ip route
+
+# 新增路由
+ip route add 1.1.1.0/24 via 192.168.1.1
+
+# 新增 eth0设备的路由
+ip route add 1.1.1.0/24 via 192.168.1.1 dev eth0
+
+# 新增 eth0设备的默认路由
+ip route add default via 192.168.1.1 dev eth0
+
+# 删除路由
+ip route del 1.1.1.0/24
+
+# 删除默认路由
+ip route del default
+</code></pre>
+<ul>
+<li>ip link</li>
+</ul>
+<pre><code class="language-bash"># 开启/关闭接口
+ip link set eth0 up
+ip link set eth0 down
+
+# 开启/关闭组播
+ip link set dev eth0 multicast on
+ip link set dev eth0 multicast off
+
+# 开启/关闭arp解析
+ip link set dev eth0 arp on
+ip link set dev eth0 arp off
+
+# 修改 mtu 为9000
+ip link set mtu 9000 dev eth0
+</code></pre>
+<ul>
+<li>ip neigh(arp 表)</li>
+</ul>
+<pre><code class="language-bash"># 可以先用 nmap 扫描网段,在执行
+ip neigh
+
+# -s 详细信息
+ip -s neigh
+
+# flush删除192.168.1.101的arp条目
+ip -s -s neigh flush 192.168.1.101
+# 或者
+ip -s -s n f 192.168.1.101
+</code></pre>
+<ul>
+<li>ip netns(命名空间)</li>
+</ul>
+<p>path: <code>/var/run/netns</code></p>
+<pre><code class="language-bash"># 新建enp1
+ip netns add enp1
+
+# 查看命名空间
+ip netns list
+</code></pre>
+<p>永久修改 ip</p>
+<pre><code class="language-bash">cat &gt; /etc/sysconfig/network-scripts/ifcfg-eth0:0 &lt;&lt; 'EOF'
+DEVICE=eth0:0
+IPADDR=1.1.1.1
+PREFIX=24
+ONPARENT=yes
+EOF
+</code></pre>
+<h3>ipcalc(ip二进制显示)</h3>
+<ul>
+<li><a href="https://www.linux.com/topic/networking/how-calculate-network-addresses-ipcalc/">教程</a></li>
+</ul>
+<h3><a href="https://github.com/zu1k/nali">nali(ip地址离线数据库)</a></h3>
+<pre><code class="language-sh"># 查询ip
+nali 8.8.8.8
+nali 8.8.8.8 114.114.114.114
+
+# 更新数据库
+nali update
+</code></pre>
+<h3>traceroute</h3>
+<p>原理是向目的主机发送ICMP报文，发送第一个报文时，设置TTL为0，TTL即Time to Live，是报文的生存时间，由于它是0，所以下一个路由器由到这个报文后，不会再继续转发了，会给源主机发送ICMP出错的报文，就可以知道第一个路由的IP地址，同理，设置TTL为1，就可以知道第二个路由的IP地址，依次类推。</p>
+<h3>tcptraceroute</h3>
+<p>tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过最常见的防火墙的过滤。正如该命令的手册页所述，tcptraceroute 发送 TCP SYN 数据包而不是 UDP 或 ICMP ECHO 数据包，所以其不易被阻塞。</p>
+<h3>防火墙</h3>
+<ul>
+<li><code>ip_rcv()</code> 中会处理 netfilter 和 iptable 过滤，如果你有很多或者很复杂的 netfilter 或iptables 规则，这些规则都是在软中断的上下⽂中执⾏的，会加⼤⽹络延迟。</li>
+</ul>
+<h4>iptables</h4>
+<blockquote>
+<p><code>iptables</code> 已经落后了，建议使用 <a href="https://wiki.nftables.org/wiki-nftables/index.php/Why_nftables%3F_">nftables</a> 一个替换现有{ip,ip6,arp,eb}tables 的框架。<a href="https://wiki.nftables.org/wiki-nftables/index.php/Main_differences_with_iptables">Main differences with iptables</a></p>
+</blockquote>
+<hr />
+<ul>
+<li><a href="https://www.bilibili.com/list/watchlater?bvid=BV1Jz4y1u7Lz">技术蛋老师：iptables核心运作原理和数据包过滤方法</a></li>
+</ul>
+<blockquote>
+<p><a href=".html">iptables 转换为 nftables 的命令</a></p>
+</blockquote>
+<ul>
+<li>iptables 和 netfilter 的关系</li>
+</ul>
+<p><code>iptables</code> 只是防火墙的管理工具，真正实现防火墙功能的是 <code>netfilter</code>，由内核 hook 构成。每个进入网络系统的包（接收或发送）在经过协议栈时都会触发这些 hook，程序可以通过注册 hook 函数的方式在一些关键路径上处理网络流量。</p>
+<ul>
+<li>
+<p>iptables 传输数据包的过程</p>
+<ul>
+<li>
+<p>① 当一个数据包进入网卡时，它首先进入 PREROUTING 链，内核根据数据包目的 IP 判断是否需要转送出去。</p>
+</li>
+<li>
+<p>② 如果数据包就是进入本机的，它就会沿着图向下移动，到达 INPUT 链。数据包到了 INPUT 链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些数据包会经过 OUTPUT 链，然后到达 POSTROUTING 链输出。</p>
+</li>
+<li>
+<p>③ 如果数据包是要转发出去的，且内核允许转发，数据包就会如图所示向右移动，经过 FORWARD 链，然后到达 POSTROUTING 链输出。</p>
+</li>
+<li>
+<p>①-&gt;②</p>
+</li>
+<li>
+<p>①-&gt;③</p>
+</li>
+</ul>
+<p><img src="./Pictures/net-tools/iptable.avif" alt="image" /></p>
+</li>
+<li>
+<p>netfilter 提供了 5 个 hook 点</p>
+<p>| 链          | 规则                       |
+|-------------|----------------------------|
+| PREROUTING  | 进入协议栈后，路由前的包   |
+| INPUT       | 路由判断是本机的包         |
+| FORWARD     | 路由判断是其他主机的包     |
+| OUTPUT      | 进入协议栈前，本机发送的包 |
+| POSTROUTING | 路由后的本机发送的包       |</p>
+</li>
+<li>
+<p>iptables 的表和链：</p>
+<ul>
+<li>表的优先顺序：Raw —&gt; mangle —&gt; nat —&gt; filter</li>
+<li>链的优先顺序：PREROUTING -&gt; INPUT -&gt; FORWARD -&gt; OUTPUT -&gt; POSTROUTING</li>
+</ul>
+<p>| table（表）            | 内容                                                                  | 链                                              |
+|------------------------|-----------------------------------------------------------------------|-------------------------------------------------|
+| filter (过滤数据包)    | 判断是否允许一个包通过                                                | INPUT、FORWARD、OUTPUT                          |
+| Nat (网络地址转换)     | 是否以及如何修改包的源/目的地址                                       | PREROUTING、POSTROUTING、OUTPUT                 |
+| Mangle (修改ip包的头） | 服务类型、TTL、并且可以配置路由实现 QOS 内核模块)                     | PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD |
+| Raw (conntrack 相关)   | iptables 防火墙是有状态，对每个包进行判断的时候是依赖已经判断过的包。 | OUTPUT、PREROUTING                              |
+| security               | 给包打上 SELinux 标记                                                 | INPUT、FORWARD、OUTPUT                          |</p>
+<p><img src="./Pictures/net-tools/iptable1.avif" alt="image" /></p>
+</li>
+<li>
+<p>参数</p>
+<p>| 参数 | 操作                            |
+| ---- | ------------------------------- |
+| -L   | 查看规则                        |
+| -I   | 在首行添加规则                  |
+| -A   | 在末尾添加规则                  |
+| -D   | 删除规则,可按规则序号和内容删除 |
+| -F   | 删除所有规则                    |
+| -j   | 动作                            |
+| -s   | 源地址                          |
+| -d   | 目标地址                        |
+| -i   | 源接口                          |
+| -o   | 目标接口                        |
+| -p   | 协议                            |</p>
+</li>
+<li>
+<p>规则：</p>
+<ul>
+<li>注意：要把允许规则放在前面(-I)，拒绝规则放在后面(-A)</li>
+</ul>
+<p>| -j(动作) | 操作                                                                 |
+| -------- | -------------------------------------------------------------------- |
+| ACCEPT   | 允许数据包通过                                                       |
+| DROP     | 直接丢弃数据包，不给任何回应信息                                     |
+| REJECT   | 拒绝数据包通过，必要时会给数据发送端一个响应的信息。                 |
+| LOG      | 在/var/log/messages 文件中记录日志信息，然后将数据包传递给下一条规则 |</p>
+<p><img src="./Pictures/net-tools/iptable2.avif" alt="image" /></p>
+</li>
+</ul>
+<h5>基本命令</h5>
+<pre><code class="language-sh"># 创建 INPUT 链的第2条规则
+iptables -I INPUT 2
+
+# 查看 INPUT 链的第2条规则
+iptables -L INPUT 2
+
+# 删除 INPUT 链的第2条规则
+iptables -D INPUT 2
+
+# 查看规则
+iptables -L
+
+# 查看INPUT表的规则
+iptables -L INPUT
+
+# 查看详细规则
+iptables -nvL --line-numbers
+
+# 最近一次启动后所记录的数据包
+journalctl -k | grep &quot;IN=.*OUT=.*&quot; | less
+</code></pre>
+<ul>
+<li>保存规则：</li>
+</ul>
+<p>| 发行版 | 默认保存目录            |
+| ------ | ----------------------- |
+| centos | /etc/sysconfig/iptables |
+| arch   | /etc/iptables           |</p>
+<pre><code class="language-sh">iptables-save &gt; /etc/iptables/iptables.bak
+# 只备份filter
+iptables-save -t filter &gt; filter.bak
+
+# 重新加载配置文件
+iptables-restore &lt; /etc/iptables/iptables.bak
+</code></pre>
+<ul>
+<li>重置规则：</li>
+</ul>
+<pre><code class="language-sh">iptables -F #刷新chain
+iptables -X #删除非默认chain
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -t raw -F
+iptables -t raw -X
+iptables -t security -F
+iptables -t security -X
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+</code></pre>
+<h5>过滤命令</h5>
+<ul>
+<li>
+<p>注意<code>ACCEPT</code>,<code>DROP</code>必须要大写</p>
+</li>
+<li>
+<p>注意：要把拒绝规则放在允许规则后面</p>
+</li>
+<li>
+<p>端口过滤：</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 只允许 tcp 协议,访问 80 端口
+iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+
+# 只允许 tcp 以外的协议,访问 80 端口
+iptables -I INPUT -p ! tcp --dport 80 -j ACCEPT
+
+# 只允许在 9:00 到 18:00 这段时间的 tcp 协议,访问 80 端口
+iptables -I INPUT -p tcp --dport 80 -m time --timestart 9:00 --timestop 18:00 -j ACCEPT
+
+# 只允许 192.168.1.0/24 网段使用 SSH
+# 注意要把拒绝规则放在后面
+iptables -I INPUT -p tcp --dport 22 -s 192.168.1.0/24 -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+
+# mysql
+iptables -I INPUT -p tcp --dport 3306 -s 127.0.0.1 -j ACCEPT
+iptables -I INPUT -p tcp --dport 3306 -s 192.168.1.0/24 -j ACCEPT
+iptables -A INPUT -p tcp --dport 3306 -j DROP
+</code></pre>
+<ul>
+<li>ip地址过滤</li>
+</ul>
+<pre><code class="language-sh"># 禁止用户访问 www.baidu.com 的网站。
+iptables -A OUTPUT -d www.baidu.com -j DROP
+
+# 禁止 从 192.168.1.0/24 到 10.1.1.0/24 的流量
+iptables -I FORWARD -s 192.168.1.0/24 -d 10.1.1.0/24 -j DROP
+</code></pre>
+<ul>
+<li>mac地址过滤</li>
+</ul>
+<pre><code class="language-sh"># 禁止转发来自 MAC 地址为 00：0C：29：27：55：3F 的和主机的数据包
+iptables -I FORWARD -m mac --mac-source 00:0c:29:27:55:3F -j DROP
+</code></pre>
+<h5>通过iptables实现nat功能</h5>
+<ul>
+<li><a href="http://arthurchiao.art/blog/nat-zh/">[译] NAT - 网络地址转换（2016）</a></li>
+</ul>
+<p>| -j 动作    | 只适用的chain      | 操作                                                                                                                                                                    |
+|------------|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| MASQUERADE | POSTROUTING        | 修改源 IP 为动态新 IP（动态获取网络接口 IP）。如果接口 的 IP 地址发送了变化，MASQUERADE 规则不受影响，可以正常工作；而对于 SNAT 就必须重新调整规则。                    |
+| SNAT       | POSTROUTING        | 发送方的地址会被静态地修改。与 <code>MASQUERADE</code> 的区别在于，SNAT必须显式指定转换后的 IP。 如果路由器配置的是静态 IP 地址，那 SNAT 是最合适的选择，因为它比 MASQUERADE 更 快 |
+| DNAT       | PREROUTING、OUTPUT | 修改目的 IP                                                                                                                                                             |
+| REDIRECT   | PREROUTING、OUTPUT | 包被重定向到路由器的另一个本地端口                                                                                                                                      |</p>
+<ul>
+<li>
+<p>NAT假设路由器的本地网络走 eth0 端口，到公网的网络走 eth1 端口。</p>
+<pre><code class="language-sh"># 匹配成功后的动作是 MASQUERADE （伪装）数据包
+iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+</code></pre>
+</li>
+<li>
+<p>基本命令</p>
+<pre><code class="language-sh"># 将目标端口是 80 的流量,跳转到 192.168.1.1
+iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-dest 192.168.1.1
+
+# 将出口为 80 端口的流量,跳转到 192.168.1.1:8080 端口
+iptables -t nat -A OUTPUT -p tcp --dport 80 -j DNAT --to-dest 192.168.1.1:8080
+
+# 伪装 192.168.100.1 为 1.1.1.1
+iptables -t nat -A POSTROUTING -s 192.168.100.1 -j SNAT --to-source 1.1.1.1
+# 通过 nat 隐藏源 ip 地址
+iptables -t nat -A POSTROUTING -j SNAT --to-source 1.2.3.4
+
+# 从 80 端口进来的流量，重定向到 8080 端口
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-ports 8080
+# 将 5000 端口 进来的流量重定向到本机的 22 端口（SSH）
+iptables -t nat -A PREROUTING -p tcp --dport 5000 -j REDIRECT --to-ports 22
+</code></pre>
+</li>
+<li>
+<p>通过跳板机111.111.111.111的 5001 端口，连接机器 123.123.123.123 的 110 （POP3）端口</p>
+<pre><code class="language-sh"># 在跳板机111.111.111.111上配置
+iptables -t nat -A PREROUTING -p tcp --dport 5001 \
+-j DNAT --to-destination 123.123.123.123:110
+   
+iptables -t nat -A POSTROUTING -p tcp --dport 110 \
+-j MASQUERADE
+</code></pre>
+<p><img src="./Pictures/net-tools/iptable3.avif" alt="image" /></p>
+</li>
+<li>
+<p>通过公网 IP 123.123.123.123 的 80 端口访问 192.168.1.2 的 HTTP 服务</p>
+<ul>
+<li>NAT 路由器的地址是 192.168.1.1</li>
+<li>http服务器在192.168.1.2</li>
+<li>公网 IP 123.123.123.123</li>
+</ul>
+<pre><code class="language-sh">iptables -t nat -A PREROUTING -p tcp -i eth1 --dport 80 -j DNAT --to 192.168.1.2
+</code></pre>
+</li>
+</ul>
+<h4>nftables</h4>
+<p>和<code>iptables</code>不同，<code>nftables</code> 不包含内置表</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h5>iptables 转换成 nftables</h5>
+<pre><code class="language-sh">iptables-save &gt; save.txt
+iptables-restore-translate -f save.txt &gt; ruleset.nft
+nft -f ruleset.nft
+nft list ruleset
+</code></pre>
+<p>| <strong>nftables 簇</strong> | <strong>iptables 实用程序</strong>  |
+| --------------- | ---------------------- |
+| ip              | iptables               |
+| ip6             | ip6tables              |
+| inet            | iiptables and p6tables |
+| arp             | arptables              |
+| bridge          | ebtables               |</p>
+<ul>
+<li>基础命令</li>
+</ul>
+<pre><code class="language-sh"># 列出所有表
+nft list ruleset
+# 保存规则
+nft list ruleset &gt; ruleset.nft
+# 读取规则文件
+nft -f ruleset.nft
+
+# 永久保存规则
+nft list ruleset &gt; /etc/nftables.conf
+
+# 删除fliter表
+nft delete table ip fliter
+
+# 删除所有规则
+nft flush ruleset
+</code></pre>
+<ul>
+<li>禁止访问 baidu</li>
+</ul>
+<pre><code class="language-sh"># 创建一个名为filter的表
+nft add table ip filter
+
+# 在filter表创建OUTPUT规则
+nft 'add chain ip filter OUTPUT { type filter hook output priority 0; policy accept; }'
+
+# 添加规则
+nft add rule ip filter OUTPUT ip daddr 182.61.200.7 counter drop
+nft add rule ip filter OUTPUT ip daddr 182.61.200.6 counter drop
+</code></pre>
+<ul>
+<li>monitor模式</li>
+</ul>
+<pre><code class="language-sh"># 追踪nft
+nft monitor
+
+# 只追踪新规则
+nft monitor new rules
+</code></pre>
+<h4>firewalld</h4>
+<ul>
+<li>
+<p>从centos7开始，默认没有<code>iptables</code>。而是使用firewalld动态防火墙工具</p>
+</li>
+<li>
+<p>firewalld与iptables的关系：</p>
+<ul>
+<li>firewalld提供了一个daemon和service，还有命令行和图形界面，仅仅代替iptables service的部分，底层还是<code>iptables</code>作为防火墙规则管理入口。</li>
+<li>firewalld使用python开发，在新版本已经计划用c++重写daemon部分</li>
+</ul>
+</li>
+<li>
+<p>静态防火墙：哪怕只修改一条规则，也需要将所有规则重新加载的模式</p>
+<ul>
+<li><code>iptables</code>是用户将新规则添加进<code>/etc/sysconfig/iptables</code>配置文件中。在执行<code>service iptables reload</code>使规则生效。
+<ul>
+<li>整个过程需要对旧规则进行清空，然后重新完整加载新规则。如果配置了需要重新加载的内核模块，则还包含相关内核模块的卸载和加载</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>动态防火墙：<code>firewalld</code>不需要对整个规则重新加载，只需变更部分的iptables就可以</p>
+</li>
+<li>
+<p>firewalld将网卡划分为不同的区域（zone），默认有9个：</p>
+<ul>
+<li>
+<p>不同区域之间的差异是对待数据包的默认行为不同。centos7中默认为public</p>
+</li>
+<li>
+<p>block（限制）：传入的网络连接被拒绝。并带有ipv4的icmp-host-prohibited信息和ipv6的icmp6-adm-prohibited</p>
+<ul>
+<li>仅允许由该系统发起的网络连接。</li>
+</ul>
+</li>
+<li>
+<p>dmz（非军事区）：适用于非军事区内可公开访问的计算机，但对内部网络的访问受限。</p>
+<ul>
+<li>仅接受某些入站连接。</li>
+</ul>
+</li>
+<li>
+<p>drop（丢弃）：传入的网络连接都被丢弃，并且不发送任何响应。</p>
+<ul>
+<li>只允许传出网络连接。
+public（公共）：用于公共区域。</li>
+</ul>
+</li>
+<li>
+<p>external（外部）：为路由器启用了伪装功能的外部网络。</p>
+<ul>
+<li>不信任来自网络其他计算机。仅接受某些类型的入站连接。</li>
+<li>基本信任来自网络其他计算机。仅接受某些类型的入站连接。
+internal（内部）：用于内部网络。</li>
+<li>基本信任来自网络其他计算机。仅接受某些类型的入站连接。</li>
+</ul>
+</li>
+<li>
+<p>home（家庭）：用于家庭网络。</p>
+</li>
+<li>
+<p>work（工作）：用于工作区。</p>
+<ul>
+<li>基本信任来自网络其他计算机。仅接受某些类型的入站连接。</li>
+<li>不信任来自网络其他计算机。仅接受某些类型的入站连接。</li>
+</ul>
+</li>
+<li>
+<p>trusted（信任）：可接受所有的网络连接</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 查看支持的所有区域
+firewall-cmd --get-zones
+
+# 查看默认区域
+firewall-cmd --get-default-zone
+# 设置默认区域为home
+firewall-cmd --set-default-zone=home
+
+# 查看活动区域和分配给它们的网络接口
+firewall-cmd --get-active-zones
+# 修改网络接口
+firewall-cmd --zone=public --change-interface=enp1s0
+# 添加新的网络接口
+firewall-cmd --zone=public --add-interface=eth0
+
+# 查看所有区域的所有规则
+firewall-cmd --list-all-zone
+# 查看public区域的所有规则
+firewall-cmd --zone=public --list-all
+</code></pre>
+</li>
+</ul>
+<h5>基本命令</h5>
+<ul>
+<li>
+<p>基本使用</p>
+<pre><code class="language-sh"># 查看状态
+systemctl status firewalld
+firewall-cmd --state
+
+# 重启防火墙。并不中断用户连接，即不丢弃状态信息
+firewall-cmd --reload
+# 重启防火墙。中断用户连接，即丢弃状态信息
+firewall-cmd --complete-reload
+
+# 将当前防火墙的规则永久保存
+firewall-cmd --runtime-to-permanent
+
+# 检查配置正确性
+firewall-cmd --check-config
+</code></pre>
+</li>
+<li>
+<p>日志</p>
+<pre><code class="language-sh"># 获取记录被拒绝的日志。默认为off
+firewall-cmd --get-log-denied
+
+# 设置记录被拒绝的日志，只能为 'all','unicast','broadcast','multicast','off' 其中的一个
+firewall-cmd --set-log-denied=all
+</code></pre>
+</li>
+<li>
+<p>断网和连网</p>
+<pre><code class="language-sh"># 启用应急模式，阻断所有网络连接。防止出现紧急情况
+firewall-cmd --panic-on
+
+# 查看应急模式
+firewall-cmd --query-panic
+
+# 禁用应急模式
+firewall-cmd --panic-off
+</code></pre>
+</li>
+<li>
+<p>firewalld service（服务）</p>
+<ul>
+<li>保存在<code>/usr/lib/firewalld/services/</code>目录（请勿修改）；每个文件对应一项具体的网络服务（如ssh服务），文件为<code>xml</code>类型</li>
+<li>如果默认的service不够用，需要把自定义的配置文件放进<code>/etc/firewalld/services/</code>目录（可以修改）</li>
+<li>每加载一项service，相当于开放了对应的端口</li>
+</ul>
+<pre><code class="language-sh"># 查看所有支持的sevice
+firewall-cmd --get-services
+
+# 查看所有支持的icmp类型的sevice
+firewall-cmd --get-icmptypes
+
+# 查看--permanent的service。表示重启后也生效的service
+firewall-cmd --get-services --permanent
+firewall-cmd --get-icmptypes --permanent
+
+# 查看当前zone（区域）加载的service
+firewall-cmd --list-services
+
+# 查看service的配置文件
+cat /usr/lib/firewalld/services/mysql.xml
+cat /usr/lib/firewalld/services/http.xml
+
+# 查看service
+firewall-cmd --query-service=http
+
+# 开启service
+firewall-cmd --add-service=http
+# 只在pubilic区域开启
+firewall-cmd --zone=public --add-service=http
+
+# 关闭service
+firewall-cmd --remove-service=http
+
+# --permanent参数。即使在重新启动后，Firewalld 也会自动加载它。
+firewall-cmd --zone=public --add-service=http --permanent
+firewall-cmd --query-service=http --permanent
+firewall-cmd --remove-service=http --permanent
+</code></pre>
+</li>
+<li>
+<p>开启/关闭端口：</p>
+<pre><code class="language-sh"># 查看redis的端口6379是否开启。no表示没有开启
+firewall-cmd --query-port=6379/tcp
+
+# 查看public的配置文件。可以看到新的记录
+cat /etc/firewalld/zones/public.xml
+# 开启端口后，需要重启防火墙
+firewall-cmd --reload
+
+# 查看port是否有对应的端口
+firewall-cmd --list-ports
+
+# 关闭端口。如果需要将规则保存至zone配置文件中，重启后也会自动加载，需要加入参数--permanent
+firewall-cmd --reload
+
+# --permanent参数，重启后也会自动加载
+firewall-cmd --add-port=6379/tcp --permanent
+firewall-cmd --list-ports --permanent
+firewall-cmd --remove-port=6379/tcp --permanent
+</code></pre>
+</li>
+<li>
+<p>端口转发</p>
+<pre><code class="language-sh"># 开启端口转发。将80端口的流量转发到192.168.110.5
+firewall-cmd --zone=public --add-forward-port=port=80:proto=tcp:toaddr=192.168.110.5
+
+# 开启端口转发。将80端口的流量转发到8080端口
+firewall-cmd --zone=public --add-forward-port=port=80:proto=tcp:toport=8080
+
+# 开启端口转发。将80端口的流量转发到192.168.110.5的8080端口
+firewall-cmd --zone=public --add-forward-port=port=80:proto=tcp:toaddr=192.168.110.5:toport=8080
+
+# 查看端口转发。
+firewall-cmd --zone=public --query-forward-port=port=80:proto=tcp:toaddr=192.168.110.5
+
+# 关闭端口转发。
+firewall-cmd --zone=public --remove-forward-port=port=80:proto=tcp:toaddr=192.168.110.5
+</code></pre>
+</li>
+<li>
+<p>开启ip伪装：常用于路由器。由于内核限制仅可用于ipv4。</p>
+<ul>
+<li>私有网络的地址将会别隐藏并映射到一个共有ip，这是地址转换的一种形式</li>
+</ul>
+<pre><code class="language-sh"># 开启ip伪装
+firewall-cmd --add-masquerade
+# 查询ip伪装
+firewall-cmd --query-masquerade
+# 关闭ip伪装
+firewall-cmd --remove-masquerade
+</code></pre>
+</li>
+<li>
+<p>开启icmp阻塞：会对icmp报文进行阻塞。icmp类似可以是请求信息、响应的应答报文、错误的应答报文</p>
+<pre><code class="language-sh"># 开启icmp阻塞。echo-reply为响应的应答报文
+firewall-cmd --add-icmp-block=echo-reply
+# 查询icmp阻塞
+firewall-cmd --query-icmp-block=echo-reply
+# 关闭icmp阻塞
+firewall-cmd --remove-icmp-block=echo-reply
+</code></pre>
+</li>
+</ul>
+<h5>复杂规则</h5>
+<ul>
+<li>基本使用</li>
+</ul>
+<pre><code class="language-sh"># mysql服务器从 IP 地址 192.168.1.69 侦听端口 3306
+firewall-cmd --zone=public --add-rich-rule 'rule family=&quot;ipv4&quot; source address=&quot;192.168.1.69&quot; port port=3306 protocol=tcp accept'
+
+# 查看
+firewall-cmd --zone=public --list-rich-rules
+
+# 删除规则
+firewall-cmd --zone=public --remove-rich-rule 'rule family=&quot;ipv4&quot; source address=&quot;192.168.1.69&quot; port port=&quot;3306&quot; protocol=&quot;tcp&quot; accept'
+
+# --permanent 重启后依然生效
+firewall-cmd --zone=public --add-rich-rule 'rule family=&quot;ipv4&quot; source address=&quot;192.168.1.69&quot; port port=3306 protocol=tcp accept' --permanent
+firewall-cmd --zone=public --list-rich-rules --permanent
+firewall-cmd --zone=public --remove-rich-rule 'rule family=&quot;ipv4&quot; source address=&quot;192.168.1.69&quot; port port=&quot;3306&quot; protocol=&quot;tcp&quot; accept' --permanent
+</code></pre>
+<ul>
+<li>各种规则</li>
+</ul>
+<pre><code class="language-sh"># mysql服务器从 IP 地址 192.168.1.69 侦听端口 3306
+firewall-cmd --zone=public --add-rich-rule 'rule family=&quot;ipv4&quot; source address=&quot;192.168.1.69&quot; port port=3306 protocol=tcp accept'
+
+# 与上一条命令相反。阻止从 IP 地址 192.168.1.69 访问 MySQL 服务器
+firewall-cmd --zone=public --add-rich-rule 'rule family=&quot;ipv4&quot; source address=&quot;192.168.1.69&quot; port port=&quot;3306&quot; protocol=&quot;tcp&quot; reject'
+
+# 将所有入站流量从端口 80 重定向到主机 192.168.1.200
+firewall-cmd --zone=public --add-rich-rule 'rule family=ipv4 forward-port port=80 protocol=tcp to-port=8080 to-addr=192.168.1.200'
+</code></pre>
+<h3>ethtool</h3>
+<ul>
+<li>
+<p>这个命令之所以能查看⽹卡收发包统计、能修改⽹卡⾃适应模式、能调整 RX 队列的数量和⼤⼩，是因为 ethtool 命令最终调⽤到了⽹卡驱动的相应⽅法，⽽不是 ethtool 本身有这个超能⼒</p>
+</li>
+<li>
+<p><code>ethtool eth0</code> 显示<code>eth0</code>接口的详细信息</p>
+</li>
+<li>
+<p><code>ethtool -i eth0</code>显示<code>eth0</code>接口的驱动信息</p>
+</li>
+<li>
+<p><code>ethtool -a eth0</code>显示<code>eth0</code>接口的自动协商的详细信息</p>
+</li>
+<li>
+<p><code>ethtool -S etho</code>显示<code>eth0</code>接口的状态</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 显示eth0的速度
+ethtool eth0
+Settings for eth0:
+    Speed: 10000Mb/s
+</code></pre>
+<h3>arp</h3>
+<pre><code class="language-bash">arp -a
+
+# 不解析域名
+arp -n
+
+# 删除192.168.1.1条目
+arp -d 192.168.1.1
+</code></pre>
+<h3>arpwatch</h3>
+<p>监听网络上 ARP 的记录</p>
+<pre><code class="language-bash">arpwatch -i enp27s0 -f arpwatch.log
+</code></pre>
+<h1>性能监控</h1>
+<h2>观察工具</h2>
+<h3>查看吞吐率，PPS（Packet Per Second 包 / 秒）</h3>
+<pre><code class="language-sh">
+# 每1秒输出，每个虚拟网卡的信息
+# rxpck/s 和 txpck/s 分别是接收和发送的 PPS，单位为包 / 秒。
+# rxkB/s 和 txkB/s 分别是接收和发送的吞吐率，单位是 KB/ 秒。
+# rxcmp/s 和 txcmp/s 分别是接收和发送的压缩数据包数，单位是包 / 秒。
+sar -n DEV 1
+
+# 显示关于网络错误的统计数据
+sar -n EDEV 1
+
+# 显示 TCP 的统计数据
+sar -n TCP 1
+</code></pre>
+<h3><a href="https://github.com/magnific0/wondershaper">wondershaper：Linux 限制网络带宽的工具</a></h3>
+<h2>压力测试</h2>
+<h3><a href="https://github.com/wg/wrk">wrk</a></h3>
+<p>| 参数 | 操作     |
+|------|----------|
+| -t   | 线程数   |
+| -c   | 连接数   |
+| -d   | 压测时间 |</p>
+<pre><code class="language-sh">wrk -t 6 -c 30000 -d 60s https://127.0.0.1:80
+</code></pre>
+<h3><a href="https://github.com/giltene/wrk2">wrk2: wrp的变种</a></h3>
+<h3><a href="https://github.com/hatoo/oha">oth：Rust 驱动的 HTTP 压测工具。这是一个用 Rust 开发的 HTTP 请求压测工具，它操作简单、带 TUI 动画界面，支持生成请求延迟、吞吐量等指标的报告，以及动态 URL 和更灵活的请求间隔（burst-delay）等功能。</a></h3>
+<ul>
+<li>
+<p><code>oth</code>性能对比<code>hey</code></p>
+<pre><code class="language-sh"># 使用hyperfine命令（高级版time命令）测试
+hyperfine 'oha --no-tui http://127.0.0.1:80'  'hey http://127.0.0.1:80'
+
+Benchmark 1: oha --no-tui http://127.0.0.1:80
+  Time (mean ± σ):      20.0 ms ±  10.0 ms    [User: 8.9 ms, System: 30.6 ms]
+  Range (min … max):    12.1 ms …  51.3 ms    55 runs
+
+
+Benchmark 2: hey http://127.0.0.1:80
+  Time (mean ± σ):       5.9 ms ±   0.8 ms    [User: 14.2 ms, System: 16.7 ms]
+  Range (min … max):     4.4 ms …  14.2 ms    337 runs
+</code></pre>
+</li>
+</ul>
+<pre><code class="language-sh"># 不使用tui模式
+oha --no-tui http://127.0.0.1:80
+
+# 每2秒将处理4个请求，6秒后将处理总共10个请求。
+oha -n 10 --burst-delay 2s --burst-rate 4 http://127.0.0.1:80
+
+# 正则表达式
+oha --rand-regex-url http://127.0.0.1/[a-z][a-z][0-9]
+</code></pre>
+<h3><a href="https://github.com/GoogleChrome/lighthouse">lighthouse(chrome 网页性能测试)</a></h3>
+<h1>优秀文章</h1>
+<ul>
+<li>
+<p><a href="https://lists.freebsd.org/pipermail/freebsd-performance/2005-February/001143.html">unix domain sockets vs. internet sockets</a></p>
+<blockquote>
+<p>unix socket is better</p>
+</blockquote>
+</li>
+</ul>
+<h1>在线工具</h1>
+<ul>
+<li><a href="https://www.cloudcraft.co/">可以画网络拓扑图</a></li>
+</ul>

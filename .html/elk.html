@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<title>elk</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">ELK</a></li>
+<li><a href=".html">Elasticsearch</a>
+<ul>
+<li><a href=".html">安装</a></li>
+<li><a href=".html">核心原理</a></li>
+<li><a href=".html">使用场景</a></li>
+</ul>
+</li>
+<li><a href=".html">未读</a>
+<ul>
+<li><a href=".html">FSCrawler</a></li>
+</ul>
+</li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>ELK</h1>
+<ul>
+<li>Elasticsearch是一个开源的搜索引擎，也是ELK（现称为Elastic Stack）的重要组成部分。它可以与数据可视化工具 Kibana 和日志处理器 Logstash 无缝集成，从而大大增强了其实用性。</li>
+</ul>
+<h1>Elasticsearch</h1>
+<ul>
+<li>
+<p>Elasticsearch通过一种被称为“倒排索引”的技术，实现快速的全文搜索功能，这与我们翻阅书籍索引找到内容的方式颇为相似。</p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI2NDY1MTA3OQ==&amp;mid=2247484402&amp;idx=1&amp;sn=4bc2a0b2020e6fbf58316f94de542646&amp;chksm=eaa82bdadddfa2ccb522df2ffbf5a29feea1383be0c689eb0c95c03d0d0d82bbbffb47f2b48b&amp;scene=21#wechat_redirect">互联网侦查：漫画趣解：透析Elasticsearch原理</a></p>
+</li>
+</ul>
+<h2>安装</h2>
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/targz.html">官网安装教程</a></li>
+</ul>
+<pre><code class="language-sh">curl -LO https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.13.4-linux-x86_64.tar.gz
+</code></pre>
+<h2>核心原理</h2>
+<ul>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/qBKaad9NV6yD9Nr3IZkvBQ">铭毅天下Elasticsearch：一幅动图，搞定 Elasticsearch 核心基础原理！</a></p>
+</li>
+<li>
+<p>1.在Elasticsearch中，首先需要导入数据。这个过程通常涉及将数据格式化为 JSON 格式，因为 Elasticsearch 使用 JSON 作为数据交换格式。</p>
+<ul>
+<li>在这张图中，你可以看到一个示例数据“The cat in the tree”，这段文本被转换成 JSON 格式并准备导入到 Elasticsearch 中。</li>
+</ul>
+<p><img src="./Pictures/elk/%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE.avif" alt="image" /></p>
+</li>
+<li>
+<p>2.数据的分析和索引</p>
+<ul>
+<li>
+<p>导入Elasticsearch后，数据会被分析和索引。</p>
+</li>
+<li>
+<p>这一步骤是通过Elasticsearch 的分词器完成的，它将文本拆分成更易于搜索的单词或短语，即“tokens”。</p>
+</li>
+</ul>
+<p><img src="./Pictures/elk/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E5%92%8C%E7%B4%A2%E5%BC%95.avif" alt="image" /></p>
+<ul>
+<li>
+<p>这些tokens随后被用来创建一个倒排索引，这是一种特殊的数据结构，用于快速全文搜索。</p>
+</li>
+<li>
+<p>倒排索引将每个唯一的单词映射到包含该单词的所有文档，这在动图中通过连接线和节点表示。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>3.分布式架构</p>
+<ul>
+<li>
+<p>Elasticsearch是一个分布式搜索引擎，这意味着数据可以跨多个服务器（称为节点）存储和检索。</p>
+</li>
+<li>
+<p>这种架构提高了系统的扩展性和容错能力。在图中，你可以看到数据被存储在不同的服务器上，这有助于分散负载和提高查询效率。</p>
+</li>
+</ul>
+<p><img src="./Pictures/elk/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84.avif" alt="image" /></p>
+</li>
+<li>
+<p>4.查询解析和执行</p>
+<ul>
+<li>当用户通过一个搜索界面（如图中的笔记本电脑）输入查询时，Elasticsearch会解析这个查询请求。
+<img src="./Pictures/elk/%E6%9F%A5%E8%AF%A2%E8%A7%A3%E6%9E%90%E5%92%8C%E6%89%A7%E8%A1%8C.avif" alt="image" /></li>
+<li>解析过程包括理解查询中的关键词以及可能的查询意图，然后使用这些信息来检索倒排索引。</li>
+</ul>
+</li>
+<li>
+<p>5.得分和排序</p>
+<ul>
+<li>
+<p>一旦Elasticsearch找到了所有相关的文档，它将基于相关性给这些文档打分。
+<img src="./Pictures/elk/%E5%BE%97%E5%88%86%E5%92%8C%E6%8E%92%E5%BA%8F.avif" alt="image" /></p>
+</li>
+<li>
+<p>打分机制通常依赖于因素如关键词的出现频率、文档中的位置等。</p>
+</li>
+<li>
+<p>这些分数用于对结果进行排序，以确保最相关的结果排在最前面。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>6.返回结果</p>
+<ul>
+<li>
+<p>最后，搜索结果会被返回给用户，通常也是以JSON格式。用户可以看到最相关的文档排在最前面，这使得用户能够快速有效地找到他们需要的信息。</p>
+</li>
+<li>
+<p>这整个过程不仅高效而且具有很高的可扩展性，使Elasticsearch成为处理大规模数据集的理想选择。</p>
+</li>
+<li>
+<p>通过这种方式，Elasticsearch支持复杂的全文搜索功能，广泛应用于各种场景中，如日志分析、实时数据监控和复杂搜索需求。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2>使用场景</h2>
+<p><img src="./Pictures/elk/%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE.avif" alt="image" /></p>
+<ul>
+<li>
+<p>1.全文搜索</p>
+<ul>
+<li>Elasticsearch 凭借其强大、可扩展和快速的搜索功能，在全文搜索场景中表现出色。</li>
+<li>它通常用于支持大型网站和应用程序的搜索功能，允许用户执行复杂的查询并获得近乎实时的响应。</li>
+</ul>
+</li>
+<li>
+<p>2.实时分析</p>
+<ul>
+<li>Elasticsearch 能够实时执行分析，因此适用于跟踪实时数据（如用户活动、交易或传感器输出）的仪表盘。这种能力使企业能够根据最新信息及时做出决策。</li>
+</ul>
+</li>
+<li>
+<p>3.机器学习</p>
+<ul>
+<li>通过在 X-Pack 中添加机器学习功能，Elasticsearch 可以自动检测数据中的异常、模式和趋势。这对于预测分析、个性化和提高运营效率非常有用。</li>
+</ul>
+</li>
+<li>
+<p>4.地理数据应用</p>
+<ul>
+<li>Elasticsearch 通过地理空间索引和搜索功能支持地理数据。这对于需要管理和可视化地理信息（如地图和基于位置的服务）的应用非常有用，使执行邻近搜索和基于位置的数据可视化成为可能。</li>
+</ul>
+</li>
+<li>
+<p>5.日志和事件数据分析</p>
+<ul>
+<li>企业使用 Elasticsearch 聚合、监控和分析各种来源的日志和事件数据。它是 ELK 堆栈（Elasticsearch、Logstash、Kibana）的关键组件，该堆栈常用于管理系统和应用程序日志，以发现问题并监控系统健康状况。</li>
+</ul>
+</li>
+<li>
+<p>6.安全信息和事件管理（SIEM）</p>
+<ul>
+<li>
+<p>Elasticsearch 可用作 SIEM 的工具，帮助企业实时分析安全事件。这对于检测、分析和响应安全事件和漏洞至关重要。</p>
+</li>
+<li>
+<p>上述每个用例都利用了 Elasticsearch 的优势（如可扩展性、速度和灵活性）来处理不同的数据类型和复杂的查询，为数据驱动型应用提供了重要价值。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1>未读</h1>
+<ul>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/698817997">鹅厂架构师：高性能分布式搜索引擎Elasticsearch</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/bVhZ40ddB_Ke_2kzC6GgdA">程序员半支烟：5000字详说Elasticsearch入门(一)</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/MZcO_wUTPWoOgQKIuQXXYA">Se7en的架构笔记：Elastic Stack 实战教程 1：Elastic Stack 8 快速上手</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/nsXGJ6rZNTuunPutKo1nWQ">Se7en的架构笔记：使用 Ansible 部署 Elasticsearch 集群</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/W2l9jminOflJO28EqyNJSA">云原生运维圈：ELK构建MySQL慢日志收集平台详解</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/eTHZZTQWFaxgReNpa2mNaw">铭毅天下Elasticsearch：Elasticsearch 电商场景：明明有这个关键词，但是搜不出来，怎么办？</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/cZw1ltk2Ar5UPeX1pJfhgA">铭毅天下Elasticsearch：6 幅图，通透理解 Elasticsearch 的六大顶级核心应用场景</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/L8_lXuodCpObokybX6xtlw">用ElasticSearch时，必须先搞明白这几个基础</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/MfDuIVai3yc9A63f7siiXQ">knowclub：你真的懂Elasticsearch分布式原理和高级聚合查询吗？</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/X2qjkkrN0moUVWlJHSXX8w">程序员半支烟：巧记Elasticsearch常用DSL语法</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/3_Pti61GppMa9CzUy9CXRg">程序员半支烟：Elasticsearch与文件描述符的恩恩怨怨</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/mO3TkKw3U9QZe_IoLV_Y_Q">腾讯技术工程：万字超全 ElasticSearch 监控指南</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/05wgfsXD5KTjwkjiCSjnpw">崔亮的博客：ELK Stack生产实践——性能压测工具esrally</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/720931769">鹅厂架构师：【万字长文】ES搜索优化实践</a></p>
+</li>
+</ul>
+<h2>FSCrawler</h2>
+<ul>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/5_bvwUQdqUOQj76CNu4ZAQ">铭毅天下Elasticsearch：Elasticsearch FSCrawler 文档爬虫学习，请先看这一篇！</a></p>
+<ul>
+<li>FSCrawler 是一个开源项目，可以帮助我们快速简便地将文件（如 PDFs、Office 文档等）索引到 Elasticsearch 中。</li>
+</ul>
+</li>
+</ul>

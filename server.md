@@ -80,6 +80,7 @@
   * [日志软件](#日志软件)
     * [logrotate（自带的日志分割工具）](#logrotate自带的日志分割工具)
     * [rsyslog](#rsyslog)
+* [未读](#未读)
 
 <!-- mtoc-end -->
 
@@ -2156,3 +2157,6 @@ include /etc/logrotate.d
         *.* @192.168.31.80
         ```
 
+# 未读
+
+- [崔亮的博客：ci/cd学习笔记](https://m.cuiliangblog.cn/catalog/1939987)

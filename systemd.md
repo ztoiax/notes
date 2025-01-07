@@ -3,10 +3,14 @@
 
 * [systemd](#systemd)
   * [all in one（非unix）哲学](#all-in-one非unix哲学)
-  * [init](#init)
+  * [init程序发展的三个阶段](#init程序发展的三个阶段)
   * [systemd](#systemd-1)
     * [基本使用](#基本使用)
     * [创建systemd unit 服务](#创建systemd-unit-服务)
+      * [介绍](#介绍)
+      * [例子](#例子)
+        * [例子：随机mac地址](#例子随机mac地址)
+        * [例子：timer定时器单元替代传统的 cron](#例子timer定时器单元替代传统的-cron)
     * [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](#咸鱼运维杂谈运维排查--systemd-之服务停止后状态为-failed)
   * [systemctl](#systemctl)
     * [unmask](#unmask)
@@ -33,6 +37,8 @@
 
 # systemd
 
+- [鹅厂架构师：systemd详解](https://zhuanlan.zhihu.com/p/860259695)
+
 ## all in one（非unix）哲学
 
 - [《The Tragedy of systemd（systemd的悲剧）》视频演讲](https://www.bilibili.com/video/BV1oo4y1x7Nw)
@@ -43,35 +49,74 @@
 
     ![image](./Pictures/systemd/systemd.gif)
 
-## init
+## init程序发展的三个阶段
 
 - init 程序的发展分为三个阶段：`sysvinit`->`upstart`->`systemd`
 
-    - sysvinit：以脚本串行的方式启动服务。下一个进程的启动，必须等待上一个进程启动完成。
+- sysvinit：以脚本串行的方式启动服务。下一个进程的启动，必须等待上一个进程启动完成。
 
-    - upstart：在sysvinit的基础上，对没有关联依赖的进程并行启动。
+- upstart：在sysvinit的基础上，对没有关联依赖的进程并行启动。
 
-    - systemd：使用socket激活机制，无论有没有关联依赖都并行启动。
+- systemd：
 
-        - 1.一个进程启动另一个进程时，一般是执行系统调用 `exec()`，systemd 在调用 exec()来启动服务之前，先创建与该服务关联的监听套接字并激活，然后在 exec()启动服务期间把套接字传递给它
+    - 主要特点：
 
-        - 2.systemd 为所有的服务创建socket，即使一个服务需要依赖于另一个服务，但由于socket已经准备好，服务之间可以直接进行连接并继续执行启动
+        - 1.并行启动服务：
+            - systemd 能够并行地启动系统服务，缩短系统启动时间。
+            - 通过服务的依赖关系，确保必要的服务按正确的顺序启动。
 
-            - 如果遇到了需要同步的请求，不得不等待阻塞的情况，那阻塞的也将只会是一个服务，并且只是一个服务的一个请求，不会影响其他服务的启动
+        - 2.按需启动（Socket 激活）：
+            - 仅在需要时启动服务，减少资源消耗。
+            - 使用套接字激活机制，systemd 可以在有请求时自动启动相关服务。
 
-            - linux提供了socket缓冲区功能：如果遇到服务启动比较慢时，客户端向服务发送请求消息， 消息会发送到对应服务的socket缓冲区，只要缓冲区未满，客户端就不需要等待并继续往下执行
+            - 1.一个进程启动另一个进程时，一般是执行系统调用 `exec()`，systemd 在调用 exec()来启动服务之前，先创建与该服务关联的监听套接字并激活，然后在 exec()启动服务期间把套接字传递给它
 
-    ```sh
-    # 第一个进程init实际是systemd
-    ps 1
-    # output
-        PID TTY      STAT   TIME COMMAND
-          1 ?        Ss     0:00 /sbin/init
+            - 2.systemd 为所有的服务创建socket，即使一个服务需要依赖于另一个服务，但由于socket已经准备好，服务之间可以直接进行连接并继续执行启动
 
-    ls -ld /sbin/init
-    # output
-    lrwxrwxrwx 22 root  3 May 14:41 /sbin/init -> ../lib/systemd/systemd
-    ```
+                - 如果遇到了需要同步的请求，不得不等待阻塞的情况，那阻塞的也将只会是一个服务，并且只是一个服务的一个请求，不会影响其他服务的启动
+
+                - linux提供了socket缓冲区功能：如果遇到服务启动比较慢时，客户端向服务发送请求消息， 消息会发送到对应服务的socket缓冲区，只要缓冲区未满，客户端就不需要等待并继续往下执行
+
+        - 3.统一的进程管理：
+
+            - 提供 systemctl 命令，统一管理系统服务的启动、停止、重启和状态查询。
+            - 支持服务的自动重启、监控和日志记录。
+
+        - 4.cgroups 资源控制：
+            - 利用 Linux 内核的 cgroups（控制组）功能，systemd 可以限制和监控服务的资源使用，如 CPU、内存和 I/O。
+
+        - 5.日志系统（journald）：
+            - 内置日志系统 systemd-journald，收集和管理系统日志。
+            - 支持集中化的二进制日志存储，提供灵活的日志查询功能。
+
+        - 6.目标单元（Targets）：
+            - 替代传统的运行级别（runlevels），提供更灵活的系统状态管理。
+            - 通过目标单元，可以定义系统在不同状态下应该运行的服务集合。
+
+        - 7.定时器单元（Timers）：
+            - 替代 cron 等传统定时任务调度器。
+            - 可以为服务配置定时启动和周期性执行。
+
+    - 单元（Units）：systemd 以单元为基本管理对象，每个单元代表系统中的一个资源或服务。
+        - 服务单元（.service）：管理系统服务。
+        - 目标单元（.target）：表示系统的状态或运行级别。
+        - 挂载单元（.mount）：管理文件系统挂载点。
+        - 套接字单元（.socket）：用于套接字激活机制。
+        - 定时器单元（.timer）：管理定时任务。
+        - 设备单元（.device）：表示内核识别的设备。
+        - 路径单元（.path）：监控文件系统中的路径变化。
+
+```sh
+# 第一个进程init实际是systemd
+ps 1
+# output
+    PID TTY      STAT   TIME COMMAND
+      1 ?        Ss     0:00 /sbin/init
+
+ls -ld /sbin/init
+# output
+lrwxrwxrwx 22 root  3 May 14:41 /sbin/init -> ../lib/systemd/systemd
+```
 
 ## systemd
 
@@ -156,6 +201,8 @@ google-chrome-stable boot.svg #用浏览器打开
 ![image](./Pictures/systemd/1.avif)
 
 ### 创建systemd unit 服务
+
+#### 介绍
 
 - [unit配置的官方文档](https://www.freedesktop.org/software/systemd/man/systemd.unit.html)
 
@@ -300,7 +347,53 @@ google-chrome-stable boot.svg #用浏览器打开
 
         - 这个设置非常重要，因为执行systemctl enable 命令时，zookeeper .service 的一个符号链接，就会放在/etc/systemd/system目录下面的multi-user.target.wants子目录之中。
 
-- 随机mac地址
+#### 例子
+
+- 1.编写服务文件：
+    - 在 `/etc/systemd/system/` 目录下创建一个新的服务文件，例如 `myservice.service`。
+
+    ```ini
+    [Unit]
+    Description=My Custom Service
+    After=network.target
+
+    [Service]
+    Type=simple
+    ExecStart=/usr/bin/mycommand --option
+    Restart=on-failure
+    RestartSec=5
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+
+- 2.重新加载 systemd 配置：
+
+    ```sh
+    sudo systemctl daemon-reload
+    ```
+
+- 3.启动并启用服务：
+
+    ```sh
+    # 启动服务
+    sudo systemctl start myservice.service
+
+    # 设置服务开机自启动
+    sudo systemctl enable myservice.service
+    ```
+
+- 4.查看服务状态和日志：
+
+    ```sh
+    # 查看服务状态
+    systemctl status myservice.service
+    # 查看服务日志
+    journalctl -u myservice.service
+    ```
+
+##### 例子：随机mac地址
+
 ```sh
 cat > /etc/systemd/system/macspoof.service << 'EOF'
 [Unit]
@@ -326,6 +419,51 @@ systemctl enable macspoof.service
 ```sh
 systemctl disable macspoof.service
 ```
+
+##### 例子：timer定时器单元替代传统的 cron
+
+- 1.创建定时器服务单元：
+
+    - 创建服务文件 `/etc/systemd/system/mytask.service`：
+    ```ini
+    [Unit]
+    Description=My Scheduled Task
+
+    [Service]
+    Type=oneshot
+    ExecStart=/usr/bin/mycommand --option
+    ```
+
+- 2.创建定时器文件 /etc/systemd/system/mytask.timer：
+
+    ```ini
+    [Unit]
+    Description=Run MyTask every day at 2 AM
+
+    [Timer]
+    OnCalendar=*-*-* 02:00:00
+    Persistent=true
+
+    [Install]
+    WantedBy=timers.target
+    ```
+
+    - OnCalendar：定义任务的调度时间。
+    - Persistent：如果错过了预定时间，系统启动后立即执行。
+
+- 3.启用并启动定时器：
+
+    ```sh
+    sudo systemctl daemon-reload
+    sudo systemctl enable mytask.timer
+    sudo systemctl start mytask.timer
+    ```
+
+- 4.查看定时器状态：
+
+    ```sh
+    systemctl list-timers
+    ```
 
 ### [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](https://mp.weixin.qq.com/s/l30kvYhga3YZO__ac0-cWg)
 

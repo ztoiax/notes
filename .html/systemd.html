@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<title>systemd</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">systemd</a>
+<ul>
+<li><a href=".html">all in one（非unix）哲学</a></li>
+<li><a href=".html">init程序发展的三个阶段</a></li>
+<li><a href=".html">systemd</a>
+<ul>
+<li><a href=".html">基本使用</a></li>
+<li><a href=".html">创建systemd unit 服务</a>
+<ul>
+<li><a href=".html">介绍</a></li>
+<li><a href=".html">例子</a>
+<ul>
+<li><a href=".html">例子：随机mac地址</a></li>
+<li><a href=".html">例子：timer定时器单元替代传统的 cron</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed</a></li>
+</ul>
+</li>
+<li><a href=".html">systemctl</a>
+<ul>
+<li><a href=".html">unmask</a></li>
+<li><a href=".html">常见启动问题</a>
+<ul>
+<li><a href=".html">爱可生开源社区：故障分析 | MySQL 通过 systemd 启动时 hang 住了……</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">hostnamectl, localectl, timedatectl, loginctl命令</a></li>
+<li><a href=".html">journalctl（日志）</a>
+<ul>
+<li><a href=".html">systemd-journald的进程服务</a></li>
+<li><a href=".html">持久化存储or内存存储</a></li>
+<li><a href=".html">速率限制</a></li>
+<li><a href=".html">日志接收和转发</a>
+<ul>
+<li><a href=".html">rsyslog</a></li>
+<li><a href=".html">kmsg</a></li>
+<li><a href=".html">console</a></li>
+<li><a href=".html">wall</a></li>
+</ul>
+</li>
+<li><a href=".html">基本使用</a></li>
+<li><a href=".html">实战调试</a>
+<ul>
+<li><a href=".html">查看错误</a></li>
+<li><a href=".html">解决办法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">Timers（定时器）</a></li>
+</ul>
+</li>
+<li><a href=".html">referece</a></li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>systemd</h1>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/860259695">鹅厂架构师：systemd详解</a></li>
+</ul>
+<h2>all in one（非unix）哲学</h2>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1oo4y1x7Nw">《The Tragedy of systemd（systemd的悲剧）》视频演讲</a></p>
+<ul>
+<li>
+<p>bsd一直遵循着unix哲学，也就是一个程序只做好一件事。因此bsd的用户排斥什么都做的systemd，并对使用着systemd的其他unix系统用户说：“我们永远也不会改变（使用sysmtemd）赶快加入我们吧”。即认为没有systemd是一种幸运，而演讲者则认为这非但不是幸运，反而是bsd的一种缺失。演讲者是freebsd的开发者，演讲的题目是《systemd的悲剧》看起来似乎是嘲讽systemd的主题演讲，但实际恰恰相反演讲者指出systemd的一些理念和优点，它和windows和macos/ios的服务管理是类似的哲学，它解决了特定的问题，并认为遵循unix的人们应该要作出change（改变）。伟大的领导者是能改变人们使用习惯的人。</p>
+</li>
+<li>
+<p>systemd是依赖于linux的，就像launch依赖与macos/ios一样</p>
+</li>
+</ul>
+<p><img src="./Pictures/systemd/systemd.gif" alt="image" /></p>
+</li>
+</ul>
+<h2>init程序发展的三个阶段</h2>
+<ul>
+<li>
+<p>init 程序的发展分为三个阶段：<code>sysvinit</code>-&gt;<code>upstart</code>-&gt;<code>systemd</code></p>
+</li>
+<li>
+<p>sysvinit：以脚本串行的方式启动服务。下一个进程的启动，必须等待上一个进程启动完成。</p>
+</li>
+<li>
+<p>upstart：在sysvinit的基础上，对没有关联依赖的进程并行启动。</p>
+</li>
+<li>
+<p>systemd：</p>
+<ul>
+<li>
+<p>主要特点：</p>
+<ul>
+<li>
+<p>1.并行启动服务：</p>
+<ul>
+<li>systemd 能够并行地启动系统服务，缩短系统启动时间。</li>
+<li>通过服务的依赖关系，确保必要的服务按正确的顺序启动。</li>
+</ul>
+</li>
+<li>
+<p>2.按需启动（Socket 激活）：</p>
+<ul>
+<li>
+<p>仅在需要时启动服务，减少资源消耗。</p>
+</li>
+<li>
+<p>使用套接字激活机制，systemd 可以在有请求时自动启动相关服务。</p>
+</li>
+<li>
+<p>1.一个进程启动另一个进程时，一般是执行系统调用 <code>exec()</code>，systemd 在调用 exec()来启动服务之前，先创建与该服务关联的监听套接字并激活，然后在 exec()启动服务期间把套接字传递给它</p>
+</li>
+<li>
+<p>2.systemd 为所有的服务创建socket，即使一个服务需要依赖于另一个服务，但由于socket已经准备好，服务之间可以直接进行连接并继续执行启动</p>
+<ul>
+<li>
+<p>如果遇到了需要同步的请求，不得不等待阻塞的情况，那阻塞的也将只会是一个服务，并且只是一个服务的一个请求，不会影响其他服务的启动</p>
+</li>
+<li>
+<p>linux提供了socket缓冲区功能：如果遇到服务启动比较慢时，客户端向服务发送请求消息， 消息会发送到对应服务的socket缓冲区，只要缓冲区未满，客户端就不需要等待并继续往下执行</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>3.统一的进程管理：</p>
+<ul>
+<li>提供 systemctl 命令，统一管理系统服务的启动、停止、重启和状态查询。</li>
+<li>支持服务的自动重启、监控和日志记录。</li>
+</ul>
+</li>
+<li>
+<p>4.cgroups 资源控制：</p>
+<ul>
+<li>利用 Linux 内核的 cgroups（控制组）功能，systemd 可以限制和监控服务的资源使用，如 CPU、内存和 I/O。</li>
+</ul>
+</li>
+<li>
+<p>5.日志系统（journald）：</p>
+<ul>
+<li>内置日志系统 systemd-journald，收集和管理系统日志。</li>
+<li>支持集中化的二进制日志存储，提供灵活的日志查询功能。</li>
+</ul>
+</li>
+<li>
+<p>6.目标单元（Targets）：</p>
+<ul>
+<li>替代传统的运行级别（runlevels），提供更灵活的系统状态管理。</li>
+<li>通过目标单元，可以定义系统在不同状态下应该运行的服务集合。</li>
+</ul>
+</li>
+<li>
+<p>7.定时器单元（Timers）：</p>
+<ul>
+<li>替代 cron 等传统定时任务调度器。</li>
+<li>可以为服务配置定时启动和周期性执行。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>单元（Units）：systemd 以单元为基本管理对象，每个单元代表系统中的一个资源或服务。</p>
+<ul>
+<li>服务单元（.service）：管理系统服务。</li>
+<li>目标单元（.target）：表示系统的状态或运行级别。</li>
+<li>挂载单元（.mount）：管理文件系统挂载点。</li>
+<li>套接字单元（.socket）：用于套接字激活机制。</li>
+<li>定时器单元（.timer）：管理定时任务。</li>
+<li>设备单元（.device）：表示内核识别的设备。</li>
+<li>路径单元（.path）：监控文件系统中的路径变化。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-sh"># 第一个进程init实际是systemd
+ps 1
+# output
+    PID TTY      STAT   TIME COMMAND
+      1 ?        Ss     0:00 /sbin/init
+
+ls -ld /sbin/init
+# output
+lrwxrwxrwx 22 root  3 May 14:41 /sbin/init -&gt; ../lib/systemd/systemd
+</code></pre>
+<h2>systemd</h2>
+<ul>
+<li>
+<p>systemd 的启动顺序：<code>default.target-&gt; multi-user.target-&gt; basic.target-&gt; sysinit.target-&gt; local-fs.target</code></p>
+<ul>
+<li>
+<p>1.<code>default.target</code>：是执行的第一个目标。但实际上 <code>default.target</code> 是指向 <code>graphical.target</code> 的软链接</p>
+<pre><code class="language-sh">systemctl get-default
+#output
+graphical.target
+</code></pre>
+<pre><code class="language-sh">grep Requires= /usr/lib/systemd/system/graphical.target
+#output
+Requires=multi-user.target
+</code></pre>
+</li>
+<li>
+<p>2.<code>multi-user.target</code>：为多用户支持设定系统环境。非 root 用户会在这个阶段的引导过程中启用。防火墙相关的服务也会在这个阶段启动。</p>
+<pre><code class="language-sh">ls /etc/systemd/system/multi-user.target.wants
+#output
+libvirtd.service    NetworkManager.service  remote-fs.target  v2ray.service
+lm_sensors.service  privoxy.service         sysstat.service
+</code></pre>
+</li>
+<li>
+<p><code>multi-user.target</code>会将控制权交给另一层<code>basic.target</code>。</p>
+<pre><code class="language-sh">grep Requires= /usr/lib/systemd/system/multi-user.target
+#output
+Requires=basic.targe
+</code></pre>
+</li>
+<li>
+<p>3.<code>basic.target</code>：用于启动普通服务特别是图形管理服务。它通过<code>/etc/systemd/system/basic.target.wants</code> 目录来决定哪些服务会被启动。<code>basic.target</code>之后将控制权交给<code>sysinit.target</code>.</p>
+<pre><code class="language-sh">grep Requires= /usr/lib/systemd/system/basic.target
+#output
+Requires=sysinit.target
+</code></pre>
+</li>
+<li>
+<p>4.<code>sysinit.target</code>：会启动重要的系统服务例如系统挂载，内存交换空间和设备，内核补充选项等等。<code>sysinit.target</code> 在启动过程中会传递给 <code>local-fs.target</code></p>
+<pre><code class="language-sh">cat /usr/lib/systemd/system/sysinit.target
+
+[Unit]
+Description=System Initialization
+Documentation=man:systemd.special(7)
+Conflicts=emergency.service emergency.target
+Wants=local-fs.target swap.target
+After=local-fs.target swap.target emergency.service emergency.target
+
+Requires=sysinit.target
+</code></pre>
+</li>
+<li>
+<p>5.<code>local-fs.target</code>：不会启动用户相关的服务，它只处理底层核心服务,它会根据<code>/etc/fstab</code>和<code>/etc/inittab</code>来执行相关操作。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3>基本使用</h3>
+<pre><code class="language-sh"># 查看启动时间
+systemd-analyze time
+
+# 列出每个 units 启动时间
+systemd-analyze blame
+
+# 查看瀑布状的启动过程流
+systemd-analyze critical-chain
+</code></pre>
+<ul>
+<li>可视化每个 units 的启动时间</li>
+</ul>
+<pre><code class="language-sh">systemd-analyze plot &gt; boot.svg
+google-chrome-stable boot.svg #用浏览器打开
+</code></pre>
+<p><img src="./Pictures/systemd/1.avif" alt="image" /></p>
+<h3>创建systemd unit 服务</h3>
+<h4>介绍</h4>
+<ul>
+<li>
+<p><a href="https://www.freedesktop.org/software/systemd/man/systemd.unit.html">unit配置的官方文档</a></p>
+</li>
+<li>
+<p><a href="http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-part-two.html">ruanyifeng：Systemd 入门教程：实战篇</a></p>
+</li>
+<li>
+<p><code>[Unit]</code>- ：通常是第一个区块，定义与其它unit的关系</p>
+<p>| [Unit]字段    | 内容                                                                   |
+|---------------|------------------------------------------------------------------------|
+| Description   | 简短描述                                                               |
+| Documentation | 文档地址                                                               |
+| Requires      | 当前 Unit 依赖的其他 Unit，如果它们没有运行，当前 Unit 会启动失败      |
+| Wants         | 与当前 Unit 配合的其他 Unit，如果它们没有运行，当前 Unit 不会启动失败 |
+| BindsTo       | 与Requires类似，它指定的 Unit 如果退出，会导致当前 Unit 停止运行       |
+| Before        | 如果该字段指定的 Unit 也要启动，那么必须在当前 Unit 之后启动           |
+| After         | 如果该字段指定的 Unit 也要启动，那么必须在当前 Unit 之前启动           |
+| Conflicts     | 这里指定的 Unit 不能与当前 Unit 同时运行                               |
+| Condition...  | 当前 Unit 运行必须满足的条件，否则不会运行                             |
+| Assert...     | 当前 Unit 运行必须满足的条件，否则会报启动失败                         |</p>
+<ul>
+<li>
+<p><code>After</code>和<code>Before</code>字段只涉及启动和关闭顺序，不涉及依赖关系。</p>
+<ul>
+<li>某 Web 应用需要 postgresql 数据库储存数据。在配置文件中，它只定义要在 postgresql 之后启动，而没有定义依赖 postgresql 。上线后，由于某种原因，postgresql 需要重新启动，在停止服务期间，该 Web 应用就会无法建立数据库连接。</li>
+</ul>
+</li>
+<li>
+<p><code>Wants</code>和<code>Requires</code>字段，有依赖关系</p>
+<ul>
+<li>
+<p><code>Wants</code>：表示sshd.service与sshd-keygen.service之间存在&quot;弱依赖&quot;关系，即如果&quot;sshd-keygen.service&quot;启动失败或停止运行，不影响sshd.service继续执行。</p>
+</li>
+<li>
+<p><code>Requires</code>：则表示&quot;强依赖&quot;关系，即如果该服务启动失败或异常退出，那么sshd.service也必须退出。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>Conflicts</code>字段：定义与其它unit有冲突关系。其中一个start时，另一个会stop</p>
+</li>
+<li>
+<p>例子：</p>
+<ul>
+<li><a href="https://seb.jambor.dev/posts/systemd-by-example-part-2-dependencies/">systemd-by-example-part-2-dependencies</a></li>
+</ul>
+<p><img src="./Pictures/systemd/all-requirement-dependencies.avif" alt="image" /></p>
+<ul>
+<li>
+<p>1.当启动<code>d.service</code>时：<code>e.service</code>也会被启动（start）。但由于没有定义启动顺序，两者是并行启动</p>
+</li>
+<li>
+<p>2.当启动<code>a.service</code>时：</p>
+<ul>
+<li><code>b.service</code> 和 <code>c.service</code> 都会被并行启动。</li>
+<li>由于<code>c.service</code>和<code>e.service</code>是Conflicts关系，而且<code>e.service</code>被<code>d.service</code> Requires。所以<code>e.service</code>和<code>d.service</code>会被关闭（stop），并且是并行关闭。</li>
+</ul>
+</li>
+<li>
+<p>3.当<code>b.service</code>启动失败时（fail）：由于被<code>a.service</code>Requires，所以<code>a.service</code>会关闭。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>[Service]</code>只有service类型，才有的区块</p>
+<p>| [Service]字段 | 内容                                                                                                                                |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| ExecStart     | 启动当前服务的命令                                                                                                                  |
+| ExecStartPre  | 启动当前服务之前执行的命令                                                                                                          |
+| ExecStartPost | 启动当前服务之后执行的命令                                                                                                          |
+| ExecReload    | 重启当前服务时执行的命令                                                                                                            |
+| ExecStop      | 停止当前服务时执行的命令                                                                                                            |
+| ExecStopPost  | 停止当其服务之后执行的命令                                                                                                          |
+| RestartSec    | 自动重启当前服务间隔的秒数                                                                                                          |
+| Restart       | 定义何种情况 Systemd 会自动重启当前服务，可能的值包括always（总是重启）、on-success、on-failure、on-abnormal、on-abort、on-watchdog |
+| TimeoutSec    | 定义 Systemd 停止当前服务之前等待的秒数                                                                                             |
+| Environment   | 指定环境变量                                                                                                                        |</p>
+<ul>
+<li>
+<p><code>-</code>：表示&quot;抑制错误&quot;，即发生错误的时候，不影响其他命令的执行。比如：<code>EnvironmentFile=-/etc/sysconfig/sshd</code></p>
+</li>
+<li>
+<p><code>Type</code>字段：表示启动类型</p>
+<p>| TYPE字段类型     | 内容                                                                                                                |
+|------------------|---------------------------------------------------------------------------------------------------------------------|
+| simple（默认值） | ExecStart字段启动的进程为主进程                                                                                     |
+| forking          | ExecStart字段将以fork()方式启动，此时父进程将会退出，子进程将成为主进程                                             |
+| oneshot          | 类似于simple，但只执行一次，Systemd 会等它执行完，才启动其他服务                                                    |
+| dbus             | 类似于simple，但会等待 D-Bus 信号后启动                                                                             |
+| notify           | 类似于simple，启动结束后会发出通知信号，然后 Systemd 再启动其他服务                                                 |
+| idle             | 类似于simple，但是要等到其他任务都执行完，才会启动该服务。一种使用场合是为让该服务的输出，不与其他服务的输出相混合 |</p>
+<ul>
+<li>
+<p><code>oneshot</code>的例子：笔记本电脑启动时，要把触摸板关掉</p>
+<pre><code class="language-systemd">[Unit]
+Description=Switch-off Touchpad
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/touchpad-off
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<ul>
+<li>
+<p>上面的触控板例子的配置文件，启动类型设为oneshot，就表明这个服务只要运行一次就够了，不需要长期运行。如果关闭以后，将来某个时候还想打开，配置文件修改如下。</p>
+<ul>
+<li><code>RemainAfterExit</code>字段设为yes，表示进程退出以后，服务仍然保持执行。这样的话，一旦使用systemctl stop命令停止服务，ExecStop指定的命令就会执行，从而重新开启触摸板。</li>
+</ul>
+<pre><code class="language-systemd">[Unit]
+Description=Switch-off Touchpad
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/touchpad-off start
+ExecStop=/usr/bin/touchpad-off stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>KillMode</code>：如何停止服务
+| KillMode字段            | 内容                                               |
+|-------------------------|----------------------------------------------------|
+| control-group（默认值） | 当前控制组里面的所有子进程，都会被杀掉             |
+| process                 | 只杀主进程                                         |
+| mixed                   | 主进程将收到 SIGTERM 信号，子进程收到 SIGKILL 信号 |
+| none                    | 没有进程会被杀掉，只是执行服务的 stop 命令。       |</p>
+</li>
+<li>
+<p><code>Restart</code>：如何重启服务
+| Restart字段  | 内容                                                          |
+|--------------|---------------------------------------------------------------|
+| no（默认值） | 退出后不会重启                                                |
+| on-success   | 只有正常退出时（退出状态码为0），才会重启                     |
+| on-failure   | 非正常退出时（退出状态码非0），包括被信号终止和超时，才会重启 |
+| on-abnormal  | 只有被信号终止和超时，才会重启                                |
+| on-abort     | 只有在收到没有捕捉到的信号终止时，才会重启                    |
+| on-watchdog  | 超时退出，才会重启                                            |
+| always       | 不管是什么退出原因，总是重启                                  |</p>
+<ul>
+<li>对于守护进程，推荐设为<code>on-failure</code>。对于那些允许发生错误退出的服务，可以设为<code>on-abnormal</code></li>
+</ul>
+</li>
+<li>
+<p><code>RestartSec</code>：重启服务之前，需要等待的秒数。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>[Install]</code>：通常是配置文件的最后一个区块，用来定义如何启动，以及是否开机启动</p>
+<p>| [Install]字段 | 内容                                                                                                                                  |
+|---------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| WantedBy      | 它的值是一个或多个 Target，当前 Unit 激活时（enable）符号链接会放入/etc/systemd/system目录下面以 Target 名 + .wants后缀构成的子目录中 |
+| RequiredBy    | 它的值是一个或多个 Target，当前 Unit 激活时，符号链接会放入/etc/systemd/system目录下面以 Target 名 + .required后缀构成的子目录中     |
+| Alias         | 当前 Unit 可用于启动的别名                                                                                                            |
+| Also          | 当前 Unit 激活（enable）时，会被同时激活的其他 Unit                                                                                   |</p>
+<ul>
+<li>
+<p>Target 的含义是服务组，表示一组服务。<code>WantedBy=multi-user.target</code>指的是，kafka 和 zookeeper 所在的 Target 是 multi-user.target。</p>
+<pre><code class="language-sh">systemctl get-default
+multi-user.target
+</code></pre>
+<ul>
+<li>这个设置非常重要，因为执行systemctl enable 命令时，zookeeper .service 的一个符号链接，就会放在/etc/systemd/system目录下面的multi-user.target.wants子目录之中。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4>例子</h4>
+<ul>
+<li>
+<p>1.编写服务文件：</p>
+<ul>
+<li>在 <code>/etc/systemd/system/</code> 目录下创建一个新的服务文件，例如 <code>myservice.service</code>。</li>
+</ul>
+<pre><code class="language-ini">[Unit]
+Description=My Custom Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/mycommand --option
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+</li>
+<li>
+<p>2.重新加载 systemd 配置：</p>
+<pre><code class="language-sh">sudo systemctl daemon-reload
+</code></pre>
+</li>
+<li>
+<p>3.启动并启用服务：</p>
+<pre><code class="language-sh"># 启动服务
+sudo systemctl start myservice.service
+
+# 设置服务开机自启动
+sudo systemctl enable myservice.service
+</code></pre>
+</li>
+<li>
+<p>4.查看服务状态和日志：</p>
+<pre><code class="language-sh"># 查看服务状态
+systemctl status myservice.service
+# 查看服务日志
+journalctl -u myservice.service
+</code></pre>
+</li>
+</ul>
+<h5>例子：随机mac地址</h5>
+<pre><code class="language-sh">cat &gt; /etc/systemd/system/macspoof.service &lt;&lt; 'EOF'
+[Unit]
+Description=Custom mac address
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/macchanger -e enp27s0
+
+[Install]
+WantedBy=multi-user.target
+EOF
+</code></pre>
+<ul>
+<li>设置开机启用服务:</li>
+</ul>
+<pre><code class="language-sh">systemctl enable macspoof.service
+</code></pre>
+<ul>
+<li>如果开机失败,就需要启动其它linux系统<code>chroot</code>后执行:</li>
+</ul>
+<pre><code class="language-sh">systemctl disable macspoof.service
+</code></pre>
+<h5>例子：timer定时器单元替代传统的 cron</h5>
+<ul>
+<li>
+<p>1.创建定时器服务单元：</p>
+<ul>
+<li>创建服务文件 <code>/etc/systemd/system/mytask.service</code>：</li>
+</ul>
+<pre><code class="language-ini">[Unit]
+Description=My Scheduled Task
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mycommand --option
+</code></pre>
+</li>
+<li>
+<p>2.创建定时器文件 /etc/systemd/system/mytask.timer：</p>
+<pre><code class="language-ini">[Unit]
+Description=Run MyTask every day at 2 AM
+
+[Timer]
+OnCalendar=*-*-* 02:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+</code></pre>
+<ul>
+<li>OnCalendar：定义任务的调度时间。</li>
+<li>Persistent：如果错过了预定时间，系统启动后立即执行。</li>
+</ul>
+</li>
+<li>
+<p>3.启用并启动定时器：</p>
+<pre><code class="language-sh">sudo systemctl daemon-reload
+sudo systemctl enable mytask.timer
+sudo systemctl start mytask.timer
+</code></pre>
+</li>
+<li>
+<p>4.查看定时器状态：</p>
+<pre><code class="language-sh">systemctl list-timers
+</code></pre>
+</li>
+</ul>
+<h3><a href="https://mp.weixin.qq.com/s/l30kvYhga3YZO__ac0-cWg">咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed</a></h3>
+<ul>
+<li>
+<p>zookeeper 是通过源码编译来安装，为了方便管理，决定改成通过 systemd 来管理。</p>
+<pre><code class="language-sh"># zookeeper
+[Unit]
+Description=Zookeeper
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/zookeeper/bin/zkServer.sh start
+ExecStop=/opt/zookeeper/bin/zkServer.sh stop
+PIDFile=/var/lib/zookeeper/zookeeper_server.pid
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+</li>
+<li>
+<p>问题：</p>
+<ul>
+<li><code> systemctl start zookeeper.service</code>启动没有问题。</li>
+<li><code>systemctl stop zookeeper.service</code> 命令停止 zookeeper 的时候，问题出现了：zookeeper 服务在停止后并不是 inactive ，而是 failed 状态，最后两行输出里有 Unit zookeeper.service entered failed state./zookeeper.service failed 字段</li>
+</ul>
+</li>
+<li>
+<p>问题定位</p>
+<ul>
+<li>
+<p>在设置了 Type=forking 后，服务在启动或关闭时执行对应的脚本会开启一个进程，并且两个进程都成功执行了（返回状态码为 0 ）。但是主进程退出时返回的状态码却是 143，而不是状态码 0。</p>
+<pre><code class="language-sh">Process: 61183 ExecStop=/opt/zookeeper/bin/zkServer.sh stop (code=exited, status=0/SUCCESS)
+Process: 61116 ExecStart=/opt/zookeeper/bin/zkServer.sh start (code=exited, status=0/SUCCESS)
+Main PID: 61132 (code=exited, status=143)
+</code></pre>
+</li>
+<li>
+<p>接着看下 zookeeper 进程还在不在：明明 zookeeper 进程已经成功退出了，但是 systemd 却说它退出失败。</p>
+</li>
+<li>
+<p>接着我们注释掉 ExecStop 字段，采用 systemd 默认的方式来停止服务。还是一样的问题，zookeeper 已经成功退出但是却显示 failed 状态，状态码是 143。</p>
+<ul>
+<li>
+<p>默认情况下，systemd 将向进程发送 <code>SIGTERM</code> 信号（相当于 kill -15命令发送的终止信号），等待一段时间后，如果服务进程未正常退出，则发送 <code>SIGKILL</code> 信号（相当于 kill -9 命令发送的强制终止信号）强制终止服务进程。</p>
+</li>
+<li>
+<p>而根据 POSIX 规范：【因接收到信号而终止的命令的退出状态应报告为大于 128】，所以被信号中断的进程退出时会返回 128 加上信号数值作为退出状态码。</p>
+<ul>
+<li>也就是说，当 zookeeper 进程收到 SIGTERM 信号时，会返回 128 + 15 也就是 143 作为退出状态码，这也就是为什么进程在成功退出后 systemctl  显示为 failed 状态。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>解决方法：</p>
+<ul>
+<li>
+<p>既然知道了进程在退出时的状态码是 143 但是 systemd 不会解释为成功，因为预期的退出状态码为 0，那么我们只需要让 systemd 把状态码 143 也解释为成功就行。</p>
+</li>
+<li>
+<p>所以在 zookeeper 的 service 文件中添加下面的配置：表示当服务进程以状态码 143 正常退出时，systemd 将其视为成功退出而不是异常退出。</p>
+<pre><code>[Service]
+...
+SuccessExitStatus=143
+...
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2>systemctl</h2>
+<ul>
+<li>
+<p>systemd 通过<code>cgroup</code>(控制组)来追踪进程，而不是 PID</p>
+<ul>
+<li>当一个进程创建了子进程，子进程会继承父进程的 cgroup</li>
+</ul>
+</li>
+<li>
+<p>systemd通过<code>unit</code>配置文件管理服务。根据其后缀名分为12种不同的类型：</p>
+<p>| Unit      | 类型                                                                                                                                                                                                                                                                    |
+|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| service   | daemon程序。是最常用的一类，可以启动、停止、重新启动、重新加载                                                                                                                                                                                                          |
+| socket    | 在文件系统或互联网上封装了一个socket。支持流、数据报和顺序包类型的 AF_INET、AF_INET6、AF_UNIX 套接字。还支持经典的 FIFO 作为传输。每个套接字单元都有一个匹配的服务单元，相应的服务在第一个连接进入套接字时就会启动，例如：nscd.socket 在传入连接上启动 nscd.service。 |
+| device    | 如果设备通过 udev 规则为此标记，它将在 systemd 中作为设备单元公开。使用 udev 设置的属性可用作配置源来设置设备单元的依赖关系。                                                                                                                                           |
+| mount     | systemd 会将/etc/fstab 中的条目都转换为挂载点，并在开机时处理。                                                                                                                                                                                                         |
+| automount | 自动挂载单元都有一个匹配的挂载单元，当该自动挂载点被访问时，systemd 就会执行挂载点中定义的挂载行为。                                                                                                                                                                   |
+| target    | 一组unit                                                                                                                                                                                                                                                                |
+| snapshot  | 快照可用于保存或回滚 init 系统的所有服务和单元的状态。比如允许用户临时进入特定状态，例如“紧急外壳”，终止当前服务，并提供一种简单的方法返回之前的状态。                                                                                                                  |
+| swap      | 和挂载配置单元类似，交换配置单元用来管理交换分区。                                                                                                                                                                                                                      |
+| timer     | 定时器的服务激活，这类配置单元取代了 atd、crond 等传统的定时服务。                                                                                                                                                                                                      |
+| path      | 监控指定目录或者文件的变化，根据变化触发其他配置单元服务的运行。                                                                                                                                                                                                        |
+| scope     | 从 systemd 外部创建的进程。                                                                                                                                                                                                                                             |
+| slice     | 通过在 cgroup 中创建一个节点实现资源的控制，一般包含 scope 与 service 单元。                                                                                                                                                                                            |</p>
+<ul>
+<li>
+<p>Unit 文件主要的存储目录：</p>
+<p>| system                |
+|-----------------------|
+| /etc/systemd/system/* |
+| /run/systemd/system/* |
+| /lib/systemd/system/* |</p>
+<p>| user                          |
+|-------------------------------|
+| ~/.config/systemd/user/*      |
+| /etc/systemd/user/*           |
+| /usr/lib/systemd/user/*       |
+| /run/systemd/user/*           |
+| ~/.local/share/systemd/user/* |</p>
+</li>
+</ul>
+</li>
+<li>
+<p>查看 <code>units</code></p>
+</li>
+</ul>
+<pre><code class="language-sh">systemctl                        # 列出正在运行的 Unit
+systemctl --all                  # 列出所有Unit，包括没有找到配置文件的或者启动失败的
+systemctl --all --state=inactive # 列出所有没有运行的 Unit
+systemctl --failed               # 列出所有加载失败的 Unit
+systemctl list-units --type=service # 列出所有正在运行的、类型为 service 的 Unit
+
+# 查看依赖关系
+systemctl list-dependencies sshd.target
+# 查看依赖关系，并展开target
+systemctl list-dependencies -all sshd.target
+
+# 查看target
+systemctl list-units --type=target
+
+# 查看 units的所有状态
+systemctl list-unit-files
+systemctl list-unit-files --user #只查看user
+
+# 查看timers
+systemctl list-timers
+</code></pre>
+<ul>
+<li>基本使用</li>
+</ul>
+<pre><code class="language-sh"># 启动服务
+systemctl start sshd.service
+# 停止服务
+systemctl stop sshd.service
+# 重启服务
+systemctl restart sshd.service
+# kill服务
+systemctl kill sshd.service
+
+# 查看服务
+systemctl status sshd.service
+# 查看远程主机的服务
+systemctl -H root@192.168.100.208 status sshd.service
+
+# 设置开机启动
+systemctl enabled sshd.service
+# 关闭开机启动
+systemctl disable sshd.service
+
+# 修改/usr/lib/systemd/system/目录下的配置文件
+systemctl edit --full sshd.service
+# 还原为最初的版本
+systemctl revert sshd.service
+
+# 重新加载配置文件
+systemctl reload sshd.service
+
+# 重新加载所有修改过的配置文件服务
+systemctl daemon-reload
+
+# 查看配置文件
+systemctl cat sshd.service
+
+# 是否正在运行
+systemctl is-active sshd.service
+# 判断状态，执行命令脚本
+systemctl is-active --quiet sshd.service &amp;&amp; sudo systemctl stop sshd.service
+# 是否处于启动失败状态
+systemctl is-failed sshd.service
+# 是否开机启动
+systemctl is-enabled sshd.service
+
+# 显示服务的属性值。默认值配置文件：/etc/systemd/system.conf
+systemctl show sshd.service
+# 显示指定属性值
+systemctl show -p CPUShares sshd.service
+# 设置指定属性值
+systemctl set-property sshd.service CPUShares=500
+</code></pre>
+<ul>
+<li>查看<code>cgroup树</code> (units 执行的脚本或文件)</li>
+</ul>
+<pre><code class="language-sh">systemd-cgls
+#使用ps命令查看cgroup树
+ps xawf -eo pid,user,cgroup,args
+</code></pre>
+<ul>
+<li>管理系统</li>
+</ul>
+<pre><code class="language-sh"># 关机
+systemctl poweroff
+# 重启
+systemctl reboot
+
+# cpu停止工作
+systemctl halt
+
+# 暂停系统
+systemctl suspend
+
+# 进入冬眠状态
+systemctl hibernate
+
+# 让系统进入交互式休眠状态
+systemctl hybrid-sleep
+
+# 启动进入救援状态（单用户状态）
+systemctl rescue
+</code></pre>
+<ul>
+<li>修改<code>runlevel</code>，当前有效，不会影响下次开机</li>
+</ul>
+<p>| SysV Runlevel | systemd Target                                         | Notes                                                                                              |
+|---------------|--------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| 0             | runlevel0.target  poweroff.target                      | Halt the system.                                                                                   |
+| 1,s,single    | runlevel1.target  rescue.target                        | Single user mode.                                                                                  |
+| 2,4           | runlevel2.target   runlevel4.target  multi-user.target | User-defined/Site-specific runlevels. By default identical to 3.
+| 3             | runlevel3.target  multi-user.target                    | Multi-user        non-graphical. Users can usually login via multiple consoles or via the network. |
+| 5             | runlevel5.target  graphical.target                     | Multi-user        graphical. Usually has all the services of runlevel 3 plus a graphical login.    |
+| 6             | runlevel6.target  reboot.target                        | Reboot                                                                                             |
+| emergency     | emergency.target                                       |</p>
+<pre><code class="language-sh"># init3
+systemctl isolate muti-user.target
+
+# init5
+systemctl isolate graphical.target
+
+# 获取当前的runlevel
+systemctl get-default
+# 设置runlevel
+systemctl set-default graphical.target
+</code></pre>
+<ul>
+<li>查看当前用户的服务</li>
+</ul>
+<pre><code class="language-sh"># --user：指定操作应用于当前用户的用户级别 systemd 实例
+systemctl --user enable --now pipewire-pulse.service
+systemctl --user restart --now pipewire-pulse.service
+systemctl --user status --now pipewire-pulse.service
+</code></pre>
+<h3>unmask</h3>
+<p>systemd 支持 mask 操作，如果一个服务被 mask 了，那么它无法被手动启动或者被其他服务所启动，也无法被设置为开机启动。</p>
+<pre><code class="language-sh">systemctl unmask httpd.service
+</code></pre>
+<h3>常见启动问题</h3>
+<h4><a href="https://mp.weixin.qq.com/s/vNA9Hny9wmF5ZFCAJfEXXQ">爱可生开源社区：故障分析 | MySQL 通过 systemd 启动时 hang 住了……</a></h4>
+<ul>
+<li>
+<p>问题：正如题目所述，在自动化测试场景下，通过 systemd 无法启动 MySQL。连续 kill -9 结束实例进程，检测 mysqld 在退出后是否会被正确拉起。</p>
+</li>
+<li>
+<p>原因：</p>
+<ul>
+<li>
+<p>systemd 启动 mysqld 的过程中，会先根据 service 模板中的配置，执行：</p>
+<ul>
+<li>
+<p>1.ExecStart（启动 mysqld）</p>
+</li>
+<li>
+<p>2.mysqld 启动创建 pid 文件</p>
+</li>
+<li>
+<p>3.ExecStartPost（自定义的一些后置脚本：调整权限、将 pid 写入 cgroup 等）</p>
+</li>
+<li>
+<p>在 步骤 2-3 的中间态，也就是 pid 文件刚创建出来时，主机上接收到了自动化测试下发的命令：<code>sudo -S kill -9 $(cat /opt/mysql/data/11690/mysqld.pid)</code></p>
+</li>
+<li>
+<p>由于这个 pid 文件和 pid 进程确实存在（如果不存在 kill 命令或 cat 会报错）</p>
+<ul>
+<li>自动化的 CASE 认为 kill 操作已成功结束。</li>
+<li>但由于 mysqld.pid 这个文件是由 MySQL 自身维护的，在 systemd 的视角中，还需要继续等待 步骤 3 完成，才认为启动成功。</li>
+</ul>
+</li>
+<li>
+<p>在 systemd 使用 forking 模式时，会根据子进程的 PID 值判断服务是否成功启动。</p>
+<ul>
+<li>如果子进程成功启动，并且没有发生意外退出，则 systemd 会认为服务已启动，并将子进程的 PID 作为 MAIN PID。</li>
+<li>而如果子进程启动失败或意外退出，则 systemd 会认为服务未能成功启动。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>总结：在执行 ExecStartPost 时，由于子进程 ID 31036 已经被 kill 掉，后置 shell 缺少了启动参数，但 ExecStart 步骤已完成，导致 MAIN PID 31036 成为了只存在于 systemd 里的 僵尸进程。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>排除过程和复现过程（省略...）</p>
+</li>
+<li>
+<p>解决方法：</p>
+<ul>
+<li>
+<p>先 kill 掉 hang 住的 systemctl start 命令，执行 systemctl stop mysqld_11690.service，这可以让 systemd 主动结束僵尸进程，虽然 stop 命令可能会报错但这并不影响。</p>
+</li>
+<li>
+<p>等待 stop 执行完成后再次使用 start 命令启动，恢复正常。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>虽然文章跟 MySQL 没太大关系，但重要的是分析偶发故障的思考过程 :)</p>
+</li>
+</ul>
+<h2>hostnamectl, localectl, timedatectl, loginctl命令</h2>
+<ul>
+<li><code>hostnamectl</code></li>
+</ul>
+<pre><code class="language-sh"># 查看主机信息
+hostnamectl
+# output
+ Static hostname: tz-pc
+       Icon name: computer-desktop
+         Chassis: desktop 🖥️
+      Machine ID: c571bebab04ca267ffe5ec875f22a566
+         Boot ID: ae5fe9fc75f1450abd39c294a9020222
+Operating System: Arch Linux
+          Kernel: Linux 6.1.27-1-lts
+    Architecture: x86-64
+ Hardware Vendor: Micro-Star International Co., Ltd.
+  Hardware Model: MS-7B84
+Firmware Version: 2.30
+   Firmware Date: Fri 2018-11-02
+
+# 修改hostname
+hostnamectl set-hostname tz
+</code></pre>
+<ul>
+<li><code>localectl</code></li>
+</ul>
+<pre><code class="language-sh"># 查看本地化设置
+localectl
+# output
+System Locale: LANG=en_US.UTF-8
+    VC Keymap: (unset)
+   X11 Layout: (unset)
+
+# 设置本地化参数。
+localectl set-locale LANG=en_GB.utf8
+localectl set-keymap en_GB
+</code></pre>
+<ul>
+<li><code>timedatectl</code></li>
+</ul>
+<pre><code class="language-sh"># 查看当前时区
+timedatectl
+
+# 查看可选的时区
+timedatectl list-timezones
+
+# 设置当前时区
+timedatectl set-timezone America/New_York
+timedatectl set-time YYYY-MM-DD
+timedatectl set-time HH:MM:SS
+</code></pre>
+<ul>
+<li><code>loginctl</code></li>
+</ul>
+<pre><code class="language-sh"># 查看当前session
+loginctl list-sessions
+
+# 查看当前登陆用户
+loginctl list-users
+
+# 查看指定用户
+loginctl show-user tz
+</code></pre>
+<h2>journalctl（日志）</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/702242748">鹅厂架构师：走进systemd | 日志服务解析</a></li>
+</ul>
+<h3>systemd-journald的进程服务</h3>
+<ul>
+<li>
+<p><code>systemd-journald.service</code>，是systemd的核心日志服务，作为系统日志的记录者，在系统启动时会第一个启动，这样如果后面服务出现问题，也会被记录在案。它只保存在内存上。</p>
+<p><img src="./Pictures/systemd/systemd-journald.avif" alt="image" /></p>
+</li>
+<li>
+<p><code>systemd-journal-flush.service</code>：将内存中的日志数据刷新到磁盘上，确保日志数据的持久化存储。</p>
+<ul>
+<li>
+<p>如果创建了 <code>/var/log/journal</code> 目录，该服务会在系统启动时启动，执行 <code>journalctl --flush</code> 命令。将 journal 切换到 persistent 也就是持久化模式。</p>
+</li>
+<li>
+<p>这个服务会在<code>systemd-journald.service</code>服务After后启动</p>
+<pre><code class="language-sh">systemctl cat systemd-journal-flush.service | grep -i After=
+# output
+After=systemd-journald.service systemd-remount-fs.service
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>systemd-journal-remote.service 、systemd-journal-gatewayd.service 和 systemd-journal-upload.service</p>
+<ul>
+<li>这三个服务之间的关系，可以理解为：
+<ul>
+<li>systemd-journal-remote.service 是服务器</li>
+<li>systemd-journal-gatewayd.service 是类似网关的存在，可以将获取到的日志打包成网络传输格式</li>
+<li>systemd-journal-upload.service 则是本地的一个客户端，会采集本地的日本，上传至指定url（remote或者gatewayd）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>systemd-journal-catalog-update.service</p>
+<ul>
+<li>
+<p>用于更新systemd日志目录，这是一种包含预定义消息的数据库，可以用来增强日志消息的可读性和有用性。</p>
+</li>
+<li>
+<p>很多包会包含自己的catalog文件，例如dbus-broker</p>
+<pre><code class="language-sh">[root@linux ~]# rpm -ql dbus-broker | grep catalog
+/usr/lib/systemd/catalog/dbus-broker-launch.catalog
+/usr/lib/systemd/catalog/dbus-broker.catalog
+</code></pre>
+<ul>
+<li><code>catalog</code> 文件中包含了消息的标识符、主题、文档链接、以及消息背景等信息</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>systemd-journald-audit.socket 和 systemd-journald-dev-log.socket</p>
+<ul>
+<li>专门用于接收来自 <code>auditd</code> 和 <code>/dev/log</code> 的日志消息，通过直接监听 <code>/dev/log</code> 以及内核审计系统接受日志。</li>
+</ul>
+<pre><code class="language-sh">ListenDatagram=/run/systemd/journal/dev-log
+PassCredentials=yes
+PassSecurity=yes
+Service=systemd-journald.service
+SocketMode=0666
+Symlinks=/dev/log
+</code></pre>
+</li>
+</ul>
+<h3>持久化存储or内存存储</h3>
+<ul>
+<li>
+<p>journald默认使用<code>violatile</code>也就是内存存储。</p>
+<ul>
+<li>
+<p>如果想要切换到持久化存储需要以下几个条件：</p>
+<ul>
+<li>
+<p><code>/var/log/journal</code>被创建</p>
+</li>
+<li>
+<p><code>journalctl --flush</code>命令被执行（给journald发送 SIGUSR1 信号）</p>
+</li>
+<li>
+<p>然后，每次系统启动时，<code>systemd-journal-flush.service</code>服务会在启动时候判断是否存在<code>/var/log/journal</code>目录，如果存在，就执行<code>journalctl --flush</code>给journald刷到<code>persistent</code>模式。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>存储大小以及转储</p>
+<ul>
+<li>
+<p>journald有几个配置项用来控制存储的日志大小。</p>
+<pre><code>SystemMaxUse=, SystemKeepFree=, SystemMaxFileSize=, SystemMaxFiles=, RuntimeMaxUse=, RuntimeKeepFree=, RuntimeMaxFileSize=, RuntimeMaxFiles=
+</code></pre>
+<ul>
+<li>System 开头的用来限制持久化的日志</li>
+<li>Runtime 开头的用来限制内存存储的日志。</li>
+<li>MaxUse：用来控制的是journal日志可以占用的最大空间，默认是10%（磁盘）、15%（内存），但是有一个最大上限 4G。</li>
+<li>KeepFree：用来控制需要留下多少空间</li>
+<li>MaxFileSize：用来控制每个journal日志文件大小，默认为1/8的MaxUse，上限为128M</li>
+<li>MaxFiles：用来控制最多保存的journal日志个数，只有打包（压缩）的日志会被删除，正在活动的日志文件不会删除，默认值为100。</li>
+</ul>
+</li>
+<li>
+<p>还有其他一些选项也可以控制日志转储：</p>
+<ul>
+<li>MaxFileSec：控制每个日志文件中条目跨越的最大时间，例如10day，就是开始到结束不能超过10天</li>
+<li>MaxRetentionSec：控制所有日志文件的时间跨度，同上</li>
+</ul>
+</li>
+<li>
+<p>同时也可以直接通过命令转储journalctl --rotate配合下面几个选项控制转储的条件</p>
+<pre><code>--vacuum-size=, --vacuum-time=, --vacuum-files=
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3>速率限制</h3>
+<ul>
+<li>
+<p>因为journal接受的是系统中所有服务的日志，所以有时候面临打日志速度太快的问题，对磁盘以及内存的压力会非常大。因此，journal也支持对日志速率进行限制。</p>
+</li>
+<li>
+<p>这两个就是常用的限制速率的配置：</p>
+<ul>
+<li><code>RateLimitIntervalSec=</code>：控制时间</li>
+<li><code>RateLimitBurst=</code>：控制数量</li>
+</ul>
+</li>
+<li>
+<p>两者相结合就是控制一定时间内记录的日志条目。 如果日志速率超过了这个限制，则会直接被丢弃，并且，在日志中会打印一条提示</p>
+<pre><code>Suppressed XXX messages from XXX
+</code></pre>
+<ul>
+<li>
+<p>这和rsyslog中的速率限制机制类似，在rsyslog中，会看到这样的提示</p>
+<pre><code>XXX messages lost due to rate-limiting (20000 allowed within 600 seconds)
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3>日志接收和转发</h3>
+<ul>
+<li>
+<p>一图总结：几个系统级别日志概念的联系</p>
+<ul>
+<li>dmesg、/var/log/message、 journal、rsyslog(syslog) 等这几个都是系统中常用的日志，它们之间的关系如下图所示。</li>
+</ul>
+<p><img src="./Pictures/systemd/journal%E7%9A%84%E6%97%A5%E5%BF%97%E6%8E%A5%E5%8F%97%E5%92%8C%E8%BD%AC%E5%8F%91.avif" alt="image" /></p>
+</li>
+<li>
+<p>日志接收</p>
+<ul>
+<li>
+<p>journal日志主要来自于以下几个地方：</p>
+<ul>
+<li>内核日志，通过kmsg</li>
+<li>libc 的 syslog 接口</li>
+<li>本地 journal 接口，sd_journal_print等</li>
+<li>服务的标准输出和错误</li>
+<li>内核 audit 子系统</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>日志转发</p>
+<ul>
+<li>
+<p>journald可以将日志转发到 syslog、kmsg、console、wall这些最终日志呈现端口。</p>
+</li>
+<li>
+<p>下面几个选项控制着是否将日志转发给他们。</p>
+<pre><code>ForwardToSyslog=, ForwardToKMsg=, ForwardToConsole=, ForwardToWall=
+</code></pre>
+</li>
+<li>
+<p>以及控制转发的最大的等级日志：</p>
+<pre><code>MaxLevelStore=, MaxLevelSyslog=, MaxLevelKMsg=, MaxLevelConsole=, MaxLevelWall=
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h4>rsyslog</h4>
+<ul>
+<li>
+<p>如果设置了 <code>ForwardToSyslog=</code> （默认开启），则journald会将从/dev/log接收到的日志转发给rsyslog</p>
+</li>
+<li>
+<p>需要注意的是，虽然rsyslog支持直接从/dev/log中读取日志，但是当前上游以及发行版都关闭了此选项，默认从journal获取日志，防止与journal争夺/dev/log的所有权。</p>
+</li>
+<li>
+<p>rsyslog采用了模块式的功能，可以灵活控制其中模块能力的启用和关闭，这里与journal的对接也进行了模块化，见如下<code>/etc/rsyslog.conf</code>配置：</p>
+<pre><code>module(load=&quot;imuxsock&quot;    # provides support for local system logging (e.g. via logger command)
+       SysSock.Use=&quot;off&quot;) # Turn off message reception via local log socket; 
+                          # local messages are retrieved through imjournal now.
+module(load=&quot;imjournal&quot;             # provides access to the systemd journal
+       StateFile=&quot;imjournal.state&quot;) # File to store the position in the journal
+</code></pre>
+</li>
+</ul>
+<h4>kmsg</h4>
+<ul>
+<li>
+<p>kmsg 相比于 rsyslog 稍微简单一点，因为他是一个独立的缓冲区，内核代码中 printk 的内容就输出到这里。 例如，在 <code>/dev/kmsg</code> 里面的一条内核日志</p>
+<pre><code class="language-sh">lsof /dev/kmsg
+COMMAND      PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+systemd        1 root    3w   CHR   1,11      0t0   10 /dev/kmsg
+systemd-j 705019 root   23w   CHR   1,11      0t0   10 /dev/kmsg
+systemd-j 705019 root   25u   CHR   1,11      0t0   10 /dev/kmsg
+</code></pre>
+</li>
+</ul>
+<h4>console</h4>
+<ul>
+<li>
+<p>当我们用 ssh 或者 vnc 这类软件连接到一个服务器，出现的一个可以键盘输入的地方，就是俗话说的 终端。 /dev/console 是一个虚拟设备，他需要与终端设备进行映射，我们在系统启动时的启动参数中，一般会将 tty0 和 ttyS0 与其进行映射。</p>
+<pre><code class="language-sh">cat /proc/cmdline  | grep console
+... console=ttyS0,115200 console=tty0 console=ttyS0,115200....
+</code></pre>
+</li>
+<li>
+<p>可以通过/proc/consoles查看当前与console映射的串口。</p>
+<pre><code class="language-sh">cat /proc/consoles 
+ttyS0                -W- (EC p a)    4:64
+tty0                 -WU (E  p  )    4:1
+</code></pre>
+</li>
+<li>
+<p>当我们向 tty0 中输入字符时，控制台也会打印相同的字符</p>
+<pre><code class="language-sh">echo 123 &gt; /dev/tty0
+</code></pre>
+<ul>
+<li>
+<p>这里 systemd-journal 其实也是相同的操作，将需要打印到控制台的日志写入 /dev/console，内容就会在控制台显示。</p>
+<pre><code>fd = open_terminal(tty, O_WRONLY|O_NOCTTY|O_CLOEXEC);
+if (writev(fd, iovec, n) &lt; 0)
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h4>wall</h4>
+<ul>
+<li>
+<p>如果有使用过 wall 这个命令，那就应该对 wall 有所了解，这个 wall 其实指的是 write to all， 也就是向所有人通知的意思，他被经常用来作为管理员向系统中的所有其他用户发送通知消息。</p>
+</li>
+<li>
+<p>同理，systemd的代码中的也是类似的实现，通过从<code>utmp</code>文件中逐条读取当前系统中有哪些用户，他们的终端是哪个，然后向对应的终端写入消息来完成。</p>
+</li>
+<li>
+<p>utmp就是<code>/var/run/utmp</code>文件，可以通过<code>utmpdump</code>工具读取，可以看到，utmp文件记录的就是登录的用户、终端、ip、时间等信息。</p>
+<pre><code class="language-sh">utmpdump /var/run/utmp 
+Utmp dump of /var/run/utmp
+[2] [00000] [~~  ] [reboot  ] [~           ] [6.1.41-2303.1.1.ocs23.x86_64] [0.0.0.0        ] [2023-08-24T04:50:27,580823+00:00]
+[1] [00053] [~~  ] [runlevel] [~           ] [6.1.41-2303.1.1.ocs23.x86_64] [0.0.0.0        ] [2023-08-24T04:51:29,999747+00:00]
+[6] [01697] [tyS0] [LOGIN   ] [ttyS0       ] [                    ] [0.0.0.0        ] [2023-08-24T04:51:30,006922+00:00]
+[7] [3316382] [tty1] [root    ] [tty1        ] [                    ] [0.0.0.0        ] [2024-05-30T11:10:27,607175+00:00]
+...
+</code></pre>
+</li>
+</ul>
+<h3>基本使用</h3>
+<pre><code class="language-sh"># 查看日志
+journalctl
+
+# 查看最新10行
+journalctl -n
+# 查看最新20行
+journalctl -n 20
+
+# 查看实时日志
+journalctl -f
+
+# 查看实时错误日志
+journalctl -fp err
+
+# 读取日志 size
+sudo journalctl --disk-usage
+# 设置日志最大为1G
+sudo journalctl --vacuum-size=1G
+# 设置日志保存时间为1年
+sudo journalctl --vacuum-time=1years
+
+# 进程路径通过程序路径查看日志
+journalctl $(which libvirtd)
+
+# 查看进程 1 的日志
+journalctl _PID=1
+
+# 显示指定用户
+journalctl _UID=33 --since today
+</code></pre>
+<pre><code class="language-sh"># 查看指定服务
+journalctl -u nginx.service
+
+# 指定时间
+journalctl -u nginx.service --since today
+
+# 多个服务
+journalctl -u nginx.service -u redis.service --since today
+
+# 实时滚动
+journalctl -u nginx.service -f
+</code></pre>
+<pre><code class="language-sh"># 查看引导日志
+journalctl -b
+
+# 查看前一次启动
+journalctl -b -1
+
+# 查看倒数第 2 次启动
+journalctl -b -2
+</code></pre>
+<ul>
+<li>查看指定时间的日志</li>
+</ul>
+<pre><code class="language-sh">journalctl --since=&quot;2023-6-1 8:00&quot;
+
+journalctl --since &quot;20 min ago&quot;
+
+journalctl --since yesterday
+
+journalctl --since &quot;2015-01-10&quot; --until &quot;2015-01-11 03:00&quot;
+
+journalctl --since 09:00 --until &quot;1 hour ago&quot;
+</code></pre>
+<ul>
+<li>查看指定优先级（及其以上级别）的日志，共有8级</li>
+</ul>
+<pre><code class="language-sh"># 0: emerg
+# 1: alert
+# 2: crit
+# 3: err
+# 4: warning
+# 5: notice
+# 6: info
+# 7: debug
+
+journalctl -p err -b
+</code></pre>
+<h3>实战调试</h3>
+<h4>查看错误</h4>
+<p>输入<code>journalctl -fp err</code></p>
+<pre><code class="language-sh">#output
+-- Logs begin at Wed 2020-08-12 10:25:59 CST. --
+Aug 18 00:04:13 tz-pc libvirtd[599]: 内部错误：自动启动化存储池 'kvm2' 失败：cannot open directory '/run/media/root/vm/kvm': 没有那个文件或目录
+-- Reboot --
+Aug 18 09:33:17 tz-pc systemd-modules-load[311]: Failed to find module 'v4l2loopback-dc'
+Aug 18 09:33:17 tz-pc kernel: sp5100-tco sp5100-tco: Watchdog hardware is disabled
+Aug 18 09:33:20 tz-pc libvirtd[514]: cannot open directory '/run/media/root/vm/kvm': 没有那个文件或目录
+Aug 18 09:33:20 tz-pc libvirtd[514]: 内部错误：自动启动化存储池 'kvm2' 失败：cannot open directory '/run/media/root/vm/kvm': 没有那个文件或目录
+-- Reboot --
+Aug 18 14:12:03 tz-pc systemd-modules-load[310]: Failed to find module 'v4l2loopback-dc'
+Aug 18 14:12:03 tz-pc kernel: sp5100-tco sp5100-tco: Watchdog hardware is disabled
+Aug 18 14:12:06 tz-pc libvirtd[522]: cannot open directory '/run/media/root/vm/kvm': 没有那个文件或目录
+Aug 18 14:12:06 tz-pc libvirtd[522]: 内部错误：自动启动化存储池 'kvm2' 失败：cannot open directory '/run/media/root/vm/kvm': 没有那个文件或目录
+Aug 18 14:39:08 tz-pc libvirtd[76205]: 操作失败: 池 ‘default’ 已存在 uuid 57c3df65-c90a-45a0-999d-5c5d4f02ccbd
+</code></pre>
+<h4>解决办法</h4>
+<pre><code class="language-bash"># 缺少内核v4l2loopback模块
+#Aug 18 09:33:17 tz-pc systemd-modules-load[311]: Failed to find module 'v4l2loopback-dc'
+
+# 以dkms(动态加载内核的方式)安装v4l2loopback
+sudo pacman -S v4l2loopback-dkms
+</code></pre>
+<pre><code class="language-bash">#Aug 18 09:33:17 tz-pc kernel: sp5100-tco sp5100-tco: Watchdog hardware is disabled
+#上网查了一下这是所有amd处理器的问题
+#直接屏蔽这个模块
+sudo echo &quot;blacklist sp5100_tco&quot; &gt; /etc/modprobe.d/sp5100_tco.conf
+</code></pre>
+<p>kvm 是因为存储池里有之前临时挂载 vm，现在没有挂载也就读取错误
+解决办法取消存储池错误的 vm 即可</p>
+<h2>Timers（定时器）</h2>
+<ul>
+<li>
+<p><a href="https://wiki.archlinux.org/title/Systemd/Timers">arch文档</a></p>
+</li>
+<li>
+<p>可以代替cron。并且有日志管理；可以设置cpu，内存额度；可以依赖其它systemd unit</p>
+</li>
+<li>
+<p>瞬间计算器</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 30秒后运行命令
+systemd-run --on-active=30 /bin/touch /tmp/foo
+
+# 12小时30分钟后启动某个服务
+systemd-run --on-active=&quot;12h 30m&quot; --unit someunit.service
+</code></pre>
+<ul>
+<li>
+<p>在<code>/usr/lib/systemd/system</code>目录下，新建一个<code>mytimer.timer</code>文件</p>
+<ul>
+<li><a href="https://www.freedesktop.org/software/systemd/man/systemd.time.html">timers官方文档</a></li>
+</ul>
+<p>| [Timer]字段       | 内容                                                             |
+|-------------------|------------------------------------------------------------------|
+| OnActiveSec       | 定时器生效后，多少时间开始执行任务                               |
+| OnBootSec         | 系统启动后，多少时间开始执行任务                                 |
+| OnStartupSec      | Systemd 进程启动后，多少时间开始执行任务                         |
+| OnUnitActiveSec   | 该单元上次执行后，等多少时间再次执行                             |
+| OnUnitInactiveSec | 定时器上次关闭后多少时间，再次执行                               |
+| OnCalendar        | 基于绝对时间，而不是相对时间执行                                 |
+| AccuracySec       | 如果因为各种原因，任务必须推迟执行，推迟的最大秒数，默认是60秒   |
+| Unit              | 真正要执行的任务，默认是同名的带有.service后缀的单元             |
+| Persistent        | 如果设置了该字段，即使定时器到时没有启动，也会自动执行相应的单元 |
+| WakeSystem        | 如果系统休眠，是否自动唤醒系统                                   |</p>
+<ul>
+<li>
+<p><code>OnUnitActiveSec=Mon *-*-* 02:00:00</code>：表示每周一凌晨两点</p>
+</li>
+<li>
+<p><code>OnUnitActiveSec=1h</code>：表示每小时执行一次</p>
+<pre><code class="language-systemd">[Unit]
+Description=Runs mytimer every hour
+
+[Timer]
+OnUnitActiveSec=1h
+Unit=mytimer.service
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+</li>
+<li>
+<p>基本命令</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 查看当前timers
+systemctl list-timers
+</code></pre>
+</li>
+</ul>
+<h1>referece</h1>
+<ul>
+<li><a href="https://systemd-by-example.com/">systemd教程和在线测试</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2016/03/systemd-tutorial-commands.html">ruanyifeng：Systemd 入门教程：命令篇</a></li>
+<li><a href="https://wiki.archlinux.org/title/Systemd">arch文档</a></li>
+</ul>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<title>web</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">browsers</a>
+<ul>
+<li><a href=".html">chrome插件</a></li>
+</ul>
+</li>
+<li><a href=".html">CGI和FastCGI</a>
+<ul>
+<li><a href=".html">CGI</a></li>
+<li><a href=".html">FastCGI</a></li>
+</ul>
+</li>
+<li><a href=".html">REST API</a></li>
+<li><a href=".html">WebAssembly</a></li>
+<li><a href=".html">数据库</a></li>
+<li><a href=".html">HTML</a></li>
+<li><a href=".html">CSS</a></li>
+<li><a href=".html">js</a></li>
+<li><a href=".html">浏览器指纹</a></li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>browsers</h1>
+<ul>
+<li>
+<p><a href="https://developer.chrome.com/docs/devtools/network/reference/?utm_source=devtools#timing-explanation">chrome浏览器F12官方文档</a></p>
+</li>
+<li>
+<p>《Inside look at modern web browser》</p>
+<ul>
+<li>
+<p><a href="https://developer.chrome.com/blog/inside-browser-part1/">Inside look at modern web browser (part 1)</a></p>
+</li>
+<li>
+<p><a href="https://developer.chrome.com/blog/inside-browser-part2/">Inside look at modern web browser (part 2)</a></p>
+</li>
+<li>
+<p><a href="https://developer.chrome.com/blog/inside-browser-part3/">Inside look at modern web browser (part 3)</a></p>
+</li>
+<li>
+<p><a href="https://developer.chrome.com/blog/inside-browser-part4/">Inside look at modern web browser (part 4)</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/99394757">Inside look at modern web browser (part 1)中文翻译</a></p>
+</li>
+<li>
+<p><a href="https://lisongfeng.cn/2019/06/05/understanding-modern-browsers.html">Inside look at modern web browser (part 2 3 4)的中文翻译</a></p>
+</li>
+<li>
+<p><a href="https://cloud.tencent.com/developer/article/1489018">腾讯技术工程：深入理解浏览器原理</a></p>
+<blockquote>
+<p>从第二部分开始，对Inside look at modern web browser，进行翻译、理解、总结提炼、条理化、加入应用示例、进行相关知识补充扩展而来。</p>
+</blockquote>
+<p><img src="./Pictures/web/chromium-arch.avif" alt="image" /></p>
+</li>
+</ul>
+<p><a href="https://cloud.tencent.com/developer/article/2187276">腾讯云开发者：揭秘字节码到像素的一生！Chromium 渲染流水线</a></p>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1x54y1B7RE">objtube的卢克儿视频：【干货】浏览器是如何运作的？</a></p>
+<blockquote>
+<p>主要基于Inside look at modern web browser讲解，还有其他技术文档</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://web.dev/howbrowserswork/">How browsers work</a></p>
+</li>
+<li>
+<p><a href="https://chromium.googlesource.com/chromium/src/+/main/docs/design/README.md">Chromium Design Docs</a></p>
+</li>
+<li>
+<p><a href="https://web.dev/rail/">rail用户性能模型</a></p>
+</li>
+<li>
+<p><a href="https://alan.norbauer.com/articles/browser-debugging-tricks">67 Weird Debugging Tricks Your Browser Doesn't Want You to Know（67 种浏览器中调试技巧）</a></p>
+</li>
+</ul>
+<h2>chrome插件</h2>
+<ul>
+<li>
+<p><a href="https://github.com/iamadamdev/bypass-paywalls-chrome">Bypass Paywalls：</a>帮助用户绕过一些新闻网站和其他网站的付费墙，让用户可以免费阅读这些网站的文章和内容。</p>
+<ul>
+<li>实现原理：因为付费网站的付费内容为了搜索流量就给谷歌爬虫开白名单，允许抓取付费内容。这样，谷歌就有了付费文章缓存，然后插件把网站链接的内容替换为谷歌的缓存内容，以此绕过付费。</li>
+<li>目前 Chrome 商店和 Firefox 商店都已经将 Bypass Paywalls 下架，所以只能离线安装。</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/Dolov/chrome-best-cookier">best-cookier</a>：管理cookier</p>
+</li>
+<li>
+<p><a href="https://github.com/027xiguapi/code-box">code-box：CSDN/知乎/脚本之家/博客园/博客园/51CTO博客/php中文网等网站,实现无需登录一键复制代码</a></p>
+</li>
+<li>
+<p><a href="https://github.com/xifangczy/cat-catch">cat-catch：嗅探视频</a></p>
+</li>
+<li>
+<p><a href="https://github.com/XengShi/materialYouNewTab">materialYouNewTab：标签页</a></p>
+</li>
+<li>
+<p><a href="https://github.com/lqzhgood/wechat-need-web">微信网页版</a></p>
+</li>
+<li>
+<p><a href="https://chromewebstore.google.com/detail/all-fingerprint-defender/meojnmfhjkahlfcecpdcdgjclcilmaij">All Fingerprint Defender：Fingerprint防御</a></p>
+</li>
+<li>
+<p><a href="https://github.com/hanydd/BilibiliSponsorBlock">BilibiliSponsorBlock：自动跳过 B 站视频中恰饭片段和开场、结尾动画的浏览器插件</a></p>
+</li>
+<li>
+<p><a href="https://github.com/slc3a2/dimmer">dimmer：黑夜模式</a></p>
+</li>
+<li>
+<p><a href="https://github.com/nsfw-filter/nsfw-filter">nsfw-filter：过滤少儿不宜</a></p>
+</li>
+</ul>
+<h1>CGI和FastCGI</h1>
+<ul>
+<li>Web服务器能解析HTTP请求，返回静态资源（HTML页、图片等），但要输出动态内容，必须得PHP/C#/Ruby/Java/Python/C/C++这些外部程序来实现。</li>
+</ul>
+<h2>CGI</h2>
+<ul>
+<li>
+<p>早期有个技术叫CGI（Common Gateway Interface，通用网关接口），是用于Web服务器和外部程序之间传输数据的一种标准。</p>
+</li>
+<li>
+<p>一个简单的CGI程序（C++语言）如下：</p>
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+int main()
+{
+    printf(&quot;Content-type: text/html\r\n\r\n&quot;);
+    printf(&quot;your name is:%s\n&quot;,  getenv(&quot;QUERY_STRING&quot;));
+    return 0;
+}
+</code></pre>
+<ul>
+<li>浏览器访问这个CGI程序，就会显示：<code>your name is:name=xxx</code></li>
+</ul>
+</li>
+<li>
+<p>CGI规定了Web服务器如何和CGI程序之间传输数据，具体过程大体是这样：</p>
+<ul>
+<li>
+<p>1.Web服务器收到的请求信息后，启动CGI程序（apache是fork进程exec CGI程序）；</p>
+</li>
+<li>
+<p>2.Web服务器通过环境变量和标准输入把请求信息传递给CGI程序；</p>
+</li>
+<li>
+<p>3.CGI程序执行业务逻辑后，通过标准输出和标准错误把响应数据返回给Web服务器，CGI程序exit；</p>
+</li>
+<li>
+<p>4.Web服务器再组织成HTTP响应包发给浏览器。</p>
+</li>
+<li>
+<p>在上面的例子中，第一行printf是输出HTTP头（还记得HTTP Header和Body是用\r\n\r\n分割的么？），<code>getenv(&quot;QUERY_STRING&quot;)</code>是从环境变量获取URL，printf是通过标准输出返回内容。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Web服务器会把哪些信息通过环境变量传递给CGI程序？常用的有这些：</p>
+<ul>
+<li>1.CONTENT_LENGTH ：向标准输入发送的数据的字节数(POST)</li>
+<li>2.QUERY_STRING：实际存放发送给CGI程序的数据(GET)</li>
+<li>3.REQUEST_METHOD：传送数据所用的CGI方法(GET或POST)</li>
+<li>4.HTTP_COOKIE：cookie值</li>
+<li>5.REMOTE_ADDR：用户IP</li>
+<li>6.SCRIPT_NAME：请求的CGI</li>
+</ul>
+</li>
+<li>
+<p>可以看到CGI只是一种标准，可以用任何一种语言编写CGI程序，只要这种语言具有标准输入、标准输出和环境变量，比如：C/C++，perl，PHP、ruby。按照CGI标准要求，就能和Web服务器交互起来。</p>
+</li>
+</ul>
+<h2>FastCGI</h2>
+<ul>
+<li>
+<p>CGI是通过环境变量/标准输入、标准输出/标准错误来传输数据，运行性能比较低，主要有两点：</p>
+<ul>
+<li>1.每个请求都需要Web服务器去fork出CGI程序，频繁fork进程比较耗时</li>
+<li>2.CGI程序每次都是从头运行，读配置、连接其他服务都得重新来，也比较耗时</li>
+</ul>
+</li>
+<li>
+<p>FastCGI是对CGI的改进，FastCGI模式下，Web服务器和FastCGI程序传输数据的过程大体是：</p>
+<ul>
+<li>1.Web服务器收到的请求信息后，按FastCGI协议把请求信息通过socket发给FastCGI程序；</li>
+<li>2.FastCGI程序执行业务逻辑后，通过socket把响应数据返回给Web服务器，FastCGI程序不exit；</li>
+<li>3.Web服务器再组织成HTTP响应包发给浏览器。</li>
+</ul>
+<p><img src="./Pictures/web/fastcgi.avif" alt="image" /></p>
+<ul>
+<li>对比CGI的通过，可以发现主要是少了每次fork的过程，并且用socket来传输数据，这是FastCGI接口更高效的原因。</li>
+</ul>
+</li>
+<li>
+<p>FastCGI有这些特点：</p>
+<ul>
+<li>
+<p>1.FastCGI程序常驻内存，启动后可以反复处理请求</p>
+</li>
+<li>
+<p>2.FastCGI 就是进程池/线程池模型的通用同步服务器框架</p>
+</li>
+<li>
+<p>FastCGI程序处理请求后不会退出，可以反复处理请求，那么在启动后就把配置解析、与其他后台的连接建立好，不用每次请求时搞一边，自然更快了。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>至于这个FastCGI内部如何实现进城池/线程池，就是FastCGI进程管理器（FastCGI引擎）的事情了。C/C++ FastCGI常用apache的<code>mod_fastcgi</code>模块，PHP常用<code>spawn-fcgi</code>和<code>PHP-FPM</code>。</p>
+</li>
+<li>
+<p>CGI/FastCGI每次执行时，会从数据层（db或数据cache）获得数据，修改后再写回到数据层，也就是说CGI/FastCGI并不会缓存数据。这就是无状态。</p>
+</li>
+<li>
+<p>无状态的架构中，请求是这台Web服务器处理，还是那台处理，都没有区别，因为数据都是从数据层获得的。这种架构的扩容非常方便，但需注意，要防范一个请求同时多并发时，可能出现的数据不一致的漏洞，即要做防并发处理。</p>
+</li>
+<li>
+<p>有状态是与无状态相对的概念，是指服务器中缓存了数据。这种架构中，因为不需要反复的从数据层取数据，性能会高很多，但因为服务器缓存了数据，为了保持数据一致性，只能把该数据的请求都分发到这台服务器来处理。对于游戏来说，每个区的用户数据是独立的，对交互的实时性要求高，采用有状态的架构正好合适。</p>
+</li>
+</ul>
+<h1>REST API</h1>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/rDOc_ugNCr6VYpua9qXOFQ">ByteByteGo：REST API 设计小抄</a></li>
+</ul>
+<p><img src="./Pictures/web/rest-api.gif" alt="image" /></p>
+<ul>
+<li>
+<p>API 将业务逻辑和数据暴露给外部系统，因此安全高效地设计 API 非常重要。今天为大家带来一份 API 设计的小抄。</p>
+</li>
+<li>
+<p>1.生成 API 密钥</p>
+<ul>
+<li>我们通常为每个客户端生成一个唯一的应用程序 ID，并生成不同对的公钥（访问密钥）和私钥（保密密钥），以满足不同授权的需要。例如，我们可以为只读访问生成一对密钥，为读写访问生成另一对密钥。</li>
+</ul>
+</li>
+<li>
+<p>2.生成签名</p>
+<ul>
+<li>
+<p>签名用于验证 API 请求的真实性和完整性。签名使用秘钥生成，通常包括以下步骤：</p>
+<ul>
+<li>收集参数</li>
+<li>创建要签名的字符串</li>
+<li>对字符串进行散列：使用加密散列函数，如结合 SHA-256 的 HMAC（基于散列的消息验证码），使用秘钥对字符串进行散列。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>3.发送请求</p>
+<ul>
+<li>
+<p>设计 API 时，决定 HTTP 请求参数中应包含哪些内容至关重要。在请求参数中包含以下内容：</p>
+<ul>
+<li>身份验证凭据</li>
+<li>时间戳：防止重放攻击。</li>
+<li>请求特定数据：处理请求所必需的数据，如用户 ID、交易详情或搜索查询。</li>
+<li>Nonce：随机生成的字符串，包含在每个请求中，以确保每个请求都是唯一的，并防止重放攻击。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>4.安全指南</p>
+<ul>
+<li>
+<p>要保护 API 免受常见漏洞和威胁的攻击，请遵守以下安全指南：</p>
+</li>
+<li>
+<p>使用 HTTPS：使用 HTTPS 确保 API 端点安全，以加密客户端和服务器之间传输的数据。</p>
+</li>
+<li>
+<p>严格验证输入：确保通过 API 请求接收的所有输入都经过验证，以防止 SQL 注入、跨站脚本 (XSS) 和其他注入攻击。</p>
+</li>
+<li>
+<p>验证时间戳和 nonce： 这可防止重放攻击。</p>
+</li>
+<li>
+<p>实施速率限制：通过限制用户或令牌在一定时间内发出请求的频率，防止滥用和 DDoS（分布式拒绝服务）攻击。</p>
+</li>
+<li>
+<p>为有效 IP 设置白名单：这样可以防止来自未知 IP 地址的恶意攻击。</p>
+</li>
+<li>
+<p>日志记录每个请求：这样可以进行监控和跟踪。</p>
+</li>
+<li>
+<p>加密敏感数据：对于用户配置文件、医疗记录等敏感数据，应在传输过程中对数据进行加密。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1>WebAssembly</h1>
+<ul>
+<li><a href="https://www.rrfed.com/2017/05/21/webassembly/">李银城：WebAssembly与程序编译</a></li>
+</ul>
+<h1>数据库</h1>
+<ul>
+<li>
+<p><a href="https://www.rrfed.com/2017/06/11/sql/">李银城：前端与 SQL</a></p>
+</li>
+<li>
+<p><a href="https://hughfenghen.github.io/posts/2024/03/14/web-storage-and-opfs/">Web 文件系统（OPFS 及工具）介绍</a></p>
+</li>
+</ul>
+<h1>HTML</h1>
+<ul>
+<li>
+<p><a href="https://kittygiraudel.com/2022/09/30/templating-in-html/">Templating in HTML</a></p>
+</li>
+<li>
+<p><a href="https://www.rrfed.com/2017/08/20/html-css-js-code-specification/">李银城：HTML/CSS/JS编码规范</a></p>
+</li>
+<li>
+<p><a href="https://www.rrfed.com/2018/01/20/cross-origin/">李银城：我知道的跨域与安全</a></p>
+</li>
+<li>
+<p><a href="https://jsonplaceholder.typicode.com/">jsonplaceholder： restful api测试网站</a></p>
+<ul>
+<li>
+<p><code>GET</code>(查)</p>
+<pre><code class="language-sh"># 返回json格式
+curl 'https://jsonplaceholder.typicode.com/todos/1'
+
+# 返回userid=5
+curl 'https://jsonplaceholder.typicode.com/todos?userId=5'
+</code></pre>
+</li>
+<li>
+<p><code>POST</code>(增)</p>
+<pre><code class="language-sh">curl -d &quot;userId=100&amp;title=post test&quot; -X POST 'https://jsonplaceholder.typicode.com/todos'
+</code></pre>
+</li>
+<li>
+<p><code>PATCH</code>(改)</p>
+<pre><code class="language-sh">curl -d &quot;title=patch test&quot; -X PATCH 'https://jsonplaceholder.typicode.com/todos/123'
+</code></pre>
+</li>
+<li>
+<p><code>DELETE</code>(删)</p>
+<pre><code class="language-sh">curl -X DELETE 'https://jsonplaceholder.typicode.com/todos/321'
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>图片优先选择avif</p>
+</li>
+</ul>
+<pre><code class="language-html">&lt;picture&gt;
+  &lt;source type=&quot;image/avif&quot; srcset=&quot;cow.avif&quot; /&gt;
+  &lt;source type=&quot;image/webp&quot; srcset=&quot;cow.webp&quot; /&gt;
+  &lt;img src=&quot;cow.jpg&quot; srcset=&quot;cow.png&quot; alt=&quot;Cow&quot; /&gt;
+&lt;/picture&gt;
+</code></pre>
+<h1>CSS</h1>
+<ul>
+<li>
+<p><a href="https://web.dev/learn/css/">Chrome 团队制作的 CSS 教程</a></p>
+</li>
+<li>
+<p><a href="https://www.pengfeixc.com/tutorial/css/introduction">css教程</a></p>
+</li>
+<li>
+<p><a href="https://github.com/AllThingsSmitty/css-protips">css技巧</a></p>
+</li>
+<li>
+<p><a href="https://web.dev/animations-guide/">How to create high-performance CSS animations</a></p>
+</li>
+<li>
+<p><a href="https://www.joshwcomeau.com/css/color-formats/">Color Formats in CSS（详细介绍 CSS 颜色的各种格式）</a></p>
+</li>
+<li>
+<p><a href="https://www.libhunt.com/css">按照 GitHub 的星星数量，为 CSS 框架排名</a></p>
+</li>
+<li>
+<p>图片优先选择avif</p>
+</li>
+</ul>
+<pre><code class="language-css">.box {
+  background-image: url(&quot;cow.jpg&quot;); /* fallback */
+  background-image: image-set(
+    url(&quot;cow.avif&quot;) type(&quot;image/avif&quot;),
+    url(&quot;cow.jpg&quot;) type(&quot;image/jpeg&quot;));
+}
+</code></pre>
+<h1>js</h1>
+<ul>
+<li>
+<p><a href="https://www.ruanyifeng.com/blog/2021/01/deno-intro.html">阮一峰：Deno 运行时入门教程：Node.js 的替代品</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1zV411z7RX">objtube的卢克儿的视频：【干货】8分钟带你了解V8引擎是如何运行JS！都2020年了还不知道什么是V8？</a></p>
+<ul>
+<li>
+<p>v8旧架构</p>
+<p><img src="./Pictures/web/v8-old.avif" alt="image" /></p>
+</li>
+<li>
+<p>v8新架构（2017年后）</p>
+<p><img src="./Pictures/web/v8-new.avif" alt="image" /></p>
+<p><img src="./Pictures/web/v8-new1.avif" alt="image" /></p>
+<ul>
+<li>假设优化后的热点代码一直传递的是int类型，如果下一次传递的是其它类型，就需要<code>deoptimization</code> 返回解析器生成bytecode运行，这样执行速度就会变慢。因此每次传递的参数最好保持同一类型。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1>浏览器指纹</h1>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1VmmNYAE53">技术爬爬虾：浏览器指纹是什么？14种指纹背后的技术原理</a></li>
+</ul>

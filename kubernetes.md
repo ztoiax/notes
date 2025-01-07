@@ -2,9 +2,22 @@
 <!-- mtoc-start -->
 
 * [Kubernetes](#kubernetes)
+  * [架构](#架构)
+  * [pod](#pod)
+    * [Label标签](#label标签)
+    * [ReplicaSet(即副本控制器)](#replicaset即副本控制器)
   * [service](#service)
-    * [普通Service类型例子（??失败了）](#普通service类型例子失败了)
-    * [Headless Service类型例子（??失败了）](#headless-service类型例子失败了)
+    * [普通Service类型例子](#普通service类型例子)
+    * [Headless Service类型例子](#headless-service类型例子)
+    * [集群内部服务暴露给外部客户端](#集群内部服务暴露给外部客户端)
+    * [Service负载均衡](#service负载均衡)
+  * [Deployment部署应用](#deployment部署应用)
+    * [升级策略](#升级策略)
+      * [滚动升级](#滚动升级)
+      * [触发升级](#触发升级)
+    * [回滚](#回滚)
+    * [控制滚动升级速率](#控制滚动升级速率)
+    * [暂停/恢复滚动升级](#暂停恢复滚动升级)
   * [Secret](#secret)
   * [网络策略](#网络策略)
     * [使用minikube实施网络策略（??失败了，以下所有应用的策略，最后可以通信）](#使用minikube实施网络策略失败了以下所有应用的策略最后可以通信)
@@ -33,12 +46,15 @@
       * [flux](#flux)
       * [案例](#案例)
         * [网易云音乐大量应用的部署流程](#网易云音乐大量应用的部署流程)
+  * [部署](#部署)
+    * [redis](#redis)
 * [第三方软件资源](#第三方软件资源)
   * [服务端](#服务端)
   * [客户端](#客户端)
   * [云原生](#云原生)
 * [在线网站工具](#在线网站工具)
 * [优秀文章](#优秀文章)
+* [未读](#未读)
 
 <!-- mtoc-end -->
 
@@ -46,15 +62,27 @@
 
 - [（视频）小白debug：Kubernetes(k8s)是什么? 架构是怎么样的？](https://www.bilibili.com/video/BV1Qy411q7ot)
 
+- [鹅厂架构师：Kubernetes(k8s)快速入门](https://zhuanlan.zhihu.com/p/1422260873)
+
 - Kubernetes 是希腊语中的船长(captain)
 
 - Kubenetes是一款由Google开发的开源的容器编排工具，在Google已经使用超过15年（Kubernetest前身是Google的内部工具Borg）。
+
+- k8s和docker的关系
+    - docker是k8s最初唯一支持的容器类型，但是现在k8s也开始支持rkt以及其他的容器类型
+    - 所以不应该错误的认为k8s是一个专门为docker容器设计的容器编排系统。
+
+## 架构
+
+- 一个简单的k8s系统：
+    - 一个`master node` 和 多个的`worker node`
+    - 当开发提交app 描述文件（比如描述运行多少个副本，暴露端口，指定的镜像，探活, 更新策略等）到`master node`，然后k8s把app部署到`worker nodes`. 至于app部署到哪个`woker node`, 我们并不关心。
 
 - 在Kubernetes中运行着的容器则可以视为是这个操作系统中运行的“进程”，通过Kubernetes这一中央协调器，解决了基于容器应用程序的调度、伸缩、访问负载均衡以及整个系统的管理和监控的问题。
 
     ![image](./Pictures/kubernetes/Kubernetes的应用管理模型.avif)
 
-    - Pod是Kubernetes中的最小调度资源：Pod中会包含一组容器，它们一起工作，并且对外提供一个（或者一组）功能。对于这组容器而言它们共享相同的网络和存储资源，因此它们之间可以直接通过本地网络（127.0.0.1）进行访问。
+    - Pod是Kubernetes中的最小调度资源：Pod中会包含一组容器，它们一起工作，并且对外提供一个（或者一组）功能。在worker nodes之间进行调度。对于这组容器而言它们共享相同的网络和存储资源，因此它们之间可以直接通过本地网络（127.0.0.1）进行访问。
 
         - 当Pod被创建时，调度器（kube-schedule）会从集群中找到满足条件的节点运行它。
 
@@ -63,8 +91,6 @@
         - Kubernetes中提供了多种Controller的实现，包括：Deployment（无状态应用）、StatefulSet（有状态应用）、Daemonset（守护模式）等，以支持不同类型应用的部署和调度模式。
 
     - Service（服务）：解决集群内的应用通信。
-
-        - Service在Kubernetes集群内扮演了服务发现和负载均衡的作用。在Kubernetes下部署的Pod实例都会包含一组描述自身信息的Label，而创建Service，可以声明一个Selector（标签选择器）。Service通过Selector，找到匹配标签规则的Pod实例，并将对Service的请求转发到代理的Pod中。Service创建完成后，集群内的应用就可以通过使用Service的名称作为DNS域名进行相互访问。
 
     - Ingress（入口）：解决外部的用户访问部署在集群内的应用
 
@@ -126,33 +152,118 @@
 
         - 外部访问入口（Ingress）：通过Ingress提供集群外的访问入口，从而可以使外部客户端能够访问到部署在Kubernetes集群内的服务。因此也需要通过Blackbox Exporter对Ingress的可用性进行探测，确保外部用户能够正常访问集群内的功能；
 
-- Service负载均衡
+## pod
 
-    ![image](./Pictures/kubernetes/Service负载均衡.avif)
+- Pod是Kubernetes中的最小调度资源：Pod中会包含一组容器，它们一起工作，并且对外提供一个（或者一组）功能。在worker nodes之间进行调度。对于这组容器而言它们共享相同的网络和存储资源，因此它们之间可以直接通过本地网络（127.0.0.1）进行访问。
 
-    - 代理对集群内部应用Pod实例的请求：
+    - 当Pod被创建时，调度器（kube-schedule）会从集群中找到满足条件的节点运行它。
 
-        - 当创建Service时如果指定了标签选择器：Kubernetes会监听集群中所有的Pod变化情况，通过Endpoints自动维护满足标签选择器的Pod实例的访问信息；
+- 为什么多个容器比单个容器中包含多个进程要好？
+    - 容器之所以被设计为单个容器只运行一个进程（除非进程本身产生子进程），是因为如果单个容器中运行多个不相关的进程，那么开发人员需要保持这些所有进程都运行OK, 并且管理他们的日志等（比如，两个进程，其中一个生产者进程，一个消费者进程，如果消费者进程crash之后，我们需要考虑该进程重启的机制）。
 
-    - 代理对集群外部服务的请求：
-        - 当创建Service时如果不指定任何的标签选择器：此时需要用户手动创建Service对应的Endpoint资源。
-        - 例如，一般来说，为了确保数据的安全，我们通常讲数据库服务部署到集群外。 这是为了避免集群内的应用硬编码数据库的访问信息，这是就可以通过在集群内创建Service，并指向外部的数据库服务实例。
+- 为什么需要Pod？简单来说：就是多个容器间共享某些资源
+    - 容器被设计为每个容器只运行一个进程，那么多个进程就不能聚集在一个单独的容器，但是容器之间是彼此完全隔离的，多个进程分布在对应的多个容器中，进程之间无法做到资源共享（比如，前边提到到生产者/消费进程，他们通过共享内存和信号量来通信，但是如果生产者进程和消费者进程分布在两个容器中，则IPC是相互隔离的，导致无法通信）。所以我们需要一种更高级的结构来将容器绑定在一起，并且将它们作为一个单元进行管理
 
+- 创建一个pod
 
-    - 通过这种方式集群内的应用或者系统主机就可以通过集群内部的DNS域名kubernetes.default.svc访问到部署外部的kube-apiserver实例。
+    - 我们从docker hub商找了个一个dns相关的镜像（即tutum/dnsutils），来创建一个pod, 对应的dnsutils.yaml如下
 
-        - 如果我们想要监控kube-apiserver相关的指标，只需要通过endpoints资源找到kubernetes对应的所有后端地址即可。
+    ```yaml
+    apiVersion: v1
+    kind: Pod   // k8s资源类型
+    metadata: // pod元数据
+    name: dnsutil-pod // pod的名称
+    spec: // pod规格
+    containers:
+    - image: tutum/dnsutils // 创建容器所用的镜像
+    name: dnsutil // 容器的名称
+    command: ["sleep", "infinity"]
+    ```
 
     ```sh
-    # kubernetes服务代理的后端实际地址通过endpoints进行维护
-    kubectl get endpoints kubernetes
-    NAME         ENDPOINTS           AGE
-    kubernetes   192.168.49.2:8443   24h
+    # 创建
+    kubectl create -f dnsutils.yaml
+
+    # 查看
+    kubectl get pods
+    ```
+
+### Label标签
+
+- 标签：是一个可以附加到资源的任意key-value对
+    - 一个标签就是一个key/value对，每个资源可以拥有多个标签
+    - 然后通过Selector(标签选择器)来选择具有确切标签的资源。
+
+```sh
+# 在之前创建的dnsutil-pod添加标签app=dnsutil
+kubectl label po dnsutil-pod app=dnsutil
+
+# 查看标签为app=dnsutil的pod
+kubectl get po -l app=dnsutil
+```
+
+### ReplicaSet(即副本控制器)
+
+- 前边我们通过手工创建了dnsutil-pod, 如果dsnutils-pod由于worker node节点失败， 那么该pod也会消失，并且不会被新的替换。或者如果我们想创建n个dnsutil-pod，只能通过手工创建吗？答案是：ReplicaSet(即副本控制器)
+
+- ReplicaSet是一种期望式声明方式，我们只需要告诉它我期望的副本数量，而不用告诉它怎么做。
+
+- ReplicaSet是一种k8s资源，通过它可以保持pod始终按照期望的副本数量运行。如果某个pod因为任何原因消失，则ReplicaSet会注意到缺少了的pod,并且创建新的pod替代它。
+
+![image](./Pictures/kubernetes/ReplicaSet.avif)
+
+- 创建一个ReplicaSet
+
+    - `replicaset.yaml`文件如下
+    ```yaml
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+    name: dnsutil-rs // replica set 名字
+    spec:
+    replicas: 2 // 期望pod的数量
+    selector:
+    matchLabels: // 操作label app=dnsutil的pod
+    app: dnsutil
+    template: // 创建新pod所用的pod模版
+    metadata:
+    labels:
+    app: dnsutil
+    spec:
+    containers:
+    - name: dnsutil
+    image: tutum/dnsutils
+    command: ["sleep", "infinity"]
+    ```
+
+    ```sh
+    # 创建
+    kubectl create -f replicaset.yaml
     ```
 
 ## service
 
-```yml
+- 为什么需要Service（服务）？
+    - pod是短暂的, 随时都可能被销毁。
+    - 新的pod创建之前不能确定该pod分配的ip
+    - 水平伸缩也就以为着多个pod可能提供相同的服务，客户端不想也不关心每个pod的ip, 相反，客户端期望通过一个单一的ip地址进行访问多个pod.
+
+- Service是一种为一组功能相同的pod提供单一不变的接入点的资源。
+    - 当服务存在时，该服务的ip地址和端口不会改变。客户端通过ip和port与服务建立连接，然后这些连接会被路由到提供该服务的某个pod上(通过负载均衡)。
+
+- 集群内部pod间通信
+
+    - 服务的后端可能不止有一个pod, 服务通过Selector（标签选择器）来指定哪些pod属于同一个组，然后连接到服务的客户端连接，服务会通过负载均衡路由到某个后端pod.
+    ![image](./Pictures/kubernetes/集群内pod间连接.avif)
+
+- 服务发现：Service创建完成后，不需要查询服务的Cluster iP, 然后在把Cluster IP配置给客户端pod，可以通过DNS发现之前创建的服务。
+
+    - 每个服务在k8s集群内部的DNS server中都会存在一个条目，客户端pod可以通过服务名称来访问服务（FQDN）。
+
+    - 注意：Cluseter IP是ping不通的，应为这个Cluseter IP一个虚拟IP, 只有与服务端口结合时才有意义。
+
+
+```yaml
 kind: Service  # 资源类型
 apiVersion: v1  # 资源版本
 metadata: # 元数据
@@ -192,121 +303,116 @@ spec: # 描述
 
     - Headless Service：该服务不会分配ClusterIP，也不通过Kube-Proxy做反向代理和负载均衡。而是通过DNS提供稳定的网络ID来访问，DNS会将Headless Service的后端直接解析为Pod IP列表。
 
-### 普通Service类型例子（??失败了）
+### 普通Service类型例子
 
-- 创建文件`01_create_deployment_app_nginx.yml`
-    ```yml
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: nginx-server1
-    spec:
-      replicas: 2 # 2个nginx
-      selector:
-        matchLabels:
-          app: nginx
-      template:
-         metadata:
-           labels:
-             app: nginx
-         spec:
-           containers:
-           - name: c1
-             image: nginx:1.15-alpine
-             imagePullPolicy: IfNotPresent
-             ports:
-             - containerPort: 80
-    ```
+- 创建一个docker镜像：node.js应用，该应用收http请求，并响应运行的主机名。
 
-    ```sh
-    # 启动
-    kubectl apply -f 01_create_deployment_app_nginx.yml
+    - 1.`app.js`内容如下：
+        ```js
+        const http = require('http');
+        const os = require('os');
+        console.log("Kubia server starting...");
+        var handler = function(request, response) {
+        console.log("Received request from " + request.connection.remoteAddress);
+        response.writeHead(200);
+        response.end("This is v1 running in pod " + os.hostname() + "\n");
+        };
+        var www = http.createServer(handler);
+        www.listen(8080);
+        ```
 
-    # 查看启动情况
-    kubectl get deployment.apps
-    ```
+    - `2.Dockerfile`的内容如下：
+        ```dockerfile
+        FROM node:7 // 构建所基于的基础镜像
+        ADD app.js /app.js // 把app.js文件从本地文件夹添加到镜像的根目录
+        ENTRYPOINT ["node", "app.js"] // 当镜像被运行时需要被执行的命令
+        ```
 
-- 命令创建service：
+    - 3.创建一个名为allen的镜像
+        ```sh
+        docker build -t allen .
+        ```
 
-    ```sh
-    kubectl expose deployment.apps nginx-server1 --type=ClusterIP --target-port=80 --port=80
-    ```
+    - 4.将该镜像推送到镜像仓库(docker hub)
+        ```sh
+        docker tag allen qinchaowhut/allen:v1
+        docker push qinchaowhut/allen:v1
+        ```
 
-- 文件创建service：`02_create_deployment_app_nginx_with_service.yml`
-    ```yml
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: nginx-server1
-    spec:
-      replicas: 2
-      selector:
-        matchLabels:
-          app: nginx
-      template:
-         metadata:
-           labels:
-             app: nginx
-         spec:
-           containers:
-           - name: nginx-smart
-             image: nginx:1.15-alpine
-             imagePullPolicy: IfNotPresent
-             ports:
-             - containerPort: 80
-    ---
+    - 5.运行allen镜像
+        ```sh
+        docker run --name allen-container -p 8080:8080 -d qinchaowhut/allen:v1
+        curl http://localhost:8080
+        ```
+
+- 创建文件`svc.yaml`
+    ```yaml
     apiVersion: v1
     kind: Service
     metadata:
-      name: nginx-svc
+      name: test-svc
     spec:
-      type: ClusterIP
       ports:
-      - protocol: TCP
-        port: 80
-        targetPort: 80
-      selector:
-        app: nginx
+      - port: 80 // 该服务的可用端口
+        targetPort: 8080 // 服务将连接转发到的容器端口
+      selector: // label app=testing的pod属于该服务
+        app: testing
+    ```
+
+- 同时创建一个ReplicaSet,其中容器运行我们的nodejs应用程序（前边创建的allen镜像）
+
+    - `replicaset-fqdn.yaml`, 该文件内容如下:
+
+    ```yaml
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    metadata:
+    name: fqdn-test
+    spec:
+    replicas: 3
+    selector:
+    matchLabels:
+    app: testing // 操作label app=testing的podz
+    template:
+    metadata:
+    labels:
+    app: testing
+    spec:
+    containers:
+    - name: nodejs
+    image: qinchaowhut/allen:v1
     ```
 
     ```sh
-    # 启动
-    kubectl apply -f 02_create_deployment_app_nginx_with_service.yml
+    # 创建
+    kubectl create -f svc.yaml
+    kubectl create -f replicaset-fqdn.yaml
+    # 查看
+    kubectl get svc test-svc
+    kubectl get svc fqdn-test
     ```
 
-- 验证
-    ```sh
-    kubectl get service
-    NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
-    kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP    4d15h
-    nginx-svc    ClusterIP   10.101.153.50   <none>        80/TCP    3s
+### Headless Service类型例子
 
-    kubectl get endpoints
-    kubectl get pods -l app=nginx
+- 使用headless服务来发现独立的pod
+    - 集群内部pod间也可以通过headless进行通信。headless服务，即在创建服务的spec中将cluseterIP字段设置为NONE。
+    - 当通过DNS服务器查询headless服务名称的时候，DNS服务器返回的是所有pod IP,而不是单个服务的IP. 客户端pod可以通过这些IP连接到其中一个，多个或者全部的pod.
 
-    # ??失败了
-    curl 10.101.153.50
-    ```
-
-
-### Headless Service类型例子（??失败了）
 
 - Headless Service类型配置解释
 
-    ```yml
+    ```yaml
     apiVersion: v1
     kind: Service
     metadata:
-      name: headless-service
+      name: test-svc-headless
     spec:
       clusterIP: None
-      selector:
-        app: my-app
       ports:
-        - name: http
-          protocol: TCP
-          port: 80
-          targetPort: 9376
+      - port: 80
+        targetPort: 8080
+      selector:
+        app: testing
     ```
 
     - `clusterIP:None`明确指定了创建Headless Service。
@@ -314,95 +420,201 @@ spec: # 描述
     - `ports` 则定义了 Service 所使用的端口和目标端口。
 
     ```sh
-    # dig 命令查询了 Service 的 DNS 记录，它将返回所有 Pod 的 IP 地址列表。
-    dig(curl) headless-service.default.svc.cluster.local
+    # 创建
+    kubectl create -f svc-headless.yaml
+    # 查看
+    kubectl get svc test-svc-headless
     ```
 
-- 创建文件：`03_create_deployment_app_nginx.yml`
+### 集群内部服务暴露给外部客户端
 
-    ```yml
+- 如下图所示，如果集群外部客户端需要访问集群内部的服务，则可以通过如下几种方式：
+
+    ![image](./Pictures/kubernetes/集群外部客户端.avif)
+
+    - 1.NodePort类型服务
+        - 通过创建NodePort类型服务，可以让k8s在所有的worker节点上保留一个端口（所有节点都是使用相同的端口号），并将传入的连接转发给属于该服务的pod.
+        ![image](./Pictures/kubernetes/NodePort类型服务.avif)
+
+    - 2.LoadBalancer类型服务
+
+        - LoadBalancer服务是NodePort服务的一种扩展。
+        - 客户端通过一个专用的负载均衡器来访问服务（客户端通过负载均衡器的IP连接到服务）。其中负载均衡器将流量重定向到worker node的节点端口。
+        ![image](./Pictures/kubernetes/LoadBalancer类型服务.avif)
+
+    - 3.通过Ingress暴露服务（通过一个IP地址公开多个服务）
+
+### Service负载均衡
+
+![image](./Pictures/kubernetes/Service负载均衡.avif)
+
+- 代理对集群内部应用Pod实例的请求：
+
+    - 当创建Service时如果指定了标签选择器：Kubernetes会监听集群中所有的Pod变化情况，通过Endpoints自动维护满足标签选择器的Pod实例的访问信息；
+
+- 代理对集群外部服务的请求：
+    - 当创建Service时如果不指定任何的标签选择器：此时需要用户手动创建Service对应的Endpoint资源。
+    - 例如，一般来说，为了确保数据的安全，我们通常讲数据库服务部署到集群外。 这是为了避免集群内的应用硬编码数据库的访问信息，这是就可以通过在集群内创建Service，并指向外部的数据库服务实例。
+
+
+- 通过这种方式集群内的应用或者系统主机就可以通过集群内部的DNS域名kubernetes.default.svc访问到部署外部的kube-apiserver实例。
+
+    - 如果我们想要监控kube-apiserver相关的指标，只需要通过endpoints资源找到kubernetes对应的所有后端地址即可。
+
+```sh
+# kubernetes服务代理的后端实际地址通过endpoints进行维护
+kubectl get endpoints kubernetes
+NAME         ENDPOINTS           AGE
+kubernetes   192.168.49.2:8443   24h
+```
+
+
+## Deployment部署应用
+
+- Deployment用于部署应用程序，并且用声明的方式升级应用程序。其中，Deployment由ReplicaSet(1:N)组成，并且由ReplicaSet来创建和管理Pod
+
+![image](./Pictures/kubernetes/Deployment.avif)
+
+### 升级策略
+
+- 1.RollingUpdate滚动更新（默认的升级策略）：该策略会渐进的删除旧的pod,同时创建新的pod, 是应用程序在整个升级过程中都处于可用状态。
+    - 注意：在升级过程中，pod的数量可以在期望的副本数量左右浮动，该上限和下限是可以设置的
+
+- 2.Recreate：即一次性删除所有的Pod, 然后才创建新的Pod(缺点：存在服务中断的情况)
+
+- 注意：升级完成之后，旧的ReplicaSet仍然保留（用于回滚，即升级的逆过程）
+
+#### 滚动升级
+
+- 创建滚动更新的yaml文件`deployment-v1.yaml
+
+    ```yaml
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: nginx-server1
+    name: testqc
     spec:
-      replicas: 2
-      selector:
-        matchLabels:
-          app: nginx
-      template:
-         metadata:
-           labels:
-             app: nginx
-         spec:
-           containers:
-           - name: nginx-smart
-             image: nginx:1.15-alpine
-             imagePullPolicy: IfNotPresent
-             ports:
-             - containerPort: 80
+    replicas: 3
+    template:
+    metadata:
+    name: allen
+    labels:
+    app: testing
+    spec:
+    containers:
+    - image: qinchaowhut/allen:v1
+    name: nodejs
+    imagePullPolicy: IfNotPresent
+    selector:
+    matchLabels:
+    app: testing
     ```
 
     ```sh
-    # 启动
-    kubectl create -f 03_create_deployment_app_nginx.yml
+    # 创建。其中record参数用于记录历史版本号，在查看升级history，显示CHANGE-CAUSE.
+    kubectl create -f deployment-v1yaml --record
+    # 查看
+    kubectl get deployment
     ```
 
-- 创建文件`04_headless-service.yml`
-
-    ```yml
+- `svc-loadbalancer.yaml`
+    ```yaml
     apiVersion: v1
     kind: Service
     metadata:
-      name: headless-service
-      namespace: default
+    name: allen-loadbalancer
     spec:
-      type: ClusterIP     # ClusterIP类型,也是默认类型
-      clusterIP: None     # None就代表是无头service
-      ports:                                # 指定service 端口及容器端口
-      - port: 80                            # service ip中的端口
-        protocol: TCP
-        targetPort: 80                      # pod中的端口
-      selector:                             # 指定后端pod标签
-         app: nginx                    # 可通过kubectl get pod -l app=nginx查看哪些pod在使用此标签
+    type: LoadBalancer
+    ports:
+    - port: 80
+    targetPort: 8080
+    selector:
+    app: testing
     ```
 
     ```sh
-    # 启动
-    kubectl apply -f 04_headless-service.yml
-
-    # 查看。可以看到headless-service没有CLUSTER-IP,用None表示
-    kubectl get svc
-    ```
-
-- dns
-    ```sh
-    # 查看kube-dns服务的IP
-    kubectl get svc -n kube-system
-    NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                        AGE
-    kube-dns   ClusterIP   10.96.0.10   <none>        53/UDP,53/TCP,9153/TCP         3d22h
-    kubelet    ClusterIP   None         <none>        10250/TCP,10255/TCP,4194/TCP   2d5h
-
-    # 在集群主机通过DNS服务地址查找无头服务的dns解析
-    dig -t A headless-service.default.svc.cluster.local. @10.96.0.10
-
-    # 验证pod的IP
-    kubectl get pod -o wide
-    ```
-
-- 创建一个镜像为busyboxplus:curl的pod，pod名称为bb2,用来解析域名
-    ```sh
-    # ??失败了
-    kubectl run bbp --image=busybox:curl -it
-    # 或
-    kubectl run bbp --image=1.28 -it
-
-    # 解析域名
-    nslookup headless-service.default.svc.cluster.local.
-
+    # 创建
+    kubectl create -f svc-loadbalancer.yaml
     # 测试
-    curl http://headless-service.default.svc.cluster.local.
+    curl 127.0.0.1:80
     ```
+
+#### 触发升级
+
+- 触发条件：只要修改deployment中定义的pod模板，k8s就会自动将实际的系统状态收敛为资源中定义的状态。
+
+- 可以通过修改Deployment中pod模板的镜像，来触发升级。
+
+    ![image](./Pictures/kubernetes/触发升级.avif)
+
+```sh
+# 修改Deployment的pod模板内的镜像(其中deployment的name为testqc, nodejs为容器name, qinchaowhut/allen:v2为镜像版本)
+kubectl set image deployment testqc nodejs=qinchaowhut/allen:v2
+
+# 查看
+kubectl get po -l app=testing
+curl 127.0.0.1
+
+# 查看升级前后ReplicaSet。可以看出旧的rs仍然本保留
+kubectl get rs
+
+# 观察整个升级过程
+kubectl rollout status deployment testqc
+```
+
+### 回滚
+
+- Deployment始终保持着升级后的版本历史记录，其中历史版本号会被保存在ReplicaSet中。
+
+- 由于滚动升级成功之后，不会删除老版本的ReplicaSet，这使得可以回滚到任意一个历史版本(注意，如果手工删除ReplicaSet， 便会丢失Deployement的历史版本，而导致无法回滚)。
+
+```sh
+# 回滚到上一个版本
+kubectl rollout undo deployment testqc
+# 查看升级历史
+kubectl rollout history deployment testqc
+# 回滚到第一个版本
+kubectl rollout undo deployment testqc --to-revision=1
+```
+
+### 控制滚动升级速率
+
+- 在Deployment的滚动升级期间，maxSurge和maxUnavaliable这两个属性会决定一次替换多少个pod（可以通过rollingUpdate的子属性来配置，maxSurge和maxUnavailable可以设置成百分数或者绝对值）
+
+    - maxSurge:表示除了Deployment中配置的期望副本数之外，最多允许超出的pod的数量。默认值为25%.(如果期望副本数设置为4，那么滚动升级过程中，不会运行超过5个pod).
+
+    - 需要注意的是：When converting a percentage to an absolute number, the number is rounded up.
+
+    - maxUnavailable:表示滚动升级过程中，相对于期望副本数，允许有多少个pod实例可以处于不可用状态，默认值25%.(如果期望副本数量为4，那么整个发布过程中，只能有一个pod处于不可用状态)
+
+    - 需要注意的是：When converting a percentage to an absolute number , the number is rouded down.
+
+    - 在我们测试环境中，Deployment设置的期望副本数量为3，所以maxSurge为1, maxUnavailable 是0, 则整个升级过程如下：
+
+    ![image](./Pictures/kubernetes/滚动升级过程.avif)
+
+- 假设我们配置的期望副本数量仍然为3，但是maxSurge和maxUnavailable都是1，则整个发布过程如下(需要注意的是:maxUnavailable是相对于期望副本数而言的， 即maxUnavailable设置为1，但是整个更新过程中，不可用pod数量可以超过1个)：
+    ![image](./Pictures/kubernetes/滚动升级过程1.avif)
+
+### 暂停/恢复滚动升级
+
+- 在某次版本发布过程中，可能我们并不想滚动升级所有的pod, 而是在滚动升级过程中，先升级一小部分pod, 然后暂停升级过程。通过查看这一小部分用户请求的处理情况，如果符合预期，就可以用新的pod替换所有旧的pod.(金丝雀发布：是一种可以将应用程序的出错版本和其影响到的用户的风险化为最小的计数。与其直接向每个用户发布新版本，不如用新版本替换一个或者一小部分的pod。)
+
+- 在通过`kubectl set image`命令触发滚动更新之后，立马执行如下命令，暂停滚动更新：
+```sh
+kubectl rollout pause deploymnet testqc
+```
+
+- 一旦确认新版本能够正常工作，就可以恢复滚动升级，用新版本pod替换所有旧版本的pod
+
+    ```sh
+    kubectl rollout resume deployment testqc
+    ```
+
+- 需要指出的是，在滚动升级过程中，想要在一个确切的位置暂停滚动升级目前无法做到。
+
+- 阻止出错版本的滚动升级
+    - minReadySeconds:指定新创建的pod至少要成功运行多久之后，才能将其视为可用。在pod可用之前，滚动升级的过程不会继续。
 
 ## Secret
 
@@ -420,7 +632,7 @@ spec: # 描述
     - 1.以文件的形式挂载到pod中
 
         - 将secret直接挂载进pod中
-            ```yml
+            ```yaml
             apiVersion: v1
             kind: Pod
             metadata:
@@ -441,7 +653,7 @@ spec: # 描述
             ```
 
             - 将secret的键投射到特定的目录中mysecret 中的键 username 会出现在容器中的路径为 /etc/foo/my-group/my-username， 而不是 /etc/foo/username。Secret 对象的 password 键不会被投射。
-                ```yml
+                ```yaml
                 apiVersion: v1
                 kind: Pod
                 metadata:
@@ -466,7 +678,7 @@ spec: # 描述
     - 2.作为容器的环境变量
 
         - Secret 主键的环境变量应该在 env[].valueFrom.secretKeyRef 中填写 Secret 的名称和主键名称。
-            ```yml
+            ```yaml
             apiVersion: v1
             kind: Pod
             metadata:
@@ -495,7 +707,7 @@ spec: # 描述
     - 由 kubelet 在为 Pod 拉取镜像时使用。
 
         - Docker配置Secret
-            ```yml
+            ```yaml
             apiVersion: v1
             kind: Secret
             metadata:
@@ -507,7 +719,7 @@ spec: # 描述
             ```
 
         - basic-auth认证secret
-            ```yml
+            ```yaml
             apiVersion: v1
             kind: Secret
             metadata:
@@ -519,7 +731,7 @@ spec: # 描述
             ```
 
         - ssh身份认证secret
-            ```yml
+            ```yaml
             apiVersion: v1
             kind: Secret
             metadata:
@@ -532,7 +744,7 @@ spec: # 描述
             ```
 
         - tls证书密钥secret
-            ```yml
+            ```yaml
             apiVersion: v1
             kind: Secret
             metadata:
@@ -609,7 +821,7 @@ kubectl exec -it frontend --namespace=network-policy-tutorial -- curl <DATABASE-
 
 - 目标：如何在`network-policy-tutorial`命名空间内限制流量。你将阻止frontend应用程序与backend和database应用程序通信。
 
-- 创建一个名为`namespace-default-deny.yml`的策略，该策略拒绝命名空间中的所有流量：
+- 创建一个名为`namespace-default-deny.yaml`的策略，该策略拒绝命名空间中的所有流量：
 
     ```sh
     apiVersion: networking.k8s.io/v1
@@ -626,7 +838,7 @@ kubectl exec -it frontend --namespace=network-policy-tutorial -- curl <DATABASE-
 
     ```sh
     # 将网络策略配置应用于集群
-    kubectl apply -f namespace-default-deny.yml --namespace=network-policy-tutorial
+    kubectl apply -f namespace-default-deny.yaml --namespace=network-policy-tutorial
     ```
 
 - 发现frontend已经不能与backend和database通信
@@ -649,9 +861,9 @@ kubectl exec -it frontend --namespace=network-policy-tutorial -- curl <DATABASE-
     frontend -> backend -> database
     ```
 
-- 创建一个名为`frontend-default-policy.yml`的策略
+- 创建一个名为`frontend-default-policy.yaml`的策略
 
-    ```yml
+    ```yaml
     apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
@@ -671,11 +883,11 @@ kubectl exec -it frontend --namespace=network-policy-tutorial -- curl <DATABASE-
     ```
 
     ```sh
-    kubectl apply -f frontend-default-policy.yml --namespace=network-policy-tutorial
+    kubectl apply -f frontend-default-policy.yaml --namespace=network-policy-tutorial
     ```
 
-- 对于 backend ，创建一个名为 `backend-default-policy.yml` 的新策略
-    ```yml
+- 对于 backend ，创建一个名为 `backend-default-policy.yaml` 的新策略
+    ```yaml
     apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
@@ -700,11 +912,11 @@ kubectl exec -it frontend --namespace=network-policy-tutorial -- curl <DATABASE-
                   run: database
     ```
     ```sh
-    kubectl apply -f backend-default-policy.yml --namespace=network-policy-tutorial
+    kubectl apply -f backend-default-policy.yaml --namespace=network-policy-tutorial
     ```
 
-- 为 database 创建一个新策略 `database-default-policy.yml`
-    ```yml
+- 为 database 创建一个新策略 `database-default-policy.yaml`
+    ```yaml
     apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
@@ -723,7 +935,7 @@ kubectl exec -it frontend --namespace=network-policy-tutorial -- curl <DATABASE-
                   run: backend
     ```
     ```sh
-    kubectl apply -f database-default-policy.yml --namespace=network-policy-tutorial
+    kubectl apply -f database-default-policy.yaml --namespace=network-policy-tutorial
     ```
 
 - 测试
@@ -743,9 +955,9 @@ kubectl exec -it frontend --namespace=network-policy-tutorial -- curl <DATABASE-
 
 #### 在单个策略中组合入站和出站规则
 
-- 创建`backend-default-policy.yml`文件
+- 创建`backend-default-policy.yaml`文件
 
-```yml
+```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -772,12 +984,12 @@ spec:
 
 #### 阻止对特定 IP 范围的出站流量
 
-- 不是创建一个新的yml配置文件，让我们更新你之前创建的`backend-default-policy.yml`文件。你将替换yaml配置的出站部分。不使用`podSelector`来限制 IP 到数据库，而是使用`ipBlock`。
+- 不是创建一个新的yaml配置文件，让我们更新你之前创建的`backend-default-policy.yaml`文件。你将替换yaml配置的出站部分。不使用`podSelector`来限制 IP 到数据库，而是使用`ipBlock`。
 
-- 更新`backend-default-policy.yml`文件：
+- 更新`backend-default-policy.yaml`文件：
     - 记得替换`<DATABASE-CLUSTER-IP>/24`
 
-    ```yml
+    ```yaml
     apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
@@ -811,7 +1023,7 @@ spec:
     namespace-default-deny   <none>         19m
 
     # 更新配置
-    kubectl apply -f backend-default-policy.yml --namespace=network-policy-tutorial
+    kubectl apply -f backend-default-policy.yaml --namespace=network-policy-tutorial
     ```
 
 - 从 frontend 访问 database ，就不再可能了
@@ -861,12 +1073,12 @@ minikube addons enable ingress
 
 ### nginx
 
-- 创建了一个名为`nginx-deployment.yml`文件
+- 创建了一个名为`nginx-deployment.yaml`文件
 
     - 创建的资源类型为`Deployment`
     - 注意新版kubernetes的`apiVersion: extensions/v1beta1`已被抛弃。使用`apps/v1`代替
 
-    ```yml
+    ```yaml
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -893,7 +1105,7 @@ minikube addons enable ingress
 
 ```sh
 # 启动
-kubectl create -f nginx-deploymeht.yml
+kubectl create -f nginx-deploymeht.yaml
 
 # 查看Deployment的运行状态
 kubectl get deployments
@@ -902,9 +1114,9 @@ kubectl get deployments
 kubectl get pods
 ```
 
-- 创建`nginx-service.yml`的文件：为了能够让用户或者其它服务能够访问到Nginx实例
+- 创建`nginx-service.yaml`的文件：为了能够让用户或者其它服务能够访问到Nginx实例
 
-    ```yml
+    ```yaml
     kind: Service
     apiVersion: v1
     metadata:
@@ -921,7 +1133,7 @@ kubectl get pods
 
 ```sh
 # 启动
-kubectl create -f nginx-service.yml
+kubectl create -f nginx-service.yaml
 
 # 查看资源
 kubectl get svc
@@ -947,16 +1159,16 @@ kubectl rollout undo deployment/nginx-deployment
 
 - [《prometheus-book》部署Prometheus](https://yunlzheng.gitbook.io/prometheus-book/part-iii-prometheus-shi-zhan/readmd/deploy-prometheus-in-kubernetes)
 
-- 创建`prometheus-config.yml`文件
+- 创建`prometheus-config.yaml`文件
     - 使用ConfigMaps管理Prometheus的配置文件
 
-```yml
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-config
 data:
-  prometheus.yml: |
+  prometheus.yaml: |
     global:
       scrape_interval:     15s
       evaluation_interval: 15s
@@ -968,14 +1180,14 @@ data:
 
 ```sh
 # 启动
-kubectl create -f prometheus-config.yml
+kubectl create -f prometheus-config.yaml
 ```
 
-- 创建`prometheus-deployment.yml`文件
+- 创建`prometheus-deployment.yaml`文件
 
     - 当ConfigMap资源创建成功后，我们就可以通过Volume挂载的方式，将Prometheus的配置文件挂载到容器中
 
-```yml
+```yaml
 apiVersion: v1
 kind: "Service"
 metadata:
@@ -1014,7 +1226,7 @@ spec:
         command:
         - "/bin/prometheus"
         args:
-        - "--config.file=/etc/prometheus/prometheus.yml"
+        - "--config.file=/etc/prometheus/prometheus.yaml"
         ports:
         - containerPort: 9090
           protocol: TCP
@@ -1029,7 +1241,7 @@ spec:
 
 ```
 # 启动
-kubectl create -f prometheus-deployment.yml
+kubectl create -f prometheus-deployment.yaml
 
 # 查看启动情况
 kubectl get pods
@@ -1056,8 +1268,8 @@ minikube service list
         - 2.创建Prometheus所使用的账号（ServiceAccount）
         - 3.将该账号与角色进行绑定（ClusterRoleBinding）
 
-    - 这些所有的操作在Kubernetes同样被视为是一系列的资源，可以通过YAML文件进行描述并创建，这里创建`prometheus-rbac-setup.yml`文件
-        ```yml
+    - 这些所有的操作在Kubernetes同样被视为是一系列的资源，可以通过YAML文件进行描述并创建，这里创建`prometheus-rbac-setup.yaml`文件
+        ```yaml
         apiVersion: rbac.authorization.k8s.io/v1
         kind: ClusterRole
         metadata:
@@ -1101,11 +1313,11 @@ minikube service list
 
         ```sh
         # 启动
-        kubectl create -f prometheus-rbac-setup.yml
+        kubectl create -f prometheus-rbac-setup.yaml
         ```
 
-- 修改`prometheus-deployment.yml`文件，并添加`serviceAccountName`和`serviceAccount`定义：
-    ```yml
+- 修改`prometheus-deployment.yaml`文件，并添加`serviceAccountName`和`serviceAccount`定义：
+    ```yaml
     spec:
       replicas: 1
       selector:
@@ -1122,7 +1334,7 @@ minikube service list
 
     ```sh
     # 对Deployment进行变更升级
-    kubectl apply -f prometheus-deployment.yml
+    kubectl apply -f prometheus-deployment.yaml
 
     # 查看pod的name
     kubectl get pods
@@ -1137,7 +1349,7 @@ minikube service list
 
     - 通过指定`kubernetes_sd_config`的模式为`node`，Prometheus会自动从Kubernetes中发现到所有的node节点并作为当前Job监控的Target实例。
 
-        ```yml
+        ```yaml
         - job_name: 'kubernetes-nodes'
           tls_config:
             ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -1146,14 +1358,14 @@ minikube service list
           - role: node
         ```
 
-    - `prometheus-config.yml`完整配置
-        ```yml
+    - `prometheus-config.yaml`完整配置
+        ```yaml
         apiVersion: v1
         kind: ConfigMap
         metadata:
           name: prometheus-config
         data:
-          prometheus.yml: |-
+          prometheus.yaml: |-
             global:
               scrape_interval:     15s
               evaluation_interval: 15s
@@ -1197,7 +1409,7 @@ minikube service list
 
 - 更新Prometheus配置文件，并重建Prometheus实例：
     ```sh
-    kubectl apply -f prometheus-config.yml
+    kubectl apply -f prometheus-config.yaml
 
     # 查看pods的name
     kubectl get pods
@@ -1228,12 +1440,12 @@ minikube service list
 | 获取集群中Service的访问地址，并通过Blackbox Exporter获取网络探测指标     | service      | 黑盒监控 | blackbox exporter |
 | 获取集群中Ingress的访问信息，并通过Blackbox Exporter获取网络探测指标     | ingress      | 黑盒监控 | blackbox exporter |
 
-- 修改`prometheus.yml`配置文件：通过labelmap步骤，将Node节点上的标签，作为样本的标签保存到时间序列当中。
+- 修改`prometheus.yaml`配置文件：通过labelmap步骤，将Node节点上的标签，作为样本的标签保存到时间序列当中。
 
 - 添加`kubernetes-kubelet`配置
     - ??失败了。不知为什么失败了，而同样的方法cAdvisor则可以
     - 问题配置文件：
-        ```yml
+        ```yaml
           - job_name: 'kubernetes-kubelet'
             scheme: https
             tls_config:
@@ -1248,7 +1460,7 @@ minikube service list
 
         ```sh
         # 重新加载
-        kubectl apply -f prometheus-config.yml
+        kubectl apply -f prometheus-config.yaml
 
         # 查看pods
         kubectl get pods
@@ -1266,7 +1478,7 @@ minikube service list
         ```
 
     - 解决方法1：由于当前使用的ca证书中，并不包含ip的地址信息：设置`insecure_skip_verify为true`跳过ca证书校验过程
-        ```yml
+        ```yaml
           - job_name: 'kubernetes-kubelet'
               scheme: https
               tls_config:
@@ -1283,7 +1495,7 @@ minikube service list
     - 解决方法2：不直接通过kubelet的metrics服务采集监控数据，而通过Kubernetes的api-server提供的代理API访问各个节点中kubelet的metrics服务
         - 通过`relabeling`，将从Kubernetes获取到的默认地址`__address__`替换为`kubernetes.default.svc:443`。同时将`__metrics_path__`替换为api-server的代理地址`/api/v1/nodes/${1}/proxy/metrics`。
 
-        ```yml
+        ```yaml
           - job_name: 'kubernetes-kubelet'
               scheme: https
               tls_config:
@@ -1304,7 +1516,7 @@ minikube service list
 
 - - 添加`cAdvisor`配置
     - 方法1：直接访问kubelet的/metrics/cadvisor地址，需要跳过ca证书认证
-        ```yml
+        ```yaml
             - job_name: 'kubernetes-cadvisor'
               scheme: https
               tls_config:
@@ -1323,7 +1535,7 @@ minikube service list
         ```
 
     - 方式2：通过api-server提供的代理地址访问kubelet的/metrics/cadvisor地址：
-        ```yml
+        ```yaml
             - job_name: 'kubernetes-cadvisor'
               scheme: https
               tls_config:
@@ -1342,11 +1554,11 @@ minikube service list
                 regex: __meta_kubernetes_node_label_(.+)
         ```
 
-- 使用`NodeExporter`监控集群资源使用情况。创建`node-exporter-daemonset.yml`文件
+- 使用`NodeExporter`监控集群资源使用情况。创建`node-exporter-daemonset.yaml`文件
 
     - 通过Daemonset的形式将Node Exporter部署到了集群中的各个节点中
 
-    ```yml
+    ```yaml
     apiVersion: apps/v1
     kind: DaemonSet
     metadata:
@@ -1377,7 +1589,7 @@ minikube service list
     ```
     ```sh
     # 启动
-    kubectl create -f node-exporter-daemonset.yml
+    kubectl create -f node-exporter-daemonset.yaml
 
     # 查看Daemonset
     kubectl get daemonsets
@@ -1398,7 +1610,7 @@ minikube service list
     - 通过relabel过程实现对Pod实例的过滤，以及采集任务地址替换，从而实现对特定Pod实例监控指标的采集。
     - 需要说明的是kubernetes-pods并不是只针对Node Exporter而言，对于用户任意部署的Pod实例，只要其提供了对Prometheus的支持，用户都可以通过为Pod添加注解的形式为其添加监控指标采集的支持。
 
-    ```yml
+    ```yaml
       - job_name: 'kubernetes-pods'
         kubernetes_sd_configs:
         - role: pod
@@ -1428,7 +1640,7 @@ minikube service list
 - 创建监控任务`kubernetes-apiservers`，这里指定了服务发现模式为endpoints：Promtheus会查找当前集群中所有的`endpoints`配置，并通过relabel进行判断是否为apiserver对应的访问地址
 
 - 对Ingress和Service进行网络探测
-    ```yml
+    ```yaml
     - job_name: 'kubernetes-apiservers'
       kubernetes_sd_configs:
       - role: endpoints
@@ -1446,9 +1658,9 @@ minikube service list
 
 - 对Ingress和Service进行网络探测
 
-    - 创建`blackbox-exporter.yml`
+    - 创建`blackbox-exporter.yaml`
 
-        ```yml
+        ```yaml
         apiVersion: v1
         kind: Service
         metadata:
@@ -1488,7 +1700,7 @@ minikube service list
 
         ```sh
         # 启动。同时通过服务blackbox-exporter在集群内暴露访问地址blackbox-exporter.default.svc.cluster.local，对于集群内的任意服务都可以通过该内部DNS域名访问Blackbox Exporter实例：
-        kubectl create -f blackbox-exporter.yml
+        kubectl create -f blackbox-exporter.yaml
 
         # 查看
         kubectl get pods
@@ -1498,20 +1710,20 @@ minikube service list
 - `kubernetes-services`的监控采集任务：为了能够让Prometheus能够自动的对Service进行探测，我们需要通过服务发现自动找到所有的Service信息。
 
     - 通过指定kubernetes_sd_config的role为service指定服务发现模式：
-        ```yml
+        ```yaml
           kubernetes_sd_configs:
             - role: service
         ```
 
     - 为了区分集群中需要进行探测的Service实例，我们通过标签`prometheus.io/probe: true`进行判断，从而过滤出需要探测的所有Service实例：
-        ```yml
+        ```yaml
               - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
                 action: keep
                 regex: true
         ```
 
     - 并且将通过服务发现获取到的Service实例地址__address__转换为获取监控数据的请求参数。同时将__address执行Blackbox Exporter实例的访问地址，并且重写了标签instance的内容：
-        ```yml
+        ```yaml
               - source_labels: [__address__]
                 target_label: __param_target
               - target_label: __address__
@@ -1521,7 +1733,7 @@ minikube service list
         ```
 
     - 最后，为监控样本添加了额外的标签信息：
-        ```yml
+        ```yaml
               - action: labelmap
                 regex: __meta_kubernetes_service_label_(.+)
               - source_labels: [__meta_kubernetes_namespace]
@@ -1531,7 +1743,7 @@ minikube service list
         ```
 
     - 完整配置：
-        ```yml
+        ```yaml
             - job_name: 'kubernetes-services'
               metrics_path: /probe
               params:
@@ -1557,7 +1769,7 @@ minikube service list
         ```
 
 - `kubernetes-ingresses`和`kubernetes-services`相类似
-    ```yml
+    ```yaml
         - job_name: 'kubernetes-ingresses'
           metrics_path: /probe
           params:
@@ -1632,7 +1844,7 @@ kubectl -n monitoring get pods
 ```
 
 - 创建`prometheus-inst.yaml`文件
-    ```yml
+    ```yaml
     apiVersion: monitoring.coreos.com/v1
     kind: Prometheus
     metadata:
@@ -1704,8 +1916,8 @@ helm delete my-mysql-release
 
 - 安装，并指定一些自定义配置文件
 
-    - 创建`mysql-config.yml`文件
-    ```yml
+    - 创建`mysql-config.yaml`文件
+    ```yaml
     mysqlUser: tz
     mysqlDatabase: testdb
     service:
@@ -1715,10 +1927,10 @@ helm delete my-mysql-release
     - 安装
     ```sh
     # 安装
-    helm install -f mysql-config.yml my-mysql-release stable/mysql
+    helm install -f mysql-config.yaml my-mysql-release stable/mysql
 
-- 更新`mysql-config.yml`文件，禁用持久化
-    ```yml
+- 更新`mysql-config.yaml`文件，禁用持久化
+    ```yaml
     mysqlUser: tz
     mysqlDatabase: testdb
     service:
@@ -1730,7 +1942,7 @@ helm delete my-mysql-release
 
     ```sh
     # 如果修改了配置文件，需要更新使用upgrade
-    helm upgrade -f mysql-config.yml my-mysql-release stable/mysql
+    helm upgrade -f mysql-config.yaml my-mysql-release stable/mysql
     ```
 
 - `REVISION`版本和`rollback`回滚
@@ -1814,7 +2026,7 @@ helm plugin uninstall dashboard
             - 当流水线入口直接就是 git merge 或 git add && git commit 的情况时
                 - template2 或 template3 是作为单独的流水线逻辑存在。
 
-        ```yml
+        ```yaml
           entrypoint: hello-hello-hello #配置template入口
           templates:
           - name: hello-hello-hello
@@ -1873,7 +2085,7 @@ helm plugin uninstall dashboard
         - 幂等性：可以重复应用而不会导致系统状态发生变化。
         - 事务性，要么全部应用成功，要么什么都不做
             - 例子：Kubernetes 资源配置文件，使用者只需要指定 CPU 和 Memory 的大小，而不需要关心底层执行细节和环境差异，保证了各个环境中部署一致。
-                ```yml
+                ```yaml
                 apiVersion: apps/v1
                 kind: Deployment
                 metadata:
@@ -2011,7 +2223,7 @@ curl https://argocd.kubernets.cn -I
 - ingress配置文件
     ```sh
     # 应用配置文件
-    kubectl apply -f argocd.k8s.local.yml
+    kubectl apply -f argocd.k8s.local.yaml
 
     # 查看
     kubectl get ingress -n argocd
@@ -2076,7 +2288,7 @@ curl https://argocd.kubernets.cn -I
 
 - `Chart.yaml` 文件是 Helm Chart 的标准，通过 dependency 字段，引用预先定义的 Horizon Template。
 
-    ```yml
+    ```yaml
     apiVersion: v2
     name: demo
     version: 1.0.0
@@ -2087,7 +2299,7 @@ curl https://argocd.kubernets.cn -I
     ```
 
 - `application.yaml` 包含了用户通过 ReactJsonSchemaForm 表单填写的数据。
-    ```yml
+    ```yaml
     deployment:
       app:
         envs:
@@ -2100,7 +2312,7 @@ curl https://argocd.kubernets.cn -I
 
 - `pipeline-output.yaml` 包含了 CI 阶段的输出，因为在 Horizon 中 CI 也是可以自定义的，所以该文件的内容也是不固定的。默认的 CI 脚本输出如下：
 
-    ```yml
+    ```yaml
     deployment:
       image: library/demo:v1
       git:
@@ -2118,7 +2330,7 @@ curl https://argocd.kubernets.cn -I
 
 - `pipeline.yaml` 包含了 CI 阶段的配置信息，Horizon 管理员可以通过自定义 CI 以支持更多的构建类型
 
-    ```yml
+    ```yaml
     pipeline:
       buildType: dockerfile
       dockerfile:
@@ -2133,7 +2345,7 @@ curl https://argocd.kubernets.cn -I
 
 - `sre.yaml` 包含了一些管理员配置，比如ingress、默认的超售比等等。使用 sre.yaml 文件修改管理员配置，既可以做到关注点分离，又保证了 GitOps 应用修改的体验统一。比如可以通过配置nodeAffinity，将应用部署到特定的节点上。SRE在修改sre.yaml后，也需要提交 PR 到 GitOps 仓库，并通过 review 机器人完成多人审核，合入到发布分支，最后在 Horizon 上执行发布，即可完成变更。
 
-    ```yml
+    ```yaml
     deployment:
       affinity:
         nodeAffinity:
@@ -2158,7 +2370,7 @@ curl https://argocd.kubernets.cn -I
         | .Values.env.baseRegistry  | image 仓库的地址 |
         | .Values.env.ingressDomain | ingress 域名     |
 
-    ```yml
+    ```yaml
     deployment:
       env:
         environment: local
@@ -2185,10 +2397,18 @@ curl https://argocd.kubernets.cn -I
     |---------------------|----------|
     | .Values.restartTime | 重启时间 |
 
-    ```yml
+    ```yaml
     deployment:
       restartTime: "2023-01-06 18:28:49"
     ```
+
+## 部署
+
+### redis
+
+- [快手技术：富贵险中求！是否应在Kubernetes上运行Redis？](https://mp.weixin.qq.com/s/9ydaYfm5Pa0XnJpryUKJ-Q)
+
+- [火山引擎开发者社区：火山引擎 Redis 云原生实践]https://mp.weixin.qq.com/s/r3GmcsS0EtBTFgMQ9VQT_w)
 
 # 第三方软件资源
 
@@ -2196,18 +2416,21 @@ curl https://argocd.kubernets.cn -I
 
 ## 服务端
 
-- [kubernetes-network-policy-recipes：只需复制粘贴即可解决 K8s 网络问题的配方。该项目包含了 Kubernetes 网络策略的各种用例和示例 YAML 文件，可直接复制使用。](https://github.com/ahmetb/kubernetes-network-policy-recipes)
+- [kubernetes-network-policy-recipes](https://github.com/ahmetb/kubernetes-network-policy-recipes)
+    > 只需复制粘贴即可解决 K8s 网络问题的配方。该项目包含了 Kubernetes 网络策略的各种用例和示例 YAML 文件，可直接复制使用。
 
 - [pixie：性能监控](https://github.com/pixie-io/pixie)
 
 - [kubesphere](https://github.com/kubesphere/kubesphere)
 
+- [KubeWall](https://github.com/kubewall/kubewall)
+    > Kubernetes 多集群管理工具，采用单一二进制文件的简便部署方式，为用户提供直观且易用的 Web 界面，用于高效管理和监控 Kubernetes 集群。
+
 - [k0s](https://github.com/k0sproject/k0s)
-  > k0s 是一个包含所有功能的单一二进制 Kubernetes 发行版，它预先配置了所有所需的 bell 和 whistle，使构建 Kubernetes 集群只需将可执行文件复制到每个主机并运行它即可。
+    > k0s 是一个包含所有功能的单一二进制 Kubernetes 发行版，它预先配置了所有所需的 bell 和 whistle，使构建 Kubernetes 集群只需将可执行文件复制到每个主机并运行它即可。
 
-  - [retina：K8s 网络可观测平台](https://github.com/microsoft/retina)
-
-    - 微软开源的基于 eBPF 的云原生容器网络可观测性平台。它提供了一个集中查看、监控、分析应用和网络运行状况的中心平台，能够将收集的网络可观测性数据发送到 Prometheus 进行可视化，适用于调试 Pod 无法互连的问题、监控网络健康状况、收集遥测数据等场景。
+- [retina：K8s 网络可观测平台](https://github.com/microsoft/retina)
+    > 微软开源的基于 eBPF 的云原生容器网络可观测性平台。它提供了一个集中查看、监控、分析应用和网络运行状况的中心平台，能够将收集的网络可观测性数据发送到 Prometheus 进行可视化，适用于调试 Pod 无法互连的问题、监控网络健康状况、收集遥测数据等场景。
 
 - [像tcpdump那样管理](https://github.com/up9inc/mizu)
 
@@ -2286,3 +2509,7 @@ curl https://argocd.kubernets.cn -I
 - [gvistor](https://mp.weixin.qq.com/s?src=11&timestamp=1613136113&ver=2886&signature=6e*T4ylvJCA--fGa-tb*ttJq3JArF7z-Wzs5eAPzlY813SG154AK1YyEgLv2MQSi7BUW8muQyHQnOl3arAu2m9qK8bCk2fgGLOv4-VYvAyWDfMUcBrvB8oZ9csaoQ-aI&new=1)
 
 - [Docker and Kubernetes 完整开发指南](https://www.bilibili.com/read/cv21266100)
+
+# 未读
+
+- [崔亮的博客：k8s学习笔记](https://m.cuiliangblog.cn/catalog/1939058)

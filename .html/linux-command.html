@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<title>linux-command</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">常用命令</a>
+<ul>
+<li><a href=".html">file (文件操作)</a>
+<ul>
+<li><a href=".html">create file</a></li>
+<li><a href=".html">paste(合并文件列)</a></li>
+<li><a href=".html">diff,patch 使用</a></li>
+<li><a href=".html">make</a>
+<ul>
+<li><a href=".html">Note: 每行命令之前必须有一个 tab 键,不然会报错</a></li>
+<li><a href=".html">Note: 需要注意的是，每行命令在一个单独的 shell 中执行。这些 Shell 之间没有继承关系。(make var-lost），取不到 foo 的值。因为两行命令在两个不同的进程执行。一个解决办法是将两行命令写在一行，中间用分号分隔。</a></li>
+<li><a href=".html">checkmake检查makefile</a></li>
+</ul>
+</li>
+<li><a href=".html">lsof</a></li>
+<li><a href=".html">rsync</a>
+<ul>
+<li><a href=".html">UDR模式</a></li>
+</ul>
+</li>
+<li><a href=".html">scp</a></li>
+<li><a href=".html">split</a></li>
+<li><a href=".html">fsarchiver</a></li>
+<li><a href=".html">find</a></li>
+<li><a href=".html">fselect: sql语句的ls</a></li>
+<li><a href=".html">locate:定位文件</a></li>
+<li><a href=".html">shred：安全地抹去磁盘数据。代替rm</a></li>
+</ul>
+</li>
+<li><a href=".html">char (字符串操作)</a>
+<ul>
+<li><a href=".html">column</a></li>
+<li><a href=".html">tr</a></li>
+<li><a href=".html">cut</a></li>
+<li><a href=".html">sed</a></li>
+<li><a href=".html">awk</a></li>
+<li><a href=".html">tac(反转行)</a></li>
+<li><a href=".html">paste</a></li>
+<li><a href=".html">perl5</a></li>
+<li><a href=".html">perl6(Raku)</a>
+<ul>
+<li><a href=".html">module</a></li>
+<li><a href=".html">个人觉得perl6中有趣的设计</a></li>
+</ul>
+</li>
+<li><a href=".html">shred：安全删除文件</a></li>
+<li><a href=".html">加密文件</a></li>
+</ul>
+</li>
+<li><a href=".html">other</a>
+<ul>
+<li><a href=".html">xargs</a></li>
+<li><a href=".html">date</a></li>
+<li><a href=".html">fuser</a></li>
+<li><a href=".html">列出子目录的大小，并计总大小</a></li>
+<li><a href=".html">openssl</a></li>
+<li><a href=".html">gnuplot</a></li>
+<li><a href=".html">shellcheck</a></li>
+<li><a href=".html">pandoc 文档转换</a></li>
+<li><a href=".html">jobs, fg, bg, nohup, disown, reptyr</a></li>
+</ul>
+</li>
+<li><a href=".html">expect交互</a></li>
+<li><a href=".html">调整分区大小</a></li>
+<li><a href=".html">mdadm(RAID)</a>
+<ul>
+<li><a href=".html">创建 RAID5</a></li>
+<li><a href=".html">创建 RAID5,并设置备份磁盘</a></li>
+<li><a href=".html">保存配置文件</a></li>
+<li><a href=".html">性能测试</a></li>
+<li><a href=".html">硬盘装载</a></li>
+<li><a href=".html">卸载 RAID</a></li>
+</ul>
+</li>
+<li><a href=".html">视频/图片</a>
+<ul>
+<li><a href=".html">ffmpeg</a>
+<ul>
+<li><a href=".html">-vf视频过滤器</a></li>
+<li><a href=".html">音频操作</a></li>
+<li><a href=".html">图片操作</a></li>
+<li><a href=".html">录屏</a></li>
+<li><a href=".html">plotbitrate</a></li>
+</ul>
+</li>
+<li><a href=".html">gif</a>
+<ul>
+<li><a href=".html">gifview</a></li>
+<li><a href=".html">gifdiff</a></li>
+<li><a href=".html">convert(gif制作)</a></li>
+<li><a href=".html">gifsicle:gif工具支持压缩、合并、编辑帧、减少帧</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">reference</a></li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>常用命令</h1>
+<h2>file (文件操作)</h2>
+<h3>create file</h3>
+<pre><code class="language-bash"># 对于多行内容,比普通重定向更方便
+cat &gt; FILE &lt;&lt; EOF
+# 内容
+EOF
+</code></pre>
+<h3>paste(合并文件列)</h3>
+<pre><code class="language-bash">cat file
+A
+A1
+A2
+
+cat file1
+B
+B1
+B2
+
+paste file file1
+A B
+A1 B1
+A2 B2
+</code></pre>
+<h3>diff,patch 使用</h3>
+<blockquote>
+<pre><code class="language-bash"># new文件比last文件多一行”2“
+cat last
+1
+
+cat new
+1
+2
+</code></pre>
+</blockquote>
+<pre><code class="language-bash"># 生产补丁
+diff -Naur last new &gt; new.diff
+
+# 给last打上补丁后,和new一样
+patch last &lt; new.diff
+
+cat last
+1
+2
+</code></pre>
+<pre><code class="language-bash"># 撤销补丁last文件变回原样
+patch -R last &lt; new.diff
+
+cat last
+1
+</code></pre>
+<h3>make</h3>
+<p>make 默认根据<code>makefile</code>文件,进行构建
+也可以使用<code>make -f RULE</code> 来指定文件</p>
+<h4>Note: 每行命令之前必须有一个 tab 键,不然会报错</h4>
+<pre><code class="language-bash">make source.txt
+# output
+makefile:4: *** 缺失分隔符。 停止。
+</code></pre>
+<p>如果想用其他键，可以用内置变量<code>.RECIPEPREFIX</code>声明。</p>
+<h4>Note: 需要注意的是，每行命令在一个单独的 shell 中执行。这些 Shell 之间没有继承关系。(make var-lost），取不到 foo 的值。因为两行命令在两个不同的进程执行。一个解决办法是将两行命令写在一行，中间用分号分隔。</h4>
+<pre><code class="language-bash"># 使用&quot;&gt;&quot;代替&lt;tab&gt;健
+.RECIPEPREFIX = &gt;
+all:
+&gt; echo Hello, world
+var-kept:
+    export foo=bar; echo &quot;foo=[$$foo]&quot;
+</code></pre>
+<h4><a href="https://github.com/mrtazz/checkmake">checkmake检查makefile</a></h4>
+<h3>lsof</h3>
+<p>列出那些文件被使用</p>
+<pre><code class="language-bash">lsof
+
+#列出正在被监听的端口
+lsof -i
+
+# 指定程序mysql
+lsof -c mysql
+
+# 指定pid
+lsof -p 7148
+</code></pre>
+<h3>rsync</h3>
+<p><a href="https://coolshell.cn/articles/7425.html">RSYNC 的核心算法</a></p>
+<ul>
+<li>
+<p><a href="https://michael.stapelberg.ch/posts/2022-06-18-rsync-overview/">How does rsync work?</a></p>
+</li>
+<li>
+<p><code>-r</code> 递归</p>
+</li>
+<li>
+<p><code>-a</code> 可代替-r，并且同步修改时间，权限等</p>
+</li>
+<li>
+<p><code>-n</code> 模拟结果</p>
+</li>
+<li>
+<p><code>-v</code> 输出</p>
+</li>
+<li>
+<p><code>--delete</code> 删除目标目录，不存在于源目录的文件</p>
+</li>
+<li>
+<p><code>--exclude</code> 排除文件</p>
+</li>
+<li>
+<p><code>--include</code> 只同步指定文件，往往与--exclude 结合使用</p>
+</li>
+<li>
+<p><code>--link-dest</code> 增量备份</p>
+</li>
+</ul>
+<pre><code class="language-bash">rsync -av SOURCE DESTINATION
+
+# 远程ssh push pull
+rsync -av .zshrc root@192.168.100.208:/root
+
+# 删除只存在于目标目录、不存在于源目录的文件。
+rsync -av --delete source/ destination
+
+# 排除txt以外所有文件
+rsync -av --include=&quot;*.txt&quot; --exclude='*' source/ destination
+</code></pre>
+<p>增量备份，对比基准和源，差异的文件同步到 target，相同的文件以<strong>硬链接</strong>的同步到 target
+<code>rsync -a --delete --link-dest /compare /source /target</code></p>
+<pre><code class="language-bash"># 先同步
+rsync -av /source /target
+
+# 增量备份
+rsync -a --delete --link-dest /compare /source /target
+</code></pre>
+<ul>
+<li>
+<p>daemon模式运行</p>
+<ul>
+<li>
+<p>rsync可以通过rsh或ssh，也能以daemon模式去运行，在以daemon方式运行时rsync server会打开一个873端口，等待客户端去连接。</p>
+</li>
+<li>
+<p>配置文件：<code>/etc/rsyncd.conf</code></p>
+</li>
+</ul>
+<pre><code class="language-sh">uid = nobody
+gid = nobody
+use chroot = yes
+max connections = 4
+syslog facility = local5
+pid file = /run/rsyncd.pid
+
+[rsynctest]
+        path = /tmp/rsynctest
+        read only = no
+</code></pre>
+<pre><code class="language-sh"># 不要忘记创建共享目录
+mkdir /tmp/rsynctest
+
+# 从/tmp/rsynctest sync到 /tmp/test
+rsync --archive rsync://127.0.0.1/rsynctest /tmp/test
+</code></pre>
+</li>
+<li>
+<p><a href="https://github.com/wsgzao/sersync">rsync+inotify-tools</a></p>
+</li>
+</ul>
+<h4>UDR模式</h4>
+<ul>
+<li>
+<p><a href="https://github.com/allisonheath/UDR">UDR</a></p>
+</li>
+<li>
+<p>测试对比</p>
+<ul>
+<li>1.在稳定的内网网络环境（同网段）用两种不同的传输方式多次进行了对比，udr方式和常规的rsync方式速度基本相当。</li>
+<li>2.在内网网络环境（跨网段、跨机房）用两种不同的传输方式多次进行了对比，udr方式要明显快于常规的rsync方式，传输大小为1G的文件进行对比：</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-sh"># 下载udr并编译
+git clone https://github.com/allisonheath/UDR.git
+cd UDR
+make -e os=XXX arch=YYY
+</code></pre>
+<h3>scp</h3>
+<pre><code class="language-sh"># 复制文件到/home/tz目录下
+scp file tz@192.168.1.102:/home/tz/
+# 复制目录到/home/tz目录下
+scp -r notes tz@192.168.1.102:/home/tz/
+
+# 从远程主机复制文件到本机
+scp tz@192.168.1.102:file .
+# 复制不同目录的多个文件，需要使用空格分割文件
+scp tz@192.168.1.102:'/path/file1 /path2/file2 /path3/file3' .
+
+# 在两个远程主机之间复制文件
+scp root@192.168.1.102:file root@127.0.0.1:24831:
+
+# 指定端口
+scp -P 22 file tz@192.168.1.102:/home/tz/
+# 保留文件原属性
+scp -p file tz@192.168.1.102:/home/tz/
+# 输出debug信息
+scp -v file tz@192.168.1.102:/home/tz/
+# 静默复制
+scp -q file tz@192.168.1.102:/home/tz/
+# 指定加密算法
+scp -c 3des file tz@192.168.1.102:/home/tz/
+# 限制传输速度为50kb/s。 需要记住的一点是，带宽是以千比特/秒(kbps)指定的。这意味着8位等于1字节
+scp -l 400 file tz@192.168.1.102:/home/tz/
+</code></pre>
+<h3>split</h3>
+<pre><code class="language-bash"># -b 二进制文件,按100M 进行拆分
+split -b 100M &lt;file&gt;
+
+# -C 文本文件,按100M 进行拆分
+split -C 100M &lt;file&gt;
+</code></pre>
+<h3>fsarchiver</h3>
+<pre><code class="language-bash">fsarchiver savefs -z1 -j12 -v /path/to/backup_image.fsa /dev/sda1
+</code></pre>
+<h3>find</h3>
+<pre><code class="language-bash"># 将BBB目录,改为AAA目录
+for file in $(find . -type d -name &quot;BBB&quot;); do
+    mv $file $(echo &quot;$file&quot; | sed &quot;s/BBB/AAA/&quot;);
+done
+
+# 将AAA目录,改为BBB目录
+for file in $(find . -type d -name &quot;AAA&quot;); do
+    mv $file $(dirname $file)/BBB
+done
+
+# 或者
+find . -type d -name AAA -exec sh -c 'mv &quot;$0&quot; $(dirname &quot;$0&quot;)/BBB' {} \;
+
+# 查找硬链接
+find / -samefile /target/file
+
+# -regex正则表达式(不支持pcre)
+find . -regex &quot;.*python.*&quot;
+
+# \! -name 排除.gz的文件
+find . \! -name &quot;*.gz&quot;
+
+# -print0 删除换行符, 将字符串连在一起
+find . -print0
+
+# 通过inode查找文件
+# 很慢
+sudo find -inum 1183045
+# 上一条命令快
+sudo debugfs -R 'ncheck 1183045' /dev/nvme0n1p3
+</code></pre>
+<h3><a href="https://github.com/jhspetersson/fselect">fselect: sql语句的ls</a></h3>
+<blockquote>
+<p>实现以列为单位的ls(面向对象)</p>
+</blockquote>
+<ul>
+<li>默认会递归目录</li>
+</ul>
+<pre><code class="language-sh"># 显示当前目录文件的size, path
+fselect size, path from .
+
+# 显示当前目录文件和/tmp目录
+fselect size, path from ., /tmp
+
+# 显示压缩文件内的文件
+fselect size, path from . archives
+
+# 递归软连接
+fselect size, path from . symlinks
+
+# 搜索长宽相等的图片
+fselect path from . where width = height
+
+# 只显示前10个
+fselect size, path from . limit 10
+
+# 不递归目录
+fselect size, path from . depth 1
+
+# 只显示目录深度2到5的文件
+fselect size, path from . mindepth 2 depth 5
+
+# order by 排序
+fselect size, path from . order by size
+fselect size, path from . order by size desc
+
+fselect modified, fsize, path from . order by 1 desc, 3
+
+
+# 统计size
+fselect &quot;MIN(size), MAX(size), AVG(size), SUM(size), COUNT(*) from .&quot;
+</code></pre>
+<ul>
+<li>输出文件</li>
+</ul>
+<pre><code class="language-sh">fselect size, path from . into json
+fselect size, path from . into html
+fselect size, path from . into csv
+</code></pre>
+<ul>
+<li>where</li>
+</ul>
+<pre><code class="language-sh"># size 大于1M的文件
+fselect size, path from . where size gt 1M
+
+# hsize 自动转换单位, 查找大于1M的png文件
+fselect hsize, path from . where name = '*.png' and size gt 1M
+
+# 查找大于1M的png文件, 小于1M的jpg文件
+fselect &quot;hsize, path from . where (name = '*.png' and size gt 1M) or (name = '*.jpg' and size lt 1M)&quot;
+
+# =~ 正则表达式(支持pcre), 查找路径包含python的文件.
+# 类似于find . -regex &quot;.*python.*&quot;
+fselect name from . where path =~ '.*python.*'
+</code></pre>
+<ul>
+<li>
+<p>文件类型:</p>
+<ul>
+<li><code>is_archive</code></li>
+<li><code>is_audio</code></li>
+<li><code>is_book</code></li>
+<li><code>is_doc</code></li>
+<li><code>is_image</code></li>
+<li><code>is_video</code></li>
+</ul>
+</li>
+<li>
+<p>特殊文件:</p>
+<ul>
+<li><code>suid</code></li>
+<li><code>is_pipe</code></li>
+<li><code>is_socket</code></li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-sh"># 只搜索图片
+fselect path from . where is_image = true
+</code></pre>
+<ul>
+<li>
+<p>权限:</p>
+<ul>
+<li><code>other_all</code></li>
+<li><code>other_read</code></li>
+<li><code>other_write</code></li>
+<li><code>other_exec</code></li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-sh"># 搜索权限包含w, x的文件
+fselect mode, path from . where other_write = true or other_exec = true
+</code></pre>
+<ul>
+<li>时间相关</li>
+</ul>
+<pre><code class="language-py"># 今天创建的文件
+fselect path from . where created = today
+
+# 昨天访问过的文件
+fselect path from . where accessed = yesterday
+
+# 2021-04-20以来修改过的文件.时分秒
+fselect path from . where modified gt 2021-04-20
+fselect path from . where modified gt '2021-04-20 18:10'
+fselect path from . where modified gt '2021-04-20 18:10:30'
+</code></pre>
+<h3>locate:定位文件</h3>
+<pre><code class="language-sh">sudo updatedb
+</code></pre>
+<h3>shred：安全地抹去磁盘数据。代替rm</h3>
+<ul>
+<li>
+<p><code>rm</code>命令或者文件管理器删除文件只是删除指向文件系统的指针（inode），所以原始数据仍可以使用</p>
+</li>
+<li>
+<p><code>shred</code> 是 Linux 软件包 <code>coreutils</code> 的一部分</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 默认情况下，shred 会执行三次，在执行的时候，它会将伪随机数据写入设备。
+shred -v /dev/sdb
+
+# 但是执行三次所需的时间太长了，我们可以通过 -n 来设置执行次数
+shred -v -n 1 /dev/sdb
+
+# 使用随机生成的数据覆盖磁盘
+shred -v -n 1 --random-source=/dev/urandom /dev/sdb
+</code></pre>
+<h2>char (字符串操作)</h2>
+<h3>column</h3>
+<p>网格排版</p>
+<h3>tr</h3>
+<p>所有操作，以<strong>字符</strong>为单位</p>
+<pre><code class="language-bash"># 删除换行符
+cat FILE | tr -d '\n'
+
+# 空格换成换行符
+cat FILE |tr '\040' '\n'
+cat FILE |tr ' ' '\n'
+
+# 换成大写
+cat FILE | tr '[a-z]' '[A-Z]'
+
+# 只保留小写
+cat FILE | tr -dc a-z
+
+# 只保留英文和数字
+cat &lt; /dev/urandom | tr -dc a-zA-Z0-9
+</code></pre>
+<h3>cut</h3>
+<pre><code class="language-bash"># 保留前5个字符
+cut -c -5 file
+
+# 保留前5个字符和7到10个字符
+cut -c -5,7-10 file
+
+# 不保留第6和11个字符
+cut -c -5,7-10,12- file
+
+# 以:为分格式符,打印第二列
+cut -d: -f2
+</code></pre>
+<h3>sed</h3>
+<ul>
+<li><a href="https://github.com/adrianscheff/useful-sed">useful-sed</a></li>
+</ul>
+<p>所有操作，以<strong>行</strong>为单位
+| 参数 | 操作 |
+| ---- | ---- |
+| p | 打印 |
+| d | 删除 |
+| a | 添加 |
+| i | 插入 |
+| c | 替换 |</p>
+<pre><code class="language-bash"># 打印1到5行
+sed -n '1,5p' FILE
+# 打印从5行到结尾
+sed -n '5,$p' FILE
+# 打印除了第 5 到 10 之间的所有行
+sed -n -e '5,10!p' inputfile
+
+# 删除带有&quot;192.168.100.1&quot;的行
+sed -i '/192.168.100.1/d' FILE
+
+# 删除第1行
+sed -i '1d' FILE
+
+# 在第1行插入newline
+sed -i '1inewline' FILE
+
+# 在第1行替换成newline
+sed -i '1cnewline' FILE
+
+# 在第1行结尾添加newline
+sed -i '1anewline' FILE
+
+# 在每1行结尾添加newline
+sed -i '1,$anewline' FILE
+
+# 将包含123的所有行,替换成321
+sed -i &quot;/123/c321&quot; FILE
+
+# 将第1个a替换成b 类似vim的替换
+sed -i 's/a/b/'  FILE
+# 将文件内所有a替换成b
+sed -i 's/a/b/g'  FILE
+
+# 将.webp)为末尾的字符，改为.avif。注意.avif末尾不需要加$
+sed -i 's/.webp)$/.avif)/g'
+
+# 打印第一行和匹配 nginx
+ps aux | sed '1p;/nginx/!d'
+
+# pm和am替换为中文
+date +%H:%M:%S:%P | sed -e 's/pm/下午/g' -e's/am/上午/g'
+
+# 替换当前目录下（包含子目录）的所有文件
+find . -type f -exec sed -i 's/a/b/g' {} +
+</code></pre>
+<pre><code class="language-sh"># 当前目录下的以.webp)等为末尾的字符，改为.avif。注意.avif末尾不需要加$
+for file in *;do
+    if [ -f $file ];then
+        sed -i 's/.png)$/.avif)/g' $file
+        sed -i 's/.jpg)$/.avif)/g' $file
+        sed -i 's/.jpeg)$/.avif)/g' $file
+        sed -i 's/.webp)$/.avif)/g' $file
+    fi
+done
+</code></pre>
+<h3>awk</h3>
+<ul>
+<li><a href="https://awk.readthedocs.io/en/latest/index.html">awk 中文指南</a></li>
+</ul>
+<blockquote>
+<p>可以代替 grep,sed</p>
+</blockquote>
+<ul>
+<li><code>OFS</code> 设置列之间的分隔符</li>
+<li><code>$NF</code> 最后 1 列</li>
+<li><code>$NR</code> 行数</li>
+<li><code>$0</code> 所有行</li>
+<li><code>-F&quot;:&quot;</code> 设置分隔符,默认是空格</li>
+<li><code>-v</code> 定义变量</li>
+</ul>
+<p><code>print</code> 内的操作为<strong>列</strong></p>
+<pre><code class="language-bash">ll &gt; FILE
+
+# 打印行数(类似于wc -l)
+awk 'END { print NR;}' FILE
+
+# 在开头显示行数(类似于cat -n)
+awk '$0 = NR&quot; &quot;$0' FILE
+
+# 在开头复制第一列
+awk '$0 = $1&quot; &quot;$0' FILE
+
+# 打印第1列
+awk '{print $1}' FILE
+
+# 打印第1,5,和最后1列
+awk '{print $1,$5,$NF}' FILE
+
+# 打印前五行
+awk 'NR &lt;= 5' FILE
+
+# 打印第5行的,第1,5,和最后1列
+awk 'NR == 5 {print $1,$5,$NF}' FILE
+
+# 打印基数行
+awk 'NR%2' FILE
+
+# 打印偶数行
+awk 'NR%2 == 0' FILE
+
+# 打印,除了最后一列
+awk 'NF--' FILE
+
+# 不打印重复行
+awk '!a[$0]++'
+
+# 以:为分隔符，打印第3列大于1000的行
+awk -F &quot;:&quot; '$3 &gt;= 1000' /etc/passwd
+
+# 以:为分隔符，打印第3列大于1000和小于100的行
+awk -F &quot;:&quot; '$3 &gt;= 1000 || $3 &lt;=100' /etc/passwd
+
+# 以:为分隔符，打印第3列大于500,小于1000的行
+awk -F &quot;:&quot; '$3 &gt;= 500 &amp;&amp; $3 &lt;=1000' /etc/passwd
+
+# 以:为分隔符，打印第3列等于1000
+awk -F &quot;:&quot; '$3 ==1000' /etc/passwd
+
+# 以:为分隔符，打印第3列不等于1000
+awk -F &quot;:&quot; '$3 !=1000' /etc/passwd
+
+# 设置列之间的分隔符为#
+awk -F &quot;:&quot; '{OFS=&quot;#&quot;} {print $1,$2,$3,$NF}' /etc/passwd
+
+# 设置列之间的分隔符为#,打印第3列大于1000的行
+awk -F &quot;:&quot; '{OFS=&quot;#&quot;} $3 &gt;= 1000 {print $1,$2,$3,$NF}' /etc/passwd
+awk -F &quot;:&quot; '{OFS=&quot;#&quot;} {if ($3 &gt;= 1000) print $1,$2,$3,$NF}' /etc/passwd
+
+# 设置列之间的分隔符为#,打印第3列大于1000的行和第一行
+awk -F &quot;:&quot; '{OFS=&quot;#&quot;} NR == 1 || $3 &gt;= 1000 {print $1,$2,$3,$NF}' /etc/passwd
+
+# 打印有apk的行的第二列(增强版grep)
+awk '/apk/ { print $2}' FILE
+
+# 打印有apk的行的倒数第3行和最后一行
+awk '/apk/ {print $(NF-4),$NF}' FILE
+
+# 第一列与第一列交换
+awk '{ print $2&quot;=&quot;$1}' FILE
+
+# 打印行号加所有行(类似于cat -n)
+awk '{ print NR&quot; &quot;$0}' FILE
+
+# 打印第一行和匹配 nginx
+ps aux | awk 'NR==1 || /nginx/'
+
+# 打印第一行和匹配 从 nginx 到 vim
+ps aux | awk '/nginx/,/vim/'
+
+# 打印第一列,不等于0的值
+awk '$1 != 0' FILE
+
+# 将第一列的值相加
+awk '{sum += $1} END {print sum}' FILE
+
+awk -v a=&quot;$i&quot; 'NR == a  {sub(/hello/,&quot;tz&quot;)}1' test |head
+# 只打印第一列的值等于100
+awk '$1==&quot;100&quot; {print $0}' FILE
+
+# 匹配第一列的值等于100,匹配第二列以a开头e结尾的行,然后只打印第三列
+awk '$1==&quot;100&quot; &amp;&amp; $2 ~ /^a.*e$/ {print $3}' FILE
+
+# root替换tz(类似sed),只是打印,并不会修改文件
+awk '{sub(/root/,&quot;tz&quot;)}1' FILE
+
+# 通过变量指定行,再进行替换
+i=2
+awk -v a=&quot;$i&quot; 'NR == a  {sub(/root/,&quot;tz&quot;)}1' FILE
+
+# 所有字符都余2
+awk 'ORS=NR%2' FILE
+
+awk -v a=&quot;$var1&quot; -v b=&quot;$var2&quot; 'BEGIN {print a,b}'
+
+# 找出当前系统中 swap 占用最大的几个进程，并列出它们的进程号、进程名和 swap  大小。
+# awk 命令用于匹配 VmSwap、Name 或者 Pid 这几个关键字，并输出它们的值。END{ print &quot;&quot;}是末尾加上换行符。
+# sort -k 3 -n -r：对输出的结果进行排序。-k 3 表示按第三列进行排序，即按照交换空间大小排序；-n 表示按照数字顺序排序；-r 表示逆序排序，即从大到小排序。
+for file in /proc/*/status;
+    do awk '/VmSwap|Name|^Pid/{printf $2 &quot; &quot; $3}END{ print &quot;&quot;}' $file;
+done | sort -k 3 -n -r | head
+</code></pre>
+<ul>
+<li>
+<p><a href="https://earthly.dev/blog/awk-examples/">Understanding AWK</a></p>
+</li>
+<li>
+<p><a href="https://backreference.org/2010/02/10/idiomatic-awk/">awk 教程</a></p>
+</li>
+</ul>
+<h3>tac(反转行)</h3>
+<pre><code class="language-sh">ls | tac
+</code></pre>
+<h3>paste</h3>
+<ul>
+<li>分成多少列</li>
+</ul>
+<pre><code class="language-sh"># 分成两列
+ls | paste - -
+
+# 分成三列, 以此类推
+ls | paste - - -
+
+# 将多个文件，以新增1列的方式，合并为一个文件
+paste file1 file2
+</code></pre>
+<h3>perl5</h3>
+<ul>
+<li><a href="https://learnbyexample.github.io/learn_perl_oneliners/cover.html">learn_perl_oneliners</a></li>
+</ul>
+<p>| 参数 | 操作             |
+| ---- | ---------------- |
+| -e   | 程序接在命令后面 |
+| -i   | 写入文件         |
+| -p   | 匹配每一行       |
+| -w   | 输出报错信息     |</p>
+<pre><code class="language-bash">ll &gt; test
+
+# grep tz test
+perl -ne 'print if /tz/' test
+
+# sed 's/root/tz/g' test
+perl -pe 's/root/tz/g' test
+
+# sed -i 's/root/tz/g' test
+perl -pie 's/root/tz/g' test
+
+# awk '{print $2}' test
+perl -lane 'print $F[1]' test
+
+# awk '{print $1,$3,$4,$5,$6}' test
+perl -lane 'print @F[0,2..5]' test
+</code></pre>
+<h3>perl6(Raku)</h3>
+<ul>
+<li>
+<p><a href="https://raku.guide/zh/">Raku 入门</a></p>
+</li>
+<li>
+<p><a href="https://github.com/dnmfarrell/Perl6-One-Liners">Perl6-One-Liners</a></p>
+</li>
+</ul>
+<p>| 参数 | 操作               |
+|------|--------------------|
+| -e   | 执行               |
+| -n   | 行操作             |
+| -p   | -n参数并自动打印$_ |
+| -M   | 加载模块           |</p>
+<ul>
+<li>
+<p><code>$_</code> 默认变量</p>
+</li>
+<li>
+<p><code>.say</code>($_.say) 打印</p>
+</li>
+<li>
+<p><code>.uc</code> 转换大写</p>
+</li>
+</ul>
+<pre><code class="language-sh">ll &gt; test
+
+cat &gt; /tmp/file &lt;&lt; 'EOF'
+1 2 3 4
+
+3 2
+1
+EOF
+</code></pre>
+<pre><code class="language-sh"># .uc 转换大写
+perl6 -ne 'say .uc' test
+perl6 -ne '.uc.say' test
+perl6 -pe '$_ = $_.uc' test
+perl6 -pe '.=uc' test
+perl6 -pe .=uc test
+
+# 首字符大写
+perl6 -pe .=wordcase test
+
+# 统计每行字符数量
+perl6 -pe .=chars.say test
+
+# 翻转行
+perl6 -pe .=flip /tmp/test
+</code></pre>
+<ul>
+<li>添加修改字符</li>
+</ul>
+<pre><code class="language-sh"># say 复制每行
+perl6 -pe 'say $_' test
+
+# 插入新一行字符
+perl6 -pe 'say next line' test
+
+# 插入尾部字符
+perl6 -pe '$_ ~= &quot; end line&quot;' test
+
+# 添加4个换行符
+perl6 -pe '$_ ~= &quot;\n&quot; x 4' test
+
+# sed 's/root/tz/g' test
+perl6 -pe 's:g/root/tz/' test
+
+# 替换开头字符是d的
+perl6 -pe 's:g/root/tz/ if /^d/' test
+
+# sed -i 's/root/tz/g' test
+</code></pre>
+<ul>
+<li>过滤筛选</li>
+</ul>
+<pre><code class="language-sh"># 只要第2行
+perl6 -ne '.print if ++$ == 2' test
+# 不要第2行
+perl6 -pe 'next if ++$ == 2' test
+
+# 单数行
+perl6 -ne '.say if ++$ !%% 2' test
+# 双数行
+perl6 -ne '.say if ++$ %% 2' test
+
+# 去除重复行
+perl6 -ne 'state %l;.say if ++%l{$_}==1'
+
+# grep root test
+perl6 -ne '.say if /root/' test
+
+# awk '{print $1}' test
+perl6 -ne '.words[0].say' test
+
+perl6 -ne '.words[0..5].say' test
+</code></pre>
+<ul>
+<li>运算</li>
+</ul>
+<pre><code class="language-sh"># 统计带有root的行
+perl6 -e 'say lines.grep(/root/).elems' test
+
+# 乘法
+perl6 -e 'say [*] 1..5'
+
+# 行相加
+perl6 -ne'say [+] .split(&quot; &quot;)' file
+</code></pre>
+<ul>
+<li>生成器</li>
+</ul>
+<pre><code class="language-sh"># a-z
+perl6 -e '.say for &quot;a&quot;..&quot;z&quot;'
+
+# aa - zz
+perl6 -e '.say for &quot;a&quot;..&quot;zz&quot;'
+
+# a-z 一行
+perl6 -e 'print  &quot;a&quot;..&quot;z&quot;'
+
+# 随机10个a-z字符 一行
+perl6 -e 'print roll 10, &quot;a&quot;..&quot;z&quot;'
+
+# 运算符
+perl6 -e 'print &quot;a&quot; x 50'
+</code></pre>
+<h4>module</h4>
+<ul>
+<li><a href="https://github.com/raku-community-modules/URI-Encode">URI-Encode</a>
+<blockquote>
+<p>转换为uri字符</p>
+</blockquote>
+</li>
+</ul>
+<pre><code class="language-sh">perl6 -M URI::Encode -e 'say encode_uri(&quot;/10 ways to crush it with Perl 6&quot;)'
+</code></pre>
+<h4>个人觉得perl6中有趣的设计</h4>
+<ul>
+<li>函数管道</li>
+</ul>
+<pre><code class="language-perl6">my @array = &lt;7 8 9 0 1 2 4 3 5 6&gt;;
+@array ==&gt; unique()
+       ==&gt; sort()
+       ==&gt; reverse()
+       ==&gt; my @final-array;
+say @final-array;
+</code></pre>
+<ul>
+<li>归约运算符</li>
+</ul>
+<pre><code class="language-perl6">[+] 0,1,2,3,4,5
+
+[+] 0..5
+
+[+] ^6
+</code></pre>
+<h3>shred：安全删除文件</h3>
+<pre><code class="language-sh"># 默认是覆盖3次，每次产生随机数据。
+shred file.txt
+
+# 指定次数为5次
+shred -n 5 file.txt
+
+# 确保文件的目录项也被删除，这样文件就不会存在于文件系统的快照或备份中。
+shred -u file.txt
+</code></pre>
+<h3>加密文件</h3>
+<pre><code class="language-sh"># 生成新的加密文件
+gpg -c --cipher-algo aes256 file
+
+# 解密
+gpg -d file
+</code></pre>
+<h2>other</h2>
+<h3>xargs</h3>
+<ul>
+<li>
+<p><code>xargs</code> 默认为 <code>xrags echo</code></p>
+</li>
+<li>
+<p><code>xargs</code> 不能运行内置命令(shell builtin)如cd命令</p>
+</li>
+</ul>
+<pre><code class="language-bash"># -Iz 执行10次echo 1,可以换成其他命令
+seq 10 | xargs -Iz echo 1
+
+# -n 分段
+seq 10 | xargs -n 3
+
+# ls -l 查看当前所有目录
+find . -type d | xargs ls -l
+
+# 打包压缩当前所有目录
+find . -type d | xargs tar cjf test.tar.gz
+find . -type d | xargs tar cjf {}.tar.gz
+
+# 创建a,b,c目录(注意这里c为c\n)
+echo 'a b c' | xargs mkdir
+
+# -p 创建a,b,c目录, 需要确认y or n
+echo 'a b c' | xargs mkdir
+
+# -d 分隔符
+echo 'axbxc' | xargs -d 'x' mkdir
+
+# -t 一行参数(rm -d a b c)
+echo 'a b c ' | xargs -t rm -d
+
+# -L 指定参数数量
+echo www.baidu.com &gt; ip
+echo www.qq.com &gt;&gt; ip
+cat ip | xargs -L 1 ping -c 1
+
+# --max-procs 表示进程数量. 如果是0, 则不限制进程
+cat ip | xargs --max-procs 2 -L 1 ping -c 1
+cat ip | xargs --max-procs 0 -L 1 ping -c 1
+
+# -I 设置变量, 再传递shell
+cat ip | xargs -I host sh -c &quot;ping -c 1 host; curl host&quot;
+</code></pre>
+<ul>
+<li>并发</li>
+</ul>
+<pre><code class="language-sh"># -P 12个核心
+find . -name '*' | xargs -P 12 file
+# -n 每个核的处理10个任务
+find . -name '*' | xargs -P 12 -n 10 file
+</code></pre>
+<h3>date</h3>
+<pre><code class="language-bash"># 年月日
+date +%Y-%m-%d
+# 2020-11-27
+
+# 时分秒
+date +%H:%M:%S
+# 11:50:47
+
+# 年月日 时分秒
+date +&quot;%Y-%m-%d %H:%M:%S&quot;
+# 2020-11-27 11:50:04
+
+# pm和am替换中文
+date +%H:%M:%S:%P | sed -e 's/pm/下午/g' -e's/am/上午/g'
+
+#or
+date +&quot;%Y年%m月%d日 %H时%M分%S秒&quot;
+# 2020年11月27日 11时51分56秒
+
+# timestamp
+date +%s
+</code></pre>
+<h3>fuser</h3>
+<pre><code class="language-bash">
+# 查看当前分区谁在使用
+fuser -vm .
+
+# 查看10808端口进程
+fuser -n tcp -v  10808
+</code></pre>
+<h3>列出子目录的大小，并计总大小</h3>
+<pre><code class="language-bash">du -cha --max-depth=1 . | grep -E &quot;M|G&quot; | sort -h
+</code></pre>
+<h3>openssl</h3>
+<pre><code class="language-bash"># 生成pem私钥(需要输入密码)
+openssl genrsa -aes128 -out private.pem 1024
+
+# 查看私钥信息(需要输入密码)
+openssl rsa -in private.pem -noout -text
+
+# 提取公钥(需要输入密码)
+openssl rsa -in private.pem -pubout &gt; public.pem
+
+# 查看公钥信息
+openssl rsa -in public.pem -pubin -noout -text
+
+# 生成文本
+echo 123 &gt; file
+
+# 使用公钥加密文本
+openssl rsautl -encrypt -inkey public.pem -pubin -in file -out file.enc
+
+# 使用私钥解密文本(需要输入密码)
+openssl rsautl -decrypt -inkey private.pem -in file.enc &gt; file
+</code></pre>
+<ul>
+<li>连接加密端口</li>
+</ul>
+<pre><code class="language-sh">openssl s_client -connect www.baidu.com:443
+</code></pre>
+<h3>gnuplot</h3>
+<pre><code class="language-sh"># 对文件第一列进行绘图
+plot &quot;filename&quot; using 1 w lines
+</code></pre>
+<h3><a href="https://github.com/koalaman/shellcheck">shellcheck</a></h3>
+<pre><code class="language-sh"># 测试有没有问题
+shellcheck --format=gcc test.sh
+</code></pre>
+<h3><a href="https://github.com/jgm/pandoc">pandoc 文档转换</a></h3>
+<pre><code class="language-sh"># 列出支持的文档格式
+pandoc --list-output-formats
+
+# md转word
+pandoc README.md -o README.docx
+
+# md转html
+pandoc README.md -o README.html
+
+# md转ppt
+pandoc README.md -o README.html -t revealjs -s
+
+# md转ppt 指定主题
+pandoc Resume.md -o README.html -t revealjs -s -V theme=beige
+
+# 输入不一定是文件, 可以输入url, 将html文件转换mardown
+pandoc -f html -t markdown https://www.sogou.com &gt; sogou.md
+</code></pre>
+<h3>jobs, fg, bg, nohup, disown, reptyr</h3>
+<ul>
+<li>
+<p>教程参考: <a href="https://www.bilibili.com/video/BV1pT4y1w7kc?from=search&amp;seid=17793808854272221660&amp;spm_id_from=333.337.0.0">bilibili: [高效搬砖] ssh上进程跑一半，发现忘开 tmux 了，又需要断开连接？场面一度很尴尬！reptyr来打救你</a></p>
+</li>
+<li>
+<p>test.sh</p>
+</li>
+</ul>
+<pre><code class="language-sh">#!/bin/sh
+# 每隔1秒输出当前时间
+while true;do
+    echo $(date)
+    sleep 1
+done
+</code></pre>
+<ul>
+<li>后台运行</li>
+</ul>
+<pre><code class="language-sh"># 执行test.sh
+./test.sh
+
+# 按ctrl-z, 进入后台
+&lt;c-z&gt;
+
+# 进入后台会停止运行, 使用bg命令让test.sh在后台继续运行
+bg
+</code></pre>
+<ul>
+<li>查看test.sh的pid</li>
+</ul>
+<pre><code class="language-sh">ps aux | grep test.sh
+
+# pid为112908
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+tz        112908  0.0  0.0  10480  3764 pts/2    S&lt;   10:37   0:00 /bin/sh ./test.sh
+</code></pre>
+<ul>
+<li>disown</li>
+</ul>
+<pre><code class="language-sh"># 如果退出shell, 那么后台任务test.sh也会退出. 使用disown 让即使退出shell, 后台任务也能继续运行
+disown 112908
+</code></pre>
+<ul>
+<li>reptyr</li>
+</ul>
+<pre><code class="language-sh"># 在开启新的shell, 捕抓test.sh标准输入, 输出. 旧的shell不能关闭, 不然会失败
+sudo reptyr -T 112908
+</code></pre>
+<ul>
+<li>kill命令, 终止test.sh</li>
+</ul>
+<pre><code class="language-sh">kill -9 112908
+</code></pre>
+<ul>
+<li>nohup：可以让进程忽略挂断信号（SIGHUP）。就算退出shell, 那么后台任务test.sh也不会退出</li>
+</ul>
+<pre><code class="language-sh"># 会自动将输出重定向nohup.out文件
+nohup ./test.sh &amp;
+[1] 21086
+nohup: ignoring input and appending output to 'nohup.out'
+
+# 退出shell后依然会运行
+# 开启新shell后，kill命令终止test.sh
+kill -9 21086
+</code></pre>
+<h2>expect交互</h2>
+<ul>
+<li><a href="https://xstarcd.github.io/wiki/shell/expect.html">expect - 自动交互脚本</a></li>
+</ul>
+<h2>调整分区大小</h2>
+<p>将 <code>sda1</code> 文件系统调整为 30G</p>
+<pre><code class="language-bash">e2fsck -f /dev/sda1
+resize2fs /dev/sda1 30G
+</code></pre>
+<p>最后再调整 <code>sda1</code> 的分区大小</p>
+<pre><code class="language-bash">fdisk /dev/sda
+</code></pre>
+<h2>mdadm(RAID)</h2>
+<p>| 参数 | 操作                           |
+| ---- | ------------------------------ |
+| -l   | raid 级别                      |
+| -n   | 硬盘数量                       |
+| -x   | 设置备份磁盘                   |
+| -S   | 关闭 RAID(remember umount)     |
+| -R   | enableRAID                     |
+| -D   | 查看设备信息(cat /proc/mdstat) |</p>
+<h3>创建 RAID5</h3>
+<pre><code class="language-bash">mdadm -C /dev/md0 -a yes -l 5 -n 3 /dev/sdb /dev/sdc /dev/sdd
+</code></pre>
+<h3>创建 RAID5,并设置备份磁盘</h3>
+<pre><code class="language-bash">mdadm -C /dev/md0 -a yes -l 5 -n 3 -x 1 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+</code></pre>
+<h3>保存配置文件</h3>
+<pre><code class="language-bash">mdadm -D --scan &gt; /etc/mdadm.conf
+</code></pre>
+<h3>性能测试</h3>
+<pre><code class="language-bash">root@localhost ~# hdparm -t /dev/md0
+/dev/md0:
+ Timing buffered disk reads: 1418 MB in  3.01 seconds = 471.61 MB/sec
+
+root@localhost ~# echo 3 &gt; /proc/sys/vm/drop_caches
+
+root@localhost ~# hdparm -t /dev/sda
+/dev/sda:
+ Timing buffered disk reads: 810 MB in  3.00 seconds = 269.99 MB/sec
+
+</code></pre>
+<h3>硬盘装载</h3>
+<pre><code class="language-bash"># 把sdb设置为故障
+mdadm /dev/md0 -f /dev/sdb
+
+# 移除sdb
+mdadm /dev/md0 -r /dev/sdb
+
+# 添加新的sdb
+mdadm /dev/md0 -a /dev/sdb
+</code></pre>
+<h3>卸载 RAID</h3>
+<pre><code class="language-bash">umount /dev/md0
+mdadm -S /dev/md0
+mdadm --zero-superblock /dev/sdb
+mdadm --zero-superblock /dev/sdc
+mdadm --zero-superblock /dev/sdd
+</code></pre>
+<h2>视频/图片</h2>
+<h3>ffmpeg</h3>
+<p>| 视频格式 | 视频编码器 | 音频编码器 |
+|----------|------------|------------|
+| mp4      | H.264      | aac        |
+| webm     | vp9        | Vorbis     |</p>
+<ul>
+<li>
+<p><a href="https://img.ly/blog/ultimate-guide-to-ffmpeg/">FFmpeg - The Ultimate Guide</a></p>
+</li>
+<li>
+<p><a href="https://www.ruanyifeng.com/blog/2020/01/ffmpeg.html">阮一峰:FFmpeg 视频处理入门教程</a></p>
+</li>
+<li>
+<p><a href="https://ffmpeg.xianwaizhiyin.net/cover.html">ffmpeg原理</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1AT411J7cH/?vd_source=5de14ac47d024a404772edfe5d5eb20c">奇乐编程学院视频:FFmpeg 最最强大的视频工具 (转码/压缩/剪辑/滤镜/水印/录屏/Gif/...)</a></p>
+</li>
+<li>
+<p><a href="https://evanhahn.github.io/ffmpeg-buddy/">在线工具：交互构建常用ffmpeg命令</a></p>
+</li>
+<li>
+<p><a href="https://ffmpeg.guide/">在线工具：交互构建复杂ffmpeg命令</a></p>
+</li>
+<li>
+<p>基本命令：</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 播放视频
+ffplay video.mp4
+
+# 窗口宽度为400
+ffplay -x 400 -i video.mp4
+
+# 播放音频
+ffplay audio.mp3
+
+# 显示波形图
+ffplay -showmode 1 audio.mp3
+</code></pre>
+<ul>
+<li><a href="https://cloud.tencent.com/developer/article/1840302">ffprobe的正确打开方式（三剑客之一）</a></li>
+</ul>
+<pre><code class="language-sh"># 查看视频文件信息。注意输出的视频码率是kb（是比特而不是字节），要除以8
+ffprobe file.mp4
+
+# 获取更多信息
+ffprobe -show_format file.mp4
+
+# json格式输出
+ffprobe -print_format json -show_streams file.mp4
+</code></pre>
+<ul>
+<li><a href="https://www.jianshu.com/p/f2ba8e0fd3a4">简书：ffmpeg # tbr &amp; tbn &amp; tbc</a></li>
+</ul>
+<pre><code class="language-sh"># 查看支持的格式
+ffmpeg -formats
+
+# 查看支持的编码器
+ffmpeg -codecs
+
+# ts转mp4。除了转换封装格式外，还会进行编码转换
+ffmpeg -i input.ts output.mp4
+
+# 缩放视频
+ffmpeg -i input.ts -s 1024x576 output.mp4
+
+# -c copy表示使用原来的编码器，即只转换封装格式
+ffmpeg -i input.mp4 -c copy output.mkv
+
+# -c:v指定视频编码器，-c:a指定音频编码器
+ffmpeg -i input.mp4 -c:v copy -c:a libvorbis output.mp4
+
+# 转码 -crf越低码率越高，文件更大（视频质量）。libx264是软解
+ffmpeg -i input.mp4 -c:v libx264 -crf 24 output.mp4
+# 转码av1
+ffmpeg -i input.mp4 -c:v libaom-av1 -crf 24 output.mkv
+# -preset选项可以花费更多的时间，文件更小。但对比上一个命令非常的慢，而压缩大小却没有小很多
+ffmpeg -i input.mp4 -c:v libx264 -preset veryslow -crf 24 output.mp4
+# nvdia显卡可以使用h264_nvenc硬解码（速度更快，但质量会低一些）
+ffmpeg -i input.mp4 -c:v h264_nvenc -crf 24 output.mp4
+# 使用libx265编码器
+ffmpeg -i input.mp4 -c:v libx265 -crf 24 output.mp4
+
+# 降低帧率
+ffmpeg -i input.mp4 -r 24 output.mp4
+
+# 剪切视频 -ss 开始时间 -t -to
+ffmpeg -ss 00:00:20 -i input.mp4 -t 10 -c copy output.mp4
+# -to 从00:00:20开始，录制30秒
+ffmpeg -ss 00:00:20 -i input.mp4 -to 00:00:30 -c copy output.mp4
+
+# 分割视频 前20秒为output1.mp4，20秒后为output2.mp4
+ffmpeg -i input.mp4 -to 00:00:20 output1.mp4 -ss 00:00:20 output2.mp4
+# 分割前20秒和20秒到40秒的视频
+ffmpeg -i input.mp4 -to 00:00:20 output1.mp4 -ss 00:00:20 -to 00:00:40 output2.mp4
+
+# 延迟视频3.84秒
+ffmpeg -i input.mp4 -itsoffset 3.84 -i input.mp4 -map 1:v -map 0:a -vcodec copy -acodec copy output.mp4
+
+# 延迟音频3.84秒
+ffmpeg -i input.mp4 -itsoffset 3.84 -i input.mp4 -map 0:v -map 1:a -vcodec copy -acodec copy output.mp4
+</code></pre>
+<ul>
+<li>合并:</li>
+<li><code>file.txt</code> 文件</li>
+</ul>
+<pre><code class="language-txt">file 'file1.mp4'
+file 'file2.mp4'
+</code></pre>
+<pre><code class="language-sh">outfile=new.mp4
+# 合并file.txt下的视频
+ffmpeg -f concat -safe 0 -i file.txt -c copy $outfile
+</code></pre>
+<h4>-vf视频过滤器</h4>
+<ul>
+<li>多个选项用 <code>,</code> 分隔</li>
+</ul>
+<pre><code class="language-sh"># 添加字幕
+ffmpeg -i input.mp4 -vf ass=sub.ass output.mp4
+
+# scale=修改分辨率为480p
+ffmpeg -i input.mp4 -vf scale=480:-1 output.mp4
+
+# transpose=旋转视频。0为90度逆时针并垂直旋转、1为90度顺时针、2为90度逆时针、3为90度顺时针并垂直旋转
+ffmpeg -i input.mp4 -vf &quot;transpose=1&quot; output.mp4
+# 旋转180度顺时针
+ffmpeg -i input.mp4 -vf &quot;transpose=1,transpose=1&quot; output.mp4
+
+# 旋转270度，但不改变编码
+ffmpeg -i input.mp4 -map_metadata 0 -metadata:s:v rotate=&quot;270&quot; -codec copy output.mp4
+</code></pre>
+<h4>音频操作</h4>
+<pre><code class="language-sh"># 提取音频
+ffmpeg -i input.mp4 -vn output.mp3
+
+# -ab压缩音频比特率为128
+ffmpeg -i input.mp3 -ab 128 output.mp3
+
+# 屏蔽前90秒的声音
+ffmpeg -i input.mp4 -vcodec copy -af &quot;volume=enable='lte(t,90)':volume=0&quot; output.mp4
+
+# 屏蔽80秒-90秒的声音
+ffmpeg -i input.mp4 -vcodec copy -af &quot;volume=enable='between(t,80,90)':volume=0&quot; output.mp4
+</code></pre>
+<h4>图片操作</h4>
+<pre><code class="language-sh"># 截图
+ffmpeg -ss 00:00:20 -i input.mp4 -vframes 1 output.png
+
+# 每隔1秒截一张图，-r指定1秒内多少帧（默认为25）
+ffmpeg -i input.mp4 -r 1 -f image2 image-%2d.png
+
+# 添加水印overlay表示位置
+ffmpeg -i input.mp4 -i input.png -filter_complex &quot;overlay=100:100&quot; output.mp4
+
+# 制作gif图 -ss 开始时间 -to 结束时间 -r为帧率
+ffmpeg -ss 00:00:20 -i input.mp4 -to 10 -r 10 output.gif
+# scale修改分辨率为200p
+ffmpeg -ss 00:00:20 -i input.mp4 -to 10 -r 10 -vf scale=200:-1 output.gif
+
+# 制作webp动画
+ffmpeg -ss 00:00:20 -i input.mp4 -to 10 -r 10 output.webp
+</code></pre>
+<h4>录屏</h4>
+<pre><code class="language-sh"># 录制屏幕(不录制声音)
+ffmpeg -f x11grab -s 1920x1080 -i :0.0 output.mp4
+
+# 录制摄像头
+ffmpeg -i /dev/video0 output.mp4
+
+# 录制声音
+arecord -L # 查看声卡设备
+ffmpeg -f alsa -i default:CARD=Generic output.mp3
+</code></pre>
+<h4><a href="https://github.com/zeroepoch/plotbitrate">plotbitrate</a></h4>
+<pre><code class="language-sh"># 生成不同时间段的视频码率图
+plotbitrate input.mkv
+
+# 音频码率
+plotbitrate -s audio input.mkv
+
+# 以svg图保存
+plotbitrate -o output.svg input.mkv
+</code></pre>
+<h3>gif</h3>
+<h4>gifview</h4>
+<h4>gifdiff</h4>
+<h4>convert(gif制作)</h4>
+<pre><code class="language-sh"># 合并多张gif -delay合并每张gif的第一秒
+convert -delay 1 -loop 0 *.gif output3.gif
+
+# 多张jpg合成gif
+convert -delay 10 -loop 0 *.jpg linux.gif
+</code></pre>
+<h4><a href="https://github.com/kohler/gifsicle">gifsicle:gif工具支持压缩、合并、编辑帧、减少帧</a></h4>
+<pre><code class="language-sh"># 查看每1帧的图片
+gifsicle -I input.gif
+
+# 压缩
+gifsicle input.gif -O3 -o output.gif
+
+# 提取第0帧
+gifsicle input.gif '#0' &gt; output.gif
+
+# 替换第5帧
+gifsicle -b target.gif --replace '#5' replace.gif
+</code></pre>
+<h1>reference</h1>
+<ul>
+<li><a href="https://linux.cn/article-7513-1.html">cron</a></li>
+<li><a href="https://linux.cn/article-9687-1.html">cron2</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2020/08/rsync.html">rsync</a></li>
+<li><a href="https://linux.cn/article-6578-1-rel.html">sed</a></li>
+<li><a href="https://linux.cn/article-10232-1.html">sed2</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2015/02/make.html">Make 命令教程</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MjM5NjQ4MjYwMQ==&amp;mid=2664624200&amp;idx=2&amp;sn=d1c968904c55de1875907ce49b9e46f8&amp;chksm=bdcecb0e8ab942180ca22f9ec4cb5b4c4d3e0df0d9dd6b13ff1de1e04a89ab84e724cb549a03&amp;mpshare=1&amp;scene=1&amp;srcid=1012DOi5bDFPP4geI536oQfi&amp;sharer_sharetime=1602496699415&amp;sharer_shareid=5dbb730cd6722d0343328086d9ad7dce#rd">awk 实用学习指南 | Linux 中国</a></li>
+</ul>

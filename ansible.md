@@ -19,6 +19,7 @@
     * [roles（角色）](#roles角色)
   * [ansible-galaxy](#ansible-galaxy)
     * [ansible-vault：加密yml文件](#ansible-vault加密yml文件)
+* [各种任务配置](#各种任务配置)
 * [第三方软件](#第三方软件)
 * [reference](#reference)
 
@@ -1552,6 +1553,14 @@ ansible-galaxy collection install community.general
 # 加密test.yml文件
 ansible-vault encrypt test.yml
 ```
+
+# 各种任务配置
+
+- [运维记事：Ansible日常应用场景](https://mp.weixin.qq.com/s/s1bh2xgKyTuJoooVeISYUQ)
+
+- [运维记事：如何使用Ansible完成Nginx、MySQL主从、Redis Cluster、MongoDB分片集群一键部署](https://mp.weixin.qq.com/s/-JVwFg6JlAQ6lKWDqoAuiQ)
+
+- [运维记事：如何使用Ansible完成Linux安全基线加固整改](https://mp.weixin.qq.com/s/FOyQYvVvjWm_d9eDGgfEZA)
 
 # 第三方软件
 

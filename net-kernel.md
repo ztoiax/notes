@@ -23,11 +23,20 @@
       * [websocket报文格式](#websocket报文格式)
     * [DNS](#dns)
       * [基本概念](#基本概念)
+      * [查询过程](#查询过程)
+      * [DNS 的记录类型](#dns-的记录类型)
+      * [arthurchiao：DNS 问题分析示例（2019）](#arthurchiaodns-问题分析示例2019)
+      * [HTTPDNS：代替传统的基于UDP的DNS协议，域名解析请求直接发送到HTTPDNS服务端，从而绕过运营商的DNS](#httpdns代替传统的基于udp的dns协议域名解析请求直接发送到httpdns服务端从而绕过运营商的dns)
       * [knowclub：localhost和127.0.0.1的区别](#knowclublocalhost和127001的区别)
-      * [CDN架构（Content Delivery Network）](#cdn架构content-delivery-network)
-        * [基于DNS解析](#基于dns解析)
+    * [CDN（Content Delivery Network）内容分发网络](#cdncontent-delivery-network内容分发网络)
+      * [基于DNS解析](#基于dns解析)
+      * [阿里的CDN架构Swift](#阿里的cdn架构swift)
     * [FTP](#ftp)
     * [DHCP](#dhcp)
+      * [连接过程](#连接过程)
+      * [地址分配](#地址分配)
+      * [地址冲突](#地址冲突)
+      * [地址回收](#地址回收)
     * [代理](#代理)
       * [Tachyon：漫谈各种黑科技式 DNS 技术在代理环境中的应用](#tachyon漫谈各种黑科技式-dns-技术在代理环境中的应用)
         * [各种代理的dns请求](#各种代理的dns请求)
@@ -45,8 +54,18 @@
     * [基于TLS1.3的微信安全通信协议mmtls介绍](#基于tls13的微信安全通信协议mmtls介绍)
   * [Session layer（会话层）](#session-layer会话层)
     * [RTP](#rtp)
+  * [MTU 和 MSS 和 分段(fragmentation)](#mtu-和-mss-和-分段fragmentation)
+    * [IPv4 Fragmentation （分段）](#ipv4-fragmentation-分段)
+      * [MTU相关命令](#mtu相关命令)
+      * [PMTU（只有TCP和UDP支持）](#pmtu只有tcp和udp支持)
+        * [PMTU 与 GRE隧道](#pmtu-与-gre隧道)
+        * [PMTU 与 IPv4sec](#pmtu-与-ipv4sec)
+        * [PMTU 与 GRE 与 IPv4sec 协同工作](#pmtu-与-gre-与-ipv4sec-协同工作)
+    * [MTU](#mtu)
+    * [包的拆分与合并TSO、GSO、LRO、GRO](#包的拆分与合并tsogsolrogro)
   * [传输层](#传输层)
     * [TCP](#tcp)
+      * [粘包问题](#粘包问题)
       * [header(头部)](#header头部)
         * [Header Compression(头部压缩)](#header-compression头部压缩)
       * [TCP 连接](#tcp-连接)
@@ -58,30 +77,36 @@
           * [分析rst包](#分析rst包)
           * [案例分析](#案例分析)
         * [如何关闭一个 TCP 连接？](#如何关闭一个-tcp-连接)
-      * [队列](#队列)
-      * [Tcp keepalive](#tcp-keepalive)
-      * [TCP Fast Open](#tcp-fast-open)
+      * [backlog队列、半队列、全队列](#backlog队列半队列全队列)
+      * [Tcp keepalive（心跳）](#tcp-keepalive心跳)
+        * [应用层心跳机制的必要性](#应用层心跳机制的必要性)
+      * [TCP Fast Open（TFO）](#tcp-fast-opentfo)
         * [nginx支持](#nginx支持)
       * [重传与RTT、RTO](#重传与rttrto)
+      * [延迟ACK](#延迟ack)
       * [TCP window(窗口、流量控制)](#tcp-window窗口流量控制)
-        * [延迟ACK](#延迟ack)
         * [Nagle算法](#nagle算法)
       * [TCP congestion control(拥塞算法)](#tcp-congestion-control拥塞算法)
       * [socket相关](#socket相关)
     * [UDP](#udp)
+      * [洋芋编程：如何实现可靠的 UDP ?](#洋芋编程如何实现可靠的-udp-)
     * [KCP](#kcp)
   * [Network Layer（网络层）](#network-layer网络层)
+    * [ICMP](#icmp)
+    * [ipv4和子网](#ipv4和子网)
+      * [A、B、C、D、E（5类）地址](#abcde5类地址)
+      * [如何判断哪些 IP 位于同一子网中？](#如何判断哪些-ip-位于同一子网中)
+    * [VPN](#vpn)
+    * [NAT](#nat)
+    * [内网穿透](#内网穿透)
+      * [UDP 内网穿透](#udp-内网穿透)
+      * [TCP 内网穿透](#tcp-内网穿透)
+  * [路由器与交换机](#路由器与交换机)
   * [Data Link layer(数据链路层)](#data-link-layer数据链路层)
     * [802.11 frame](#80211-frame)
-  * [分段 (fragmentation)](#分段-fragmentation)
-    * [IPv4 Fragmentation （分段） ](#ipv4-fragmentation-分段-)
-      * [设置TCP MSS(Maximum Segment Size 最大段长)，可以避免ipv4分段](#设置tcp-mssmaximum-segment-size-最大段长可以避免ipv4分段)
-      * [PMTU（只有TCP和UDP支持）](#pmtu只有tcp和udp支持)
-        * [PMTU 与 GRE隧道](#pmtu-与-gre隧道)
-        * [PMTU 与 IPv4sec](#pmtu-与-ipv4sec)
-        * [PMTU 与 GRE 与 IPv4sec 协同工作](#pmtu-与-gre-与-ipv4sec-协同工作)
-    * [MTU](#mtu)
-    * [包的拆分与合并TSO、GSO、LRO、GRO](#包的拆分与合并tsogsolrogro)
+    * [ARP](#arp)
+      * [ARP表](#arp表)
+      * [ARP攻击](#arp攻击)
   * [物理层](#物理层)
     * [qdisc（排队规则）](#qdisc排队规则)
       * [classless qdisc（无类别）](#classless-qdisc无类别)
@@ -89,12 +114,18 @@
   * [数据包流程](#数据包流程)
 * [Overlay虚拟化技术](#overlay虚拟化技术)
   * [Vxlan（Virtual Extensible LAN）](#vxlanvirtual-extensible-lan)
+    * [VTEP (VXLAN Tunnel Endpoint)](#vtep-vxlan-tunnel-endpoint)
+      * [网络拓扑结构](#网络拓扑结构)
   * [GRE（Generic Routing Encapsulation）](#gregeneric-routing-encapsulation)
   * [MPLS（Multiprotocol Label Switching）](#mplsmultiprotocol-label-switching)
   * [SD-WAN（Software-Defined Wide Area Network）](#sd-wansoftware-defined-wide-area-network)
 * [DPDK](#dpdk)
 * [sysctl](#sysctl)
 * [网络优化](#网络优化)
+  * [洋芋编程：想要支持百万长连接，需要调优哪些参数？](#洋芋编程想要支持百万长连接需要调优哪些参数)
+* [DDOS攻击](#ddos攻击)
+  * [SYN flood (洪泛) 攻击](#syn-flood-洪泛-攻击)
+  * [反射型攻击](#反射型攻击)
 
 <!-- mtoc-end -->
 
@@ -133,17 +164,21 @@
 #### 状态码
 
 - `1xx`：
+    - `100 Continue`：继续
+
+客户端已接收部分请求，并准备好接收剩下的部分，请求者需要继续提出请求。
     - `101 Switching Protocol`： 协议转换，比方说升级为`websocket`
+    - `102 Processing`：webdav扩展的状态码，表示处理将会继续执行
 
 - `2xx`：
 
-    - `200 OK`
-
+    - `200 OK`：请求成功。服务器已成功处理了请求，可以正常打开网页啦（或者请求的文件）。
     - `201 Created`：成功创建资源，一般用于`POST`、`PUT`
-
-    - `204 No Content`：没有body
-
-    - `206 Partial Content`：分块下载和断点续传，在客户端发送“范围请求”、要求获取资源的部分数据时出现，它与 200 一样，也是服务器成功处理了请求，但 body 里的数据不是资源的全部，而是其中的一部分。
+    - `202 Accepted`：请求已经接受，但未被实时处理，最终有可能拒绝
+    - `203 Non-Authoritative Information`：非授权信息。请求成功。但返回的实体头元信息不在原始服务器，而是第三方的一个副本或本地。
+    - `204 No Content`：没有内容（body）。服务器处理了请求，但不返回内容。在未更新网页的情况下，浏览器继续显示当前页面。
+    - `205 Reset Content`：重置内容。服务器处理了请求，但不返回内容。客户端重置文档视图。
+    - `206 Partial Content`：部分内容。分块下载和断点续传，在客户端发送“范围请求”、要求获取资源的部分数据时出现，它与 200 一样，也是服务器成功处理了请求，但 body 里的数据不是资源的全部，而是其中的一部分。
 
         - `Accept-Ranges` （它的值不为“none”），那么表示该服务器支持范围请求。
 
@@ -152,26 +187,46 @@
         ```sh
         curl http://www.example.com -i -H "Range: bytes=0-50, 100-150"
         ```
+    - `207 Multi-Status`：webdav扩展的状态码，表示消息体是xml，并且可能根据之前的请求数量，包含一些响应代码
 
 - `3××`：
 
-    - `301 Moved Permanently`：“永久重定向”，含义是此次请求的资源已经不存在了，需要改用改用新的 URI 再次访问。
+    - `300 Multiple Choices`：多重选择。被请求的资源有一系列可供选择的信息
+    - `301 Moved Permanently`：永久移动。含义是此次请求的资源已经不存在了，需要改用改用新的 URI 再次访问。
 
-    - `302 Found`：“临时重定向”，意思是请求的资源还在，但需要暂时用另一个 URI 来访问。
+    - `302 Found`：临时移动。意思是请求的资源还在，但需要暂时用另一个 URI 来访问。
 
         - 例子：访问`www.bing.com` 会出现`302`，重定向到`cn.bing.com`
 
+    - `303 See other`：当前请求可以在另一个url上被找到，客户端应该采取get的方式访问该资源
     - `304 Not Modified`：它用于 `If-Modified-Since` 和`If-None-Match` 请求，表示资源未修改，用于缓存控制。它不具有通常的跳转含义，但可以理解成“重定向已到缓存的文件”（即“缓存重定向”）。
+    - `305 Use proxy`：使用代理
+    - `306 Switch proxy`：该状态码，已经被抛弃
+    - `307 Temporary Redirect`：临时重定向。请求资源临时从不同的url响应请求
+    - `308 Permanent Redirect`：永久重定向。请求资源临时永久移动到新的url
 
-- `4××`：
+- `4××`：客户端问题
 
-    - `400 Bad Request`：表示客户端请求的报文有错误，但只是个笼统的错误。
+    - `400 Bad Request`：客户端的请求语法出错，服务器端无法理解。
 
-    - `401 Authorization Required`：需要用户密码认证。比如nginx对资源，设置了auth_basic模块
+    - `401 Authorization Required`：（未经授权）服务器要求客户端进行身份验证。需要用户密码认证。比如nginx对资源，设置了auth_basic模块
 
-    - `403 Forbidden`：表示服务器禁止访问资源，并不是客户端的请求出错。
+    - `402 Payment Required`：预留状态码
+    - `403 Forbidden`：服务器理解了你的请求，但是拒绝执行。
+    - `404 Not Found`：服务器无法找到用户请求的文档
 
-- `500` (Internal Server Error)
+        - 网页数据被更改、或者上传到网页的文件目录/文件名称被更改，导致网页失效。
+        - 网页文件被移动或删除，导致原链接失效。
+        - 我们自己输入的网址有错误，不能链接到所需的文件。
+        - 你压根没插网线或者家里Wi-Fi信号太差。
+
+
+- `5xx` ：服务端问题
+    - 一般情况下5xx的状态码其实并不是服务器返回给客户端的。它们是由网关返回的，常见的网关，比如nginx。
+    - `500 Internal Server Error`：内部服务器错误。可能是服务器的程序码出错。
+    - `501 Not Implemented`：服务器不支持请求功能
+    - `502 Bad Gateway`：其实是由网关代理（nginx）发出的，是因为网关代理把客户端的请求转发给了服务端，但服务端却发出了无效响应
+        - 这里的无效响应，一般是指TCP的RST报文或四次挥手的FIN报文。
 
 #### 客户端缓存（浏览器缓存）
 
@@ -343,8 +398,6 @@
 
 - [小林coding：HTTP/2 牛逼在哪？](https://www.xiaolincoding.com/network/2_http/http2.html)
 
-- 全面采用二进制：收到报文后，无需再将明文的报文转成二进制，而是直接解析二进制报文
-
 - Frame header：
 
     ![image](./Pictures/net-kernel/http2_header.avif)
@@ -363,6 +416,19 @@
 - 多路服用：
 
     ![image](./Pictures/net-kernel/http2_vs_http1.1.avif)
+
+- 只有1个tcp连接
+
+    - 在 HTTP/1.1 版本中，访问不同的的资源时 (CSS, Javascript, images ...) 会使用多个 TCP 连接会产生大量的延迟
+        ![image](./Pictures/net-kernel/HTTP1.1访问时的瀑布图.avif)
+
+    - 解决方案也很简单：直接升级使用 HTTP/2, 在整个通信过程中，只会有 1 个 TCP 连接。
+        ![image](./Pictures/net-kernel/HTTP2访问时的瀑布图.avif)
+
+        - 缺点：TCP丢包带来的影响在 HTTP/2 中表现更为严重，因为 HTTP/2 只使用 1 个 TCP 连接进行传输。所以 1 次丢包会导致所有的资源下载速度变慢。而 HTTP/1.1 可能有多个独立的 TCP 连接，1 次丢包也只会影响其中 1 个 TCP 连接，所以这种场景下 HTTP/1.1 反而会获得更好的性能。
+
+- 全面采用二进制：收到报文后，无需再将明文的报文转成二进制，而是直接解析二进制报文
+
 
 - 服务器推送：客户端在访问 HTML 时，服务器可以直接主动推送 CSS 文件，减少了消息传递的次数
 
@@ -725,7 +791,9 @@
 
 #### websocket报文格式
 
-![image](./Pictures/net-kernel/websocket报文格式.avif)
+- websocket报文格式
+
+    ![image](./Pictures/net-kernel/websocket报文格式.avif)
 
     - 这里面字段很多，但我们只需要关注下面这几个。
 
@@ -766,36 +834,361 @@
 
 #### 基本概念
 
-- [朱小厮的博客：一文搞懂 DNS 基础知识，收藏起来有备无患~](https://mp.weixin.qq.com/s?src=11&timestamp=1678026571&ver=4388&signature=XbzLnBwAUMdDP2*TUw4OVETJ7xPZ9A7f9bfiGR7mHT7RCnrMvu9IQDuVHJ5*xMfO9aws0PENX5LpobXKiIuwvuU54*-uVJe*TyMb9JP6FYxHCdAH7Ov1tFRv1B9hbqaj&new=1)
+- [洋芋编程：DNS 原理入门](https://mp.weixin.qq.com/s/b2KFiwhpacT-gvZEd0GoOQ)
 
-- DNS 解析流程
+- [李银城：从Chrome源码看DNS解析过程](https://www.rrfed.com/2018/01/01/chrome-dns-resolve/)
 
-    - 标准 glibc 提供了 libresolv.so.2 动态库，我们的应用程序就是用它进行域名解析（也叫 resolving）的， 它还提供了一个配置文件 `/etc/nsswitch.conf` 决定了 resolving 的顺序，默认是先查找 hosts 文件，如果没有匹配到，再进行 DNS 解析
+- [朱小厮的博客：一文搞懂 DNS 基础知识，收藏起来有备无患~](https://mp.weixin.qq.com/s/M89J-L4qOFqaIUjxHlAJiA)
+
+- 标准 glibc 提供了 libresolv.so.2 动态库，我们的应用程序就是用它进行域名解析（也叫 resolving）的， 它还提供了一个配置文件 `/etc/nsswitch.conf` 决定了 resolving 的顺序，默认是先查找 hosts 文件，如果没有匹配到，再进行 DNS 解析
+
     ```
     hosts:      files dns myhostname
     ```
 
-    - 本地 DNS 服务器在 `/etc/resolv.conf`
+- 域名层级
 
-    - 域名
+    - 全球有13个根域名解析服务器，这13条记录持久化在dns服务器中
 
-        - 全球有13个根域名解析服务器，这13条记录持久化在dns服务器中
-        ![image](./Pictures/net-kernel/dns.avif)
+    ![image](./Pictures/net-kernel/dns.avif)
 
-        - 域名劫持
-        ![image](./Pictures/net-kernel/dns1.avif)
+    - 根域名.root  `www.example.com` 真正的域名是 `www.example.com.root` ，简写为 www.example.com. 。因为，根域名.root 对于所有域名都是一样的， 所以平时是省略的。
 
-    - 两种查询方式
+    - 根域名的下一级，叫做 顶级域名（top-level domain，缩写为 TLD），比如 `.com`、`.net`；
 
-        - 1.迭代查询：由dns服务器对每一层域名服务器一查到底
-        ![image](./Pictures/net-kernel/dns-iteration.avif)
+    - 再下一级叫做 次级域名（second-level domain，缩写为 SLD）， 比如 www.example.com 里面的 `.example`，这一级域名是用户可以注册的；
 
-        - 2.递归查询：每查一层会return（返回）下一层的域名服务器给客户端，之后客户端继续查询下一层，以此类推。相比递归查询，可以减少dns服务器的压力
+    - 再下一级是 主机名（host），比如 www.example.com 里面的 `www`，又称为 三级域名， 这是用户在自己的域里面为服务器分配的名称，是用户可以任意分配的。
+
+    ```sh
+    # 主机名.次级域名.顶级域名.根域名
+    host.sld.tld.root
+    ```
+
+    - 域名劫持
+    ![image](./Pictures/net-kernel/dns1.avif)
+
+- 两种查询方式
+
+    - 1.迭代查询：由dns服务器对每一层域名服务器一查到底
+    ![image](./Pictures/net-kernel/dns-iteration.avif)
+
+    - 2.递归查询：每查一层会return（返回）下一层的域名服务器给客户端，之后客户端继续查询下一层，以此类推。相比递归查询，可以减少dns服务器的压力
+
+- DNS 服务器的IP地址，有可能是动态的，每次上网时由网关分配，这叫做 DHCP 机制；
+    - 也有可能是事先指定的固定地址。 Linux系统里面，DNS 服务器的 IP 地址保存在 `/etc/resolv.conf` 文件。
+
+- DNS 解析流程
+    ![image](./Pictures/net-kernel/dns_解析流程.avif)
+
+    - 浏览器输入域名，如 `www.example.com`
+    - 查询当前硬件的缓存（host 文件 或浏览器缓存）中是否存在该域名对应的记录，如果存在直接使用，如果不存在则进入后续流程
+    - 向运营商的 DNS 服务器发起 DNS 解析的请求，一般称运营商的 DNS 服务器为 `Local DNS`
+    - `Local DNS` 会查询缓存记录 (内部实现对请求端来说是透明的)
+    - `Local DNS` 如果没有缓存，会把域名从右往左扫描，依次请求对应的服务器
+    - 对于域名 `www.example.com`，先去请求根域名服务器，假设根域名服务器返回了管理 .com 域的服务器，名字为 TLD
+    - `Local DNS` 请求管理 TLD 服务器
+    - 一般来说，TLD 返回的记录是一条 CNAME 记录，这里假设域名的 CNAME 解析到了 Amazon
+    - `Local DNS` 请求 Amazon 的 DNS 服务器 (一般称之为权威服务器，权威服务器是 Amazon 自己构建的)
+    - Amazon 返回 www.example.com 对应的服务器 IP 地址
+    - `Local DNS` 缓存这个 IP 地址，并且返回给浏览器
+    - 浏览器和返回的 IP 地址建立 TCP 连接，发送 HTTP 报文
+
 
     - 转发：当前运营商(比如联通)的LocalDNS不访问百度权威DNS服务器，而是直接访问了其它运营商(比如电信)的LocalDNS服务器，有些小的运营商就是通过这样做来降低成本。如果电信的LocalDNS对非自家ip的访问限了速那么很明显会影响你的DNS解析时间。
     ![image](./Pictures/net-kernel/dns2.avif)
 
-- HTTPDNS：代替传统的基于UDP的DNS协议，域名解析请求直接发送到HTTPDNS服务端，从而绕过运营商的DNS
+- DNS 相关命令
+
+    ```sh
+    # dig命令
+    dig math.stackexchange.com
+    # 如果不想看到这么多内容，可以使用 `+short` 参数
+    dig +short math.stackexchange.com
+
+    # host 命令可以看作 dig 命令的简化版本，返回当前请求域名的各种记录。
+    host github.com
+
+    # nslookup 命令用于互动式地查询域名记录。
+    nslookup
+    nslookup github.com
+
+    # whois 命令用来查看域名的注册情况。
+    whois github.com
+    ```
+
+#### 查询过程
+
+- 虽然只需要返回一个IP地址，但是 DNS 的查询过程非常复杂，分成多个步骤。
+
+- 分级查询：就是从根域名开始，依次查询每一级域名的 `NS` 记录，直到查到最终的 IP 地址
+
+    - 需要明确的是，每一级域名都有自己的 `NS` 记录，`NS` 记录指向该级域名的域名服务器。这些服务器知道下一级域名的各种记录。
+    - 1.从 "根域名服务器" 查到 "顶级域名服务器"的 NS 记录和 A 记录（IP 地址）
+    - 2.从 "顶级域名服务器" 查到 "次级域名服务器"的 NS 记录和 A 记录（IP 地址）
+    - 3.从 "次级域名服务器" 查到 "主机名"的 IP 地址
+
+    - DNS 服务器怎么知道 "根域名服务器" 的 IP 地址。 回答是 "根域名服务器" 的 NS 记录和 IP 地址一般是不会变化的， 所以内置在 DNS 服务器里面。
+
+        - 下面是内置的根域名服务器 IP 地址的一个 例子
+
+            ```
+            ; formerly NS.INTERNIC.NET
+            ;
+            .                        3600000  IN  NS    A.ROOT-SERVERS.NET.
+            A.ROOT-SERVERS.NET.      3600000      A     198.41.0.4
+            A.ROOT-SERVERS.NET.      3600000      AAAA  2001:503:BA3E::2:30
+            ;
+            ; formerly NS1.ISI.EDU
+            ;
+            .                        3600000      NS    B.ROOT-SERVERS.NET.
+            B.ROOT-SERVERS.NET.      3600000      A     192.228.79.201
+            ;
+            ; formerly C.PSI.NET
+            ;
+            .                        3600000      NS    C.ROOT-SERVERS.NET.
+            C.ROOT-SERVERS.NET.      3600000      A     192.33.4.12
+            ```
+
+        - 列出了根域名（.root）的三条 NS 记录，以及它们的 IP 地址（即 A 记录）
+
+            |NS 记录           |IP 地址（即 A 记录）|
+            |------------------|--------------------|
+            |A.ROOT-SERVERS.NET|198.41.0.4          |
+            |B.ROOT-SERVERS.NET|192.228.79.201      |
+            |C.ROOT-SERVERS.NET|192.33.4.12。       |
+
+        - 另外，可以看到所有记录的 TTL 值是 3600000 秒，相当于 1000 小时。也就是说，每 1000 小时才查询一次根域名服务器的列表。
+
+        - 目前，世界上一共有 13 组根域名服务器，从 A.ROOT-SERVERS.NET 一直到 M.ROOT-SERVERS.NET。
+
+```sh
+dig math.stackexchange.com
+
+# 第 1 段是查询参数和统计
+
+; <<>> DiG 9.10.6 <<>> math.stackexchange.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44088
+;; flags: qr rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 4, ADDITIONAL: 6
+
+# 第 2 段是查询内容
+# 结果表示，查询域名 math.stackexchange.com 的 A 记录，A 是 address 的缩写
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;math.stackexchange.com.  IN A
+
+# 第 3 段是 DNS 服务器的答复
+# 结果显示，math.stackexchange.com 有四个 A 记录，即四个 IP 地址。
+# 54 是 TTL 值（Time to live 的缩写），表示缓存时间，即 54 秒之内不用重新查询。
+
+;; ANSWER SECTION:
+math.stackexchange.com. 54 IN A 151.101.65.69
+math.stackexchange.com. 54 IN A 151.101.193.69
+math.stackexchange.com. 54 IN A 151.101.129.69
+math.stackexchange.com. 54 IN A 151.101.1.69
+
+# 第 4 段显示 stackexchange.com 的 NS 记录（Name Server 的缩写）
+# 即哪些服务器负责管理 stackexchange.com 的 DNS 记录。
+# 结果显示 stackexchange.com 共有四条 NS 记录，即四个域名服务器，向其中任一台查询就能知道 math.stackexchange.com 的 IP 地址是什么
+
+;; AUTHORITY SECTION:
+stackexchange.com. 1866 IN NS ns-925.awsdns-51.net.
+stackexchange.com. 1866 IN NS ns-1832.awsdns-37.co.uk.
+stackexchange.com. 1866 IN NS ns-cloud-d1.googledomains.com.
+stackexchange.com. 1866 IN NS ns-cloud-d2.googledomains.com.
+
+# 第 5 段是上面四个域名服务器的 IP 地址，这是随着前一段一起返回的
+
+;; ADDITIONAL SECTION:
+ns-925.awsdns-51.net. 1626 IN A 205.251.195.157
+ns-1832.awsdns-37.co.uk. 1592 IN A 205.251.199.40
+ns-925.awsdns-51.net. 1626 IN AAAA 2600:9000:5303:9d00::1
+ns-1832.awsdns-37.co.uk. 1593 IN AAAA 2600:9000:5307:2800::1
+ns-cloud-d1.googledomains.com. 3204 IN AAAA 2001:4860:4802:32::6d
+
+# 第 6 段是 DNS 服务器的一些传输信息
+
+;; Query time: 26 msec
+;; SERVER: 192.168.1.1#53(192.168.1.1)
+;; WHEN: Fri Feb 17 22:31:26 CST 2023
+;; MSG SIZE  rcvd: 368
+```
+
+- 如果不想看到这么多内容，可以使用 `+short` 参数
+```sh
+# 只返回 math.stackexchange.com 对应的 4 个 IP 地址（即A记录）。
+dig +short math.stackexchange.com
+151.101.1.69
+151.101.129.69
+151.101.193.69
+151.101.65.69
+```
+
+- 指定dns服务器查询
+```sh
+dig @8.8.8.8 math.stackexchange.com
+```
+
+- dig 命令可以单独查看每一级域名的 `NS` 记录。
+    ```sh
+    dig ns com
+    dig ns stackexchange.com
+
+    # +short 参数可以显示简化的结果
+    dig +short ns com
+    dig +short ns stackexchange.com
+    ```
+
+- dig 命令的 +trace 参数可以显示 DNS 的整个分级查询过程。
+    ```sh
+    dig +trace math.stackexchange.com
+
+    # 第一段列出根域名.的所有 NS 记录，即所有根域名服务器。
+    # 根据内置的根域名服务器 IP 地址，DNS 服务器向所有这些 IP 地址发出查询请求，询问 math.stackexchange.com 的顶级域名服务器 com.的 NS 记录。 最先回复的根域名服务器将被缓存，以后只向这台服务器发请求。
+    ; <<>> DiG 9.20.4 <<>> +trace math.stackexchange.com
+    ;; global options: +cmd
+    .			37521	IN	NS	f.root-servers.net.
+    .			37521	IN	NS	d.root-servers.net.
+    .			37521	IN	NS	c.root-servers.net.
+    .			37521	IN	NS	a.root-servers.net.
+    .			37521	IN	NS	g.root-servers.net.
+    .			37521	IN	NS	l.root-servers.net.
+    .			37521	IN	NS	i.root-servers.net.
+    .			37521	IN	NS	j.root-servers.net.
+    .			37521	IN	NS	k.root-servers.net.
+    .			37521	IN	NS	b.root-servers.net.
+    .			37521	IN	NS	m.root-servers.net.
+    .			37521	IN	NS	h.root-servers.net.
+    .			37521	IN	NS	e.root-servers.net.
+    ;; Received 228 bytes from 192.168.41.102#53(192.168.41.102) in 72 ms
+
+    # 结果显示.com 域名的 13 条 NS 记录，同时返回的还有每一条记录对应的 IP 地址。
+    com.			172800	IN	NS	l.gtld-servers.net.
+    com.			172800	IN	NS	j.gtld-servers.net.
+    com.			172800	IN	NS	h.gtld-servers.net.
+    com.			172800	IN	NS	d.gtld-servers.net.
+    com.			172800	IN	NS	b.gtld-servers.net.
+    com.			172800	IN	NS	f.gtld-servers.net.
+    com.			172800	IN	NS	k.gtld-servers.net.
+    com.			172800	IN	NS	m.gtld-servers.net.
+    com.			172800	IN	NS	i.gtld-servers.net.
+    com.			172800	IN	NS	g.gtld-servers.net.
+    com.			172800	IN	NS	a.gtld-servers.net.
+    com.			172800	IN	NS	c.gtld-servers.net.
+    com.			172800	IN	NS	e.gtld-servers.net.
+    com.			86400	IN	DS	19718 13 2 8ACBB0CD28F41250A80A491389424D341522D946B0DA0C0291F2D3D7 71D7805A
+    com.			86400	IN	RRSIG	DS 8 1 86400 20250119050000 20250106040000 26470 . ExRuZtIRJOVkE7DUTsVm/8nBpDsisu9QQF4u1P+0tUP4mX6ef1hHvD6s z6BaX5boggq1RagKfnzpWfMXxfsDhzB3M6hUMIVCpj2bemZpjC0I53Me yGglPbr6Xx8kz14D5AKwrj/xRJ2gqHkNBVPhRbvqWL11UreLFHKSD9H6 hlJUOAIniZMFAjTJa9TDBxN60/+xit9ntShco2wjhBOAQfNbhZDArAEb g827QeCe8HAv4meW9+Jl/9zBUYjF5XuL2LFRUeEwY24s1XcbLjwMXkHM bn2ELbyiQ65QC30K/x3TVLfexGNV1JaO8eJHy4fKXIxZaRBAak1ahmTs 71Hg6Q==
+    ;; Received 1182 bytes from 2001:503:ba3e::2:30#53(a.root-servers.net) in 136 ms
+
+    # 结果显示 stackexchange.com 有2条 NS 记录，同时返回的还有每一条 NS 记录对应的 IP 地址
+    # 然后DNS 服务器向上面这2台 NS 服务器查询 math.stackexchange.com 的主机名。
+    stackexchange.com.	172800	IN	NS	sureena.ns.cloudflare.com.
+    stackexchange.com.	172800	IN	NS	damian.ns.cloudflare.com.
+
+    # 结果显示，math.stackexchange.com 有 2 条 A 记录，即这2个 IP 地址都可以访问到网站。并且还显示， 最先返回结果的 NS 服务器是 sureena.ns.cloudflare.com，IP 地址为 2803:f800:50::6ca2:c27e。
+    math.stackexchange.com.	300	IN	A	104.18.43.226
+    math.stackexchange.com.	300	IN	A	172.64.144.30
+    ;; Received 83 bytes from 2803:f800:50::6ca2:c27e#53(sureena.ns.cloudflare.com) in 411 ms
+    ```
+
+#### DNS 的记录类型
+
+- 域名与 IP 之间的对应关系，称为 "记录"（record）。
+
+- 根据使用场景，"记录"可以分成不同的类型（type）
+
+    - 前面已经看到了有 `A` 记录和 `NS` 记录
+
+    - A：地址记录（Address），返回域名指向的 IP 地址。
+    - AAAA: 记录是域名到 IPV6 地址。
+    - NS：域名服务器记录（Name Server），返回保存下一级域名信息的服务器地址。该记录只能设置为域名，不能设置为 IP 地址。
+    - MX：邮件记录（Mail eXchange），返回接收电子邮件的服务器地址。
+    - CNAME：规范名称记录（Canonical Name），返回另一个域名，即当前查询的域名是另一个域名的跳转，详见下文。
+    - PTR：逆向查询记录（Pointer Record），只用于从 IP 地址查询域名，详见下文。
+
+- 一般来说，为了服务的安全可靠，至少应该有两条 `NS` 记录，而 `A` 记录和 MX 记录也可以有多条，这样就提供了服务的冗余性，防止出现单点失败。
+
+- 查看指定的记录类型
+
+    ```sh
+    dig a github.com
+    dig ns github.com
+    dig mx github.com
+    ```
+
+- `CNAME` 记录主要用于域名的内部跳转，为服务器配置提供灵活性，用户感知不到。举例来说，`facebook.github.io` 这个域名就是一个 CNAME 记录。
+
+    ```sh
+    dig facebook.github.io
+
+    ...
+
+    ;; ANSWER SECTION:
+    facebook.github.io. 3370    IN  CNAME   github.map.fastly.net.
+    github.map.fastly.net.  600 IN  A   103.245.222.133
+    ```
+    - 上面结果显示，facebook.github.io 的 CNAME 记录指向 github.map.fastly.net。
+        - 也就是说，用户查询 facebook.github.io 的时候， 实际上返回的是 github.map.fastly.net 的 IP 地址。这样的好处是，变更服务器 IP 地址的时候，只要修改 github.map.fastly.net 这个域名就可以了， 用户的 facebook.github.io 域名不用修改。
+
+    - 由于 `CNAME` 记录就是一个替换，所以域名一旦设置 CNAME 记录以后，就不能再设置其他记录了（比如 A 记录和 MX 记录），这是为了防止产生冲突。
+        - 举例来说，foo.com 指向 bar.com，而两个域名各有自己的 MX 记录，如果两者不一致，就会产生问题。由于顶级域名通常要设置 MX 记录， 所以一般不允许用户对顶级域名设置 CNAME 记录。
+
+- `PTR` 记录用于从 IP 地址反查域名。dig 命令的 -x 参数用于查询 PTR 记录。
+
+    - 逆向查询的一个应用，是可以防止垃圾邮件，即验证发送邮件的 IP 地址，是否真的有它所声称的域名。
+
+    ```sh
+    # 192.30.252.153 这台服务器的域名是  lb-192-30-252-153-iad.github.com。
+    dig -x 192.30.252.153
+
+
+    ; <<>> DiG 9.20.4 <<>> -x 192.30.252.153
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18478
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+    ;; QUESTION SECTION:
+    ;153.252.30.192.in-addr.arpa.	IN	PTR
+
+    ;; ANSWER SECTION:
+    153.252.30.192.in-addr.arpa. 3600 IN	PTR	lb-192-30-252-153-iad.github.com.
+
+    ;; Query time: 151 msec
+    ;; SERVER: 192.168.41.102#53(192.168.41.102) (UDP)
+    ;; WHEN: Mon Jan 06 16:13:41 CST 2025
+    ;; MSG SIZE  rcvd: 91
+    ```
+
+#### [arthurchiao：DNS 问题分析示例（2019）](http://arthurchiao.art/blog/dns-practice-zh/)
+
+- 1.没有配置合适的dns服务器`/etc/resolv.conf`
+
+- 2.`/etc/hosts` 中域名映射ip的问题：映射的ip未必是域名最优的地址，甚至可能不可用
+
+- 3.DNS 查询不稳定，时快时慢：有 tc 或 iptables 规则，导致到 DNS 服务器的 packet 变慢或丢失
+    ```sh
+    # 查看tc规则
+    tc -p qdisc ls dev eth0
+    # 删除规则
+    tc qdisc del dev eth0 root
+    ```
+
+- 4.DNS反向查询不稳定：ltrace -p <PID>跟踪 ping 域名进程发现问题，卡在 `gethostbyaddr()` 的函数
+    - 解决方法是：修改 `/etc/resolv.conf` 更换 DNS 服务器
+
+    ```sh
+    # 使用以下命令进行验证
+    nslookup <IP>
+    host <IP>
+    dig -x <IP>
+    ```
+
+#### HTTPDNS：代替传统的基于UDP的DNS协议，域名解析请求直接发送到HTTPDNS服务端，从而绕过运营商的DNS
 
 - 域名可以对应多个ip地址，从而实现负载均衡
 
@@ -807,32 +1200,6 @@
 
         - 国内支持EDNS有DNSPod，已被腾讯收购
 
-- [李银城：从Chrome源码看DNS解析过程](https://www.rrfed.com/2018/01/01/chrome-dns-resolve/)
-
-- [arthurchiao：DNS 问题分析示例（2019）](http://arthurchiao.art/blog/dns-practice-zh/)
-
-    - 1.没有配置合适的dns服务器`/etc/resolv.conf`
-
-    - 2.`/etc/hosts` 中域名映射ip的问题：映射的ip未必是域名最优的地址，甚至可能不可用
-
-    - 3.DNS 查询不稳定，时快时慢：有 tc 或 iptables 规则，导致到 DNS 服务器的 packet 变慢或丢失
-        ```sh
-        # 查看tc规则
-        tc -p qdisc ls dev eth0
-        # 删除规则
-        tc qdisc del dev eth0 root
-        ```
-
-    - 4.DNS反向查询不稳定：ltrace -p <PID>跟踪 ping 域名进程发现问题，卡在 `gethostbyaddr()` 的函数
-        - 解决方法是：修改 `/etc/resolv.conf` 更换 DNS 服务器
-
-        ```sh
-        # 使用以下命令进行验证
-        nslookup <IP>
-        host <IP>
-        dig -x <IP>
-        ```
-
 #### [knowclub：localhost和127.0.0.1的区别](https://mp.weixin.qq.com/s/5vKgzvXsbrOMElc5VPGAPA)
 
 - 有人告诉我 localhost 和 127.0.0.1 的区别是 localhost 不经过网卡
@@ -840,13 +1207,29 @@
 
 - localhost 会按[dns 解析流程进行解析]，然后和 127.0.0.1 一样
 
-#### CDN架构（Content Delivery Network）
+### CDN（Content Delivery Network）内容分发网络
+
+- [洋芋编程：CDN 原理入门](https://mp.weixin.qq.com/s/hMdy7ecucd_SkIpZ1owQvg)
 
 - [yes的练级攻略：面试官：你懂 CDN 吗？](https://mp.weixin.qq.com/s/kdhVCNc5YtUdR869WpQbrQ)
 
 - 这其实就是所谓的“热点”问题，该如何解决这个问题呢？可以采取类似分流的操作。
+    - 基本思路是: 尽可能避开互联网上有可能影响数据传输速度和稳定性的瓶颈和环节， 使内容传输得更快更稳定。
 
-- 基础原理
+- CDN 的 基本原理为反向代理，反向代理（Reverse Proxy）
+
+    > 简单地理解，CDN 就是客户端和真实服务器之间的一层高效的缓存。
+
+    - 代理服务器来接受的连接请求，然后将请求转发给内部网络上的服务器， 并将从服务器上得到的结果返回给请求连接的客户端
+    - 通过部署更多的反向代理服务器，来实现 多节点 CDN 架构。
+
+- CDN 主要使用了以下几种方法来提高其性能和可靠性:
+    - 分布式存储: 采用可扩展的系统架构，利用多节点、多位置、多种方式存储数据
+    - 负载均衡: 可以将流量均匀地分配到多个节点服务器上，从而避免某些服务器过度负载而导致响应时间延迟
+    - 动态路由: 可以根据网络流量和服务器负载情况来选择最优的路径和服务器来响应用户请求
+    - 内容压缩: 可以将内容文件压缩到更小的体积，以减少网络传输的时间和成本
+
+- 例子
 
     - 如果网站服务器部署在北京，香港的用户访问该网站，由于物理距离的缘故（网络的传输时间受距离影响），时延相对而言会比较大，导致体验上并不是很好。
 
@@ -877,6 +1260,38 @@
 
     - 这就好比我们自驾从香港开到北京，路线有很多，然后有个导航很智能，它可以实时监控计算当前道路信息，给我们提供一条路径最短、最不堵的路。
 
+- 不适合使用 CDN 的场景
+    - 请求客户端和服务器物理距离很近，比如同机房、同机架的内网服务
+    - 用户分布在同一地理区域，如同城服务、本地门户网站
+    - 动态文件或接口，比如更新很频繁的文件，使用 CDN 反而会增加响应耗时
+
+- 传统网站访问过程
+    - 1.客户端浏览器输入网址，如 https://www.example.com/logo.png
+    - 2.浏览器请求 DNS 服务器，查询 https://www.example.com/logo.png 对应的源服务器 IP 地址
+    - 3.DNS 服务器返回对应的 IP 地址
+    - 4.浏览器向服务器发起 TCP 连接
+    - 5.浏览器通过建立的 TCP 连接发送 HTTP 请求图片文件
+    - 6.服务器向浏览器发送图片文件
+    - 7.浏览器将接收到的图片文件渲染，完成本次请求
+
+    - 如果我们要加入 CDN 的话，是加到哪个步骤呢？
+        - 第 2 步，浏览器在访问真实的服务器之前，会先通过 DNS 查询域名对应源服务器的 IP 地址，如果 DNS 返回的是 CDN 服务器的 IP 地址， 那么后面的流程就会变为: 客户端浏览器就直接从 CDN 服务器获取数据
+        - 将域名 `www.example.com` 的 `CNAME` 记录解析到 CDN 服务商即可，CDN 服务商的 DNS 服务器也称为权威服务器
+
+- 接入 CDN 网站访问过程
+    - 1.客户端浏览器输入网址，如 https://www.example.com/logo.png
+    - 2.浏览器请求 DNS 服务器，查询 https://www.example.com/logo.png 对应的服务器 IP 地址
+    - 3.由于域名的 `CNAME` 记录解析到了 CDN 服务商，所以这里 DNS 服务器会返回 CDN 服务商提供的 CDN 节点服务器的地址
+    - 4.浏览器向 CDN 节点服务器发起 TCP 连接
+    - 5.浏览器通过建立的 TCP 连接发送 HTTP 请求图片文件
+    - 6.CDN 节点服务器使用内部专用 DNS 解析出域名对应的源服务器 IP 地址
+    - 7.CDN 节点服务器向源服务器发起TCP连接
+    - 8.CDN 节点服务器通过建立的 TCP 连接发送 HTTP 请求图片文件
+    - 9.CDN 服节点务器接收到图片文件后，在本地保存一份，作为缓存使用，减少源服务器的回源流量
+    - 10.CDN 节点服务器向浏览器发送图片文件
+    - 11.浏览器将接收到的图片文件渲染，完成本次请求
+
+
 - CDN 基础架构
 
     ![image](./Pictures/net-kernel/cdn架构.avif)
@@ -900,11 +1315,11 @@
 
             - 所以只能 302 ，而 302 的流程每次还得访问 GSLB，那不就等于所有请求每次都得经过 GSLB 操作？因此 GSLB 可能会成为性能瓶颈。
 
-    - 解决方法：DNS解析
-        - 用户通过域名解析定位到 GSLB ，通过负载均衡返回用户最近的一个缓存站 ip，后续浏览器、本地 DNS 服务器等都会将本次域名解析得到的 ip 结果缓存一段时间。
-        - 那么这个时间段内用户再次请求这个域名，压根不会打到 GSLB 而是直接访问对应的缓存站，这不就解决瓶颈问题了吗？
+            - 解决方法：DNS解析
+                - 用户通过域名解析定位到 GSLB ，通过负载均衡返回用户最近的一个缓存站 ip，后续浏览器、本地 DNS 服务器等都会将本次域名解析得到的 ip 结果缓存一段时间。
+                - 那么这个时间段内用户再次请求这个域名，压根不会打到 GSLB 而是直接访问对应的缓存站，这不就解决瓶颈问题了吗？
 
-##### 基于DNS解析
+#### 基于DNS解析
 
 - 基于 DNS 解析具体有三种实现方式：
     - 1.利用 CNAME 实现负载均衡
@@ -924,6 +1339,18 @@
     - 差别就是不需要实现一个功能完整的权威 DNS 服务器，仅需对个别需要 GSLB 操作的请求进行修改转发即可
     - 不过这其实也得将对外公布的权威 DNS 服务器的地址变成代理服务器地址，这个难度和第二点一致。
 
+#### 阿里的CDN架构Swift
+
+- 阿里的 HTTP 缓存服务器，名字叫 Swift。
+
+![image](./Pictures/net-kernel/cdn_阿里cdn架构swift.avif)
+
+图中是一个 CDN 节点，用户的请求从 LVS（LVS是一个四层的负载均衡组件）的入口来，先由 LVS 做一次 4 层的负载均衡， 然后转到一台 Tengine（阿里在 Nginx 的基础上开发的服务器）上，Tengine 做一致性哈希，选择一台 Swift 服务器去做缓存数据回源。
+
+![image](./Pictures/net-kernel/cdn_阿里cdn架构swift1.avif)
+
+首先可以看到，Swift 是一个多线程的程序，每个线程启动一个 epoll 来充分发挥多核的处理能力，并且尽量减少线程间的上下文切换，一个请求尽量在一个线程处理。除此之外，还能看到 内存缓存，SSD 缓存，SATA 缓存。Swift 有热点淘汰和提升机制，将热文件放在内存里，次热文件放在 SSD 上，最后才是 SATA 盘。叔度 (阿里 CDN 负责人) 指出，Tengine 和 Swift 是通过 Spdy 协议 来通信的，从而优化 HTTP 的传输效率。
+
 ### FTP
 
 ![image](./Pictures/net-kernel/ftp.avif)
@@ -932,7 +1359,98 @@
 
 ### DHCP
 
-- [视频（技术蛋老师）：DHCP运作原理和握手过程](https://www.bilibili.com/video/BV1Gd4y1n7Xz)
+- [（视频）技术蛋老师：DHCP运作原理和握手过程](https://www.bilibili.com/video/BV1Gd4y1n7Xz)
+
+- [洋芋编程：网络辣鸡自救指南 - 笔记本/手机 是如何拿到局域网 IP 的？](https://mp.weixin.qq.com/s/X5uq1YSaMcrIhkC_FXATxA)
+
+- DHCP（Dynamic Host Configuration Protocol，动态主机配置协议）是为主机（客户端）自动配置 IP 地址、子网、DNS 服务器、默认网关等信息的网络协议。
+
+- 虽然 DHCP 依赖于其他协议（如 ARP、UDP 和 IP），但它自身不属于任何一层，而是工作在应用层。
+
+- 路由器的 DHCP 功能主要分为三个方面:
+    - 当一台新设备连接到家用路由器时，三个功能都会执行到。
+
+    - 1.作为 DHCP 服务器为客户端分配 IP 地址
+    - 2.作为 DHCP 客户端从其他 DHCP 服务器中获取 IP 地址
+    - 3.在 DHCP 服务器和客户端之间完成中继广播消息
+
+#### 连接过程
+
+- 连接过程
+
+    ![image](./Pictures/net-kernel/dhcp_连接过程.avif)
+
+    - 1.客户端在网段内广播 DISCOVER 消息
+    - 2.DHCP 服务器在网络内广播 OFFER 消息
+    - 3.客户端在网络内广播 REQUEST 消息
+    - 4.在接收 ACK 消息后，客户端就能使用所分配的 IP 地址（10.1.1.5）
+
+- 下面展开来说下这个过程中的一些细节:
+
+    - 假设主机 A（客户端）最开始没有 IP 地址以及其它信息，那么就需要先使用 DHCP 来获取
+    - 主机生成一个 DHCP 请求报文，并将这个报文放入: 目的端口 67 和 源端口 68 的 UDP 报文段中
+    - 将该报文段放入: 广播 IP 目的地址(255.255.255.255) 和 源 IP 地址（0.0.0.0） 的 IP 数据报中
+    - 将该数据报放入 MAC 帧中，帧目的地址 FF:FF:FF:FF:FF:FF，通过二层交换机广播到所有连接的设备
+    - 连接在交换机的 DHCP 服务器 (也可以是连接到光猫上的家用路由器) 收到广播帧之后，不断地向上分解得到 IP 数据报、UDP 报文段、DHCP 请求报文，之后生成 DHCP ACK 报文，该报文包含以下信息：IP 地址、DNS 服务器的 IP 地址、默认网关路由器的 IP 地址和子网掩码，然后将该报文被放入 UDP 报文段中，再把 UDP 报文段放入 IP 数据报中，最后放入 MAC 帧中
+    - Mac 帧的目的地址是请求主机 A 的 MAC 地址，因为交换机具有自学习能力，之前主机 A 发送广播帧之后，顺带就记录了 MAC 地址和其转发接口的 交换表项，因此现在交换机知道应该向哪个接口发送该 Mac 帧
+    - 主机收到 Mac 帧后，不断分解得到 DHCP 报文，之后就配置它的 IP 地址、子网掩码和 DNS 服务器的 IP 地址，并在其 IP 转发表中安装默认网关
+
+    ![image](./Pictures/net-kernel/dhcp_请求报文.avif)
+
+- 手动分配静态 IP 地址
+    - 手动配置好 IP 地址之后，依然会执行上面的连接过程，只不过发起的请求报文不同而已。
+
+    - 例如主机 A 将自己的 IP 地址配置为 192.168.20.10, 那么发起的 DHCP 请求报文中的 请求 IP 地址 就是 192.168.20.10, 剩下的连接过程和动态获取 IP 地址过程一样。
+
+#### 地址分配
+
+- 分配顺序
+    - DHCP 服务器需要从 IP 地址池中为客户端分配一个 IP 地址，具体的顺序如下:
+
+    - 1.DHCP 服务器上已配置，指定客户端的 MAC 地址静态绑定的 IP 地址
+    - 2.客户端发送的 DISCOVER 请求报文中指定的 IP 地址
+    - 3.DHCP 服务器的 IP 地址池中查找 “Expired” 状态的 IP 地址，也就是租期到期的 IP 地址
+    - 4.DHCP 服务器的 IP 地址池中查找 “Idle” 状态的 IP 地址，也就是空闲的 IP 地址
+    - 5.如果上述步骤均未找到可分配的 IP 地址，DHCP 服务器地址池依次回收租期到期状态的（Expired）和处于冲突状态（Conflict）的 IP 地址，回收后如果找到可用的 IP 地址，分配给客户端，否则，客户端等待 DHCP 服务器应答超时后，重新发送 DISCOVER 请求报文来申请 IP 地址
+
+- 静态 IP
+    - 对于客户端申请静态 IP (已经指定了 IP 地址) 的请求报文，DHCP 服务器收到请求之后，会先检查该 IP 是否已经分配，如果已经分配给其他主机，直接回复 NACK 消息拒绝。
+    ![image](./Pictures/net-kernel/dhcp_检测IP是否已经分配.avif)
+    - 除了客户端申请静态 IP 地址外，网络管理员也可以通过 DHCP 服务器静态分配机制来分配 IP, 避免客户端手动配置错误的情况。
+
+- 确认分配
+    - 那么如何确认指定的 IP 是否已经分配了呢？DHCP 服务器只需要 ping 一下申请的 IP 地址即可。
+    - 对于申请动态 IP (没有指定了 IP 地址) 的请求报文，DHCP 服务器只需要找一个没有使用的 IP 地址返回就可以了。
+
+#### 地址冲突
+
+- 假设当前主机 A 已经通过 DHCP 获取到 IP: 192.168.20.10。
+
+- 那么当主机 A 休眠时，无法回复 Ping，DHCP 服务器就会认为该 IP 地址没有被使用，于是将 192.168.20.10 分配给其他主机，等到主机 A 休眠结束后，IP 地址就与主机 B 发生了冲突。
+
+- 如果主机 A 是关机而非休眠的话，是否会产生 IP 地址冲突呢？
+
+- 不会，因为当主机 A 开机时，首先要完成 TCP/IP 模块的初始化，在配置其静态 IP 192.168.20.10 时，会发三次 ARP 消息 (目的: 确认有没有主机在使用 IP 192.168.20.10)，如果有其他主机使用了这个 IP, 主机 A 就会收到对应的回复，也就不会继续使用这个 IP 地址了。
+
+#### 地址回收
+
+- DHCP 服务器的 IP 地址池中会指定 IP 地址的租期，如果客户端发送的 DISCOVER 报文中携带了期望租期，服务器会将 客户端的期望租期 与 分配 IP 的租期 进行比较，选择其中时间较短的租期分配给客户端。
+
+- 1.租期到期和续期
+
+    - 如果客户端希望租期到期后，继续使用当前的 IP 地址，需要更新 IP 地址的租期。
+
+    - 1.当客户端 IP 地址租期剩余 50% 时，会以单播的方式向 DHCP 服务器发送 REQUEST 请求报文，请求更新 IP 地址租期，如果收到 ACK 报文，租期更新成功（即租期重新从 0 开始计算），如果收到 NAK 报文，则向 DHCP 服务器重新发送 DISCOVER 报文请求新的 IP 地址
+
+    - 2.当客户端 IP 地址租期剩余 87.5% 时，如果还未收到 DHCP 服务器的应答报文，客户端会以广播的方式向 DHCP 服务器发送 REQUEST 报文 (为什么这里是广播呢？因为收不到 DHCP 服务器的应答，说明 DHCP 服务器可能已经发生变更)，请求更新 IP 地址租期，如果收到 ACK 报文，租期更新成功（即租期重新从 0 开始计算），如果收到 NAK 报文，则向 DHCP 服务器重新发送 DISCOVER 报文请求新的 IP 地址
+
+    - 3.如果租期到期时，都没有收到 DHCP 服务器的应答，客户端停止使用当前 IP 地址，重新发送 DISCOVER 报文请求新的 IP 地址
+
+- 2.手动释放
+    - 客户端在租期到期之前，如果不想再使用当前的 IP 地址 (例如笔记本电脑从宿舍移动到了教室)，客户端会向 DHCP 服务器发送 RELEASE 请求报文，通知 DHCP 服务器释放 IP 地址的租期，便于该 IP 地址后续被其他客户端继续使用。
+
+- 3.超时和断线
+    - 如前文中提到的，当客户端因为休眠和断线 (例如网线被拔掉) 而无法响应 DHCP 服务器的检测时，DHCP 服务器将回收该客户端的 IP 地址。
 
 ### 代理
 
@@ -1746,6 +2264,363 @@
 
     - `Sequence number`：可以重排，但不能重传
 
+## MTU 和 MSS 和 分段(fragmentation)
+
+- [洋芋编程：网络辣鸡自救指南 - MTU, MSS 傻傻分不清楚 ?](https://mp.weixin.qq.com/s/NxanJQYr6kyKtSwTGVyanQ)
+
+- [解决 GRE 和 IPsec 中的 IPv4 分段、MTU、MSS 和 PMTUD 问题](https://www.cisco.com/c/zh_cn/support/docs/ip/generic-routing-encapsulation-gre/25885-pmtud-ipfrag.html)
+
+- [（视频）技术蛋老师：IPv4分片问题 | MTU和MSS的核心区别](https://www.bilibili.com/video/BV14GyGY8ENw)
+
+- 概述
+
+    - MTU 属于链路层，计算大小时会包括 IP 数据包的头部和数据。
+    - MSS 属于传输层，计算大小时仅包括 TCP 段的数据部分，不包括 TCP 和 IP 头部。
+    - UDP 不考虑 MSS，但也应该注意 MTU 限制 (由应用层完成)，避免数据报过大而导致 IP 层分片。
+
+    ![image](./Pictures/net-kernel/MSS和MTU的区别.avif)
+
+- MTU（Maximum Transmit Unit，最大传输单元）：大小根据以太网的标准来设置，以太网标准规定，一个网络帧最大为 1518 字节，去掉以太网头部的 18 字节后，剩余的就是以太网 MTU 的大小1500字节，Wi-Fi 同样为 1500 字节。
+
+    - 假设IP层有 <= 1500 byte 需要发送，只需要一个 IP 包就可以完成发送任务；
+    - 假设IP层有 > 1500 byte 数据需要发送，需要分片才能完成发送，分片后的 IP Header ID 相同。
+
+- MSS（Maximum Segment Size，最大报文段长度）：TCP 提交给 IP 层最大分段大小，不包含 TCP Header 和  TCP Option，只包含 TCP Payload ，MSS 是 TCP 用来限制应用层最大的发送字节数。
+
+    - 假设 MTU= 1500 byte，那么 MSS = 1500- 20(IP Header) -20 (TCP Header) = 1460 byte
+    - 如果应用层有 2000 byte 发送，那么需要两个切片才可以完成发送，第一个 TCP 切片 = 1460，第二个 TCP 切片 = 540。
+
+    - 如果一个 IP 分片丢失，整个 IP 报文的所有分片都得重传。经过 TCP 层分片后，如果一个 TCP 分片丢失后，进行重发时也是以 MSS 为单位，而不用重传所有的分片。但tcp丢包会因为拥塞控制严重影响性能。
+
+    - MSS 由 TPC 连接的双方在 TCP 3次握手过程中协商得出的，由 MSS 值较小的一方决定。
+        - ![image](./Pictures/net-kernel/tcp_mss.avif)
+
+        - 如图所示 (Wireshark 抓包)，TCP 三次握手建立连接时，第一个和第二个包中，发送方和接收方分别声明了自己的 MSS:
+
+            - 发送方声明了自己的 MSS = 1460 (字节)
+            - 接收方声明了自己的 MSS = 1412 (字节)
+
+        - 三次握手之后，发送方知道自己的 MTU 比接收方的要大，如果直接发送 1460 字节的包，很可能在网络链路中的某个节点被分片或者丢包了，所以在接下来传输数据时，发送方会将自己的 MSS 调整为 1412。
+
+        - 但是需要注意的是: 如果网络链路中的某个节点的 MTU 比发送方和接收方的更小，那么数据包还是会被分片。
+
+### IPv4 Fragmentation （分段）
+
+- 尽管 IPv4 数据报的最大长度为 65535 字节，但大多数传输链路强制执行更小的最大数据包长度限制（即 MTU）
+
+- 当发送方发给接收方的数据包 (例如 2500 字节大小) 经过路由器时，如果超过路由器的 MTU 大小 (例如路由器 MTU 只有 1500)，路由器如何做出选择，取决于数据包在网络层是否设置了 `DF`（Don't fragment）标志:
+    - 1.如果设置了，直接丢弃数据包
+    - 2.如果没设置，数据包被分片再传输
+
+- DF 标志位（一个 IP 包能否分段）：
+    | DF bit | 表示                   |
+    |--------|------------------------|
+    | 0      | may fragment（分段）   |
+    | 1      | don't fragment（不分） |
+
+- MF 标志位（分段后，每个分段有 ）：
+    | MF bit | 表示           |
+    |--------|----------------|
+    | 0      | last fragment  |
+    | 1      | more fragments |
+
+- ![image](./Pictures/net-kernel/ipv4-fragmentation.avif)
+
+    - 第一个表格：
+        - IP 包长度 5140，包括 5120 bytes 的 payload
+        - DF = 0， 允许分段
+        - MF = 0， 这是未分段
+
+    - 第二个表格：
+        - 0-0 第一个分段: 长度 1500 = 1480 (payload) + 20 (IP Header). Offset(起始偏移量): 0
+        - 0-1 第二个分段: 长度 1500 = 1480 (payload) + 20 (IP Header). Offset: 185 = 1480 / 8
+        - 0-2 第三个分段: 长度 1500 = 1480 (payload) + 20 (IP Header). Offset: 370 = 185 + 1480/8
+        - 0-3 第四个分段: 长度 700 =  680 (payload, = (5140 - 20) - 1480 * 3) + 20 (IP Header) . Offset: 555 = 370 + 1480/8
+
+- 分段的问题：
+    - 导致CPU和内存开销小幅增加
+    - 执行重组的路由器会选择可用的最大缓冲区(18K)，因为在收到最后一个分段之前，它无法确定原始IPv4数据包的大小。
+    - 第4层(L4)到第7层(L7)信息过滤或处理数据包的防火墙无法处理ipv4的分段
+ jj   - 丢弃其中一个分段包，需要重传根据tcp还是udp决定
+        - tcp有编号确认机制，只需要重传丢失的那个分段包
+        - udp则不可靠
+
+#### MTU相关命令
+
+- ifconfig命令
+    ```sh
+    # 获取 MTU 值大小
+    ifconfig | grep -i mtu
+
+    # 查看某个具体网卡的 MTU
+    ifconfig eth0 | grep -i mtu
+    ```
+
+- tracepath命令 查看网络链路中的 MTU
+
+    ```sh
+    tracepath dbwu.tech
+    # 输出主机到目标地址的每一跳
+    # 并显示路径中的最小 MTU 值
+     1?: [LOCALHOST]                                         pmtu 1500
+     1:  10.90.89.46                                           0.500ms
+     1:  10.90.91.46                                           0.545ms
+
+    ...
+
+    14:  172.70.212.4                                        191.432ms asymm 15
+         Too many hops: pmtu 1500
+         Resume: pmtu 1500
+    ```
+
+- ping 命令 (Linux 环境) 的几个参数说明:
+
+    - `M do`：设置不允许分片
+    - `s` ：设置数据包的有效负载大小（不包括 ICMP 头部的 8 字节）
+
+- ping 命令采用 ICMP 协议来完成探测，ICMP 头大小为 8 字节，IP 头大小为 20 字节，如果网络链路的 MTU 为 1500 字节，那么单个数据包最大长度等于:1500 - 20 - 8 = 1472
+
+    - 首先，先设置数据包大小为 1472，看看是否可以连通:
+
+    ```sh
+    ping -M do -s 1472 -c 3 dbwu.tech
+    PING dbwu.tech (104.21.71.166) 1472(1500) bytes of data.
+    1480 bytes from 104.21.71.166 (104.21.71.166): icmp_seq=1 ttl=50 time=200 ms
+    1480 bytes from 104.21.71.166 (104.21.71.166): icmp_seq=2 ttl=50 time=200 ms
+    1480 bytes from 104.21.71.166 (104.21.71.166): icmp_seq=3 ttl=50 time=200 ms
+
+    # 通过输出结果可以看到，数据包超过了 MTU，而且不允许分片，所以连通失败了。
+    ping -M do -s 1473 -c 3 dbwu.tech
+    PING dbwu.tech (172.67.147.110) 1473(1501) bytes of data.
+    ping: local error: Message too long, mtu=1500
+    ping: local error: Message too long, mtu=1500
+    ping: local error: Message too long, mtu=1500
+
+    # 设置允许数据分片后
+    ping -s 1473 -c 3 dbwu.tech
+    PING dbwu.tech (172.67.147.110) 1473(1501) bytes of data.
+    1481 bytes from 172.67.147.110 (172.67.147.110): icmp_seq=1 ttl=51 time=207 ms
+    1481 bytes from 172.67.147.110 (172.67.147.110): icmp_seq=2 ttl=51 time=207 ms
+    1481 bytes from 172.67.147.110 (172.67.147.110): icmp_seq=3 ttl=51 time=207 ms
+    ```
+
+#### PMTU（只有TCP和UDP支持）
+
+- PMTU或叫PMTUD（Path MTU Discovery）是一种用于确定从源到目标地路径上的最大传输单元（MTU）的方法。
+
+    - PMTUD 的基本思想是通过逐步减小数据包大小，确定路径中最小的 MTU 值，具体的工作过程：
+
+    - 1.发送初始数据包：源主机首先假设网络链路的最小 MTU 等于自己的 MTU，发送一个不允许分片（Don't Fragment，IP 报文中的 DF 标志）的大数据包。
+
+    - 2.ICMP "需要分片" 消息：如果数据包在网络链路的某个转发节点因为 MTU 过大 (且不允许分片) 而无法通过，就会直接丢弃数据包并返回一个 ICMP Fragmentation Needed 消息给源主机，并指明路径中此时的 MTU 值。
+
+    - 3.调整数据包大小：源主机接收到 ICMP 消息后，更新 MTU 值，并重发较小的、不允许分片的数据包。
+
+    - 4.重复上述步骤：源主机重复发送不允许分片的数据包，并根据 ICMP 消息不断调整数据包大小，直到数据包成功到达目的地。
+
+    - 最后一次发送的数据包的 MTU 值，也就是整个网络链路中的最小 MTU 值。
+
+- 局限性
+    - PMTUD 依赖 ICMP 协议进行探测，但是 ICMP 会被很多网络链路中的设备禁用，所以整体上可用性较差，改进的方法是 PLPMTUD（Packetization Layer Path MTU Discovery），不依赖 ICMP 消息，而是通过传输层协议（如 TCP）的反馈机制来发现网络链路的 MTU。
+
+- TCP MSS解决TCP连接的两个端点上的分段，但不处理这两个端点之间中间有较小MTU链路的情况。
+
+    - PMTU：动态确定从数据包源到目的地的路径中的最低MTU。
+
+- 查看是否开启PMTU
+    ```sh
+    # 默认为1（关闭PMTU），0为打开
+    sysctl net.ipv4.ip_no_pmtu_disc
+    net.ipv4.ip_no_pmtu_disc = 0
+    ```
+
+- PMTU的工作原理：路由器尝试将IPv4数据报（设置了DF位）转发到其MTU低于数据包大小的链路上，路由器会丢弃数据包，并将互联网控制消息协议(ICMP)“目标无法到达”(Destination Unreachable)消息返回到IPv4数据报源，消息中的代码表示“需要分段并设置DF”（类型3，代码4）。
+
+    - 例子1：数据包可以一直传输到接收方，而不会被分段。
+    - 例子2：http连接中：TCP 客户端发送小数据包，服务器发送大数据包。
+
+        - 只有来自服务器的大数据包（大于576字节）触发PMTUD。
+
+        - 客户端的数据包很小（小于576字节），不触发PMTUD，因为它们不需要分段即可通过576 MTU链路。
+
+        ![image](./Pictures/net-kernel/pmtu.avif)
+
+    - 例子3：非对称路由示例，其中一条路径的最小MTU小于另一条路径。
+
+        - TCP 客户端到服务器的流量会经过路由器 A 和路由器 B，
+            - 客户端永远不会收到带有表示“需要分段和DF设置”的代码的ICMP“目标无法到达”消息，因为路由器A在通过路由器B向服务器发送数据包时无需对数据包进行分段。
+
+        - TCP 服务器到客户端的返回流量会经过路由器 D 和路由器 C。
+            - 服务器向客户端发送数据包时，PMTUD会触发服务器降低发送MSS，因为路由器D必须对4092字节的数据包进行分段，然后才能将其发送到路由器C。
+
+        ![image](./Pictures/net-kernel/pmtu1.avif)
+
+##### PMTU 与 GRE隧道
+
+- GRE包大小
+    ![image](./Pictures/net-kernel/gre-overhead.avif)
+    ![image](./Pictures/net-kernel/gre-overhead1.avif)
+    | 步骤 | 操作/封包    | 协议     | 长度                                             | 备注                 |
+    |------|--------------|----------|--------------------------------------------------|----------------------|
+    | 1    | ping -s 1448 | ICMP     | 1456 = 1448 + 8 （ICMP header）                  | ICMP MSS             |
+    | 2    | L3           | IP       | 1476 = 1456 + 20 （IP header）                   | GRE Tunnel MTU       |
+    | 3    | L2           | Ethernet | 1490 = 1476 + 14 （Ethernet header）             | 经过 bridge 到达 GRE |
+    | 4    | GRE          | IP       | 1500 = 1476 + 4 （GRE header）+ 20 （IP header） | 物理网卡 （IP）MTU   |
+    | 5    | L2           | Ethernet | 1514 = 1500 + 14 （Ethernet header）             | 最大可传输帧大小     |
+
+    - 1514 - 1490 = 24 byte
+
+        - GRE 隧道接口的 IPv4 MTU 默认比物理接口的 IPv4 MTU 少 24 字节，因此 GRE 接口的 IPv4 MTU 为 1476 字节
+
+- DF位=0 和 = 1的两种情况：
+
+    - DF位=0（分段）：
+        - 1.发送端发送一个 1500 字节的数据包（20 字节 IPv4 报头 + 1480 字节 TCP 负载）。
+        - 2.由于GRE隧道的MTU为1476，因此1500字节的数据包将分为两个IPv4分段（1476字节和44字节），每个分段预计会额外增加24字节的GRE报头。
+        - 3.每个 IPv4 分段增加 24 字节的 GRE 报头。现在，两个分段分别为 1500 字节 (1476 + 24) 和 68 字节 (44 + 24)。
+        - 4.包含两个 IPv4 分段的 GRE + IPv4 数据包被转发到 GRE 隧道对等路由器。
+        - 5.GRE 隧道对等路由器将删除两个数据包中的 GRE 报头。
+        - 6.此路由器将两个数据包转发到目标主机。
+        - 7.目标主机将 IPv4 分段重组为原始 IPv4 数据报。
+
+    - DF位=1（不分段），并且路径中存在一条链路，其MTU低于其他链路：
+        - 1.路由器收到 1500 字节的数据包（20 字节 IPv4 报头 + 1480 字节 TCP 负载），然后丢弃该数据包。路由器丢弃数据包是因为该数据包大于 GRE 隧道接口上的 IPv4 MTU (1476)。
+        - 2.路由器向发送者发送一条 ICMP 错误，通知发送者下一跳 MTU 为 1476。主机将此信息记录在其路由表中，通常作为目标的主机路由。
+        - 3.当重新发送数据时，发送主机采用 1476 字节作为数据包大小。GRE 路由器添加 24 字节的 GRE 封装，然后发送一个 1500 字节的数据包。
+        - 4.该 1500 字节的数据包无法通过 1400 字节的链路，因此中间路由器将丢弃该数据包。
+        - 5.中间路由器将向 GRE 路由器发送一个含有下一跳 MTU 为 1400 的 ICMP（类型 = 3，代码 = 4）。GRE 路由器将其降低至 1376 (1400 - 24) 字节，并在 GRE 接口上设置内部 IPv4 MTU 值。
+        - 6.下次主机重新发送1476字节的数据包时，GRE路由器会丢弃该数据包，因为它大于GRE隧道接口上的当前IPv4 MTU(1376)。
+        - 7.GRE路由器向下一跳MTU为1376的发送方发送另一个ICMP（类型= 3，代码= 4），主机使用新值更新其当前信息。
+        - 8.主机再次重新发送数据，但现在GRE在较小的1376字节数据包中添加24字节的封装并继续转发数据。此时，数据包将发送到GRE隧道对等体，数据包在该对等体解封并发送到目的主机。
+        ![image](./Pictures/net-kernel/pmtu-gre-df=1.avif)
+
+##### PMTU 与 IPv4sec
+
+- IPv4sec包大小：52 字节
+
+- IPv4sec隧道模式（默认模式）下，DF位=0 和 = 1的两种情况：
+
+    - DF位=0（分段）：
+        - 1.路由器收到发往主机 2 的 1500 字节的数据包（20 字节 IPv4 报头 + 1480 字节 TCP 负载）。
+        - 2.1500 字节的数据包经过 IPv4sec 加密，增加了 52 字节的开销（IPv4sec 报头、报尾和另外的 IPv4 报头）。现在 IPv4sec 需要发送 1552 字节的数据包。由于出站MTU为1500，因此必须对此数据包进行分段。
+        - 3.IPv4sec 数据包被拆分为两个分段。在分段期间，会为第二个分段添加一个额外的20字节IPv4报头，从而产生一个1500字节的分段和一个72字节的IPv4分段。
+        - 4.IPv4sec 隧道对等路由器接收分段，剥离附加的 IPv4 报头，并将 IPv4 分段合并为原始 IPv4sec 数据包。然后 IPv4sec 解密该数据包。
+        - 5.最后，路由器将 1500 字节的原始数据包转发到主机 2。
+        ![image](./Pictures/net-kernel/pmtu-ipv4sec-df=0.avif)
+
+    - DF位=1（不分段），并且路径中存在一条链路，其MTU低于其他链路：
+        - 1.路由器收到1500字节的数据包并将其丢弃，因为添加IPv4sec开销时，数据包会大于PMTU(1500)。
+        - 2.路由器向主机 1 发送一条 ICMP 消息，并通知该主机下一跳 MTU 为 1442 (1500 - 58 = 1442)。此58字节是使用IPv4sec ESP和ESPauth时的最大IPv4sec开销。实际IPv4sec开销可能比此值小7个字节。主机 1 通常在其路由表中以目标（主机 2）主机路由的形式记录该信息。
+        - 3.主机1将主机2的PMTU降低到1442，因此主机1在将数据重新发送到主机2时发送更小（1442字节）的数据包。路由器接收 1442 字节的数据包，然后 IPv4sec 添加 52 字节的加密开销，由此产生 1496 字节的 IPv4sec 数据包。由于此数据包的报头中设置了 DF 位，因此，采用 1400 字节 MTU 链路的中间路由器将丢弃此数据包。
+        - 4.丢弃数据包的中间路由器向 IPv4sec 数据包的发送端（第一个路由器）发送一条 ICMP 消息，告知发送端下一跳 MTU 为 1400 字节。这个值记录在 IPv4sec SA PMTU 中。
+        - 5.主机1下次重新传输1442字节的数据包（它未收到该数据包的确认）时，IPv4sec将丢弃该数据包。路由器丢弃该数据包，因为在添加到数据包时，IPv4sec开销会使其大于PMTU(1400)。
+        - 6.路由器向主机 1 发送一条 ICMP 消息，通知它下一跳 MTU 现在为 1342。(1400 - 58 = 1342)。主机1再次记录此信息。
+        - 7.当主机1再次重新传输数据时，它使用较小大小的数据包(1342)。此数据包不需要分段，而是通过IPv4sec隧道发送到主机2。
+        ![image](./Pictures/net-kernel/pmtu-ipv4sec-df=1.avif)
+
+##### PMTU 与 GRE 与 IPv4sec 协同工作
+
+- 使用 IPv4sec 来加密 GRE 隧道
+
+    - IPv4sec 和 GRE 以这种方式组合是因为 IPv4sec 不支持 IPv4 组播数据包，这意味着在 IPv4sec VPN 网络上无法运行动态路由协议。
+
+    - GRE 隧道支持组播，因此可先使用 GRE 隧道加密 GRE IPv4 单播数据包中的动态路由协议组播数据包，然后再使用 IPv4sec 加密单播数据包。
+
+- DF位=0 和 = 1的两种情况：
+
+    - DF位=0（分段）：
+        - 1.路由器收到一个 1500 字节的数据报。
+        - 2.在封装之前，GRE 将 1500 字节的数据包拆分为两个分段，一个 1476 字节 (1500 - 24 = 1476)，另一个 44 字节（24 字节数据 + 20 字节 IPv4 报头）。
+        - 3.GRE 封装 IPv4 分段，该过程将导致每个数据包增加 24 字节。因而将产生两个 GRE + IPv4sec 字段，一个 1500 字节 (1476 + 24 = 1500)，另一个 68 字节 (44 + 24 = 68)。
+        - 4.IPv4sec对两个数据包进行加密，每个数据包增加52字节（IPv4sec隧道模式）的封装开销，以提供1552字节和120字节的数据包。
+        - 5.由于 1552 字节的 IPv4sec 数据包大于出站 MTU (1500)，因此，路由器会将其分段。1552 字节的数据包被拆分为 1500 字节的数据包和 72 字节的数据包（52 字节负载加上为第二个分段附加的 20 字节 IPv4 报头）。三个数据包（1500 字节、72 字节和 120 字节）被转发到 IPv4sec + GRE 对等设备。
+        - 6.接收路由器重组两个 IPv4sec 分段（1500 字节和 72 字节），以便获取原始 1552 字节的 IPv4sec + GRE 数据包。对于 120 字节的 IPv4sec + GRE 数据包无需任何操作。
+        - 7.IPv4sec 对 1552 字节和 120 字节的 IPv4sec + GRE 数据包进行解密，以便获取 1500 字节和 68 字节的 GRE 数据包。
+        - 8.GRE 解封装 1500 字节和 68 字节的 GRE 数据包，以便获取 1476 字节和 44 字节的 IPv4 数据包分段。然后这些 IPv4 数据包分段被转发到目标主机。
+        - 9.主机 2 重组这些 IPv4 分段，以便获取原始 1500 字节的 IPv4 数据报。
+        ![image](./Pictures/net-kernel/pmtu-gre-ipv4sec-df=0.avif)
+
+    - DF位=1（不分段）：
+        - 1.路由器收到一个 1500 字节的数据包。由于设置了 DF 位，并且在增加 GRE 开销（24 字节）之后数据包大小超过出站接口“ip mtu”，因此 GRE 无法对该数据包进行分段或转发，并丢弃此数据包。
+        - 2.路由器向主机 1 发送 ICMP 消息，以便该主机知晓下一跳 MTU 为 1476 (1500 - 24 = 1476)。
+        - 3.主机 1 针对主机 2 将其 PMTU 更改为 1476，并在重新传输数据包时发送更小大小。GRE 封装数据包，并将 1500 字节的数据包传递给 IPv4sec。由于 GRE 从内部 IPv4 报头中复制了 DF 位（已设置），并且加上 IPv4sec 开销（最大 38 字节）后，数据包因太大而无法传出物理接口，因此 IPv4sec 丢弃该数据包。
+        - 4.IPv4sec向GRE发送ICMP消息，表示下一跳MTU为1462字节（因为为加密和IPv4开销添加了最大38字节）。GRE在隧道接口上将值1438 (1462 - 24)记录为"ip mtu"。
+        - 5.主机 1 下次重新传输 1476 字节的数据包时，GRE 将丢弃此数据包。
+        - 6.路由器向主机 1 发送 ICMP 消息，指明下一跳 MTU 为 1438。
+        - 7.主机 1 针对主机 2 减小其 PMTU，并重新传输 1438 字节的数据包。这次 GRE 接受该数据包，对其进行封装，并将其传递给 IPv4sec 进行加密。
+        - 8.IPv4sec 数据包被转发到中间路由器并被丢弃，因为该路由器出站接口 MTU 为 1400。
+        - 9.中间路由器向 IPv4sec 发送 ICMP 消息，指明下一跳 MTU 为 1400。IPv4sec 将该值记录在关联 IPv4sec SA 的 PMTU 值中。
+        - 10.当主机 1 重新传输 1438 字节的数据包时，GRE 封装该数据包，然后将其传递给 IPv4sec。IPv4sec 丢弃该数据包，因为其已将自己的 PMTU 改为 1400。
+        - 11.IPv4sec 向 GRE 发送 ICMP 错误消息，指明下一跳 MTU 为 1362，并且 GRE 在内部记录值 1338。
+        - 12.当主机1重新传输原始信息包时(因为没有收到确认)，GRE将丢弃它。
+        - 13.路由器向主机 1 发送 ICMP 消息，指明下一跳 MTU 为 1338（1362 - 24 字节）。主机 1 针对主机 2 将其 PMTU 减小至 1338。
+        - 14.主机1转发1338字节信息包，同时它可以最终到达主机2。
+        ![image](./Pictures/net-kernel/pmtu-gre-ipv4sec-df=1.avif)
+
+### MTU
+
+- [Troubleshooting MTU Issues](https://netbeez.net/blog/troubleshooting-mtu-issues/)
+
+- 如果ip层的网络包的长度比链路层的 MTU 还大，那么 IP 层就需要进行分片
+
+| Packet Size | Interface MTU | DF option (IP header) | Layer 2 interface (switched) | Layer 3 interface (routed) |
+|-------------|---------------|-----------------------|------------------------------|----------------------------|
+| <= 1500     | 1500          | 0 (unset)             | Pass                         | Pass                       |
+| <= 1500     | 1500          | 1 (set)               | Pass                         | Pass                       |
+| >= 1500     | 1500          | 0 (unset)             | Discard                      | Fragment                   |
+| >= 1500     | 1500          | 1 (set)               | Discard                      | Discard and Notify         |
+
+```sh
+# 查看每个网卡的MTU
+ip a | grep mtu
+
+# 临时修改mtu
+ifconfig eth0 mtu 9000
+# 或者
+ip link set dev eth0 mtu 9000
+
+# 永久修改mtu。不同的linux发行版有所不同。redhat系修改这个配置文件/etc/sysconfig/network-scripts/ifcfg-eth0
+auto eth0
+iface eth0 inet static
+        address 192.168.0.2
+        netmask 255.255.255.0
+        mtu 9000
+```
+
+- jumebo frames（巨型帧）：标准帧的MTU为1500，jumebo的MTU为9000（需要网卡支持，如intel X520）
+
+### 包的拆分与合并TSO、GSO、LRO、GRO
+
+- 拆分
+
+    ![image](./Pictures/net-kernel/TSO-GSO-off.avif)
+    ![image](./Pictures/net-kernel/TSO.avif)
+    ![image](./Pictures/net-kernel/GSO.avif)
+
+- 合并
+
+    ![image](./Pictures/net-kernel/LRO-GRO-off.avif)
+    ![image](./Pictures/net-kernel/LRO.avif)
+    ![image](./Pictures/net-kernel/GRO.avif)
+
+```sh
+# 查看是否开启
+ethtool -k eth0
+
+tcp-segmentation-offload: on # TSO
+generic-segmentation-offload: on # GSO
+
+large-receive-offload: on # LRO
+generic-receive-offload: on # GRO
+```
+
+```sh
+# 开启GRO。修改 GRO 配置会涉及先 down 再 up 这个网卡
+sudo ethtool -K eth0 gro on
+```
+
+
+
 ## 传输层
 
 - 三种端口
@@ -1770,19 +2645,11 @@
 
 - [李银城：WebSocket与TCP/IP](https://www.rrfed.com/2017/05/20/websocket-and-tcp-ip/)
 
+- TCP 连接迁移：受限于 TCP 四元组 的限制，如果源 IP 发生变化，则需要重新建立 TCP 连接，从而导致延迟暂停 (例如当前设备从 Wifi 切换到蜂窝网络)。
+
 - TCP是有三个特点，面向连接、可靠、基于字节流。
 
     - 字节流：可以理解为一个双向的通道里流淌的数据，这个数据其实就是我们常说的二进制数据，简单来说就是一大堆 01 串。纯裸TCP收发的这些 01 串之间是没有任何边界的，你根本不知道到哪个地方才算一条完整消息。
-
-        - 粘包问题：使用TCP发送"夏洛"和"特烦恼"的时候，接收端收到的就是"夏洛特烦恼"，这时候接收端没发区分你是想要表达"夏洛"+"特烦恼"还是"夏洛特"+"烦恼"。
-
-            - 因此纯裸TCP是不能直接拿来用的，你需要在这个基础上加入一些自定义的规则，用于区分消息边界。
-
-            - 于是我们会把每条要发送的数据都包装一下，比如加入消息头，消息头里写清楚一个完整的包长度是多少，根据这个长度可以继续接收数据，截取出来后它们就是我们真正要传输的消息体。
-
-            - 而这里头提到的消息头，还可以放各种东西，比如消息体是否被压缩过和消息体格式之类的，只要上下游都约定好了，互相都认就可以了，这就是所谓的协议。
-
-                - 于是基于TCP，就衍生了非常多的协议，比如HTTP和RPC。
 
     - 不可靠的网络：网络是不同节点间共享信息的唯一途径，数据的传输主要通过以太网进行传输，这是一种异步网络，也就是网络本身并不保证发出去的数据包一定能被接到或是何时被收到。
         - 请求丢失
@@ -1791,6 +2658,52 @@
         - 远程节点无法响应
         - 远程节点已经处理完请求，但在ack的时候丢包
         - 远程接收节点已经处理完请求，但回复处理很慢
+
+#### 粘包问题
+
+- [洋芋编程：为什么 TCP 粘包 是正常现象](https://mp.weixin.qq.com/s/6ssSPkbdqNhWe1jmAnUe1Q)
+
+- 粘包问题：TCP 粘包 并不是因为协议本身有 “问题”，而是一种 “正常现象”, 因为 TCP 是面向字节流的协议，数据之间没有所谓 “边界”，所以数据粘包之后的 “拆包” 工作应该 (也必须) 由应用层（如HTTP、RPC）完成。
+
+    - 例子：使用TCP发送"夏洛"和"特烦恼"的时候，接收端收到的就是"夏洛特烦恼"，这时候接收端没发区分你是想要表达"夏洛"+"特烦恼"还是"夏洛特"+"烦恼"。
+
+    - MSS：
+
+        - 如果 MSS 较小，一个完整的数据包会被 TCP 拆分成多个更小的 数据包进行发送，产生拆包现象
+        - 如果 MSS 较大，多个完整的数据包会被 TCP 合并为一个更大的 数据包进行发送，产生粘包现象
+        ![image](./Pictures/net-kernel/TCP_粘包问题.avif)
+
+    - 缓冲机制：TCP 在发送数据时，会将数据放入发送缓冲区；在接收数据时，会将数据放入接收缓冲区。TCP 会尽可能地将发送缓冲区中的数据打包成一个或多个数据包发送出去，而接收方在读取数据时，也会尽量将接收缓冲区中的数据全部读取出来。
+
+        - 如果要发送的数据小于发送缓冲区大小，TCP 会将多次要发送的数据，全部写入发送缓冲区，然后一起发送，产生粘包现象
+        - 如果要发送的数据大于发送缓冲区大小，TCP 会将要发送的数据进行切分，满足写入发送缓冲区的条件，然后发送，产生拆包现象
+
+- 解决方法：
+
+    - 因此纯裸TCP是不能直接拿来用的，你需要在这个基础上加入一些自定义的规则，用于区分消息边界。
+
+        - 只要应用程序对 TCP 的字节流数据能够区分单个消息的标志和边界，那么应用程序就可以将粘包后的数据分割为正常的单个消息，粘包问题自然迎刃而解。
+
+    - 1.设置消息固定长度：接收方从缓冲区读取数据时，每次都读取固定的长度，这样很自然就把单个消息拆分出来
+
+    - 2.设置消息分隔符: 发送方在将单个消息末尾追加分隔符，用来分区单个消息，接收方从缓冲区读取数据后，根据分隔符将读取到的数据切割成一个个单条消息
+        - 当然，分隔符很容易出现在要发送的应用数据中，这样就产生了冲突，无法进行正常拆包，所以实际项目中很少使用这种方式。
+
+    - 3.设置消息头部格式: 将消息分为消息头部和消息体，消息头中包含表示消息总长度（或者消息体长度，例如 HTTP 中的 Content-Length）字段，接收方首先读取消息头部，然后根据消息长度字段 读取具体的消息体内容，这也是最常用的方式
+
+    - 4.特定消息格式: 例如将单个消息固定为 JSON 格式，接收方从缓冲区读取数据后，根据读取到的数据能否被解析成合法的 JSON 来判断消息是否结束
+        - 当然，实际项目中很少使用这种方式
+
+- 场景：
+
+    - 完全禁止 粘包/拆包 的场景
+        - 1.低延迟要求: 在线游戏、股票交易
+        - 2.小数据频繁传输，例如 Telnet, SSH 终端
+
+    - 可以忽视 粘包/拆包 的场景
+        - 1.小数据传输，且两次传输之间的时间间隔很大，例如 5 秒/次 的心跳
+        - 2.使用已经处理了粘包问题的应用层协议，例如 HTTP 使用响应头中的 Content-Length 作为消息分隔符
+        - 3.传输数据只需要保证顺序即可，无需区分边界，例如大文件传输，每个数据包都是文件的一小部分而已，因为 TCP 保证了传输顺序性，所以接收方只需要读取数据，然后追加到已有数据的后面即可
 
 #### header(头部)
 
@@ -1810,6 +2723,10 @@
     | RST   | 该位为 1 表示 TCP 连接中出现异常必须强制断开连接。                                               |
     | SYN   | 初始化一个连接的同步序列号                                                                       |
     | FIN   | 该位为 1 表示今后不会有数据发送，希望断开连接。                                                  |
+
+- 虽然 IP 也有校验和，但只对 IP 分组首部进行计算和校验，所以 TCP 和 UDP 都额外提供了校验和来保护自己的首部和数据。
+
+    - TCP 为数据段中的数据提供了校验和，这样有助于确保抵达目标地址后，检验数据在传输过程中是否被网络损坏。
 
 - 窗口大小（Window）：长度 16 位：即 TCP 数据包长度为 65535字节（大概64KB）；可以通过 Options 字段的 WSOPT 选项(14位)：扩展到30位（2^30 = 1GB）
 
@@ -1841,27 +2758,6 @@
         - 第一次握手初始 SYN 包中因为发送方没有对方时间戳的信息，因此 TSecr 会以 0 填充，TSval 则填充自己的时间戳信息。
 
     - PAWS（防回绕序列号）：PAWS 假设接收到的每个 TCP 包中的 TSval 都是随时间单调增的，基本思想就是如果接收到的一个 TCP 包中的 TSval 小于刚刚在这个连接上接收到的报文的 TSval，则可以认为这个报文是一个旧的重复包而丢掉。
-
-- MTU 和 MSS
-
-    - [（视频）技术蛋老师：IPv4分片问题 | MTU和MSS的核心区别
-](https://www.bilibili.com/video/BV14GyGY8ENw)
-
-    ![image](./Pictures/net-kernel/MSS和MTU的区别.avif)
-
-    - MTU: Maximum Transmit Unit，最大传输单元。 由网络接口层（数据链路层）提供给网络层最大一次传输数据的大小；一般 MTU=1500 Byte。
-
-        - 假设IP层有 <= 1500 byte 需要发送，只需要一个 IP 包就可以完成发送任务；
-        - 假设 IP 层有> 1500 byte 数据需要发送，需要分片才能完成发送，分片后的 IP Header ID 相同。
-
-    - MSS：Maximum Segment Size 。TCP 提交给 IP 层最大分段大小，不包含 TCP Header 和  TCP Option，只包含 TCP Payload ，MSS 是 TCP 用来限制应用层最大的发送字节数。
-
-        - 假设 MTU= 1500 byte，那么 MSS = 1500- 20(IP Header) -20 (TCP Header) = 1460 byte
-        - 如果应用层有 2000 byte 发送，那么需要两个切片才可以完成发送，第一个 TCP 切片 = 1460，第二个 TCP 切片 = 540。
-
-    - 如果一个 IP 分片丢失，整个 IP 报文的所有分片都得重传。经过 TCP 层分片后，如果一个 TCP 分片丢失后，进行重发时也是以 MSS 为单位，而不用重传所有的分片
-
-    - 3次握手建立连接时：双方互相告知自己期望接收到的MSS大小。内核的TCP模块在tcp_sendmsg方法里，会按照对方告知的MSS来分片，把消息流分为多个网络分组（如图1中的3个网络分组），再调用IP层的方法发送数据。
 
 ##### Header Compression(头部压缩)
 
@@ -1952,7 +2848,7 @@
 
     - 防止接受历史包：如果连接中断，但发送的包还在网络中；而重新建立的连接之后，会收到了旧的包，由于ISN（序列号）一致，server会响应了旧的包，造成数据混乱
 
-            ![image](./Pictures/net-kernel/TCP_isn_different.avif)
+        ![image](./Pictures/net-kernel/TCP_isn_different.avif)
 
     - `ISN` Initial Sequence Number（初始序列号）随机生成算法：`ISN = M + F`
 
@@ -2016,6 +2912,14 @@
 ##### TIME_WAIT相关
 
 ```sh
+# 查看TIME_WAIT的连接
+netstat -ant | grep TIME_WAIT
+
+# 统计TIME_WAIT的连接的个数
+netstat -ant | grep TIME_WAIT | wc -l
+```
+
+```sh
 # tcp关闭连接后保持TIME_WAIT时间。目的是防止丢失Fin包，如果没有接受到ack会再次发送fin包（默认为60秒）
 sysctl net.ipv4.tcp_fin_timeout
 net.ipv4.tcp_fin_timeout = 60
@@ -2075,7 +2979,7 @@ net.ipv4.tcp_max_tw_buckets = 32768
 
 - `TIME_WAIT`消耗的 Client 的端口的解决方法：
 
-    - 1.`tcp_tw_reuse` 和 `tcp_timestamps`（默认启用）对应tcp header的options的`TSOPT`
+    - 1.`tcp_tw_reuse` （默认关闭）和 `tcp_timestamps`（默认启用）对应tcp header的options的`TSOPT`
 
         - `tcp_tw_reuse`：调用 connect() 函数时，内核会随机找一个 TIME_WAIT 状态超过 1 秒的连接给新的连接复用
 
@@ -2176,6 +3080,12 @@ net.ipv4.tcp_max_tw_buckets = 32768
 #### reset包
 
 ##### [鹅厂架构师：什么！TCP又发reset包？](https://mp.weixin.qq.com/s/bic8IqdTYLpi9ll3zmkdbw)
+
+- 为什么 RST 报文不需要 ACK 确认?
+    - RST 报文的发送方在发送 RST 报文之后，会将该 TCP 连接直接关闭，然后释放对应的结构体内存，至于接收方是否能收到这个报文，发送方已经不关注了。
+
+    - 如果接收方收到了 RST, 也会释放对应的结构体内存，结束
+    - 如果接收方没有收到 RST, 再次向发送方发送数据时，还是会收到 RST, 最终也会释放对应的结构体内存，结束
 
 - TCP的经典异常问题无非就是丢包和连接中断
     - 在这里我打算与各位聊一聊TCP的RST到底是什么？
@@ -2409,7 +3319,7 @@ net.ipv4.tcp_max_tw_buckets = 32768
 
         ![image](./Pictures/net-kernel/TCP_killcx.avif)
 
-#### 队列
+#### backlog队列、半队列、全队列
 
 - `backlog队列`：
 
@@ -2453,27 +3363,6 @@ net.ipv4.tcp_max_tw_buckets = 32768
         # 查看SYN半队列溢出的次数
         netstat -s | grep -i "SYNs to LISTEN sockets dropped"
         ```
-
-        - `SYN flood` 攻击原理：短时间内伪造大量不同ip地址并向server端发送syn，但不发送最后一次握手的ack；从而让server端一直处于`SYN_RCVD` 状态，占满syn半队列，并不断超时重发syn ack
-
-            ```sh
-            # 模拟syn flood攻击
-            hping3 -S -p 80 --flood 127.0.0.1
-            ```
-
-            - 解决方法：
-
-                - 增大`netdev_max_backlog`
-                - 增大`net.ipv4.tcp_max_syn_backlog`
-                - 开启`net.ipv4.tcp_syncookies`
-                - 增大`net.core.somaxconn`
-                - 减少`net.ipv4.tcp_synack_retries`（默认为5次）
-
-            - [小林coding：cookies方案为什么不直接取代半连接队列？](https://www.xiaolincoding.com/network/3_tcp/tcp_no_accpet.html#cookies%E6%96%B9%E6%A1%88%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%9B%B4%E6%8E%A5%E5%8F%96%E4%BB%A3%E5%8D%8A%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97)
-
-                - 1.cookies通过通信双方的IP地址端口、时间戳、MSS等信息进行实时计算的，保存在TCP报头的seq里，如果传输过程中数据包丢了，也不会重发第二次握手的信息。
-
-                - 2.攻击者构造大量的第三次握手包（ACK包），同时带上各种瞎编的cookies信息，服务端收到ACK包后以为是正经cookies，憨憨地跑去解码（耗CPU），最后发现不是正经数据包后才丢弃。
 
     - accept 全连接队列： Server 端收到第三次握手的ACK包后，就会将连接信息从SYN 半连接队列移到此队列（此时三次握手已经完成）。`accept()`，从`accept全队列`取出连接对象，返回用于传输的 socket 的文件描述符
 
@@ -2519,11 +3408,15 @@ net.ipv4.tcp_max_tw_buckets = 32768
         netstat -s | grep overflowed
         ```
 
-#### Tcp keepalive
+#### Tcp keepalive（心跳）
 
-- 在空闲时，TCP 向对方发送空数据的 ack keepalive 探测包，如果没有响应，socket 关闭。
+- TCP Keepalive 是一种用于检测 TCP 连接是否活跃的机制，通过定期发送探测数据包来确定连接的状态，主要用于检测空闲 (僵尸) 连接、保持 NAT 映射 (NAT 设备、防火墙设备) 等。
 
-- TCP keepalive 进程在发送第一个 keepalive 之前要等待两个小时（默认值 7200 秒），然后每隔 75 秒重新发送一次。只要 TCP/IP socket 通信正在进行并处于活动状态，就不需要 keepalive。
+- 原理：
+    - 1.要启用 TCP Keepalive 自动检测机制，需要通信双方都开启 Keepalive 选项
+    - 2.如果在一定时间（默认 7200秒，也就是2 小时）内没有数据传输，TCP 会发送一个 Keepalive 探测数据包
+    - 3.如果通信的对方仍然活跃，就会对该探测数据包进行响应，如果对方没有响应，TCP 将重试发送探测数据包
+    - 4.在达到最大重试次数（默认 9 次）后，如果仍然未收到响应，TCP 将认为连接已断开，关闭连接
 
 - socket接口需要设置`SO_KEEPALIVE`
 
@@ -2531,7 +3424,7 @@ net.ipv4.tcp_max_tw_buckets = 32768
 ![image](./Pictures/net-kernel/TCP_keepalive1.avif)
 
 ```sh
-# 在最后一个 data packet（空 ACK 不算 data）之后,多长时间开始发送keepalive
+# 在最后一个 data packet（空 ACK 不算 data）之后,多长时间开始发送keepalive。7200秒等于2小时
 sysctl net.ipv4.tcp_keepalive_time
 net.ipv4.tcp_keepalive_time = 7200
 
@@ -2542,23 +3435,84 @@ net.ipv4.tcp_keepalive_intvl = 75
 # 最大失败次数
 sysctl net.ipv4.tcp_keepalive_probes
 net.ipv4.tcp_keepalive_probes = 9
+
+# 在优化高并发场景和移动场景为主的后端服务器时，这几个参数需要着重优化一下:
+# 设置首次探测之前的空闲时间为 10 分钟
+echo 600 > /proc/sys/net/ipv4/tcp_keepalive_time
+
+# 设置重试探测的时间间隔为 15 秒
+echo 15 > /proc/sys/net/ipv4/tcp_keepalive_intvl
+
+# 设置最大重试次数为 3 次
+echo 3 > /proc/sys/net/ipv4/tcp_keepalive_probes
+sysctl -p
 ```
 
-#### TCP Fast Open
+##### 应用层心跳机制的必要性
 
-> 需要client和server端同时支持
+
+- TCP Keepalive 机制由内核 (操作系统) 负责执行，当进程退出后，内核会针对进程中未关闭的连接逐个进行关闭 (向连接的通信对方发送 FIN 报文)，这样就保证了每个连接的通信双方都可以知道通信的状态，并根据状态来完成不同的具体业务逻辑。
+
+- TCP Keepalive 机制无法确认应用层的心跳检测目标：应用程序还在正常工作。
+
+- 具体来说，TCP Keepalive 检测结果正常，只能说明两件事情：
+    - 1.应用程序 (进程) 还存在
+    - 2.网络链路正常
+    - 但是 当应用程序进程运行中发生异常时，例如死锁、Bug 导致的无限循环、无限阻塞 等，虽然此时操作系统依然可以正常执行 TCP Keepalive 机制，但是对于应用程序的异常情况，通信对方是无法得知的。
+
+- 此外，应用层心跳检测具有更好的灵活性，例如可以控制检测时间、间隔、异常处理机制、附加额外数据等。
+
+- 综上所述，应用层心跳检测是必须实现的。
+
+- 常见的应用层心跳实现方式有:
+    - HTTP: 访问指定 URL, 根据响应码或者响应数据来判定应用是否正常
+    - WebSocket: 和 HTTP 检测方式类似
+    - Exec: 执行指定 (Shell) 命令 (例如文件检查、网络检查)，并检查命令的退出状态码，如果状态码为 0，说明应用正常运行
+
+- 其中业界主流的检测方式是 HTTP (长连接方式), 主要是因为:
+    - HTTP 实现简单，基于长连接的方式避免了连接的建立和释放带来的开销
+    - HTTP 对于 (异构) 环境的要求很低，而且大多数应用中都使用 HTTP 作为 API 主要通信协议，心跳检测并不会带来多少额外的工作量
+
+
+- 实现细节
+    - 1.不要单独实现 “心跳线程”
+        - 使用单独的线程来实现 “心跳检测”，虽然可以将心跳检测应用代码和具体的业务逻辑代码隔离，但是当 “业务线程” 发生死锁或者 Bug 崩溃时，心跳线程检测不到。
+        - 所以应该将心跳检测直接实现在 “业务线程” 中。
+
+    - 2.不要单独实现 “心跳连接”
+        - 对于网络 (例如 TCP) 编程的场景，心跳检测应该在 “业务连接” 直接实现，而不是使用单独的连接，这样当业务连接出现异常时，通信对方可以第一时间感知到 (没有及时收到心跳响应)。
+
+        - 此外，大多数网络防火墙会定时监测空闲 (僵尸) 连接并清除，如果心跳检测使用额外的连接，那么当 “业务连接” 长时间没有要发送的数据时，就已经被防火墙断开了，但是此时心跳检测连接还在正常工作，这会影响通信对方的判断，以为 “业务连接” 还在正常工作。
+
+        - 所以应该将心跳检测直接实现在 “业务连接” 中。
+
+#### TCP Fast Open（TFO）
+
+- [洋芋编程：为什么 TFO 可以将 TCP 降低到 0 次 握手？](https://mp.weixin.qq.com/s/_cB9Kr1ZcUZKz3uBtDEi4Q)
 
 - [What is TCP Fast Open?](https://www.keycdn.com/support/tcp-fast-open)
 
 - [lwm:TCP Fast Open: expediting web services](https://lwn.net/Articles/508865/)
 
-- 初始阶段比传统三次握手多了请求`cookie`
+- 在传统的三次握手基础上进行优化，允许在握手过程中发送数据，从而减少首次发送数据的延迟，提升网络应用性能。
+
+    - 事实上，很多云计算服务商提供的 Linux 发行版本都对网络协议栈进行了优化，会在 TCP 第三次握手时直接发送数据，读者自己抓包验证时，可能会和本文结果存在一定差异。
+
+- 需要client和server端同时支持
+
+- 1.初始阶段比传统三次握手多了请求`cookie`
 
     ![image](./Pictures/net-kernel/TCP_fast_open.avif)
 
+    - 1.当发送方第一次和接收方建立 TCP 连接时，发送 1 个 SYN 报文
+    - 2.接收方返回 SYN-ACK 报文的同时，附带一个随机生成的名为 TFO Cookie 的标识符给发送方
+    - 3.发送方收到 SYN-ACK 报文后，保存 TFO Cookie，发送 ACK 报文给接收方，完成三次握手，开始传输数据
+
     - `cookie` 根据client的ip生成
 
-- 之后的阶段
+    - 和 Web 应用层 中的 Cookie 机制一样，第一次访问时，需要登录验证，然后由服务端验证后，后续访问中可以直接携带，无需再次登录。
+
+- 2.之后的阶段
 
     ![image](./Pictures/net-kernel/TCP_fast_open1.avif)
 
@@ -2572,12 +3526,49 @@ net.ipv4.tcp_keepalive_probes = 9
 
     - 配合tls1.3的话，tcp三次握手可以与tls1.3同时进行
 
+- 优点：
+    - 通过 TFO，发送方在发送 SYN 报文时就可以直接携带数据，接收方可以在第一次握手时直接处理数据，并且在第二次握手时直接发送数据，
+    - 发送方第一次发送数据，减少了 1.5 个 RTT 延迟
+    ![image](./Pictures/net-kernel/TCP_TFO_rtt.avif)
+
+    - 接收方第一次发送数据，减少了 1 个 RTT 延迟
+    ![image](./Pictures/net-kernel/TCP_TFO_rtt1.avif)
+
+- 缺点：
+
+    - 局限性：需要通信双方都支持 TFO, 如果其中一方不支持，连接自动回退到传统的 TCP 连接建立过程
+        - 此外，通信链路中的转发设备 (NAT, 防火墙) 也会执行这个兼容性机制。
+
+    - 安全性：虽然 TFO 的 Cookie 是由接收方生成并发送给发送方的，并且每个 Cookie 都与发送方关联，但是增加了接收方的安全攻击面，可能引发诸如 “TCP SYN Flood” 放大攻击 等安全风险。
+
+        - 如果攻击者从被入侵主机获取到有效的 TFO Cookie，进而伪造了大量的携带数据报文，那么接收方就需要大量的内存来临时存储应用数据，最终导致内存耗尽。
+
+    - 部署环境要求：对内核版本有要求，且需要修改内核参数。
+
+    - 应用数据过大：如果发送方第一次要发送的数据大于 TCP 的 MSS, 依然需要拆包进行多次发送，当应用数据过大时，TCP Fast Open 带来的优势 (RTT 减少) 几乎可以忽略。
+
 ```sh
-# 查看是否开启tcp fast open（linux默认情况下是开启的）。返回0表示没有开启、1表示客户端开启、2表示服务端开启、3表示客户端服务端都开启
+# 查看是否开启tcp fast open（linux默认情况下是开启的）。
+# 返回0表示没有开启
+# 1表示客户端开启
+# 2表示服务端开启
+# 3表示客户端服务端都开启
 cat /proc/sys/net/ipv4/tcp_fastopen
 
-# 永久启用
+# 启动
+echo 3 | sudo tee /proc/sys/net/ipv4/tcp_fastopen
+
+# 永久启动
 echo "net.ipv4.tcp_fastopen=3" > /etc/sysctl.d/30-tcp_fastopen.conf
+sysctl -p
+```
+
+- 测试
+```sh
+curl --tcp-fastopen http://example.com
+
+# 可以使用如下方式确认 curl 版本是否支持 TFO
+curl -V | grep -i TFO
 ```
 
 ##### nginx支持
@@ -2590,6 +3581,8 @@ listen 80 fastopen=256
 ```
 
 #### 重传与RTT、RTO
+
+- [洋芋编程：TCP 可靠传输实现原理 - 1.确认和重传](https://mp.weixin.qq.com/s/k8IqzMLe2crCMmMQ-0fHdA)
 
 > RTT(Round Trip Time)：一个数据包从发出去到回来的时间
 
@@ -2624,13 +3617,60 @@ listen 80 fastopen=256
     - [x] RFC2988以连接来确定定时器
         - 1.每一次发送包（包含重传的包）时如果定时器没有启动，则开启定时器
 
+
+- 理想发送缓冲区= 网络带宽每秒发送字节数 * RTT
+
+    - 网络带宽每秒发送字节数 = 1024, RTT = 1 秒，缓冲区 = 1024 字节
+    - 网络带宽每秒发送字节数 = 4096, RTT = 0.5 秒，缓冲区 = 2048 字节
+
+- 超时重传：
+
+    - 发送方发送了数据包: 1, 2, 3, 4, 5, 并启动 超时定时器
+    - 接收方收到了数据包: 1, 2, 5
+
+    - 如果在超时前收到 Ack，发送方确认该数据包已成功接收，停止定时器，并将 RTO 时间恢复到正常计算值。
+    - 如果定时器超时，发送方就重新发送 3 号 数据包，并重置定时器 (通常会增加 RTO 时间，例如退避算法中，RTO 时间会翻倍)。
+
 - Fast Retransmit(快速重传) 的算法：连续收到三个相同确认号的ack，立刻重传，而不需要等待定时器
+
+    - 快速重传之所以称为快速，是因为它不像超时重传一样需要等待 RTO 时间。
 
     ![image](./Pictures/net-kernel/TCP_Fast-Retransmit.avif)
 
-- SACK（ Selective Acknowledgment）：解决重传一个，还是重传所有的问题。它允许设备单独确认段(segments)，从而只重传丢失的段
+    - 例子：
+        - 发送方发送了数据包: 1, 2, 3, 4, 5, 6, 7
+        - 接收方收到了数据包: 1, 2, 5, 应答 Ack = 3
+        - 接收方收到了数据包: 1, 2, 5, 4, 应答 Dup Ack = 3
+        - 接收方收到了数据包: 1, 2, 5, 4, 6, 应答 Dup Ack = 3
+        - 接收方收到了数据包: 1, 2, 5, 4, 6, 7 应答 Dup Ack = 3
+        - 此时发送方收到了 3 个重复 Ack, 意识到 3 号数据包 (可能) 已经丢失，理解重新发送 3 号数据包
+
+    - 为什么要求必须大于等于 3 个 Dup Ack 呢？
+
+        - 因为网络包有时会乱序 (尤其是链路比较复杂的情况下)，乱序的包一样会触发重复的 Ack，但是为了乱序而重传没有必要。
+        - 正常的乱序 (非丢包) 情况下，数据包之间的序号差异不会很大，例如 3 号数据包可能会在 5 号数据包之后到达，但是不太可能在 50 号数据包之后到达。
+
+        ![image](./Pictures/net-kernel/TCP_Dup_Ack.avif)
+
+        - 左图中，2 号数据包的因为丢包，凑够了 3 个 Dup Ack，所以触发快速重传
+        - 右图中，2 号数据包 4 号数据包之后到达，因为没有凑够 3 个 Dup Ack, 没有触发快速重传
+
+- 快速重传 vs 超时重传
+
+    - 快速重传降低了延迟，但是有可能产生重复包 (例如某个包延迟了，但却导致其被重传了)
+    - 超时重传降低了产生重复包的概率，但是增加了延迟
+
+    - 相比超时重传，快速重传对性能影响小一些，因为它没有 RTO 等待时间，而且拥塞窗口减小的幅度没那么大，可以避免进入 慢启动 阶段 (慢启动在后面的 TCP 拥塞控制一文中会讲到)。
+
+    - 但是如果数据包数量太少，其中一个数据包丢失了，没有足够数量的后续数据包触发 Dup Ack，可能会凑不齐触发快速重传所必需的 3 个 Dup Ack，因此这种情况下的丢包，只能等待超时重传。
+
+        - 例子：在文件传输场景中，丢包对极小文件的影响比大文件严重。因为读写一个小文件需要的数据包很少，所以丢包时 (很可能) 凑不齐 3 个 Dup Ack，只能等待超时重传，而大文件因为数据包很多，较大可能会触发快速重传。
+
+- SACK（ Selective Acknowledgment）选择性确认：解决重传一个，还是重传所有的问题。它允许设备单独确认段(segments)，从而只重传丢失的段
 
     ![image](./Pictures/net-kernel/TCP_sack.avif)
+
+    - SAck 需要发送方和接收方都支持 (如果对端没有启用 SACK, 优化效果会大打折扣)，接收方通过告诉发送方已经收到哪些数据块，以及缺失哪些数据块，从而使发送方只重传丢失的数据段，而不是整个数据窗口。
 
     ```sh
     # 查看是否开启sack（默认开启）
@@ -2638,9 +3678,16 @@ listen 80 fastopen=256
     net.ipv4.tcp_sack = 1
     ```
 
+- SACK选择性重传 vs 快速重传
+
+    - 快速重传只知道有数据包丢了，但是不知道是一个还是多个、以及具体的数据包
+    - 选择性重传可以知道具体是哪些数据包丢了。
+
+    - 两者互为补充，快速重传通过 Dup Aak 快速检测到丢包情况，及时进行重传，选择性重传在快速重传的基础上，通过应答中的 SAck 报文，进行更加精准高效的重传 (尤其是大范围数据传输中，个别数据包丢失的情况)。
+
 - 伪重传（不必要的重传）机制：
 
-    - D-SACK：发送端接受到D-SACK时，判断是发送端的包丢失了？还是接收端的 ACK 丢失了？
+    - D-SACK（Duplicate SACK）重复选择性确认：发送端接受到D-SACK时，判断是发送端的包丢失了？还是接收端的 ACK 丢失了？
 
         > ACK大于SACK便是D-SACK
 
@@ -2649,7 +3696,9 @@ listen 80 fastopen=256
         - 发送端可以判断自己的 RTO 是不是有点小，导致过早重传
 
         ![image](./Pictures/net-kernel/TCP_d-sack.avif)
-        ![image](./Pictures/net-kernel/TCP_d-sack1.avif)
+
+        - Ack = 4000, SAck=3000-3500，也就是意味着 4000 之前的所有数据包都接收到了，所以 SACK=3000-3500 就是一个 Dup SAck。
+        - 通过这个 Dup SAck, 发送方就可以知道，数据包没有丢失，丢失的是 Ack 应答包。
 
         ```sh
         # 查看是否开启D-SACK（默认开启）
@@ -2662,6 +3711,35 @@ listen 80 fastopen=256
         - 比仅采用 DSACK 更早检测到伪重传行为，因为它判断伪重传的 ACK 是在启动丢失恢复之前生成的。相反， DSACK 只有在重复报文段到达接收端后才能发送，并且在 DSACK 返回至发送端后才能有所响应。
 
     - F-RTO：只检测由重传计时器超时引发的伪重传
+
+#### 延迟ACK
+
+- 延迟ACK（默认开启）：如果接收方收到数据包之后，没有什么数据要发送给发送方，可以延迟一段时间 Ack, 如果在延迟期间，接收方有数据要发送，就可以将数据和 Ack 放在一个数据包里面发送了。
+
+    - 1.第二个包到后，再返回一个ack
+
+    - 2.在收到数据后并不马上响应，而是延迟一段可以接受的时间200ms，在返回
+
+    - 3.有数据发送，则立刻返回ack + 数据
+
+    ![image](./Pictures/net-kernel/TCP_delay-ack2.avif)
+    ![image](./Pictures/net-kernel/TCP_delay-ack.avif)
+
+- 延迟确认并没有直接提高性能，只是减少了部分确认包，减轻了网络负担。
+
+- 但是某些场景中，延迟确认反而会影响性能，典型的场景下如下:
+
+    - 小数据包通信: 发送方可能会因为等待接收方的 Ack 而出现额外的延迟，导致传输整体时间增加
+    - 实时通信: 延迟确认会增加传输延迟 (当然，这类场景一般使用 UDP)
+    - 高并发短连接: 每个短连接的请求-响应时间，因为延迟确认而增加，导致服务器的请求积压
+    - 还有一种场景: 发送窗口很小，也会严重降低 TCP 的传输性能，示例来自 Wireshark 网络分析的艺术
+        ![image](./Pictures/net-kernel/TCP_delay-ack3.avif)
+
+        - 如图所示，服务器接收窗口只有 2920 字节（相当于两个 MSS），且关闭了延迟确认时。因为客户端每发两个包就会耗光窗口，所以不得不停下来等待服务器的确认。
+
+        - 如果这时候服务器上启用了延迟确认 (例如延迟时间为 200 毫秒)，那 29 号和 30 号数据包之间、32 号与 33 号数据包之间 ... 38 号和 39 号数据包之间，都需要多等待 200 毫秒，传输效率会下降数百倍。这个场景下的延迟确认杀伤力巨大，而且非常隐蔽！
+
+- 延迟确认除了影响性能，还会严重影响 RTT 的统计。如果需要精确地监测延迟时间来预防拥塞，就必须在通信双方都启用 TCP Timestamps (net.ipv4.tcp_timestamps = 1) 来排除延迟确认干扰。
 
 #### TCP window(窗口、流量控制)
 
@@ -2719,22 +3797,37 @@ listen 80 fastopen=256
 
     ![image](./Pictures/net-kernel/tcp_wmem1.gif)
 
+- `swnd`（发送窗口）= min(rwnd（接受窗口）, cwnd（拥塞窗口）)
+
+    ![image](./Pictures/net-kernel/TCP_congestion_swnd.avif)
+
 - 发送端其发送buffer内的数据都可以分为 4 类：
 
     ![image](./Pictures/net-kernel/TCP_window_category.avif)
+
+    - 其中，黑色方框部分就是 `发送窗口`，每确认一部分数据后，窗口就会向前移动，添加一部分新数据，然后准备发送。
 
     - 1.已经发送并得到接收端 ACK 的
     - 2.已经发送但还未收到接收端 ACK 的
     - 3.未发送但允许发送的 (接收方还有空间)
     - 4.未发送且不允许发送 (接收方没空间了)
 
-    - 窗口变化：收到 36 的 ACK 后，窗口向后滑动 5 个 byte：
+    - 如图所示，收到接收方对 32 - 36 的 5 个数据包的 Ack 之后，窗口向前滑动 5 个数据包，发送了 46 - 51 的 5 个数据包，同时将 52 - 56 的 5 个数据包加入到窗口中准备发送。
         ![image](./Pictures/net-kernel/TCP_window_category1.avif)
         ![image](./Pictures/net-kernel/TCP_window_category2.avif)
+
+- 发送窗口和 MSS 有什么关系？
+
+    - 发送窗口决定了一口气能发送多少字节，而 MSS 决定了这些字节需要分多少个数据包发送完。
+
+    - 在发送窗口为 16000 字节的情况下:
+        - 如果 MSS 等于 1000 字节，需要发送 16000/1000=16 个数据包
+        - 如果 MSS 等于 8000 字节，需要发送 16000/8000=2 个数据包
 
 - 窗口变0过程：
 
     ![image](./Pictures/net-kernel/TCP_window_reduce.avif)
+    ![image](./Pictures/net-kernel/TCP_window_reduce1.avif)
 
     - 当接受buffer满了，会发送通知一个 zero 窗口，发送端的收到后，发送窗口也变成了 0，也就是发送端不能发数据了。
 
@@ -2757,11 +3850,24 @@ listen 80 fastopen=256
 
         - DDoS 攻击点：攻击者可以在和 Server 建立好连接后，就向 Server 通告一个 0 窗口，然后 Server 端就只能等待进行 ZWP，于是攻击者会并发大量的这样的请求，把 Server 端的资源耗尽。
 
+- TCP Window Full
+
+    ![image](./Pictures/net-kernel/TCP_window_full.avif)
+
+    - 如图所示的 Wireshark 抓包截图，当一个数据包被打上 TCP Window Full 标签时，表示数据包的发送方已经将发送窗口中的数据包全部发送完了，但是还未收到任何确认。
+
+    - Window Full 很容易和 Zero Window 混淆，两者之间有一定相似之处:
+        - Window Full 表示这个 数据包的发送方 告诉接收方，暂时不会再发送数据了
+        - Zero Window 表示这个 数据包的发送方 告诉接收方，暂时不能再接收数据了
+        - 也就是说两者都意味着数据传输暂停，同样需要引起重视。
+
 - 糊涂窗口综合症：接收端的窗口被填满，然后接收处理完几个字节，腾出几个字节的窗口后，通知发送端，这个时候发送端马上就发送几个字节给接收端吗？
 
-    - 在接收端解决方案David D Clark’s方案：如果收到的数据导致 window size 小于某个值，就 ACK 一个 0 窗口，等到接收端处理了一些数据后 windows size 大于等于了 MSS，或者 buffer 有一半为空，就可以通告一个非 0 窗口。
+    - 例子：当有效负载只有 1 字节时，再加上 TCP 头部和 IP 头部各占用的 20 字节，整个网络包就是 41 字节，这样实际带宽的利用率只有 2.4%（1/41）。往大了说，如果整个网络带宽都被这种小包占满，那整个网络的有效利用率就太低了。
 
-    - 在发送端解决方案Nagle’s algorithm：
+    - 在接收端的解决方案David D Clark’s方案：如果收到的数据导致 window size 小于某个值，就 ACK 一个 0 窗口，等到接收端处理了一些数据后 windows size 大于等于了 MSS，或者 buffer 有一半为空，就可以通告一个非 0 窗口。
+
+    - 在发送端的解决方案Nagle’s algorithm：
         - 1.如果包长度达到 MSS ，则允许发送
         - 2.如果该包含有 FIN ，则允许发送
         - 3.设置了 TCP_NODELAY 选项，则允许发送
@@ -2769,20 +3875,9 @@ listen 80 fastopen=256
             - Nagle 算法并不禁止发送小的数据包 (超时时间内)，而是避免发送大量小的数据包。
         - 5.上述条件都未满足，但发生了超时（一般为 200ms ），则立即发送
 
-##### 延迟ACK
-
-- 延迟ACK（默认开启）
-
-    - 1.第二个包到后，再返回一个ack
-
-    - 2.在收到数据后并不马上响应，而是延迟一段可以接受的时间200ms，在返回
-
-    - 3.有数据发送，则立刻返回ack + 数据
-
-    ![image](./Pictures/net-kernel/TCP_delay-ack1.avif)
-    ![image](./Pictures/net-kernel/TCP_delay-ack.avif)
-
 ##### Nagle算法
+
+- Nagle 算法和延迟ack一样，并没有直接提高性能，只是减少了部分确认包，减轻了网络负担。
 
 - Nagle算法：发送端不要立即发送数据，攒多了再发。但是也不能一直攒，否则就会造成程序的延迟上升。目的是为了避免发送小的数据包。
 
@@ -2800,7 +3895,7 @@ listen 80 fastopen=256
 
     - 2.等待超时（一般为200ms），第一个包没到MSS长度，但是又迟迟等不到第二个包的到来，则立即发送。
 
-    ![image](./Pictures/net-kernel/Nagle算法.avif)
+        ![image](./Pictures/net-kernel/Nagle算法.avif)
 
         - 1.由于启动了Nagle算法，msg1 小于 mss ，此时等待`200ms`内来了一个 msg2
             - msg1 + msg2 > MSS，因此把 msg2 分为 msg2(1) 和 msg2(2)，msg1 + msg2(1) 包的大小为`MSS`。此时发送出去。
@@ -2845,11 +3940,15 @@ listen 80 fastopen=256
             - 2.加入消息长度信息
                 - 在实际场景中，HTTP 中的`Content-Length`就起了类似的作用，当接收端收到的消息长度小于 `Content-Length` 时，说明还有些消息没收到。那接收端会一直等，直到拿够了消息或超时
 
+- Nagle算法 和 延迟ack一样，不适合需要快速响应的小数据包通信场景，因为会导致发送延迟，影响性能与应用体验。
 
-
-- Delay ACK 和 Nagle 算法：这两个方法看似都能解决一些问题。但是如果一起用就很糟糕了。
+- Nagle算法 和 延迟ack：这两个方法看似都能解决一些问题。但是如果一起用就很糟糕了。如果接收方启用了延迟确认，Nagle 算法可能导致发送方的数据包积压，从而增加通信延迟，这种情况下，Nagle 算法和延迟确认的结合可能会引起队列头部阻塞（head-of-line blocking）, 增加网络延迟。
 
     ![image](./Pictures/net-kernel/TCP_delay-ack1.avif)
+
+    - 1.当 服务端 发送了第一个分组后，由于 客户端 开启了延迟确认，就需要等待 40ms 后才会回复 ACK
+    - 2.同时，由于 服务端 开启了 Nagle 算法，这时还没收到第一个分组的 ACK，服务端 也会在这里一直等着
+    - 3.直到 40ms 超时后，客户端 才会回复 ACK，然后 服务端 才会继续发送第二个分组
 
     - 解决方法：发送方关闭 Nagle 算法；或者接收方关闭延迟ACK
         - 1.关闭 Nagle’s Algorithm 的方法：可以给 socket 设置 TCP_NODELAY. 这样程序在 write 的时候就可以 bypass Nagle’s Algorithm，直接发送。
@@ -2866,7 +3965,11 @@ listen 80 fastopen=256
             04:13:32.384536 IP foobarhost.57010 > 104.244.42.65.http: Flags [P.], seq 1:38, ack 1, win 64240, length 37: HTTP: POST /apikey=1&command=2 HTTP/1.0
             ```
 
+- TCP_CORK
 
+    - TCP_CORK 算法是比 Nagle 算法更加激进的优化方式，因为它完全禁止了小数据包的发送，直到数据积累到足够大 (能够填充一个完整的 TCP 段)，或者被明确指示发送 (如关闭 TCP_CORK 选项)。
+
+    - 相对来说， Nagle 算法只是禁止了大量的小数据包的发送。
 
 #### TCP congestion control(拥塞算法)
 
@@ -2878,11 +3981,49 @@ listen 80 fastopen=256
 
 - [小林coding：再谈 TCP 拥塞控制！](https://zhuanlan.zhihu.com/p/423509812)
 
-> 流量控制是解决发送和接受端的缓存。拥塞算法是解决两端之间的网络拥堵问题
+- [洋芋编程：TCP 可靠传输实现原理 - 3.拥塞控制](https://mp.weixin.qq.com/s/xNJrYW3Ytk_vc32oDWrKqg)
+
+- [洋芋编程：TCP 到底有什么性能问题？](https://mp.weixin.qq.com/s/2vtO3uVQAwR2aMEsPpCTvw)
+
+- 拥塞控制 与 滑动窗口的区别
+    - 滑动窗口主要关注发送方到接收方的流量控制
+    - 拥塞控制更多地关注整个网络 (链路) 层面的流量控制
+        - 拥塞控制的视角更为全面，会对整个网络链路中的所有主机、路由器，以及降低网络传输性能的有关因素进行综合考量。
+
+- 目前有非常多的 TCP 的拥塞控制协议，例如：
+
+    > 不同拥塞控制算法的核心差异主要在 拥塞避免 阶段。
+
+    - 基于丢包 的拥塞控制：采取慢启动方式，逐渐增大拥塞窗口，出现丢包时减小拥塞窗口，如 Tahoe、Reno、NewReno、Bic、Cubic、PRR
+
+        ![image](./Pictures/net-kernel/TCP_congestion_algorithm.avif)
+    - 基于时延 的拥塞控制：通过延迟和带宽估算来进行拥塞控制，延迟增大时减小拥塞窗口，延时减小时增大拥塞窗口，如 Vegas、FastTCP、Westwood、Ledbat
+        ![image](./Pictures/net-kernel/TCP_congestion_algorithm1.avif)
+    - 基于链路容量 的拥塞控制：实时测量网络带宽和时延，根据网络传输中的 报文总量 和带宽时延的乘积 进行拥塞控制，如 BBR (Google 开发的一种算法，通过估算瓶颈带宽和往返时延来控制拥塞)
+    - 基于学习的 拥塞控制：没有特定的拥塞信号，通过分析不同网络条件下的传输行为，借助评价函数，基于训练数据，使用机器学习的方法生成最优的拥塞控制规则，如 Remy
+
+```sh
+# 查看系统支持的拥塞算法
+sysctl net.ipv4.tcp_available_congestion_control
+net.ipv4.tcp_available_congestion_control = reno cubic bbr
+
+# 查看当前使用的拥塞算法（我这里为bbr）
+sysctl net.ipv4.tcp_congestion_control
+net.ipv4.tcp_congestion_control = bbr
+```
 
 - 拥塞算法依赖于一个拥塞窗口 `cwnd`（以包为单位，因此乘以MSS），`cwnd` 由发送方维护
 
     - Linux 3.0 后采用了 Google 的论文[《An Argument for Increasing TCP’s Initial Congestion Window》](https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/36640.pdf)的建议——把 cwnd 初始化成了 10 个 MSS。
+
+        - 那么，第一次发送的 TCP 数据 (Segment) 总量为:10 * 1460 = 14600 约等于14KB
+
+        ```c
+        // https://github.com/torvalds/linux/blob/02f8c6aee8df3cdc935e9bdd4f2d020306035dbe/include/net/tcp.h#L200
+
+        // Linux 3.0 默认 cwnd 大小
+        #define TCP_INIT_CWND  10
+        ```
 
     - 修改cwnd是网络性能优化的手段：并不是越大越好，它会增加瓶颈路由器的压力
 
@@ -2896,26 +4037,36 @@ listen 80 fastopen=256
 
         ![image](./Pictures/net-kernel/TCP_initcwnd.avif)
 
-- `swnd`（发送窗口） = min(rwnd, cwnd)
+- TCP 的拥塞控制的核心思想是根据网络状况动态调整拥塞窗口（cwnd）的大小，通过反馈机制（如丢包和延迟）检测网络拥塞，并相应地调整数据发送速率，主要由 4 个方面组成:
 
-    ![image](./Pictures/net-kernel/TCP_congestion_swnd.avif)
-
-    - swnd决定了一口气能发多少字节，而 MSS 决定了这些字节要分多少包才能发完。
-
-![image](./Pictures/net-kernel/TCP_congestion_algorithm.avif)
-![image](./Pictures/net-kernel/TCP_congestion_algorithm1.avif)
+    - 1.慢启动
+    - 2.拥塞避免
+    - 3.快速重传 (拥塞发生后)
+    - 4.快速恢复
+    ![image](./Pictures/net-kernel/TCP_congestion_状态机avif)
 
 - BSD初始版本的Reno算法：
 
-    - Slow Start（慢热启动算法）
+    - 1.Slow Start（慢热启动算法）
 
         - 每当收到一个 ACK，cwnd = cwnd + 1; 呈线性上升
 
         - 每当过了一个 RTT，cwnd = cwnd * 2; 呈指数上升
 
-        - 有一个慢启动门限 ssthresh（一般为65535 bytes）。 当 cwnd >= ssthresh 时进入拥塞避免算法
+        - 有一个慢启动阈值 `ssthresh`（一般为65535 bytes，约等于65 KB）。 当 `cwnd >= ssthresh` 时从 慢启动阶段 进入到 拥塞避免阶段。
 
-    - Congestion Avoidance（拥塞避免算法）
+        - 例子：以stackoverflow.com以其首页 html 文本数据大小 (68.8 KB) 为例，说明一下慢启动对于服务端发送响应数据，带来了哪些性能影响。
+            - 1.第 1 次发送的数据总量为: 14 KB
+            - 2.经过 1 个 RTT, cwnd 翻倍
+            - 3.第 2 次发送的数据总量为: 28 KB
+            - 4.经过 1 个 RTT, cwnd 再次翻倍
+            - 5.第 3 次发送的数据总量为: 56 KB
+
+            - 经过 3 次发送后，14 + 28 + 56 = 98 KB, 首页 html 文本数据传输完成，一共经历了 3 个往返次数。
+
+    - 2.Congestion Avoidance（拥塞避免算法）
+
+        > 不同拥塞控制算法的核心差异主要在 拥塞避免 阶段。
 
         - 每收到一个 ACK，cwnd = cwnd + 1 / cwnd; 呈线性上升
 
@@ -2927,18 +4078,48 @@ listen 80 fastopen=256
             ![image](./Pictures/net-kernel/TCP_congestion_reno.avif)
 
         - 出现收到 3 个 duplicate ACK 进行重传数据包时（表示不太严重）：进入快速重传
-
-    - Fast Retransimit（快速重传）
+    - 3.Fast Retransimit（快速重传）：拥塞发生后
 
         > 表明网络只是轻微拥堵
 
-        - 1.cwnd = cwnd/2
-        - 2.ssthresh = cwnd
-        - 3.进入快速恢复算法
+        - 在基于丢包的拥塞控制算法中 (例如 Reno、Cubic、NewReno), 认为一旦发生丢包，就是网络链路发生了拥塞，所以发送方会急剧地减小发送窗口，甚至进入短暂的等待状态（快速重传）。
+            - 1% 的丢包率并不只是降低 1% 的传输性能，而是可能降低 50% 甚至更多 (取决于具体的 TCP 实现)
+                - 此时就可能出现极端情况: 网络花在重传被丢掉的数据包的时间比发送新的数据包的时间还要多，所以这是造成 所谓 TCP 性能问题 的最大元凶。
 
-    - Fast Recovery（快速恢复算法）
+            - 丢包同时会加重网络链路拥塞，假设 1 个 TCP 数据段转发到第 N 个路由器，前 N-1 个路由器已经完成转发，但是第 N 个路由器转发时丢失了数据段，最终导致丢失的数据段浪费了前面所有路由器的带宽。
 
-        > 快速恢复的思想是 “数据包守恒” 原则：即带宽不变的情况下，在网络同一时刻能容纳数据包数量是恒定的。当 “老” 数据包离开了网络后，就能向网络中发送一个 “新” 的数据包。既然已经收到了 3 个duplicated ACK，那么就是说可以在发送 3 个分段了。
+            - TCP Reno 算法发生丢包时，性能直接腰斩
+                ![image](./Pictures/net-kernel/TCP_Conservation_reno丢包.avif)
+
+            - TCP Tahoe 算法发生丢包时，直接重置，进入慢启动过程
+                ![image](./Pictures/net-kernel/TCP_Conservation_tahoe丢包.avif)
+
+
+            - 这里以 HTTP 场景为例，丢包带来的影响在 HTTP/2 中表现更为严重，因为 HTTP/2 只使用 1 个 TCP 连接进行传输。所以 1 次丢包会导致所有的资源下载速度变慢。而 HTTP/1.1 可能有多个独立的 TCP 连接，1 次丢包也只会影响其中 1 个 TCP 连接，所以这种场景下 HTTP/1.1 反而会获得更好的性能。
+
+        - TCP Reno 算法的快速重传
+            - 1.cwnd = cwnd/2
+            - 2.ssthresh = cwnd
+            - 3.进入快速恢复算法
+            ![image](./Pictures/net-kernel/TCP_Conservation_reno快速重传.avif)
+
+        - TCP Tahoe 算法的快速重传
+            - 该算法和超时重传机制一样，工作过程如下:
+            - 1.修改 sshthresh = cwnd / 2
+            - 2.修改 cwnd = 1
+            - 3.进入慢启动过程
+            ![image](./Pictures/net-kernel/TCP_Conservation_Tahoe快速重传.avif)
+
+        - TCP Cubic 算法的快速重传
+            - Cubic 是一种改进的拥塞控制算法 (Linux 2.6.18 之后默认使用)，是基于丢包机制的拥塞控制算法中表现最好的。
+            - Cubic 和 Reno 算法一样，发生拥塞后也是采用加法线性增加，但是每次不是加 1, 而是根据一个特定的公式来决定窗口增加的大小，从而到达更快地收敛 cwnd。
+
+            - 如图所示，相比于 Reno 算法发生拥塞后的 “大起大落”，Cubic 算法要相对 “顺滑” 一些。
+            ![image](./Pictures/net-kernel/TCP_Conservation_Cubic快速重传.avif)
+
+    - 4.Fast Recovery（快速恢复算法）
+
+        > 快速恢复的思想是 “数据包守恒” 原则：即带宽不变的情况下，在网络同一时刻能容纳数据包数量是恒定的。拥塞发生之后，如果触发了快速重传 (收到 3 个及以上 Dup Ack), 说明此时网络拥塞并没有很严重，所以只要保证接下来降低发送速率就可以了，完全不需要像超时重传一样那么保守，此时就可以进入到快速恢复阶段了。
 
         ![image](./Pictures/net-kernel/TCP_Conservation.avif)
 
@@ -2949,6 +4130,13 @@ listen 80 fastopen=256
         - 3.如果收到新的 ACK，而非 duplicated Ack：cwnd = sshthresh ，然后进入拥塞避免状态
 
         ![image](./Pictures/net-kernel/TCP_congestion_reno1.avif)
+
+        - 相比保守的 RTO 超时重传，快速恢复调整 cwnd 和 sshthresh 更加符合真实的网络链路场景，但是该算法的不足在于: 严重依赖引起快速重传的 Dup Ack, 引发快速重传至少需要 3 个 Dup Ack 包，但是 3 个 Dup Ack 并不意味着只丢了 3 个数据包 (很可能是多个数据包)，但是快速重传只会重传一个，其他丢失的数据包依然只能等待 RTO 超时重传，于是进入一个恶性循环:
+
+            - 超时一个数据包，sshthresh 就锐减一半
+            - 超时多个数据包，sshthresh 就会减少到 1, 并且不会触发快速恢复算法了
+
+    - 慢启动和快速恢复针对的目标是同一个: cwnd 初始值大小，慢启动设置 cwnd 初始值为 1, 快速恢复设置 cwnd 初始值为 ssthresh。
 
 - [ ] Linux rate halving 算法的快速恢复（已弃用）：
 
@@ -2982,7 +4170,7 @@ listen 80 fastopen=256
 
     ![image](./Pictures/net-kernel/TCP_congestion_bdp.avif)
 
-- BBR:
+- BBR:比丢包算法更好的拥塞算法
 
     - [BBR: Congestion-Based Congestion Control（论文）（中文）](http://arthurchiao.art/blog/bbr-paper-zh/)
 
@@ -3031,12 +4219,6 @@ listen 80 fastopen=256
         ![image](./Pictures/net-kernel/TCP_congestion_bbr6.avif)
 
 - TCP Westwood 算法简称 TCPW：和 bbr 算法类似是基于带宽、延时计算的一种拥塞控制算法。
-
-```sh
-# 查看拥塞算法（我这里为bbr）
-sysctl net.ipv4.tcp_congestion_control
-net.ipv4.tcp_congestion_control = bbr
-```
 
 - 同一网络下TCP对比UDP：
 
@@ -3184,6 +4366,8 @@ net.ipv4.tcp_congestion_control = bbr
     - udp的header比tcp的header要小；因此单个段（segment）可以更大/
 
 
+#### [洋芋编程：如何实现可靠的 UDP ?](https://mp.weixin.qq.com/s/xe32fVUSQU-QIpZPtBszeQ)
+
 ### [KCP](https://github.com/skywind3000/kcp)
 
 - [KCP: 快速可靠的ARQ协议](http://kaiyuan.me/2017/07/29/KCP%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/)
@@ -3193,7 +4377,22 @@ net.ipv4.tcp_congestion_control = bbr
 
 ## Network Layer（网络层）
 
-- [traceroute and ttl](https://netbeez.net/blog/traceroute/)
+### ICMP
+
+- [洋芋编程：ping 和 traceroute 命令实现原理](https://mp.weixin.qq.com/s/hnM0rtSRUYFulJ1s9jWoQg)
+
+- 在数据传输过程中，网络层的 IP 协议提供 “尽力而为” 的传输服务 (也就是不保证数据包一定会被送达)，如果要使传输过程变得可靠，就要使用传输层的 TCP 协议来实现。IP 协议不会在目标主机是否收到数据进行验证、无法进行流量控制和差错控制，因此在数据包的传输过程中难免产生各种错误。
+
+- ICMP 是一个差错报告机制，所以只需要做一件事情: 当数据报的处理过程出现差错时，向 源主机/设备 返回具体的错误就可以了，其他一律不管。
+
+    - 收到 ICMP 差错报告后，虽然无法判断差错是由哪个中间网络设备所引起的 (因为 IP 数据包中只有源端和目标端，没有记录数据包在网络中传输的全部路径)，但是可以根据 ICMP 差错报文来确定错误的类型，以及确定接下来如何更有效地重发失败的数据包。
+
+    - 例如当主机或路由器无法将数据包送达目标地址时，会发送 Destination Unreachable 错误应答给源主机，造成这个问题可能有如下的原因:
+
+        - 网络不可达: 路由器无法确定到达目标主机的路径，可能因为路由表中不存在到达目标网络的路由，或者路由器无法到达指定网络
+        - 主机不可达: 路由器无法直接到达目标主机，可能因为目标主机关闭了连接，或者目标主机已离线
+        - 端口不可达: 目标主机上没有程序监听目标端口
+        - 协议不可达: 目标主机上无法处理数据包指定的协议
 
 - header(头部)
 
@@ -3230,6 +4429,535 @@ net.ipv4.tcp_congestion_control = bbr
 
             - 4.`IP_LOCAL_INPUT` 节点用于监控和检查上交到本地上层应用的数据包，该节点是 Linux 防火墙的重要生效节点之一
 
+- ICMP 洪泛攻击
+
+    - ICMP 协议没有验证机制，所以很容易被用于进行网络攻击，目前最常见的是 ICMP 洪泛攻击: 攻击者在短时间内向目标设备发送大量的 ICMP 虚假报文，导致设备忙于应答虚假报文，无法应答正常报文。
+        ![image](./Pictures/net-kernel/ICMP_洪泛攻击.avif)
+
+    - ICMP 泛洪攻击具体可分为带宽 DOoS 攻击和端口扫描攻击（针对连接的 DOoS 攻击）两类。
+
+        - 1.带宽 DOoS 攻击：攻击者发送大量伪造的 ICMP Echo 请求报文，交换机、路由器等网络设备的 CPU 需要响应这种报文，会占用大量的带宽和 CPU 资源，这种 DOoS 攻击和其他 DOoS 攻击一样，消耗设备的资源而使得设备无法提供正常服务。
+
+        - 2.连接 DOoS 攻击
+            - 攻击者发送大量的端口扫描报文，交换机需要回应大量的 ICMP 目标不可达报文，这种攻击既消耗系统的资源，同时攻击者能够很轻易获得设备对外开放的端口，然后可以针对这些端口进行攻击，可以影响所有 IP 设备的网络连接。
+
+- ping
+
+    - ping 是 ICMP 的一个经典应用，主要用来测试两台主机之间的连通性，通过 ICMP 的 Echo 的报文来确定:
+
+        - 目标设备是否可达
+        - 与远程主机的通信往返延迟 RTT
+        - 数据报文的丢失情况 (丢包)
+
+- traceroute
+
+    - traceroute 是 ICMP 的另一个经典应用，用来跟踪一个数据包从源设备到目标设备的传输信息，通常用于诊断网络问题和查找数据包传输路径。
+
+        ```sh
+        # 指定使用 ICMP 协议
+        # 因为很多 Linux 系统默认使用 UDP 协议
+        traceroute --icmp  dbwu.tech
+
+        # 指定使用 TCP 协议
+        traceroute --tcp -p 80 -n google.com
+        ```
+
+    - traceroute 不仅支持 ICMP 协议，还支持 TCP, UDP 协议，本文使用 ICMP 来说明其工作流程和抓包实验，其他协议的工作原理也是类似的，感兴趣的读者可以自行尝试。
+
+        - 1.发送 UDP 数据包: 源设备向目标设备发送一系列 ICMP 报文，初始 TTL (Time To Live) 设置为 1 (默认情况下，单个 TTL 值会发送 3 个相同的包)
+        - 2.路由器处理: 第一个路由器收到 ICMP 报文后，检测 TTL, TTL 等于 1, 然后将其减 1, TTL 等于 0, 路由器将数据包丢掉，然后发送 ICMP 超时 (Time Exceeded) 报文给源设备
+        - 3.累计处理：源设备收到 ICMP 超时报文之后，将 TTL 设置为 2, 然后发送新的 ICMP 报文
+        - 4.路由器再次处理: 第一个路由器收到 ICMP 报文后，检测 TTL, TTL 等于 2, 然后将其减 1, TTL 等于 1, 接着转发到第二个路由器，第二个路由器收到 ICMP 报文后，检测 TTL, TTL 等于 1, 然后将其减 1, TTL 等于 0, 第二个路由器将数据包丢掉，然后发送
+            - ICMP 超时 (Time Exceeded)
+            - 报文给源设备
+
+        - 5.重复第 2 - 4 步，直到数据包到达目标设备 或者到达路由最大跳跃数量 (通常为 30)。如果可以到达目标设备，源设备会发送一个于 的 ICMP 报文，这时目标设备会发送
+            - ICMP
+            - 应答报文给源设备
+        - 6.这时源设备就可以知道: 到达目标设备所经过的路由器 IP 地址以及每个路由器的往返时间
+
+        - 我们可以将 traceroute 命令的整个执行策略概括为: 步步为营，每次向前走一步，直到到达目标或者发生错误，通过命令输出的数据包传输路径，可以很快找到网络故障的位置。
+
+    - 隐藏路由器
+        - 数据包在传输过程中，有的路由器会隐藏自己的位置，不让 ICMP Timeout 的消息通过，或者 某次探查没有获得响应，或者响应丢失，结果就是 traceroute 的结果输出中，在对应的路由器的那一跳上始终会显示 `*` 号。
+
+        - 还有一种情况，某些路由器会错误地转发 TTL 为 0 的数据报，此时该路由器的下一跳路由器，就会直接丢弃数据，并返回 ICMP 传输超时 报文。
+
+### ipv4和子网
+
+- [洋芋编程：网络辣鸡自救指南 - 子网](https://mp.weixin.qq.com/s/1TUG1QomAIA29W-8A3EDHA)
+
+- 子网（Subnet）是将一个大的 IP 地址空间划分成若干个较小的网络单元的过程。每个子网都有一个唯一的子网标识符（Subnet ID）和一个子网掩码（Subnet Mask），用于确定子网的范围和边界。
+
+- 为什么需要子网？子网（Subnet）的存在主要是为了更有效地管理和使用 IP 地址。
+
+    - IP 地址管理: 子网允许网络管理员将一个大的 IP 地址空间划分为若干个小的子网，每个子网包含一定数量的 IP 地址。这样可以更灵活地分配 IP 地址，提高地址的利用率，并且方便对 IP 地址进行管理和维护。
+    - 隔离和安全: 子网可以根据网络拓扑、安全策略等需求进行划分，不同子网之间可以进行隔离，提高网络的安全性。例如，内部子网和外部子网可以根据防火墙规则进行访问控制，限制不同网络之间的通信。
+    - 性能优化: 合理划分子网可以减少广播域的大小，降低广播和多播的传播范围，减少网络拥塞和冲突，提高网络性能。
+    - 灵活性和可扩展性: 子网划分可以根据实际需求进行调整和扩展，灵活适应不同规模和需求的网络环境。新增设备或子网时，可以通过调整子网划分来满足新的需求，而无需更改整个网络结构。
+
+- IP 地址组成
+
+    - `IP 地址 = 网络号 + 主机号`
+
+    - 网络号：表示主机 (或路由设备) 所连接到的网络，网络地址表示其属于互联网的哪个网络。
+
+    - 主机号：表示主机 (或路由设备) 属于该网络中的哪一台主机。
+
+    - 例如 IP 地址 192.168.1.100/24 中，前 24 位表示 (192.168.1) 网络部分，后 8 位 (100) 表示主机部分。
+
+- 子网掩码：子网掩码表示网络号与主机号之间的边界。
+    - 子网掩码和 IP 地址一样分成 4 个部分、由十进制表示，例如网络部分的长度为 24 位，子网掩码则为 255.255.255.0。但是和 IP 地址不同的是，当使用二进制表示时，子网掩码一定是以连续的 1 开始，以连续的 0 结束。
+
+- IP 私有地址：并没有什么特别的结构，只不过是将公有地址中没有被分配的一部分拿出来，规定这部分地址只能在内网使用而已。
+    - 由于 IPv4 中地址枯竭的问题，RFC 专门定义了只在内部网络中使用的 IP 地址，也就是子网 (内网) 地址，每个地址分类提供了不同的子网地址范围，网络部分相同的 IPv4 地址可以认为它们归属同一子网。
+
+- CIDR（Classless Inter-Domain Routing，无类别域间路由）基于可变长子网掩码进行任意长度的 IP 地址前缀，也就是说，主机部分也可以是任意长度。
+
+    - 表示方法:`前缀地址 / 前缀长度`
+    - 例如：192.168.1.0/24, 前缀地址是 IP 地址的开头部分，前缀长度是一个从 0 到 32 的整数，表示网络前缀的位数。
+
+    - 子网掩码：前缀长度是 24，所以子网掩码是 255.255.255.0
+    - 网络地址：192.168.1.0
+    - 广播地址：将主机对应的比特位全置为 1，即 192.168.1.255
+
+    - 可用主机地址范围：从 192.168.1.1 到 192.168.1.254（减去网络地址和广播地址），也就是 254 个主机地址
+
+- 特殊地址
+    - 主机号部分的比特全部为 0 时表示整个子网。
+    - 主机号部分的比特全部为 1 时表示向子网中的所有设备发送广播。
+
+    - `0.0.0.0`
+
+        - 有的教材上注明: A 类地址的范围是 0.0.0.0 ~ 127.255.255.255，但是 0.0.0.0 用于表示默认路由或未知地址 (一般表示当前主机)，不属于有效的 A 类地址范围。
+
+        - 在 Linux 中使用 ping 0.0.0.0 时，地址会被解析到本地环回地址 127.0.0.1, 所以实际的应答就是 127.0.0.1。
+
+            ```sh
+            ping 0.0.0.0
+            PING 0.0.0.0 (127.0.0.1) 56(84) bytes of data.
+            64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.398 ms
+            64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.061 ms
+            64 bytes from 127.0.0.1: icmp_seq=3 ttl=64 time=0.064 ms
+            ^C
+            --- 0.0.0.0 ping statistics ---
+            3 packets transmitted, 3 received, 0% packet loss, time 2041ms
+            rtt min/avg/max/mdev = 0.061/0.174/0.398/0.158 ms
+            ```
+
+        - 0.0.0.0 用于表示默认路由，又该如何理解呢？
+
+            - 简单来说，如果主机需要通信的目标设备 IP 地址和自己*不在*同一网段，就可以使用这条默认路由 (网关)，让网关将自己的数据包转发出去。例如一个家庭中所有网络设备的网关都是其连接的路由器 (光猫)。
+
+    - `127.0.0.1`： 本地环回地址 (保留地址)，一般作为本地开发测试使用。
+
+    - `255.255.255.255`： 255.255.255.255 表示当前子网的广播地址。
+
+#### A、B、C、D、E（5类）地址
+
+- IPv4 地址中前三类 (A, B, C) 公网地址网络部分与主机部分都是已经分配好的。
+
+- A 类
+    - 地址范围: 1.0.0.0 ~ 127.255.255.255
+    - 网络部分: 8 位
+    - 主机部分: 24 位
+    - 子网范围: 10.0.0.0 ~ 10.255.255.255 (10.0.0.0/8 或者 10/8)
+    - 子网掩码: 255.0.0.0
+    - 应用场景: 大规模网络
+
+    - A 类地址的网络地址有效范围就等于: 01000000 (1) 到 01111111（127）。
+
+    - 最大网络数量：`2 ^ 7 - 1 = 127`
+
+        - 为什么网络数量是 127 ?：第一个字节的最高位（即最左边的位）始终为 0 (用于标记 A 类)，后面的 7 位用于网络号。
+
+    - 每个网络最大主机数量: `2 ^ 24 - 2 = 16777214`
+
+        - 为什么主机数量要减去 2 ?因为 `1.0.0.0` 表示当前的网络地址，`126.255.255.255` 表示该网络的广播地址。
+
+            - 网络地址是该子网的第一个地址，表示网络本身，而广播地址是该子网的最后一个地址，用于向该子网中的所有设备发送广播消息，所以在该子网中，这两个地址不能被分配给任何设备使用。
+
+    - 2个特殊的地址:
+
+        - `0.0.0.0` 表示默认路由或未知地址
+        - `127.0.0.1` 表示本地环回地址
+
+- B 类
+    - 地址范围: 128.0.0.0 ~ 191.255.255.255
+    - 网络部分: 16 位
+    - 主机部分: 16 位
+    - 子网范围: 172.16.0.0 ~ 172.31.255.255 (172.16.0.0/12 或者 172.16/12)
+    - 子网掩码: 255.255.0.0
+    - 应用场景: 中等规模网络
+
+    - B 类地址的网络地址有效范围就等于: 10000000 (128) 到 10111111（191）。
+
+    - 最大网络数量:`2 ^ 14 - 1 = 16383`
+
+        - 为什么网络数量是 16383 ?B 类地址的特征: 第一个字节的最高前两位（即最左边的两位）始终为 10 (用于标记 B 类)，后面的 14 位用于网络号。
+
+            - 但是实际上地址 128.0.0.0 不做分配，实际分配的是 128.1.0.0, 第一个可用网络地址为 128.1, 所以网络数量要在 2^14 的基础上再减去 1, 也就是 16383。
+
+    - 每个网络最大主机数量:`2 ^ 15 - 1 = 65534`
+
+        - 为什么主机数量要减去 2 ?因为 128.0.0.0 表示当前的网络地址，191.255.255.255 表示该网络的广播地址。
+
+- C 类
+    - 地址范围: 192.0.0.0 ~ 223.255.255.255
+    - 网络部分: 24 位
+    - 主机部分: 8 位
+    - 子网范围: 192.168.0.0 ~ 192.168.255.255 (192.168.0.0/16 或者 192.16/16)
+    - 子网掩码: 255.255.255.0
+    - 应用场景: 小型规模网络
+
+    - C 类地址的网络地址有效范围就等于: 11000000 (192) 到 11011111（223）。
+
+    - 最大网络数量:`2 ^ 21 - 1 = 2097151`
+
+        - 为什么网络数量是 2,097,151 ?C 类地址的特征: 第一个字节的最高前三位（即最左边的前三位）始终为 110 (用于标记 C 类)，后面的 21 位用于网络号。
+            - 但是实际上地址 192.0.0.0 不做分配，实际分配的是 192.0.1.0, 第一个可用网络地址为 192.0.1, 所以网络数量要在 2^21 的基础上再减去 1, 也就是 2,097,151。
+
+    - 每个网络最大主机数量:`2 ^ 8 - 2 = 254`
+
+        - 为什么主机数量要减去 2 ?因为 192.0.0.0 表示当前的网络地址，223.255.255.255 表示该网络的广播地址。
+
+- D 类地址
+    - 地址范围: 224.0.0.0 ~ 239.255.255.255
+    - 应用场景: 多播
+    - D 类地址没有传统意义上的网络号和主机号的概念，因为它们不用于传统的单播通信，同时，D 类地址也没有子网掩码，因为其不涉及子网划分，多播用来标识一个多播组，而不是特定的网络和主机。
+
+- E 类地址
+    - 地址范围: 240.0.0.0 ~ 255.255.255.255
+    - 应用场景: 实验和未来用途，没有在常规通信中使用
+    - E 类地址也没有传统的网络号和主机号的概念，因为它们是保留的，不用于实际网络通信。
+
+#### 如何判断哪些 IP 位于同一子网中？
+
+- 下面哪些 IP 地址位于同一子网中？
+
+    - 192.168.78.36/29
+    - 192.168.78.42/29
+    - 192.168.78.41/29
+    - 192.168.78.45/29
+    - 192.168.78.48/29
+
+- 当前子网掩码长度为 29, 最长掩码长度为 32, 所以每个子网中的主机数量 (IP 地址) 为 :`2 ^ (32 - 29) = 2 ^ 3 = 8`
+
+- 将上面 5 个 IP 地址的主机位 (最后 1 位) 除以 8，即可得到该 IP 地址对应的子网网段。
+
+    - 36 / 8 = 4
+    - 42 / 8 = 5
+    - 41 / 8 = 5
+    - 45 / 8 = 5
+    - 48 / 8 = 6
+
+- 所以第 2, 3, 4 个 IP 地址位于同一子网。
+
+### VPN
+
+- 由于 IP 地址的短缺，一个机构能申请到的 IP 地址数量往往远小于本机构所拥有的主机数量，并且一个机构并不需要把所有的主机接入到公网中，机构内的计算机可以使用仅在本机构有效的 IP 地址（专用地址）。
+
+- VPN 使用公网作为内部专网之间的通信载体。
+
+- 下图中，场所 A 和 B 的通信经过互联网，如果场所 A 的主机 X 要和另一个场所 B 的主机 Y 通信，IP 数据报的源地址是 10.1.0.1，目标地址是 10.2.0.3。
+
+    ![image](./Pictures/net-kernel/vpn.avif)
+
+    - 数据报先发送到与公网相连的路由器 R1，R1 对内部数据进行加密，然后重新加上数据报的首部，源地址是路由器 R1 的公网地址 125.1.2.3，目标地址是路由器 R2 的公网地址 194.4.5.6。
+
+    - 路由器 R2 收到数据报后将数据部分进行解密，恢复原来的数据报，此时目标地址为 10.2.0.3，就交付给 Y。
+### NAT
+
+- [洋芋编程：NAT 实现原理](https://mp.weixin.qq.com/s/hFe0n_Gz1E7fe9R6C8xbUg)
+
+- NAT（Network Address Translation，网络地址转换）的基本原理是在转发网络包时，对 IP 头部中四元组的 (源 IP, 目标 IP, 源端口，目标端口) 进行改写。
+
+- 主要功能：将内部网络 (如企业或居民住宅) 的私有 IP 地址转换为公网 IP 地址，从而允许多个内部主机/设备共享一个公网 IP 地址与外部网络 (一般指互联网) 进行通信。
+
+- 为什么需要 NAT ?
+    - 1.缓解 公网 IPv4 地址短缺问题 (最主要的原因)
+    - 2.提高网络安全性，NAT 通过隐藏内部网络的 IP 地址结构，外部用户无法直接访问内部网络设备 (透明代理)
+    - 3.私有 IP 地址可以灵活扩展，不同的私有地址可以在不同的内部网络中使用 (例如 A 公司的某台服务器和 B 公司的某台客户端具有相同的 IP 地址，这是完全 OK 的，因为这两个设备之间不会进行通信)
+
+- 缺点：
+    - 资源开销：NAT 设备需要维护大量的地址转换信息
+    协议兼容性：一些应用层协议（如 SIP、IPSec）流量可能无法穿越 NAT 设备，需要额外的配置或技术来解决
+    - 性能：由于每个数据包都需要进行地址转换，会对网络性能产生一定的影响
+    - 限制: NAT 受限于未被占用的端口号数量
+
+- 既可以在支持网络地址转换的路由器（称为 NAT 网关）中配置 NAT
+    - 也可以在 Linux 服务器中配置 NAT（Linux 服务器实际上充当的是 “软件路由器” 的角色）。
+
+- NAT 根据实现方式分为三类：
+
+    - 1.静态 NAT
+        - 内网 IP 与公网 IP 是一对一的永久映射关系。
+        - 例如：内部地址 192.168.1.10 映射到公网地址 203.0.113.10。
+
+    - 2.动态 NAT
+        - 内网 IP 从公网 IP 池中，动态选择一个进行映射。
+        - 例如：多个内部地址 192.168.1.10, 192.168.1.11 等可以动态映射到公网地址池中的 203.0.113.10, 203.0.113.11 等。
+
+    - 3.NAPT
+        - 网络地址端口转换 NAPT（Network Address and Port Translation），目前主流的 NAT 实现方式，目标是为了更有效地利用公网 IP 地址 (一个公网 IP 应该服务于尽可能多的内部 IP)，现代的 NAT 转换表把传输层的端口号也加上了，这样多个内部的主机/设备就一个共用一个公网 IP, 一般将 NAPT 简称为 “地址转换表”。
+        ![image](./Pictures/net-kernel/nat_NAPT地址转换表示例.avif)
+
+- 地址转换类型
+
+    - SNAT（Source Network Address Translation）主要用于转换数据包中的源 IP 地址，目标 IP 地址保持不变，主要目标是隐藏内部网络中设备的私有 IP 地址，并将其转换为一个公网 IP 地址。
+
+        - 应用场景：多个内网 IP 地址共享一个公网 IP 地址。
+
+        ```
+        PACKET FORWARDED                     PACKET RECEIVED
+        |----------------------|             |----------------------|
+        |    IP PACKET         |             |    IP PACKET         |
+        |                      |             |                      |
+        | SRC: 192.168.0.2     |             | SRC: 100.100.100.100 |
+        | DST: 123.125.115.110 |             | DST: 123.125.115.110 |
+        | |---------------|    |             | |---------------|    |
+        | |   TCP PACKET  |    | = (SNAT) => | |   TCP PACKET  |    |
+        | | DPORT: 80     |    |             | | DPORT: 80     |    |
+        | | SPORT: 2345   |    |             | | SPORT: 3456   |    |
+        | | ... DATA ...  |    |             | | ... DATA ...  |    |
+        | |---------------|    |             | |---------------|    |
+        |----------------------|             |----------------------|
+        ```
+
+    - DNAT (Destination Network Address Translation) 主要用于转换数据包中的目标 IP 地址，源 IP 地址保持不变，主要目标是将 公网 IP 地址的请求重定向到内部网络的特定网络设备。
+
+        - 应用场景：将外部请求重定向到内部服务器，同时隐藏外部请求对应的后端服务器的真实 IP 地址。
+
+        ```
+        PACKET RECEIVED                      PACKET FORWARDED
+        |----------------------|             |----------------------|
+        |    IP PACKET         |             |    IP PACKET         |
+        |                      |             |                      |
+        | SRC: 123.125.115.110 |             | SRC: 123.125.115.110 |
+        | DST: 100.100.100.100 |             | DST: 192.168.0.2     |
+        | |---------------|    |             | |---------------|    |
+        | |   TCP PACKET  |    | = (DNAT) => | |   TCP PACKET  |    |
+        | | DPORT: 3456   |    |             | | DPORT: 2345   |    |
+        | | SPORT: 80     |    |             | | SPORT: 80     |    |
+        | | ... DATA ...  |    |             | | ... DATA ...  |    |
+        | |---------------|    |             | |---------------|    |
+        |----------------------|             |----------------------|
+        ```
+
+    - 双向地址转换：同时使用 SNAT 和 DNAT，当接收到网络包时，执行 DNAT，把目标 IP 转换为内部 IP；而在发送网络包时，执行 SNAT，把源 IP 替换为外部 IP。
+
+- 下面通过一个小例子来说明，为了便于演示，这里省略 NAT 网关中的端口映射关系。
+    ![image](./Pictures/net-kernel/nat_地址转换类型.avif)
+    - 1.内部主机 (IP: 192.168.0.2) 访问 http://baidu.com (123.125.115.110)
+    - 2.NAT 网关会把源 IP 地址 (192.168.0.2) 转换成自己的公网 IP (100.100.100.100)，然后发送给 http://baidu.com
+    - 3.baidu.com 收到请求后，发送响应
+    - 4.NAT 网关接收到 baidu.com 的响应数据包后，将目标 IP 地址转换成内部 IP 地址 (192.168.0.2)，发送给内部对应的主机
+
+- 实现原理示例
+
+    - 私有 (内网) 地址向公网地址发送数据包
+
+        - 假设这里的 NAT 转换工作是由网关来完成的，其中 (NAT 网关) 公网 IP + 端口号 <=> 私有 IP + 端口号 的映射关系如下图所示，当然，这个映射关系也就是 地址转换表.
+
+        - 现在私有 IP 10.10.1.1 要通过端口 1025 向公网 IP 192.0.2.79 的 80 端口发送数据，其中，NAT 网关的 IP 为 198.18.8.31。
+
+        ![image](./Pictures/net-kernel/nat_私有地址向公网地址发送数据包.avif)
+
+        - 1.私有 IP `10.10.1.1` 通过端口 `1025` 发送数据包
+        - 2.SNAT: 网关通过地址转换表，将数据包中的源 IP 改写为自身 IP `198.18.8.31`, 源端口改写为私有地址的映射端口 `5436`
+        - 3.公网 IP `192.0.2.79` 的 `80` 端口接收到数据包后，进行响应的处理，然后向网关 IP `198.18.8.31` 的端口 `5436` 发送数据包
+        - 4.DNAT: 网关接收到数据包后，通过地址转换表，将数据包中的目标 IP 改写为私有 IP `10.10.1.1`, 目标端口改写为私有地址的端口 `1025`
+
+    - 公网地址向私有 (内网) 地址发送数据包
+        - 整个过程和 私有地址向公网地址发送数据包 类似，这不过是网关的 SNAT, DNAT 工作顺序整好相反
+        ![image](./Pictures/net-kernel/nat_公网地址向私有地址发送数据包.avif)
+
+- NAT 设备支持端口数量上限
+
+    - 1.端口数量：NAT 设备可以使用的端口号范围从 1 到 65535，其中一些端口号（如 0-1023）通常保留用于特权服务（如 HTTP、HTTPS、FTP 等），因此可用的端口号大约在 1024 到 65535 之间，这样实际可用的端口号大约有 64511 个。
+
+    - 2.IP 地址数量：如果 NAT 设备只有一个公有 IP 地址，那么它最多可以映射约 64511 个端口。但如果设备有多个公有 IP 地址，每个 IP 地址都可以使用约 64511 个端口号，支持的端口映射数量可以组合增加。例如，如果 NAT 设备有 10 个公有 IP 地址，那么它可以支持的端口映射数量大约是 10 × 64511 = 645110 个。
+
+    - 3.设备性能和内存：虽然理论上可以支持这么多的端口号映射，但实际情况中，NAT 设备的硬件性能（CPU、内存）和软件实现也会限制其实际支持的连接数。
+
+    - 如果某个内网主机向公网服务端发起了大量连接，例如 10 万连接，这会占用 NAT 设备的大量端口号资源。
+
+    - 假设 NAT 设备有两个公有 IP 地址（203.0.113.1 和 203.0.113.2），每个 IP 地址最多支持 64511 个端口，并且负载均衡策略为轮询，那么连接端口映射情况如下:
+
+        - 为 203.0.113.1 分配 50000 个连接
+        - 为 203.0.113.2 分配 50000 个连接
+
+### 内网穿透
+
+- [洋芋编程：内网/公网穿透 实现原理](https://mp.weixin.qq.com/s/H_ngWHKcKkyIMko8nc-83Q)
+
+- 本文以 P2P 网络场景为例来讲解内网穿透原理，读者也可以带入其他应用场景，例如远程协助工具、远程会议工具。
+
+- 问题：在大多数的情况下，参与 P2P 网络的设备位于使用 NAT 设备后面，这导致这些设备无法直接通过公共互联网进行通信。
+
+- 内网穿透 (打洞) ：目标是使节点之间能够绕过 NAT，像两个正常的公网 IP 一样直接建立 P2P 连接，常见的实现方案有 TCP 打洞和 UDP 打洞，本文着重介绍 UDP 穿透 (打洞) 的实现原理。
+
+#### UDP 内网穿透
+
+- 连接双方节点通过 “中间服务器” 的协助，可以建立连接并使数据报文能够穿透对方的 NAT 网关。
+
+- 假设节点 A 和节点 B 是 P2P 网络中的两个节点，且都位于各自的 NAT 网关之后。
+
+    - 1.节点 A 和节点 B 分别登录 “中间服务器” S，并上报各自的 内网 IP 和端口号，S 分别记录 A 和 B 的 公网+内网 IP 和端口号
+    - 2.节点 A 要向节点 B 发起连接建立，但是不知道节点 B 的 IP 地址和端口号，于是向 S 请求相关信息
+    - 3.S 将 B 的公网+内网 IP 和端口号告诉 A
+    - 4.获取到 B 的 IP 和端口号之后，A 开始向 B 发起连接，发送数据
+
+- 当然，针对节点 A 和节点 B 所在的 NAT 网关位置，具体的细节可能稍有差异，下面一起来看看不同的场景下的具体实现细节。
+
+- 心跳
+    - 一般情况下， NAT 网关/设备针对 UDP 连接有自动关闭/删除的机制 (例如空闲/超时计数)，所有 UDP 穿透存在有效期限制，所以通信的节点双方，需要定时向对方发送心跳包，保证内网穿透可以维持正常。
+
+- 相同 NAT
+
+    - 在这种场景中，节点 A 和节点 B 的 NAT 网关是同一个，如图所示，A 和 B 的 NAT 设备 IP 都是 155.99.25.11。
+    ![image](./Pictures/net-kernel/内网穿透_udp内网穿透_相同NAT.avif)
+
+    - 穿透前
+        - 节点 A (10.0.0.1:4321) 通过 NAT 网关 (155.99.25.11) 登录 “中间服务器” S
+        - 数据包中的 源 IP 地址、源端口分别被 NAT 网关改为 155.99.25.11, 62000
+        - 节点 B (10.1.1.3:4321) 通过 NAT 网关 (155.99.25.11) 登录 “中间服务器” S
+        - 数据包中的 源 IP 地址、源端口分别被 NAT 网关改为 155.99.25.11, 62005
+
+    - 穿透中
+        - 节点 A 向 S 请求节点 B 的 IP 地址和端口号，数据包中包含 A 的内网地址+端口 (10.0.0.1:4321)
+        - S 向节点 A 发送数据包，其中包含了节点 B 的 公网+内网 IP 和端口号，节点 A 收到数据包后，保存了 B 的地址和端口信息
+        - S 向节点 B 发送数据包，其中包含了节点 A 的 公网+内网 IP 和端口号，节点 B 收到数据包后，保存了 A 的地址和端口信息
+        - 此时节点 A 和节点 B 都有了对方的 IP 地址和端口号，穿透完成
+
+    - 穿透后
+        - 节点 A 和节点 B 分别向对方发送数据 (使用 NAT 内网地址通信)
+
+- 不同 NAT
+
+    - 在这种场景中，节点 A 和节点 B 属于不同的 NAT 网关，如图所示，A 的 NAT 设备 IP 是 155.99.25.11, B 的 NAT 设备 IP 都是 138.76.29.7。
+    ![image](./Pictures/net-kernel/内网穿透_udp内网穿透_不同NAT.avif)
+
+    - 穿透前
+        - 节点 A (10.0.0.1:4321) 通过 NAT 网关 (155.99.25.11) 登录 “中间服务器” S
+        - 数据包中的 源 IP 地址、源端口分别被 NAT 网关改为 155.99.25.11, 62000
+        - 节点 B (10.1.1.3:4321) 通过 NAT 网关 (138.76.29.7) 登录 “中间服务器” S
+        - 数据包中的 源 IP 地址、源端口分别被 NAT 网关改为 138.76.29.7, 31000
+
+    - 穿透中
+        - 节点 A 向 S 请求节点 B 的 IP 地址和端口号，数据包中包含 A 的内网地址+端口 (10.0.0.1:4321)
+        - S 向节点 A 发送数据包，其中包含了节点 B 的 公网+内网 IP 和端口号，节点 A 收到数据包后，保存了 B 的地址和端口信息
+        - S 向节点 B 发送数据包，其中包含了节点 A 的 公网+内网 IP 和端口号，节点 B 收到数据包后，保存了 A 的地址和端口信息
+        - 此时节点 A 和节点 B 都有了对方的 IP 地址和端口号，穿透完成
+
+    - 穿透后
+        - 节点 A 和节点 B 分别向对方发送数据 (使用两个 NAT 地址通信)
+
+- 多层不同 NAT
+
+    - 在这种场景中，节点 A 和节点 B 属于不同且层次较多的 NAT 网关，如图所示，A 的 NAT 设备 IP 是 10.0.1.1, B 的 NAT 设备 IP 都是 10.0.1.3, 与此同时，节点 A 的 NAT 和节点 B 的 NAT 又属于同一个 NAT: 155.99.25.11。
+    ![image](./Pictures/net-kernel/内网穿透_udp内网穿透_多层不同NAT.avif)
+
+    - 穿透前
+        - 节点 A (10.0.0.1:4321) 首先通过 NAT 网关 (10.0.1.1)，然后通过 NAT 网关 (155.99.25.11) 登录 “中间服务器” S
+        - 数据包中的 源 IP 地址、源端口分别被 NAT 网关改为 10.0.1.1, 45000 (第一次 NAT 转换)
+        - 数据包中的 源 IP 地址、源端口分别被 NAT 网关改为 155.99.25.11, 62000 (第二次 NAT 转换)
+        - 节点 B (10.1.1.3:4321) 首先通过 NAT 网关 (10.0.1.1)，然后通过 NAT 网关 (155.99.25.11) 登录 “中间服务器” S
+        - 数据包中的 源 IP 地址、源端口分别被 NAT 网关改为 10.0.1.3, 55000 (第一次 NAT 转换)
+        - 数据包中的 源 IP 地址、源端口分别被 NAT 网关改为 155.99.25.11, 62005 (第二次 NAT 转换)
+
+    - 穿透中
+        - 节点 A 向 S 请求节点 B 的 IP 地址和端口号，数据包中包含 A 的内网地址+端口 (10.0.0.1:4321)
+        - S 向节点 A 发送数据包，其中包含了节点 B 的 公网+内网 IP 和端口号，节点 A 收到数据包后，保存了 B 的地址和端口信息
+        - S 向节点 B 发送数据包，其中包含了节点 A 的 公网+内网 IP 和端口号，节点 B 收到数据包后，保存了 A 的地址和端口信息
+        - 此时节点 A 和节点 B 都有了对方的 IP 地址和端口号，穿透完成
+
+    - 穿透后
+        - 节点 A 和节点 B 分别向对方发送数据 (使用外层 NAT 155.99.25.11 通信)
+
+#### TCP 内网穿透
+
+- TCP 内网穿透比 UDP 内网穿透复杂，因为 TCP 是一个面向连接的协议，需要通过三次握手建立连接。相比之下，UDP 只需要处理一个套接字的收发通信，而 TCP 需要处理多个套接字绑定同一个端口（端口复用），此外大部分 NAT 网关/设备对 UDP 协议支持更友好一些。
+
+- TCP 内网穿透基本原理
+    - 节点 A 和节点 B 通过 NAT 网关登录 “中间服务器” S, 同时监听各自的本地 TCP 端口，等待外部的请求建立连接
+    - 节点 A 向 S 请求节点 B 的 IP 地址和端口号，数据包中包含 A 的内网地址+端口
+    - S 向节点 A 发送数据包，其中包含了节点 B 的 公网+内网 IP 和端口号，节点 A 收到数据包后，保存了 B 的地址和端口信息
+    - S 向节点 B 发送数据包，其中包含了节点 A 的 公网+内网 IP 和端口号，节点 B 收到数据包后，保存了 A 的地址和端口信息
+    - 此时 节点 A 有了节点 B 的 IP 地址和端口号，向节点 B 发起 TCP 连接
+
+- 连接建立后，双方通过相同的 (或者不同的) NAT 网关/设备进行通信，流程和前文中提到的 UDP 内网穿透差不多，这里不再赘述。
+
+## 路由器与交换机
+
+- [洋芋编程：交换机和路由器的区别是什么 ？](https://mp.weixin.qq.com/s/W0F1xGNQk0f36rd8tQ8NQA)
+
+- 工作层次不同
+    - 交换机主要工作在数据链路层，主要用于组建局域网
+    - 路由器工作在网络层，主要用于将交换机组建的局域网相互连接起来，或者接入互联网
+
+- 转发数据不同
+    - 交换机是基于以太网设计的，实现了特定网络内的 数据帧 转发。
+    - 路由器是基于 IP 设计的，实现了不同网络之间的 数据包 转发。
+
+- 转发的依据不同
+    - 交换机转发所依据的对象是 Mac 地址
+        - Mac 地址通常是硬件实现的，由网卡生产商来分配，一般情况下不可修改。
+    - 路由转发所依据的对象是 IP 地址
+        - IP 地址是在软件中实现的，描述的是设备所在的网络，通常由网络管理员或系统自动分配。
+
+- 转发表的维护方式不同
+
+    - 交换机维护 Mac 表
+        - 交换机对 Mac 地址表的维护是数据包转发操作中的一个 (顺带的) 步骤。
+
+    - 路由器维护路由表
+        - 路由器对路由表的维护和数据包的转发操作相互独立的，也就是说，在转发数据包的过程中不需要对路由表的内容进行维护。
+
+        - 对路由表进行维护的方法有几种，大体上可分为以下两类。
+            - 由人手动维护路由记录
+            - 根据路由协议机制，通过路由器之间的信息交换，由路由器自行维护路由表的记录
+
+- 转发规则不同
+
+    - 交换机在地址表中只匹配完全一致的记录
+        - 交换机不会校验包中的目标 Mac 地址，全部收下做转发
+
+    - 路由器只匹配网络号部分，忽略主机号部分
+        - 路由器会校验包中的目标 Mac 地址是不是自己，如果是的话存入内存缓冲区，否则丢弃
+
+    - 交换机匹配不到时广播消息
+        - 如果交换机在 Mac 地址表里找不到转发端口时，会选择广播。
+
+    - 路由器匹配不到时丢弃消息
+        - 如果路由器在路由表中无法找到匹配的记录，会丢弃这个包，并通过 ICMP 消息 (Destination Unreachable) 告知发送方。
+
+    - 两者的处理机制完全不同，原因在于网络规模的大小。
+
+        - 交换机连接的网络最多也就是几千台设备的规模，这个规模并不大。如果只有几千台设备，遇到不知道应该转发到哪里的包，交换机可以将包发送到所有的端口上，虽然这个方法很简单粗暴，但不会引发什么问题。
+
+        - 然而，路由器工作的网络环境就是互联网，它的规模是远远大于以太网的，全世界所有的设备都连接在互联网上，在如此庞大的网络中，如果将不知道应该转发到哪里的包发送到整个网络上，那就会产生大量的网络包，造成网络拥塞。因此，路由器遇到不知道该转发到哪里的包，就会直接丢弃。
+
+- 端口和 Mac 地址不同
+
+    - 交换机只是将数据包转发到正确的端口，它自己并不会成为数据包的 (源) 发送方、(目标) 接收方。
+
+    - 路由器的各个端口都具有 Mac 地址和 IP 地址，因此能够成为数据链路层/以太网的发送方和接收方。从这个意义上来说，它和计算机的网卡是一样的。当转发数据包时，首先路由器端口会接收发给自己的以太网包，然后查询转发目标，再由相应的端口作为发送方将以太网包发送出去。
+
+- 共同点
+    - 路由器和交换机不考虑请求包和响应包之间的关联，而是将它们作为独立的包来对待，因此请求和响应有可能通过不同的路由来传输，具体走哪条路由，是由路由器的路由表和交换机的地址表中的配置来决定的。
+    - 服务器向客户端返回的响应消息 和 客户端向服务器发送的请求消息 不一定通过相同的路由传输。
+
+- 三层交换机与路由器的比较
+
+    ![image](./Pictures/net-kernel/三层交换机与路由器的比较.avif)
+
+    - 传统路由器的路由选择功能、分组转发以及管理功能等均由 CPU 处理，管理功能负载的增加，就会带来分组转发能力的下降。
+
+    - L3 交换机改善了这一缺点，将硬件设备内部分离成两个区域，即以路由选择、管理功能为主的控制平面，和以数据转发功能为主的数据平面，从而实现了能够高速转发分组的系统架构。
+
+        ![image](./Pictures/net-kernel/三层交换机的控制平面和数据平面.avif)
+
 ## Data Link layer(数据链路层)
 
 - [The Data Link layer of the OSI model](https://www.ictshore.com/free-ccna-course/data-link-layer/)
@@ -3240,253 +4968,151 @@ net.ipv4.tcp_congestion_control = bbr
 
     ![image](./Pictures/net-kernel/802_11_Frame.avif)
 
+### ARP
 
-## 分段 (fragmentation)
+- [洋芋编程：ARP 工作层次和原理解析](https://mp.weixin.qq.com/s/ttMRt-G2O0xcX-mMFiNstQ)
 
-- [解决 GRE 和 IPsec 中的 IPv4 分段、MTU、MSS 和 PMTUD 问题](https://www.cisco.com/c/zh_cn/support/docs/ip/generic-routing-encapsulation-gre/25885-pmtud-ipfrag.html)
+- ARP（Address Resolution Protocol，地址解析协议）是用来将 IP 地址解析为 MAC 地址的协议。
 
-### IPv4 Fragmentation （分段） 
+- arp协议属于osi层级的哪一层？
 
-- 尽管 IPv4 数据报的最大长度为 65535 字节，但大多数传输链路强制执行更小的最大数据包长度限制（即 MTU）
+    - 1.ARP 属于二层协议，工作在数据链路层，因为 ARP 无法脱离广播域的限制。
 
-- DF 标志位（一个 IP 包能否分段）：
-    | DF bit | 表示                   |
-    |--------|------------------------|
-    | 0      | may fragment（分段）   |
-    | 1      | don't fragment（不分） |
+    - 2.ARP 协议工作在 OSI (或 TCP/IP) 模型的第二层（数据链路层）和第三层（网络层）之间，也许这个结论会颠覆你对网络分层的已有认知，但是如果分析 ARP 的工作方式之后，你会发现情况确实如此。
 
-- MF 标志位（分段后，每个分段有 ）：
-    | MF bit | 表示           |
-    |--------|----------------|
-    | 0      | last fragment  |
-    | 1      | more fragments |
+        - ARP 不属于二层网络，不能把数据发送到目标主机，因为 ARP 报文数据是包装在二层以太网帧中的
+        - ARP 也不属于三层网络，因为它不具备三层网络中的路由寻址功能 (无法跨越网段)。
 
-- ![image](./Pictures/net-kernel/ipv4-fragmentation.avif)
+    - 具体来说，ARP 通过 ARP 请求和 ARP 应答，将网络层的逻辑地址（IP 地址）映射到数据链路层的物理地址（MAC 地址）。
 
-    - 第一个表格：
-        - IP 包长度 5140，包括 5120 bytes 的 payload
-        - DF = 0， 允许分段
-        - MF = 0， 这是未分段
+- 这里假设主机 A 第一次和主机 B 通信。
 
-    - 第二个表格：
-        - 0-0 第一个分段: 长度 1500 = 1480 (payload) + 20 (IP Header). Offset(起始偏移量): 0 
-        - 0-1 第二个分段: 长度 1500 = 1480 (payload) + 20 (IP Header). Offset: 185 = 1480 / 8 
-        - 0-2 第三个分段: 长度 1500 = 1480 (payload) + 20 (IP Header). Offset: 370 = 185 + 1480/8
-        - 0-3 第四个分段: 长度 700 =  680 (payload, = (5140 - 20) - 1480 * 3) + 20 (IP Header) . Offset: 555 = 370 + 1480/8
+    - 当主机 A 需要发送数据到主机 B 时，首先会检查主机 B 的 IP 地址是否位于同一子网内 (两台主机是否连接的同一个交换机)
+        - 如果主机 B 的 IP 地址位于同一子网内，主机 A 会发起 ARP 广播请求，主机 B 收到 ARP 请求后，会回复一个 ARP 回复，其中包含了目标 B 的 MAC 地址
+        - 如果主机 B 的 IP 地址不在同一子网内，主机将向默认网关发送 ARP 请求，ARP 请求中包含了目标 IP 地址和请求者的 MAC 地址，获取主机 B 的 MAC 地址
 
-- 分段的问题：
-    - 导致CPU和内存开销小幅增加
-    - 执行重组的路由器会选择可用的最大缓冲区(18K)，因为在收到最后一个分段之前，它无法确定原始IPv4数据包的大小。
-    - 第4层(L4)到第7层(L7)信息过滤或处理数据包的防火墙无法处理ipv4的分段
-    - 丢弃其中一个分段包，需要重传根据tcp还是udp决定
-        - tcp有编号确认机制，只需要重传丢失的那个分段包
-        - udp则不可靠
+    - 在向默认网关发送 ARP 请求之前，需要获取默认网关路由器的 MAC 地址，所以 会先发出一个 ARP 请求
+        - 默认网关收到 ARP 请求后，发送一个 ARP 回复到主机 A，其中包含了自己的 MAC 地址
+    - 此时主机 A 再次向默认网关发送 查询主机 B 的 ARP 请求
+        - 默认网关收到 ARP 请求后，会将 ARP 请求转发出去然后等待应答 (这里的细节先忽略)，接收到应答之后，发送一个 ARP 回复到主机 A，其中包含了主机 B 的 MAC 地址
+        - 主机 A 将主机 B 的 MAC 地址保存在 ARP 缓存中，后续再向主机 B 发送数据时，就可以直接从 ARP 表中获取到主机 B 的 MAC 地址了
 
-#### 设置TCP MSS(Maximum Segment Size 最大段长)，可以避免ipv4分段
+    - ![image](./Pictures/net-kernel/arp-广播和单播.avif)
 
-- MSS 值仅作为 TCP SYN 数据段中的一个 TCP 报头选项发送。
+- 例子：同一子网内的两台主机之间的 ARP 请求和应答过程
 
-- TCP 连接的每一端都会向另一端报告其 MSS 值。发送主机需要将单个 TCP 数据段中的数据大小限制为小于或等于接收主机报告的 MSS 的值。
+    > ARP 通过广播 ARP 请求和单播 ARP 应答这两个过程完成 IP 地址到 MAC 地址解析和映射
 
-![image](./Pictures/net-kernel/tcp-mss.avif)
+    - ![image](./Pictures/net-kernel/arp-广播和单播_同一子网.avif)
 
-#### PMTU（只有TCP和UDP支持）
+    - 这里假设主机 Host_1 要向主机 Host_3 发送主机，但是不知道 Host_3 的 IP 地址，所以需要先通过 ARP 请求来获得 Host_3 的 IP 地址。
 
-- TCP MSS解决TCP连接的两个端点上的分段，但不处理这两个端点之间中间有较小MTU链路的情况。
+    - 1.Host_1 查找本地的 ARP 缓存表，确认是否存在 Host_3 的 MAC 地址表项
+        - 如果在 ARP 缓存表中 找到了 Host_3 的 MAC 地址 (假设为 MAC_3)，直接将数据报文进行帧封装 ( `目的 MAC 地址: MAC_3`)
+        - 如果在 ARP 缓存表中 找不到 Host_3 的 MAC 地址，先缓存要发送的数据报文，然后通过广播方式发送一个 ARP 请求报文，其中:
+            - `源 MAC 地址: Host_1 的 MAC 地址, 源 IP 地址: Host_1 的 IP 地址`
+            - `目的 MAC 地址: FF:FF:FF:FF:FF:FF, 目的 IP 地址: Host_3 的 IP 地址`
 
-    - PMTU：动态确定从数据包源到目的地的路径中的最低MTU。
+    - 2.交换机 Switch_1 收到 ARP 请求报文后，转发到在同一广播域内 (也就是转发到 Host_2, Host_3)
 
-- 查看是否开启PMTU
+    - 3.Host_2 收到 ARP 请求后，发现目的 IP 地址不是自己的，直接丢掉，Host_3 收到 ARP 请求后，发现目的 IP 地址是自己，开始处理：
+        - 首先将 ARP 请求中的 源 IP 地址和源 MAC 地址存入自己的 ARP 表中 (也就是存储 Host_1_IP -> Host_1_MAC 的映射关系)
+        - 然后使用单播发送 ARP 应答报文给 Host_1, 其中:
+            - `源 MAC 地址: Host_3 的 MAC 地址, 源 IP 地址: Host_3 的 IP 地址`
+            - `目的 MAC 地址: Host_1 的 MAC 地址, 目的 IP 地址: Host_1 的 IP 地址`
+
+    - 4.交换机 Switch_1 收到 ARP 应答报文后，转发到 Host_1, Host_1 收到 ARP 应答后:
+        - 首先将 ARP 应答中的 源 IP 地址和源 MAC 地址存入自己的 ARP 表中 (也就是存储 Host_3_IP -> Host_3_MAC 的映射关系)
+        - 然后将要发送的数据进行报文封装，并发送给 Host_3
+
+- 例子：不同子网的两台主机的流程
+
+    - ![image](./Pictures/net-kernel/arp-广播和单播_不同子网.avif)
+
+    - 主机 Host_1 要向主机 Host_4 发送主机。
+
+    - 因为 Host_1 已经配置了默认网关，所以 Host_1 会先发送 ARP 请求报文获取默认网关路由器的 MAC 地址，收到默认网关的应答报文后，将默认网关的 IP 地址和 MAC 地址存入自己的 ARP 表中，然后将发送给 Host_4 的数据报文发送给默认网关，经由默认网关转发到 Host_4。
+
+    - 网关需要学习 Host_4 的 ARP 表项吗？
+        - 需要，因为网关必须先把数据报文封装成以太网帧，其中当然必须包含 Host_4 的 MAC 地址。
+
+    - 后序的通信过程中，Host_1 学习 Host_4 的 ARP 表项 (IP -> MAC 映射关系) 过程，和前文中 Host_1 学习 Host_3 的 ARP 表项过程类似，唯一的区别在于多了一层默认网关和一层交换机 (Switch_2) 的转发，这里不再赘述。
+
+- 免费 ARP：主机使用自己的 IP 地址作为目的 IP 地址发送 ARP 请求 (主机自己向自己发送 ARP 请求)。此种方式称免费 ARP, 主要起到如下作用:
+
+    - 1.IP 地址冲突检测: 主机对外发送 ARP 请求，正常情况下不会收到 ARP 应答，如果收到了，说明网络中已经存在与自身 IP 重复的主机，检测到重复 (冲突) 之后，主机会周期性地发送 ARP 免费应答报文，直到冲突解决
+    - 2.通告新的 MAC 地址: 主机更换了网卡，这时会产生新的 MAC 地址，为了通知网络中的其他主机更新 ARP 表项，主机会发送一个免费的 ARP 请求
+
+#### ARP表
+
+- 主机 (客户端) 和三层网络设备 (例如路由器，三层交换机) 上会维护一张 ARP 表，用于存储 IP 地址和 MAC 地址的映射关系，每一个表项表示一个 IP 地址到 MAC 地址的转换关系。
+
+    - ARP 表是以每个网络接口为单位保存的，也就是每个以太网卡、无线网卡、虚拟网卡 (例如 Docker) 都有自己的 ARP 表，当一个数据包到达某个网络接口时，操作系统会检查该接口的 ARP 缓存表。
+
     ```sh
-    # 默认为1（关闭PMTU），0为打开
-    sysctl net.ipv4.ip_no_pmtu_disc
-    net.ipv4.ip_no_pmtu_disc = 0
+    # arp命令
+    arp -n
+    Address                  HWtype  HWaddress           Flags Mask            Iface
+    192.168.41.196                   (incomplete)                              wlan0
+    192.168.41.102           ether   46:da:13:65:a7:24   C                     wlan0
+
+    arp -an
+    ? (192.168.41.196) at <incomplete> on wlan0
+    ? (192.168.41.102) at 46:da:13:65:a7:24 [ether] on wlan0
+
+    # ip命令查看arp表
+    ip neigh show
+    192.168.41.196 dev wlan0 FAILED
+    192.168.41.102 dev wlan0 lladdr 46:da:13:65:a7:24 REACHABLE
+    fe80::44da:13ff:fe65:a724 dev wlan0 lladdr 46:da:13:65:a7:24 router REACHABLE
     ```
 
-- PMTU的工作原理：路由器尝试将IPv4数据报（设置了DF位）转发到其MTU低于数据包大小的链路上，路由器会丢弃数据包，并将互联网控制消息协议(ICMP)“目标无法到达”(Destination Unreachable)消息返回到IPv4数据报源，消息中的代码表示“需要分段并设置DF”（类型3，代码4）。
+    | ip neigh show的arp表状态 | 说明                                                                                                                                         |
+    | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+    | REACHABLE                | 表示该 IP 地址的 MAC 地址信息是最新的，并且正常进行通信。                                                                                    |
+    | STALE                    | 表示该 IP 地址的 MAC 地址信息仍然可用，但已经超过了过期时间，主机可能会继续使用这个 MAC 地址进行通信，但应尽快发送 ARP 请求来更新 MAC 地址。 |
+    | DELAY                    | 表示主机已经发送了 ARP 请求，但尚未收到应答。                                                                                                |
+    | PROBE                    | 表示主机正在发送 ARP 请求，以确认该 IP 地址是否仍然可用，通常发生在主机重启或重新连接到网络时。                                              |
+    | FAILED                   | 表示 ARP 请求失败，主机无法获取到该 IP 地址对应的 MAC 地址。                                                                                 |
+    | PERMANENT                | 表示静态 ARP 表项，在管理员手动删除之前一直生效。                                                                                            |
 
-    - 例子1：数据包可以一直传输到接收方，而不会被分段。
-    - 例子2：http连接中：TCP 客户端发送小数据包，服务器发送大数据包。
 
-        - 只有来自服务器的大数据包（大于576字节）触发PMTUD。
+- ARP 表类型
 
-        - 客户端的数据包很小（小于576字节），不触发PMTUD，因为它们不需要分段即可通过576 MTU链路。
+    - 1.动态类型：通过 ARP 请求和 ARP 应答自动生成和维护，表项可以被更新和 (过期) 删除，也可以被静态 ARP 表项覆盖。
 
-        ![image](./Pictures/net-kernel/pmtu.avif)
+    - 2.静态类型
+        - 由网络管理员手动建立的 IP 地址和 MAC 地址之间的映射关系，表项不会被 (过期) 删除，也不会被静态 ARP 表项覆盖。
 
-    - 例子3：非对称路由示例，其中一条路径的最小MTU小于另一条路径。
+        - 静态 ARP 表项可以限制指定本端主机和指定 IP 的对端主机通信时只使用指定的 MAC 地址
+            - 此时攻击报文无法修改本端主机的 ARP 表中的 IP 地址和 MAC 地址的映射关系，从而保护了本端主机和对端主机之间的正常通信，一般会在网关设备上配置静态 ARP 表项。
 
-        - TCP 客户端到服务器的流量会经过路由器 A 和路由器 B，
-            - 客户端永远不会收到带有表示“需要分段和DF设置”的代码的ICMP“目标无法到达”消息，因为路由器A在通过路由器B向服务器发送数据包时无需对数据包进行分段。
+- ARP表缓存过期
+    - 和所有 “缓存数据” 一样，ARP 缓存也存在数据失效的问题。
+    - 当某个主机的 IP 地址或者 MAC 地址发生变化时，ARP 缓存的数据就会失效，为了最大化减少 ARP 缓存失效带来的问题，ARP 缓存数据会定期删除，缓存数据删除之后，主机发送数据请求之前，重新执行一次 ARP 请求查询就又可以获取到目标主机的 MAC 地址了。
 
-        - TCP 服务器到客户端的返回流量会经过路由器 D 和路由器 C。
-            - 服务器向客户端发送数据包时，PMTUD会触发服务器降低发送MSS，因为路由器D必须对4092字节的数据包进行分段，然后才能将其发送到路由器C。
+    ```sh
+    # 查看 ARP 缓存的默认有效期
+    # APR 缓存默认有效期: 1 分钟。每隔 1 分钟，定期删除 ARP 缓存
+    sysctl net.ipv4.neigh.default.gc_stale_time
+    net.ipv4.neigh.default.gc_stale_time = 60
+    ```
 
-        ![image](./Pictures/net-kernel/pmtu1.avif)
+    - 除了定期删除策略外，在网络接口下线时 (例如无线网卡被拔出)，其 ARP 缓存会被立刻删除。
 
-##### PMTU 与 GRE隧道
+#### ARP攻击
 
-- GRE包大小
-    ![image](./Pictures/net-kernel/gre-overhead.avif)
-    ![image](./Pictures/net-kernel/gre-overhead1.avif)
-    | 步骤 | 操作/封包    | 协议     | 长度                                             | 备注                 |
-    |------|--------------|----------|--------------------------------------------------|----------------------|
-    | 1    | ping -s 1448 | ICMP     | 1456 = 1448 + 8 （ICMP header）                  | ICMP MSS             |
-    | 2    | L3           | IP       | 1476 = 1456 + 20 （IP header）                   | GRE Tunnel MTU       |
-    | 3    | L2           | Ethernet | 1490 = 1476 + 14 （Ethernet header）             | 经过 bridge 到达 GRE |
-    | 4    | GRE          | IP       | 1500 = 1476 + 4 （GRE header）+ 20 （IP header） | 物理网卡 （IP）MTU   |
-    | 5    | L2           | Ethernet | 1514 = 1500 + 14 （Ethernet header）             | 最大可传输帧大小     |
+- ARP 攻击利用 ARP 协议的工作方式来欺骗网络中的主机，使其将网络流量发送到错误的目标，通常有下面几种常见的方式。
 
-    - 1514 - 1490 = 24 byte
+- 1.ARP 欺骗（ARP Spoofing）
+    - 攻击者发送伪造的 ARP 应答消息，欺骗网络中的其他主机，告诉它们 **攻击者的 MAC 地址对应于指定主机的 IP 地址**，这样，当其他主机想要发送数据给指定主机时，数据包实际上会被发送到攻击者的主机上，攻击者可以对数据进行监视、修改或丢弃。
 
-        - GRE 隧道接口的 IPv4 MTU 默认比物理接口的 IPv4 MTU 少 24 字节，因此 GRE 接口的 IPv4 MTU 为 1476 字节
+    - 为了防止 ARP 欺骗，可以使用 `ARP Anti-Spoofing` 技术来保护网络安全，交换机会对 ARP 报文进行检查，一旦发现 IP 与 MAC 地址有伪造的情况，立马丢包甚至关闭端口。
 
-- DF位=0 和 = 1的两种情况：
+    - 当用户手动修改 IP 时，其实已经通过 DHCP Release 报文将自动获取到的 IP 释放了。所以当交换机检查到该 IP 已经被释放后，任何非 DHCP 数据报文，全部拒绝丢掉。
 
-    - DF位=0（分段）：
-        - 1.发送端发送一个 1500 字节的数据包（20 字节 IPv4 报头 + 1480 字节 TCP 负载）。
-        - 2.由于GRE隧道的MTU为1476，因此1500字节的数据包将分为两个IPv4分段（1476字节和44字节），每个分段预计会额外增加24字节的GRE报头。
-        - 3.每个 IPv4 分段增加 24 字节的 GRE 报头。现在，两个分段分别为 1500 字节 (1476 + 24) 和 68 字节 (44 + 24)。
-        - 4.包含两个 IPv4 分段的 GRE + IPv4 数据包被转发到 GRE 隧道对等路由器。
-        - 5.GRE 隧道对等路由器将删除两个数据包中的 GRE 报头。
-        - 6.此路由器将两个数据包转发到目标主机。
-        - 7.目标主机将 IPv4 分段重组为原始 IPv4 数据报。
-
-    - DF位=1（不分段），并且路径中存在一条链路，其MTU低于其他链路：
-        - 1.路由器收到 1500 字节的数据包（20 字节 IPv4 报头 + 1480 字节 TCP 负载），然后丢弃该数据包。路由器丢弃数据包是因为该数据包大于 GRE 隧道接口上的 IPv4 MTU (1476)。
-        - 2.路由器向发送者发送一条 ICMP 错误，通知发送者下一跳 MTU 为 1476。主机将此信息记录在其路由表中，通常作为目标的主机路由。
-        - 3.当重新发送数据时，发送主机采用 1476 字节作为数据包大小。GRE 路由器添加 24 字节的 GRE 封装，然后发送一个 1500 字节的数据包。
-        - 4.该 1500 字节的数据包无法通过 1400 字节的链路，因此中间路由器将丢弃该数据包。
-        - 5.中间路由器将向 GRE 路由器发送一个含有下一跳 MTU 为 1400 的 ICMP（类型 = 3，代码 = 4）。GRE 路由器将其降低至 1376 (1400 - 24) 字节，并在 GRE 接口上设置内部 IPv4 MTU 值。
-        - 6.下次主机重新发送1476字节的数据包时，GRE路由器会丢弃该数据包，因为它大于GRE隧道接口上的当前IPv4 MTU(1376)。
-        - 7.GRE路由器向下一跳MTU为1376的发送方发送另一个ICMP（类型= 3，代码= 4），主机使用新值更新其当前信息。
-        - 8.主机再次重新发送数据，但现在GRE在较小的1376字节数据包中添加24字节的封装并继续转发数据。此时，数据包将发送到GRE隧道对等体，数据包在该对等体解封并发送到目的主机。
-        ![image](./Pictures/net-kernel/pmtu-gre-df=1.avif)
-
-##### PMTU 与 IPv4sec
-
-- IPv4sec包大小：52 字节
-
-- IPv4sec隧道模式（默认模式）下，DF位=0 和 = 1的两种情况：
-
-    - DF位=0（分段）：
-        - 1.路由器收到发往主机 2 的 1500 字节的数据包（20 字节 IPv4 报头 + 1480 字节 TCP 负载）。
-        - 2.1500 字节的数据包经过 IPv4sec 加密，增加了 52 字节的开销（IPv4sec 报头、报尾和另外的 IPv4 报头）。现在 IPv4sec 需要发送 1552 字节的数据包。由于出站MTU为1500，因此必须对此数据包进行分段。
-        - 3.IPv4sec 数据包被拆分为两个分段。在分段期间，会为第二个分段添加一个额外的20字节IPv4报头，从而产生一个1500字节的分段和一个72字节的IPv4分段。
-        - 4.IPv4sec 隧道对等路由器接收分段，剥离附加的 IPv4 报头，并将 IPv4 分段合并为原始 IPv4sec 数据包。然后 IPv4sec 解密该数据包。
-        - 5.最后，路由器将 1500 字节的原始数据包转发到主机 2。
-        ![image](./Pictures/net-kernel/pmtu-ipv4sec-df=0.avif)
-
-    - DF位=1（不分段），并且路径中存在一条链路，其MTU低于其他链路：
-        - 1.路由器收到1500字节的数据包并将其丢弃，因为添加IPv4sec开销时，数据包会大于PMTU(1500)。
-        - 2.路由器向主机 1 发送一条 ICMP 消息，并通知该主机下一跳 MTU 为 1442 (1500 - 58 = 1442)。此58字节是使用IPv4sec ESP和ESPauth时的最大IPv4sec开销。实际IPv4sec开销可能比此值小7个字节。主机 1 通常在其路由表中以目标（主机 2）主机路由的形式记录该信息。
-        - 3.主机1将主机2的PMTU降低到1442，因此主机1在将数据重新发送到主机2时发送更小（1442字节）的数据包。路由器接收 1442 字节的数据包，然后 IPv4sec 添加 52 字节的加密开销，由此产生 1496 字节的 IPv4sec 数据包。由于此数据包的报头中设置了 DF 位，因此，采用 1400 字节 MTU 链路的中间路由器将丢弃此数据包。
-        - 4.丢弃数据包的中间路由器向 IPv4sec 数据包的发送端（第一个路由器）发送一条 ICMP 消息，告知发送端下一跳 MTU 为 1400 字节。这个值记录在 IPv4sec SA PMTU 中。
-        - 5.主机1下次重新传输1442字节的数据包（它未收到该数据包的确认）时，IPv4sec将丢弃该数据包。路由器丢弃该数据包，因为在添加到数据包时，IPv4sec开销会使其大于PMTU(1400)。
-        - 6.路由器向主机 1 发送一条 ICMP 消息，通知它下一跳 MTU 现在为 1342。(1400 - 58 = 1342)。主机1再次记录此信息。
-        - 7.当主机1再次重新传输数据时，它使用较小大小的数据包(1342)。此数据包不需要分段，而是通过IPv4sec隧道发送到主机2。
-        ![image](./Pictures/net-kernel/pmtu-ipv4sec-df=1.avif)
-
-##### PMTU 与 GRE 与 IPv4sec 协同工作
-
-- 使用 IPv4sec 来加密 GRE 隧道
-
-    - IPv4sec 和 GRE 以这种方式组合是因为 IPv4sec 不支持 IPv4 组播数据包，这意味着在 IPv4sec VPN 网络上无法运行动态路由协议。
-
-    - GRE 隧道支持组播，因此可先使用 GRE 隧道加密 GRE IPv4 单播数据包中的动态路由协议组播数据包，然后再使用 IPv4sec 加密单播数据包。
-
-- DF位=0 和 = 1的两种情况：
-
-    - DF位=0（分段）：
-        - 1.路由器收到一个 1500 字节的数据报。
-        - 2.在封装之前，GRE 将 1500 字节的数据包拆分为两个分段，一个 1476 字节 (1500 - 24 = 1476)，另一个 44 字节（24 字节数据 + 20 字节 IPv4 报头）。
-        - 3.GRE 封装 IPv4 分段，该过程将导致每个数据包增加 24 字节。因而将产生两个 GRE + IPv4sec 字段，一个 1500 字节 (1476 + 24 = 1500)，另一个 68 字节 (44 + 24 = 68)。
-        - 4.IPv4sec对两个数据包进行加密，每个数据包增加52字节（IPv4sec隧道模式）的封装开销，以提供1552字节和120字节的数据包。
-        - 5.由于 1552 字节的 IPv4sec 数据包大于出站 MTU (1500)，因此，路由器会将其分段。1552 字节的数据包被拆分为 1500 字节的数据包和 72 字节的数据包（52 字节负载加上为第二个分段附加的 20 字节 IPv4 报头）。三个数据包（1500 字节、72 字节和 120 字节）被转发到 IPv4sec + GRE 对等设备。
-        - 6.接收路由器重组两个 IPv4sec 分段（1500 字节和 72 字节），以便获取原始 1552 字节的 IPv4sec + GRE 数据包。对于 120 字节的 IPv4sec + GRE 数据包无需任何操作。
-        - 7.IPv4sec 对 1552 字节和 120 字节的 IPv4sec + GRE 数据包进行解密，以便获取 1500 字节和 68 字节的 GRE 数据包。
-        - 8.GRE 解封装 1500 字节和 68 字节的 GRE 数据包，以便获取 1476 字节和 44 字节的 IPv4 数据包分段。然后这些 IPv4 数据包分段被转发到目标主机。
-        - 9.主机 2 重组这些 IPv4 分段，以便获取原始 1500 字节的 IPv4 数据报。
-        ![image](./Pictures/net-kernel/pmtu-gre-ipv4sec-df=0.avif)
-
-    - DF位=1（不分段）：
-        - 1.路由器收到一个 1500 字节的数据包。由于设置了 DF 位，并且在增加 GRE 开销（24 字节）之后数据包大小超过出站接口“ip mtu”，因此 GRE 无法对该数据包进行分段或转发，并丢弃此数据包。
-        - 2.路由器向主机 1 发送 ICMP 消息，以便该主机知晓下一跳 MTU 为 1476 (1500 - 24 = 1476)。
-        - 3.主机 1 针对主机 2 将其 PMTU 更改为 1476，并在重新传输数据包时发送更小大小。GRE 封装数据包，并将 1500 字节的数据包传递给 IPv4sec。由于 GRE 从内部 IPv4 报头中复制了 DF 位（已设置），并且加上 IPv4sec 开销（最大 38 字节）后，数据包因太大而无法传出物理接口，因此 IPv4sec 丢弃该数据包。
-        - 4.IPv4sec向GRE发送ICMP消息，表示下一跳MTU为1462字节（因为为加密和IPv4开销添加了最大38字节）。GRE在隧道接口上将值1438 (1462 - 24)记录为"ip mtu"。
-        - 5.主机 1 下次重新传输 1476 字节的数据包时，GRE 将丢弃此数据包。
-        - 6.路由器向主机 1 发送 ICMP 消息，指明下一跳 MTU 为 1438。
-        - 7.主机 1 针对主机 2 减小其 PMTU，并重新传输 1438 字节的数据包。这次 GRE 接受该数据包，对其进行封装，并将其传递给 IPv4sec 进行加密。
-        - 8.IPv4sec 数据包被转发到中间路由器并被丢弃，因为该路由器出站接口 MTU 为 1400。
-        - 9.中间路由器向 IPv4sec 发送 ICMP 消息，指明下一跳 MTU 为 1400。IPv4sec 将该值记录在关联 IPv4sec SA 的 PMTU 值中。
-        - 10.当主机 1 重新传输 1438 字节的数据包时，GRE 封装该数据包，然后将其传递给 IPv4sec。IPv4sec 丢弃该数据包，因为其已将自己的 PMTU 改为 1400。
-        - 11.IPv4sec 向 GRE 发送 ICMP 错误消息，指明下一跳 MTU 为 1362，并且 GRE 在内部记录值 1338。
-        - 12.当主机1重新传输原始信息包时(因为没有收到确认)，GRE将丢弃它。
-        - 13.路由器向主机 1 发送 ICMP 消息，指明下一跳 MTU 为 1338（1362 - 24 字节）。主机 1 针对主机 2 将其 PMTU 减小至 1338。
-        - 14.主机1转发1338字节信息包，同时它可以最终到达主机2。
-        ![image](./Pictures/net-kernel/pmtu-gre-ipv4sec-df=1.avif)
-
-### MTU
-
-- [Troubleshooting MTU Issues](https://netbeez.net/blog/troubleshooting-mtu-issues/)
-
-- 如果ip层的网络包的长度比链路层的 MTU 还大，那么 IP 层就需要进行分片
-
-| Packet Size | Interface MTU | DF option (IP header) | Layer 2 interface (switched) | Layer 3 interface (routed) |
-|-------------|---------------|-----------------------|------------------------------|----------------------------|
-| <= 1500     | 1500          | 0 (unset)             | Pass                         | Pass                       |
-| <= 1500     | 1500          | 1 (set)               | Pass                         | Pass                       |
-| >= 1500     | 1500          | 0 (unset)             | Discard                      | Fragment                   |
-| >= 1500     | 1500          | 1 (set)               | Discard                      | Discard and Notify         |
-
-```sh
-# 查看每个网卡的MTU
-ip a | grep mtu
-
-# 临时修改mtu
-ifconfig eth0 mtu 9000
-# 或者
-ip link set dev eth0 mtu 9000
-
-# 永久修改mtu。不同的linux发行版有所不同。redhat系修改这个配置文件/etc/sysconfig/network-scripts/ifcfg-eth0
-auto eth0
-iface eth0 inet static
-        address 192.168.0.2
-        netmask 255.255.255.0
-        mtu 9000
-```
-
-- jumebo frames（巨型帧）：标准帧的MTU为1500，jumebo的MTU为9000（需要网卡支持，如intel X520）
-
-### 包的拆分与合并TSO、GSO、LRO、GRO
-
-- 拆分
-
-    ![image](./Pictures/net-kernel/TSO-GSO-off.avif)
-    ![image](./Pictures/net-kernel/TSO.avif)
-    ![image](./Pictures/net-kernel/GSO.avif)
-
-- 合并
-
-    ![image](./Pictures/net-kernel/LRO-GRO-off.avif)
-    ![image](./Pictures/net-kernel/LRO.avif)
-    ![image](./Pictures/net-kernel/GRO.avif)
-
-```sh
-# 查看是否开启
-ethtool -k eth0
-
-tcp-segmentation-offload: on # TSO
-generic-segmentation-offload: on # GSO
-
-large-receive-offload: on # LRO
-generic-receive-offload: on # GRO
-```
-
-```sh
-# 开启GRO。修改 GRO 配置会涉及先 down 再 up 这个网卡
-sudo ethtool -K eth0 gro on
-```
+- 2.ARP 洪泛（ARP Flooding）
+    - 攻击者发送大量伪造的 ARP 请求和应答包，导致网络设备的 ARP 缓存表被填满。当设备的 ARP 缓存被伪造的条目填满时，合法的 ARP 条目无法被正确存储和更新，导致设备无法进行正常的网络通信，从而引发网络瘫痪。
 
 ## 物理层
 
@@ -3851,7 +5477,7 @@ sudo tc qdisc del dev eth0 root
     ![image](./Pictures/net-kernel/nic.avif)
     ![image](./Pictures/net-kernel/nic1.avif)
 
-    - 1.网卡会通知DMA将数据包信息放到rx ring buffer（它是由NIC和驱动程序共享的一片区域），再触发一个硬中断给CPU，CPU触发软中断让ksoftirqd去RingBuffer收包
+    - 1.网卡会通知DMA将数据包信息放到`rx ring buffer`（它是由NIC和驱动程序共享的一片区域），再触发一个硬中断给CPU，CPU触发软中断让`ksoftirqd`去`RingBuffer`收包
     - 2.经过TCP/IP协议逐层处理。——顺着物理层，数据链路层，网络层，传输层
     - 3.应用程序通过read()从socket buffer读取数据。
 
@@ -3874,17 +5500,17 @@ sudo tc qdisc del dev eth0 root
         ethtool -G eth0 rx 4096 tx 4096
         ```
 
-- 1.NIC与驱动交互：事实上，rx ring buffer存储的并不是实际的packet数据，而是一个描述符，这个描述符指向了它真正的存储地址，具体流程如下：
+- 1.NIC与驱动交互：事实上`rx ring buffer`存储的并不是实际的packet数据，而是一个描述符，这个描述符指向了它真正的存储地址，具体流程如下：
 
     ![image](./Pictures/net-kernel/NIC与驱动交互.avif)
 
-    - 1.驱动在内存中分配一片缓冲区用来接收数据包，叫做sk_buffer
-    - 2.将上述缓冲区的地址和大小（即接收描述符），加入到rx ring buffer
+    - 1.驱动在内存中分配一片缓冲区用来接收数据包，叫做`sk_buffer`
+    - 2.将上述缓冲区的地址和大小（即接收描述符），加入到`rx ring buffer`
         - 描述符中的缓冲区地址是DMA使用的物理地址
     - 3.驱动通知网卡有一个新的描述符
-    - 4.网卡从rx ring buffer中取出描述符，从而获知缓冲区的地址和大小
+    - 4.网卡从`rx ring buffer`中取出描述符，从而获知缓冲区的地址和大小
     - 5.网卡收到新的数据包
-    - 6.网卡将新数据包通过DMA直接写到sk_buffer中
+    - 6.网卡将新数据包通过DMA直接写到`sk_buffer`中
 
     - 当驱动处理速度跟不上网卡收包速度时，驱动来不及分配缓冲区，NIC接收到的数据包无法及时写到sk_buffer，就会产生堆积，当NIC内部缓冲区写满后，就会丢弃部分数据，引起丢包。
         - 这部分丢包为 `rx_fifo_errors` ，在 `/proc/net/dev` 中体现为fifo字段增长，在ifconfig中体现为`overruns`指标增长。
@@ -3897,9 +5523,9 @@ sudo tc qdisc del dev eth0 root
 
             - 意味着对内核来说，其实并不知道已经有新数据到了内存中，需要通过中断告诉内核有新数据进来了，并需要进行后续处理。
 
-    - 2.当NIC把数据包通过DMA复制到内核缓冲区sk_buffer后，NIC立即发起一个硬件中断。
+    - 2.当NIC把数据包通过DMA复制到内核缓冲区`sk_buffer`后，NIC立即发起一个硬件中断。
 
-    - 3.CPU接收后，首先进入上半部分，网卡中断对应的中断处理程序是网卡驱动程序的一部分，之后由它发起软中断，进入下半部分，开始消费sk_buffer中的数据，交给内核协议栈处理。
+    - 3.CPU接收后，首先进入上半部分，网卡中断对应的中断处理程序是网卡驱动程序的一部分，之后由它发起软中断，进入下半部分，开始消费`sk_buffer`中的数据，交给内核协议栈处理。
 
         ![image](./Pictures/net-kernel/驱动与Linux内核交互.avif)
 
@@ -3987,8 +5613,8 @@ sudo tc qdisc del dev eth0 root
                 - 美团线上的CPU一般是48个逻辑core，就会生成48个中断号，由于我们是两块网卡做了bond，也就会生成96个中断号。
 
 - 验证与复现网络丢包
-    - 使用systemtap诊断测试环境软中断分布的方法
-    - 可以确认网卡的软中断在机器上分布非常不均，而且主要集中在CPU 0上。通过/proc/interrupts能确认硬中断集中在CPU 0上，因此软中断也都由CPU 0处理
+    - 使用`systemtap`诊断测试环境软中断分布的方法
+    - 可以确认网卡的软中断在机器上分布非常不均，而且主要集中在CPU 0上。通过`/proc/interrupts`能确认硬中断集中在CPU 0上，因此软中断也都由CPU 0处理
 
 - 优化策略
 
@@ -4036,7 +5662,7 @@ sudo tc qdisc del dev eth0 root
 
         - 通过观察，我们发现一个有趣的现象，当只有CPU 0处理中断时，Redis进程更倾向于运行在CPU 0，以及CPU 0同一物理CPU下的其他核上。
 
-            - 于是有了以下推测：我们设置的中断亲缘性，是直接选取了前8个核心，但这8个core却可能是来自两块物理CPU的，在/proc/cpuinfo中，通过字段processor和physical id 能确认这一点，那么响应慢是否和物理CPU有关呢？物理CPU又和NUMA架构关联，每个物理CPU对应一个NUMA node，那么接下来就要从NUMA角度进行分析。
+            - 于是有了以下推测：我们设置的中断亲缘性，是直接选取了前8个核心，但这8个core却可能是来自两块物理CPU的，在`/proc/cpuinfo`中，通过字段processor和physical id 能确认这一点，那么响应慢是否和物理CPU有关呢？物理CPU又和NUMA架构关联，每个物理CPU对应一个NUMA node，那么接下来就要从NUMA角度进行分析。
 
             - 当两个NUMA节点处理中断时，CPU实例化的`softnet_data`以及驱动分配的`sk_buffer`都可能是跨Node的，数据接收后对上层应用Redis来说，跨Node访问的几率也大大提高，并且无法充分利用L2、L3 cache，增加了延时。
 
@@ -4052,20 +5678,227 @@ sudo tc qdisc del dev eth0 root
 
 ## Vxlan（Virtual Extensible LAN）
 
-- Vxlan的包大小
+- [洋芋编程：为什么需要 VLANX 网络](https://mp.weixin.qq.com/s/NzkmjGrvkRAH_vsQgM1JkQ)
 
-    ![image](./Pictures/net-kernel/vxlan-overhead.avif)
+- Vxlan是一种网络虚拟化技术，主要用于解决传统数据中心网络面临的可伸缩性和灵活性的问题。通过在已有网络基础上创建一个逻辑上的 Overlay 覆盖网络，实现了跨物理网络的虚拟局域网（VLAN）扩展。
 
-    | 步骤 | 操作/封包    | 协议     | 长度                                                | MTU                                                  |
-    |------|--------------|----------|-----------------------------------------------------|------------------------------------------------------|
-    | 1    | ping -s 1422 | ICMP     | 1430 = 1422 + 8 （ICMP header）                     |                                                      |
-    | 2    | L3           | IP       | 1450 = 1430 + 20 （IP header）                      | VxLAN Interface 的 MTU                               |
-    | 3    | L2           | Ethernet | 1464 = 1450 + 14 （Ethernet header）                |                                                      |
-    | 4    | VxLAN        | UDP      | 1480 = 1464 + 8 （VxLAN header） + 8 （UDP header） |                                                      |
-    | 5    | L3           | IP       | 1500 = 1480 + 20 （IP header）                      | 物理网卡的（IP）MTU，它不包括 Ethernet header 的长度 |
-    | 6    | L2           | Ethernet | 1514 = 1500 + 14 （Ethernet header）                | 最大可传输帧大小                                     |
+- 解决了哪些问题？
 
-    - 因此，VxLAN 的 overhead 是1514- 1464 = 50 byte。
+    - 1.突破 VLAN 数量限制：
+
+        - 问题：传统的 VLAN 使用 12 位的标志符作为虚拟网络的区分标识，最多可以提供 2^12 = 4096 个虚拟网络，这对于大型数据中心和多租户需求来说是远远不够的。
+        ![image](./Pictures/net-kernel/vlan_数量.avif)
+
+        - VXLAN 使用 24 位的标志符作为虚拟网络的区分标识，最多可以提供 1600 万+ (2^24 = 16777216) 个虚拟网络，极大地扩展了网络的规模。
+        ![image](./Pictures/net-kernel/vxlan_数量.avif)
+
+            - 虽然 VXLAN 可以提供更多的虚拟网络，但是它并不会完全取代 VLAN, 例如在大型数据中心，可能会同时使用这两种网络标准，使用 VXLAN 将租户进行隔离，同时单个租户可以基于其 VXLAN 创建内部的 VLAN。
+
+    - 2.提升网络虚拟化的可扩展性
+
+        - VXLAN 将网络虚拟化推到三层网络，减少了二层网络中的广播风暴问题，提高了网络的可伸缩性，(当然这个功能使用 VLAN 也可以实现)。
+
+    - 3.跨子网通信
+
+        - 问题：传统的 VLAN 基于二层网络通信，虚拟机无法跨越不同的子网通信
+
+        - VXLAN 基于三层网络通信，可以将二层网络的数据封装之后进行传输，实现跨子网的虚拟机通信。
+        ![image](./Pictures/net-kernel/vxlan_跨子网通信.avif)
+
+    - 4.减少 MAC 表消耗
+
+        - VXLAN 采用采用隧道传输机制，交换机 (一般位于机架顶部) 无须在 MAC 表中记录虚拟机的信息，这样可以使二层网络保持低资源消耗，避免交换机的 MAC 表溢出。
+
+    - 5.充分利用网络路径
+
+        - STP生成树协议 (Spanning Tree Protocol) 是一种用于防止网络中发生环路的协议，但它的作用是通过选择一条活跃路径，而将其他冗余路径阻塞，从而确保网络拓扑是无环的。
+
+        - 问题：传统的的基于 STP 的 VLAN 部署中可能遇到的一个问题: 如果每个 VLAN 都独立运行 STP，可能导致网络路径的浪费。这是因为 STP 对于整个交换网络来说是全局的，而不是基于单个 VLAN 的。因此，STP 将会为整个交换网络选择一条活跃路径，并将其他冗余路径阻塞，而这种选择是基于整个网络而不是基于单个 VLAN。
+        ![image](./Pictures/net-kernel/vlan_STP生成树协议.avif)
+
+        - VXLAN 的数据包是封装到 UDP 通过三层网络传输和转发的，可以有效使用所有的网络路径。
+        ![image](./Pictures/net-kernel/vxlan_STP生成树协议.avif)
+
+    - 6.虚拟机迁移
+
+        - 传统的 VLAN 中的虚拟机在迁移之前，需要在目标子网上面重新配置 VLAN，而 VXLAN 允许虚拟网络横跨物理网络的子网，避免虚拟机跨越三层网络，使得虚拟机可以在不同的 IP 子网中移动而不受限制，减少了迁移复杂性。
+
+        - 例如，当虚拟机所在宿主机因为故障或其他原因需要停机维护时，就需要将虚拟机迁移到其他宿主机中，为了保证业务的可持续性服务，迁移过程中虚拟机的 IP 地址不能发生变化，VXLAN 保证只要虚拟机迁移后仍然处于同一个二层网络，就不需要改变 IP 地址。
+
+    - 7.多租户环境增强
+
+        - VXLAN 支持多租户环境，使得不同租户的数据可以在同一物理网络基础上独立传输，并允许 IP 地址空间重叠，避免了流量数据泄露和潜在的安全隐患，此外还可以使用差异化的服务质量 (QoS) 策略和服务级别协议 (SLA) 配置网段。
+
+- Vxlan实现原理
+    - 本质上就是参考了 OSI 网络模型的设计中数据封装和转发
+    - VxLAN 使用虚拟隧道端点（Virtual Tunnel End Point、VTEP）设备对服务器发出和收到的数据包进行二次封装和拆包，将原本在二层网络传输的 以太帧 封装到网络四层的 UDP 数据包中
+        - 同时加入自定义的 VXLAN 协议 Header 首部。这样就可以在已有的网络基础上跨越各类设备通信，包括防火墙和路由器。
+
+- 传输协议
+
+    - VXLAN 使用网络层的 IP 协议 + 传输层的 UDP 协议完成传输
+    - 通过定义一个数据封装格式，在原始的二层网络数据包之前加上 VXLAN Header, 然后放入 UDP 和 IP 数据包中，这样就完成了基于三层网络建立的二层网络隧道。
+
+- Vxlan的头部（header）
+
+    - 头部大小：由 8 个字节（64位）组成：包括标志位、VNI 标志符和其他控制信息，这种紧凑的头部设计有助于降低额外的网络开销。
+
+    ![image](./Pictures/net-kernel/vxlan_header.avif)
+
+    - 标志位 (Flags): 8 比特，用于标识 VXLAN 头部的特性，目前只使用了最低位（bit 0），该位为 "I" 比特，表示 VXLAN 包是否包含附加的 VXLAN 标头
+    - 保留位 (Reserved): 24 比特，保留用于将来扩展协议时使用
+    - VXLAN 网络标识符 (VNI - VXLAN Network Identifier): 24 比特，用于标识 VXLAN 网络的唯一标识符，每个 VXLAN 网络都应该有一个唯一的 VNI (也就是用一个数字标识一个虚拟网络)
+    - 原始以太网帧 (Original L2 Frame): 用于携带实际的网络数据包，也就是封装在 VXLAN 头部中的原始以太网帧
+
+- VXLAN 头部设置完成之后，会被层层封装: UDP -> IP -> MAC，最终形成的数据包会通过三层网络发出。
+
+    - Outer UDP Header: 封装 原始二层以太帧 + VXLAN Header, 源 VLANX 端口号通常是动态随机分配的，目的 VXLAN 端口号通常固定为 4789
+    - Outer IP Header: 封装 IP Header, 由 VTEP 设备完成，也就是 源 IP 地址 (VTEP 的 IP 地址) 和 目的 IP 地址 (对端 VTEP 的 IP 地址)
+    - Outer MAC Header: 封装 MAC Header, 由 VTEP 设备完成，也就是 源 MAC 地址 (VTEP 的 MAC 地址) 和 目的 MAC 地址 (下一跳的网络(路由)设备 MAC 地址)
+
+    - Vxlan的包大小
+
+        | 步骤 | 操作/封包    | 协议     | 长度                                                | MTU                                                  |
+        |------|--------------|----------|-----------------------------------------------------|------------------------------------------------------|
+        | 1    | ping -s 1422 | ICMP     | 1430 = 1422 + 8 （ICMP header）                     |                                                      |
+        | 2    | L3           | IP       | 1450 = 1430 + 20 （IP header）                      | VxLAN Interface 的 MTU                               |
+        | 3    | L2           | Ethernet | 1464 = 1450 + 14 （Ethernet header）                |                                                      |
+        | 4    | VxLAN        | UDP      | 1480 = 1464 + 8 （VxLAN header） + 8 （UDP header） |                                                      |
+        | 5    | L3           | IP       | 1500 = 1480 + 20 （IP header）                      | 物理网卡的（IP）MTU，它不包括 Ethernet header 的长度 |
+        | 6    | L2           | Ethernet | 1514 = 1500 + 14 （Ethernet header）                | 最大可传输帧大小                                     |
+
+        - 因此， 是1514- 1464 = 50
+
+#### VTEP (VXLAN Tunnel Endpoint)
+
+- VTEP 是 VXLAN 的关键组件，负责将 VXLAN 虚拟网络数据包进行封装和解封装
+    - VTEP 既可以是网络物理设备 (交换机) 也可以是虚拟设备 (普通服务器通过软件实现的，例如 KVM)。
+
+- 每个 VTEP 设备都会被分配一个独立的 IP 地址和一个 VNI 标志，用于标识该设备在物理网络中的位置，这个 IP 地址通常是在 VTEP 设备的物理接口或逻辑接口上配置的。
+    - 该 IP 地址在 VXLAN 报文头部中被使用，便于在数据包封装和解封的过程中识别出 源 VTEP 和目标 VTEP。两个 VTEP 设备之间会创建无状态隧道用于传输数据。
+    - VXLAN 独立于底层的物理网络拓扑；反过来，两个 VTEP 之间的底层 IP 网络也独立于 VXLAN。
+
+- 由于 VXLAN 封装在 UDP 数据包内，因此它们可以在任何能够传输 UDP 数据包的网络上运行，只需要保证 UDP 数据报可以从封装 VTEP 转发到解封装 VTEP 即可，底层网络节点之间的物理布局和地理距离并不重要。
+
+- 封装和解封装过程
+    ![image](./Pictures/net-kernel/vxlan_封装和解封装过程.avif)
+
+    - 发送端封装：当一个主机 (物理主机或虚拟机) 要发送数据包到另一个主机时，VTEP 设备负责将原始的以太网帧封装到 VXLAN 数据报文中，封装的过程包括在原始帧上加上 VXLAN Header
+        - 其中包含 VXLAN 网络标识符 (VNI)，以及 源 VTEP 和目标 VTEP 的 IP 地址信息，这样原始帧就变为一个 VXLAN 帧。
+
+    - 接收端解封装：接收端的目标 VTEP 通过解析 VXLAN Header，识别出 VXLAN 网络标识符 (VNI)，并将原始帧从 VXLAN 封装报文中解析出来。
+
+        - 然后目标 VTEP 将原始帧发送到目标主机 (物理主机或虚拟机) ，这个解封装的过程允许跨物理网络的虚拟机进行通信，因为基于三层网络的 VXLAN 提供了一种逻辑隔离和扩展机制。
+
+    - 通过数据包封装和解封装，底层网络所做的转换工作对于通信的双方来说是透明的。
+
+##### 网络拓扑结构
+
+![image](./Pictures/net-kernel/vxlan_网络拓扑结构.avif)
+
+- 如图所示，虚拟机 (VM_A)、虚拟机 (VM_B) 、虚拟机 (VM_C) 同属一个子网: 10.1.1.0/24, 并且同属一个 VNI/5000
+
+- 此时 VM_A 想与 VM_C 进行通信，这中间的通信过程是什么样的呢？下面跟着流程图一起看来下。
+
+- 为了方便展示和联系上下文，下文中的设备名称和地址等直接使用简写，例如
+    - VM_A 表示虚拟机 A
+    - MAC_B 表示虚拟机 B 的 MAC 地址
+    - IP_C 表示虚拟机 C 的 IP 地址
+    - VTEP_1 表示编号为 1 的 VTEP 设备
+
+- ARP请求报文转发流程
+
+    ![image](./Pictures/net-kernel/vxlan_ARP请求报文转发流程.avif)
+
+    - 由于是首次进行通信，VM_A 上没有 VM_C 的 MAC 地址，所以会发送 ARP 广播请求 VM_C 的 MAC 地址。
+
+    - 1.VM_A 发送 ARP 广播请求报文
+
+        |               |                   |
+        | ------------- | ----------------- |
+        | 源 MAC 地址   | MAC_A             |
+        | 目的 MAC 地址 | FF:FF:FF:FF:FF:FF |
+        | 源 IP 地址    | IP_A              |
+        | 目的 IP 地址  | IP_C              |
+
+    - 2.VTEP_1 封装 ARP 请求报文
+
+        - VTEP_1 收到 ARP 请求报文之后，会依次进行如下工作:
+
+            - 根据二层子接口上的配置判断请求报文需要进入 VXLAN 隧道
+            - 确定请求报文所属广播域，也就确定了报文所属 VNI
+            - 学习 VM_A 的 MAC_A + VNI + Port (二层子接口对应的物理接口) 的映射关系，并记录在 MAC 表中
+
+            - 对请求报文进行封装，封装之后的报文如下
+
+                |               |                                                             |
+                | ------------- | ----------------------------------------------------------- |
+                | 源 MAC 地址   | VTEP_1 的 MAC 地址                                          |
+                | 目的 MAC 地址 | 网络中下一跳设备的 MAC 地址                                 |
+                | 源 IP 地址    | VTEP_1 的 IP 地址                                           |
+                | 目的 IP 地址  | 对端 VTEP 设备的 IP 地址 (也就是 VTEP_2, VTEP_3 的 IP 地址) |
+
+        - 需要注意的是: 实际场景中，对端 VTEP 设备可能有 N 个，那么就会发出 N 个封装后的报文请求。
+
+    - 3.ARP 请求报文解封装
+
+        - 请求报文到达 VTEP_2, VTEP_3 之后，两者会依次进行如下工作:
+            - 对报文进行解封装，得到 VM_A 的原始 ARP 请求报文
+            - 学习 VM_A 的 `MAC_A + VNI + 对端 VTEP_1 IP 地址` 的映射关系，并记录在各自的 MAC 表中
+            - 根据二层子接口上的配置对报文进行处理，并在各自对应的二层域内进行广播
+            - VM_B 和 VM_C 接收到 VM_A 的原始 ARP 请求报文之后，比较目的 IP 地址是否为自己的 IP 地址
+            - **VM_B 发现目的 IP 地址不是自己，直接将请求报文丢弃，没有后文了 **...
+            - **VM_C 发现目的 IP 地址是自己，学习 VM_A 的 MAC_A + IP 并记录在 ARP 缓存表中，并且对 VM_A 的 ARP 请求做出应答**
+
+    - 从 VM_A 上发出的原始 ARP 请求报文经过层层封装和转发，终于到达了目的地 VM_C，这中间经过了一次广播 (或多播, 取决于具体的配置)，因为 VTEP 设备有自动学习的能力，所以请求沿途经过和到达的 VTEP 设备都将各自需要的映射信息记录在各自的 MAC 表中。
+
+    - 接下来，我们看看 VM_C 是如何应答 VM_A 的 ARP 请求的。
+
+- ARP响应报文转发流程
+
+    ![image](./Pictures/net-kernel/vxlan_ARP响应报文转发流程.avif)
+
+    - 1.VM_C 发出应答报文
+
+        - 因为 VM_C 已经学习了 VM_A 的 MAC + IP 记录，所以 ARP 应答报文为单播。
+
+            |               |       |
+            | ------------- | ----- |
+            | 源 MAC 地址   | MAC_C |
+            | 目的 MAC 地址 | MAC_A |
+            | 源 IP 地址    | IP_C  |
+            | 目的 IP 地址  | IP_A  |
+
+        - 通过报文我们可以看到，VM_C 的应答报文 和 VM_A 的请求报文正好反过来。
+
+    - 2.VTEP_3 封装 ARP 应答报文
+
+        - VTEP_3 收到 ARP 应答报文之后，会依次进行如下工作:
+
+            - 根据二层子接口上的配置判断请求报文需要进入 VXLAN 隧道，识别报文所属 VNI
+            - 学习 VM_C 的 MAC_A + VNI + Port (二层子接口对应的物理接口) 的映射关系，并记录在 MAC 表中
+            - 对应答报文进行封装，封装之后的报文如下
+
+                |               |                             |
+                | ------------- | --------------------------- |
+                | 源 MAC 地址   | VTEP_3 的 MAC 地址          |
+                | 目的 MAC 地址 | 网络中下一跳设备的 MAC 地址 |
+                | 源 IP 地址    | VTEP_3 的 IP 地址           |
+                | 目的 IP 地址  | VTEP_1 的 IP 地址           |
+
+    - 3.ARP 应答报文解封装
+
+        - ARP 应答报文到达 VTEP_1 之后，会依次进行如下工作:
+
+            - 对报文进行解封装，得到 VM_C 的原始 ARP 应答报文
+            - 学习 VM_C 的 MAC_C + VNI + 对端 VTEP_3 IP 地址 的映射关系，并记录在 MAC 表中
+            - VTEP_1 将应答报文发送给 VM_A
+            - VM_A 学习 VM_C 的 MAC_A + IP 并记录在 ARP 缓存表中
+
+    - 到了这里，从 VM_A 发起的 ARP 请求到应答通信过程就结束了，因为 VM_A 和 VM_C 都学习到了对方的 MAC + IP 地址，后续两者之间的通信会直接采用单播。
+
+- 小结：在 VM_A 和 VM_C 的整个通信过程中，只有发出一次广播 (或多播, 取决于具体的配置)，得益于 VTEP 设备的自动学习能力，后续的报文都是通过单播直接发送的。可以想象，如果 VTEP 设备没有自动学习能力的话，在 VTEP 数量很多的情况下，依然会产生 ARP 广播风暴问题。
+    - 除了本文提到的广播 (多播) 学习模式外，还可以通过 SDN 模式的分布式控制中心来管理整个 VXLAN 网络
 
 ## GRE（Generic Routing Encapsulation）
 
@@ -4410,3 +6243,394 @@ sysctl --all
     ```bash
     net.ipv4.tcp_slow_start_after_idle = 0
     ```
+
+## [洋芋编程：想要支持百万长连接，需要调优哪些参数？](https://mp.weixin.qq.com/s/7cdkLa_8OtycU0x10QmL4g)
+
+- 1.文件描述符限制
+    - 系统级别限制：操作系统会设置一个全局的文件描述符限制，控制整个系统能同时打开的最大文件数
+    - 用户级别限制：每个用户会有一个文件描述符的限制，控制这个用户能够同时打开的最大文件数
+    - 进程级别限制：每个进程也会有一个文件描述符的限制，控制单个进程能够同时打开的最大文件数
+
+    - `too many open files`, 产生这个问题的根本原因是: 短时间内打开大量网络 (文件) 连接，超过了操作系统对单个进程允许打开的文件描述符（file descriptor）数量限制。
+    ```sh
+    # 文件描述符数量，默认输出 1024 或者 65535。表示单个进程同时最多只能维持 1024 个网络 (例如 TCP) 连接。
+    ulimit -n
+    1024
+
+    # 临时性调整。只在当前会话 (终端) 中有效，退出或重启后失效
+    ulimit -HSn 1048576
+
+    # 永久性设置。重启永久生效
+    sudo vim /etc/security/limits.conf
+    # 调整文件描述符限制
+    # 注意: 实际生效时会以两者中的较小值为准 (所以最好的方法就是保持两个值相同)
+    * soft nofile 1048576
+    * hard nofile 1048576
+    root soft nofile 1048576
+    root hard nofile 1048576
+
+    # 运行 sysctl -p 命令生效，重启之后仍然有效
+    sysctl -p
+    ```
+
+    - 单个进程打开的文件描述符数量 不能超过 操作系统所有进程文件描述符数量 `/proc/sys/fs/file-max`, 所以需要修改对应的值:
+    ```sh
+    sudo vim /etc/sysctl.conf
+
+    # 操作系统所有进程一共可以打开的文件数量
+    # 增加/修改以下内容
+    # 注意: 该设置只对非 root 用户进行限制, root 不受影响
+    fs.file-max = 16777216
+
+    # 进程级别可以打开的文件数量
+    # 或者可以设置为一个比 soft nofile 和 hard nofile 略大的值
+    fs.nr_open = 16777216
+
+
+    # 运行 sysctl -p 命令生效，重启之后仍然有效。
+    sysctl -p
+
+    # 查看配置
+    cat /proc/sys/fs/file-nr
+    # 第一个数表示当前系统使用的文件描述符数
+    # 第二个数表示分配后已释放的文件描述符数
+    # 第三个数等于 file-max
+    1344    0       1048576
+    ```
+
+- Linux 内核参数调优
+
+    - 打开系统配置文件 `/etc/sysctl.conf`，增加 (或修改) 以下配置数据，参数名称及其作用已经写在了注释中。
+
+    ```sh
+    # 设置系统的 TCP TIME_WAIT 数量，如果超过该值
+    # 不需要等待 2MSL，直接关闭
+    net.ipv4.tcp_max_tw_buckets = 1048576
+
+    # 将处于 TIME_WAIT 状态的套接字重用于新的连接
+    # 如果新连接的时间戳 大于 旧连接的最新时间戳
+    # 重用该状态下的现有 TIME_WAIT 连接，这两个参数主要针对接收方 (服务端)
+    # 对于发送方 (客户端) ，这两个参数没有任何作用
+    net.ipv4.tcp_tw_reuse = 1
+    # 必须配合使用
+    net.ipv4.tcp_timestamps = 1
+
+    # 启用快速回收 TIME_WAIT 资源
+    # net.ipv4.tcp_tw_recycle = 1
+    # 能够更快地回收 TIME_WAIT 套接字
+    # 此选项会导致处于 NAT 网络的客户端超时，建议设置为 0
+    # 因为当来自同一公网 IP 地址的不同主机尝试与服务器建立连接时，服务器会因为时间戳的不匹配而拒绝新的连接
+    # 这是因为内核会认为这些连接是旧连接的重传
+    # 该配置会在 Linux/4.12 被移除
+    # 在之后的版本中查看/设置会提示 "cannot stat /proc/sys/net/ipv4/tcp_tw_recycle"
+    # net.ipv4.tcp_tw_recycle = 0
+
+    # 缩短 Keepalive 探测失败后，连接失效之前发送的保活探测包数量
+    net.ipv4.tcp_keepalive_probes = 3
+
+    # 缩短发送 Keepalive 探测包的间隔时间
+    net.ipv4.tcp_keepalive_intvl = 15
+
+    # 缩短最后一次数据包到 Keepalive 探测包的间隔时间
+
+    # 减小 TCP 连接保活时间
+    # 决定了 TCP 连接在没有数据传输时，多久发送一次保活探测包，以确保连接的另一端仍然存在
+    # 默认为 7200 秒
+    net.ipv4.tcp_keepalive_time = 600
+
+    # 控制 TCP 的超时重传次数，决定了在 TCP 连接丢失或没有响应的情况下，内核重传数据包的最大次数
+    # 如果超过这个次数仍未收到对方的确认包，TCP 连接将被终止
+    net.ipv4.tcp_retries2 = 10
+
+    # 缩短处于 TIME_WAIT 状态的超时时间
+    # 决定了在发送 FIN（Finish）包之后，TCP 连接保持在 FIN-WAIT-2 状态的时间 (对 FIN-WAIT-1 状态无效)
+    # 主要作用是在 TCP 连接关闭时，为了等待对方关闭连接而保留资源的时间
+    # 如果超过这个时间仍未收到 FIN 包，连接将被关闭
+    # 更快地检测和释放无响应的连接，释放资源
+    net.ipv4.tcp_fin_timeout = 15
+
+    # 调整 TCP 接收和发送窗口的大小，以提高吞吐量
+    # 三个数值分别是 min，default，max，系统会根据这些设置，自动调整 TCP 接收 / 发送缓冲区的大小
+    net.ipv4.tcp_mem = 8388608 12582912 16777216
+    net.ipv4.tcp_rmem = 8192 87380 16777216
+    net.ipv4.tcp_wmem = 8192 65535 16777216
+
+    # 定义了系统中每一个端口监听队列的最大长度
+    net.core.somaxconn = 65535
+
+    # 增加半连接队列容量
+    # 除了系统参数外 (net.core.somaxconn, net.ipv4.tcp_max_syn_backlog)
+    # 程序设置的 backlog 参数也会影响，以三者中的较小值为准
+    net.ipv4.tcp_max_syn_backlog = 65535
+
+    # 全连接队列已满后，如何处理新到连接 ?
+    # 如果设置为 0 (默认情况)
+    #   客户端发送的 ACK 报文会被直接丢掉，然后服务端重新发送 SYN+ACK (重传) 报文
+    #       如果客户端设置的连接超时时间比较短，很容易在这里就超时了，返回 connection timeout 错误，自然也就没有下文了
+    #       如果客户端设置的连接超时时间比较长，收到服务端的 SYN+ACK (重传) 报文之后，会认为之前的 ACK 报文丢包了
+    #       于是再次发送 ACK 报文，也许可以等到服务端全连接队列有空闲之后，建立连接完成
+    #   当服务端重试次数到达上限 (tcp_synack_retries) 之后，发送 RST 报文给客户端
+    #       默认情况下，tcp_synack_retries 参数等于 5, 而且采用指数退避算法
+    #       也就是说，5 次的重试时间间隔为 1s, 2s, 4s, 8s, 16s, 总共 31s
+    #       第 5 次重试发出后还要等 32s 才能知道第 5 次重试也超时了，所以总共需要等待 1s + 2s + 4s+ 8s+ 16s + 32s = 63s
+    # 如果设置为 1
+    #   服务端直接发送 RST 报文给客户端，返回 connection reset by peer
+    #   设置为 1, 可以避免服务端给客户端发送 SYN+ACK
+    #   但是会带来另外一个问题: 客户端无法根据 RST 报文判断出，服务端拒绝的具体原因:
+    #   因为对应的端口没有应用程序监听，还是全队列满了
+    # 除了系统参数外 (net.core.somaxconn)
+    # 程序设置的 backlog 参数也会影响，以两者中的较小值为准
+    # 所以全连接队列大小 = min(backlog, somaxconn)
+    net.ipv4.tcp_abort_on_overflow = 1
+
+    # 增大每个套接字的缓冲区大小
+    net.core.optmem_max = 81920
+    # 增大套接字接收缓冲区大小
+    net.core.rmem_max = 16777216
+    # 增大套接字发送缓冲区大小
+    net.core.wmem_max = 16777216
+
+    # 增加网络接口队列长度，可以避免在高负载情况下丢包
+    # 在每个网络接口接收数据包的速率比内核处理这些包的速率快时，允许送到队列的数据包的最大数量
+    net.core.netdev_max_backlog = 65535
+
+    # 增加连接追踪表的大小，可以支持更多的并发连接
+    # 注意：如果防火墙没开则会提示 error: "net.netfilter.nf_conntrack_max" is an unknown key，忽略即可
+    net.netfilter.nf_conntrack_max = 1048576
+
+    # 缩短连接追踪表中处于 TIME_WAIT 状态连接的超时时间
+    net.netfilter.nf_conntrack_tcp_timeout_time_wait = 30
+    ```
+
+    ```sh
+    # 运行 sysctl -p 命令生效，重启之后仍然有效。
+    sysctl -p
+    ```
+
+- 客户端参数
+
+    - 当服务器充当 “客户端角色” 时 (例如代理服务器)，连接后端服务器器时，每个连接需要分配一个临时端口号。
+
+    ```sh
+    # 查询系统配置的临时端口号范围
+    sysctl net.ipv4.ip_local_port_range
+
+    # 增加系统配置的临时端口号范围
+    sysctl -w net.ipv4.ip_local_port_range="10000 65535"
+    ```
+
+# DDOS攻击
+
+- [洋芋编程：DDoS 究竟在攻击什么?](https://mp.weixin.qq.com/s/UIjXckCpwngrh0I_nWDjOg)
+
+- 分布式拒绝服务（DDoS）攻击是一种常见的网络攻击形式，攻击者通过向目标服务端发送大量的请求，使目标服务端无法进行网络连接，无法正常提供服务。
+
+- 这类攻击类型主要利用网络协议的漏洞或者设计缺陷，消耗目标服务端的资源，其中最著名的莫过于 TCP SYN Flood 攻击，几乎所有大型网站都遭受过这种类型攻击，造成几个小时到几天的服务不可用时间。
+
+## SYN flood (洪泛) 攻击
+
+- `SYN flood` 攻击原理：短时间内伪造大量不同ip地址并向server端发送syn，但不发送最后一次握手的ack；从而让server端一直处于`SYN_RCVD` 状态，占满syn半队列，并不断超时重发syn ack
+
+- 模拟攻击
+    ```sh
+    # hping3 (Redis 作者开发的另外一个工具) 可以构造 TCP/IP 协议数据包，对系统进行安全审计、防火墙测试、DDoS 攻击测试等。
+    # -S 参数表示设置 TCP 协议的 SYN（同步序列号）
+    # -p 表示目的端口为 80
+    # -i u10表示每隔 10 微秒发送一个网络帧
+    # --rand-source 随机化源 IP 地址 (模拟更加真实的攻击)
+
+    # 模拟syn flood攻击
+    # 当前主机: 192.168.0.2, 充当 “客户端” 发起 TCP 连接
+    hping3 -S -p 80 -i u10 192.168.0.30
+
+    # 在主机 192.168.0.30 抓包
+    tcpdump -i eth0 -n tcp port 80
+    # Flags [S] 表示这是一个 SYN 包
+    # 大量的 SYN 包表明，这是一个 SYN Flood 攻击
+    09:15:48.287047 IP 192.168.0.2.27095 > 192.168.0.30: Flags [S], seq 1288268370, win 512, length 0
+    09:15:48.287050 IP 192.168.0.2.27131 > 192.168.0.30: Flags [S], seq 2084255254, win 512, length 0
+    09:15:48.287052 IP 192.168.0.2.27116 > 192.168.0.30: Flags [S], seq 677393791, win 512, length 0
+    09:15:48.287055 IP 192.168.0.2.27141 > 192.168.0.30: Flags [S], seq 1276451587, win 512, length 0
+    09:15:48.287068 IP 192.168.0.2.27154 > 192.168.0.30: Flags [S], seq 1851495339, win 512, length 0
+    ```
+
+    - 通过抓包输出，可以得出如下结果:
+
+        - 1.客户端 (攻击方) 构造大量的 SYN 包，请求建立 TCP 连接
+        - 2.服务端 (被攻击方) 收到 SYN 包后，会向源 IP (客户端) 发送 SYN + ACK 报文，并等待三次握手的最后一次 ACK 报文，直到超时
+        - 3.经过一段时间后，服务端的半连接队列会打满，从而无法建立新的 TCP 连接
+
+
+    - 手动处理包的核心思路: 先找到状态异常的包，然后手动进行限制或设置直接丢包处理。
+
+        ```sh
+        # 首先，我们通过 netstat 命令找出状态为 SYN_RECEIVED 的数据包，然后分析其中异常的数据包。
+        netstat -n -p | grep SYN_RECV
+        # 发现大量 SYN_RECV 状态的连接，并且源 IP 地址为 192.168.0.2
+        ...
+        tcp 0 0 192.168.0.30:80 192.168.0.2:12503 SYN_RECV -
+        tcp 0 0 192.168.0.30:80 192.168.0.2:13502 SYN_RECV -
+        tcp 0 0 192.168.0.30:80 192.168.0.2:15256 SYN_RECV -
+        tcp 0 0 192.168.0.30:80 192.168.0.2:18117 SYN_RECV -
+        ...
+        ```
+
+        - 找出异常数据包的源 IP 地址后，要解决 SYN Flood 攻击的问题，只要丢掉相关的包就可以，可以使用 `iptables` 命令来完成。
+
+            ```sh
+            iptables -I INPUT -s 192.168.0.2 -p tcp -j REJECT
+            ```
+
+        - 当然，攻击者不会一个源 IP 地址进行攻击，所以 SYN Flood 攻击中的源 IP 地址并不是固定的，这时手动限制单个 IP 地址的方式可能就不适合了 (当然，也可以将上述命令操作转为自动化脚本)。除此之外，还可以通过限制 SYN 包的速率来实现。
+
+            ```sh
+            # 限制 SYN 并发数为每秒 1 次
+            iptables -A INPUT -p tcp --syn -m limit --limit 1/s -j ACCEPT
+
+            # 限制单个 IP 在 60 秒建立的新连接数为 10
+            iptables -I INPUT -p tcp --dport 80 --syn -m recent --name SYN_FLOOD --update --seconds 60 --hitcount 10 -j REJECT
+            ```
+
+        - 上述方法虽然可以限制单个攻击源 IP 地址发起的 SYN Flood 攻击，但是如果攻击者发起的是大规模 (僵尸网络) 的 SYN Flood 攻击，该方法可能就无效了。
+
+        - 因为在遭遇大规模的 SYN Flood 攻击时，服务端管理人员很可能无法 SSH 登录（SSH 也是基于 TCP 的）到服务端，更不可能执行上述的相关命令。
+
+    - 调整参数防范：
+
+        - 1.增大半连接队列的容量
+            ```sh
+            # 查看半队列
+            sysctl net.ipv4.tcp_max_syn_backlog
+            net.ipv4.tcp_max_syn_backlog = 512
+
+            # 临时配置，重启后配置会丢失
+            # 将半连接队列容量增大到 65535
+            sysctl -w net.ipv4.tcp_max_syn_backlog=65535
+            ```
+
+        - 2.减少连接 SYN_RECV 状态失败时内核自动重试次数
+            ```sh
+            # 查看
+            sysctl net.ipv4.tcp_synack_retries
+            net.ipv4.tcp_synack_retries = 5
+
+            # 临时配置，重启后配置会丢失
+            # 将自动重试次数减少到 1:
+            sysctl -w net.ipv4.tcp_synack_retries=1
+            ```
+
+        - 3.直接拒绝：如果面对海量请求真的处理不过来，直接拒绝就行了
+            ```sh
+            # 查看
+            sysctl net.ipv4.tcp_abort_on_overflow
+            net.ipv4.tcp_abort_on_overflow = 0
+
+            # 临时配置，重启后配置会丢失
+            # 启动拒绝连接:
+            sysctl -w net.ipv4.tcp_abort_on_overflow=1
+            ```
+
+        - 4.TCP SYN Cookies
+
+            > 需要注意的是：开启 TCP syncookies 后，内核选项 (半连接容量) net.ipv4.tcp_max_syn_backlog 失效。
+
+            - 在默认的 TCP 三次握手过程中，客户端向服务端发送 SYN 数据包，服务端收到之后应该回复一个 SYN + ACK 数据包，并进入 SYN_RECV 状态等待客户端的 ACK 确认，但是，如果攻击者向服务端发送大量的 SYN 数据包而不回复 ACK 确认，服务端的半连接队列就会被打满，无法接受正常的新连接。
+
+            - TCP SYN Cookies 是一种专门防御 SYN Flood 攻击的方法，SYN Cookies 基于 TCP 连接四元组（包括源地址、源端口、目的地址、目的端口）以及一个加密种子（如系统启动时间），计算出一个哈希值（SHA1），这个哈希值称为 Cookie。
+
+            - Cookie 就被用作序列号，来应答 SYN + ACK 包，并释放连接状态，当客户端发送完三次握手的最后一次 ACK 后，服务端就会再次计算（反向）这个哈希值，确认是上次返回的 SYN + ACK 的应答包，然后才会进入 TCP 的连接状态。
+
+            - 开启 TCP SYN Cookies 之后，就不需要维护半连接状态了，自然也就不存在半连接队列的容量限制问题了。
+
+            ```sh
+            # 临时配置，重启后配置会丢失
+            # 开启 TCP SYN Cookies
+            sysctl -w net.ipv4.tcp_syncookies=1
+            net.ipv4.tcp_syncookies = 1
+            ```
+
+            - [小林coding：cookies方案为什么不直接取代半连接队列？](https://www.xiaolincoding.com/network/3_tcp/tcp_no_accpet.html#cookies%E6%96%B9%E6%A1%88%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%9B%B4%E6%8E%A5%E5%8F%96%E4%BB%A3%E5%8D%8A%E8%BF%9E%E6%8E%A5%E9%98%9F%E5%88%97)
+
+                - 1.cookies通过通信双方的IP地址端口、时间戳、MSS等信息进行实时计算的，保存在TCP报头的seq里，如果传输过程中数据包丢了，也不会重发第二次握手的信息。
+
+                - 2.攻击者构造大量的第三次握手包（ACK包），同时带上各种瞎编的cookies信息，服务端收到ACK包后以为是正经cookies，憨憨地跑去解码（耗CPU），最后发现不是正经数据包后才丢弃。
+
+        - 参数持久化
+
+            ```sh
+            vim /etc/sysctl.conf
+
+            # 对应配置修改如下
+            net.ipv4.tcp_syncookies = 1
+            net.ipv4.tcp_synack_retries = 1
+            net.ipv4.tcp_max_syn_backlog = 1024
+
+            # 配置持久化（动态生效）
+            sysctl -p
+            ```
+
+        - 增大`netdev_max_backlog`
+        - 增大`net.core.somaxconn`
+
+## 反射型攻击
+
+- 反射型 DDoS 攻击也称为 (流量) 放大型攻击。
+
+    - 攻击者向服务端发送大量的数据包，占用服务端的带宽和资源，造成目标服务端无法正常提供服务，例如 UDP 洪泛、ICMP 洪泛。
+
+    - UDP 洪泛: 攻击者向目标服务发送大量的 UDP 数据报文试图填充服务端的可用端口，服务端如果没有找到指定端口，会返回 “Destination Unreachable” 应答报文，在海量 UDP 请求下，服务端就会被攻击流量淹没。
+
+    - ICMP 洪泛：攻击者向目标服务端发送大量的 ICMP ECHO, 也就是 ping 请求 数据包，目标服务端会耗费大量的 CPU 资源去处理和响应，从而无法响应正常请求。
+
+- 攻击者也可以利用利用第三方服务或设备，放大攻击流量，典型的如 DNS 攻击。攻击者利用开放的 DNS 服务端向目标系统发送大量的 DNS 查询请求，通过伪造源 IP 地址为被攻击目标，使被攻击目标系统收到大量的 DNS 响应数据包，占用其带宽和服务端资源。
+
+    - 举个小例子来说明这种情况:
+
+        ```
+        +------+            +------+              +------+
+        |      |            |      |   ---->      |      |
+        |   A  |   --->     |   B  |   ---->      |   C  |
+        |      |            |      |   ---->      |      |
+        +------+            +------+              +------+
+        攻击者              开放服务端              被攻击者
+        ```
+
+        - 假设 B 服务端作为开放服务端，监听 UDP 端口 5678，当给这个 UDP 端口发送消息后会做具体的应答。
+
+            - 那么攻击者 A 只需要做以下事情:
+
+                - 1.发送数据给 B，并修改数据报文，伪装自己的源 IP 为 C
+                - 2.B 接收到 A 的数据后，根据源 IP 将应答发送给 C (因为 A 发过来的报文中，源 IP 是 C)
+                - 3.C 收到了来自 B 的 “反射性” 攻击，因为 B 将数据数量包放大了，原本 A 可能只发送了 “hello” 给 B，而 B 却发送了 N N N 个 “hello” 给 C, 如果类似 B 的开放服务端还不止一个，那么理论上，C 受到的攻击可以被无限放大
+
+    - 再举一个 DNS 放大攻击的小例子。
+
+        - 开启 Wireshark 抓包，然后执行下面的命令:
+            ```sh
+            dig ANY isc.org
+            ```
+
+        - 如图所示，发出去的 DNS 请求包数据只有 25 字节.
+        ![image](./Pictures/net-kernel/ddos_DNS请求抓包.avif)
+
+        - 但是收到的 DNS 应答包数据居然有 3111 字节，足足放大了 124 倍，如果在请求包中伪造一个想要攻击的服务端 IP 地址，该地址就会莫名收到 DNS 服务端 3111 字节的回复，利用这个放大攻击，只需要控制少量 (僵尸) 主机，就可以把一个大网站拖垮。
+        ![image](./Pictures/net-kernel/ddos_DNS应答抓包.avif)
+
+- 反射型攻击还可以对特定应用程序或服务发送攻击，例如 HTTP 洪泛 (发送大量 HTTP 请求)，慢速 HTTP (攻击者向目标服务端发送大量的 HTTP 请求，但是每个请求的发送速度非常缓慢)，薄弱环节攻击 (例如网站的关键字搜索功能，攻击者可以自动化伪造不同关键字，发送大量请求，严重影响网站的响应速度，严重时甚至直接使整个网站宕机)。
+
+- 不论哪种类型的反射型攻击，其攻击方式都具有如下特点：
+
+    - 高流量: 攻击者发送大量的数据 (请求报文) 到目标服务端或网络，使其超出正常处理能力范围
+    - 大规模且难以识别: 攻击者操作数百或数千个攻击节点 (也称为 “肉鸡” 或 “僵尸网络”)，形成大规模的攻击，而且攻击节点很难找出共性特征 (攻击流量和正常流量看起来几乎一样)
+    - 目的明确且无差别攻击: 攻击的目的通常是使目标服务端或网络不可用，所有会攻击目标服务端所有开放端口
+    - 持续性: 攻击行为可以持续数小时甚至数天
+
+- 攻击防范
+    > 反射型攻击的单纯从技术上很难实现绝对防范，毕竟像 Github 这种级别的网站面对 DDoS 时也只能 “躺平”，目前主流的解决方法基本都是通过 “加钱” 的方式来解决的，例如堆硬件、搭软件、叠带宽等方面。
+
+    - 流量过滤和清洗: 使用 (云计算厂商提供的) 专业的 DDoS 防护设备或服务，对流量进行实时监测、过滤和清洗、识别并阻止异常流量
+    - 入侵检测和防御: 部署入侵检测系统 (IDS) 和入侵防御系统 (IPS)，对网络流量进行实时监控和分析、识别并阻止异常流量
+    - 增加带宽和资源: 增加网络带宽和服务端资源，提高系统抵御大流量攻击的能力
+    - ISP: 与互联网服务提供商（ISP）合作，共同防范 DDoS 攻击
+    - CDN: 尽可能使用 CDN 分发流量，最大限度减少攻击对关键业务/服务的影响
+    - 限流: 关键业务/服务中对网络流量进行限制

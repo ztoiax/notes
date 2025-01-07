@@ -1535,6 +1535,9 @@ agedu -w
     ```sh
     # 显示进程树结构，显示效果比pstree详细美观的多
     ps axjf
+
+    # 看下进程上次的启动时间是什么时候。
+    ps -o lstart <pid>
     ```
 
 ## [htop](https://github.com/hishamhm/htop)

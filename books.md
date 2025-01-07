@@ -100,6 +100,7 @@
   * [金融](#金融)
   * [城市规划](#城市规划)
   * [产业](#产业)
+  * [企业](#企业)
   * [新闻](#新闻)
 * [数据](#数据)
 
@@ -148,6 +149,8 @@
 - [Modern-CPP-Programming](https://github.com/federico-busato/Modern-CPP-Programming)
 
 - [Learn Modern C++](https://learnmoderncpp.com/)
+
+- [write-a-hash-table：从零用 C 语言实现哈希表。该项目是讲解如何用 C 语言实现一个开放寻址和双重哈希的哈希表，代码约为 200 行，预计学习时间为 1 到 2 小时。](https://github.com/jamesroutley/write-a-hash-table)
 
 ### Java
 
@@ -325,6 +328,8 @@
 
 ## algorithm(算法)
 
+- [《算法（第4版）》的 C++ 实现：这个仓库包含《算法（第4版）》教科书介绍的算法的 C++ 语言实现，与原书的 Java 实现相对应](https://github.com/landerrosette/algs4)
+
 - [《算法新解》](https://github.com/liuxinyu95/AlgoXY)
 
 - [《复杂性思考》(英文)](https://www.greenteapress.com/compmod/html/index.html)
@@ -448,6 +453,8 @@
 
 - [Clean-Code-Notes:写出简洁、易读、易维护代码的书](https://github.com/JuanCrg90/Clean-Code-Notes)
 
+- [awesome-low-level-design：设计的学习资源合集。如停车场、stack overflow、任务管理系统等](https://github.com/ashishps1/awesome-low-level-design)
+
 ## 软件工程
 
 - [《高并发的哲学原理》](https://github.com/johnlui/PPHC)
@@ -457,6 +464,8 @@
 - [对开发人员有用的定律、理论、原则和模式。](https://github.com/nusr/hacker-laws-zh)
 
 - [我做系统架构的一些原则](https://coolshell.cn/articles/21672.html)
+
+- [domain-driven-hexagon：学习领域驱动设计与六边形架构的最佳实践。这是一个结合领域驱动设计（DDD）与六边形架构（Hexagonal Architecture）的示例项目，旨在帮助开发者理解如何设计高质量、可扩展、可维护的应用程序。](https://github.com/Sairyss/domain-driven-hexagon)
 
 ## Operating System(操作系统)
 
@@ -1314,6 +1323,9 @@
             - 逆向与爬虫的故事
 
             - NightTeam
+
+            - K哥爬虫
+                > 爬虫、因爬虫相关的计算机犯罪
 
 - ai
 
@@ -2288,6 +2300,12 @@ RabbitMQ实战指南》作者
         - 艾媒咨询
 
         - 未来智库
+
+## 企业
+
+- 微信公众号
+    - 暗涌Waves
+    > 初创企业故事、企业家采访
 
 ## 新闻
 

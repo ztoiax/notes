@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<title>硬件</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">企业</a></li>
+<li><a href=".html">服务器</a>
+<ul>
+<li><a href=".html">刀片服务器</a></li>
+</ul>
+</li>
+<li><a href=".html">网络</a>
+<ul>
+<li><a href=".html">交换机</a>
+<ul>
+<li><a href=".html">汇聚交换机</a></li>
+<li><a href=".html">园区核心交换机</a></li>
+<li><a href=".html">数据中心交换机</a></li>
+</ul>
+</li>
+<li><a href=".html">路由器</a></li>
+</ul>
+</li>
+<li><a href=".html">存储</a>
+<ul>
+<li><a href=".html">集中式存储</a>
+<ul>
+<li><a href=".html">fc san</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">超融合</a></li>
+<li><a href=".html">防火墙</a>
+<ul>
+<li><a href=".html">IDS入侵检测设备</a></li>
+<li><a href=".html">IPS入侵检测设备</a></li>
+<li><a href=".html">防止漏洞被扫描和利用的安全设备</a></li>
+<li><a href=".html">上网行为设备</a></li>
+</ul>
+</li>
+<li><a href=".html">测试仪</a></li>
+<li><a href=".html">监控视频ai设备处理设备</a></li>
+<li><a href=".html">硬件</a></li>
+<li><a href=".html">开源硬件</a></li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>企业</h1>
+<ul>
+<li>
+<p>博科垄断fc交换机</p>
+<ul>
+<li>并且是按照端口激活数量卖，并不是有多少端口，就能用多少。</li>
+</ul>
+</li>
+<li>
+<p>redware公司的负载均衡设备，有自己的asic芯片检测数据包，防止DDOS攻击</p>
+</li>
+<li>
+<p>EMC存储巨头被戴尔收购</p>
+<ul>
+<li>
+<p>EMC也有个子公司叫VMWare，因此也有传闻称：戴尔收购EMC是冲着VMWare</p>
+</li>
+<li>
+<p>VMWare对EMC设备的支持，是其他厂商无法匹敌的</p>
+</li>
+<li>
+<p>存储服务器，扩展时即使买同品牌同一型号的硬盘，也未必识别。因此滋生出“刷微码”的灰色产业</p>
+</li>
+</ul>
+</li>
+<li>
+<p>盛科通信：在苏州，由国资控股的以太网芯片制造商</p>
+</li>
+<li>
+<p>超聚变：</p>
+<ul>
+<li>自研的电源技术，最高有3000瓦的电源，功率转换率96%</li>
+<li>自研的bmc芯片，达到国际CC EAL4+安全标准
+<ul>
+<li>fdm技术支持预测硬盘和内存故障，最高硬盘可以提前30天的故障预测</li>
+</ul>
+</li>
+<li>有type接口的ibmc，所以支持插手机运维</li>
+</ul>
+</li>
+<li>
+<p>Mellanox（迈洛斯）：</p>
+<ul>
+<li>有infiniband交换机和infiniband网卡。注意：不单单是infiniband支持RDMA，以太网接口也支持RDMA</li>
+<li>被nvidia收购</li>
+</ul>
+</li>
+</ul>
+<h1>服务器</h1>
+<ul>
+<li>
+<p>不支持三风扇显卡</p>
+</li>
+<li>
+<p>戴尔snapI/O技术：支持将pcie x16的插槽，逻辑拆分为2个x8的插槽，这样就能和2个cpu通信。特别是网卡，目前只验证过Mellanox（迈洛斯）的</p>
+</li>
+<li>
+<p>惠普HPE的iLO芯片：远程管理服务器，监控硬件状态，电源管理（开机、关机、重启），固件升级</p>
+</li>
+</ul>
+<h2>刀片服务器</h2>
+<ul>
+<li><a href="https://www.bilibili.com/list/watchlater?bvid=BV1Ph411t7ri">无情开评：拥有一台无所不能的服务器是什么感觉？来自H3C/HPE的全场景覆盖型服务器开箱</a>
+<ul>
+<li>
+<p>左侧有2个管理模块：</p>
+<ul>
+<li>COMPOSER（管理硬件）：对整个服务器做健康管理、固件升级。最多管理21个刀箱</li>
+<li>STREAMER（管理软件）：对服务器部署操作系统。最多支持5个刀箱，也就是60个刀片服务器</li>
+</ul>
+</li>
+<li>
+<p>后面板风扇左侧的板卡FLM：可以查看散热和电源管理，并即时发送给COMPOSER管理模块</p>
+</li>
+<li>
+<p>最多支持12个半宽半高的刀片：</p>
+<ul>
+<li>
+<p>半宽半高刀片：2路cpu</p>
+</li>
+<li>
+<p>半宽全高刀片：4路cpu</p>
+</li>
+<li>
+<p>刀片可以不安装硬盘，将操作系统安装在存储上，通过HBA卡启动（san boot）</p>
+</li>
+<li>
+<p>全宽半高存储模块：专门的安装硬盘的。可以给其他刀片服务器使用。有2个sas连接器，连接到后面板的sas交换机</p>
+</li>
+<li>
+<p>全宽半高GPU模块：</p>
+<ul>
+<li>2路cpu</li>
+<li>2个gpu套件，每个有2个pcie4.0接口，支持1块全高gpu和2块半高的gpu，不能超过300W。</li>
+<li>也支持mxm接口的gpu</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>后面板总共有6个业务板卡的插槽：1共3组，互为冗余</p>
+<ul>
+<li>sas交换机：只能安装在插槽1、4</li>
+<li>网络板卡：
+<ul>
+<li>交换机（互联模块）：上联</li>
+<li>卫星互联模块：下联</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1>网络</h1>
+<h2>交换机</h2>
+<ul>
+<li>
+<p><a href=".html">全面讲解交换机的来龙去脉，基础+拓展史上最全干货</a></p>
+<ul>
+<li>
+<p>堆叠与级联这两个概念既有区别又有联系。堆叠可以看作是级联的一种特殊形式。它们的不同之处在于：级联的交换机之间可以相距很远(在媒体许可范围内)，而一个堆叠单元内的多台交换机之间的距离非常近，一般不超过几米；级联一般采用普通端口，而堆叠一般采用专用的堆叠模块和堆叠电缆。</p>
+<ul>
+<li>
+<p>一般来说，不同厂家、不同型号的交换机可以互相级联，堆叠则不同，它必须在可堆叠的同类型交换机(至少应该是同一厂家的交换机)之间进行；级联仅仅是交换机之间的简单连接，堆叠则是将整个堆叠单元作为一台交换机来使用</p>
+</li>
+<li>
+<p>虚拟堆叠：实际就是交换机之间的级联。交换机并不是通过专用堆叠模块和堆叠电缆，而是通过 Fast Ethernet端口或 Giga Ethernet端口进行堆叠，实际上这是一种变相的级联。即便如此，虚拟堆叠的多台交换机在网络中已经可以作为一个逻辑设备进行管理</p>
+<ul>
+<li>Fast Ethernet或 Giga Ethernet作为堆叠总线，易于实现，成本较低；堆叠端口可以作为普通端口使用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>集群，就是将多台互相连接(级联或堆叠)的交换机作为一台逻辑设备进行管理。集群中，一般只有一台起管理作用的交换机，称为命令交换机，它可以管理若干台其他交换机。在网络中，这些交换机只需要占用一个IP地址(仅命令交换机需要)，节约了宝贵的IP地址。</p>
+</li>
+<li>
+<p>POE交换机：支持通过网线给终端供电。通过网线传输直流电，针对输出电流在网线中的传输采取了一系列安全保护措施（短路、过载、浪涌防护等）。同时POE交换机可智能检测终端是否支持POE，在接入非POE终端时不会供电，从而很好的兼容了普通交换机的功能。</p>
+<ul>
+<li>应用：连接wifi无线ap</li>
+</ul>
+</li>
+<li>
+<p>TOR（TOP OF RACK）交换机：机柜顶部交换机，上接核心交换机，下接服务器。基本都是1U 48口起步</p>
+</li>
+<li>
+<p>光电混合交换机：光电混合缆线（一端是电口（rj45），另一端光口）最高可以支持300米传输距离</p>
+</li>
+<li>
+<p>Crossbar：控制与转发分离。</p>
+<ul>
+<li>
+<p>有2种分离模式：正交、平行</p>
+<ul>
+<li>
+<p>正交：业务板卡与交换板卡直连</p>
+</li>
+<li>
+<p>华为一般是平行</p>
+</li>
+<li>
+<p>思科一般是正交</p>
+</li>
+<li>
+<p>山石、新华三的防火墙一般是正交</p>
+</li>
+</ul>
+</li>
+<li>
+<p>主控单板、交换网板（数据交换从主控分离出来）、接口单板、背板</p>
+<ul>
+<li>背板：是框式交换机用于连接引擎、交换矩阵、线卡、风扇、电源等的PCB板，类似计算机的主板</li>
+<li>主控单板：提供设备的管理和控制功能以及数据平面的协议处理功能，负责处理各种通信协议</li>
+<li>交换网板：主要是负责跨接口单板卡之间的数据转发交换
+<ul>
+<li>交换网板上一般会有一个或者多个交换芯片，交换机芯片通过交换网板内部链路、背板与各个接口单板相连，提供接口单板之间的数据交换。</li>
+<li>通常交换单元采用高性能的ASIC芯片</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>信元交换（ATM）：核心交换机有入网板、交换网板、出网板。数据包会在入网切成信元，出网重组信元，在交换网板跑的都是信元。这样就可以动态进行负载均衡，提升数据转发效率，减少拥塞和丢包</p>
+</li>
+<li>
+<p>镜像接口：以进行网络流量分析、监控或调试。可以连接IPS入侵检测设备和青藤的防止漏洞被扫描和利用的安全设备</p>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1wy4y187Yh">无情开评：百万搬砖科普：数据包由生到灭都经历了些什么？</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?bvid=BV1kQ4y1a7Je">无情开评：网络传输的基础是什么？——交换机科普</a></p>
+<ul>
+<li>从2、3层交换到第7层的应用交换：应用场景：qos识别应用层的内容，语言、视频、文字，然后根据优先级进行转发。</li>
+</ul>
+</li>
+</ul>
+<h3>汇聚交换机</h3>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1jt4y1r7aK">无情开评：【全网首开】华为打造的业界第一款全万兆光电混合交换机带给我们哪些惊喜？</a></li>
+</ul>
+<h3>园区核心交换机</h3>
+<ul>
+<li><a href="https://www.bilibili.com/list/watchlater?bvid=BV14K411M7Wy">无情开评：感受了旗舰的力（重）量~面向WiFi 6时代的华为最强园区核心交换机——CloudEngine S12700E</a></li>
+</ul>
+<h3>数据中心交换机</h3>
+<ul>
+<li><a href="https://www.bilibili.com/list/watchlater?bvid=BV1iv41167kQ">无情开评：敢与华为对飚，大型云计算数据中心核心电风扇（bushi）,交换机——新华三S12500系列实评</a>
+<ul>
+<li>横向虚拟化：可以将4台物理交换机，虚拟成1台交换机</li>
+<li>纵向虚拟化：可以添加远程的低端交换机生成虚拟的业务板卡</li>
+<li>业务板卡：除了网络以外，还支持防火墙、负载均衡、ips入侵检测（防火墙的一种）</li>
+</ul>
+</li>
+</ul>
+<h2>路由器</h2>
+<ul>
+<li>
+<p>交换机的作用是建立网络，路由器的作用是连接网络。前者负责内网流量，后者负责内网和外网的流量</p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?bvid=BV1iT4y1F7Ts">无情开评：这才是真正的路由器，你们家的都是弟弟——电信级大型核心路由器实机开评</a></p>
+<ul>
+<li>
+<p>高精度时间同步接口：4个同轴接口 + 2个电口。连接专门的时间同步器</p>
+</li>
+<li>
+<p>支持开发应用架构：可以插入防火墙、负载均衡等业务板卡。</p>
+<ul>
+<li>如果有钱，不推荐。功能都集中到1台设备，如果出现单点故障，业务就会垮掉</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1>存储</h1>
+<ul>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/ESb1b7LOPAY4i6CArXLNGA">朱小厮的博客：收藏：存储知识全面总结</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?bvid=BV1wT41137As">无情开评：存储只是用来扩容？那你亏大了！看看如何百分百压榨存储的价值</a></p>
+<ul>
+<li>
+<p>比服务器要贵的多</p>
+</li>
+<li>
+<p>双机热备（active standby，也就是主备）：2台服务器 + 1台存储（存储有2个以上控制器）</p>
+<ul>
+<li>1台服务器跑业务，另一台监工：1台坏了，还有另一台顶上，数据依旧保存在存储设备上</li>
+<li>这也是为什么要买存储，而不是多加服务器拓展硬盘</li>
+</ul>
+</li>
+<li>
+<p>双A模式（active active，依然是主备）：2台服务器 + 2台存储</p>
+<ul>
+<li>数据依然存放在1台存储上。只是1台存储坏了，另一台可以自动故障转移</li>
+</ul>
+</li>
+<li>
+<p>存储双活：2台存储做数据同步。与双A模式的不同在于网络恢复目标（RPO）、恢复时间目标（RTO）必须等于0</p>
+<ul>
+<li>应用：两第三中心、异地灾备</li>
+<li>2台存储设备一般都是同厂商，厂商之间不兼容。一般中高端存储才具备这一功能</li>
+</ul>
+</li>
+<li>
+<p>双活网关：服务器先链接网关，在连接存储。存储网关会将数据，分别写入多台存储设备上</p>
+<ul>
+<li>不需要考虑存储的厂商兼不兼容</li>
+<li>有dell emc vplex系列和ibm san volume controller系列</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>集中式存储</h2>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?oid=297239166&amp;bvid=BV1KF411t7nV">无情开评：我们弄来了两百万的设备，只为让大家搞清楚——集中式存储</a></p>
+</li>
+<li>
+<p>集中式存储，没有单独的电源开关，防止误操作</p>
+</li>
+<li>
+<p>集中式存储的性能取决于控制器</p>
+</li>
+<li>
+<p>集中式存储可能会有电池，在断电后争取把缓存的数据同步到硬盘</p>
+</li>
+</ul>
+<h3>fc san</h3>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?bvid=BV15Y411g78S">无情开评：关于玩转高端存储的实景教学：环境搭建与配置</a></p>
+<ul>
+<li>
+<p>HPE Alletra 9000存储设备：</p>
+<ul>
+<li>
+<p>硬件：</p>
+<ul>
+<li>
+<p>每个控制器2个cpu，有4个asic芯片负责raid数据奇偶校验</p>
+</li>
+<li>
+<p>一共有4个控制器，16个asic芯片支持点对点直连，分担io请求</p>
+</li>
+<li>
+<p>pcie支持scm非易失内存</p>
+</li>
+<li>
+<p>每个控制器有2个万兆电口（rj45）：插网线并不会亮，只有配置同步服务才会亮</p>
+</li>
+<li>
+<p>每个控制器有2个QSFP+ 100G nvme over roce2模块，只支持连接拓展柜；连接服务器需要购买nvme over fibre模块</p>
+</li>
+</ul>
+</li>
+<li>
+<p>可以根据组（类似于部门）划分存储：</p>
+</li>
+<li>
+<p>可以基于应用划分存储：如sql server, ibm db2等数据库</p>
+</li>
+<li>
+<p>支持nvme over Fibre</p>
+</li>
+<li>
+<p>存储池：每块硬盘会被划分为1G的虚拟磁盘，虚拟磁盘又会被划分128MB的逻辑区域，逻辑区域又划分为16k的块。</p>
+<ul>
+<li>
+<p>业务系统需要存储时，会在每块硬盘拿16k的块，组成逻辑卷大小；因此硬盘越多，性能越快</p>
+</li>
+<li>
+<p>10+2的raid6校验机制：12个16k的块，会有2个块做数据校验</p>
+<ul>
+<li>
+<p>这个技术覆盖拓展柜（即HA Cage）</p>
+</li>
+<li>
+<p>因此数据丢失时，所有的硬盘，都会参与数据恢复重构；不像传统raid，只有1到2块盘参与</p>
+<ul>
+<li>重构速度为100G每分钟</li>
+</ul>
+</li>
+<li>
+<p>由于是10/12的损耗：45 * 3.84T * 10/12 = 128T（转换10进制后）</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>标准fc san网络架构：3台服务器（2台vmware-esxi，1台windows-server） + 1台fc光纤交换机 + 1台HPE Alletra 9000存储</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1>超融合</h1>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?oid=675833782&amp;bvid=BV18U4y1c7Sc">无情开评：为什么互联网行业更喜欢分布式架构？超融合科普</a></p>
+</li>
+<li>
+<p>传统三大件几乎决定了性能天花板，对于普通公司没什么问题。但对于互联网公司，一次热搜、一场活动就需要拓展三大件的。</p>
+</li>
+<li>
+<p>2009年Nutanix（路坦力）公司提出超融合概念（HCI，Hyper-Converged-Infrastructure），解决传统的数据中心三大件：服务器、网络、存储，不易于拓展的方案</p>
+<ul>
+<li>
+<p>利用虚拟化技术，将三大件统一管理。简单来说就是一台服务器承担三大件功能，然后通过网络连接拓展。</p>
+</li>
+<li>
+<p>存储：超融合改变最大的地方</p>
+<ul>
+<li>
+<p>不使用集中式存储，也就是没有raid卡；而使用分布式存储，采用JBOD直通卡，将服务器的硬盘变成存储池。</p>
+</li>
+<li>
+<p>软件定义存储：采用软件算法保证数据冗余和一致性。需要3台以上服务器才能建立集群，超过半数以上支持才能更新数据。拓展数据中心，只需要增加服务器即可。</p>
+</li>
+<li>
+<p>由于没有raid卡，性能等同于单块硬盘，iops性能比较拉胯；因此采用nvme的固态硬盘或傲腾持久性内存作为缓存。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>网络：没有接入交换机，只有汇聚交换机。超融合现在基本是万兆，因此需要一台万兆交换机，将3台服务器进行连接</p>
+</li>
+</ul>
+</li>
+<li>
+<p>超融合架构：计算（服务器）+ 网络 + 存储绑定在一起</p>
+<ul>
+<li>
+<p>优点：</p>
+<ul>
+<li>取消存储网络，简化网络</li>
+<li>快速部署、快速交付——一般1个半小时，就能上线1个节点</li>
+<li>统一管理，简化运维</li>
+</ul>
+</li>
+<li>
+<p>缺点：</p>
+<ul>
+<li>计算、网络、存储想拓展任何点，都需要打包购买。例子：如果只想拓展硬盘容量，不支持外部存储，需要和计算、网络一起打包购买</li>
+<li>计算、网络、存储都需要配置独立的虚拟网络，配置比较复杂</li>
+<li>不同超融合方案的厂商，彼此之间的并不兼容
+<ul>
+<li>这可能也是超融合发展十几年，也没有被中小企业接纳</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>在超融合领域的不同企业定位：</p>
+<ul>
+<li>
+<p>只卖软件：vmware和windows server</p>
+<ul>
+<li>开源有pve（proxmox virtual environment），基于debian bookworm上开发</li>
+</ul>
+</li>
+<li>
+<p>软件+硬件设备一起卖（ibm模式）：</p>
+<ul>
+<li>国产厂商：华为、华三、深信服、联想、smartx、浪潮</li>
+<li>国外厂商：Nutanix(路坦力）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1>防火墙</h1>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?bvid=BV1S84y1N7hP">无情开评：20年技术沉淀，一起见见新华三防火墙的新一代王者</a></p>
+<ul>
+<li>AD-WAN（应用双边加速）：网络两端的防火墙，可以实现数据压缩，减少链路传输的数据量</li>
+<li>虚拟化技术：可以将1台物理机，虚拟化为4000个虚拟防火墙</li>
+<li>IRF:多台物理机，虚拟成1台</li>
+<li>支持云端：多台防火墙接入云端管理平台，进行统一管理</li>
+</ul>
+</li>
+</ul>
+<h2>IDS入侵检测设备</h2>
+<ul>
+<li>
+<p>防火墙也有IDS和IPS功能</p>
+</li>
+<li>
+<p>IDS和IPS的区别：</p>
+<ul>
+<li>IDS：只检测和报警</li>
+<li>IPS：在IDS基础上能够采取措施处理</li>
+</ul>
+</li>
+<li>
+<p>IDS部署方式：所有流量都经过的地方，如tor交换机</p>
+</li>
+<li>
+<p>IPS部署方式</p>
+<ul>
+<li>旁路模式：在路由器和交换机之间</li>
+<li>连接到交换机镜像口，类似于IDS</li>
+</ul>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?bvid=BV13Z4y1g728">无情开评：全球首款IDS网络安全设备，售价近50万，开盖瞬间我控制不住寄己</a></p>
+<ul>
+<li>
+<p>启明星辰：主要客户是政府，军工，大型国企等</p>
+<ul>
+<li>50万的设备，内部简单。价值主要体现在软件。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>IPS入侵检测设备</h2>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?bvid=BV1WV411h7iA&amp;oid=415638902">无情开评：IPS迟早取代IDS？华三Secpath T1000-C开拆</a></p>
+<ul>
+<li>与卡巴斯基有合作：集成卡巴斯基的病毒引擎</li>
+</ul>
+</li>
+</ul>
+<h2>防止漏洞被扫描和利用的安全设备</h2>
+<ul>
+<li><a href="https://www.bilibili.com/list/watchlater?bvid=BV1cj41127p9">无情开评：如果你的系统漏洞突然全部消失了，会是一个什么体验？</a>
+<ul>
+<li>青藤公司</li>
+<li>连接交换机的镜像接口</li>
+<li>对于还是无法获取更新的老设备，可以有效避免被攻击</li>
+<li>漏洞无需修复
+<ul>
+<li>对于外部攻击：可以防扫描</li>
+<li>对于内部攻击：可以防利用
+<ul>
+<li>原理：部署后会采集内网设备的漏洞，然后一旦探测到有攻击的网络流量就会采取行动防止</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2>上网行为设备</h2>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/list/watchlater?bvid=BV1Vh411i7Kp">无情开评：连微信聊天记录都能查？这款设备让办公室摸鱼成为高危行为！</a></p>
+<ul>
+<li>奇安信：上网行为管理ac
+<ul>
+<li>前身是360企业管理集团收购网康后，结合成奇安信</li>
+<li>有360的云病毒特征库支持，需要联网实现</li>
+<li>安装windows客户端（名字叫准入客户端），才支持的功能
+<ul>
+<li>监控微信、qq聊天内容</li>
+<li>操作系统底层的控制（DLP），防止数据泄漏：
+<ul>
+<li>不允许windows10连接到内网</li>
+<li>不允许微信等客户端，发送指定文件名、文件类型、文件大小、文件内容的文件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1gD4y1o7H3">无情开评：就是这个家伙在监控你上网时的一举一动，拆它！</a></p>
+<ul>
+<li>深信服：上网行为管理ac
+<ul>
+<li>console口不能像华为、思科那样进行命令行管理；只能外接短信猫或作为双机热备HA接口</li>
+<li>没有reset重置按钮，如果忘记密码。需要跳线短接eth0和eth1开机，2分钟后重置完成</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1>测试仪</h1>
+<ul>
+<li><a href="https://www.bilibili.com/list/watchlater?bvid=BV1e84y1S7b2">无情开评：测试这台防火墙，需要用到价值7位数的测试仪，豁出去了---新华三防火墙M9000</a>
+<ul>
+<li>keysight企业（中文名：是德科技）：
+<ul>
+<li>惠普创立的安捷伦公司在分出来的企业。</li>
+<li>2017年收购ixia。网络测试产品已经覆盖从1层到7层</li>
+<li>要求：测试仪性能 &gt; 被测试设备的性能</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1>监控视频ai设备处理设备</h1>
+<ul>
+<li><a href="https://www.bilibili.com/list/watchlater?bvid=BV1N14y1m7Jc">无情开评：打开新视界，当传统监控视频被赋予了AI能力之后，能干些啥？</a></li>
+</ul>
+<h1>硬件</h1>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1DP4y1F7Jh">易天小讲堂：带你全面认识电口模块</a></p>
+</li>
+<li>
+<p><a href=".html">大话存储：【冬瓜哥画PPT】最完整的存储系统接口/协议/连接方式总结</a></p>
+</li>
+<li>
+<p>1U高度等于4.45cm</p>
+</li>
+<li>
+<p>单个raid数量建议不超过15块硬盘，不然重构时间会很长</p>
+</li>
+<li>
+<p>boss卡：卡上2个m.2接口的固态硬盘（一般是系统盘），接在内存接口上，这样离cpu更近。</p>
+</li>
+<li>
+<p>riser卡：拓展的pcie接口，一般是半高</p>
+</li>
+<li>
+<p>QAT芯片：intel至强D系列边缘服务cpu内置QAT芯片，支持100G ssl流量的加解密</p>
+</li>
+<li>
+<p>intel VROC技术：cpu代替raid卡管理pcie通道的固态硬盘，延迟更低，性能更高；需要双cpu支持</p>
+</li>
+<li>
+<p>bypass（旁路）：设备断电或者出现问题，就会变成一根物理网线直接导通，不会对其他业务造成影响</p>
+</li>
+<li>
+<p>子母卡：华三的核心路由器，有一种业务板卡的类型，最多可以插入4块1U高度半宽的子卡</p>
+<ul>
+<li>可以插入不同速率的子卡，满足业务需求</li>
+</ul>
+</li>
+</ul>
+<h1>开源硬件</h1>
+<ul>
+<li>
+<p><a href="http://uinio.com/Embedded/Arduino/">玩转 Arduino Uno、Mega、ESP 开源硬件</a></p>
+</li>
+<li>
+<p><a href="https://github.com/open-sdr/openwifi">openwifi</a></p>
+<ul>
+<li>
+<p><a href="https://github.com/open-sdr/openwifi-hw">openwifi-hw：fpga</a></p>
+</li>
+<li>
+<p><a href="https://space.bilibili.com/477269819">知乎纸飞机：openwifi作者(开源WiFi芯片项目)</a></p>
+</li>
+<li>
+<p><a href="https://space.bilibili.com/1706180770/video">We5G实验室：openwifi实验</a></p>
+</li>
+</ul>
+</li>
+</ul>

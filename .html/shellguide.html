@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<title>shellguide</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">shell script</a>
+<ul>
+<li><a href=".html">cheatsheet</a></li>
+<li><a href=".html">字符串</a>
+<ul>
+<li><a href=".html">字符串颜色</a></li>
+</ul>
+</li>
+<li><a href=".html">if</a></li>
+<li><a href=".html">for</a>
+<ul>
+<li><a href=".html">读取目录下的文件</a></li>
+<li><a href=".html">读取指定文件的行</a></li>
+</ul>
+</li>
+<li><a href=".html">获取参数</a></li>
+</ul>
+</li>
+<li><a href=".html">reference</a></li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>shell script</h1>
+<h2>cheatsheet</h2>
+<pre><code class="language-sh"># - 返回上一个目录
+cd -
+
+# 等同于 mv test test.bak
+mv test{,.bak}
+</code></pre>
+<p>获取使用最多的命令:</p>
+<pre><code class="language-sh">history | awk 'BEGIN {FS=&quot;[ \t]+|\\|&quot;} {print $3}' | sort | uniq -c | sort -nr | head
+</code></pre>
+<p><code>CDPATH</code> 能在任何路径下通过 <code>cd</code> 进入<code>CDPATH</code> 变量下的目录，</p>
+<pre><code class="language-sh">export CDPATH='/home/tz:/home/tz/.config:/etc'
+</code></pre>
+<p><code>$_</code> 和 <code>!$</code> 获取上一个命令的最后参数:</p>
+<pre><code class="language-sh">echo $_
+echo !$
+</code></pre>
+<p>重定向:</p>
+<pre><code class="language-sh">strace -e open ls 2&gt;&amp;1 | grep ^n
+</code></pre>
+<h2>字符串</h2>
+<h3>字符串颜色</h3>
+<pre><code class="language-sh">echo -e &quot;\033[30m 黑色字 \033[0m&quot;
+echo -e &quot;\033[31m 红色字 \033[0m&quot;
+echo -e &quot;\033[32m 绿色字 \033[0m&quot;
+echo -e &quot;\033[33m 黄色字 \033[0m&quot;
+echo -e &quot;\033[34m 蓝色字 \033[0m&quot;
+echo -e &quot;\033[35m 紫色字 \033[0m&quot;
+echo -e &quot;\033[36m 青色字 \033[0m&quot;
+echo -e &quot;\033[37m 白色字 \033[0m&quot;
+echo -e &quot;\033[40;33m 黑底黄字 \033[0m&quot;
+echo -e &quot;\033[41;33m 红底黄字 \033[0m&quot;
+echo -e &quot;\033[42;33m 绿底黄字 \033[0m&quot;
+echo -e &quot;\033[43;33m 黄底黄字 \033[0m&quot;
+echo -e &quot;\033[44;33m 蓝底黄字 \033[0m&quot;
+echo -e &quot;\033[45;33m 紫底黄字 \033[0m&quot;
+echo -e &quot;\033[46;33m 青底黄字 \033[0m&quot;
+echo -e &quot;\033[47;33m 白底黄字 \033[0m&quot;
+</code></pre>
+<h2>if</h2>
+<p>字符串变量 <strong>不为空</strong>,则执行:</p>
+<pre><code class="language-sh">a='hello'
+
+if [ &quot;$a&quot; ];then
+    echo $a;
+else
+    echo 'a is null'
+fi
+</code></pre>
+<p>字符串变量 为<strong>空</strong>,则执行:</p>
+<pre><code class="language-sh">if [ -z &quot;$b&quot; ]; then
+    echo &quot;b is null&quot;
+fi
+</code></pre>
+<p>整数变量 数值判断,则执行:</p>
+<pre><code class="language-sh">int=5
+
+if (( int == 5 ));then
+    echo &quot;int is $int&quot;
+else
+    echo &quot;int does not equal 5&quot;
+fi
+</code></pre>
+<ul>
+<li>字符串判断</li>
+</ul>
+<pre><code class="language-sh">if [ &quot;$1&quot; == &quot;show&quot; ]; then
+    echo $1
+fi
+</code></pre>
+<ul>
+<li>包含<code>*</code> 通配符</li>
+</ul>
+<pre><code class="language-sh">VAR='GNU/Linux is an operating system'
+if [[ $VAR == *&quot;is&quot;* ]]; then
+  echo &quot;It's there.&quot;
+fi
+</code></pre>
+<p>文件 <strong>存在</strong>,执行:</p>
+<pre><code class="language-sh">echo exist &gt; /tmp/test
+
+if [ -e /tmp/test ];then
+    cat /tmp/test
+else
+    echo 'file is not exist'
+fi
+</code></pre>
+<h2>for</h2>
+<pre><code class="language-sh">for i in {1..5}; do
+    echo $i;
+done
+</code></pre>
+<p>for seq:</p>
+<pre><code class="language-sh">for i in $(seq 1 5); do
+    echo $i
+done
+</code></pre>
+<p>修改步进为 2:</p>
+<pre><code class="language-sh">for i in $(seq 1 2 5); do
+    echo $i
+done
+</code></pre>
+<p>or:</p>
+<pre><code class="language-sh">for (( i=1; i&lt;=5; i=i+2 )); do
+    echo $i;
+done
+</code></pre>
+<h3>读取目录下的文件</h3>
+<pre><code class="language-sh">for file in *;do
+    if [ -f $file ];then
+        echo $file
+    fi
+done
+</code></pre>
+<ul>
+<li>读取d字符开头的文件</li>
+</ul>
+<pre><code class="language-sh">for file in d*;do
+    if [ -f $file ];then
+        echo $file
+    fi
+done
+
+# 通过参数1指定字符
+for file in $1*;do
+    echo $file
+done
+</code></pre>
+<ul>
+<li>指定目录</li>
+</ul>
+<pre><code class="language-sh"># 指定目录.sh
+
+# for file in &quot;$1/*&quot;;do 加入&quot;&quot;是错误的，这会把所有的文件拼成一串字符串，再赋值给$file
+
+for file in $1/*;do
+    echo $file
+done
+</code></pre>
+<pre><code class="language-sh"># 读取末尾是.mp4的文件
+for file in $1/*;do
+    if [[ $file == *&quot;.mp4&quot; ]]; then
+        echo $file
+    fi
+done
+</code></pre>
+<h3>读取指定文件的行</h3>
+<pre><code class="language-sh">echo a &gt; /tmp/test
+echo b &gt;&gt; /tmp/test
+echo c &gt;&gt; /tmp/test
+echo d &gt;&gt; /tmp/test
+echo e &gt;&gt; /tmp/test
+
+for i in $(cat &quot;/tmp/test&quot;); do
+    echo $i;
+done
+</code></pre>
+<p>做成脚本:</p>
+<pre><code class="language-sh">cat &gt; /tmp/for.sh &lt;&lt; 'EOF'
+#!/bin/bash
+
+IFS=$'\n'       # make newlines the only separator
+set -f          # disable globbing
+for i in $(cat &lt; &quot;$1&quot;); do
+  echo $i
+done
+EOF
+</code></pre>
+<p>测试:</p>
+<pre><code class="language-sh">chmod 755 /tmp/for.sh
+/tmp/for.sh /tmp/test
+</code></pre>
+<h2>获取参数</h2>
+<pre><code class="language-sh">#!/bin/bash
+# 用户可以输入任意数量的参数，利用for循环，可以读取每一个参数。
+
+for i in &quot;$@&quot;; do
+  echo $i
+done
+
+#2 Solution
+echo &quot;一共输入了 $# 个参数&quot;
+
+while [ &quot;$1&quot; != &quot;&quot; ]; do
+  echo &quot;剩下 $# 个参数&quot;
+  echo &quot;参数：$1&quot;
+  shift
+done
+</code></pre>
+<h1>reference</h1>
+<ul>
+<li>
+<p><a href="https://wangdoc.com/bash/intro.html">阮一峰: Bash脚本教程</a></p>
+</li>
+<li>
+<p><a href="https://github.com/alexanderepstein/Bash-Snippets">good bash 脚本集合</a></p>
+</li>
+<li>
+<p><a href="https://www.shellcheck.net/">shellcheck</a></p>
+</li>
+</ul>

@@ -53,7 +53,9 @@
       * [基本命令](#基本命令)
       * [捕抓 TCP SYN，ACK 和 FIN 包](#捕抓-tcp-synack-和-fin-包)
     * [tshark、editcap、capinfos：抓包](#tsharkeditcapcapinfos抓包)
+    * [wireshark：tcpdump gui版](#wiresharktcpdump-gui版)
     * [ptcpdump：抓包](#ptcpdump抓包)
+    * [netcap：跟踪整个协议栈的抓包工具](#netcap跟踪整个协议栈的抓包工具)
     * [nmap](#nmap)
     * [zmap](#zmap)
     * [RustScan：端口扫描](#rustscan端口扫描)
@@ -72,13 +74,16 @@
     * [防火墙](#防火墙)
       * [iptables](#iptables)
         * [基本命令](#基本命令-1)
-        * [过滤命令](#过滤命令)
+        * [开放指定端口](#开放指定端口)
         * [通过iptables实现nat功能](#通过iptables实现nat功能)
+        * [docker与iptables](#docker与iptables)
       * [nftables](#nftables)
         * [iptables 转换成 nftables](#iptables-转换成-nftables)
       * [firewalld](#firewalld)
         * [基本命令](#基本命令-2)
         * [复杂规则](#复杂规则)
+      * [iptables和NAT](#iptables和nat)
+    * [TCP_Wrappers（第二层防火墙）](#tcp_wrappers第二层防火墙)
     * [ethtool](#ethtool)
     * [arp](#arp)
     * [arpwatch](#arpwatch)
@@ -1349,6 +1354,10 @@ tshark -q -n -r test.pcapng -z ip_hosts,tree
 tshark -q -n -r test.pcapng -z ip_srcdst,tree
 ```
 
+### [wireshark：tcpdump gui版](https://github.com/wireshark/wireshark)
+
+- [（视频）技术爬爬虾：网络顶级掠食者 Wireshark抓包从入门到实战](https://www.bilibili.com/video/BV12X6gYUEqA)
+
 ### [ptcpdump：抓包](https://github.com/mozillazg/ptcpdump)
 
 - [奇妙的Linux世界：ptcpdump: 新一代抓包神器，可捕获任何进程、容器或 Pod 的网络流量](https://mp.weixin.qq.com/s/CbOyeQ42D776XuCOTj4Pow)
@@ -1356,6 +1365,12 @@ tshark -q -n -r test.pcapng -z ip_srcdst,tree
 - 可捕获任何进程、容器或 Pod 的网络流量
 
 - 基于ebpf
+
+### [netcap：跟踪整个协议栈的抓包工具](https://github.com/bytedance/netcap)
+
+- [开发内功修炼：字节跳动Linux内核网络全协议栈抓包工具netcap，开源啦！！](https://mp.weixin.qq.com/s/dPrzhPp7O9Ynvqk-yUxZmg)
+
+- 与 tcpdump 工具只能作用于内核网络协议栈准备发包和收包的固定点相比，netcap 可以几乎跟踪整个内核网络协议栈（有skb作为参数的函数）。
 
 ### nmap
 
@@ -1461,6 +1476,8 @@ tshark -q -n -r test.pcapng -z ip_srcdst,tree
 - 比nmap速度要快 [ZMap 为什么能在一个小时内就扫描整个互联网？](https://www.zhihu.com/question/21505586/answer/18443313)
 
 ### [RustScan：端口扫描](https://github.com/RustScan/RustScan)
+
+- 能够在 3 秒内扫描指定 IP 的所有端口。它提供了灵活的脚本引擎，支持 Python、Lua 和 Shell 脚本，开发者可以根据需求自定义脚本，实现个性化的扫描和处理逻辑。
 
 ### [vmessping：可以ping vmess://的地址](https://github.com/v2fly/vmessping)
 
@@ -1715,51 +1732,26 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
 
 > `iptables` 已经落后了，建议使用 [nftables](https://wiki.nftables.org/wiki-nftables/index.php/Why_nftables%3F_) 一个替换现有{ip,ip6,arp,eb}tables 的框架。[Main differences with iptables](https://wiki.nftables.org/wiki-nftables/index.php/Main_differences_with_iptables)
 
+> [iptables 转换为 nftables 的命令](#nftables)
+
 ---
 
-- [技术蛋老师：iptables核心运作原理和数据包过滤方法](https://www.bilibili.com/list/watchlater?bvid=BV1Jz4y1u7Lz)
+- [洋芋编程：iptables 的五表五链](https://mp.weixin.qq.com/s/D0FqiY5pPE9pJ-6AFMbZWQ)
 
-> [iptables 转换为 nftables 的命令](#nftables)
+- [（视频）技术蛋老师：iptables核心运作原理和数据包过滤方法](https://www.bilibili.com/list/watchlater?bvid=BV1Jz4y1u7Lz)
 
 - iptables 和 netfilter 的关系
 
-`iptables` 只是防火墙的管理工具，真正实现防火墙功能的是 `netfilter`，由内核 hook 构成。每个进入网络系统的包（接收或发送）在经过协议栈时都会触发这些 hook，程序可以通过注册 hook 函数的方式在一些关键路径上处理网络流量。
+    - `iptables` 只是防火墙的管理工具，真正实现防火墙功能的是 `netfilter`，由内核 hook 构成。每个进入网络系统的包（接收或发送）在经过协议栈时都会触发这些 hook，程序可以通过注册 hook 函数的方式在一些关键路径上处理网络流量。
+    - `iptables` 相关的内核模块在这些 hook 点注册了处理函数，因此可以通过配置 iptables 规则来使得网络流量符合防火墙规则。
 
-- iptables 传输数据包的过程
+- 理解 iptables 是学习 Docker, Kubernetes 等开源项目中网络功能实现的基础。
 
-    - ① 当一个数据包进入网卡时，它首先进入 PREROUTING 链，内核根据数据包目的 IP 判断是否需要转送出去。
-    - ② 如果数据包就是进入本机的，它就会沿着图向下移动，到达 INPUT 链。数据包到了 INPUT 链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些数据包会经过 OUTPUT 链，然后到达 POSTROUTING 链输出。
-    - ③ 如果数据包是要转发出去的，且内核允许转发，数据包就会如图所示向右移动，经过 FORWARD 链，然后到达 POSTROUTING 链输出。
+- 配置防火墙的主要工作就是添加、修改和删除`规则`。
 
-    - ①->② 
-    - ①->③
+    - 当数据包与 `规则` 匹配时，内核会执行具体的 `行为`。
 
-    ![image](./Pictures/net-tools/iptable.avif)
-
-- netfilter 提供了 5 个 hook 点
-
-    | 链          | 规则                       |
-    |-------------|----------------------------|
-    | PREROUTING  | 进入协议栈后，路由前的包   |
-    | INPUT       | 路由判断是本机的包         |
-    | FORWARD     | 路由判断是其他主机的包     |
-    | OUTPUT      | 进入协议栈前，本机发送的包 |
-    | POSTROUTING | 路由后的本机发送的包       |
-
-- iptables 的表和链：
-
-    - 表的优先顺序：Raw —> mangle —> nat —> filter
-    - 链的优先顺序：PREROUTING -> INPUT -> FORWARD -> OUTPUT -> POSTROUTING
-
-    | table（表）            | 内容                                                                  | 链                                              |
-    |------------------------|-----------------------------------------------------------------------|-------------------------------------------------|
-    | filter (过滤数据包)    | 判断是否允许一个包通过                                                | INPUT、FORWARD、OUTPUT                          |
-    | Nat (网络地址转换)     | 是否以及如何修改包的源/目的地址                                       | PREROUTING、POSTROUTING、OUTPUT                 |
-    | Mangle (修改ip包的头） | 服务类型、TTL、并且可以配置路由实现 QOS 内核模块)                     | PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD |
-    | Raw (conntrack 相关)   | iptables 防火墙是有状态，对每个包进行判断的时候是依赖已经判断过的包。 | OUTPUT、PREROUTING                              |
-    | security               | 给包打上 SELinux 标记                                                 | INPUT、FORWARD、OUTPUT                          |
-
-    ![image](./Pictures/net-tools/iptable1.avif)
+    ![image](./Pictures/net-tools/iptable2.avif)
 
 - 参数
 
@@ -1777,79 +1769,268 @@ tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过
     | -o   | 目标接口                        |
     | -p   | 协议                            |
 
-- 规则：
+- 行为
 
     - 注意：要把允许规则放在前面(-I)，拒绝规则放在后面(-A)
 
-    | -j(动作) | 操作                                                                 |
-    | -------- | -------------------------------------------------------------------- |
-    | ACCEPT   | 允许数据包通过                                                       |
-    | DROP     | 直接丢弃数据包，不给任何回应信息                                     |
-    | REJECT   | 拒绝数据包通过，必要时会给数据发送端一个响应的信息。                 |
-    | LOG      | 在/var/log/messages 文件中记录日志信息，然后将数据包传递给下一条规则 |
+        | -j(动作) | 操作                                                                                                                 |
+        |--        |--                                                                                                                    |
+        | ACCEPT   | 允许数据包通过                                                                                                       |
+        | DROP     | 直接丢弃数据包，不给任何回应信息                                                                                     |
+        | REJECT   | 拦截数据包，并返回数据包通知对方                                                                                     |
+        | LOG      | 日志记录。在/var/log/messages 文件中记录日志信息，然后将数据包传递给下一条规则                                       |
+        |REDIRECT  |将封包重新导向到另一个端口（PNAT），进行完此动作后，继续比对其它规则，这个功能可以用来实现透明代理或用来保护应用服务器|
+        |SNAT      |源地址转换                                                                                                            |
+        |DNAT      |目的地址转换                                                                                                          |
+        |MASQUERADE|IP伪装（NAT），用于 ADSL                                                                                              |
+        |SEMARK    |添加 SEMARK 标记以供网域内强制访问控制（MAC）                                                                         |
+        |QUEUE     |将数据包传递到用户空间                                                                                                |
+        |RETURN    |防火墙停止执行当前链中的后续规则，并返回到调用链中继续检测                                                            |
 
-    ![image](./Pictures/net-tools/iptable2.avif)
+- `链`：netfilter 提供了5链（5个hook点）
+
+    - `链`：是数据包传播的路径，每一个 `链` 中可以有 N 个 规则 (N >= 0)。当数据包到达一个 `链` 时，iptables 就会从链中第一个规则开始检测， 如果数据包满足规则所定义的条件，系统会执行具体的 `行为`，否则 `iptables` 继续检查下一个规则。 如果数据包不符合链中任一个规则，`iptables` 就会根据该链预先定义的默认策略来处理数据包。
+
+    | 链          | 规则                                                              |
+    |-------------|----------------------------                                       |
+    | INPUT       | 处理接受的数据包                                                  |
+    | OUTPUT      | 处理发送的数据包                                                  |
+    | FORWARD     | 处理转发的数据包，常用于 `网络隔离`, `NAT`, `负载均衡`            |
+    | PREROUTING  | 修改到达且还未转发的数据包，常用于 `DNAT`, `端口映射`, `源地址转换`|
+    | POSTROUTING | 修改发送前的的数据包，常用于 `SNAT`                                |
+
+- 表：
+
+    - 大部分场景仅需使用 `Filter` 表 和 `NAT` 表。
+
+    - 1.Raw 表用于在 连接跟踪、NAT 和路由表处理之前 对数据包进行处理，包含 2 种内置链:
+
+        |链        |
+        |----------|
+        |PREROUTING|
+        |OUTPUT    |
+
+        - 因为优先级最高，所以如果使用了 `Raw` 表，那么在 `Raw` 表处理完后, 将跳过 `NAT` 表和 `ip_conntrack` 处理, 也就是避免了 **连接跟踪、NAT 和路由表前置** 处理。
+
+    - 2.Filter表：是 iptables 的默认表，用于过滤数据包（判断是否允许一个包通过），如果没有定义表的情况下将使用 Filter 表，包含 3 种内置链:
+
+        - 在 Filter 表中只允许对数据包进行接受，丢弃的操作，而无法对数据包进行更改。
+
+        |链         |
+        |---------- |
+        |INPUT      |
+        |OUTPUT     |
+        |FORWARD    |
+
+    - 3.Nat (网络地址转换)： 是否以及如何修改包的源/目的地址
+
+        |链         |
+        |---------- |
+        |PREROUTING |
+        |POSTROUTING|
+        |OUTPUT     |
+
+
+    - 4.Mangle 对指定数据包报头进行修改、标记或重定向
+
+        - 服务类型、TTL、并且可以配置路由实现 QOS 内核模块
+
+        |链         |
+        |---------- |
+        |PREROUTING |
+        |POSTROUTING|
+        |INPUT      |
+        |OUTPUT     |
+        |FORWARD    |
+
+    - 5.security：给包打上 SELinux 标记，以此影响 SELinux 或其他可以解读 SELinux 安全上下文的系统处理包的行为。这些标记可以基于单个包，也可以基于连接。
+
+        |链         |
+        |---------- |
+        |INPUT      |
+        |FORWARD    |
+        |OUTPUT     |
+
+- iptables 的表和链：
+
+    ![image](./Pictures/net-tools/iptable表和链关系图.avif)
+
+    - 链的优先顺序：PREROUTING -> INPUT -> FORWARD -> OUTPUT -> POSTROUTING
+
+        - 任何一个数据包必然经过 5 个链中的其中一个。
+            - 一个数据包进入网卡时，首先进入 `PREROUTING` 链，内核根据数据包目的 IP 判断是否需要转发
+            - 如果数据包是进入本机的，它就会沿着图向下移动，到达 `INPUT` 链，数据包到了`INPUT`链后，任何进程都会收到它，本机上程序可以发送数据包，这些数据包会经过 `OUTPUT` 链，然后到达 `POSTROUTING` 链输出
+            - 如果数据包是转发出去的，且内核允许转发，数据包会经过 `FORWARD` 链，然后到达 `POSTROUTING` 链输出
+
+    - 表的优先顺序：Raw —> mangle —> nat —> filter
+        ![image](./Pictures/net-tools/iptable1.avif)
+
+- iptables 传输数据包的过程
+
+    - ① 当一个数据包进入网卡时，它首先进入 PREROUTING 链，内核根据数据包目的 IP 判断是否需要转送出去。
+    - ② 如果数据包就是进入本机的，它就会沿着图向下移动，到达 INPUT 链。数据包到了 INPUT 链后，任何进程都会收到它。本机上运行的程序可以发送数据包，这些数据包会经过 OUTPUT 链，然后到达 POSTROUTING 链输出。
+    - ③ 如果数据包是要转发出去的，且内核允许转发，数据包就会如图所示向右移动，经过 FORWARD 链，然后到达 POSTROUTING 链输出。
+
+    - ①->②
+    - ①->③
+
+    ![image](./Pictures/net-tools/iptable.avif)
 
 ##### 基本命令
 
-```sh
-# 创建 INPUT 链的第2条规则
-iptables -I INPUT 2
+> iptables [-t 表名] 管理选项 [链名] [匹配条件] [-j 控制类型]
 
-# 查看 INPUT 链的第2条规则
-iptables -L INPUT 2
+- 查看规则
 
-# 删除 INPUT 链的第2条规则
-iptables -D INPUT 2
+    ```sh
+    # 查看所有防火墙规则
+    iptables -L
+    iptables --list
 
-# 查看规则
-iptables -L
+    # 查看 mangle 表规则
+    iptables -t mangle --list
 
-# 查看INPUT表的规则
-iptables -L INPUT
+    # 查看 nat 表规则
+    iptables -t nat --list
 
-# 查看详细规则
-iptables -nvL --line-numbers
+    # 查看已经添加的规则
+    iptables -nvL
 
-# 最近一次启动后所记录的数据包
-journalctl -k | grep "IN=.*OUT=.*" | less
-```
+    # 查看已经添加的规则，并显示编号
+    iptables -nvL --line-numbers
+    ```
+
+    | 字段名称    | 描述         |
+    | ----------- | ------------ |
+    | target      | 规则行为     |
+    | prot        | 协议         |
+    | opt         | 选项         |
+    | source      | 源 IP 地址   |
+    | destination | 目的 IP 地址 |
+
+- 操作
+    ```sh
+    # 规则管理命令
+    iptables -A：在规则链的末尾加入新规则
+    iptables -D：删除某个规则
+    iptables -I：在规则链的头部加入新规则
+    iptables -R：替换规则链中的规则
+
+    # 链管理命令
+    iptables -F：清空规则链
+    iptables -Z：清空规则链中的数据包计算器和字节计数器
+    iptables -N：创建新的用户自定义规则链
+    iptables -P：设置规则链中的默认策略
+
+    # 通用匹配参数
+    -t
+        对指定的表 table 进行操作
+        如果不指定此选项，默认的是 filter 表
+
+    -p 协议
+        指定规则的协议，如 tcp, udp, icmp 等，可以使用all来指定所有协议
+        如果不指定 -p 参数，默认的是 all 值
+
+    -s 源地址
+        指定数据包的源地址
+        参数可以使IP地址、网络地址、主机名
+        例如：-s 192.168.1.101 指定IP地址
+        例如：-s 192.168.1.10/24 指定网络地址
+
+    -d 目的地址
+        指定数据包的目的地址，规则和 -s 类似
+
+    -j 执行目标
+        指定规则匹配时如何处理数据包
+        可能的值是ACCEPT, DROP, QUEUE, RETURN 等
+
+    -i 输入接口
+        指定要处理来自哪个接口的数据包，这些数据包将进入 INPUT, FORWARD, PREROUTE 链
+        例如：-i eth0指定了要处理经由eth0进入的数据包
+        如果不指定 -i参数，那么将处理进入所有接口的数据包
+        如果指定 ! -i eth0，那么将处理所有经由eth0以外的接口进入的数据包
+        如果指定 -i eth+，那么将处理所有经由eth开头的接口进入的数据包
+
+    -o 输出
+        指定了数据包由哪个接口输出，这些数据包将进入 FORWARD, OUTPUT, POSTROUTING链
+        如果不指定-o选项，那么所有接口都可以作为输出接口
+        如果指定 ! -o eth0，那么将从eth0以外的接口输出
+        如果指定 -i eth+，那么将仅从eth开头的接口输出
+
+    # 扩展参数
+    -sport 源端口
+        针对 -p tcp 或者 -p udp，默认情况下，将匹配所有端口
+        可以指定端口号或者端口名称、端口范围，例如 –sport 22， –sport ssh，–sport 22:100
+        从性能上讲，使用端口号更好， /etc/services 文件描述了映射关系
+
+    -dport 目的端口
+        规则和 –sport 类似
+
+    -tcp-flags TCP 标志
+        针对 -p tcp
+        可以指定由逗号分隔的多个参数
+        取值范围：SYN, ACK, FIN, RST, URG, PSH, ALL, NONE
+
+    -icmp-type ICMP 标志
+        针对 -p icmp
+        icmp-type 0 表示 Echo Reply
+        icmp-type 8 表示 Echo
+    ```
+
+    ```sh
+    # 创建 INPUT 链的第2条规则
+    iptables -I INPUT 2
+
+    # 查看 INPUT 链的第2条规则
+    iptables -L INPUT 2
+
+    # 删除 INPUT 链的第2条规则
+    iptables -D INPUT 2
+
+    # 最近一次启动后所记录的数据包
+    journalctl -k | grep "IN=.*OUT=.*" | less
+    ```
+
+- 清空当前的所有规则和计数
+    ```sh
+    iptables -F  # 清空所有的防火墙规则
+    iptables -X  # 删除用户自定义的空链
+    iptables -Z  # 清空计数
+
+    iptables -t nat -F
+    iptables -t nat -X
+    iptables -t mangle -F
+    iptables -t mangle -X
+    iptables -t raw -F
+    iptables -t raw -X
+    iptables -t security -F
+    iptables -t security -X
+    ```
+
+- 设置默认规则
+    ```sh
+    iptables -P INPUT DROP    # 配置默认的不让进
+    iptables -P FORWARD DROP  # 默认的不允许转发
+    iptables -P OUTPUT ACCEPT # 默认的可以出去
+    ```
 
 - 保存规则：
 
-| 发行版 | 默认保存目录            |
-| ------ | ----------------------- |
-| centos | /etc/sysconfig/iptables |
-| arch   | /etc/iptables           |
+    | 发行版 | 默认保存目录            |
+    | ------ | ----------------------- |
+    | centos | /etc/sysconfig/iptables |
+    | arch   | /etc/iptables           |
 
-```sh
-iptables-save > /etc/iptables/iptables.bak
-# 只备份filter
-iptables-save -t filter > filter.bak
+    ```sh
+    iptables-save > /etc/iptables/iptables.bak
+    # 只备份filter
+    iptables-save -t filter > filter.bak
 
-# 重新加载配置文件
-iptables-restore < /etc/iptables/iptables.bak
-```
+    # 重新加载配置文件
+    iptables-restore < /etc/iptables/iptables.bak
+    ```
 
-- 重置规则：
-
-```sh
-iptables -F #刷新chain
-iptables -X #删除非默认chain
-iptables -t nat -F
-iptables -t nat -X
-iptables -t mangle -F
-iptables -t mangle -X
-iptables -t raw -F
-iptables -t raw -X
-iptables -t security -F
-iptables -t security -X
-iptables -P INPUT ACCEPT
-iptables -P FORWARD ACCEPT
-iptables -P OUTPUT ACCEPT
-```
-
-##### 过滤命令
+##### 开放指定端口
 
 - 注意`ACCEPT`,`DROP`必须要大写
 
@@ -1867,6 +2048,21 @@ iptables -I INPUT -p ! tcp --dport 80 -j ACCEPT
 # 只允许在 9:00 到 18:00 这段时间的 tcp 协议,访问 80 端口
 iptables -I INPUT -p tcp --dport 80 -m time --timestart 9:00 --timestop 18:00 -j ACCEPT
 
+# 允许本地回环接口(即运行本机访问本机)
+iptables -A INPUT -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
+
+# 允许已建立的或相关连的通行
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# 允许所有本机向外的访问
+iptables -A OUTPUT -j ACCEPT
+
+# 禁止其他未允许的规则访问
+iptables -A FORWARD -j REJECT
+
+# 允许机房内网机器可以访问
+iptables -A INPUT -p all -s 192.168.1.0/24 -j ACCEPT
+
 # 只允许 192.168.1.0/24 网段使用 SSH
 # 注意要把拒绝规则放在后面
 iptables -I INPUT -p tcp --dport 22 -s 192.168.1.0/24 -j ACCEPT
@@ -1878,7 +2074,7 @@ iptables -I INPUT -p tcp --dport 3306 -s 192.168.1.0/24 -j ACCEPT
 iptables -A INPUT -p tcp --dport 3306 -j DROP
 ```
 
-- ip地址过滤
+- ip地址过滤（黑名单你）
 
 ```sh
 # 禁止用户访问 www.baidu.com 的网站。
@@ -1886,14 +2082,28 @@ iptables -A OUTPUT -d www.baidu.com -j DROP
 
 # 禁止 从 192.168.1.0/24 到 10.1.1.0/24 的流量
 iptables -I FORWARD -s 192.168.1.0/24 -d 10.1.1.0/24 -j DROP
+
+# 屏蔽单个 IP
+iptables -I INPUT -s 123.45.6.7 -j DROP
+# 屏蔽 IP 网段 从 123.0.0.1  到 123.255.255.254
+iptables -I INPUT -s 123.0.0.0/8 -j DROP
+# 屏蔽 IP 网段 从 123.45.0.1 到 123.45.255.254
+iptables -I INPUT -s 124.45.0.0/16 -j DROP
+# 屏蔽 IP 网段 从 123.45.6.1 到 123.45.6.254
+iptables -I INPUT -s 123.45.6.0/24 -j DROP
 ```
 
 - mac地址过滤
 
-```sh
-# 禁止转发来自 MAC 地址为 00：0C：29：27：55：3F 的和主机的数据包
-iptables -I FORWARD -m mac --mac-source 00:0c:29:27:55:3F -j DROP
-```
+    ```sh
+    # 禁止转发来自 MAC 地址为 00：0C：29：27：55：3F 的和主机的数据包
+    iptables -I FORWARD -m mac --mac-source 00:0c:29:27:55:3F -j DROP
+    ```
+
+- 防止 SYN 洪水攻击
+    ```sh
+    iptables -A INPUT -p tcp --syn -m limit --limit 5/second -j ACCEPT
+    ```
 
 ##### 通过iptables实现nat功能
 
@@ -1949,6 +2159,57 @@ iptables -I FORWARD -m mac --mac-source 00:0c:29:27:55:3F -j DROP
     - 公网 IP 123.123.123.123
     ```sh
     iptables -t nat -A PREROUTING -p tcp -i eth1 --dport 80 -j DNAT --to 192.168.1.2
+    ```
+
+##### docker与iptables
+
+- 如果在公网可以访问的服务器运行 Docker，需要对应的 iptables 规则来限制访问主机上的容器或其他服务。
+
+- 在 Docker 规则之前添加 iptables 规则
+
+    - Docker 安装了两个名为 `DOCKER-USER` 和 `DOCKER` 的自定义 iptables 链，确保传入的数据包始终先由这两个链进行检查。
+
+        ```sh
+        # 查看
+        iptables -L -n -v | grep -i docker
+        ```
+
+    - Docker 的所有 iptables 规则都被添加到 Docker 链中，不要手动修改此链 (可能会引发问题)。如果需要添加在一些在 Docker 之前加载的规则，将它们添加到 `DOCKER-USER` 链中，这些规则应用于 Docker 自动创建的所有规则之前。
+
+    - 添加到 `FORWARD` 链中的规则在这些链之后进行检测，这意味着如果通过 Docker 公开一个端口，那么无论防火墙配置了什么规则，该端口都会被公开。如果想让这些规则在通过 Docker 暴露端口时仍然适用，必须将这些规则添加到 `DOCKER-USER` 链中。
+
+
+- 限制到 Docker 主机的连接
+
+    - 默认情况下，允许所有 外部 IP 连接 Docker 主机，为了只允许特定的 IP 或网络访问容器，在 `DOCKER-USER` 过滤器链的顶部插入一个规则。
+
+        ```sh
+        # 只允许 192.168.1.1 访问
+        iptables -I DOCKER-USER -i eth0 ! -s 192.168.1.1 -j DROP
+        ```
+
+    - 也可以允许来自源子网的连接
+
+        ```sh
+        # 允许 192.168.1.0/24 子网的用户访问:
+        iptables -I DOCKER-USER -i eth0 ! -s 192.168.1.0/24 -j DROP
+        ```
+
+- 阻止 Docker 操作 iptables
+    - 在 Docker 引擎的配置文件 `/etc/docker/daemon.json` 设置 iptables 的值为 `false`，但是最好不要修改，因为这很可能破坏 Docker 引擎的容器网络。
+
+- 为容器设置默认绑定地址
+
+    - 默认情况下，Docker 守护进程将公开 0.0.0.0 地址上的端口，即主机上的任何地址。如果希望将该行为更改为仅公开内部 IP 地址上的端口，则可以使用 --ip  选项指定不同的IP地址。
+
+- 集成到防火墙
+    - 如果运行的是 Docker 20.10.0 或更高版本，在系统上启用了 iptables, Docker 会自动创建一个名为 docker 的防火墙区域， 并将它创建的所有网络接口 (例如 docker0 ) 加入到 docker 区域，以允许无缝组网。
+
+- 运行命令将 docker 接口从防火墙区域中移除:
+
+    ```sh
+    firewall-cmd --zone=trusted --remove-interface=docker0 --permanent
+    firewall-cmd --reload
     ```
 
 #### nftables
@@ -2257,6 +2518,106 @@ firewall-cmd --zone=public --add-rich-rule 'rule family="ipv4" source address="1
 # 将所有入站流量从端口 80 重定向到主机 192.168.1.200
 firewall-cmd --zone=public --add-rich-rule 'rule family=ipv4 forward-port port=80 protocol=tcp to-port=8080 to-addr=192.168.1.200'
 ```
+
+#### iptables和NAT
+
+- iptables 中的 NAT 表 用于实现网络地址转换，包含 3 种内置链: `PREROUTING`, `POSTROUTING`, `OUTPUT`
+
+    ```sh
+    # 通过 iptables 实现流量转发，将目标 IP 地址为 192.168.1.1 + 目标端口为 27017 的所有 TCP 数据包转发到 10.0.0.2:1234。
+    iptables \
+      -A PREROUTING    # 追加一条规则到 PREROUTING 链，常用于 DNAT
+      -t nat           # 用于 nat 表
+      -p tcp           # 这条规则仅适用于 TCP 数据包
+      -d 192.168.1.1   # 这条规则仅适用于目标 IP 地址为 192.168.1.1 的数据包
+      --dport 27017    # 这条规则仅适用于目标端口为 27017 的数据包
+      -j DNAT          # 指定目标网络地址转换
+      --to-destination # 指定转发的目标地址为 10.0.0.2:1234
+         10.0.0.2:1234
+    ```
+
+- 下面是流量转发的示意图，因为是 DNAT, 所以源 IP 地址和源端口在转发过程中不会发生变化。
+
+    ```
+    PACKET RECEIVED                   PACKET FORWARDED
+    |---------------------|           |---------------------|
+    |    IP PACKET        |           |    IP PACKET        |
+    |                     |           |                     |
+    | SRC: 192.168.1.2    |           | SRC: 192.168.1.2    |
+    | DST: 192.168.1.1    |           | DST: 10.0.0.2       |
+    | |---------------|   |           | |---------------|   |
+    | |   TCP PACKET  |   | =(DNAT)=> | |   TCP PACKET  |   |
+    | | DPORT: 27017  |   |           | | DPORT: 1234   |   |
+    | | SPORT: 23456  |   |           | | SPORT: 23456  |   |
+    | | ... DATA ...  |   |           | | ... DATA ...  |   |
+    | |---------------|   |           | |---------------|   |
+    |---------------------|           |---------------------|
+    ```
+
+### TCP_Wrappers（第二层防火墙）
+
+- [SRE运维实践记：Linux的第二层防火墙—TCP_Wrappers](https://mp.weixin.qq.com/s/VnlKNUuH6YMXEt9QlQLHQw)
+
+- iptables防火墙通过直观地监视系统的运行状况，阻挡网络中的一些恶意扫描和攻击，保护整个系统正常运行，免遭攻击和破坏。如果通过了第一层防护，那么下一层就是TCP_Wrappers了。通过TCP_Wrappers可以实现对系统中提供的某些服务的开放与关闭、允许和禁止，从而保证系统安全运行。
+
+- TCP_Wrappers防火墙的实现是通过`/etc/hosts.allow`和`/etc/hosts.deny`两个文件完成的。
+
+```sh
+# 安装
+yum install tcp_wrappers
+```
+
+- 使用方法：
+
+    ```sh
+    service: host(s) [:action]
+    ```
+
+- 参数含义：
+
+    - service：代表服务名，例如，sshd、vsftpd、sendmail等。
+    - host(s)：代表主机名或者IP地址，可以有多个，例如，192.168.64.4、www.tencent.com
+    - action：动作，符合条件后所采取的动作
+
+    - 配置中常用关键字：
+
+        - ALL：所有的服务或IP
+        - ALL EXCEPT：除去指定服务或IP后的所有服务或IP
+
+- 配置
+    ```sh
+    # 同过ALL EXCEPT配置除了192.168.64.5这台服务器，任何服务器执行所有服务时被允许或拒绝
+    ALL : ALL EXCEPT 192.168.64.5
+
+    # 在规则中使用通配符，匹配192.168.64.x网段中所有主机访问当前服务器和域名满足以test.com结尾即可访问当前服务器
+    sshd : 192.168.64.* *.test.com
+    ```
+
+    - 实现仅允许IP为192.168.64.5、192.168.64.6以及域名为www.test.com的三台服务器通过SSH服务远程登录到当前服务器。
+        - Linux会首先判断/etc/hosts.allow这个文件。如果远程服务器满足文件/etc/hosts.allow设定，就不会再去访问/etc/hosts.deny文件了；
+        - 如果远程服务器IP满足/etc/hosts.deny中的规则，则此远程服务器就被限制为不可访问当前服务器；
+        - 如果也不满足/etc/hosts.deny的规则，则此远程服务器默认是可以访问当前服务器。
+        - 因此在/etc/hosts.allow中设置允许访问规则后，在/etc/hosts.deny中设置禁止所有远程服务器不可访问当前服务器即可满足仅允许上述三台远程服务器访问当前服务器。
+        ```sh
+        vi /etc/hosts.allow
+        sshd : 192.168.64.5 192.168.64.6 www.test.com
+        #----------------------
+        vi /etc/hosts.deny
+        sshd : ALL
+        ```
+
+        - 配置如上规则后，在192.168.64.7服务器通过ssh登录192.168.64.4会提示错误“ssh_exchange_identification: read: Connection reset by peer”，实现了指定服务器之外的所有服务器禁止使用SSH访问当前服务器。
+
+- 进阶使用
+
+    - spawn：先执行后续命令，执行完后远程服务器会等待5秒重置连接的时间
+    - twist：先执行后续命令，执行完后立刻断开与远程服务器的连接
+
+    ```sh
+    # 设置拒绝远程服务器登录后，给root用户发送安全提示邮件
+    vi /etc/hosts.deny
+    sshd : ALL: spawn (echo "Security notice from host $(/bin/hostname)" | /bin/mail -s "reject %d-%h ssh" root)
+    ```
 
 ### ethtool
 

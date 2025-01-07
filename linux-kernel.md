@@ -87,7 +87,7 @@
 
 ## 内核态
 
-- [朱小厮的博客：进入内核态究竟是什么意思？]()
+- [朱小厮的博客：科普：进入内核态究竟是什么意思？](https://mp.weixin.qq.com/s/7xzdNbRRUdugDDtrZHmNdg)
 
 - 实模式：早期的DOS这样的操作系统，它其实将要执行的应用程序加载变成了操作系统的一部分
 
@@ -1515,7 +1515,7 @@ TLB（Translation Lookaside Buffer）：页表的缓存，集成在cpu内部，�
 
 读锁：可以有多个线程持有，因此是共享锁
 
-写锁：只能有一个线程持有，因此是互诉锁
+写锁：只能有一个线程持有，因此是互斥锁
 
 - 优先算法
 
@@ -2185,44 +2185,6 @@ systemd-cgls -k | grep kworker
 
     ![image](./Pictures/linux-kernel/fs-symbolic_link-save.avif)
 
-### FUFE用户态挂载文件系统
-
-- [奇伢云存储：用户态文件系统挂载的两种方式](https://mp.weixin.qq.com/s/whOFPXyozrTXK8dg2Aluiw)
-
-- 用户态文件系统的挂载本质上是：为了建立用户态的守护进程、内核fuse文件系统、挂载点这三者之间的关联。
-
-    - 串联这三者之间的桥梁就是 `/dev/fuse` 设备文件。构建关联之后，在应用程序发出的I/O请求，就能够传递到对应的守护进程中处理。
-
-    ![image](./Pictures/linux-kernel/fuse文件系统.avif)
-
-- 用户态文件系统挂载，最关键的就是对`/dev/fuse`的处理而已。描述如：
-
-    - 1.打开 `/dev/fuse` 设备，获得一个文件描述符。假设 fd=7。
-    - 2.以此文件描述符（fd=7），构造内核fuse文件系统专用的参数，调用Mount系统调用进行挂载。
-    - 3.挂载完成之后，守护进程就可以作为一个服务端，监听这个文件描述符（fd=7）的可读数据，然后进行处理。
-
-    - 也就是说，挂载的最关键的是对 `/dev/fuse` 设备文件的处理。
-
-- 挂载的两种方式
-
-    - 对于上述的挂载过程，通常是由FUSE公共库来完成，最出名的就是C语言的libfuse库，这也是官方的FUSE库。
-
-    - 但FUSE机制用户态的实现是不限制编程语言的，在Go语言，我们也可以挂载和实现用户态文件系统。
-
-        - 对于Go语言的FUSE库来说，通常来讲，有两种方式进行挂载：
-
-            - 1.使用Mount系统调用：直接处理 `/dev/fuse` 的细节，直接进行挂载。
-
-                - 优点：是更部署更简单，不需要第三方的工具依赖。
-                - 缺点：是实现稍复杂，需要显式的处理/dev/fuse，针对性构造fuse文件系统需要的挂载参数，相对要复杂一些。对FUSE底层原理要熟悉。
-
-            - 2.使用`fusermount`挂载工具：先用fusermount进行挂载，然后通过UNIX域套接字回传 /dev/fuse的文件描述符。
-
-                - 优点：是使用更简单，fusermount帮我们屏蔽了对/dev/fuse设备和Mount参数构造的显式处理。
-                - 缺点：但它部署的时候，对fusermount工具就有了依赖，要求Linux上必须安装fusermount工具。
-
-            - 以上省去代码...
-
 ### loop设备
 
 - [Linux 式套娃，把“文件系统”安装在一个“文件”上？](https://mp.weixin.qq.com/s/UqJ7h3PSCF-bBj_aqxOSzw)
@@ -2328,6 +2290,161 @@ systemd-cgls -k | grep kworker
     hexdump -C ./minix_test.img
     ```
 
+### FUFE用户态挂载文件系统
+
+- [奇伢云存储：用户态文件系统挂载的两种方式](https://mp.weixin.qq.com/s/whOFPXyozrTXK8dg2Aluiw)
+
+- 用户态文件系统的挂载本质上是：为了建立用户态的守护进程、内核fuse文件系统、挂载点这三者之间的关联。
+
+    - 串联这三者之间的桥梁就是 `/dev/fuse` 设备文件。构建关联之后，在应用程序发出的I/O请求，就能够传递到对应的守护进程中处理。
+
+    ![image](./Pictures/linux-kernel/fuse文件系统.avif)
+
+- 用户态文件系统挂载，最关键的就是对`/dev/fuse`的处理而已。描述如：
+
+    - 1.打开 `/dev/fuse` 设备，获得一个文件描述符。假设 fd=7。
+    - 2.以此文件描述符（fd=7），构造内核fuse文件系统专用的参数，调用Mount系统调用进行挂载。
+    - 3.挂载完成之后，守护进程就可以作为一个服务端，监听这个文件描述符（fd=7）的可读数据，然后进行处理。
+
+    - 也就是说，挂载的最关键的是对 `/dev/fuse` 设备文件的处理。
+
+- 挂载的两种方式
+
+    - 对于上述的挂载过程，通常是由FUSE公共库来完成，最出名的就是C语言的libfuse库，这也是官方的FUSE库。
+
+    - 但FUSE机制用户态的实现是不限制编程语言的，在Go语言，我们也可以挂载和实现用户态文件系统。
+
+        - 对于Go语言的FUSE库来说，通常来讲，有两种方式进行挂载：
+
+            - 1.使用Mount系统调用：直接处理 `/dev/fuse` 的细节，直接进行挂载。
+
+                - 优点：是更部署更简单，不需要第三方的工具依赖。
+                - 缺点：是实现稍复杂，需要显式的处理/dev/fuse，针对性构造fuse文件系统需要的挂载参数，相对要复杂一些。对FUSE底层原理要熟悉。
+
+            - 2.使用`fusermount`挂载工具：先用fusermount进行挂载，然后通过UNIX域套接字回传 /dev/fuse的文件描述符。
+
+                - 优点：是使用更简单，fusermount帮我们屏蔽了对/dev/fuse设备和Mount参数构造的显式处理。
+                - 缺点：但它部署的时候，对fusermount工具就有了依赖，要求Linux上必须安装fusermount工具。
+
+            - 以上省去代码...
+
+### 自制FUFE用户态文件系统
+
+- [奇伢云存储：自制文件系统 — 02 FUSE 框架，开发者的福音](https://mp.weixin.qq.com/s/sLKGhy3iI0jnjXE6iDPi-g)
+
+- 查看内核支持的文件系统
+    ```sh
+    # 直接去看内核模块
+    ls /lib/modules/${kernel_version}/kernel/fs/
+    ```
+
+    - `.ko` 模块的知识：
+
+        - ko 其实是 kernel object 的缩写，这类文件存在的意义其实和用户态的 `.so` 库类似，都是为了模块化的编程实践。内核把核心主干框架之外的功能拆解成模块，需要的时候就加载 ko 模块，不需要的时候卸载即可。这样带来的好处就是方便开发和使用，保持内核的核心代码极度精炼。
+
+- 为什么文件系统的开发大家会觉得非常难？
+    - 原因其实不在于实现，而在于调试和排障，因为早期文件系统的开发只能在内核之中，这个带来了非常高的门槛。
+    - 内核模块的开发之所以艰难就是难在调试和排障，用户态的程序你可以随意 debug，出问题最多也就是 panic，coredump，内核态的程序出了文件就是宕机，所有现场都丢失，你只能通过日志，kdump 等手段来排查。并且内核态程序的编写是要注意非常多的规范的，比如内存分配，比用户态的要谨慎的多。
+
+    ![image](./Pictures/linux-kernel/fs-内核文件系统请求和响应.gif)
+
+- FUSE文件系统
+
+    - 把 IO 路径导向用户态，由用户态程序捕获到 IO ，从而实现文件的存储，这个机制就叫 FUSE 机制。
+
+    ![image](./Pictures/linux-kernel/fs-fufe文件系统请求和响应.gif)
+
+- FUSE 是一个用来实现用户态文件系统的框架，这套 FUSE 框架包含 3 个组件：
+
+    - 1.内核模块 `fuse.ko` ：用来接收 vfs 传递下来的 IO 请求，并且把这个 IO 封装之后通过管道发送到用户态；
+
+    - 2.用户态 lib 库 `libfuse` ：解析内核态转发出来的协议包，拆解成常规的 IO 请求；
+
+    - 3.mount 工具 `fusermount` ；
+
+    - 这 3 个组件只为了完成一件事：让 IO 在内核态和用户态之间自由穿梭。
+
+#### FUSE 原理
+
+- `ls -l /tmp/fuse` 命令的演示图：
+
+    ![image](./Pictures/linux-kernel/fs-fufe原理.avif)
+
+    - 1.背景：一个用户态文件系统，挂载点为 /tmp/fuse ，用户二进制程序文件为 ./hello ；
+
+    - 2.当执行 `ls -l /tmp/fuse` 命令的时候，流程如下：
+        - 1.IO 请求先进内核，经 vfs 传递给内核 FUSE 文件系统模块；
+        - 2.内核 FUSE 模块把请求发给到用户态，由 ./hello 程序- 2.接收并且处理。处理完成之后，响应原路返回；
+
+    ![image](./Pictures/linux-kernel/fs-fufe原理动画.gif)
+
+    - 通过这两张图，对 FUSE IO 的流程应该就清晰了，内核 FUSE 模块在内核态中间做协议包装和协议解析的工作，承接 vfs 下来的请求并按照 FUSE 协议转发到用户态，然后接收用户态的响应，回复给用户。
+
+- 内核态的 `fuse.ko` 模块，用户态的 `libfuse` 库，是配套使用的，最核心的功能是协议封装和解析，当然还有运输。
+
+    - 内核 `fuse.ko` 用于承接 vfs 下来的 io 请求，然后封装成 FUSE 数据包，转发给用户态。
+    - 用户态文件系统收到这个 FUSE 数据包，它如果想要看懂这个数据包，就必须实现一套 FUSE 协议的代码，这套代码是公开透明的，属于 FUSE 框架的公共的代码，这种代码不能够让所有的用户文件系统都重复实现一遍，于是 `libfuse` 用户库就诞生了。
+
+- `/dev/fuse`是内核态和用户态的纽带
+    - 用户的 io 通过正常的系统调用进来，走到内核文件系统 fuse
+    - fuse 文件系统把这个 io 请求封装起来，打包成特定的格式，通过 /dev/fuse 这个管道传递到用户态。在此之前有守护进程监听这个管道，看到有消息出来之后，立马读出来，然后利用 libfuse 库解析协议，之后就是用户文件系统的代码逻辑了。
+    - 以下动画省略了拆解包的步骤
+    ![image](./Pictures/linux-kernel/fs-fufe原理动画1.gif)
+
+#### FUFE使用
+
+- 1.判断 Linux 内核是否支持 fuse
+
+    ```sh
+    # 没有则会报错，什么都不显示表示支持fuse
+    modprobe fuse
+
+    # 或者查看内核模块目录是否有fuse
+    ls /lib/modules/${kernel_version}/kernel/fs/fuse/
+    ```
+
+- 2.挂载 fuse 内核文件系统，便于管理
+    - fuse 这个内核文件系统其实是可以挂载，也可以不挂载，挂载了主要是方便管理多个用户系统而已，fuse 内核文件系统的 Type 名称为 fusectl
+
+    ```sh
+    # 挂载
+    mount -t fusectl none /sys/fs/fuse/connections
+
+    # 查看
+    df -aT|grep -i fusectl
+    fusectl        -                   -     -     -    - /sys/fs/fuse/connections
+    none           fusectl             0     0     0    - /sys/fs/fuse/connections
+
+    # 查看所有实现的用户文件系统。对应两个目录，目录名为 Unique ID，能够唯一标识一个用户文件系统。这里表示内核 fuse 模块通过 /dev/fuse 设备文件，建立了两个通信管道，分别对应了两个用户文件系统
+    ls -l /sys/fs/fuse/connections/
+    # 查看有2个fuse文件系统
+    df -aT|grep -i fuse
+    fusectl        -                   -     -     -    - /sys/fs/fuse/connections
+    /dev/nvme0n1p4 fuseblk           61G   27G   34G  44% /mnt/D
+    /dev/nvme0n1p3 fuseblk           80G   47G   34G  59% /mnt/C
+    gvfsd-fuse     fuse.gvfsd-fuse     0     0     0    - /run/user/1000/gvfs
+    none           fusectl             0     0     0    - /sys/fs/fuse/connections
+
+    # waiting 文件：cat 一下就能获取到当前正在处理的 IO 请求数；
+    # abort 文件：该文件写入任何字符串，都会终止这个用户文件系统和上面所有的请求；
+    ls -l /sys/fs/fuse/connections/58
+    /sys/fs/fuse/connections/58:
+    total 0
+    --w------- 1 tz tz 0 Jan  2 14:04 abort
+    -rw------- 1 tz tz 0 Jan  2 14:04 congestion_threshold
+    -rw------- 1 tz tz 0 Jan  2 14:04 max_background
+    -r-------- 1 tz tz 0 Jan  2 14:04 waiting
+    ```
+
+- 3.用户文件系统怎么挂载
+    ```sh
+    # ??失败率
+    fusermount -o fsname=none,subtype=fusectl -- /mnt/myfs/
+    fusermount: old style mounting not supported
+    ```
+
+- 以下省略文章。自制文件系统 — 03、04、05
+
 # I/O
 
 - [小林coding：文件系统全家桶](https://www.xiaolincoding.com/os/6_file_system/file_system.html)
@@ -2407,6 +2524,24 @@ systemd-cgls -k | grep kworker
 
     - 阻塞 I/O：
 
+        - 应用进程执行系统调用时被阻塞，直到数据从内核缓冲区复制到应用进程缓冲区中才返回。
+
+            - 阻塞不意味着整个操作系统都被阻塞，在阻塞的过程中，其它应用进程还可以执行，所以阻塞本身不消耗 CPU 时间，这种模型的 CPU 利用率会比较高。
+
+        - 阻塞式 I/O 工作流程翻译为简单的伪代码。
+
+            ```py
+            while True:
+                # 阻塞等待客户端连接
+                connection, client_address = sock.accept()
+                try:
+                    while True:
+                        # 阻塞等待数据
+                        # 读取数据
+                        data = connection.recv(16)
+                        # 执行其他操作
+            ```
+
         - 服务端的线程阻塞在了两个地方：`accept()` , `read()`
         ![image](./Pictures/linux-kernel/io-blocking.gif)
 
@@ -2417,12 +2552,37 @@ systemd-cgls -k | grep kworker
     - 非阻塞 I/O：调用 `read` 时：不断轮询，直到数据准备好
 
         - 数据还未到达网卡，或者到达网卡但还没有拷贝到内核缓冲区之前，这个阶段是非阻塞的
+            - 应用进程执行系统调用时，内核直接返回一个错误码，然后应用进程可以继续向下运行，但是需要不断的执行系统调用来获取 I/O 操作是否完成，也称为轮询（polling）。
 
         - 最后一步的「数据从内核缓冲区拷贝到用户缓冲区」依然是阻塞
+
+        - 由于 CPU 要处理更多的系统调用，因此这种模型的 CPU 利用率比较低。
 
         ![image](./Pictures/linux-kernel/io-Non-blocking.gif)
 
         ![image](./Pictures/linux-kernel/io-Non-blocking1.avif)
+
+        - 非阻塞式 I/O 工作流程翻译为简单的伪代码。
+            ```py
+            while True:
+                try:
+                    # 内核直接返回一个错误吗
+                    connection, client_address = sock.accept()
+                    # 继续向下执行
+                    connection.setblocking(0)
+                except BlockingIOError:
+                    # 处理错误
+                    ...
+
+                try:
+                    # 读取数据
+                    data = connection.recv(16)
+                    # 执行其他操作
+                    ...
+                except BlockingIOError:
+                    # 处理错误
+                    ...
+            ```
 
         - 方法1：每次都创建一个新的进程或线程，去调用 read 函数
 
@@ -2460,23 +2620,102 @@ systemd-cgls -k | grep kworker
 
         - 当内核数据准备好时，再以事件通知应用程序进行操作。如果没有事件发生，那么当前线程就会发生阻塞，这时 CPU 会切换其他线程执行任务
 
+        - 这种模型可以让单个 进程/线程 具有处理多个 I/O 事件的能力，也称为事件驱动 I/O。
+            - 如果一个 Web Server 没有 I/O 多路复用，那么每一个 Socket 连接都需要创建一个线程去处理，如果同时有几万个连接，那么就需要创建相同数量的线程 (可能导致的后果就是操作系统直接崩溃)，相比之下，I/O 多路复用不需要多个进程/线程创建、上下文切换的开销，系统负载更小。
+
         ![image](./Pictures/linux-kernel/io-multiplexing.avif)
+
+        - I/O 多路复用 工作流程翻译为简单的伪代码。
+            ```py
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            server_address = ('localhost', 8080)
+
+            ...
+
+            inputs = [sock]
+            outputs = []
+
+            while inputs:
+                # 阻塞等待套接字就绪
+                readable, writable, exceptional = select.select(inputs, outputs, inputs)
+
+                # 获取到已经就绪的套接字
+                # 遍历处理读事件
+                for s in readable:
+                    ...
+
+                # 遍历处理写事件
+                for s in writable:
+                    ...
+
+                # 遍历处理其他事件
+                for s in exceptional:
+                    ...
+            ```
 
     - 信号驱动IO模型
 
+        ![image](./Pictures/linux-kernel/io-信号驱动模型.avif)
+
         - 信号驱动IO不再用主动询问的方式去确认数据是否就绪，而是向内核发送一个信号（调用sigaction的时候建立一个SIGIO的信号），然后应用用户进程可以去做别的事，不用阻塞。
 
-        - 当内核数据准备好后，再通过SIGIO信号通知应用进程，数据准备好后的可读状态。应用用户进程收到信号之后，立即调用recvfrom，去读取数据。
-
-        ![image](./Pictures/linux-kernel/io-信号驱动模型.avif)
+        - 当内核数据准备好后，再通过SIGIO信号通知应用进程，数据准备好后的可读状态。在信号处理程序中执行系统调用`recvfrom`，将数据从内核空间 (缓冲区) 复制数据到用户空间 (进程)
 
         - 采用这种方式，CPU的利用率很高。不过这种模式下，在大量IO操作的情况下可能造成信号队列溢出导致信号丢失，造成灾难性后果。
 
+        - 工作流程翻译为简单的伪代码。
+            ```py
+            # 信号回调函数
+            def handler(signum, frame):
+                # 读取数据
+                data, addr = sock.recvfrom(1024)
+                # 执行其他操作
+                ...
+
+            # 初始化 socket
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.bind(('localhost', 8080))
+
+            ...
+
+            # 注册信号回调函数
+            signal.signal(signal.SIGIO, handler)
+
+            ...
+
+            while True:
+                # 等待信号通知
+                signal.pause()
+            ```
+
     - 2.6版本的异步 I/O `aio`：「内核数据准备好」和「数据从内核态拷贝到用户态」这两个过程都不用等待。
+
+        > 异步 I/O 与信号驱动 I/O 的区别在于，异步 I/O 的信号是通知应用进程 I/O (数据复制) 已经完成，而信号驱动 I/O 的信号是通知应用进程可以开始 I/O (数据复制) 。
 
         - 调用 `aio_read` 之后，就立即返回，内核自动将数据从内核空间拷贝到应用程序空间，这个拷贝过程同样是异步的，内核自动完成的
 
         ![image](./Pictures/linux-kernel/io-aio.avif)
+
+        - 工作流程翻译为简单的伪代码。
+
+            ```py
+            # 异步回调函数
+            # 通知应用进程 I/O (数据复制) 已经完成
+            async def handle_client(reader, writer):
+                while True:
+                    # 直接读取数据即可
+                    data = await reader.read(100)
+
+                    # 执行其他操作
+                    ...
+
+                writer.close()
+
+            async def main():
+                # 监听端口并注册异步回调函数
+                server = await asyncio.start_server(handle_client, 'localhost', 10000)
+            ```
+
 
     - 5.1版本的真正异步 I/O `io_uring` ：
 
@@ -2756,6 +2995,8 @@ systemd-cgls -k | grep kworker
 
 ![image](./Pictures/linux-kernel/io-multiplexing-性能图.avif)
 
+- [洋芋编程：I/O 多路复用模型](https://mp.weixin.qq.com/s/P7P8m5tmHjEIJ0k2KxZaUQ)
+
 - [小林coding：I/O 多路复用：select/poll/epoll](https://www.xiaolincoding.com/os/8_network_system/selete_poll_epoll.html#%E5%A6%82%E4%BD%95%E6%9C%8D%E5%8A%A1%E6%9B%B4%E5%A4%9A%E7%9A%84%E7%94%A8%E6%88%B7)
 
 - 最基础的 TCP 的 Socket 编程，它是阻塞 I/O 模型，基本上只能一对一通信
@@ -2808,35 +3049,159 @@ systemd-cgls -k | grep kworker
 
 ### select()
 
-- `select()`：调用select函数，可以同时监控多个fd，在select函数监控的fd中，只要有任何一个数据状态准备就绪了，select函数就会返回可读状态，这时应用进程再发起recvfrom请求去读取数据。
+- `select()`：是最早的一种 I/O 多路复用机制，允许应用程序监视多个fd（文件描述符），等待它们变为可读、可写或有错误发生。在select函数监控的fd中，只要有任何一个数据状态准备就绪了，select函数就会返回可读状态。这时应用进程再发起recvfrom请求去读取数据。
 
     ![image](./Pictures/linux-kernel/io-multiplexing-select.gif)
 
     ![image](./Pictures/linux-kernel/io-multiplexing-select2.avif)
 
-    - 步骤：
+- 步骤：
 
-        - 1.将已连接的 Socket 都放到一个文件描述符集合
+    ![image](./Pictures/linux-kernel/io-multiplexing-select1.avif)
 
-        - 2.然后调用 select() 将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生
-            - 内核检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此 Socket 标记为可读或可写
+    - 1.将已连接的 Socket 都放到一个文件描述符集合
 
-        - 3.接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。
-        ![image](./Pictures/linux-kernel/io-multiplexing-select1.avif)
+    - 2.然后调用 select() 将文件描述符集合拷贝到内核里，让内核来检查是否有网络事件产生
+        - 内核检查的方式很粗暴，就是通过遍历文件描述符集合的方式，当检查到有事件产生后，将此 Socket 标记为可读或可写
 
-    - 总共2次遍历（内核+用户）每次的时间复杂度为 O(n)，2次拷贝文件描述符（从用户->内核，在从内核->用户）
-
-    - select 使用固定长度的 Bitsmap，表示文件描述符集合。集合长度由内核中的 FD_SETSIZE 限制， 默认最大值为 1024，只能监听 0~1023 的文件描述符。
+    - 3.接着再把整个文件描述符集合拷贝回用户态里，然后用户态还需要再通过遍历的方法找到可读或可写的 Socket，然后再对其处理。
 
     ![image](./Pictures/linux-kernel/io-multiplexing-select3.avif)
 
+- select 使用固定长度的 Bitsmap，表示文件描述符集合。集合长度由内核中的 FD_SETSIZE 限制， 默认最大值为 1024，只能监听 0~1023 的文件描述符。
+
+- 优点：可移植性强，几乎在所有操作系统上都能使用 (包括 Windows)
+
+- 缺点：性能取决于文件描述符数量，因为每次调用都需要遍历整个文件描述符集合。总共2次遍历（内核+用户）每次的时间复杂度为 O(n)，2次拷贝文件描述符（从用户->内核，在从内核->用户）
+
+- select 底层维护一个类似 `Set` 的数据结构，用于存放 (套接字对应的) 文件描述符
+
+- 将 select 工作流程翻译为简单的伪代码。
+    ```py
+    # 初始化文件描述符集
+    read_fds = set()
+    write_fds = set()
+    error_fds = set()
+
+    # 添加文件描述符到集合中
+    read_fds.add(socket1)
+    read_fds.add(socket2)
+
+    ...
+
+    # 超时时间为 5 秒
+    timeout = 5
+    # 调用 select 系统调用
+    # 每次调用时需要重新初始化文件描述符集合
+    # 否则就无法区分状态是之前的，还是重新获取后的
+    # 内核会将就绪的 文件描述符 设置为 OK, 然后返回给用户空间
+    # 总共经过 2 次上下文切换和数据拷贝
+    #   1. 将文件描述符集合从用户空间拷贝到内核空间
+    #   2. 将文件描述符集合从内核空间拷贝到用户空间
+    ready_read, ready_write, ready_error = select(read_fds, write_fds, error_fds, timeout)
+
+    # 处理就绪的文件描述符
+    for fd in ready_read:
+        if fd == socket1:
+            handle_socket1_read()
+        elif fd == socket2:
+            handle_socket2_read()
+
+    for fd in ready_write:
+        if fd == socket1:
+            handle_socket1_write()
+        elif fd == socket2:
+            handle_socket2_write()
+
+    for fd in ready_error:
+        handle_error(fd)
+    ```
+
+### poll()
+
 - `poll()`：与 `select()` 无本质区别。而是用链表代替bitsmap，突破了select的最大长度，但还是会受系统文件描述符的限制。
+
+- 此外，select 和 poll 还有下面的一些微小的差异:
+
+    - select 的可移植性最好，而且 timeout 超时参数为微妙，而 poll 为毫秒，因此实时性可以更高一些
+    - poll 没有最大描述符数量的限制，如果系统对实时性没有严格要求，应该使用 poll 替代 select
+
+- 下面将 poll 工作流程翻译为简单的伪代码。
+
+    ```py
+    # 初始化 pollfd 结构体
+    # 这里使用数组模拟 poll 的链表
+    poll_fds = [
+        {'fd': socket1, 'events': POLLIN},
+        {'fd': socket2, 'events': POLLIN}
+    ]
+
+    # 调用 poll 系统调用
+    timeout = 5000  # 超时时间为 5秒
+    ready_fds = poll(poll_fds, timeout)
+
+    # 处理就绪的文件描述符
+    # 和 select 一样，依然会经过 2 次上下文切换和数据拷贝
+    for pfd in ready_fds:
+        if pfd['revents'] & POLLIN:
+            if pfd['fd'] == socket1:
+                handle_socket1_read()
+            elif pfd['fd'] == socket2:
+                handle_socket2_read()
+        if pfd['revents'] & POLLOUT:
+            if pfd['fd'] == socket1:
+                handle_socket1_write()
+            elif pfd['fd'] == socket2:
+                handle_socket2_write()
+        if pfd['revents'] & POLLERR:
+            handle_error(pfd['fd'])
+    ```
 
 ### epoll()
 
-- `epoll()`
+![image](./Pictures/linux-kernel/io-multiplexing-select、poll、epoll的模式区别.avif)
 
-    - 遍历socket用红黑树，时间复杂度为O(log n)
+- select 和 poll 存在的性能问题:
+
+    - 1.底层数据结构，select 和 poll 采用的都是时间复杂度为 O(N) 的数据结构，所以遍历时只能采用轮询方式，这从根本上决定了性能会随着文件描述符数量变多而降低
+
+    - 2.复制方式，select 和 poll 在 (套接字对应的) 文件描述符状态发生变化后，没有对应的事件回调机制，需要调用方主动 (轮询) 将文件描述符集合从用户空间复制到内核空间，内核修改完成后，再从内核空间复制到用户空间，两次的上下文切换会带来不小的开销
+
+- epoll解决方法：
+
+    - 在文件描述符复制方面，相比于 select, poll 每次系统调用时复制全部的文件描述符的开销，epoll 虽然同样会发生系统调用，但是复制的是 已经就绪 的文件描述符，其量级要远远小于全部的。
+
+    - 在事件 (文件描述符) 管理方面，相比于 select, poll 不断轮询所有文件描述符的方式 (时间复杂度 `O(N)`)，epoll 只需要调用 epoll_wait 检测和遍历 就绪事件链表 即可 (时间复杂度 `O(1)`)。
+
+    - 可以想象一下，假如文件描述符有 10000 个，平均每次就绪事件为 10 个:
+
+        - select、poll 每次主动遍历所有文件描述符，一共 10000 次操作
+        - epoll 只需要判断 就绪事件链表 是否为空 (1 次操作)，然后遍历链表 (10 次操作)，一共 11 次操作
+
+        - 从图中可以看到，如果文件描述符数量在 1000 个以内，三者之间几乎没有性能差异。
+        ![image](./Pictures/linux-kernel/io-multiplexing-select、poll、epoll的性能差异.avif)
+
+    - epoll 的实现主要使用到了2种数据结构:
+
+        - 1.红黑树：管理内核中的 所有文件描述符，因为红黑树插入、更新、删除操作时间复杂度都是 O(log N), 避免了轮询遍历时的 O(N) 复杂度
+
+        - 2.双向链表：存储 就绪事件
+
+- 必须要使用 epoll 吗 ?
+
+    - 在大量并发连接的场景中 (例如 Web Server)，毫无疑问的首选方案是 epoll, 那么 select 和 poll 是不是就一无是处呢？
+
+    - 当然不是，简单来说:
+        - select, poll 适合连接数量很少，但是每个连接都很活跃的场景
+        - epoll 适合连接数量很多，但是活跃连接很少的场景，毕竟 epoll 的事件通知、回调机制也会带来系统开销
+
+- epoll 主要的几个函数:
+
+    - epoll_create(): 创建一个 epoll 文件描述符，这是一个内核对象，用于管理所有被监听的文件描述符 (套接字)
+    - epoll_ctl(): 添加、删除、修改某个具体的文件描述符 (操作的是 红黑树数据结构)
+    - epoll_wait(): 等待已经就绪事件的文件描述符 (操作的是 双向链表数据结构)，如果没有文件描述符就绪，调用线程会进入挂起等待，直到有文件描述符变为 就绪或超时
+
+    - 应用程序系统调用 epoll_ctl 时采用事件通知回调方式，例如调用 add 操作时，不仅将文件描述符加入到内核的红黑树中 (树中节点以文件描述符 fd 对象进行对比，所以重复添加也没什么影响)，同时事件还向内核注册了对应的回调函数，这样在某个事件就绪时，主动调用回调函数，然后回调函数会把该事件加入到 `就绪事件链表` 中。
 
     ```c
     int s = socket(AF_INET, SOCK_STREAM, 0);
@@ -2854,122 +3219,207 @@ systemd-cgls -k | grep kworker
     }
     ```
 
-    - 使用事件驱动的机制，内核里维护了一个链表来记录就绪事件
+- epoll 工作流程翻译为简单的伪代码。
 
-        - 当某个 socket 有事件发生时，通过回调函数，内核会将其加入到这个就绪事件列表中，当用户调用 epoll_wait() 函数时，只会返回有事件发生的文件描述符的个数，不需要像 select/poll 那样轮询扫描整个 socket 集合，大大提高了检测的效率。
+    ```py
+    # 初始化，创建一个 epoll 文件描述符实例
+    epoll_fd = epoll_create()
 
-        ![image](./Pictures/linux-kernel/io-multiplexing-epoll.gif)
+    # 添加要监听的文件描述符到 epoll 实例
+    epoll_ctl(epoll_fd, ADD, listen_sock, READ_EVENT)
 
-        ![image](./Pictures/linux-kernel/io-multiplexing-epoll.avif)
+    # 主循环
+    while True:
+      # 等待事件发生
+      events = epoll_wait(epoll_fd)
 
-    - 两种事件触发机制：
+      # 遍历返回的就绪事件链表
+      for event in events:
+          if event.fd == listen_sock:
+              # 新的客户端连接
+              conn_sock = accept(listen_sock)
+              # 将连接对应的文件描述符添加到红黑树
+              epoll_ctl(epoll_fd, ADD, conn_sock, READ_EVENT)
+          else:
+              # 处理现有连接的事件
+              if event.type == READ_EVENT:
+                  data = read(event.fd)
+                  if data:
+                      # 处理读取到的数据
+                      process(data)
+                  else:
+                      # 将连接对应的文件描述符从红黑树中删除
+                      epoll_ctl(epoll_fd, REMOVE, event.fd)
+                      # 连接关闭
+                      close(event.fd)
+    ```
 
-        - 边缘触发（edge-triggered，ET）：当 epoll_wait 检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用 epoll_wait 时，不会再次响应应用程序并通知此事件。
+- 使用事件驱动的机制，内核里维护了一个链表来记录就绪事件
 
-            - 程序会一直执行 I/O 操作，直到系统调用（如 read 和 write）返回错误，错误类型为 EAGAIN 或 EWOULDBLOCK。
+    - 当某个 socket 有事件发生时，通过回调函数，内核会将其加入到这个就绪事件列表中，当用户调用 epoll_wait() 函数时，只会返回有事件发生的文件描述符的个数，不需要像 select/poll 那样轮询扫描整个 socket 集合，大大提高了检测的效率。
 
-            - 你的快递被放到了一个快递箱里，如果快递箱只会通过短信通知你一次，即使你一直没有去取，它也不会再发送第二条短信提醒你
+    ![image](./Pictures/linux-kernel/io-multiplexing-epoll.gif)
 
-        - 水平触发（level-triggered，LT）（默认）：当 epoll_wait 检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用 epoll_wait 时，会再次响应应用程序并通知此事件。
+    ![image](./Pictures/linux-kernel/io-multiplexing-epoll.avif)
 
-            - 如果快递箱发现你的快递没有被取出，它就会不停地发短信通知你，直到你取出了快递，它才消停
+- 两种事件触发机制：
 
-        - 边缘触发（ET）相比水平触发（LT），效率更高，减少 `epoll_wait` 的系统调用次数
+    - 边缘触发（edge-triggered，ET）：*内核只会通知一次*。当 epoll_wait 检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用 epoll_wait 时，不会再次响应应用程序并通知此事件。
 
-            - select/poll 只有水平触发模式，epoll 默认是水平触发
+        - 程序会一直执行 I/O 操作，直到系统调用（如 read 和 write）返回错误，错误类型为 EAGAIN 或 EWOULDBLOCK。
 
-        - [大佬的实验](https://github.com/cheerfuldustin/test_epoll_lt_and_et)： 客户端都是输入 “abcdefgh” 8 个字符，服务端每次接收 2 个字符。
+        - 你的快递被放到了一个快递箱里，如果快递箱只会通过短信通知你一次，即使你一直没有去取，它也不会再发送第二条短信提醒你
 
-            - 水平触发：服务端 4 次循环每次都能取到 2 个字符，直到 8 个字符全部读完。
-            ![image](./Pictures/linux-kernel/io-multiplexing-epoll-lt.avif)
+    - 水平触发（level-triggered，LT）（默认）：*内核会通知多次*。当 epoll_wait 检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用 epoll_wait 时，会再次响应应用程序并通知此事件，直到应用程序处理完成为止。
 
-            - 边缘触发：读到 2 个字符后这个读就绪事件就没有了。等客户端再输入一个字符串后，服务端关注到了数据的 “变化” 继续从缓冲区读接下来的 2 个字符 “c” 和”d”。
-            ![image](./Pictures/linux-kernel/io-multiplexing-epoll-et.avif)
+        - 如果快递箱发现你的快递没有被取出，它就会不停地发短信通知你，直到你取出了快递，它才消停
 
-- [腾讯技术工程：十个问题理解 Linux epoll 工作原理](https://cloud.tencent.com/developer/article/1831360?areaSource=103001.1&traceId=BvF3fKyDKtNgcpPoiZcYP)
+    - 边缘触发（ET）相比水平触发（LT），效率更高，减少 `epoll_wait` 的系统调用次数
 
-    ![image](./Pictures/linux-kernel/io-multiplexing-epoll1.avif)
+        - select/poll 只有水平触发模式，epoll 默认是水平触发
 
-    - 那什么样的 fd 才可以被 epoll 监视呢？
+    - [大佬的实验](https://github.com/cheerfuldustin/test_epoll_lt_and_et)： 客户端都是输入 “abcdefgh” 8 个字符，服务端每次接收 2 个字符。
 
-        - 底层驱动实现了 `file_operations` 中 poll 函数的文件类型才可以被 epoll 监视！socket 类型的文件驱动是实现了 poll 函数的，因此才可以被 epoll 监视。
+        - 水平触发：服务端 4 次循环每次都能取到 2 个字符，直到 8 个字符全部读完。
+        ![image](./Pictures/linux-kernel/io-multiplexing-epoll-lt.avif)
 
-    - ep->wq 的作用是什么？
+        - 边缘触发：读到 2 个字符后这个读就绪事件就没有了。等客户端再输入一个字符串后，服务端关注到了数据的 “变化” 继续从缓冲区读接下来的 2 个字符 “c” 和”d”。
+        ![image](./Pictures/linux-kernel/io-multiplexing-epoll-et.avif)
 
-        - wq 是一个等待队列，保存对某一个 epoll 实例调用 epoll_wait() 的所有进程。一个进程调用 epoll_wait() 后，如果没有事件发生，就会放到 ep->wq 里；当 epoll 实例监视的文件上有事件发生后，在唤醒wq队列上的进程
+#### [腾讯技术工程：十个问题理解 Linux epoll 工作原理](https://cloud.tencent.com/developer/article/1831360?areaSource=103001.1&traceId=BvF3fKyDKtNgcpPoiZcYP)
 
-    - 什么是 epoll 惊群？
+![image](./Pictures/linux-kernel/io-multiplexing-epoll1.avif)
 
-        - 多个进程等待在 ep->wq 上，事件触发后所有进程都被唤醒，但只有其中 1 个进程能够成功继续执行的现象。其他被白白唤起的进程，导致开销
+- 那什么样的 fd 才可以被 epoll 监视呢？
 
-        - 解决方法：内核提供了 `EPOLLEXCLUSIVE` 选项和 `SO_REUSEPORT` 选项
+    - 底层驱动实现了 `file_operations` 中 poll 函数的文件类型才可以被 epoll 监视！socket 类型的文件驱动是实现了 poll 函数的，因此才可以被 epoll 监视。
 
-            - `EPOLLEXCLUSIVE`：只唤起排在队列最前面的 1 个进程
-            - `SO_REUSEPORT`：每个进程自己都有一个独立的 epoll 实例，内核来决策把连接分配给哪个 epoll
-        - nginx的解决方法：配置加入`accept_mutex`
+- ep->wq 的作用是什么？
 
-    - ep->poll_wait 的作用是什么？
+    - wq 是一个等待队列，保存对某一个 epoll 实例调用 epoll_wait() 的所有进程。一个进程调用 epoll_wait() 后，如果没有事件发生，就会放到 ep->wq 里；当 epoll 实例监视的文件上有事件发生后，在唤醒wq队列上的进程
 
-        - epoll 也是一种文件类型。也实现了 file_operations 中的 poll 函数，因此 epoll 类型的 fd 可以被其他 epoll 实例监视。
+- ep->poll_wait 的作用是什么？
 
-        - ep->poll_wait 也是一个等待队列。当被监视的文件是一个 **epoll 类型** 时，需要用这个等待队列来处理递归唤醒。
+    - epoll 也是一种文件类型。也实现了 file_operations 中的 poll 函数，因此 epoll 类型的 fd 可以被其他 epoll 实例监视。
 
-        - 一个 epoll 实例监视了另一个 epoll 就会出现递归
-            - epollfd1 监视了 2 个 “非 epoll” 类型的 fd
-            - epollfd2 监视了 epollfd1 和 2 个 “非 epoll” 类型的 fd
+    - ep->poll_wait 也是一个等待队列。当被监视的文件是一个 **epoll 类型** 时，需要用这个等待队列来处理递归唤醒。
 
-            ![image](./Pictures/linux-kernel/io-multiplexing-epoll-poll_wait.avif)
+    - 一个 epoll 实例监视了另一个 epoll 就会出现递归
+        - epollfd1 监视了 2 个 “非 epoll” 类型的 fd
+        - epollfd2 监视了 epollfd1 和 2 个 “非 epoll” 类型的 fd
 
-    - ep->rdllist 的作用是什么？
+        ![image](./Pictures/linux-kernel/io-multiplexing-epoll-poll_wait.avif)
 
-        - rdlist是就绪事件的 fd 组成的链表
+- ep->rdllist 的作用是什么？
 
-        - 扫描 ep->rdllist 链表，内核可以轻松获取当前有事件触发的 fd。而不是像 select()/poll() 那样全量扫描所有被监视的 fd，再从中找出有事件就绪的。
+    - rdlist是就绪事件的 fd 组成的链表
 
-    - 事件就绪的 fd 会 “主动” 跑到 rdllist 中去，而不用全量扫描就能找到它们呢？
+    - 扫描 ep->rdllist 链表，内核可以轻松获取当前有事件触发的 fd。而不是像 select()/poll() 那样全量扫描所有被监视的 fd，再从中找出有事件就绪的。
 
-        - 调用 epoll_ctl 新增一个被监视的 fd 时，都会注册一下这个 fd 的回调函数 ep_poll_callback
+- 事件就绪的 fd 会 “主动” 跑到 rdllist 中去，而不用全量扫描就能找到它们呢？
 
-        - 当网卡收到数据包会触发一个中断，中断处理函数再回调 ep_poll_callback 将这个 fd 所属的 “epitem” 添加至 epoll 实例中的 rdllist 中。
+    - 调用 epoll_ctl 新增一个被监视的 fd 时，都会注册一下这个 fd 的回调函数 ep_poll_callback
 
-    - ep->ovflist 的作用是什么？
+    - 当网卡收到数据包会触发一个中断，中断处理函数再回调 ep_poll_callback 将这个 fd 所属的 “epitem” 添加至 epoll 实例中的 rdllist 中。
 
-        - 由于 rdllist 链表业务非常繁忙，所以在复制数据到用户空间时，加了一个 ep->mtx 互斥锁来保护 epoll 自身数据结构线程安全
+- ep->ovflist 的作用是什么？
 
-        - 但加锁期间很可能有新事件源源不断地产生，新触发的事件需要一个地方来收集，不然就丢事件了。这个用来临时收集新事件的链表就是 ovflist。
+    - 由于 rdllist 链表业务非常繁忙，所以在复制数据到用户空间时，加了一个 ep->mtx 互斥锁来保护 epoll 自身数据结构线程安全
 
-    - txlist 链表是什么？
+    - 但加锁期间很可能有新事件源源不断地产生，新触发的事件需要一个地方来收集，不然就丢事件了。这个用来临时收集新事件的链表就是 ovflist。
 
-        - 这个链表用来最后向用户态复制数据，rdllist 要先把自己的数据全部转移到 txlist，然后 rdllist 自己被清空。ep_send_events_proc 遍历 txlist 处理向用户空间复制，复制成功后如果是水平触发 (LT) 还要把这个事件还回 rdllist，等待下一次 epoll_wait 来获取它。ovflist 上的 fd 会合入 rdllist 上等待下一次扫描
+- txlist 链表是什么？
 
-        ![image](./Pictures/linux-kernel/io-multiplexing-epoll-list.avif)
+    - 这个链表用来最后向用户态复制数据，rdllist 要先把自己的数据全部转移到 txlist，然后 rdllist 自己被清空。ep_send_events_proc 遍历 txlist 处理向用户空间复制，复制成功后如果是水平触发 (LT) 还要把这个事件还回 rdllist，等待下一次 epoll_wait 来获取它。ovflist 上的 fd 会合入 rdllist 上等待下一次扫描
 
-    - epmutex、ep->mtx、ep->lock 3 把锁的区别是？
+    ![image](./Pictures/linux-kernel/io-multiplexing-epoll-list.avif)
 
-        - epmutex 全局互斥锁，只有 3 个地方用到这把锁：
-            - ep_free() 销毁一个 epoll 实例时
-            - eventpoll_release_file() 清理从 epoll 中已经关闭的文件时
-            - epoll_ctl() 时避免 epoll 间嵌套调用时形成死锁
+- epmutex、ep->mtx、ep->lock 3 把锁的区别是？
 
-        - ep->mtx 内部的互斥锁，涉及对 epoll 实例中 rdllist 或红黑树的访问的锁
-            - ep_scan_ready_list() 扫描就绪列表
-            - eventpoll_release_file() 中执行 ep_remove() 删除一个被监视文件
-            - ep_loop_check_proc() 检查 epoll 是否有循环嵌套或过深嵌套
-            - epoll_ctl() 操作被监视文件增删改等处有使用
+    - epmutex 全局互斥锁，只有 3 个地方用到这把锁：
+        - ep_free() 销毁一个 epoll 实例时
+        - eventpoll_release_file() 清理从 epoll 中已经关闭的文件时
+        - epoll_ctl() 时避免 epoll 间嵌套调用时形成死锁
 
-        - ep->lock 内部的自旋锁，用来保护 ep->rdllist 的线程安全
+    - ep->mtx 内部的互斥锁，涉及对 epoll 实例中 rdllist 或红黑树的访问的锁
+        - ep_scan_ready_list() 扫描就绪列表
+        - eventpoll_release_file() 中执行 ep_remove() 删除一个被监视文件
+        - ep_loop_check_proc() 检查 epoll 是否有循环嵌套或过深嵌套
+        - epoll_ctl() 操作被监视文件增删改等处有使用
 
-            - 自旋锁的特点是得不到锁时不会引起进程休眠，所以在 ep_poll_callback 中只能使用 ep->lock，否则就会丢事件。
+    - ep->lock 内部的自旋锁，用来保护 ep->rdllist 的线程安全
 
-    - epoll、epitem、和红黑树间的组织关系
+        - 自旋锁的特点是得不到锁时不会引起进程休眠，所以在 ep_poll_callback 中只能使用 ep->lock，否则就会丢事件。
 
-        ![image](./Pictures/linux-kernel/io-multiplexing-epoll-rdllist.avif)
+- epoll、epitem、和红黑树间的组织关系
 
-### Reactor架构
+    ![image](./Pictures/linux-kernel/io-multiplexing-epoll-rdllist.avif)
 
-- Reactor 模型是网络服务器端用来处理高并发网络 IO 请求的一种编程模型。
-    - 该模型主要有三类处理事件：即连接事件、写事件、读事件
-    - 三个关键角色：即 reactor、acceptor、handler。acceptor负责连接事件，handler负责读写事件，reactor负责事件监听和事件分发。
+
+### 进程/线程模型
+
+#### 主进程 (master) + 多个子进程 (worker)
+
+- 主进程 (master) + 多个子进程 (worker)
+
+    ![image](./Pictures/linux-kernel/io-multiplexing-主进程+子进程模型.avif)
+
+    - 主进程执行 bind() + listen()，创建多个子进程
+    - 每个子进程中，都通过 accept() 或 epoll_wait() 处理连接
+
+- 优点：
+    - 主进程负责事件分发，子进程负责事件处理
+- 缺点：
+    - 需要额外的进程通信开销、主进程可能成为瓶颈
+    - 有惊群问题。什么是 epoll 惊群？多个进程/线程等待在 ep->wq 上，事件触发后所有进程/线程都被唤醒，但只有其中 1 个进程/线程能够成功继续执行的现象。其他被白白唤起的进程，导致开销
+
+        - 解决方法：
+
+            - 内核提供了 `EPOLLEXCLUSIVE` 选项和 `SO_REUSEPORT` 选项
+
+                - `EPOLLEXCLUSIVE`：只唤起排在队列最前面的 1 个进程
+                - `SO_REUSEPORT`：每个进程自己都有一个独立的 epoll 实例，内核来决策把连接分配给哪个 epoll
+
+            - nginx的解决方法：配置加入`accept_mutex`（全局锁）。worker 进程首先需要竞争到锁，只有竞争到锁的进程，才会加入到 epoll 中，这样就确保只有一个 worker 子进程被唤醒。
+
+#### 多进程模型
+
+![image](./Pictures/linux-kernel/io-multiplexing-多进程模型.avif)
+
+所有的进程都监听相同的端口，并且开启 `SO_REUSEPORT` 选项，内核负责对请求进行负载均衡，分配到具体的监听进程，内核确保只有一个进程被唤醒，所以不会出现惊群问题。
+
+多个进程之间通常通过共享监听套接字来处理客户端请求，具体的负载均衡工作交给操作系统，新连接到达后，操作系统会自动分配给一个空闲的工作进程。
+
+由于每个工作进程都是独立的，不会共享内存，避免了进程间通信带来的开销。当然，为了高性能，这种模型依然要依赖底层提供的 IO 多路复用机制、并且以事件驱动的方式来处理具体操作，所以本质上和下文中的 Reactor 模型是一样的 (唯一的区别在于多进程还是多线程)。
+
+- 下面是 Nginx 的多进程监听相同端口示例图。
+![image](./Pictures/linux-kernel/io-multiplexing-nginx多进程模型.avif)
+
+#### 多线程模型
+
+![image](./Pictures/linux-kernel/io-multiplexing-多线程模型.avif)
+
+每个连接由一个单独的线程处理，虽然线程的开销远远小于进程，但是需要处理线程之间的数据同步和共享问题，以及更麻烦的数据竞争和锁 (线程安全性)。
+
+其次，线程开销少只是相对进程来说，当面对海量连接时，`one thread per connection` 的模式注定无法处理。
+
+#### Reactor架构
+
+- 通常由一个主线程监听 I/O 事件，并在事件到达后，分发给相应的事件处理 (回调函数)。
+
+- Reactor 模型是事件驱动的 I/O 多路复用模型的典型代表，通常由以下几个部分组成：
+
+    - 事件多路复用器：如 select、poll、epoll 等，用于监听 I/O 事件变化 (内核实现)
+    - 事件分发器：负责将 I/O 事件分发给相应的事件处理器 (框架开发者来实现)
+    - 事件处理器：处理具体的 I/O 事件 (应用开发者来实现)
+
+- Reactor 模型主要有三类处理事件：即连接事件、写事件、读事件
+    - 三个关键角色：即 reactor、acceptor、handler。
+        - acceptor：负责连接事件
+        - handler：负责读写事件
+        - reactor：负责事件监听和事件分发。
+
+- 这种模型实现相对复杂，尤其是线程安全性方面，但是该模型可以支持高并发处理 (主要通过复用来最小化创建、销毁 进程/线程带来的开销)，并且架构核心的多路复用和事件分发/处理是解耦的，所以扩展性和可维护性很好，这也是大多数主流网络编程框架，使用该模型作为实现的主要原因。
 
 - [小林coding：高性能网络模式：Reactor 和 Proactor](https://www.xiaolincoding.com/os/8_network_system/reactor.html)
 
@@ -3066,7 +3516,7 @@ systemd-cgls -k | grep kworker
 
     ![image](./Pictures/linux-kernel/reactor2.avif)
 
-### Proactor架构
+#### Proactor架构
 
 - Proactor 是异步网络模式
 
@@ -3093,6 +3543,109 @@ systemd-cgls -k | grep kworker
 
     - 而 Windows 里实现了一套完整的支持 socket 的异步编程接口，这套接口就是 IOCP，是由操作系统级别实现的异步 I/O，真正意义上异步 I/O，因此在 Windows 里实现高性能网络程序可以使用效率更高的 Proactor 方案。
 
+### Netty, gnet 等框架
+
+- [洋芋编程：既然有 epoll ，为什么又折腾出 Netty, gnet 等框架 ？](https://mp.weixin.qq.com/s/WVyxhbFknTuVT-Uu3OmOqg)
+
+- 问题：既然 Linux 提供了 epoll 这样的 I/O 多路复用机制，接近内核且高性能，为什么开发者不直接使用 epoll 进行编程？而是在应用层折腾出了类似 Netty (Java), gnet (Golang) 这样的网络编程框架呢？
+    - 毕竟，每多一层封装，系统的整体性能就会有 (主要是数据复制带来的) 损耗。
+
+- 答案其实和简单，总结出来无非是 3 点:
+    - 简化复杂的网络编程
+    - 自定义功能和扩展性
+    - 降低开发成本、提升代码可维护性
+
+- 1.简化复杂的网络编程
+
+    - 编程框架可以屏蔽细节，简化并统一 API，使应用开发者可以专注处理业务逻辑，降低心智负担，提高交付效率和质量。
+
+    - 直接使用 epoll 提供的 API 进行编程时，(Socket) 文件描述符的相关操作的简化图，除此之外，开发者还需要其他的各种底层操作:
+
+        ![image](./Pictures/linux-kernel/io-multiplexing-网络框架.avif)
+
+        - Reactor 模型的实现 (为了有效管理)
+        - I/O 事件处理
+        - 各类网络协议解析
+        - 多线程实现 (为了高性能)
+        - ...
+
+    - 但是有了编程框架之后，就完全不一样了: 框架会处理好所有底层的这些 “脏活累活”，以 TCP 协议为例，最终传递到应用开发者的就是事件名称以及对应的应用数据，应用开发者只需要重复三板斧操作就可以了:
+
+        ![image](./Pictures/linux-kernel/io-multiplexing-网络框架1.avif)
+
+        - 读数据
+        - 处理业务逻辑
+        - 写数据
+
+    - 所以网络编程框架，本质上可以看作是应用层的 TCP/IP 协议栈，只不过处理的 I/O 事件没有内核层的 TCP/IP 协议栈那么多而已。
+
+    - 提升性能和并发处理
+        - 虽然 epoll 提供了高效的 I/O 事件通知机制，但是面对大量并发网络连接时，如何调度事件、充分利用多线程的同时避免竞争条件等问题，epoll 并不负责。这时就需要一个网络编程框架来把这些必要的基础性工作完成，例如封装 Reactor 模型。
+
+        - 此外，框架内部通常实现了很多性能优化，比如常见的 内存池、零拷贝、缓冲区、减少上下文切换的无锁编程 等机制，这些优化细节大大提高了网络应用的性能。
+
+    - 解析复杂的网路协议
+
+        - 一个系统的通信往往由多种网络协议组成:
+
+            - 面向 C 端的 HTTP、WebSocket
+            - 面向 B 端的 TCP、UDP
+            - 系统内部众多服务之间互相调用的 RPC
+            - ...
+        - 应用开发者不可能逐个去实现解析各种网络协议，代码质量难以得到保证，且属于重复性造轮子。
+
+        - 网络编程框架把解析的活儿干完，应用开发者可以专注于 “一把梭” 就可以了。
+
+            - 毕竟，对于大多数项目来说，最复杂的地方就是去实现一套绝对灵活的 “极品” 业务逻辑规则，而不是相对固定的网络协议解析。
+
+    - 网络编程不同于单机编程，除了程序外，整个通信链路中容易出现问题的地方也很多，下面的错误是不是似曾相识:
+
+        - connection timed out
+        - connection refused
+        - no route to host
+        - broken pipe
+        - address already in use
+        - network is unreachable
+        - host unreachable
+        - ...
+
+        - 如果这些错误全部交给应用开发者处理，那么在开始编写业务逻辑之前，代码可能已经变成了这个样子:
+        ![image](./Pictures/linux-kernel/io-multiplexing-网络框架2.avif)
+
+    - 解决跨平台问题
+        - Linux 的 epoll 仅仅是众多平台 I/O 多路复用实现机制其中的一种，如果开发者的系统需要运行在多个不同平台上，就要针对每个平台编写一套系统。
+
+        - 网络编程框架可以根据运行平台环境，(例如通过条件编译) 自动选择对应的 I/O 多路复用机制，真正做到代码 “一次编写，随地运行”。
+
+- 2.自定义功能和扩展性
+
+    - 既然是业务系统，那就说明每个模块、功能必要有优先级排序，几个重要且明显的需求就出来了:
+
+        - 优先运行系统的核心功能
+        - 紧急任务可以临时加塞到任务队列
+        - 可以根据系统运行环境，自定义不同的配置参数
+        - ...
+        - 而这些需求，不可能直接和 epoll API 的调用代码堆叠到一起，此时，就需要借助网络编程框架来进行一个优雅且合理的代码实现分层。
+        ![image](./Pictures/linux-kernel/io-multiplexing-网络框架3.avif)
+
+    - 技术性扩展功能
+        - 现代服务端网络程序中，一些基础组件是必备的，这时就可以直接借助框架来无缝集成，
+
+        - 最常见的也是最必要的就是 应用层的心跳检测机制 了，这一点无需解释太多。此外还有:
+
+            - SSL/TLS 安全层扩展集成
+            - 传输数据压缩
+            - 自动重连/断开
+            - 负载均衡
+            - 网络连接统计、状态上报
+            - 针对 TCP 的粘包/拆包问题 的 编码器/解码器
+            - ...
+
+- 3.降低开发成本和提升代码可维护性
+    - epoll 实现在内核中，提供的 API[11] 自然是 C/C++ 语言版本。
+    - 即使现在 AI 已经可以写代码了，可以编写优秀的 C/C++ 程序的程序员相对较为稀缺，且开发周期较长。相反，使用 Java/Go 直接编写业务代码的程序员有足够的市场供应，这样就可以降低招聘成本和周期，快速迭代产品，投入市场进行验证。毕竟对于一个公司/项目来说，活下去最重要，而活下去靠的是什么？赚钱的业务。
+
+    - 通过网络编程框架，让技术水平一般的程序员，快速写出可以投入生产环境的 “及格代码”。
 
 ## 通用块层
 

@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<title>android</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">Android</a></li>
+<li><a href=".html">原理</a>
+<ul>
+<li><a href=".html">apk</a></li>
+</ul>
+</li>
+<li><a href=".html">第三方优秀资源</a>
+<ul>
+<li><a href=".html">cli</a></li>
+<li><a href=".html">gui</a></li>
+<li><a href=".html">app</a>
+<ul>
+<li><a href=".html">应用管理</a>
+<ul>
+<li><a href=".html">android四大组件</a></li>
+</ul>
+</li>
+<li><a href=".html">文件管理器、云盘</a></li>
+<li><a href=".html">文件互传、远程控制</a></li>
+<li><a href=".html">数据备份</a></li>
+<li><a href=".html">网络相关</a></li>
+<li><a href=".html">隐藏检查</a></li>
+<li><a href=".html">游戏相关</a></li>
+<li><a href=".html">第三方客户端</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href=".html">刷机</a>
+<ul>
+<li><a href=".html">刷入recovery、magisk、lsposed</a></li>
+<li><a href=".html">frida</a></li>
+<li><a href=".html">救砖</a>
+<ul>
+<li><a href=".html">magisk模块变砖</a></li>
+</ul>
+</li>
+<li><a href=".html">rom</a></li>
+<li><a href=".html">GSI</a></li>
+<li><a href=".html">小刘不是程序员：如何挂载安卓系统镜像？</a></li>
+</ul>
+</li>
+<li><a href=".html">电视app</a></li>
+<li><a href=".html">类似项目</a></li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>Android</h1>
+<ul>
+<li>
+<p><a href="https://roadmap.sh/android">Android学习路线</a></p>
+</li>
+<li>
+<p><a href="https://github.com/JsonChao/Awesome-Android-Performance">Awesome-Android-Performance</a></p>
+</li>
+</ul>
+<h1>原理</h1>
+<ul>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1zM4m1Z7Wj">（视频）FlashCorpa：系统进阶支线 Vol.7如何防止设备格机</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1rg4y1M7mh">（视频）小刘不是程序员：Android系统是如何启动的？</a></p>
+</li>
+</ul>
+<h2>apk</h2>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1Xe4y1M7v9">（视频）Janwrice：关于Apks的一切|MT管理器|NP管理器|SAI</a></li>
+</ul>
+<h1>第三方优秀资源</h1>
+<h2>cli</h2>
+<ul>
+<li>
+<p><a href="https://github.com/google/adb-sync">adb-sync</a></p>
+<pre><code class="language-sh"># 手机同步到电脑         adb-sync --reverse /sdcard/Download/ ~/Downloads
+# 电脑同步到手机         adb-sync -d ~/Downloads /sdcard/Download/
+</code></pre>
+</li>
+<li>
+<p><a href="https://github.com/rom1v/sndcpy">sndcpy：将手机音频转发到电脑</a></p>
+</li>
+<li>
+<p><a href="https://github.com/kriswebdev/android_aircrack">android_aircrack：wifi破解</a></p>
+</li>
+</ul>
+<h2>gui</h2>
+<ul>
+<li>
+<p><a href="https://kite.mi.com/#/documents/instructions/quickstart?id=%e5%bf%ab%e9%80%9f%e5%bc%80%e5%a7%8b">kite：小米性能监控工具</a></p>
+</li>
+<li>
+<p><a href="https://qx.wysteam.cn/download/">ADB ToolboX：adb gui只支持windows</a></p>
+</li>
+</ul>
+<h2>app</h2>
+<ul>
+<li>
+<p><a href="https://github.com/microg/GmsCore">GmsCore：谷歌服务框架的开源替代品。该项目是一个开源的替代 Google Play 服务的解决方案，它可以让无法安装或不想用 Google 服务的用户，运行依赖谷歌服务的 Android 应用。</a></p>
+</li>
+<li>
+<p><a href="https://github.com/meefik/busybox">busybox</a></p>
+</li>
+<li>
+<p><a href="https://github.com/hanxinhao000/ZeroTermux">ZeroTermux</a></p>
+<ul>
+<li>ZeroTermux 基于 Termux，整合了非常多的脚本和工具，在国内网络环境中部署更简单。</li>
+<li>功能：
+<ul>
+<li>
+<p>开启 Web 文件管理，通过网页访问 Termux 以及手机存储部分文件（基于FlieBrowser)</p>
+</li>
+<li>
+<p>自带文件管理器管理 Termux 文件</p>
+</li>
+<li>
+<p>一键配置 Termux （换源、美化、安装插件）</p>
+</li>
+<li>
+<p>一键配置 qemu 虚拟机（甚至可以一键安装 windows7 等）</p>
+</li>
+<li>
+<p>可通过脚本一键安装 Linux 发行版（Ubuntu、Kail 等等）</p>
+<ul>
+<li>
+<p>通过 proot 容器部署 Linux 发行版（性能损耗较少）</p>
+<pre><code class="language-sh"># 安装 proot-distro 
+pkg install proot-distro 
+# 列出支持的 Linux 发行版
+proot-distro list
+
+# 安装 Ubuntu
+proot-distro install ubuntu
+# 登录 ubuntu
+proot-distro login ubuntu
+</code></pre>
+</li>
+<li>
+<p>可以通过 Moe 全能脚本、termux-linux-toolx（旧版用的是yutools）这两个脚本工具快速部署Linux 发行版（而且更适合国内网络环境）</p>
+</li>
+</ul>
+</li>
+<li>
+<p>开启 SSH</p>
+<pre><code class="language-sh"># 安装 SSH
+pkg install openssh-server
+# 安装 termux-services 退出 termux 重新启动
+pkg install termux-services -y
+# sshd服务设为自启动
+sv-enable sshd 
+# 取消sshd自启动
+sv-disable sshd 
+# 停止sshd服务
+sv down sshd 
+# 启动sshd服务
+sv up sshd 
+# 查看sshd服务运行状态
+sv status sshd
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/kivy/python-for-android">将 Python 程序变成 Android APK</a></p>
+</li>
+<li>
+<p><a href="https://f-droid.org/">f-droid：只上架开源app的应用商店</a></p>
+<ul>
+<li><a href="https://github.com/Droid-ify/client">f-droid clinet</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/maks/MGit">mgit：git客户端</a></p>
+</li>
+<li>
+<p><a href="https://github.com/whyorean/AuroraStore">AuroraStore：匿名googleplay商店</a></p>
+</li>
+<li>
+<p><a href="https://github.com/TeamNewPipe/NewPipe">NewPipe：youtube开源版，可以按时间顺序浏览up的视频</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fcitx5-android/fcitx5-android">fcitx5：开源输入法</a></p>
+</li>
+<li>
+<p><a href="https://github.com/aidlearning/AidLearning-FrameWork">AidLearning-FrameWork</a></p>
+</li>
+<li>
+<p><a href="https://github.com/termux/termux-app">termux</a></p>
+<ul>
+<li><a href="https://www.sqlsec.com/2018/05/termux.html">Termux 高级终端安装使用配置教程</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/shixinzhang/AndroidBitmapMonitor">AndroidBitmapMonitor：图片内存分析工具</a></p>
+</li>
+<li>
+<p><a href="https://bitwarden.com/download/">bitwarden：密码管理器</a></p>
+</li>
+<li>
+<p><a href="https://github.com/zfdang/Android-Touch-Helper">Android-Touch-Helper：跳过广告</a></p>
+</li>
+<li>
+<p><a href="https://litiaotiao.cn/">李跳跳：跳过广告</a></p>
+</li>
+<li>
+<p><a href="https://github.com/gedoor/MyBookshelf">阅读</a></p>
+</li>
+<li>
+<p><a href="https://github.com/capntrips/KernelFlasher">KernelFlasher：刷、备份、恢复内核</a></p>
+</li>
+<li>
+<p><a href="https://github.com/gkd-kit/gkd">自定义屏幕点击</a></p>
+<ul>
+<li><a href="https://github.com/Adpro-Team/GKD_THS_List">GKD第三方订阅</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/RikkaApps/Shizuku">Shizuku：为其他app解锁高级权限</a></p>
+</li>
+<li>
+<p><a href="https://github.com/pppscn/SmsForwarder">SmsForwarder（短信转发器）：备用机监控，如应用，短信通知等</a></p>
+</li>
+<li>
+<p><a href="https://github.com/f-droid/fdroidclient">fdroidclient</a>免费、开源的 Android 应用商店。该项目是 F-Droid 的 Android 客户端，专门收集各类开源安卓软件（FOSS）的应用商店。</p>
+</li>
+<li>
+<p><a href="https://github.com/AttemptD/AfuseKt-release">AfuseKt：视频播放器</a>支持协议：Alist，SMB，Webdav，Emby（直连），Local，jellyfin（直连），阿里网盘</p>
+</li>
+<li>
+<p><a href="https://github.com/EnjoyingFOSS/feeel">feeel：锻炼动作教学</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Ashinch/ReadYou">ReadYou：rss订阅</a></p>
+</li>
+<li>
+<p><a href="https://github.com/allentown521/FocusReader">FocusReader：rss订阅</a></p>
+</li>
+<li>
+<p><a href="https://github.com/deadlyjack/Acode">Acode：代码编辑工具</a>轻量级的 Web IDE，具有即时预览、控制台和丰富的插件等特点</p>
+<p><img src="./Pictures/android/Acode.avif" alt="image" /></p>
+</li>
+<li>
+<p><a href="https://github.com/xbmc/xbmc">xbmc：kodi服务端</a></p>
+</li>
+<li>
+<p><a href="https://github.com/xbmc/Kore">Kore：kodi客户端</a></p>
+</li>
+<li>
+<p><a href="https://github.com/jellyfin/jellyfin-android">jellyfin-android：jellyfin视频服务的客户端</a></p>
+<ul>
+<li><a href="https://github.com/jellyfin/jellyfin-androidtv">jellyfin-androidtv：电视客户端</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/ente-io/ente">ente</a>：提供端到端加密的服务，内含基于此服务（Ente）的两款产品，它们分别是云相册（免费试用）和 2FA 验证器（永久免费）。永久免费的 Ente Auth，它可帮助你在移动设备上生成并存储两步验证 (2FA) 令牌。</p>
+</li>
+<li>
+<p><a href="https://github.com/niedev/RTranslator">RTranslator：实时翻译</a></p>
+</li>
+<li>
+<p><a href="https://github.com/shell360">shell360：ssh客户端</a></p>
+</li>
+<li>
+<p><a href="https://github.com/xiaoyaocz/dart_simple_live">dart_simple_live：一个 APP 上看各种主流直播平台</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ente-io/ente">Ente Auth：一个开源的双因素认证码管理器</a></p>
+</li>
+<li>
+<p><a href="https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile">tvbox手机版</a></p>
+</li>
+<li>
+<p><a href="https://github.com/yaoxieyoulei/mytv-android">mytv-android：电视直播</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ZCShou/GoGoGo">GoGoGo：地图定位修改</a></p>
+</li>
+<li>
+<p><a href="https://github.com/TeamNewPipe/NewPipe">NewPipe：youtube客户端，免广告、免登陆订阅、有下载功能、免会员观看</a></p>
+</li>
+<li>
+<p><a href="https://github.com/EtchDroid/EtchDroid">EtchDroid：无需root，将img写入插入otg线的u盘</a></p>
+</li>
+<li>
+<p><a href="https://github.com/T8RIN/ImageToolbox">ImageToolbox：Android 设计的图像编辑工具。它完全免费，支持批量处理、滤镜、背景移除、尺寸调整和裁剪等多种功能。</a></p>
+</li>
+<li>
+<p><a href="https://github.com/EXALAB/AnLinux-App">AnLinux-App：安装linux</a></p>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1sK2nYpEEg">在下莫老师：坏了，这回给手机装Linux更简单了，利用Anlinux来手机变电脑</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/chenxiaolong/DualBootPatcher">DualBootPatcher：多重引导。手机多系统启动</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Ium-Lab/Apk.1-Installer">Apk.1-Installer：apk.1安装，针对微信传apk文件</a></p>
+</li>
+<li>
+<p><a href="https://github.com/capntrips/KernelFlasher">KernelFlasher：刷内核</a></p>
+</li>
+<li>
+<p><a href="https://github.com/deltazefiro/Amarok-Hider">Amarok-Hider：隐藏私人文件和应用</a></p>
+</li>
+<li>
+<p><a href="https://github.com/keymapperorg/KeyMapper">KeyMapper：可以自定义 Android 设备的按键、指纹和手势操作。无需 ROOT 权限，支持蓝牙和有线键盘，提供灵活的按键重映射体验。</a></p>
+</li>
+</ul>
+<h3>应用管理</h3>
+<ul>
+<li>
+<p><a href="https://github.com/MuntashirAkon/AppManager">AppManager</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Hamza417/Inure">Inure</a></p>
+</li>
+<li>
+<p><a href="https://github.com/aistra0528/Hail">Hail：冻结应用</a></p>
+</li>
+<li>
+<p><a href="https://github.com/RikkaApps/App-Ops-issue-tracker/releases/tag/files">AppOps：权限管理</a></p>
+</li>
+<li>
+<p><a href="https://play.google.com/store/apps/details?id=com.oasisfeng.island">island：应用隔离、分身</a></p>
+</li>
+<li>
+<p><a href="https://www.luckypatchers.com/">幸运破解器：破解</a></p>
+</li>
+</ul>
+<h4>android四大组件</h4>
+<ul>
+<li>
+<p><a href="https://bbs.letitfly.me/">（写轮眼）论坛</a></p>
+</li>
+<li>
+<p><a href="https://github.com/LibChecker/LibChecker">LibChecker：查看应用的四大组件等</a></p>
+</li>
+<li>
+<p><a href="https://github.com/lihenggui/blocker">blocker：一键关闭广告相关的四大组件</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Tornaco/Thanox">Thanox：需要xposed或magisk安装。可以修改四大组件</a></p>
+<ul>
+<li><a href="https://tornaco.github.io/Thanox-Docs/zh/">官方文档</a></li>
+</ul>
+</li>
+</ul>
+<h3>文件管理器、云盘</h3>
+<ul>
+<li>
+<p><a href="https://github.com/githubXiaowangzi/NP-Manager">np管理器：模仿mt文件管理器</a></p>
+</li>
+<li>
+<p><a href="https://github.com/syncthing/syncthing-android">syncthing：文件同步</a></p>
+</li>
+<li>
+<p><a href="https://github.com/zhanghai/MaterialFiles">MaterialFiles：文件管理器</a></p>
+</li>
+<li>
+<p><a href="https://mixplorer.com">mixplorer</a></p>
+</li>
+<li>
+<p><a href="https://github.com/jing332/AListFlutter">AListFlutter：alist安卓版，局域网视频观看</a></p>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1vq421c7kW">在下莫老师：旧手机变网盘！无需代码，在手机上快速部署Alist</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/liupan1890/aliyunpan/issues/901">蜗牛云盘</a></p>
+</li>
+<li>
+<p><a href="https://github.com/cloud-fs/cloud-fs.github.io/releases">clouddrive：云盘管理</a></p>
+</li>
+</ul>
+<h3>文件互传、远程控制</h3>
+<ul>
+<li>
+<p><a href=".html">unison：intel的手机电脑消息、文件传输</a></p>
+</li>
+<li>
+<p><a href="https://github.com/localsend/localsend">localsend：文件互传</a></p>
+</li>
+<li>
+<p><a href="https://github.com/KDE/kdeconnect-android">kdeconnect：文件传输、剪切板同步、远程控制等</a></p>
+</li>
+<li>
+<p><a href="https://github.com/rustdesk/rustdesk">rustdesk：远程控制</a></p>
+</li>
+</ul>
+<h3>数据备份</h3>
+<ul>
+<li>
+<p><a href="https://github.com/XayahSuSuSu/Android-DataBackup">Android-DataBackup：数据备份</a></p>
+</li>
+<li>
+<p><a href="https://github.com/NeoApplications/Neo-Backup">Neo-Backup</a></p>
+</li>
+<li>
+<p><a href="https://github.com/immich-app/immich">immich：照片和视频的备份解决方案</a></p>
+</li>
+<li>
+<p><a href="https://github.com/nextcloud/android">Nextcloud：私人云盘</a></p>
+<ul>
+<li><a href="https://github.com/pulsejet/memories">memories：Nextcloud的照片管理</a></li>
+</ul>
+</li>
+</ul>
+<h3>网络相关</h3>
+<ul>
+<li>
+<p><a href="https://github.com/VREMSoftwareDevelopment/WiFiAnalyzer">WiFiAnalyzer：WiFi 分析工具</a></p>
+</li>
+<li>
+<p><a href="https://github.com/tailscale/tailscale-android">tailscale：WireGuard vpn</a></p>
+</li>
+<li>
+<p><a href="https://github.com/oxen-io/session-android">session：加密通信</a></p>
+</li>
+<li>
+<p><a href="https://github.com/wanghongenpin/network_proxy_flutter">network_proxy_flutter：支持手机端的免费抓包工具</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ukanth/afwall">afwall：对每个应用的iptable gui版</a></p>
+</li>
+</ul>
+<h3>隐藏检查</h3>
+<ul>
+<li>
+<p><a href="https://github.com/rushiranpise/detection">root等隐藏检查app清单</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Dr-TSNG/NativeDetector">NativeDetector：牛头人</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Dr-TSNG/ApplistDetector">ApplistDetector：隐藏检测（英文）</a></p>
+</li>
+<li>
+<p><a href="https://github.com/byxiaorun/Ruru/releases">ruru：隐藏检测（中文）</a></p>
+</li>
+</ul>
+<h3>游戏相关</h3>
+<ul>
+<li>
+<p><a href="https://github.com/hrydgard/ppsspp">ppsspp：psp模拟器</a></p>
+</li>
+<li>
+<p><a href="https://github.com/brunodev85/winlator/releases/download/v5.1.0/Winlator.Development.apk">Winlator：使用 Wine 和 Box86/Box64 来运行 Windows 应用和游戏</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Swordfish90/Lemuroid">Lemuroid：游戏机模拟器</a></p>
+<ul>
+<li><a href="https://www.emulatorgames.net/roms/">Lemuroid游戏ROM</a></li>
+</ul>
+</li>
+</ul>
+<h3>第三方客户端</h3>
+<ul>
+<li><a href="https://github.com/guozhigq/pilipala">pilipala：bilibili</a></li>
+</ul>
+<h1>刷机</h1>
+<ul>
+<li>
+<p><a href="https://www.xda-developers.com/">xda</a></p>
+</li>
+<li>
+<p><a href="https://xiaomifirmwareupdater.com/">miui下载</a></p>
+</li>
+<li>
+<p><a href="https://xiaomirom.com/series/">miui下载</a></p>
+</li>
+<li>
+<p><a href="https://web.vip.miui.com/page/info/mio/mio/detail?postId=18371653&amp;fromPathname=mioSingleBoard&amp;app_version=dev.20051">miui下载：小米社区</a></p>
+</li>
+<li>
+<p><a href="https://get.pixelexperience.org/">pixelexperience</a></p>
+</li>
+<li>
+<p><a href=".html">进击的Coder：手把手教你搭建完美的 Android 搞机/逆向环境</a></p>
+</li>
+<li>
+<p>查看是否是vbmeta分区</p>
+<pre><code class="language-sh"># 有vbmeta, vbmeta_a, or vbmeta_b,代表是vbmeta分区
+adb shell ls -l /dev/block/by-name
+</code></pre>
+</li>
+<li>
+<p>9008驱动安装</p>
+<ul>
+<li>
+<p><a href="https://www.mediafire.com/file/us1ffpw4i86j3v1/Qualcomm_QDLoader_HS-USB_Driver_Setup.rar/file">高通9008驱动下载</a></p>
+</li>
+<li>
+<p><a href="https://qpsttool.com/qpst-tool-v2-7-496">qpst下载</a></p>
+</li>
+</ul>
+<pre><code class="language-sh"># 未解锁bootloader的收紧，重启进9008
+adb reboot edl
+fastboot oem edl
+</code></pre>
+</li>
+</ul>
+<h2>刷入recovery、magisk、lsposed</h2>
+<ul>
+<li>
+<p>步骤</p>
+<ul>
+<li>
+<p>1.解锁bootloaders</p>
+</li>
+<li>
+<p>2.root</p>
+</li>
+<li>
+<p>3.刷入第三方recovery</p>
+<ul>
+<li>
+<p><a href="https://twrp.me/Devices/">twrp官网下载</a></p>
+</li>
+<li>
+<p><a href="https://orangefox.download/zh-CN">orangefox官网</a></p>
+</li>
+<li>
+<p><a href="https://xdaforums.com/t/xiaomi-mi-10-pbrp-recovery.4664760/">Xiaomi Mi 10 PBRP Recovery</a></p>
+</li>
+<li>
+<p>fastboot安装</p>
+</li>
+</ul>
+<pre><code class="language-sh"># 重启进fastboot
+adb reboot bootloader
+
+# 查看设备
+fastboot devices
+
+# 关闭avb分区。vbmeta.img需要从rom中提取
+fastboot --disable-verity --disable-verification flash vbmeta vbmeta.img
+
+# 刷入twrp
+fastboot flash recovery twrp-3.7.0_12-0-umi.img
+
+# 重启进recovery
+fastboot reboot recovery
+</code></pre>
+<ul>
+<li>免刷进twrp</li>
+</ul>
+<pre><code class="language-sh">fastboot boot twrp-3.7.0_12-0-umi.img
+</code></pre>
+<ul>
+<li><code>adb shell</code>安装（需要root）</li>
+</ul>
+<pre><code class="language-sh">su
+dd if=/sdcard/twrp.img of=/dev/block/bootdevice/by-name/recovery
+</code></pre>
+<ul>
+<li>如果data分区挂载失败，会找不到刷机包。需要格式化data</li>
+</ul>
+</li>
+<li>
+<p>4.<a href="https://github.com/bmax121/APatch">Apatch</a></p>
+<ul>
+<li><a href="https://www.bilibili.com/list/watchlater?bvid=BV1wb4y1P74d">派大宝UI：速通全新内核级ROOT方案APatch，隐藏效果堪比KSU</a>
+<ul>
+<li>android13以上版本的，APatch刷<code>boot.img</code>文件，而面具需要刷的是<code>init_boot.img</code></li>
+</ul>
+<pre><code class="language-sh"># 刷入修补后的boot.img文件
+fastboot flash boot ./apatch_patched_10763_0.10.7_vneh.img
+
+# 重启手机
+fastboot reboot
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>4.<a href="https://github.com/tiann/KernelSU">KernelSU</a></p>
+<ul>
+<li>
+<p><a href="https://github.com/MiCode/Xiaomi_Kernel_OpenSource">小米开源的kernel列表</a></p>
+</li>
+<li>
+<p><a href="https://www.bilibili.com/video/BV1dm4y1h7Py">派大宝UI：【Root玩机】KernelSU 内核root刷入教程</a></p>
+<ul>
+<li>
+<p>下载文件</p>
+<ul>
+<li>
+<p>boot-gz.img.gz后续的文件为联发科机型；boot.img.gz为高通</p>
+</li>
+<li>
+<p>内核要选择与文件名相同的版本</p>
+<ul>
+<li>
+<p>官方没有提供kernel版本（5以前），需要自己编译</p>
+<ul>
+<li><a href="https://www.bilibili.com/video/BV1cX4y127gQ">[系统进阶指南 Vol.5]KernelSU旧内核编译实践教程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>文件解压后为boot.img文件，通过fastboot刷入即可</p>
+<ul>
+<li>magisk模块会自动加载，由于kernelsu是基于kernel的root，可以完美隐藏root，因此fastboot刷入前记得移除shamiko等模块</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>4.<a href="https://github.com/topjohnwu/Magisk">magisk</a></p>
+<ul>
+<li>
+<p>4.<a href="https://github.com/HuskyDG/magisk-files/releases">Magisk Delta</a></p>
+<ul>
+<li>
+<p>delta版和普通版是可以随意切换的，在magisk授予root后，打开根据提升进行修复，选“直接安装（推荐）”选项即可</p>
+<ul>
+<li>
+<p>切换前：由于delta版使用超级用户列表管理root权限，没有隐藏列表，因此记得移除shamiko模块</p>
+<ul>
+<li>开启“强制使用超级用户列表”，更好的隐藏root</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>更新magisk时，如果使用了隐藏改名为Settings记得取消</p>
+</li>
+<li>
+<p><a href="https://github.com/Magisk-Modules-Repo">Magisk模块列表</a></p>
+</li>
+<li>
+<p><a href="https://magisk.suchenqaq.club/">Magisk和xposed模块资源分享</a></p>
+</li>
+<li>
+<p><a href="https://github.com/DerGoogler/MMRL">MMRL：magisk、kernelSU、APatch的模块管理</a></p>
+</li>
+<li>
+<p>隐藏：</p>
+<ul>
+<li>
+<p><a href="https://github.com/snake-4/Zygisk-Assistant">Zygisk-Assistant：隐藏root</a></p>
+</li>
+<li>
+<p><a href="https://github.com/HuskyDG/MagiskHide/releases/download/v1.10.3/magiskhide-release.zip">MagiskHide：隐藏root</a></p>
+<ul>
+<li>不依赖<code>zygisk</code>，与shamiko冲突</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/LSPosed/LSPosed.github.io/releases">shamiko：隐藏root</a></p>
+</li>
+<li>
+<p><a href="https://github.com/PaperStrike/safetynet-fix/releases">safetynet-fix魔改版：隐藏bootloader锁</a></p>
+</li>
+<li>
+<p>注意：数据人民币app会残留未隐藏时检测的数据，记得清除全部数据</p>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/Dr-TSNG/ZygiskNext">ZygiskNext：替换内置的zygisk</a></p>
+</li>
+<li>
+<p><a href="https://github.com/symbuzzer/livebootmodule">liveboot：magisk模块版。修改开机启动动画为显示logcat、dmensg</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Magisk-Modules-Repo/ssh">ssh服务器</a></p>
+</li>
+<li>
+<p><a href="https://github.com/gloeyisk/universal-gms-doze">universal-gms-doze：减少google play服务耗电</a></p>
+</li>
+<li>
+<p><a href="https://github.com/rev1si0n/lamda">lamda：逆向及自动化的辅助框架</a></p>
+</li>
+<li>
+<p><a href="https://github.com/yc9559/uperf">uperf：调度</a></p>
+</li>
+<li>
+<p><a href="https://github.com/eritpchy/FingerprintPay">FingerprintPay：指纹支付</a></p>
+</li>
+<li>
+<p><a href="https://github.com/topjohnwu/Fingerface">Fingerface：面部识别</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Asterisk4Magisk/Xray4Magisk">Xray4Magisk：xray core</a></p>
+</li>
+<li>
+<p><a href="https://github.com/lico-n/ZygiskFrida">ZygiskFrida</a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>5.xposed</p>
+<ul>
+<li>
+<p><a href="https://github.com/LSPosed/LSPosed">LSPosed</a></p>
+<ul>
+<li>使用 暗码 <code>*#*#lsposed#*#*</code> 可以启动寄生管理器。</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo">xposed模块列表</a></p>
+</li>
+<li>
+<p><a href="https://github.com/LSPosed/CorePatch">核心破解：降级安装</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Dr-TSNG/Hide-My-Applist">Hide-My-Applist：隐藏xposed</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/cn.cyanc.xposed.noregionlimits">解除地区限制</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Lerist/FakeLocation">虚拟定位</a></p>
+</li>
+<li>
+<p><a href="https://github.com/kaisar945/Xposed-GodMode">上帝模式（类似ublock那样屏蔽广告的方式，屏蔽app的组件）</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/com.fkzhang.wechatxposed">微x/Qx模块</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Mingyueyixi/MaskWechat">MaskWechat：隐藏微信聊天记录</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/wx.myfriends">微密友 - 隐藏微信好友</a></p>
+</li>
+<li>
+<p><a href="https://github.com/pwh-pwh/wxrecordread">修改微信聊天页面信息</a></p>
+</li>
+<li>
+<p><a href="https://github.com/zhudongya123/WechatChatRoomHelper">微信群消息助手</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fankes/TSBattery">TSBattery：使 QQ、TIM、微信 变得更省电</a></p>
+</li>
+<li>
+<p><a href="https://github.com/nining377/UnblockMusicPro_Xposed">解除网易云</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/com.blanke.diaomao163">网易云换源插件</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/Hook.JiuWu.Xp">HookVip：解锁部分App会员</a></p>
+</li>
+<li>
+<p><a href="https://github.com/shatyuka/Zhiliao">知了：知乎去广告</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/me.zhenxin.thisreallylite">微博极速版去广告</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/com.ext.star.wars">大圣净化</a></p>
+</li>
+<li>
+<p><a href="https://github.com/freedom-introvert/biliSendCommAntifraud">哔哩发评反诈：检测评论是否被吞</a></p>
+</li>
+<li>
+<p><a href="https://github.com/yujincheng08/BiliRoaming">哔哩漫游，解除B站客户端番剧区域限制</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Auto-Accounting/Qianji_auto">Qianji_auto：自动记账</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/io.github.chsbuffer.miuihelper">MIUI 生活质量提升</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/io.github.yangyiyu08.taplusext">miui传送门增强 -- TaplusExtension</a></p>
+</li>
+<li>
+<p><a href="https://github.com/monwf/customiuizer">customiuizer</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Xposed-Modules-Repo/me.jsonet.jshook">Jshook：对应用程序注入rhino/frida，你只需要会js就可以快速实现hook</a></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2><a href="https://frida.re/docs/home/">frida</a></h2>
+<ul>
+<li>
+<p>pc上安装frida</p>
+<pre><code class="language-sh">pip install frida-tools
+</code></pre>
+</li>
+<li>
+<p>手机上安装frida</p>
+<ul>
+<li><a href="https://github.com/frida/frida/releases">下载frida-server</a></li>
+</ul>
+<pre><code class="language-sh">adb push frida-server-16.0.18-android-arm64 /data/local/tmp/
+adb shell &quot;chmod 755 /data/local/tmp/frida-server-16.0.18-android-arm64&quot;
+adb shell &quot;/data/local/tmp/frida-server-16.0.18-android-arm64 &amp;&quot;
+</code></pre>
+</li>
+<li>
+<p>pc上操作</p>
+<pre><code class="language-sh"># 查看手机上的安装应用
+frida-ps -U
+
+</code></pre>
+</li>
+</ul>
+<h2>救砖</h2>
+<h3>magisk模块变砖</h3>
+<ul>
+<li>
+<p>进入<code>/data/adb/modules/</code>（magisk模块目录），删除导致变砖的magisk模块。</p>
+<ul>
+<li>多种方法进入目录删除模块：
+<ul>
+<li>1.twrp删除</li>
+<li>2.使用小米手机自带的recovery安全模式，使用有root权限的文件管理器</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>提取当前刷机包的boot.img，进入fastboot刷入</p>
+</li>
+</ul>
+<h2>rom</h2>
+<ul>
+<li><a href="https://xdaforums.com/t/crdroid-stable-xiaomi-mi-10.4660391/">crdroid：类原生</a></li>
+</ul>
+<h2>GSI</h2>
+<ul>
+<li>
+<p><a href="https://gitlab.com/TrebleInfo/TrebleInfo">TrebleInfo：检查是否支持GSI</a></p>
+</li>
+<li>
+<p><a href="https://github.com/erfanoabdi/ErfanGSIs">ErfanGSIs：制作GSI</a></p>
+</li>
+</ul>
+<h2><a href="https://www.bilibili.com/video/BV1gL411D7hE">小刘不是程序员：如何挂载安卓系统镜像？</a></h2>
+<h1>电视app</h1>
+<ul>
+<li>
+<p>论坛</p>
+<ul>
+<li>
+<p><a href="https://www.znds.com/">智能电视网</a></p>
+</li>
+<li>
+<p><a href="https://space.bilibili.com/13359751">当贝市场：bilibili主页</a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>应用商店</p>
+<ul>
+<li>当贝市场
+<ul>
+<li><a href="https://www.dangbei.com/app/">当贝市场在线地址</a></li>
+</ul>
+</li>
+<li>emoton store：相当于海外版当贝商店</li>
+<li><a href="https://www.tvmao.com/tv/">电视猫在线地址</a></li>
+<li><a href="https://www.hybase.com/shouji/tv/">黑域基地在线地址</a></li>
+</ul>
+</li>
+<li>
+<p>文件管理</p>
+<ul>
+<li>小白文件管理器</li>
+<li><a href="https://www.skyjos.cn/owlfiles/publishing/android_tv/">猫头鹰文件</a></li>
+<li>File Manager Pro+</li>
+<li>es文件管理器</li>
+<li>X-plore</li>
+</ul>
+</li>
+<li>
+<p>浏览器</p>
+<ul>
+<li>emoton浏览器</li>
+<li>via浏览器TV版</li>
+</ul>
+</li>
+<li>
+<p>视频</p>
+<ul>
+<li>
+<p><a href="https://github.com/qist/tvbox">tvbox：这个项目包含tvbox的其他版本和各种配置</a></p>
+<ul>
+<li>https://ghp.ci/https://raw.githubusercontent.com/xianyuyimu/TVBOX-/main/TVBox/%E4%B8%80%E6%9C%A8%E5%A4%9A%E7%BA%BF%E8%B7%AF.json</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/FongMi/Release">OK影视：类似于tvbox</a></p>
+</li>
+<li>
+<p>影视仓：类似于tvbox</p>
+</li>
+<li>
+<p><a href="https://github.com/yaoxieyoulei/mytv-android">mytv-android</a></p>
+</li>
+<li>
+<p>BesTV粤视厅</p>
+</li>
+<li>
+<p><a href="https://github.com/xiaye13579/BBLL">BBLL：第三方bilibili</a></p>
+</li>
+<li>
+<p><a href="https://github.com/yuliskov/SmartTube">smarttube：第三方youtube，没有广告</a></p>
+</li>
+<li>
+<p>YouTube for Fire TV：无需google服务</p>
+</li>
+</ul>
+</li>
+<li>
+<p>播放器</p>
+<ul>
+<li>
+<p><a href="https://kodi.tv/download/">kodi</a></p>
+<ul>
+<li>插件：
+<ul>
+<li>PVR：iptv客户端</li>
+<li>opensubtitles：字幕</li>
+<li>豆瓣刮削器</li>
+<li>speed test：测网速</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/nova-video-player/aos-AVP">nova</a></p>
+</li>
+<li>
+<p><a href="https://www.videolan.org/vlc/download-android.html">vlc</a></p>
+</li>
+<li>
+<p>当贝播放</p>
+</li>
+<li>
+<p><a href="https://github.com/yuliskov/SmartTube">SmartTube</a></p>
+</li>
+</ul>
+</li>
+<li>
+<p>nas</p>
+<ul>
+<li>jellyfin</li>
+<li>emby</li>
+<li>plex</li>
+</ul>
+</li>
+<li>
+<p>ui</p>
+<ul>
+<li>projectivy_launcher</li>
+<li>emotn ui</li>
+<li>当贝桌面</li>
+<li>吾爱出品</li>
+</ul>
+</li>
+<li>
+<p>云盘</p>
+<ul>
+<li>
+<p>阿里云盘第三方</p>
+<ul>
+<li>小白云盘TV版：播放4k没问题，有自动挂载云盘功能，能解析所有音轨，支持kodi、nplayer、mx player播放器。</li>
+<li>阿里云盘TV版：在线搜索资源最丰富，字幕资源最丰富。只支持调用kodi播放器</li>
+<li>蜗牛云盘TV版：支持kodi、mx player播放器</li>
+</ul>
+</li>
+<li>
+<p>天翼云盘TV</p>
+</li>
+<li>
+<p>夸克网盘TV版</p>
+</li>
+<li>
+<p>中国移动云盘</p>
+</li>
+</ul>
+</li>
+<li>
+<p>游戏机模拟器</p>
+<ul>
+<li>爱吾游戏宝盒</li>
+<li>小鸡模拟器</li>
+<li>酷咖游戏</li>
+</ul>
+</li>
+<li>
+<p>ktv</p>
+<ul>
+<li>iktv</li>
+<li>想唱就唱KTV</li>
+</ul>
+</li>
+<li>
+<p>投屏</p>
+<ul>
+<li>当贝投屏</li>
+</ul>
+</li>
+<li>
+<p>adb</p>
+<ul>
+<li>手机使用甲壳虫ADB助手</li>
+<li>手机使用atvTools</li>
+</ul>
+</li>
+<li>
+<p>其他</p>
+<ul>
+<li>AIDA64：查看硬件参数</li>
+<li>米家TV版：控制小米生态链设备</li>
+<li>搜狗输入法海信提取版</li>
+<li>东方财富通tv版</li>
+</ul>
+</li>
+</ul>
+<h1>类似项目</h1>
+<ul>
+<li><a href="https://github.com/fynks/awesome-android-root">awesome-android-root</a></li>
+</ul>

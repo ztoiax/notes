@@ -13,6 +13,7 @@
 * [CSS](#css)
 * [js](#js)
 * [浏览器指纹](#浏览器指纹)
+* [未读](#未读)
 
 <!-- mtoc-end -->
 
@@ -72,6 +73,8 @@
 - [BilibiliSponsorBlock：自动跳过 B 站视频中恰饭片段和开场、结尾动画的浏览器插件](https://github.com/hanydd/BilibiliSponsorBlock)
 
 - [dimmer：黑夜模式](https://github.com/slc3a2/dimmer)
+
+- [nsfw-filter：过滤少儿不宜](https://github.com/nsfw-filter/nsfw-filter)
 
 # CGI和FastCGI
 
@@ -298,3 +301,7 @@
 # 浏览器指纹
 
 - [技术爬爬虾：浏览器指纹是什么？14种指纹背后的技术原理](https://www.bilibili.com/video/BV1VmmNYAE53)
+
+# 未读
+
+- [崔亮的博客：前端学习笔记](https://m.cuiliangblog.cn/catalog/11001293)

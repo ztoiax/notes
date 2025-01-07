@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<title>dmenu</title>
+<link rel="stylesheet" href="file:///home/tz/.config/rucola/default_dark.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+<script>hljs.highlightAll();</script>
+<!-- raw HTML omitted -->
+<ul>
+<li><a href=".html">dmenu 的正确使用方式</a>
+<ul>
+<li><a href=".html">Create a messy file</a>
+<ul>
+<li><a href=".html">Get url head</a></li>
+<li><a href=".html">Get url tail</a></li>
+<li><a href=".html">-o cut</a></li>
+<li><a href=".html">获取上一条命令所输出的网址,并用浏览器打开</a></li>
+<li><a href=".html">For dir regux</a></li>
+<li><a href=".html">Copy the path in the same way</a></li>
+<li><a href=".html">当然也以行为单位，复制命令的输出</a></li>
+</ul>
+</li>
+<li><a href=".html">通过 dmenu menu 二级菜单，可快速获取并复制文件内容，代替 grep</a></li>
+<li><a href=".html">建一个搜索引擎合集脚本，配合 dmenu 使用</a></li>
+</ul>
+</li>
+</ul>
+<!-- raw HTML omitted -->
+<h1>dmenu 的正确使用方式</h1>
+<h3>Create a messy file</h3>
+<pre><code class="language-bash">#my file name is lstest
+12321https://www.google.com/
+123123
+https://www.baidu.com/312321  123123
+https://top.baidu.com/312321  123123
+www.123.123/12312 adfasdf
+321312
+/home/tz/.config/nvim
+123 /home/tz/ 12312312
+123 /home/tz/.config
+</code></pre>
+<h3>Get url head</h3>
+<pre><code class="language-bash">egrep '((http|https)://|www\.)' lstest #your file name
+</code></pre>
+<p><img src="./Pictures/dmenu/1.avif" alt="image" /></p>
+<h3>Get url tail</h3>
+<pre><code class="language-bash">egrep '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
+</code></pre>
+<p><img src="./Pictures/dmenu/2.avif" alt="image" /></p>
+<h3>-o cut</h3>
+<pre><code class="language-bash">egrep -o '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' lstest
+</code></pre>
+<p><img src="./Pictures/dmenu/3.avif" alt="image" /></p>
+<h3>获取上一条命令所输出的网址,并用浏览器打开</h3>
+<pre><code class="language-bash"># add function
+function searchurl {
+    $(history | tail -n 1 | awk '{$1=&quot;&quot;;print $0}') | egrep -o '((http|https)://|www\.)[a-zA-Z1-9.+-/]*' | dmenu -p &quot;search url&quot; -l 10 | xargs xdg-open &amp;&gt; /dev/null
+#如果只需要复制网址，把&quot;xargs xdg-open &amp;&gt; /dev/null&quot; 替换成&quot;xclip -selection clipboard&quot;
+}
+# zsh bindkey
+zle -N searchurl
+# Alt + u
+bindkey &quot;^[u&quot; searchurl
+</code></pre>
+<p><img src="./Pictures/dmenu/4.gif" alt="image" /></p>
+<h3>For dir regux</h3>
+<pre><code class="language-bash">dir=&quot;bin|boot|dev|etc|home|lib|lib64|lost+found|mnt|opt|proc|root|run|sbin|srv|sys|tmp|usr|var&quot;
+egrep -o &quot;/($dir)/[a-zA-Z0-9/.]*&quot; lstest
+</code></pre>
+<p><img src="./Pictures/dmenu/5.avif" alt="image" /></p>
+<h3>Copy the path in the same way</h3>
+<pre><code class="language-bash">function cpdir {
+# set dir varible
+    dir=&quot;bin|boot|dev|etc|home|lib|lib64|lost+found|mnt|opt|proc|root|run|sbin|srv|sys|tmp|usr|var&quot;
+    $(history | tail -n 1 | awk '{$1=&quot;&quot;;print $0}') | egrep -o &quot;/($dir)/[a-zA-Z0-9/.]*&quot; | dmenu -p &quot;copy url&quot; -l 10 | xclip -selection clipboard
+}
+</code></pre>
+<p><img src="./Pictures/dmenu/6.gif" alt="image" /></p>
+<h3>当然也以行为单位，复制命令的输出</h3>
+<pre><code class="language-bash"># 复制上一条执行的命令的输出
+function cpline {
+    $(history | tail -n 1 | awk '{$1=&quot;&quot;;print $0}') | dmenu -p &quot;copy line&quot; -l 10 | xclip -selection clipboard
+}
+
+# 通过历史记录,选择要复制的命令的输出,注意命令会重复执行
+function cpcommand {
+    $(history | sort -nr | awk '{$1=&quot;&quot;;print $0}' | dmenu -p &quot;copy content&quot; -l 10) | xclip -selection clipboard
+}
+</code></pre>
+<p><img src="./Pictures/dmenu/9.gif" alt="image" /></p>
+<h2>通过 dmenu menu 二级菜单，可快速获取并复制文件内容，代替 grep</h2>
+<p><strong>Can search</strong></p>
+<ul>
+<li><code>XK</code></li>
+<li><code>Port</code></li>
+<li><code>other any file</code></li>
+</ul>
+<pre><code class="language-bash"># It is realized by two-layer menu.
+function checkfile {
+    choices=&quot;XK\nport&quot;
+    chosen=$(echo -e &quot;$choices&quot; | dmenu -p &quot;输入你的查找什么&quot;) #the one-layer
+
+    #the two-layer by case realized
+    case &quot;$chosen&quot; in
+        XK) grep '^#' /usr/include/X11/keysymdef.h | dmenu -p &quot;XK&quot; -l 15 | awk '{ print $2 }' | xclip -selection clipboard ;;
+        port) grep -v '^#' /etc/services | dmenu -p &quot;port&quot; -l 15 | awk '{ print $1 }' | xclip -selection clipboard;;
+    esac
+}
+</code></pre>
+<p><img src="./Pictures/dmenu/7.gif" alt="image" /></p>
+<h2>建一个搜索引擎合集脚本，配合 dmenu 使用</h2>
+<p>This is a <a href="https://github.com/ztoiax/userfulscripts/blob/master/dmenu-search.sh" title="With a Title">script code link</a>.</p>
+<p><img src="./Pictures/dmenu/8.gif" alt="image" /></p>
