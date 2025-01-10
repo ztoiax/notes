@@ -3,24 +3,27 @@
 
 * [LNMP](#lnmp)
 * [nginx](#nginx)
+  * [Nginx和Apache的区别](#nginx和apache的区别)
   * [安装nginx](#安装nginx)
     * [源码安装](#源码安装)
     * [yum安装](#yum安装)
-    * [安装第三方模块，以echo模块为例子](#安装第三方模块以echo模块为例子)
-    * [Nginx版本热升级](#nginx版本热升级)
+    * [版本热升级](#版本热升级)
+    * [配置热更新](#配置热更新)
   * [基本命令](#基本命令)
   * [架构](#架构)
     * [master进程](#master进程)
     * [worker进程](#worker进程)
     * [模块](#模块)
+      * [开发第三方模块](#开发第三方模块)
+        * [使用rust语言开发模块](#使用rust语言开发模块)
   * [基本配置](#基本配置)
     * [main块配置](#main块配置)
       * [worker配置](#worker配置)
     * [events块配置](#events块配置)
     * [http块配置](#http块配置)
       * [压缩](#压缩)
-        * [gzip压缩](#gzip压缩)
-        * [Brotli压缩](#brotli压缩)
+        * [gzip压缩算法](#gzip压缩算法)
+        * [Brotli压缩算法](#brotli压缩算法)
     * [server块配置](#server块配置)
       * [server_name、location、root、alias、listen](#server_namelocationrootaliaslisten)
       * [重写规则。比较 return、rewrite 和 try_files 指令](#重写规则比较-returnrewrite-和-try_files-指令)
@@ -36,6 +39,7 @@
       * [aio（异步io）](#aio异步io)
     * [内置变量](#内置变量)
     * [正向代理和反向代理](#正向代理和反向代理)
+      * [upstream指令配置反向代理](#upstream指令配置反向代理)
       * [proxy相关指令](#proxy相关指令)
     * [静态页面](#静态页面)
     * [tomcat](#tomcat)
@@ -60,6 +64,7 @@
       * [7层负载均衡策略](#7层负载均衡策略)
       * [7层负载均衡基本配置](#7层负载均衡基本配置)
       * [多tomcat的7层负载均衡](#多tomcat的7层负载均衡)
+      * [配置跨域 CORS](#配置跨域-cors)
     * [缓存](#缓存)
       * [服务端缓存](#服务端缓存)
         * [配置缓存](#配置缓存)
@@ -77,8 +82,6 @@
       * [http3](#http3)
       * [websocket](#websocket)
     * [autoindex模块： 用户请求以 `/` 结尾时，列出目录结构，可以用于快速搭建静态资源下载网站。](#autoindex模块-用户请求以--结尾时列出目录结构可以用于快速搭建静态资源下载网站)
-    * [配置跨域 CORS](#配置跨域-cors)
-    * [跨域请求头部配置](#跨域请求头部配置)
     * [图片防盗链](#图片防盗链)
     * [适配 PC 或移动设备](#适配-pc-或移动设备)
     * [单页面项目history路由配置](#单页面项目history路由配置)
@@ -91,7 +94,11 @@
     * [open_log_file_cache 日志缓存](#open_log_file_cache-日志缓存)
   * [第三方模块](#第三方模块)
     * [echo模块：可以 echo 变量](#echo模块可以-echo-变量)
-    * [开发第三方模块](#开发第三方模块)
+    * [ngx_waf防火墙模块](#ngx_waf防火墙模块)
+      * [安装](#安装)
+      * [配置](#配置)
+        * [常用配置](#常用配置)
+        * [测试](#测试)
   * [管理](#管理)
     * [auth_basic模块：对访问资源加密，需要用户权限认证](#auth_basic模块对访问资源加密需要用户权限认证)
     * [Stub Status模块：输出nginx的基本状态信息指标。](#stub-status模块输出nginx的基本状态信息指标)
@@ -101,10 +108,14 @@
       * [根据 URL 名称过滤](#根据-url-名称过滤)
     * [对 ua 进行限制](#对-ua-进行限制)
     * [http方法和ip访问控制](#http方法和ip访问控制)
-    * [请求限制：限制同一IP的连接数和并发数](#请求限制限制同一ip的连接数和并发数)
-      * [limit_conn_module模块：限制连接数](#limit_conn_module模块限制连接数)
-      * [limit_req_module模块：限制并发的连接数](#limit_req_module模块限制并发的连接数)
     * [limit_rate模块：限制客户端响应传输速率](#limit_rate模块限制客户端响应传输速率)
+    * [防止攻击](#防止攻击)
+      * [反向代理攻击](#反向代理攻击)
+      * [DDoS攻击](#ddos攻击)
+        * [限流、黑名单防御](#限流黑名单防御)
+      * [请求限制：限制同一IP的连接数和并发数](#请求限制限制同一ip的连接数和并发数)
+        * [limit_conn_module模块：限制连接数](#limit_conn_module模块限制连接数)
+        * [limit_req_module模块：限制并发的连接数](#limit_req_module模块限制并发的连接数)
   * [常见错误与性能优化](#常见错误与性能优化)
     * [每个 worker 没有足够的文件描述符：](#每个-worker-没有足够的文件描述符)
     * [未启用与上游服务器的 keepalive 连接](#未启用与上游服务器的-keepalive-连接)
@@ -120,6 +131,7 @@
       * [njs：是 JavaScript 语言的一个子集，它允许扩展 nginx 的功能](#njs是-javascript-语言的一个子集它允许扩展-nginx-的功能)
     * [客户端](#客户端)
       * [nginx-ui：Nginx 在线管理平台，它开箱即用、功能丰富，支持流量统计、在线查看 Nginx 日志、编辑 Nginx 配置文件、自动检查和重载配置文件等功能。](#nginx-uinginx-在线管理平台它开箱即用功能丰富支持流量统计在线查看-nginx-日志编辑-nginx-配置文件自动检查和重载配置文件等功能)
+      * [nginx-proxy-manager：有漂亮干净的 Web UI。还可以获得受信任的 SSL 证书，并通过单独的配置、自定义和入侵保护来管理多个代理。](#nginx-proxy-manager有漂亮干净的-web-ui还可以获得受信任的-ssl-证书并通过单独的配置自定义和入侵保护来管理多个代理)
       * [ngxtop：日志监控](#ngxtop日志监控)
       * [goaccess 日志监控](#goaccess-日志监控)
       * [rhit:日志浏览器](#rhit日志浏览器)
@@ -144,6 +156,20 @@
 # [nginx](http://nginx.org/en/docs/)
 
 - [技术蛋老师：Nginx入门必须懂3大功能配置 - Web服务器/反向代理/负载均衡](https://www.bilibili.com/video/BV1TZ421b7SD)
+
+## Nginx和Apache的区别
+
+- 相同点
+
+    - web服务器，提供http服务
+    - 可以实现负载均衡和反向代理的功能
+
+- 差异点
+
+    - Nginx是一个基于事件的web服务器；apache是一个基于流程的服务器
+    - Nginx采取异步非阻塞网络IO；Apache采取了同步阻塞网络IO；Nginx的抗高并发能力会更好，可以同时处理更多请求
+    - Nginx更加轻量化，占用更少的内存和资源
+    - Apache性能更稳定，比Nginx的bug要少
 
 ## [安装nginx](http://nginx.org/en/linux_packages.html)
 
@@ -278,55 +304,7 @@ yum install -y yum-utils
     systemctl restart firewalld.service
     ```
 
-### 安装第三方模块，以echo模块为例子
-<span id="echo"></span>
-
-```sh
-# 下载最新的稳定版1.18(使用搜狗镜像)
-wget http://mirrors.sohu.com/nginx/nginx-1.18.0.tar.gz
-tar xvzf nginx-1.18.0.tar.gz
-cd nginx-1.18.0
-
-# 新建一个module目录
-mkdir module
-cd module
-
-# 安装echo模块(由国人章亦春开发)
-git clone https://github.com/openresty/echo-nginx-module.git module/echo-nginx-module
-# 国内下载地址
-git clone https://gitee.com/mirrors/echo-nginx-module.git module/echo-nginx-module
-
-# 模块
-# ssl
---with-http_ssl_module
-# regex正则表达式
---with-pcre
-# 状态页面
---with-http_stub_status_module
-
-# 设置安装目录 和 安装模块
-./configure --prefix=/usr/local/nginx \
-    --add-module=./module/echo-nginx-module \
-    --with-http_ssl_module \
-    --with-pcre \
-    --with-http_stub_status_module \
-    --with-debug
-
-# 编译
-make -j$(nproc)
-# 安装。会生成/usr/local/nginx 目录
-make install
-
-# 设置硬连接到 /bin 目录
-sudo ln /usr/local/nginx/sbin/nginx /bin/nginx
-
-# 启动nginx
-sudo nginx
-```
-
-生成的 `ngx_modules.c` 文件里的 `mgx_modules` 数组表示 nginx 每个模块的优先级,对于`HTTP过滤模块`则相反，越后越优先
-
-### Nginx版本热升级
+### 版本热升级
 
 - [Se7en的架构笔记：Nginx 平滑升级](https://mp.weixin.qq.com/s/zvcZ6uihFPi_xlA33z9vug)
 
@@ -337,27 +315,37 @@ sudo nginx
     ![image](./Pictures/nginx/nginx架构-master进程-热升级.avif)
 
     - 具体流程如下：
-        - 1.将旧Nginx文件换成新Nginx文件（注意备份旧的nginx二进制文件，配置文件）
-        - 2.向master(old)进程发送USR2信号，为了新的 Master 使用 pid.bin 这个文件名，master(old)会把老的 pid 文件改为 pid.oldbin。
+        > 注意：备份旧的nginx二进制文件，配置文件
+        - 1.将旧Nginx文件换成新Nginx文件
+        - 2.向master(old)进程发送`USR2`信号，为了新的 Master 使用 pid.bin 这个文件名，master(old)会把老的 pid 文件改为 pid.oldbin。
         - 3.master进程用新Nginx文件启动master(new)进程。到现在为止，会出现两个 Master 进程：Master(Old) 和 Master (New)
             - 这里新的 Master (New) 进程是怎么样启动的呢？它其实是老的 Master(Old) 进程的子进程，不过这个子进程是使用了新的 binary 文件带入来启动的。
 
-        - 4.向master(old)发送WINCH信号，关闭旧worker进程，观察新worker进程工作情况。
-            - 若升级成功，则向老master进程发送QUIT信号，关闭老master进程
-            - 若升级失败，则需要回滚，向老master发送HUP信号（重读配置文件），向新master发送QUIT信号，关闭新master及worker。
+        - 4.选择升级或回滚
+
+            - 方法1.通过信号 `QUIT` 命令老 master 进程优雅退出。
+            - 方法2（更好的回滚）.向老 master 进程发送 `WINCH` 信号，关闭旧worker进程。而不是向老 master 进程发送 `QUIT` 信号。
+                - 这样老 worker 进程全部退出后，老 master 进程仍然存在。由于老 master 进程是由老版本的 Nginx 二进制文件启动，这样回滚很容易，只要将它的 worker 进程重新拉起，即可向用户提供旧版本服务，同时要求新版本的 Nginx 进行优雅退出即可。
+                - 观察新worker进程工作情况：
+                    - 若升级成功：则向老master进程发送`QUIT`信号，关闭老master进程
+                    - 若升级失败：则需要回滚，向老master发送`HUP`信号（重读配置文件），向新master发送`QUIT`信号，关闭新master及worker。
+
+        - 5.当处理完所有请求后，老版本的 worker 和 master 进程依次退出。当老版本的 master、worker 进程都退出后，根据 Linux 内核的规则，pid 为 1 的系统守护进程将成为新 master 的父进程。此时平滑升级完毕。
 
             - 在一个父进程退出，而它的一个或多个子进程还在运行时，那么这些子进程将成为孤儿进程。孤儿进程将被 init 进程(进程号为1)所收养，并由 init 进程对它们完成状态收集工作。所以老 Master(Old) 进程退出后，新的 Master(Old) 进程并不会退出。
 
     - 如果想回滚，就需要再走一次热升级流程，用备份好的老 Nginx 文件作为新的热升级文件（因此建议备份旧的 Nginx 文件）。
 
-- 热升级主要用到了 USR2 和 WINCH/QUIT 信号。
+- 热升级主要用到了 `USR2` 和 `WINCH`、`QUIT` 信号。
     ![image](./Pictures/nginx/nginx热升级用到的信号.avif)
 
-- 1.备份：直接备份整个目录（包括nginx二进制运行文件），可以剔除日志文件不备份
+- 1.备份：
 
     ```sh
-    # 打包压缩
+    # 打包压缩。直接备份整个目录（包括nginx二进制运行文件），可以剔除日志文件不备份
     tar -zcvf nginx1.11.1.tar-gz nginx1.11.1/
+    # 只备份二进制文件
+    cp /usr/local/nginx/sbin/nginx /usr/local/nginx/sbin/nginx.old
     ```
 
 - 2.查看原有的 nginx 编译参数。如--prefix
@@ -384,39 +372,110 @@ sudo nginx
 
     # 覆盖原来的文件
     cp nginx /bin/nginx
+
+    # -t 检查配置是否正确
+    nginx -t
     ```
 
 - 5.最关键的步骤：
-    - 通过 kill 命令向老 master 进程发送 USR2 信号，让老 master 生成新的子进程（新 master 进程），同时用 exec 函数载入新版本的 Nginx 二进制文件。
+    - 通过 kill 命令向老 master 进程发送 `USR2` 信号，让老 master 生成新的子进程（新 master 进程），同时用 exec 函数载入新版本的 Nginx 二进制文件。
         - 新 master 进程和新 worker 进程会继承老 master 进程的资源，因此它们也能监听 80 端口。
     ```sh
     # 新编译的 nginx, 替换旧 nginx(生成/usr/local/nginx/logs/nginx.pid.oldbin)
     kill -s SIGUSR2 <nginx master pid>
-    # ps 查看 新旧两个版本的 nginx 都在运行
+    # ps 查看 新旧两个版本的 nginx 都在运行，由于新 master 进程和新 worker 进程会继承老 master 进程的资源，因此它们也能监听 80 端口。此时新老 Nginx 同时处理服务。可以看到此时服务可以正常访问。
     ps -ef | grep nginx
     ```
+    ![image](./Pictures/nginx/nginx-热升级.avif)
 
-- 6.向老 master 进程发送 QUIT 信号，当它的 worker 子进程退出后，老 master 进程也会自行退出。
+- 6.选择升级或回滚
 
-    ```sh
-    # kill掉旧版本
-    kill -s SIGQUIT <nginx master old pid>
-    ```
+    - 方法1.向老 master 进程发送 `QUIT` 信号，当它的 worker 子进程退出后，老 master 进程也会自行退出。
+
+        ```sh
+        # kill掉旧版本
+        kill -s SIGQUIT <nginx master old pid>
+
+        # 此时只剩下新的 master 进程和 worker 进程。新 master 进程的父进程变为 pid 为 1 的系统守护进程。
+        # 可以注意到有个进程号为 15506 的 worker 进程，它的用户是 nobody，这个进程是在升级时出现的，等老 master 和 老 worker 进程退出后，新的 worker 进程的用户就是我们指定的 nginx 用户了。
+        ps -ef | grep nginx
+        ```
+        ![image](./Pictures/nginx/nginx-热升级1.avif)
+
+    - 方法2（更好的回滚）.向老 master 进程发送 `WINCH` 信号，关闭旧worker进程。而不是向老 master 进程发送 `QUIT` 信号。
+
+        - 这样老 worker 进程全部退出后，老 master 进程仍然存在。由于老 master 进程是由老版本的 Nginx 二进制文件启动，这样回滚很容易，只要将它的 worker 进程重新拉起，即可向用户提供旧版本服务，同时要求新版本的 Nginx 进行优雅退出即可。
+
+            ```sh
+            kill -WINCH <nginx master old pid>
+
+            # 并且 80 端口是由老 master 进程监听的，新 master 进程和新 worker 进程会继承老 master 进程的资源从而监听 80 端口。
+            netstat -antlp | grep 80
+            tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      9209/nginx: master  
+            ```
+
+        - 观察新worker进程工作情况：
+
+            - 若升级成功：则向老master进程发送`QUIT`信号，关闭老master进程
+
+                ```sh
+                kill -QUIT <nginx master old pid>
+                ```
+
+                - 此时老 master 进程依然存在。
+                ![image](./Pictures/nginx/nginx-热升级2.avif)
+
+            - 若升级失败：则需要回滚，向老master发送`HUP`信号（重读配置文件），向新master发送`QUIT`信号，关闭新master及worker。
+                
+                ```sh
+                kill -HUP <nginx master old pid>
+                ```
+
+                - 查看新拉起的 worker 进程：
+                ![image](./Pictures/nginx/nginx-热升级3.avif)
+
+                ```sh
+                kill -QUIT <nginx master new pid>
+                ```
+
+                - 此时就只剩下老 master 和 老 worker 进程，回滚完成。
+                ![image](./Pictures/nginx/nginx-热升级4.avif)
+
+                ```sh
+                # 最后记得把二进制文件改回老版本的二进制文件。
+                mv /usr/local/nginx/sbin/nginx.old /usr/local/nginx/sbin/nginx
+                ```
 
 - 7.验证nginx升级是否成功
 
     ```sh
     # 查看nginx版本
     ./nginx -v
+
+    # 查看能否访问网页
+    curl 127.0.0.1:80
     ```
 
 - 回滚
     - 通过上述方式升级以后，只保留了新的 master 进程，这时如果需要从新版本回滚到老版本，就得重新执行一次“升级”。
+        - 还有一种更简单的回滚方法，在热升级过程中，向老 master 进程发送 `WINCH` 信号而不是 `QUIT` 信号
+
+### 配置热更新
+
+- 1.热重载-配置热更新
+
+    ![image](./Pictures/nginx/nginx架构-master进程-热重载.avif)
+
+    - 具体流程如下：
+        - 更新nginx.conf配置文件，向master发送SIGHUP信号（`kill -s SIGHUP <nginx master pid>`
+）或执行`nginx -s reload`
+        - Master进程使用新配置，启动新的worker进程，并向所有老的 Worker 进程发送信号，告诉他们可以光荣退休了。
+        - 新的 Worker 在启动后，就开始接收新的请求，而老的 Worker 在收到来自 Master 的信号后就不再接收新的请求，并且在当前进程中的所有未处理完的请求处理完成后再退出。
 
 ## 基本命令
 
 ```sh
-# 查看当前 Nginx 最终的配置
+# 查看当前 Nginx的配置目录，以及输出配置
 nginx -T
 
 # 备份配置
@@ -604,25 +663,13 @@ systemctl status nginx   # 查看 Nginx 运行状态
 
 - 具体包括如下4个主要功能：
 
-    - 1.接受来自外界的信号。其中master循环中的各项标志位就对应着各种信号，如：ngx_quit代表QUIT信号，表示优雅的关闭整个服务。
+    - 1.接受来自外界的信号。其中master循环中的各项标志位就对应着各种信号，如：ngx_quit代表`QUIT`信号，表示优雅的关闭整个服务。
 
-    - 2.向各个worker进程发送信。比如ngx_noaccept代表WINCH信号，表示所有子进程不再接受处理新的连接，由master向所有的子进程发送QUIT信号量。
+    - 2.向各个worker进程发送信。比如ngx_noaccept代表`WINCH`信号，表示所有子进程不再接受处理新的连接，由master向所有的子进程发送`QUIT`信号量。
 
-    - 3.监控worker进程的运行状态。比如ngx_reap代表CHILD信号，表示有子进程意外结束，这时需要监控所有子进程的运行状态，主要由ngx_reap_children完成。
+    - 3.监控worker进程的运行状态。比如ngx_reap代表`CHILD`信号，表示有子进程意外结束，这时需要监控所有子进程的运行状态，主要由ngx_reap_children完成。
 
     - 4.当woker进程退出后（异常情况下），会自动重新启动新的woker进程。主要也是在ngx_reap_children。
-
-- 热更
-
-    - 1.热重载-配置热更
-
-        ![image](./Pictures/nginx/nginx架构-master进程-热重载.avif)
-
-        - 具体流程如下：
-            - 更新nginx.conf配置文件，向master发送SIGHUP信号（`kill -s SIGHUP <nginx master pid>`
-）或执行`nginx -s reload`
-            - Master进程使用新配置，启动新的worker进程，并向所有老的 Worker 进程发送信号，告诉他们可以光荣退休了。
-            - 新的 Worker 在启动后，就开始接收新的请求，而老的 Worker 在收到来自 Master 的信号后就不再接收新的请求，并且在当前进程中的所有未处理完的请求处理完成后再退出。
 
 ### worker进程
 
@@ -675,7 +722,7 @@ systemctl status nginx   # 查看 Nginx 运行状态
 
 - 每个 Worker 进程都是从 Master 进程fork过来，在 Master 进程里面，先建立好需要 listen 的 socket（listenfd）之后，然后再 fork 出多个 Worker 进程。
 
-    - 所有 Worker 进程的 listenfd 会在新连接到来时变得可读，为保证只有一个进程处理该连接（也就是惊群问题），所有 Worker 进程在注册 listenfd 读事件前抢互斥锁accept_mutex，抢到互斥锁的那个进程注册 listenfd 读事件，在读事件里调用 accept 接受该连接。
+    - 所有 Worker 进程的 listenfd 会在新连接到来时变得可读，为保证只有一个进程处理该连接（也就是惊群问题），所有 Worker 进程在注册 listenfd 读事件前抢互斥锁`accept_mutex`，抢到互斥锁的那个进程注册 listenfd 读事件，在读事件里调用 accept 接受该连接。
 
     - 一个 Worker 进程在 accept 这个连接之后，就开始读取、解析、处理请求，在产生数据后再返回给客户端，最后才断开连接，这样一个完整的请求就是这样的了。我们可以看到，一个请求完全由 Worker 进程来处理，而且只在一个 Worker 进程中处理。
 
@@ -732,6 +779,16 @@ systemctl status nginx   # 查看 Nginx 运行状态
 
 ### 模块
 
+- 模块安装分为`静态`和`动态`。
+    - 静态模块：需要重新编译整个 Nginx，花费的时间相对于安装动态模块比较长。
+    - 动态模块：
+        ```nginx
+        # 加载编译好的动态模块
+        load_module "/usr/local/nginx/modules/ngx_http_waf_module.so";
+        ```
+
+    [以Brotli模块安装为例](#Brotli)
+
 - 大量的第三方模块，质量参差不齐，它们严重依赖NGINX的API。NGINX是20年前的软件，当时的服务器架构跟如今已经不可同日而语。软件需要进化，就要做重构，但是API不能轻易改。关注NGINX社区的人知道，Igor亲自设计了另一个跟NGINX不同的软件Unit，这软件不会再支持模块化了，这是他们的选择。
 
 - 每个模块就是一个功能模块，只负责自身的功能，模块之间严格遵循“高内聚，低耦合”的原则。
@@ -743,14 +800,14 @@ systemctl status nginx   # 查看 Nginx 运行状态
     - 邮件服务模块：邮件服务
     - 第三方模块： HTTP Upstream Request Hash模块、Notice模块和HTTP Access Key模块
 
-- 模块从功能上还可以分为以下几种：
+- 模块从功能上还可以分为3种：
 
-    - Handlers（处理器模块）：此类模块直接处理请求，并进行输出内容和修改 headers 信息等操作。
+    - 1.Handlers（处理器模块）：此类模块直接处理请求，并进行输出内容和修改 headers 信息等操作。
         - Handlers 处理器模块一般只能有一个。
 
-    - Filters（过滤器模块）：此类模块主要对其他处理器模块输出的内容进行修改操作，最后由 Nginx 输出。
+    - 2.Filters（过滤器模块）：此类模块主要对其他处理器模块输出的内容进行修改操作，最后由 Nginx 输出。
 
-    - Proxies（代理类模块）：此类模块是 Nginx 的 HTTP Upstream 之类的模块，这些模块主要与后端一些服务比如FastCGI 等进行交互，实现服务代理和负载均衡等功能。
+    - 3.Proxies（代理类模块）：此类模块是 Nginx 的 HTTP Upstream 之类的模块，这些模块主要与后端一些服务比如FastCGI 等进行交互，实现服务代理和负载均衡等功能。
 
     - Nginx（内核）本身做的工作实际很少，当它接到一个 HTTP 请求时，它仅仅是通过查找配置文件将此次请求映射到一个 location block，而此 location 中所配置的各个指令则会启动不同的模块去完成工作，因此模块可以看做 Nginx 真正的劳动工作者。
 
@@ -850,6 +907,24 @@ systemctl status nginx   # 查看 Nginx 运行状态
 | rds-json-nginx-module #使 nginx 支持 json 数据的处理                                |
 | lua-nginx-module                                                                    |
 
+#### 开发第三方模块
+
+- [Se7en的架构笔记：Nginx 第三方模块使用与开发](https://mp.weixin.qq.com/s/u1O6LyhFivHr1QclJhABGg)
+
+##### 使用rust语言开发模块
+
+- [NGINX开源社区：使用 Rust（替代 C 语言）扩展 NGINX](https://mp.weixin.qq.com/s/bq2ntj6PrTXo1iV7Nk7uTg)
+
+- 过去，NGINX 仅支持使用 C 语言编写的模块
+
+- 我们很高兴地宣布推出 ngx-rust 项目 Rustaceans。这是一种使用 Rust 语言编写 NGINX 模块的新方法。
+
+- 这并非我们第一次尝试 Rust 的模块开发。在 Kubernetes 的早期和 service mesh（服务网格）的初级阶段，我们就围绕 Rust 开展了一些工作，为 ngx-rust 项目奠定了坚实的基础。
+
+- 最初，ngx-rust 是为加速与 NGINX 兼容的 Istio 服务网格 产品的开发而创建的。然而，随着时间推移，该项目逐渐被搁置。在此期间，许多社区成员分拆了代码库，或是创建了与 ngx-rust 提供的原始 Rust 绑定 (binding) 示例相关的项目。
+
+- 以下使用ngx-rust，省略...
+
 ## 基本配置
 
 - 配置文件在`/usr/local/nginx/conf/nginx.conf`
@@ -886,13 +961,13 @@ systemctl status nginx   # 查看 Nginx 运行状态
 
 - nginx.conf 配置文件的语法规则
     - 配置文件由指令与指令块构成
-    - 每条指令以 “;” 分号结尾，指令与参数间以空格符号分隔
-    - 指令块以 {} 大括号将多条指令组织在一起
-    - include 语句允许组合多个配置文件以提升可维护性
-    - 通过 # 符号添加注释，提高可读性
-    - 通过 $ 符号使用变量
-    - 部分指令的参数支持正则表达式，例如常用的 location 指令
-    - 括号内有其他指令,则称为 context(上下文),如 events, http, server, and location
+    - 每条指令以 `;` 分号结尾，指令与参数间以空格符号分隔
+    - 指令块以 `{}` 大括号将多条指令组织在一起
+    - `include` 语句允许组合多个配置文件以提升可维护性
+    - 通过 `#` 符号添加注释，提高可读性
+    - 通过 `$` 符号使用变量
+    - 部分指令的参数支持正则表达式，例如常用的 `location` 指令
+    - 括号内有其他指令，则称为 context(上下文),如 events, http, server, and location
     - 内层块会继承外层块的设置，如果有冲突以内层块为主
         - 例子：**http 块** 设置 `gzip on` 而 **location 块** 设置 `gzip off` 结果为 **off**
 
@@ -966,7 +1041,7 @@ thread_pool default threads=32 max_queue=65536;
 
     ```nginx
     # 每个 worker 子进程的最大连接数量（可以打开的最大文件句柄数）。
-    worker_rlimit_nofile_number 20480
+    worker_rlimit_nofile_number 20480;
 
     # worker 子进程异常终止后的 core 文件
     worker_rlimit_core 50M; # 存放大小限制
@@ -1108,7 +1183,10 @@ lingering_time 30s
 
 - JPG/JPEG/PNG：对于这类图片格式数据，虽然它本身已经被压缩过了，不能被 gzip、brotli 处理，但仍然有优化的空间。
 
-##### gzip压缩
+- gzip压缩算法和Brotli压缩算法对比
+![image](./Pictures/nginx/http_compression.avif)
+
+##### gzip压缩算法
 
 - 目前绝大多数的网站都在使用 GZIP 传输 HTML、CSS、JavaScript 等资源文件。
 
@@ -1179,7 +1257,7 @@ http {
     }
     ```
 
-##### Brotli压缩
+##### Brotli压缩算法
 
 - [Brotli](https://github.com/google/ngx_brotli)是Google推出的开源压缩算法，通过变种的LZ77算法、Huffman编码以及二阶文本建模等方式进行数据压缩，与其他压缩算法相比，它有着更高的压缩效率，性能也比我们目前常见的Gzip高17-25%
 
@@ -1187,6 +1265,8 @@ http {
     - Mozilla Firefox >= 44
     - Google Chrome > 49
     - Opera >= 38
+
+<span id="Brotli"></span>
 
 - 下载Brotli模块
     ```sh
@@ -1199,7 +1279,7 @@ http {
     cmake --build . --config Release --target brotlienc
     ```
 
-- 1.nginx安装编译，添加brotli模块（Statically compiled）
+- 1.静态模块安装：nginx安装编译，添加brotli模块（Statically compiled）
     ```sh
     cd nginx-1.x.x
     # 检查模块支持。记得加入之前编译的选项，不然启动nginx时，nginx.conf会报错
@@ -1243,9 +1323,9 @@ http {
     nginx -V | grep -i brotli
     ```
 
-- 2.Dynamically loaded
+- 2.动态模块安装：Dynamically loaded
 
-    - 如果不选择以上的Statically compiled。可以选择这个
+    - 如果不选择以上的静态模块(Statically compiled)。可以选择这个
     ```sh
     cd nginx-1.x.x
     ./configure --with-compat --add-dynamic-module=/path/to/ngx_brotli
@@ -1261,6 +1341,8 @@ http {
           ...
     }
     ```
+
+
 
 - nginx配置
 
@@ -1393,7 +1475,7 @@ http {
 
     - 匹配规则：
 
-        - 匹配优先级：= > ^~ > ~ > ~* > ^~ > 普通匹配
+        - 匹配优先级：`=` > `^~` > `~` > `~*` > `^~` > `普通匹配`
 
         - `=` 精确匹配；
             - 使用 `=` 精确匹配可以加快查找的顺序。
@@ -1439,11 +1521,11 @@ http {
         }
         ```
 
-        - 请求 / 精准匹配A，不再往下查找。
-        - 请求 /index.html 匹配 B。首先查找匹配的前缀字符，找到最长匹配是配置 B，接着又按照顺序查找匹配的正则。结果没有找到，因此使用先前标记的最长匹配，即配置 B。
-        - 请求 /documents/document.html 匹配 C。首先找到最长匹配 C，由于后面没有匹配的正则，所以使用最长匹配 C。
-        - 请求 /images/1.gif匹配 D。首先进行前缀字符的查找，找到最长匹配 D。但是，特殊的是它使用了 ^~ 修饰符，不再进行接下来的正则的匹配查找，因此使用 D。这里，如果没有前面的修饰符，其实最终的通过正则匹配的是 E。
-        - 请求 /documents/1.jpg 匹配 E。首先进行前缀字符的查找，找到最长匹配项 C，继续进行正则查找，找到匹配项 E。
+        - 请求 `/` 精准匹配A，不再往下查找。
+        - 请求 `/index.html` 匹配 B。首先查找匹配的前缀字符，找到最长匹配是配置 B，接着又按照顺序查找匹配的正则。结果没有找到，因此使用先前标记的最长匹配，即配置 B。
+        - 请求 `/documents/document.html` 匹配 C。首先找到最长匹配 C，由于后面没有匹配的正则，所以使用最长匹配 C。
+        - 请求 `/images/1.gif` 匹配 D。首先进行前缀字符的查找，找到最长匹配 D。但是，特殊的是它使用了 ^~ 修饰符，不再进行接下来的正则的匹配查找，因此使用 D。这里，如果没有前面的修饰符，其实最终的通过正则匹配的是 E。
+        - 请求 `/documents/1.jpg` 匹配 E。首先进行前缀字符的查找，找到最长匹配项 C，继续进行正则查找，找到匹配项 E。
 
     - location 中的`@`：
 
@@ -1451,8 +1533,9 @@ http {
 
             ```nginx
             location / {
-                try_files $uri $uri/ @redirectUri
+                try_files $uri $uri/ @redirectUri;
             }
+
             location @redirectUri {
                 # ...do something
             }
@@ -1472,8 +1555,8 @@ http {
         }
         ```
 
-        - 1.不带 / 的情况：Nginx 会找是否有 test 文件。
-        - 2.带 / 的情况：Nginx 会找是否有 test 目录，如果有则找 test 目录下的 html文件（不一定是index.html）
+        - 1.不带 `/` 的情况：Nginx 会找是否有 test 文件。
+        - 2.带 `/` 的情况：Nginx 会找是否有 test 目录，如果有则找 test 目录下的 html文件（不一定是index.html）
 
             - 返回301 Moved Permanently
             ```sh
@@ -1487,7 +1570,7 @@ http {
             curl 127.0.0.1/test/app/index.html
             ```
 
-        - 可以看到带 / 容易会暴露服务器不公开的文件。如果要使uri和文件路径完全一对一建议使用 `=` 的意义
+        - 可以看到带 `/` 容易会暴露服务器不公开的文件。如果要使uri和文件路径完全一对一建议使用 `=` 的意义
             ```nginx
             location = /test/ {
              ...
@@ -1513,14 +1596,14 @@ http {
     ```nginx
     # 当用户访问 www.test.com/image/1.png 时，实际在服务器找的路径是 /opt/nginx/static/image/1.png
     location /image {
-     root /opt/nginx/static;
+        root /opt/nginx/static;
     }
     ```
 
 - `alias`指令：也是指定静态资源目录位置，它只能写在 location 中。
 
-    - root 会将定义路径与 URI 叠加，alias 则只取定义路径。
-    - 使用 alias 末尾一定要添加 `/`
+    - `root` 会将定义路径与 URI 叠加，`alias` 则只取定义路径。
+    - 使用 `alias` 末尾一定要添加 `/`
 
     ```nginx
     # 当用户访问 www.test.com/image/1.png 时，实际在服务器找的路径是 /opt/nginx/static/image/1.png
@@ -1561,28 +1644,28 @@ http {
 
     - 2.控制 NGINX 和 NGINX Plus 内部的处理流，例如，当需要动态生成内容时，将请求转发到应用服务器。`try_files` 指令通常用于此类情形。
 
-- 两个通用的 NGINX 重写指令是 return 和 rewrite，而try_files 指令是将请求定向到应用服务器的便捷方法。
+- 两个通用的 NGINX 重写指令是 `return` 和 `rewrite`，而 `try_files` 指令是将请求定向到应用服务器的便捷方法。
 
-- return 指令：是两个通用指令中较为简单的一个，因此我们建议尽可能使用该指令，而非 rewrite（稍后会详细说明原因和使用场景）。
+- `return` 指令：是两个通用指令中较为简单的一个，因此我们建议尽可能使用该指令，而非 `rewrite`（稍后会详细说明原因和使用场景）。
 
-    - 您可以将 return 添加到 server 或 location 上下文（指定要重写的URL）中，它定义了客户端在后续资源请求中使用的 rewrite 重写后的 URL。
+    - 您可以将 `return` 添加到 server 或 location 上下文（指定要重写的URL）中，它定义了客户端在后续资源请求中使用的 `rewrite` 重写后的 URL。
 
     - 下面的简单示例显示了如何将客户端重定向到新域名：
 
-            ```nginx
-            server {
-                listen 80;
-                listen 443 ssl;
-                server_name www.old-name.com;
-                return 301 $scheme://www.new-name.com$request_uri;
-            }
-            ```
+        ```nginx
+        server {
+            listen 80;
+            listen 443 ssl;
+            server_name www.old-name.com;
+            return 301 $scheme://www.new-name.com$request_uri;
+        }
+        ```
 
-            - return 指令告知 NGINX 停止处理请求，并立即将 301响应码 (Moved Permanently) 和指定的已重写的 URL 发送至客户端。
+        - `return` 指令告知 NGINX 停止处理请求，并立即将 301响应码 (Moved Permanently) 和指定的已重写的 URL 发送至客户端。
 
-            - 重写的 URL 使用两个 NGINX 变量来延用原始请求 URL 中的值
-                - $scheme 表示协议（http 或 https）
-                - $request_uri 表示包含参数的完整 URI。
+        - 重写的 URL 使用两个 NGINX 变量来延用原始请求 URL 中的值
+            - `$scheme` 表示协议（http 或 https）
+            - `$request_uri` 表示包含参数的完整 URI。
 
     - 在某些情况下，您可能希望返回比文本字符串更复杂或更精细的响应。使用 `error_page` 指令，您可为每个 HTTP 代码返回一个完整的自定义 HTML 页面，并更改响应代码或执行重定向。
 
@@ -1605,11 +1688,11 @@ http {
         return 401 "Access denied because token is expired or invalid";
         ```
 
-- rewrite 指令
+- `rewrite` 指令
 
     - 若要测试 URL 之间更复杂的差异、捕获原始 URL 中没有相应 NGINX 变量的元素或者更改（或添加）路径中的元素，该怎么办呢？在这种情况下，您可以使用 rewrite 指令。
 
-    - 与 return 指令一样，在需要重写的 URL 的 server 或 location 上下文中添加 rewrite 指令。这两个指令虽然非常相似，但多有不同，而且正确使用 rewrite 指令的难度可能更大。它的语法很简单：
+    - 与 `return` 指令一样，在需要重写的 URL 的 server 或 location 上下文中添加 `rewrite` 指令。这两个指令虽然非常相似，但多有不同，而且正确使用 `rewrite` 指令的难度可能更大。它的语法很简单：
 
         ```nginx
         rewrite regex URL [flag];
@@ -1623,15 +1706,15 @@ http {
         | permanent | 返回 301 永久重定向                                                   |
 
 
-        - 第一个参数 regex：与指定的正则表达式相匹配（除了匹配 server 或 location 指令以外）时才会重写 URL。
+        - 第一个参数 `regex`：与指定的正则表达式相匹配（除了匹配 server 或 location 指令以外）时才会重写 URL。
 
-        - 第二个区别是 rewrite 指令只能返回 301 或 302响应码。若要返回其他响应码，您需要在 rewrite 指令后添加一个 return 指令
+        - 第二个区别是 `rewrite` 指令只能返回 301 或 302响应码。若要返回其他响应码，您需要在 `rewrite` 指令后添加一个 `return` 指令
 
-        - 最后，rewrite 指令不一定会像 return 指令那样停止 NGINX 对请求的处理，也未必向客户端发送重定向。除非您明确表明（使用标记或 URL 语法）希望 NGINX 停止处理或发送重定向，否则它会在整个配置中查找 rewrite 模块中定义的指令（break、if、return、rewrite 及 set），并依次对其进行处理。
+        - 最后，`rewrite` 指令不一定会像 `return` 指令那样停止 NGINX 对请求的处理，也未必向客户端发送重定向。除非您明确表明（使用标记或 URL 语法）希望 NGINX 停止处理或发送重定向，否则它会在整个配置中查找 `rewrite` 模块中定义的指令（break、if、return、rewrite 及 set），并依次对其进行处理。
 
-            - 如果重写的 URL 与rewrite模块中的后续指令相匹配，NGINX 将对重写的 URL 执行指定的操作（通常会再次重写）。
+            - 如果重写的 URL 与 `rewrite` 模块中的后续指令相匹配，NGINX 将对重写的 URL 执行指定的操作（通常会再次重写）。
 
-            - 例如，如果原始 location 块和其中的 NGINX 重写规则与重写的 URL 相匹配，NGINX 就会进入循环，重复地应用重写，直至达到 10 次内置上限。如前所述，我们建议您尽可能使用 return 指令。
+            - 例如，如果原始 location 块和其中的 NGINX 重写规则与重写的 URL 相匹配，NGINX 就会进入循环，重复地应用重写，直至达到 10 次内置上限。如前所述，我们建议您尽可能使用 `return` 指令。
 
     - 例子：
 
@@ -1659,11 +1742,12 @@ http {
         }
         ```
 
-        - 当访问 fe.lion.club/search 时：会自动帮我们重定向到 https://www.baidu.com。
-
-        - 当访问 fe.lion.club/images/1.jpg 时
-            - 第一步重写 URL 为 fe.lion.club/pics/1.jpg，找到 pics 的 location
-            - 继续重写 URL 为 fe.lion.club/photos/1.jpg，找到 /photos 的 location 后，去 html/photos 目录下寻找 1.jpg 静态资源。
+        - 当访问 `fe.lion.club/search` 时：会自动帮我们重定向到 `https://www.baidu.com。
+`
+        - 当访问 `fe.lion.club/images/1.jpg` 时
+            > 递归
+            - 第一步重写 URL 为 `fe.lion.club/pics/1.jpg`，找到 pics 的 location
+            - 继续重写 URL 为 `fe.lion.club/photos/1.jpg`，找到 /photos 的 location 后，去 html/photos 目录下寻找 1.jpg 静态资源。
 
     - 例子：匹配以字符串 /download 开头且在路径靠后位置包含 /media/ 或 /audio/ 目录的 URL，并用 /mp3/ 替换这些元素和添加相应的文件扩展名 .mp3 或 .ra。
 
@@ -1682,16 +1766,18 @@ http {
         ```
 
         - $1 和 $2 变量捕获未更改的路径元素。
-            - 例如，/download/cdn-west/media/file1 变为 /download/cdn-west/mp3/file1.mp3。
+            - 例如，`/download/cdn-west/media/file1` 变为 `/download/cdn-west/mp3/file1.mp3`。
 
-        - 可以在 rewrite 指令中添加标记，以控制处理流。本例中的 last 标记就是其中之一：它指示 NGINX 跳过当前 server 或 location 块中的任何后续 rewrite 模块指令，并开始搜索与重写的 URL 相匹配的新 location。
+        - 可以在 `rewrite` 指令中添加标记，以控制处理流。本例中的 `last` 标记就是其中之一：它指示 NGINX 跳过当前 server 或 location 块中的任何后续 `rewrite` 模块指令，并开始搜索与重写的 URL 相匹配的新 location。
 
-        - 在本例中，最后的 return 指令表示，如果 URL 与任一 rewrite 指令均不匹配，则会向客户端返回 403 响应码。
+        - 在本例中，最后的 `return` 指令表示，如果 URL 与任一 `rewrite` 指令均不匹配，则会向客户端返回 403 响应码。
 
 
-- try_files 指令
+- `try_files` 指令
 
-    - 与 return 和 rewrite 指令一样，将 try_files 指令添加到 server 或 location 块中。作为参数，它需要一个包含一个或多个文件和目录的列表以及一个最终的 URI：
+    - 与 `return` 和 `rewrite` 指令一样，将 `try_files` 指令添加到 server 或 location 块中。
+    - 作为参数，它需要**一个包含一个或多个**文件和目录的列表以及一个最终的 URI。
+    - try_files 指令指示 NGINX 依次检查文件 $uri 和目录 $uri/ 是否存在。如果文件和目录都不存在，NGINX 将返回一个重定向
 
         ```nginx
         location /images/ {
@@ -1717,7 +1803,7 @@ http {
             fastcgi_param SCRIPT_NAME     $fastcgi_script_name;
             fastcgi_param QUERY_STRING    $args;
 
-            ... other fastcgi_param's
+            # ... other fastcgi_param's
         }
 
         location @drupal {
@@ -1727,7 +1813,7 @@ http {
             fastcgi_param SCRIPT_NAME     /index.php;
             fastcgi_param QUERY_STRING    q=$uri&$args;
 
-            ... other fastcgi_param's
+            # ... other fastcgi_param's
         }
         ```
 
@@ -1753,51 +1839,51 @@ server {
 
 ##### 例子：如果客户端请求的文件不存在，NGINX 会提供默认的 GIF 文件
 
-    - 当客户端请求（例如）http://www.domain.com/images/image1.gif 时，NGINX 会先在适用于该位置的 root 或 alias 指令指定的本地目录中查找 image1.gif（示例代码中未显示）。
+- 当客户端请求（例如）http://www.domain.com/images/image1.gif 时，NGINX 会先在适用于该位置的 root 或 alias 指令指定的本地目录中查找 image1.gif（示例代码中未显示）。
 
-    - 如果查找不到，它就会重定向到 /images/default.gif。该值与第二个 location 指令完全匹配，因此处理停止，NGINX 提供此文件，并将其标记为缓存 30 秒。
+- 如果查找不到，它就会重定向到 /images/default.gif。该值与第二个 location 指令完全匹配，因此处理停止，NGINX 提供此文件，并将其标记为缓存 30 秒。
 
-    ```nginx
-    location /images/ {
-     try_files $uri $uri/ /images/default.gif;
-    }
+```nginx
+location /images/ {
+    try_files $uri $uri/ /images/default.gif;
+}
 
-    location = /images/default.gif {
-     expires 30s;
-    }
-    ```
+location = /images/default.gif {
+    expires 30s;
+}
+```
 
 
-    ```nginx
-    # add 'www'
-    server {
-        listen 80;
-        listen 443 ssl;
-        server_name domain.com;
-        return 301 $scheme://www.domain.com$request_uri;
-    }
+```nginx
+# add 'www'
+server {
+    listen 80;
+    listen 443 ssl;
+    server_name domain.com;
+    return 301 $scheme://www.domain.com$request_uri;
+}
 
-    # remove 'www'
-    server {
-        listen 80;
-        listen 443 ssl;
-        server_name www.domain.com;
-        return 301 $scheme://domain.com$request_uri;
-    }
-    ```
+# remove 'www'
+server {
+    listen 80;
+    listen 443 ssl;
+    server_name www.domain.com;
+    return 301 $scheme://domain.com$request_uri;
+}
+```
 
 - rewrite 需要解释正则表达式 ^(.*)$，并创建一个自定义变量 ($1) —— 实际上相当于 $request_uri 固定变量。
 
-    ```nginx
-    # NOT RECOMMENDED
-    rewrite ^(.*)$ $scheme://www.domain.com$1 permanent;
-    ```
+```nginx
+# NOT RECOMMENDED
+rewrite ^(.*)$ $scheme://www.domain.com$1 permanent;
+```
 
 ##### 例子：将所有流量重定向到正确的域名
 
 - 当请求 URL 与任何 server 和 location 块都不匹配时（可能是因为域名拼写错误），便会将传入流量重定向到网站的主页。
 
-    - 它的工作原理是在 listen 指令中使用 default_server 参数，并在 server_name 指令中将下划线用作参数。
+    - 它的工作原理是在 listen 指令中使用 default_server 参数，并在 server_name 指令中将`_`（下划线）用作参数。
 
     - server_name 指令中将下划线用作参数可避免无意中匹配真实域名
 
@@ -1877,7 +1963,7 @@ server {
 
 - 在 MODXCloud 的这个示例中，有一个资源充当一组 URL 的控制器。您的用户可使用更易读的名称来命名资源，您能够对其进行重写（而非重定向），以便 listing.html 上的控制器执行处理。
 
-- 例如，用户友好型 URL http://mysite.com/listings/123 被重写为由 listing.html 控制器处理的 URL http://mysite.com/listing.html?listing=123。
+- 例如，用户友好型 URL `http://mysite.com/listings/123` 被重写为由 listing.html 控制器处理的 URL `http://mysite.com/listing.html?listing=123`。
 
 ```nginx
 rewrite ^/listings/(.*)$ /listing.html?listing=$1 last;
@@ -1887,7 +1973,7 @@ rewrite ^/listings/(.*)$ /listing.html?listing=$1 last;
 
 - 往往需要和nginx的内置变量配合使用
 
-- if 指令使用起来很棘手，尤其是在 location{} 块中。它通常不会按照预期执行，甚至还会导致出现段错误。
+- `if` 指令使用起来很棘手，尤其是在 location{} 块中。它通常不会按照预期执行，甚至还会导致出现段错误。
 
     - 通常，在 if{} 块中，您可以一直安全使用的指令只有 `return` 和 `rewrite`。
 
@@ -1901,14 +1987,14 @@ rewrite ^/listings/(.*)$ /listing.html?listing=$1 last;
 
     - condition 判断条件：
         - $variable 仅为变量时，值为空或以 0 开头字符串都会被当做 false 处理；
-        - = 或 != 相等或不等；
-        - ~ 正则匹配；
-        - ! ~ 非正则匹配；
-        - ~* 正则匹配，不区分大小写；
-        - -f 或 ! -f 检测文件存在或不存在；
-        - -d 或 ! -d 检测目录存在或不存在；
-        - -e 或 ! -e 检测文件、目录、符号链接等存在或不存在；
-        - -x 或 ! -x 检测文件可以执行或不可执行；
+        - `=` 或 `!=` 相等或不等；
+        - `~` 正则匹配；
+        - `! ~` 非正则匹配；
+        - `~*` 正则匹配，不区分大小写；
+        - `-f` 或 `! -f` 检测文件存在或不存在；
+        - `-d` 或 `! -d` 检测目录存在或不存在；
+        - `-e` 或 `! -e` 检测文件、目录、符号链接等存在或不存在；
+        - `-x` 或 `! -x` 检测文件可以执行或不可执行；
 
 - 例子：当访问 localhost:8080/images/ 时，会进入 if 判断里面执行 rewrite 命令。
 
@@ -2133,7 +2219,11 @@ location /video/ {
 
     - 正向代理：客户端无法主动或者不打算主动去向某服务器发起请求，而是委托了 Nginx 代理服务器去向服务器发起请求，并且获得处理结果，返回给客户端。(类似于中介)
 
+        - 像VPN就是正向代理，一般在客户端（浏览器）中配置代理服务器的相关信息。
+
         - 客户端可以察觉。(360，火绒可能也是正向代理)
+
+        - 对服务器端来说是透明的。
 
         ```nginx
         # 正向代理配置
@@ -2149,11 +2239,15 @@ location /video/ {
         }
         ```
 
-    - 反向代理：后将请求转发给内部网络上的服务器，并将从服务器上得到的结果返回给 internet 上请求连接的客户端。
+    - 反向代理：客户端发送请求到代理服务器，由代理服务器转发给相应的Web服务器进行处理，最终返回结果给客户端。
 
         - 简单来说：访问不同的路径，就去不同的端口
 
-        - 客户端无法察觉。隐藏真实服务器
+        - 像Nginx就是反向代理服务器软件，对客户端暴露的其实是一个VIP，不是真实的Web服务器的IP。
+
+        - 反向代理的是对象是Web服务器端，代理服务器和Web服务端属于同一个LAN，对客户端来说是透明的。
+
+            - 客户端无法察觉。隐藏真实服务器
 
         ```nginx
         server {
@@ -2195,9 +2289,9 @@ location /video/ {
     - 2.图片测试: 在浏览器里输入`127.0.0.1:8080/YouPictureName.png`:
       ![image](./Pictures/nginx/proxy1.avif)
 
-- `proxy_pass`指令两种用法的区别就是带 / 和不带 / ，在配置代理时它们的区别可大了：
+- `proxy_pass`指令两种用法的区别：末尾带 `/` 和`不带 /` ，在配置代理时它们的区别可大了：
 
-    - 不带 / 意味着 Nginx 不会修改用户 URL，而是直接透传给上游的应用服务器
+    - `不带 /` 意味着 Nginx 不会修改用户 URL，而是直接透传给上游的应用服务器
 
         ```nginx
         location /bbs/{
@@ -2221,7 +2315,7 @@ location /video/ {
         - 请求到达 Nginx 的 URL：/bbs/abc/test.html
         - 请求到达上游应用服务器的 URL：/abc/test.html
 
-    - 并没有拼接上 /bbs，这点和 root与 alias 之间的区别是保持一致的。
+            - 并没有拼接上 `/bbs`，这点和 `root` 与 `alias` 命令之间的区别是保持一致的。
 
 - 子目录
 
@@ -2241,7 +2335,7 @@ location /video/ {
         }
 
         location /github {
-            # 设置为baidu
+            # 设置为github
             proxy_pass https://www.github.com/;
         }
     }
@@ -2249,55 +2343,55 @@ location /video/ {
 
     - 测试：在浏览器里输入`http://127.0.0.1:8080/baidu`和`http://127.0.0.1:8080/github`
 
-- 配置反向代理
+#### upstream指令配置反向代理
 
-    - 两台云服务器，它们的公网 IP 分别是：121.42.11.34 与 121.5.180.193。
+- 两台云服务器，它们的公网 IP 分别是：`1.1.1.1` 与 `2.2.2.2`
 
-    - 121.42.11.34 服务器作为上游服务器，做如下配置
+- 1.1.1.1 服务器作为上游服务器，做如下配置
 
-        ```nginx
-        # /etc/nginx/conf.d/proxy.conf
-        server{
-          listen 8080;
-          server_name localhost;
+    ```nginx
+    # /etc/nginx/conf.d/proxy.conf
+    server{
+      listen 8080;
+      server_name localhost;
 
-          location /proxy/ {
-            root /usr/share/nginx/html/proxy;
-            index index.html;
-          }
-        }
+      location /proxy/ {
+        root /usr/share/nginx/html/proxy;
+        index index.html;
+      }
+    }
 
-        # /usr/share/nginx/html/proxy/index.html
-        <h1> 121.42.11.34 proxy html </h1>
-        ```
+    # /usr/share/nginx/html/proxy/index.html
+    <h1> 1.1.1.1 proxy html </h1>
+    ```
 
-    - 121.5.180.193 服务器作为代理服务器
+- 2.2.2.2 服务器作为代理服务器
 
-        ```nginx
-        # /etc/nginx/conf.d/proxy.conf
-        upstream back_end {
-          server 121.42.11.34:8080 weight=2 max_conns=1000 fail_timeout=10s max_fails=3;
-          keepalive 32;
-          keepalive_requests 80;
-          keepalive_timeout 20s;
-        }
+    ```nginx
+    # /etc/nginx/conf.d/proxy.conf
+    upstream back_end {
+      server 1.1.1.1:8080 weight=2 max_conns=1000 fail_timeout=10s max_fails=3;
+      keepalive 32;
+      keepalive_requests 80;
+      keepalive_timeout 20s;
+    }
 
-        server {
-          listen 80;
-          server_name proxy.lion.club;
-          location /proxy {
-           proxy_pass http://back_end/proxy;
-          }
-        }
-        ```
+    server {
+      listen 80;
+      server_name proxy.lion.club;
+      location /proxy {
+        proxy_pass http://back_end/proxy;
+      }
+    }
+    ```
 
-    - /etc/hosts文件添加`121.5.180.193 proxy.lion.club`
+- `/etc/hosts`文件添加`2.2.2.2 proxy.lion.club`
 
-    - 流程：
-        - 当访问 proxy.lion.club/proxy 时通过 upstream 的配置找到 121.42.11.34:8080；
-        - 因此访问地址变为 http://121.42.11.34:8080/proxy；
-        - 连接到 121.42.11.34 服务器，找到 8080 端口提供的 server；
-        - 通过 server 找到 /usr/share/nginx/html/proxy/index.html 资源，最终展示出来。
+- 流程：
+    - 当访问 `proxy.lion.club/proxy` 时通过 `upstream` 的配置找到 1.1.1.1:8080；
+    - 因此访问地址变为 `http://1.1.1.1:8080/proxy`；
+    - 连接到 `1.1.1.1` 服务器，找到 `8080` 端口提供的 server；
+    - 通过 server 找到 `/usr/share/nginx/html/proxy/index.html` 资源，最终展示出来。
 
 #### proxy相关指令
 
@@ -2344,6 +2438,10 @@ server {
 ```
 
 ### 静态页面
+
+- 动静分离：
+    - 静态页面：交给Nginx处理
+    - 动态页面：交给PHP-FPM模块或Apache处理。
 
 - 静态页面的配置
 
@@ -3305,8 +3403,8 @@ server {
     }
     ```
 
-- 3:ip_hash（客户端 ip 绑定）：每个请求按照访问 Ip（即 Nginx 的前置服务器或客户端 IP）的 hash 结果分配。来自同一个 ip 的请求永远只分配一台服务器。
-    - 需要一个客户只访问一个服务器，那么就需要用 ip_hash 了
+- 3:ip_hash（客户端 ip 绑定）：每个请求按照访问 ip（即 Nginx 的前置服务器或客户端 IP）的 hash 结果分配。
+    - 保证同一ip请求落到同一服务器上。
     - 解决 session 一致问题：比如把登录信息保存到了 session 中，那么跳转到另外一台服务器的时候就需要重新登录了。
 
     ```nginx
@@ -3502,6 +3600,71 @@ server {
     }
 }
 ```
+
+#### 配置跨域 CORS
+
+- 同源：如果两个页面的协议，端口（如果有指定）和域名都相同，则两个页面具有相同的源。
+
+    - 例子：与 URL http://store.company.com/dir/page.html 的源进行对比的
+
+        ```
+        http://store.company.com/dir2/other.html 同源
+        https://store.company.com/secure.html 不同源，协议不同
+        http://store.company.com:81/dir/etc.html 不同源，端口不同
+        http://news.company.com/dir/other.html 不同源，主机不同
+        ```
+
+    - 不同源会有如下限制：
+        - Web 数据层面：同源策略限制了不同源的站点读取当前站点的 Cookie、IndexDB、LocalStorage 等数据。
+        - DOM 层面：同源策略限制了来自不同源的 JavaScript 脚本对当前 DOM 对象读和写的操作。
+        - 网络层面：同源策略限制了通过 XMLHttpRequest 等方式将站点的数据发送给不同源的站点。
+
+- 跨域：同源策略限制了从同一个源加载的文档或脚本如何与来自另一个源的资源进行交互。
+
+    - 这是一个用于隔离潜在恶意文件的重要安全机制。通常不允许不同源间的读操作。
+
+- Nginx 解决跨域的原理：
+
+    - 前端的域名为：fe.server.com
+    - 后端的域名为：dev.server.com
+    - 现在我在 fe.server.com 对 dev.server.com 发起请求一定会出现跨域。
+
+    - 将 server_name 设置为 fe.server.com 然后设置相应的 location 以拦截前端需要跨域的请求，最后将请求代理回 dev.server.com
+
+        - 这样可以完美绕过浏览器的同源策略：fe.server.com 访问 Nginx 的 fe.server.com 属于同源访问，而 Nginx 对服务端转发的请求不会触发浏览器的同源策略。
+
+        ```nginx
+        server {
+         listen      80;
+         server_name  fe.server.com;
+         location / {
+          proxy_pass dev.server.com;
+         }
+        }
+        ```
+
+- 跨域请求头部配置
+
+    ```nginx
+    location / {
+
+         if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain; charset=utf-8';
+            add_header 'Content-Length' 0;
+            return 204;
+         }
+
+         add_header 'Access-Control-Allow-Origin' '*';
+         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
+         add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
+         add_header 'Access-Control-Expose-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
+
+    }
+    ```
+
 
 ### 缓存
 
@@ -4011,7 +4174,7 @@ http {
 
 ###### 例子：配置缓存
 
-- 被代理服务器配置
+- 被代理服务器（上游服务器）配置
 
     - 被代理服务器上需要通知代理服务器缓存内容的时间，否则代理服务器不会对内容进行缓存
     - 通过X-Accel-Expires，expires，Cache-Control "max-age="其中一个参数指定时间。
@@ -4528,80 +4691,6 @@ server {
   ![image](./Pictures/nginx/autoindex.avif)
 
 
-### 配置跨域 CORS
-
-- 同源：如果两个页面的协议，端口（如果有指定）和域名都相同，则两个页面具有相同的源。
-
-    - 例子：与 URL http://store.company.com/dir/page.html 的源进行对比的
-
-        ```
-        http://store.company.com/dir2/other.html 同源
-        https://store.company.com/secure.html 不同源，协议不同
-        http://store.company.com:81/dir/etc.html 不同源，端口不同
-        http://news.company.com/dir/other.html 不同源，主机不同
-        ```
-
-    - 不同源会有如下限制：
-        - Web 数据层面：同源策略限制了不同源的站点读取当前站点的 Cookie、IndexDB、LocalStorage 等数据。
-        - DOM 层面：同源策略限制了来自不同源的 JavaScript 脚本对当前 DOM 对象读和写的操作。
-        - 网络层面：同源策略限制了通过 XMLHttpRequest 等方式将站点的数据发送给不同源的站点。
-
-- 跨域：同源策略限制了从同一个源加载的文档或脚本如何与来自另一个源的资源进行交互。
-
-    - 这是一个用于隔离潜在恶意文件的重要安全机制。通常不允许不同源间的读操作。
-
-- Nginx 解决跨域的原理：
-
-    - 前端的域名为：fe.server.com
-    - 后端的域名为：dev.server.com
-    - 现在我在 fe.server.com 对 dev.server.com 发起请求一定会出现跨域。
-
-    - 将 server_name 设置为 fe.server.com 然后设置相应的 location 以拦截前端需要跨域的请求，最后将请求代理回 dev.server.com
-
-        - 这样可以完美绕过浏览器的同源策略：fe.server.com 访问 Nginx 的 fe.server.com 属于同源访问，而 Nginx 对服务端转发的请求不会触发浏览器的同源策略。
-
-        ```nginx
-        server {
-         listen      80;
-         server_name  fe.server.com;
-         location / {
-          proxy_pass dev.server.com;
-         }
-        }
-        ```
-
-### 跨域请求头部配置
-
-```nginx
-location / {
-
-     if ($request_method = 'OPTIONS') {
-
-        add_header 'Access-Control-Allow-Origin' '*';
-
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-
-        add_header 'Access-Control-Max-Age' 1728000;
-
-        add_header 'Content-Type' 'text/plain; charset=utf-8';
-
-        add_header 'Content-Length' 0;
-
-        return 204;
-
-     }
-
-     add_header 'Access-Control-Allow-Origin' '*';
-
-     add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
-
-     add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
-
-     add_header 'Access-Control-Expose-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
-
-}
-```
-
 ### 图片防盗链
 
 - 防盗链：是网站内容本身不再自己公司的服务器上，使用技术手段直接调用其其他公司的服务器网站数据，并向最终用户提供
@@ -4639,7 +4728,7 @@ server {
 
 - 根据用户设备不同返回不同样式的站点，以前经常使用的是纯前端的自适应布局，但是复杂的网站并不适合响应式，无论是复杂性和易用性上面还是不如分开编写的好，比如我们常见的淘宝、京东。
 
-- 根据用户请求的 user-agent 来判断是返回 PC 还是 H5 站点：
+- 根据用户请求的 `user-agent` 来判断是返回 PC 还是 H5 站点：
 
 ```nginx
 server {
@@ -4899,7 +4988,52 @@ open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;
 
 ### echo模块：可以 echo 变量
 
-[跳转至 echo 模块安装](#echo)
+- 静态模块安装：需要编译nginx
+
+    ```sh
+    # 下载最新的稳定版1.18(使用搜狗镜像)
+    wget http://mirrors.sohu.com/nginx/nginx-1.18.0.tar.gz
+    tar xvzf nginx-1.18.0.tar.gz
+    cd nginx-1.18.0
+
+    # 新建一个module目录
+    mkdir module
+    cd module
+
+    # 安装echo模块(由国人章亦春开发)
+    git clone https://github.com/openresty/echo-nginx-module.git module/echo-nginx-module
+    # 国内下载地址
+    git clone https://gitee.com/mirrors/echo-nginx-module.git module/echo-nginx-module
+
+    # 模块
+    # ssl
+    --with-http_ssl_module
+    # regex正则表达式
+    --with-pcre
+    # 状态页面
+    --with-http_stub_status_module
+
+    # 设置安装目录 和 安装模块
+    ./configure --prefix=/usr/local/nginx \
+        --add-module=./module/echo-nginx-module \
+        --with-http_ssl_module \
+        --with-pcre \
+        --with-http_stub_status_module \
+        --with-debug
+
+    # 编译
+    make -j$(nproc)
+    # 安装。会生成/usr/local/nginx 目录
+    make install
+
+    # 设置硬连接到 /bin 目录
+    sudo ln /usr/local/nginx/sbin/nginx /bin/nginx
+
+    # 启动nginx
+    sudo nginx
+    ```
+
+    - 生成的 `ngx_modules.c` 文件里的 `mgx_modules` 数组表示 nginx 每个模块的优先级,对于`HTTP过滤模块`则相反，越后越优先
 
 - 在 80 端口的 server 下加入:
 
@@ -4914,9 +5048,352 @@ open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;
 
 - 测试：http://127.0.0.1/echo
 
-### 开发第三方模块
+### ngx_waf防火墙模块
 
-- [Se7en的架构笔记：Nginx 第三方模块使用与开发](https://mp.weixin.qq.com/s/u1O6LyhFivHr1QclJhABGg)
+- [奇妙的Linux世界：使用 Nginx 三方扩展 ngx_waf 快速实现一个高性能的 Web 应用防火墙](https://mp.weixin.qq.com/s/9aCFZNXszd4T7LUoL9G9kg)
+
+- 主要功能：
+    - 防御 `CC` 攻击(超出限制后自动拉黑对应 IP 一段时间或者使用验证码做人机识别)，可以支持多种黑白名单(`IP`、`POST`、`URL`、`UA`等等)，还可以提供防护 `SQL` 注入和 `XSS` 工具。
+
+    - 使用简单：配置文件和规则文件书写简单，可读性强
+    - 基础防护：如 IP 或 IP 网段的黑白名单、URI 黑白名单和请求体黑名单等
+    - 高性能：使用高效的 IP 检查算法和缓存机制，支持 IPV4 和 IPV6
+    - 高级防护：兼容 ModSecurity 的规则，你可以使用 OWASP 的核心规则库
+    - 友好爬虫验证：支持验证 Google、Bing、Baidu 和 Yandex 的爬虫并自动放行，避免错误拦截，主要是基于 User-Agent 和 IP 的识别规则
+    - 验证码：支持三种验证码：hCaptcha、reCAPTCHAv2 和 reCAPTCHAv3
+
+- 缓存策略为 `LRU`。
+
+- 开销：`IP` 检查和 `CC` 防御花费常数时间；其它的检查花费 `O(nm)` 的时间
+    - `n` 是相关规则的条数
+    - `m` 为执行正则匹配的时间复杂度
+    - 但是每次检查过后会自动缓存本次检查的结果，下次检查相同的目标时就可以使用缓存而不是检查全部的规则。不会缓存 `POST` 请求体的检查结果。
+
+#### 安装
+
+- Nginx 提供两种安装模块的方式，即「静态链接」和「动态加载」，通过两种方式安装的模块也分别称为「静态模块」和「动态模块」
+
+- 静态模块：安装静态模块需要重新编译整个 Nginx，花费的时间相对于安装动态模块比较长。
+
+     ```sh
+     # 下载对应的Nginx版本
+     # http://nginx.org/en/download.html
+     cd /usr/local/src
+     wget https://nginx.org/download/nginx-1.20.1.tar.gz
+     tar -zxf nginx-1.20.1.tar.gz
+
+     # 使用稳定版的源码
+     cd /usr/local/src
+     git clone -b lts https://github.com/ADD-SP/ngx_waf.git
+
+     # 运行配置脚本
+     cd /usr/local/src/nginx-1.20.1
+     ./configure ARG --add-module=/usr/local/src/ngx_waf
+     sed -i 's/^\(CFLAGS.*\)/\1 \
+         -fstack-protector-strong -Wno-sign-compare/' \
+         objs/Makefile
+
+     # 编译(非并行/并行)
+     make
+     make -j$(nproc)
+
+     # 替换Nginx二进制文件(假设已经安装过)
+     cp objs/nginx /usr/local/nginx/sbin/nginx
+     ```
+
+- 动态模块安装：
+
+    ```sh
+    # 下载对应的Nginx版本
+    # http://nginx.org/en/download.html
+    cd /usr/local/src
+    wget https://nginx.org/download/nginx-1.20.1.tar.gz
+    tar -zxf nginx-1.20.1.tar.gz
+
+    # 使用稳定版的源码
+    cd /usr/local/src
+    git clone -b lts https://github.com/ADD-SP/ngx_waf.git
+
+    # 运行配置脚本
+    cd /usr/local/src/nginx-1.20.1
+    ./configure --add-dynamic-module=/usr/local/src/ngx_waf --with-compat
+    sed -i 's/^\(CFLAGS.*\)/\1 \
+    -fstack-protector-strong -Wno-sign-compare/' \
+    objs/Makefile
+
+    # 开始编译动态模块
+    make modules
+
+    # 将动态模块拷贝到模块目录(关闭服务)
+    cp objs/*.so /usr/local/nginx/modules
+    ```
+
+    - 最后，在 Nginx 的配置文件顶部添加一行，表示加载这个编译好的模块。
+
+        ```nginx
+        load_module "/usr/local/nginx/modules/ngx_http_waf_module.so";
+        ```
+
+#### 配置
+
+- `server` 块中添加配置
+
+- LTS 版本
+
+    ```nginx
+    http {
+        ...
+        server {
+            ...
+            # on/off 表示启用和关闭
+            waf on;
+
+            # 规则文件所在目录的绝对路径，必须以/结尾
+            waf_rule_path /usr/local/src/ngx_waf/assets/rules/;
+
+            # 防火墙工作模式，STD表示标准模式
+            waf_mode STD;
+
+            # CC防御参数
+            # 1000表示每分钟请求次数上限，超出上限后封禁对应ip地址60分钟
+            waf_cc_deny rate=1000r/m duration=60m;
+
+            # 最多缓存50个检测目标的检测结果
+            # 对除了IP黑白名单检测、CC防护和POST检测以外的所有检测生效
+            waf_cache capacity=50;
+            ...
+        }
+        ...
+    }
+    ```
+
+- Current 版本
+    ```nginx
+    http {
+        # 声明一块共享内存
+        waf_zone name=waf size=20m;
+        ...
+        server {
+            ...
+            # on/off 表示启用和关闭
+            waf on;
+
+            # 规则文件所在目录的绝对路径，必须以/结尾
+            waf_rule_path /usr/local/src/ngx_waf/assets/rules/;
+
+            # 防火墙工作模式，STD表示标准模式
+            waf_mode STD;
+
+            # CC防御参数
+            # 1000表示每分钟请求次数上限，超出上限后封禁对应ip地址60分钟
+            waf_cc_deny on rate=1000r/m duration=60m zone=waf:cc;
+
+            # 对除了IP黑白名单检测、CC防护和POST检测以外的所有检测生效
+            waf_cache on capacity=50;
+            ...
+        }
+        ...
+    }
+    ```
+
+##### 常用配置
+
+- 1.针对路径或文件限流
+
+    - 有时你可能想要限制不同的路径或文件的请求速率，比如静态资源和动态资源使用不同的速率限制。
+
+    - LTS版本
+        ```nginx
+        # LTS
+
+        # 将静态资源的请求速率限制到10,000次/分钟
+        location /static/ {
+            waf_cc_deny rate=10000r/m duration=1h;
+        }
+
+        # 将动态资源的请求速率限制到2,000次/分钟
+        location /dynamic/ {
+            waf_cc_deny rate=2000r/m duration=1h;
+        }
+        ```
+
+    - Current版本
+        ```nginx
+        http {
+            waf_zone name=waf size=20m;
+            server {
+                # 将静态资源的请求速率限制到10,000次/分钟
+                location /static/ {
+                    waf_cc_deny rate=10000r/m duration=1h zone=waf:cc_static;
+                }
+
+                # 将动态资源的请求速率限制到2,000次/分钟
+                location /dynamic/ {
+                    waf_cc_deny rate=2000r/m duration=1h zone=waf:cc_dynamic;
+                }
+            }
+        }
+        ```
+- 2.开启验证码
+    - hCaptcha
+    - reCAPTCHAv2
+    - reCAPTCHAv3
+
+    - 当你的站点受到 CC 攻击时开启验证码是不错的选择，因为验证码可以帮助你进行人机识别。本模块目前支持三种验证码，你应该选择一个并从其网站上申请到 `Sitekey` 和 `Secret`。配置完成之后，重启 nginx 服务。
+
+    ```nginx
+    # 整个站点开启验证码
+    server {
+        waf_captcha on prov=hCaptcha secret=your_secret sitekey=your_sitekey;
+    }
+    ```
+
+    ```nginx
+    # 为某个路径开启验证码
+    location {
+        waf_captcha on prov=hCaptcha secret=your_secret sitekey=your_sitekey;
+    }
+    ```
+
+    ```nginx
+    # 当访问频率过高时开启验证码
+    http {
+        waf_zone name=waf size=20m;
+        server {
+            waf_cc_deny on rate=1000r/m duration=1h zone=waf:cc;
+            waf_captcha off prov=hCaptcha secret=your_secret sitekey=your_sitekey;
+            waf_action cc_deny=CAPTCHA zone=waf:action;
+        }
+    }
+    ```
+
+- 3.拦截请求时启用验证码
+
+    - 如今，许多攻击者都会使用自动工具攻击服务器，这些自动工具会尝试每一个漏洞，有的会被安全措施所拦截，有的则可以躲避检测。如果攻击者觉得你的价值比较高，可能会手动攻击你的服务。我们并不能完美地防御这些攻击，但却能很简单地提高攻击的成本。
+
+    - 当一个请求被拦截时，ngx_waf 会对该 IP 启用验证码，此时该 IP 想要继续访问就必须完成验证码。这基本可以废掉多数的自动攻击工具，因为这些工具会尝试每一个漏洞，而我们总能识别一些明显的攻击请求并启用验证码，而自动工具时难以通过验证的。对于手动攻击者，这也能提高他们的时间成本。
+
+    ```nginx
+    http {
+        waf_zone name=waf size=20m;
+
+        server {
+            waf_captcha off prov=xxx sitekey=xxx secret=xxx;
+            waf_action blacklist=CAPTCHA zone=waf:action;
+        }
+    }
+    ```
+
+- 4.被攻击时降低带宽占用
+    - 当你受到 CC 攻击时，攻击者的 IP 已经被 CC 防护拉黑，但是你的上下行带宽依然很高， 这是因为 CC 防护会返回一个 503 状态码，因此占用了你的带宽，你可以使用下面的配置来降低带宽占用。
+
+    - `444` 状态码是 nginx定义的一个非标准的 HTTP 状态码，其作用就是直接关闭连接，不再发送任何数据。如果你使用了 `444` 状态码，那么在用户看来你的网站就像是不存在一样。这是因为网站出错一般都会有 HTTP 状态码用来提示错误， 如果访问一个网站连错误提示都没有，那么大概率是这个网站不存在。
+
+    - LTS
+        ```nginx
+        waf_http_status cc_deny=444;
+        ```
+
+    - Current
+        ```nginx
+        waf_action cc_deny=444;
+        ```
+
+- 5.抵御分布式 CC 攻击
+
+    - CC 攻击(HTTP 洪水)是指发送大量的 HTTP 请求来耗尽服务器的资源。如果攻击者使用的 IP 较少则防御较为简单，因为只需要限制 IP 的请求频率，但是如果攻击者使用大量的 IP 进行攻击，仅仅限制 IP 的请求频率是无济于事的。这种使用大量 IP 进行 CC 攻击的方式称为分布式 CC 攻击或分布式 HTTP 洪水。
+
+    - 本模块提供了一些缓解方式，第一种开启验证码来缓解，第二种使用降低带宽占用，第三种使用五秒盾来缓解。你可能听说过 Cloudflare 的五秒盾，本模块的五秒盾和 Cloudflare 的完全不同。它的功能是检测客户端是否能够正确地支持 `Cookie`，比如发送 `Cookie` 和正确地处理 `Set-Cookie` 响应头。你可以从本项目的 `assets/` 目录下找到 `under-attack.html` 并将其拷贝到某个路径下，然后通过修改 nginx 的配置文件来开启五秒盾。
+
+    - LTS
+        ```nginx
+        # 为整个网站开启五秒盾
+        server {
+            waf_under_attack on file=/path/to/under_attack.html;
+        }
+
+        # 为某个路径开启五秒盾
+        location /path {
+            waf_under_attack on file=/path/to/under_attack.html;
+        }
+        ```
+
+    - Current
+        ```nginx
+
+        # 为整个网站开启五秒盾
+        server {
+            waf_under_attack on;
+        }
+
+        # 为某个路径开启五秒盾
+        location /path {
+            waf_under_attack on;
+        }
+        ```
+
+##### 测试
+
+- 当我们部署和配置服务完成之后，需要测试下防火墙是否正常起作用了，可以通过如下方式进行简单的测试来判断规则是否正常运行。
+
+```nginx
+# 测试时的配置
+master_process on;
+worker_processes  1;
+
+http {
+    server {
+        listen 80;
+        server_name  localhost;
+
+        access_log off;
+
+        waf on;
+        waf_mode DYNAMIC !CC !POST;
+        waf_rule_path /usr/local/src/ngx_waf/rules/;
+        waf_cache capacity=6000 interval=1h percent=50;
+
+        location / {
+            default_type text/html;
+            return 200 'hello';
+        }
+    }
+}
+```
+
+- 1.简易测试
+
+    ```sh
+    # 运行下列命令，如果输出 403 则表示模块正常工作
+    curl -I -o /dev/null --user-agent bench \
+        -s -w "%{http_code}\\n" https://example.com
+    ```
+
+- 2.自动测试
+
+    - 项目附带了许多测试用例，你可以通过下面的指令来运行全部的用例
+
+    ```nginx
+    # 这行命令的执行时间比较长
+    cpan Test::Nginx
+
+    # 如果目录已经存在则会先删除再创建
+    export MODULE_TEST_PATH=/path/to/temp/dir
+
+    # 如果你安装了动态模块则需要指定动态模块的绝对路径，反之则无需执行这行命令
+    export MODULE_PATH=/path/to/ngx_http_waf_module.so
+
+    # 自动化测试
+    cd ./test/test-nginx
+    sh ./init.sh
+    sh ./start.sh ./t/*.t
+    ```
+
+    ```nginx
+    # 可以使用WRK工具测试
+    wrk -c 100 -d 30m -t 1 -s test/wrk/rand.lua --latency \
+        http://localhost/ -- /path/to/rand-str.txt
+    ```
 
 ## 管理
 
@@ -5105,12 +5582,12 @@ location = /50x.html {
 
 ```nginx
 if ($host = zy.com' ) {
-     #其中 $1是取自regex部分()里的内容,匹配成功后跳转到的URL。
+     # 其中 $1是取自regex部分()里的内容,匹配成功后跳转到的URL。
      rewrite ^/(.*)$  http://www.zy.com/$1  permanent；
 }
 
 location /test {
-    // /test 全部重定向到首页
+    # /test 全部重定向到首页
     rewrite  ^(.*)$ /index.html  redirect;
 }
 ```
@@ -5136,6 +5613,7 @@ server
     if ($http_user_agent ~* (Scrapy|Curl|HttpClient)) {
         return 403;
     }
+}
 ```
 
 ### http方法和ip访问控制
@@ -5185,7 +5663,95 @@ server
     }
     ```
 
-### 请求限制：限制同一IP的连接数和并发数
+### limit_rate模块：限制客户端响应传输速率
+
+- 该限制针对每个请求设置的：如果客户端同时打开2个连接，则总体速率将是指定限制的2倍
+
+```nginx
+location / {
+    # 速度限制为10kb/s
+    limit_rate 10k;
+
+    root   html;
+    index  index.html index.htm;
+}
+
+location / {
+    # 下载15MB之后，速度限制10kb/s
+    limit_rate_after 15m;
+    limit_rate 10k;
+
+    root   html;
+    index  index.html index.htm;
+}
+```
+
+### 防止攻击
+
+- [机智的程序员小熊：被黑客用 Nginx 攻击了网站，我该怎么办？](https://mp.weixin.qq.com/s/QD_dXDsVRQo0dhFVLVWIiw)
+
+#### 反向代理攻击
+
+- 使用Nginx作为反向代理服务器，将攻击流量转发到目标服务器。这样就能隐藏攻击流量的真实地址。
+
+```nginx
+server {
+    listen 80;
+    server_name www.example.com;
+    location / {
+        proxy_pass http://backend_server;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+- 所有访问`www.example.com:80`的流量全部都会转发到`http://backend_server`服务器上。
+- `proxy_set_header` `X-Real-IP` `$remote_addr`; 设置请求头提供真实来源ip。
+- `proxy_set_header` `Host` `$host`;设置访问的`Host`。
+- 只要把`X-Real-IP`改成其他不存在的IP，就可以隐藏自己的真实IP地址，让攻击更难以被追踪和防御。当然相对于客户端来说，只能知道nginx的地址就不知道真实服务器的地址了。
+
+#### DDoS攻击
+
+- DDoS攻击就是借助某些工具瞬间发动大量的请求，让服务器资源耗尽，无法正常响应其他用户的请求，一般也常用于压力测试。介绍一些常用的工具：
+
+    - `ApacheBench` (ab)：常用的命令行工具，用于模拟多个并发请求。可以控制请求总数、并发数等参数。
+    - `Siege`：命令行工具，和上面一样，并且还支持 HTTP 和 HTTPS 协议。
+    - `JMeter`：一个功能强大的 Java 应用程序，可以用于模拟各种负载情况。JMeter 可以通过图形界面进行配置，支持更多协议和数据格式，包括 HTTP、HTTPS、SOAP、REST 等。
+    - [hey：go语言写的，宣传要替换ab命令](https://github.com/rakyll/hey)
+
+- 但事实往往比这个残酷，攻击者会做一些病毒，在网络上传播开来，病毒运行时可以直接疯狂访问服务器，或者利用Nginx提供的反向代理和其支持的比如socket、SSL，不断的建立握手请求。
+
+##### 限流、黑名单防御
+
+```nginx
+http {
+    limit_req_zone $binary_remote_addr zone=one:10m rate=5r/s;
+
+    geo $block {
+        default 0;
+        include /path/to/block_ip.txt;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            limit_req zone=one burst=10 nodelay;
+            if ($block) {
+                return 403;
+            }
+            proxy_pass http://backend;
+        }
+    }
+}
+```
+- `limit_req_zone` 定义了一个名为“one”的限制请求速率的区域，该区域的大小为10MB，请求速率限制为每秒5个请求。
+- `limit_req` 指定使用名为“one”的限制规则。
+- `geo $block`是黑名单，这个文件可以写需要屏蔽的ip。
+- server块中的`location`指令使用了`limit_req`和`if`表示黑名单的返回403状态码。
+
+#### 请求限制：限制同一IP的连接数和并发数
 
 - 对于大流量恶意的访问，会造成带宽的浪费，给服务器增加压力。合理的控制还可以用来防止 DDos 和 CC 攻击。
 
@@ -5194,7 +5760,7 @@ server
     - limit_conn_module 连接频率限制模块
     - limit_req_module 请求频率限制模块
 
-#### limit_conn_module模块：限制连接数
+##### limit_conn_module模块：限制连接数
 
 - 如果共享内存空间被耗尽，服务器将会对后续所有的请求返回 503 (Service Temporarily Unavailable) 错误。
 
@@ -5240,7 +5806,7 @@ server
     }
     ```
 
-#### limit_req_module模块：限制并发的连接数
+##### limit_req_module模块：限制并发的连接数
 
 - 通过 limit_req_zone 限制并发连接数
 
@@ -5259,28 +5825,6 @@ server
         limit_req zone=creq burst=5 nodelay;
         ```
 
-### limit_rate模块：限制客户端响应传输速率
-
-- 该限制针对每个请求设置的：如果客户端同时打开2个连接，则总体速率将是指定限制的2倍
-
-```nginx
-location / {
-    # 速度限制为10kb/s
-    limit_rate 10k;
-
-    root   html;
-    index  index.html index.htm;
-}
-
-location / {
-    # 下载15MB之后，速度限制10kb/s
-    limit_rate_after 15m;
-    limit_rate 10k;
-
-    root   html;
-    index  index.html index.htm;
-}
-```
 
 ## 常见错误与性能优化
 
@@ -5299,35 +5843,35 @@ location / {
 
 ### 未启用与上游服务器的 keepalive 连接
 
-- 问题：当连接关闭时，Linux 套接字会处于 TIME‑WAIT 状态两分钟，在流量高峰期时这会增加可用源端口池耗尽的可能性。如果发生这种情况，NGINX 将无法打开与上游服务器的新连接。
+- 问题：当连接关闭时，Linux 套接字会处于 `TIME‑WAIT` 状态1分钟，在流量高峰期时这会增加可用源端口池耗尽的可能性。如果发生这种情况，NGINX 将无法打开与上游服务器的新连接。
 
 - 解决方法：是在 NGINX 和上游服务器之间启用 keepalive 连接 —— 该连接不会在请求完成时关闭，而是保持打开状态以用于其他请求。这样做既降低了源端口耗尽的可能性，又提高了性能。
 
     - 1.在每个 upstream{} 块中包含 keepalive 指令，以设置保存在每个 worker 进程缓存中的到上游服务器的空闲 keepalive 连接数。
-            - 建议将该参数设置为 upstream{} 块中列出的服务器数量的两倍。
-            - 请注意，keepalive 指令不限制 NGINX worker 进程可以打开的上游服务器的连接总数 —— 这一点经常被误解。所以 keepalive 的参数不需要像您想象的那么大。
-            - 另请注意，当您在 upstream{} 块中指定负载均衡算法时 —— 使用 hash、ip_hash、least_conn、least_time 或 random 指令 —— 该指令必须位于 keepalive 指令之前。通常，在 NGINX 配置中，指令顺序并不重要，而这是少数例外之一。
+        - 建议将该参数设置为 upstream{} 块中列出的服务器数量的**2倍**。
+        - 请注意，keepalive 指令不限制 NGINX worker 进程可以打开的上游服务器的连接总数 —— 这一点经常被误解。所以 keepalive 的参数不需要像您想象的那么大。
+        - 另请注意，当您在 upstream{} 块中指定负载均衡算法时 —— 使用 hash、ip_hash、least_conn、least_time 或 random 指令 —— 该指令必须位于 keepalive 指令之前。通常，在 NGINX 配置中，指令顺序并不重要，而这是少数例外之一。
 
-            ```nginx
-            http {
-                upstream node_backend {
-                    server 127.0.0.1:3000 max_fails=1   fail_timeout=2s;
-                    server 127.0.0.1:4000 max_fails=1   fail_timeout=2s;
-                    keepalive 4;
-                }
+        ```nginx
+        http {
+            upstream node_backend {
+                server 127.0.0.1:3000 max_fails=1   fail_timeout=2s;
+                server 127.0.0.1:4000 max_fails=1   fail_timeout=2s;
+                keepalive 4;
+            }
 
-                server {
-                    listen 80;
-                    server_name example.com;
+            server {
+                listen 80;
+                server_name example.com;
 
-                    location / {
-                        proxy_set_header Host $host;
-                        proxy_pass http://node_backend/;
-                        proxy_next_upstream error timeout   http_500;
-                    }
+                location / {
+                    proxy_set_header Host $host;
+                    proxy_pass http://node_backend/;
+                    proxy_next_upstream error timeout   http_500;
                 }
             }
-            ```
+        }
+        ```
 
         - 大多数情况下，keepalive_requests = 100也够用，但是对于 QPS 较高的场景，非常有必要加大这个参数，以避免出现大量连接被生成再抛弃的情况，减少TIME_WAIT。
             - QPS=10000 时，客户端每秒发送 10000 个请求 (通常建立有多个长连接)，每个连接只能最多跑 100 次请求，意味着平均每秒钟就会有 100 个长连接因此被 nginx 关闭。同样意味着为了保持 QPS，客户端不得不每秒中重新新建 100 个连接。
@@ -5403,15 +5947,15 @@ location / {
 
 - 只有在少数情况下，禁用代理缓冲可能有意义（例如长轮询），因此我们强烈建议不要更改默认设置。
 
-    - 对于经常在 NGINX 配置中看到 proxy_buffering off 指令的情况，我们感到非常惊讶。也许这样做是为了减少客户端延迟，但其影响可以忽略不计，而关闭后的副作用却很多：代理缓冲被禁用后，速率限制和缓存即便配置了也不起作用，性能也会受影响等等。
+    - 对于经常在 NGINX 配置中看到 `proxy_buffering off` 指令的情况，我们感到非常惊讶。也许这样做是为了减少客户端延迟，但其影响可以忽略不计，而关闭后的副作用却很多：代理缓冲被禁用后，速率限制和缓存即便配置了也不起作用，性能也会受影响等等。
 
 ### 过多的健康检查
 
-- 配置多个虚拟服务器将请求代理到同一个上游组十分常见（换句话说，在多个 server{} 块中包含相同的 proxy_pass 指令）。
+- 配置多个虚拟服务器将请求代理到同一个上游组十分常见（换句话说，在多个 server{} 块中包含相同的 `proxy_pass` 指令）。
 
-- 这里的错误是在每个 server{} 块中都添加一个 health_check 指令。这样做只会增加上游服务器的负载，而不会产生任何额外信息。
+    - 问题：这里的错误是在每个 server{} 块中都添加一个 `health_check` 指令。这样做只会增加上游服务器的负载，而不会产生任何额外信息。
 
-- 解决方法是每个 upstream{} 块只定义一个健康检查。此处，我们在一个指定位置为名为 b 的上游 group 定义了健康检查，并进行了适当的超时和http消息头设置。
+    - 解决方法是每个 upstream{} 块只定义一个健康检查。此处，我们在一个指定位置为名为 b 的上游 group 定义了健康检查，并进行了适当的超时和http消息头设置。
 
     ```nginx
     location / {
@@ -5678,6 +6222,22 @@ location / {
 ### 客户端
 
 #### [nginx-ui：Nginx 在线管理平台，它开箱即用、功能丰富，支持流量统计、在线查看 Nginx 日志、编辑 Nginx 配置文件、自动检查和重载配置文件等功能。](https://github.com/0xJacky/nginx-ui)
+
+#### [nginx-proxy-manager：有漂亮干净的 Web UI。还可以获得受信任的 SSL 证书，并通过单独的配置、自定义和入侵保护来管理多个代理。](https://github.com/NginxProxyManager/nginx-proxy-manager)
+
+- 基于 Tabler(https://tabler.github.io/) 的美观安全的管理界面
+- 无需了解 Nginx 即可轻松创建转发域、重定向、流和 404 主机
+- 使用 Let's Encrypt 的免费 SSL 或提供您自己的自定义 SSL 证书
+- 主机的访问列表和基本 HTTP 身份验证
+- 高级 Nginx 配置可供超级用户使用
+- 用户管理、权限和审核日志
+
+- 网站默认账号和密码为
+
+    ```
+    账号：admin@example.com
+    密码：changeme
+    ```
 
 #### [ngxtop：日志监控](https://github.com/lebinh/ngxtop)
 

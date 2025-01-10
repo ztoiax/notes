@@ -86,6 +86,20 @@
 
 - [TinySSH：ssh客户端](https://github.com/chenjiaxing6/TinySSH)
 
+- [termora：ssh客户端](https://github.com/TermoraDev/termora)
+
+    - 支持 SSH 和本地终端
+    - 支持 Windows、macOS、Linux 平台
+    - 支持 Zmodem 协议
+    - 支持 SSH 端口转发
+    - 支持配置同步到 Gist
+    - 支持宏（录制脚本并回放）
+    - 支持关键词高亮
+    - 支持密钥管理器
+    - 支持将命令发送到多个会话
+    - 支持 Find Everywhere 快速跳转
+    - 支持数据加密
+
 ## 手机与电脑交互
 
 - [intel unison：手机电脑消息、文件传输]()

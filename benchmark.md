@@ -60,6 +60,9 @@
   * [iptraf-ng：统计端口收发包（tui）](#iptraf-ng统计端口收发包tui)
 * [Web](#web)
   * [ab：web 压力测试](#abweb-压力测试)
+  * [siege：和ab命令一样，并且还支持 HTTP 和 HTTPS 协议。](#siege和ab命令一样并且还支持-http-和-https-协议)
+  * [jmeter：一个功能强大的 Java 应用程序，可以用于模拟各种负载情况。JMeter 可以通过图形界面进行配置，支持更多协议和数据格式，包括 HTTP、HTTPS、SOAP、REST 等。](#jmeter一个功能强大的-java-应用程序可以用于模拟各种负载情况jmeter-可以通过图形界面进行配置支持更多协议和数据格式包括-httphttpssoaprest-等)
+  * [hey：go语言写的，宣传要替换ab命令](#heygo语言写的宣传要替换ab命令)
   * [httperf](#httperf)
 * [File](#file)
   * [VFS](#vfs)
@@ -1214,6 +1217,12 @@ ab -n 1000 -c 5000 http://127.0.0.1/
 > # 带宽速率
 > Transfer rate:          7593.38 [Kbytes/sec] received
 > ```
+
+## [siege：和ab命令一样，并且还支持 HTTP 和 HTTPS 协议。](https://github.com/JoeDog/siege)
+
+## [jmeter：一个功能强大的 Java 应用程序，可以用于模拟各种负载情况。JMeter 可以通过图形界面进行配置，支持更多协议和数据格式，包括 HTTP、HTTPS、SOAP、REST 等。](https://github.com/apache/jmeter)
+
+## [hey：go语言写的，宣传要替换ab命令](https://github.com/rakyll/hey)
 
 ## httperf
 

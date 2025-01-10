@@ -341,6 +341,8 @@
 
 - [Open-Sora：生成图片或视频、图生视频、视频编辑](https://github.com/hpcaitech/Open-Sora)
 
+- [深入理解Sora技术原理｜得物技术](https://mp.weixin.qq.com/s/e1DqTa1Tgyi4OWpgwrj48Q)
+
 - [可灵AI：快手的](https://klingai.kuaishou.com/text-to-video/new)
 
 - [CogVideo：清华大学的](https://github.com/THUDM/CogVideo)

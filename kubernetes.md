@@ -2456,6 +2456,14 @@ curl https://argocd.kubernets.cn -I
     kubectl krew install cert-manager
     ```
 
+- [rancher-desktop：gui客户端](https://github.com/rancher-sandbox/rancher-desktop)
+
+    - docker desktop需要付费后
+
+    - 当我们开始开发 Rancher Desktop 时，我们的目标并不是要创建一个替代 Docker Desktop 的产品。相反，我们专注于改善本地运行 Kubernetes 的体验，而 Docker Desktop 专注于容器化应用程序。而且，Docker 多年来一直致力于 Docker Desktop，使其在容器化应用程序方面表现出色。
+
+    - 随着我们向 Rancher Desktop 中添加构建、推送和拉取镜像并运行容器等功能。Rancher Desktop 在功能方面开始与 Docker Desktop 重叠。
+
 - [k8sgpt](https://github.com/k8sgpt-ai/k8sgpt)
 
 - [kubectx：像git那样切换分支](https://github.com/ahmetb/kubectx)

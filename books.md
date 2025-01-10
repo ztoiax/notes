@@ -82,7 +82,7 @@
   * [做菜](#做菜)
   * [农业和水产](#农业和水产)
   * [纺织](#纺织)
-  * [预防诈骗](#预防诈骗)
+  * [政法](#政法)
   * [游戏](#游戏)
   * [影视](#影视)
   * [音乐](#音乐)
@@ -111,6 +111,11 @@
 ## 计算理论
 
 ## Program Language(编程语言)
+
+- 编程语言排行榜
+
+    - [tiobe](https://www.tiobe.com/tiobe-index/)
+    - [RedMonk](https://redmonk.com/sogrady/category/programming-languages/)
 
 - [cheat sheet](https://wangchujiang.com/reference/)
 
@@ -1136,6 +1141,8 @@
 
     - 滴滴技术
 
+    - 转转技术
+
     - 三七互娱技术团队
 
     - 360技术工程
@@ -1696,7 +1703,7 @@ RabbitMQ实战指南》作者
 
     - 中国流行面料FabricsChina
 
-## 预防诈骗
+## 政法
 
 - bilibili
 
@@ -1706,6 +1713,7 @@ RabbitMQ实战指南》作者
 
     - 北京反洗钱研究
     - 中信建设反洗钱
+    - 中国人民公安大学学报
 
 ## 游戏
 
