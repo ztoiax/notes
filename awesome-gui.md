@@ -340,6 +340,8 @@
     git clone https://github.com/casualsnek/waydroid_script
     ```
 
+- [aya：简化对安卓设备的操作控制，可以看作 ADB 的图形用户界面](https://github.com/liriliri/aya)
+
 # 类似项目
 
 - [linux 下的惬意生活](https://github.com/yangyangwithgnu/the_new_world_linux#%E7%9B%AE%E5%BD%95)

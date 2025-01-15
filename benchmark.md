@@ -1971,6 +1971,8 @@ strace -cp pid
 strace -o file ls
 ```
 
+- [（视频）：现代CPP随笔_0CCh：Linux实用工具 之 strace，深入理解系统调用的利器](https://www.bilibili.com/video/BV1CxcgefEpM/?spm_id_from=333.1365.top_right_bar_window_history.content.click)
+
 ## eBPF
 
 - [官方文档](https://ebpf.io/)

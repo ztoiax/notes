@@ -76,6 +76,8 @@
 
 - [nsfw-filter：过滤少儿不宜](https://github.com/nsfw-filter/nsfw-filter)
 
+- [DeepSeekAI](https://github.com/DeepLifeStudio/DeepSeekAI)
+
 # CGI和FastCGI
 
 - Web服务器能解析HTTP请求，返回静态资源（HTML页、图片等），但要输出动态内容，必须得PHP/C#/Ruby/Java/Python/C/C++这些外部程序来实现。

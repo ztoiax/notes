@@ -64,6 +64,8 @@
 
 - [filepilot：第三方文件资源管理器](https://filepilot.tech/)
 
+- [MD3-Windows：windows美化](https://github.com/Runixe786/MD3-Windows)
+
 ## app
 
 - [TortoiseGit：windows最好的git gui客户端](https://github.com/TortoiseGit/TortoiseGit)

@@ -157,6 +157,8 @@
 
 - [write-a-hash-table：从零用 C 语言实现哈希表。该项目是讲解如何用 C 语言实现一个开放寻址和双重哈希的哈希表，代码约为 200 行，预计学习时间为 1 到 2 小时。](https://github.com/jamesroutley/write-a-hash-table)
 
+- [《C++ 17 The Complete Guide》翻译](https://github.com/CnTransGroup/Cpp17TheCompleteGuideChinese)
+
 ### Java
 
 - [《Java 编程思想》 第四版](https://wizardforcel.gitbooks.io/thinking-in-java/content/)
@@ -270,6 +272,8 @@
 - [《Cracking Codes with Python》 (英文)](https://inventwithpython.com/cracking/)
 
 - [《Python编程快速上手 --让繁琐工作自动化》(英文)](https://automatetheboringstuff.com/)
+
+- [《How to Think Like a Computer Scientist: Interactive Edition》（如何像计算机科学家一样思考）：一本在线的编程入门教材](https://levjj.github.io/thinkcspy/)
 
 - [CPython-Internals](https://github.com/zpoint/CPython-Internals/blob/master/README_CN.md)
 
@@ -1294,6 +1298,9 @@
     - 奇伢云存储
         > 存储、文件系统、linux编程、go语言
 
+    - [现代CPP随笔_0CCh](https://space.bilibili.com/3493295527299091/video)
+        > linux调试工具、c++编程
+
 - 网络
 
     - 网工手艺
@@ -1354,6 +1361,9 @@
 
     - 岁寒博客
         > 高并发架构
+
+    - 支付进阶之路
+        > 资金安全、支付架构
 
 - debug：
 
@@ -1890,6 +1900,7 @@ RabbitMQ实战指南》作者
         - 晕眩Schwindel
         - 乾乾文史
         - Kritik人文社
+        - Ether人文社
         - 毛邓理论研究
         - 湘大毛研中心
         - 设计-建筑与现代性

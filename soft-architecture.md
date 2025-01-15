@@ -4,6 +4,7 @@
 * [企业文化](#企业文化)
   * [云计算公司 Snowflake](#云计算公司-snowflake)
   * [华为](#华为)
+* [it历史](#it历史)
 * [开源相关](#开源相关)
 * [项目管理](#项目管理)
 * [软技能](#软技能)
@@ -123,6 +124,10 @@
 ## 华为
 
 - [一只羊咩咩1995](https://www.bilibili.com/list/watchlater?oid=284344040&bvid=BV1Bc411v7ok)
+
+# it历史
+
+- [支付进阶之路：一文看懂收单支付40年的风起云涌](https://mp.weixin.qq.com/s/2yXk51nYFlwAcPvFQzNTBg)
 
 # 开源相关
 

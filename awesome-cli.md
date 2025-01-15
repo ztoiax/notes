@@ -76,6 +76,7 @@
   * [ag](#ag)
     * [instead grep](#instead-grep)
   * [fzf](#fzf)
+  * [television：rust版fzf](#televisionrust版fzf)
   * [skim：rust 版fzf](#skimrust-版fzf)
   * [zf：zig版fzf](#zfzig版fzf)
   * [diff-so-fancy](#diff-so-fancy)
@@ -556,6 +557,8 @@ fzf
 # -e 取消模糊搜索
 fzf -e
 ```
+
+## [television：rust版fzf](https://github.com/alexpasmantier/television)
 
 ## [skim：rust 版fzf](https://github.com/lotabout/skim)
 

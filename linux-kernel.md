@@ -72,7 +72,7 @@
       * [FUFE使用](#fufe使用)
 * [I/O](#io)
   * [5种I/O模型](#5种io模型)
-  * [非直接I/O Page cache](#非直接io-page-cache)
+  * [非直接I/O：使用Page cache](#非直接io使用page-cache)
     * [Page cache的零拷贝技术](#page-cache的零拷贝技术)
   * [直接I/O + 异步I/O 解决大文件传输问题](#直接io--异步io-解决大文件传输问题)
   * [缓冲区共享 (Buffer Sharing)](#缓冲区共享-buffer-sharing)
@@ -2519,7 +2519,7 @@ systemd-cgls -k | grep kworker
 
         ![image](./Pictures/linux-kernel/io-direct.avif)
 
-    - 非直接 I/O：使用页缓存
+    - 非直接 I/O：使用页缓存（page cache）
 
         | 什么情况下内核会把缓存刷到磁盘？                    |
         |-----------------------------------------------------|
@@ -2746,9 +2746,12 @@ systemd-cgls -k | grep kworker
                 ceph config show osd.16 | grep ioring
                 ```
 
-## 非直接I/O Page cache
+## 非直接I/O：使用Page cache
 
 - [小林coding：进程写文件时，进程发生了崩溃，已写入的数据会丢失吗？](https://www.xiaolincoding.com/os/6_file_system/pagecache.html)
+
+- 进程写文件时，进程发生了崩溃，已写入的数据会丢失吗？
+    - 不会。因为进程在执行 write （使用缓冲 IO）系统调用的时候，实际上是将文件数据写到了内核的 page cache，它是文件系统中用于缓存文件数据的缓冲，所以即使进程崩溃了，文件数据还是保留在内核的 page cache，我们读数据的时候，也是从内核的 page cache 读取，因此还是依然读的进程崩溃前写入的数据。
 
 - 通过 mmap 以及 buffered I/O 将文件读取到内存空间实际上都是读取到 Page Cache 中
 
