@@ -101,7 +101,7 @@
   * [城市规划](#城市规划)
   * [产业](#产业)
   * [企业](#企业)
-  * [新闻](#新闻)
+  * [新闻和综合知识区](#新闻和综合知识区)
 * [数据](#数据)
 
 <!-- mtoc-end -->
@@ -222,6 +222,8 @@
 
 - [Build-lua-in-rust：用Rust写个Lua解释器](https://github.com/WuBingzheng/build-lua-in-rust)
 
+- [rust-by-practice：Rust 语言实战。该项目提供了大量的 Rust 实战练习，来帮助 Rust 新手学习和上手 Rust 语言。这里除了有大量的练习题和答案，还支持在线编辑和运行 Rust 代码。](https://github.com/sunface/rust-by-practice)
+
 ### Lisp
 
 - [《Structure and Interpretation of Computer Programs(SICP)》(英文)](http://sarabander.github.io/sicp/html/index.xhtml)
@@ -292,6 +294,8 @@
 - [《流畅的 Python（第 2 版）》的示例代码](https://github.com/fluentpython/example-code-2e)
 
 - [《JavaScript 工程师的 Python 指南》](https://github.com/luckrnx09/python-guide-for-javascript-engineers)|
+
+- [《Pytorch实用教程》第二版](https://tingsongyu.github.io/PyTorch-Tutorial-2nd/)
 
 #### 数据科学
 
@@ -407,6 +411,8 @@
 - [db-tutorial：是一个数据库教程](https://github.com/dunwu/db-tutorial)
     - 包含分布式, mysql, redis, mongodb, hbase, elasticsearch
 
+- [sql-basics：设计精美的sql互动教学网站](https://sql.programmable.net/lessons/sql-basics)
+
 ### mysql
 
 - [爱可生开源社区的课间、演讲、书籍如《Mysql大智小技》](https://github.com/actiontech/slides)
@@ -490,6 +496,8 @@
 
 - [rCore-Tutorial-Book-v3:用 Rust 语言从零开始写一个基于 RISC-V 架构的类 Unix 内核。清华大学开源的中文教程](https://github.com/rcore-os/rCore-Tutorial-Book-v3)
 
+- [1000行代码的操作系统：用 C 语言一步步从头构建一个小型操作系统](https://operating-system-in-1000-lines.vercel.app/en/)
+
 - [osdev: 操作系统相关知识的wiki](https://wiki.osdev.org/Main_Page)
 
 - [理解Linux进程](https://tobegit3hub1.gitbooks.io/understanding-linux-processes/content/)
@@ -537,6 +545,8 @@
 - [《Introduction to Compilers and Language Design》](https://www3.nd.edu/~dthain/compilerbook/)
 
 - [腾讯技术工程：如何从0到1设计实现一门自己的脚本语言]()
+
+- [为什么要学习写编译器（英文）](https://takashiidobe.com/gen/writing-compilers)
 
 ## 调试
 
@@ -747,7 +757,11 @@
 
 - [《动手实战人工智能 AI By Doing》](https://aibydoing.com/intro)
 
-- [《大语言模型》](https://llmbook-zh.github.io/)
+- [《大语言模型》：这是一本为想入门大模型技术的程序员/学生准备的开源书籍，内容不仅涵盖了大模型的基础原理和关键技术，还提供了配套的代码工具库和大模型，帮助读者快速入门并实践。](https://llmbook-zh.github.io/)
+
+- [《大模型基础》。该书是由浙江大学 DAILY 实验室开源的大语言模型教材，内容涵盖传统语言模型、大语言模型架构演化、Prompt 工程、参数高效微调、模型编辑、检索增强生成等方面。](https://github.com/ZJU-LLMs/Foundations-of-LLMs)
+
+- [《学习 PyTorch 进行深度学习：从零到精通》。该项目提供了丰富的图文教程、代码示例、视频讲解和实战项目，旨在通过实践的方式帮助初学者掌握 PyTorch 框架和深度学习技术。](https://github.com/yunjey/pytorch-tutorial)
 
 - [machine-learning-roadmap](https://github.com/mrdbourke/machine-learning-roadmap)
 
@@ -769,7 +783,7 @@
 
 - [AIGC 课程, 目前已支持 ChatGPT, Midjourney, Runway, Stable Diffusion, AI数字人，AI声音&音乐，大模型微调](https://www.learnprompt.pro/)
 
-- [从零到神经网络高手](https://github.com/karpathy/nn-zero-to-hero)
+- [从零到神经网络高手：这是一门从基础开始的神经网络课程，包含视频、练习和配套源码，帮助初学者初逐步掌握神经网络的基本概念，并通过实例代码来加深理解。](https://github.com/karpathy/nn-zero-to-hero)
 
 - [《LLMs-from-scratch》](https://github.com/rasbt/LLMs-from-scratch)
     - 这是一本讲述如何从头制作一个类似 ChatGPT 的大语言模型的书，它介绍了 LLMs 的工作原理，并教你如何创建自己的 LLM，内含丰富的图示和代码示例，目前该书还在编写中未完结。
@@ -866,6 +880,8 @@
     - 最重要的是 游戏化 的形式让学习英语从此不再痛苦
 
 - [DictionaryByGPT4](https://github.com/Ceelog/DictionaryByGPT4)：一本 GPT4 生成的单词书📚，超过 8000 个单词分析，涵盖了词义、例句、词根词缀、变形、文化背景、记忆技巧和小故事
+
+- [earthworm](https://github.com/cuixueshe/earthworm)：在线学习英语网站，支持自托管和本地运行。它采用连词成句、循序渐进的方法帮你学习英语。通过不断地重复形成肌肉记忆，并结合游戏奖励和积分排名的方式，让背单词变得有趣且高效。
 
 ## 文档
 
@@ -981,6 +997,8 @@
 - [top-rss-list](https://github.com/weekend-project-space/top-rss-list)
 
 # 职业和面试
+
+- [自洽的程序员：这本书的真正用意是想解决工作过程中碰到的焦虑、倦怠、迷茫、抑郁等情绪，聚焦于解决具体问题，通过改变认知将我们从负面情绪的泥淖中走出来，做到更坦然，真诚的面对自己的内心，成为一个自洽的程序员。](https://self-consistent-coder.readthedocs.io/zh-cn/latest/)
 
 - [如何成为一名靠谱的程序员：职业素养入门指南](https://mp.weixin.qq.com/s/7uyA8bFr8FZTRGlN38tdHg)
 
@@ -1301,6 +1319,9 @@
     - [现代CPP随笔_0CCh](https://space.bilibili.com/3493295527299091/video)
         > linux调试工具、c++编程
 
+    - 深入浅出BPF
+        > bpf
+
 - 网络
 
     - 网工手艺
@@ -1364,6 +1385,9 @@
 
     - 支付进阶之路
         > 资金安全、支付架构
+
+    - 牧羊人的方向
+        > 数据库、架构
 
 - debug：
 
@@ -1552,6 +1576,8 @@ RabbitMQ实战指南》作者
     - [二进制的老王：硬盘评测、硬盘数据恢复](https://space.bilibili.com/18731657)
 
     - [钱韦德：硬盘评测、nas体验](https://space.bilibili.com/20274090)
+
+    - [秋芝2046：ai大模型](https://space.bilibili.com/385670211)
 
 - 微信公众号
 
@@ -2017,6 +2043,8 @@ RabbitMQ实战指南》作者
     - 科社共运动态+
     - 阶级与哲学
     - 世界观察局
+    - 南洋问题研究
+        > 东南亚、东南亚犯罪
 
 ## 军事
 
@@ -2074,6 +2102,10 @@ RabbitMQ实战指南》作者
     - 劳动法学习
     - 辽沈法律帮
     - 青鸟法援服务团
+
+- bilibili
+
+    - [法山叔](https://space.bilibili.com/369287008)
 
 ## 心理
 
@@ -2197,6 +2229,9 @@ RabbitMQ实战指南》作者
     - 乡村建设研究
         > 温铁军
 
+    - 黄文政讲人口问题
+        > 人口问题
+
 ## 金融
 
 - bilibili
@@ -2218,6 +2253,8 @@ RabbitMQ实战指南》作者
     - [投研部杨摸鱼](https://space.bilibili.com/13611123)
 
     - [小Lin说](https://space.bilibili.com/520819684)
+
+    - [小Lin竖着说](https://space.bilibili.com/3546638236781247)
 
 - 微信公众号
 
@@ -2326,7 +2363,7 @@ RabbitMQ实战指南》作者
     - 暗涌Waves
     > 初创企业故事、企业家采访
 
-## 新闻
+## 新闻和综合知识区
 
 - bilibili
 
@@ -2337,6 +2374,11 @@ RabbitMQ实战指南》作者
     - [高剑犁](https://space.bilibili.com/59104725)
 
     - [小黛晨读](https://space.bilibili.com/1556651916)
+
+    - [大闲人贾白](https://space.bilibili.com/549117578)
+        > 深入了解诈骗、各种社会现象的知识类up主
+
+    - [卢克文工作室](https://www.bilibili.com/video/BV1bUwGe1Eew)
 
 - 微信公众号
 
@@ -2368,6 +2410,9 @@ RabbitMQ实战指南》作者
     - 罗文益
     - 原子智库-腾讯新闻
         > 什么都有
+
+    - 方圆
+        > 最高检的杂志。有各种案例、防诈骗案例
 
 - bilibili
 

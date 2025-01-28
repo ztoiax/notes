@@ -112,6 +112,15 @@
       * [classless qdisc（无类别）](#classless-qdisc无类别)
       * [classful qdisc（有类别）](#classful-qdisc有类别)
   * [数据包流程](#数据包流程)
+    * [网卡接收数据包的流程](#网卡接收数据包的流程)
+      * [接受数据包中断过程相关的源码和函数](#接受数据包中断过程相关的源码和函数)
+      * [网卡丢包问题](#网卡丢包问题)
+        * [优化策略](#优化策略)
+    * [网卡发送数据包的流程](#网卡发送数据包的流程)
+    * [网络优化](#网络优化)
+      * [sysctl命令](#sysctl命令)
+      * [arthurchiao：Linux 网络栈接收数据（RX）：配置调优（2022）](#arthurchiaolinux-网络栈接收数据rx配置调优2022)
+      * [洋芋编程：想要支持百万长连接，需要调优哪些参数？](#洋芋编程想要支持百万长连接需要调优哪些参数)
 * [Overlay虚拟化技术](#overlay虚拟化技术)
   * [Vxlan（Virtual Extensible LAN）](#vxlanvirtual-extensible-lan)
     * [VTEP (VXLAN Tunnel Endpoint)](#vtep-vxlan-tunnel-endpoint)
@@ -119,10 +128,7 @@
   * [GRE（Generic Routing Encapsulation）](#gregeneric-routing-encapsulation)
   * [MPLS（Multiprotocol Label Switching）](#mplsmultiprotocol-label-switching)
   * [SD-WAN（Software-Defined Wide Area Network）](#sd-wansoftware-defined-wide-area-network)
-* [DPDK](#dpdk)
-* [sysctl](#sysctl)
-* [网络优化](#网络优化)
-  * [洋芋编程：想要支持百万长连接，需要调优哪些参数？](#洋芋编程想要支持百万长连接需要调优哪些参数)
+* [DPDK（英特尔数据平面开发工具集）](#dpdk英特尔数据平面开发工具集)
 * [DDOS攻击](#ddos攻击)
   * [SYN flood (洪泛) 攻击](#syn-flood-洪泛-攻击)
   * [反射型攻击](#反射型攻击)
@@ -3783,9 +3789,9 @@ listen 80 fastopen=256
 
         | 列数                  | 内容                                                   |
         | --------------------- | ------------------------------------------------------ |
-        | min（最小包缓冲）     | 动态范围的最小值                                       |
-        | default（默认包缓冲） | 初始默认值，会覆盖全局参数 `net.core.rmem_default`     |
-        | max（最大包缓冲）     | 动态范围的最大值，不会覆盖全局参数 `net.core.rmem_max` |
+        | min     | 缓冲区的最小值，即使内存紧张，缓冲区也不会小于这个值。                                       |
+        | default | 缓冲区的默认值，是新创建的 TCP 套接字的初始缓冲区大小。会覆盖全局参数 `net.core.rmem_default`     |
+        | max     | 缓冲区的最大值，在内存充足的情况下，缓冲区可以动态增长到这个值。不会覆盖全局参数 `net.core.rmem_max` |
 
 - 对于发送buffer：
 
@@ -5439,9 +5445,262 @@ sudo tc qdisc del dev eth0 root
 ![image](./Pictures/net-kernel/数据包流程.avif)
 ![image](./Pictures/net-kernel/数据包流程1.avif)
 
+- [鸟窝聊技术：2 万字综述：Linux 网络性能终极指南](https://mp.weixin.qq.com/s/VjTrDg8fLWpFFgZ2maEneQ)
+
 - [美团技术团队：Redis高负载下的中断优化](https://tech.meituan.com/2018/03/16/redis-high-concurrency-optimization.html)
 
-    - 网卡丢包问题。起初线上存在部分Redis节点还在使用千兆网卡的老旧服务器，而缓存服务往往需要承载极高的查询量，并要求毫秒级的响应速度，如此一来千兆网卡很快就出现了瓶颈。经过整治，我们将千兆网卡服务器替换为了万兆网卡服务器，本以为可以高枕无忧，但是没想到，在业务高峰时段，机器也竟然出现了丢包问题，而此时网卡带宽使用还远远没有达到瓶颈。
+### 网卡接收数据包的流程
+
+- 简单来说：
+    - 1.网卡会通知DMA将数据包信息放到`rx ring buffer`（它是由NIC和驱动程序共享的一片区域）是一个环形缓冲区队列，再触发一个HardIRQ（硬中断）通知CPU，CPU触发softIRQ（软中断）让`ksoftirqd`去`RingBuffer`收包
+
+    - 2.经过TCP/IP协议逐层处理。——顺着物理层，数据链路层，网络层，传输层
+    - 3.应用程序通过read()从socket buffer读取数据。
+
+![image](./Pictures/net-kernel/nic-接收数据包的流程.avif)
+![image](./Pictures/net-kernel/nic-接收数据包的流程1.avif)
+
+- 1.数据包到达网卡（NIC）
+
+- 2.NIC 进行验证MAC（如果不是混杂模式）并FCS决定放弃或继续
+
+- 3.NIC 通过DMA（直接内存访问）数据包放入`sk_buffer`
+
+    ![image](./Pictures/net-kernel/NIC与驱动交互.avif)
+
+    - 1.驱动在内存中分配一片缓冲区用来接收数据包，叫做`sk_buffer`
+    - 2.将上述缓冲区的地址和大小（即接收描述符），加入到`rx ring buffer`
+        - 事实上`rx ring buffer`存储的并不是实际的packet数据，而是一个描述符，这个描述符指向了它真正的存储地址，具体流程如下：
+        - 描述符中的缓冲区地址是DMA使用的物理地址
+    - 3.驱动通知网卡有一个新的描述符
+    - 4.网卡从`rx ring buffer`中取出描述符，从而获知缓冲区的地址和大小
+    - 5.网卡收到新的数据包
+    - 6.网卡将新数据包通过DMA直接写到`sk_buffer`中
+
+    - 当驱动处理速度跟不上网卡收包速度时，驱动来不及分配缓冲区，NIC接收到的数据包无法及时写到sk_buffer，就会产生堆积，当NIC内部缓冲区写满后，就会丢弃部分数据，引起丢包。
+        - 这部分丢包为 `rx_fifo_errors` ，在 `/proc/net/dev` 中体现为fifo字段增长，在ifconfig中体现为`overruns`指标增长。
+
+    - `rx ring buffer`满了会丢包
+
+        ```sh
+        # 查看RingBuffer丢包
+        ifconfig | grep overruns
+        ```
+
+    - 一个网卡可以有多个`rx ring buffer`
+        ```sh
+        ethtool -g eth0
+
+        # ethtool命令查看第一个rx ring buffer（0_drops表示第一个）
+        ethtool -S eth0 | grep rx_queue_0_drops
+
+        # 修改RingBuffer长度为4096
+        # 会使网卡先 down 再 up，因此会造成丢包。请谨慎操作。
+        ethtool -G eth0 rx 4096 tx 4096
+        ```
+
+- 3.NIC 引发HardIRQ“硬中断”，通知系统内核处理（驱动与Linux内核交互）
+
+    - 1.这个时候，数据包已经被转移到了 `sk_buffer` 中。
+
+        - 这是驱动程序在内存中分配的一片缓冲区，并且是通过DMA写入的（这种方式不依赖CPU直接将数据写到了内存中）
+
+            - 意味着对内核来说，其实并不知道已经有新数据到了内存中，需要通过中断告诉内核有新数据进来了，并需要进行后续处理。
+
+    - 2.当NIC把数据包通过DMA复制到内核缓冲区`sk_buffer`后，NIC立即发起一个硬件中断。
+
+    - 3.CPU接收后，首先进入上半部分，网卡中断对应的中断处理程序是网卡驱动程序的一部分，之后由它发起软中断，进入下半部分，开始消费`sk_buffer`中的数据，交给内核协议栈处理。
+
+
+        ![image](./Pictures/net-kernel/驱动与Linux内核交互.avif)
+
+        - 每个队列在第一列中都分配有一个中断向量。这些中断向量在系统启动或加载 NIC 设备驱动程序模块时初始化。每个 RX 和 TX 队列都分配有一个唯一的中断向量号，该向量会通知中断处理程序中断来自哪个 NIC/队列。这些列以计数器值的形式表示传入中断的数量
+
+            ```sh
+            egrep 'CPU0|eth3' /proc/interrupts
+                CPU0 CPU1 CPU2 CPU3 CPU4 CPU5
+            110:    0    0    0    0    0    0   IR-PCI-MSI-edge   eth3-rx-0
+            111:    0    0    0    0    0    0   IR-PCI-MSI-edge   eth3-rx-1
+            112:    0    0    0    0    0    0   IR-PCI-MSI-edge   eth3-rx-2
+            113:    2    0    0    0    0    0   IR-PCI-MSI-edge   eth3-rx-3
+            114:    0    0    0    0    0    0   IR-PCI-MSI-edge   eth3-tx
+            ```
+
+            - 在默认情况下，所有队列的硬中断都由CPU 0处理，因此对应的软中断逻辑也会在CPU 0上处理，在服务器 `top` 的输出中，也可以观察到 `%si` 软中断部分，CPU 0的占比比其他core高出一截。
+
+- 4.驱动触发SoftIRQ (NET_RX_SOFTIRQ)。
+
+    - HardIRQ 在 CPU 使用率方面可能会很昂贵，尤其是在持有内核锁的情况下。如果它们执行时间过长，将导致 CPU 无法响应其他 HardIRQ，因此内核引入了SoftIRQs（Soft Interrupts），这样可以将 HardIRQ 处理程序中耗时的部分移到 SoftIRQ 处理程序中慢慢处理。
+
+    - SoftIRQ，也称为“下半部”中断。它是一个内核例程，计划在其他任务不会被中断时运行。
+        - 这些例程以进程的形式运行ksoftirqd/cpu-number，并调用驱动程序特定的代码函数。
+        - 目的：耗尽网络适配器接收`rx ring buffer`。
+
+    ```sh
+    ps aux | grep ksoftirq
+    root          17  0.0  0.0      0     0 ?        S    10:32   0:00 [ksoftirqd/0]
+    root          28  0.0  0.0      0     0 ?        S    10:32   0:00 [ksoftirqd/1]
+    root          34  0.0  0.0      0     0 ?        S    10:32   0:00 [ksoftirqd/2]
+    root          40  0.0  0.0      0     0 ?        S    10:32   0:00 [ksoftirqd/3]
+    ```
+
+    - 监控
+        ```sh
+        watch -n1 grep RX /proc/softirqs
+        watch -n1 grep TX /proc/softirqs动触发SoftIRQ (NET_RX_SOFTIRQ)。
+        ```
+
+    - 问题：通过中断，能够快速及时地响应网卡数据请求，但如果数据量大，那么会产生大量中断请求，CPU大部分时间都忙于处理中断，效率很低。
+
+        - 解决方法：现在的内核及驱动都采用一种叫`NAPI（new API）`的方式进行数据处理，其原理可以简单理解为 中断+轮询，在数据量大时，一次中断后通过轮询接收一定数量包再返回，避免产生多次中断。
+
+- 5.`NAPI` 从 `rx ring buffer`环形缓冲区轮询数据。
+
+    - 如果 SoftIRQ 运行时间不够长，传入数据的速率可能会超过内核耗尽缓冲区的能力。结果，NIC 缓冲区将溢出，流量将丢失。有时，需要增加 SoftIRQ 在 CPU 上运行的时间。这称为`netdev_budget`。
+        ```sh
+        #  netdev_budget_usecs：1 个 NAPI 轮询周期的最大微秒数。当netdev_budget_usecs轮询周期已过或处理的数据包数达到时，轮询将退出netdev_budget。
+        sysctl net.core.netdev_budget_usecs
+        net.core.netdev_budget_usecs = 2000
+        ```
+
+    - `dev_weight`：内核在 NAPI 中断上可以处理的最大数据包数量，这是一个 PER-CPU 变量。对于支持 LRO 或 GRO_HW 的驱动程序，硬件聚合数据包在此计为一个数据包。
+        ```sh
+        sysctl net.core.dev_weight
+        net.core.dev_weight = 64
+        ```
+
+    - `netdev_budget_usecs`轮询例程具有预算，它通过使用超时或netdev_budget数据包来确定允许代码使用的 CPU 时间`dev_weight`。这是为了防止 SoftIRQ 独占 CPU。完成后，内核将退出轮询例程并重新准备，然后整个过程将重复进行。
+
+    - 1.Linux 还为 分配内存sk_buff。
+    - 2.Linux 填充元数据：协议、接口、setmatchheader、删除以太网
+    - 3.Linux 将 skb 传递给内核栈（netif_receive_skb）
+    - 4.它设置网络头，克隆skb到 taps（即 tcpdump）并将其传递给 tc ingress
+
+    - 5.`netdev_max_backlog`：Linux 内核中的一个队列，在从 NIC 接收流量后，但在协议栈（IP、TCP 等）处理之前，流量会存储在该队列中。每个 CPU 核心都有一个积压队列。给定核心的队列可以自动增长，包含的数据包数量最多为设置指定的最大值`netdev_max_backlog`。
+
+        - 换句话说，当接口接收数据包的速度比内核处理数据包的速度快时，这是在 INPUT 端（接收 dsic）排队的数据包的最大数量。
+
+        ```sh
+        # 默认值1000。取决于网络接口驱动程序：ifconfig <interface> | grep rxqueuelen
+        sysctl net.core.netdev_max_backlog
+        net.core.netdev_max_backlog = 1000
+        ```
+
+        ```sh
+        # 默认队列规则
+        sysctl net.core.default_qdisc
+        net.core.default_qdisc = fq_codel
+
+        # 或者
+        cat /proc/sys/net/core/default_qdisc
+        fq_codel
+        ```
+
+- 5.TCP/IP协议栈逐层处理，最终交给用户空间读取
+
+    - 数据包进到IP层之后，经过IP层、TCP层处理（校验、解析上层协议，发送给上层协议），放入socket buffer，在应用程序执行read() 系统调用时，就能从socket buffer中将新数据从内核区拷贝到用户区，完成读取。
+        - 这里的socket buffer大小即TCP接收窗口，TCP由于具备流量控制功能，能动态调整接收窗口大小，因此数据传输阶段不会出现由于socket buffer接收队列空间不足而丢包的情况（但UDP及TCP握手阶段仍会有）。
+
+    - 1.它调用ip_rcv并处理 IP 数据包
+    - 2.它调用 netfilter( PREROUTING)
+    - 3.它查看路由表，看看是转发还是本地
+    - 4.如果是本地的，则调用 netfilter ( LOCAL_IN)
+
+    - 5.它调用 L4 协议（例如tcp_v4_rcv）
+    - 6.它找到了正确的插座
+    - 7.它进入 tcp 有限状态机
+    - 8.将数据包放入入`socket buffer`并按`tcp_rmem`规则调整大小
+        ```sh
+        # 三个数值分别是 min，default，max，系统会根据这些设置，自动调整 TCP 接收 / 发送缓冲区的大小
+        sysctl net.ipv4.tcp_rmem
+        net.ipv4.tcp_rmem = 4096 131072	6291456
+        ```
+
+        | 列数                  | 内容                                                   |
+        | --------------------- | ------------------------------------------------------ |
+        | min     | 缓冲区的最小值，即使内存紧张，缓冲区也不会小于这个值。                                       |
+        | default | 缓冲区的默认值，是新创建的 TCP 套接字的初始缓冲区大小。会覆盖全局参数 `net.core.rmem_default`     |
+        | max     | 缓冲区的最大值，在内存充足的情况下，缓冲区可以动态增长到这个值。不会覆盖全局参数 `net.core.rmem_max` |
+
+- 6.内核将发出信号，表示有数据可供应用程序使用（epoll 或任何轮询系统）
+
+- 7.应用程序唤醒并读取数据
+
+#### 接受数据包中断过程相关的源码和函数
+
+- 整个中断过程的源码部分比较复杂，并且不同驱动的厂商及版本也会存在一定的区别。 以下调用关系基于Linux-3.10.108及内核自带驱动drivers/net/ethernet/intel/ixgbe：
+
+    ![image](./Pictures/net-kernel/中断过程的源码.avif)
+
+    - `enqueue_to_backlog`函数中，会对CPU的`softnet_data`实例中的接收队列（`input_pkt_queue`）进行判断，如果队列中的数据长度超过`netdev_max_backlog` ，那么数据包将直接丢弃，这就产生了丢包。
+
+        - 美团丢包疑惑：，我们线上服务器的内核版本及网卡都支持NAPI，而NAPI的处理逻辑是不会走到`enqueue_to_backlog`中的，`enqueue_to_backlog`主要是非NAPI的处理流程中使用的。
+
+            - 对此，我们觉得可能和当前使用的Docker架构有关，事实上，我们通过net.if.dropped指标获取到的丢包，都发生在Docker虚拟网卡上，而非宿主机物理网卡上，因此很可能是Docker虚拟网桥转发数据包之后，虚拟网卡层面产生的丢包
+
+    - 内核会为每个CPU Core都实例化一个`softnet_data`对象，这个对象中的`input_pkt_queue`用于管理接收的数据包。
+
+        - 假如所有的中断都由一个CPU Core来处理的话，那么所有数据包只能经由这个CPU的`input_pkt_queue`，如果接收的数据包数量非常大，超过中断处理速度，那么`input_pkt_queue`中的数据包就会堆积，直至超过`netdev_max_backlog`，引起丢包。
+
+        - 这部分丢包可以在`cat /proc/net/softnet_stat`的输出结果中进行确认
+
+            - 其中每行代表一个CPU
+                - 每列的统计数据以十六进制提供
+
+            | 列数 | 内容                                                                                               |
+            | ---- | -------------------------------------------------------------------------------------------------- |
+            | 1    | 中断处理程序接收的帧数                                                                             |
+            | 2    | 超过 `netdev_max_backlog` 而丢弃的帧数                                                             |
+            | 3    | 在`net_rx_action`函数中处理数据包超过`netdev_budge`指定数量或运行时间超过2个时间片的次数，ksoftirqd 耗尽 CPU 时间的次数。           |
+            | 8    | 没有意义因此全是 0                                                                                 |
+            | 9    | CPU 为了发送包而获取锁的时候有冲突的次数                                                           |
+            | 10   | CPU 被其他 CPU 唤醒来处理 backlog 数据的次数                                                       |
+            | 11   | 触发 flow_limit 限制的次数                                                                         |
+
+            ```bash
+            cat /proc/net/softnet_stat
+            00000f0f 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            000007f2 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            00000ffb 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            00006d1b 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            0000102f 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            00000777 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            0000be12 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            00006447 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            0000b33e 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            000083b6 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            0000bd5f 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            00008710 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+            ```
+
+        ```sh
+        cat /proc/net/sockstat
+        sockets: used 1334
+        TCP: inuse 52 orphan 0 tw 2 alloc 75 mem 0
+        UDP: inuse 36 mem 1246
+        UDPLITE: inuse 0
+        RAW: inuse 1
+        FRAG: inuse 0 memory 0
+        ```
+
+- 驱动及内核处理过程中的几个重要函数：
+
+    - 1.注册中断号及中断处理程序，根据网卡是否支持MSI/MSIX，结果为：MSIX → ixgbe_msix_clean_rings，MSI → ixgbe_intr，都不支持 → ixgbe_intr
+        - `lspci -vvv`命令查看网卡是不是MSI-X中断机制
+
+    - 2.线上的多队列网卡均支持MSIX，中断处理程序入口为ixgbe_msix_clean_rings，里面调用了函数napi_schedule(&q_vector->napi)
+    - 3.之后经过一些列调用，直到发起名为NET_RX_SOFTIRQ的软中断。到这里完成了硬中断部分，进入软中断部分，同时也上升到了内核层面
+    - 4.NET_RX_SOFTIRQ对应的软中断处理程序接口是net_rx_action()
+    - 5.net_rx_action功能就是轮询调用poll方法，这里就是ixgbe_poll。一次轮询的数据包数量不能超过内核参数net.core.netdev_budget指定的数量（默认值300），并且轮询时间不能超过2个时间片。
+        - 这个机制保证了单次软中断处理不会耗时太久影响被中断的程序
+    - 6.ixgbe_poll之后的一系列调用就不一一详述了，有兴趣的同学可以自行研究，软中断部分有几个地方会有类似if (static_key_false(&rps_needed))这样的判断，会进入前文所述有丢包风险的enqueue_to_backlog函数。
+        - 这里的逻辑为判断是否启用了RPS机制，RPS是早期单队列网卡上将软中断负载均衡到多个CPU Core的技术，它对数据流进行hash并分配到对应的CPU Core上，发挥多核的性能。
+            - 不过现在基本都是多队列网卡，不会开启这个机制，因此走不到这里，static_key_false是针对默认为false的static key的优化判断方式。
+        - 这段调用的最后，deliver_skb会将接收的数据传入一个IP层的数据结构中，至此完成二层的全部处理。
+
+#### 网卡丢包问题
+
+- 网卡丢包问题。起初线上存在部分Redis节点还在使用千兆网卡的老旧服务器，而缓存服务往往需要承载极高的查询量，并要求毫秒级的响应速度，如此一来千兆网卡很快就出现了瓶颈。经过整治，我们将千兆网卡服务器替换为了万兆网卡服务器，本以为可以高枕无忧，但是没想到，在业务高峰时段，机器也竟然出现了丢包问题，而此时网卡带宽使用还远远没有达到瓶颈。
 
 - 定位网络丢包的原因
 
@@ -5470,138 +5729,9 @@ sudo tc qdisc del dev eth0 root
                     - 这表明，各家网卡厂商设备内部对这些丢包的计数器、指标的定义略有不同，但通过驱动向内核提供的统计数据都封装成了struct rtnl_link_stats64定义的格式。
 
     - 在对丢包服务器进行检查后，发现rx_missed_errors为0，丢包全部来自rx_dropped。说明丢包发生在Linux内核的缓冲区中。
-    - 接下来，我们要继续探索到底是什么缓冲区引起了丢包问题，这就需要完整地了解服务器接收数据包的过程。
+    - 到底是什么缓冲区引起了丢包问题，这就需要完整地了解服务器接收数据包的过程。
 
-- 网卡接收数据包的流程
-
-    ![image](./Pictures/net-kernel/nic.avif)
-    ![image](./Pictures/net-kernel/nic1.avif)
-
-    - 1.网卡会通知DMA将数据包信息放到`rx ring buffer`（它是由NIC和驱动程序共享的一片区域），再触发一个硬中断给CPU，CPU触发软中断让`ksoftirqd`去`RingBuffer`收包
-    - 2.经过TCP/IP协议逐层处理。——顺着物理层，数据链路层，网络层，传输层
-    - 3.应用程序通过read()从socket buffer读取数据。
-
-    - `rx ring buffer`满了会丢包
-
-        ```sh
-        # 查看RingBuffer丢包
-        ifconfig | grep overruns
-        ```
-
-    - 一个网卡可以有多个`rx ring buffer`
-        ```sh
-        ethtool -g eth0
-
-        # ethtool命令查看第一个rx ring buffer（0_drops表示第一个）
-        ethtool -S eth0 | grep rx_queue_0_drops
-
-        # 修改RingBuffer长度为4096
-        # 会使网卡先 down 再 up，因此会造成丢包。请谨慎操作。
-        ethtool -G eth0 rx 4096 tx 4096
-        ```
-
-- 1.NIC与驱动交互：事实上`rx ring buffer`存储的并不是实际的packet数据，而是一个描述符，这个描述符指向了它真正的存储地址，具体流程如下：
-
-    ![image](./Pictures/net-kernel/NIC与驱动交互.avif)
-
-    - 1.驱动在内存中分配一片缓冲区用来接收数据包，叫做`sk_buffer`
-    - 2.将上述缓冲区的地址和大小（即接收描述符），加入到`rx ring buffer`
-        - 描述符中的缓冲区地址是DMA使用的物理地址
-    - 3.驱动通知网卡有一个新的描述符
-    - 4.网卡从`rx ring buffer`中取出描述符，从而获知缓冲区的地址和大小
-    - 5.网卡收到新的数据包
-    - 6.网卡将新数据包通过DMA直接写到`sk_buffer`中
-
-    - 当驱动处理速度跟不上网卡收包速度时，驱动来不及分配缓冲区，NIC接收到的数据包无法及时写到sk_buffer，就会产生堆积，当NIC内部缓冲区写满后，就会丢弃部分数据，引起丢包。
-        - 这部分丢包为 `rx_fifo_errors` ，在 `/proc/net/dev` 中体现为fifo字段增长，在ifconfig中体现为`overruns`指标增长。
-
-- 2.通知系统内核处理（驱动与Linux内核交互）
-
-    - 1.这个时候，数据包已经被转移到了 `sk_buffer` 中。
-
-        - 这是驱动程序在内存中分配的一片缓冲区，并且是通过DMA写入的（这种方式不依赖CPU直接将数据写到了内存中）
-
-            - 意味着对内核来说，其实并不知道已经有新数据到了内存中，需要通过中断告诉内核有新数据进来了，并需要进行后续处理。
-
-    - 2.当NIC把数据包通过DMA复制到内核缓冲区`sk_buffer`后，NIC立即发起一个硬件中断。
-
-    - 3.CPU接收后，首先进入上半部分，网卡中断对应的中断处理程序是网卡驱动程序的一部分，之后由它发起软中断，进入下半部分，开始消费`sk_buffer`中的数据，交给内核协议栈处理。
-
-        ![image](./Pictures/net-kernel/驱动与Linux内核交互.avif)
-
-        - 问题：通过中断，能够快速及时地响应网卡数据请求，但如果数据量大，那么会产生大量中断请求，CPU大部分时间都忙于处理中断，效率很低。
-
-            - 解决方法：现在的内核及驱动都采用一种叫NAPI（new API）的方式进行数据处理，其原理可以简单理解为 中断+轮询，在数据量大时，一次中断后通过轮询接收一定数量包再返回，避免产生多次中断。
-
-        - 整个中断过程的源码部分比较复杂，并且不同驱动的厂商及版本也会存在一定的区别。 以下调用关系基于Linux-3.10.108及内核自带驱动drivers/net/ethernet/intel/ixgbe：
-
-            ![image](./Pictures/net-kernel/中断过程的源码.avif)
-
-            - `enqueue_to_backlog`函数中，会对CPU的`softnet_data`实例中的接收队列（`input_pkt_queue`）进行判断，如果队列中的数据长度超过`netdev_max_backlog` ，那么数据包将直接丢弃，这就产生了丢包。
-
-                - `netdev_max_backlog`是由系统参数`net.core.netdev_max_backlog`指定的，默认大小是 1000。
-
-                - 美团丢包疑惑：，我们线上服务器的内核版本及网卡都支持NAPI，而NAPI的处理逻辑是不会走到`enqueue_to_backlog`中的，`enqueue_to_backlog`主要是非NAPI的处理流程中使用的。
-
-                    - 对此，我们觉得可能和当前使用的Docker架构有关，事实上，我们通过net.if.dropped指标获取到的丢包，都发生在Docker虚拟网卡上，而非宿主机物理网卡上，因此很可能是Docker虚拟网桥转发数据包之后，虚拟网卡层面产生的丢包
-
-            - 内核会为每个CPU Core都实例化一个`softnet_data`对象，这个对象中的`input_pkt_queue`用于管理接收的数据包。
-
-                - 假如所有的中断都由一个CPU Core来处理的话，那么所有数据包只能经由这个CPU的`input_pkt_queue`，如果接收的数据包数量非常大，超过中断处理速度，那么`input_pkt_queue`中的数据包就会堆积，直至超过`netdev_max_backlog`，引起丢包。
-
-                    - 这部分丢包可以在`cat /proc/net/softnet_stat`的输出结果中进行确认
-
-                        - 其中每行代表一个CPU
-
-                        | 列数 | 内容                                                                                               |
-                        | ---- | -------------------------------------------------------------------------------------------------- |
-                        | 1    | 中断处理程序接收的帧数                                                                             |
-                        | 2    | 超过 `netdev_max_backlog` 而丢弃的帧数                                                             |
-                        | 3    | 在`net_rx_action`函数中处理数据包超过`netdev_budge`指定数量或运行时间超过2个时间片的次数           |
-                        | 8    | 没有意义因此全是 0                                                                                 |
-                        | 9    | CPU 为了发送包而获取锁的时候有冲突的次数                                                           |
-                        | 10   | CPU 被其他 CPU 唤醒来处理 backlog 数据的次数                                                       |
-                        | 11   | 触发 flow_limit 限制的次数                                                                         |
-
-                        ```bash
-                        cat /proc/net/softnet_stat
-                        00000f0f 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        000007f2 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        00000ffb 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        00006d1b 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        0000102f 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        00000777 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        0000be12 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        00006447 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        0000b33e 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        000083b6 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        0000bd5f 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        00008710 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-                        ```
-
-        - 在检查线上服务器之后，发现第一行CPU。硬中断的中断号及统计数据可以在`/proc/interrupts`中看到，对于多队列网卡，当系统启动并加载NIC设备驱动程序模块时，每个RXTX队列会被初始化分配一个唯一的中断向量号，它通知中断处理程序该中断来自哪个NIC队列。
-
-            - 在默认情况下，所有队列的硬中断都由CPU 0处理，因此对应的软中断逻辑也会在CPU 0上处理，在服务器 `top` 的输出中，也可以观察到 `%si` 软中断部分，CPU 0的占比比其他core高出一截。
-
-    - 驱动及内核处理过程中的几个重要函数：
-
-        - 1.注册中断号及中断处理程序，根据网卡是否支持MSI/MSIX，结果为：MSIX → ixgbe_msix_clean_rings，MSI → ixgbe_intr，都不支持 → ixgbe_intr
-            - `lspci -vvv`命令查看网卡是不是MSI-X中断机制
-
-        - 2.线上的多队列网卡均支持MSIX，中断处理程序入口为ixgbe_msix_clean_rings，里面调用了函数napi_schedule(&q_vector->napi)
-        - 3.之后经过一些列调用，直到发起名为NET_RX_SOFTIRQ的软中断。到这里完成了硬中断部分，进入软中断部分，同时也上升到了内核层面
-        - 4.NET_RX_SOFTIRQ对应的软中断处理程序接口是net_rx_action()
-        - 5.net_rx_action功能就是轮询调用poll方法，这里就是ixgbe_poll。一次轮询的数据包数量不能超过内核参数net.core.netdev_budget指定的数量（默认值300），并且轮询时间不能超过2个时间片。
-            - 这个机制保证了单次软中断处理不会耗时太久影响被中断的程序
-        - 6.ixgbe_poll之后的一系列调用就不一一详述了，有兴趣的同学可以自行研究，软中断部分有几个地方会有类似if (static_key_false(&rps_needed))这样的判断，会进入前文所述有丢包风险的enqueue_to_backlog函数。 
-            - 这里的逻辑为判断是否启用了RPS机制，RPS是早期单队列网卡上将软中断负载均衡到多个CPU Core的技术，它对数据流进行hash并分配到对应的CPU Core上，发挥多核的性能。
-                - 不过现在基本都是多队列网卡，不会开启这个机制，因此走不到这里，static_key_false是针对默认为false的static key的优化判断方式。
-            - 这段调用的最后，deliver_skb会将接收的数据传入一个IP层的数据结构中，至此完成二层的全部处理。
-
-- 3.TCP/IP协议栈逐层处理，最终交给用户空间读取
-
-    - 数据包进到IP层之后，经过IP层、TCP层处理（校验、解析上层协议，发送给上层协议），放入socket buffer，在应用程序执行read() 系统调用时，就能从socket buffer中将新数据从内核区拷贝到用户区，完成读取。
-        - 这里的socket buffer大小即TCP接收窗口，TCP由于具备流量控制功能，能动态调整接收窗口大小，因此数据传输阶段不会出现由于socket buffer接收队列空间不足而丢包的情况（但UDP及TCP握手阶段仍会有）。
+##### 优化策略
 
 - 网卡队列
 
@@ -5616,63 +5746,557 @@ sudo tc qdisc del dev eth0 root
     - 使用`systemtap`诊断测试环境软中断分布的方法
     - 可以确认网卡的软中断在机器上分布非常不均，而且主要集中在CPU 0上。通过`/proc/interrupts`能确认硬中断集中在CPU 0上，因此软中断也都由CPU 0处理
 
-- 优化策略
+- 前文提到，丢包是因为队列中的数据包超过了`netdev_max_backlog`造成了丢弃，因此首先想到是临时调大`netdev_max_backlog`能否解决燃眉之急，事实证明，对于轻微丢包调大参数可以缓解丢包，但对于大量丢包则几乎不怎么管用，内核处理速度跟不上收包速度的问题还是客观存在
 
-    - 前文提到，丢包是因为队列中的数据包超过了`netdev_max_backlog`造成了丢弃，因此首先想到是临时调大`netdev_max_backlog`能否解决燃眉之急，事实证明，对于轻微丢包调大参数可以缓解丢包，但对于大量丢包则几乎不怎么管用，内核处理速度跟不上收包速度的问题还是客观存在
+    - 本质还是因为单核处理中断有瓶颈，即使不丢包，服务响应速度也会变慢。因此如果能同时使用多个CPU Core来处理中断，就能显著提高中断处理的效率，并且每个CPU都会实例化一个`softnet_data`对象，队列数也增加了。
 
-        - 本质还是因为单核处理中断有瓶颈，即使不丢包，服务响应速度也会变慢。因此如果能同时使用多个CPU Core来处理中断，就能显著提高中断处理的效率，并且每个CPU都会实例化一个`softnet_data`对象，队列数也增加了。
+- 1.CPU亲缘性（affinity）：中断亲缘性设置
 
-    - 1.CPU亲缘性（affinity）：中断亲缘性设置
+    - 让指定的中断向量号更倾向于发送给指定的CPU Core来处理，俗称“绑核”。
 
-        - 让指定的中断向量号更倾向于发送给指定的CPU Core来处理，俗称“绑核”。
+    - `grep eth /proc/interrupts`的第一列可以获取网卡的中断号，如果是多队列网卡，那么就会有多行输出：
 
-        - `grep eth /proc/interrupts`的第一列可以获取网卡的中断号，如果是多队列网卡，那么就会有多行输出：
+    - 中断的亲缘性设置可以在`cat /proc/irq/${中断号}/smp_affinity` 或 `cat /proc/irq/${中断号}/smp_affinity_list`中确认
 
-        - 中断的亲缘性设置可以在`cat /proc/irq/${中断号}/smp_affinity` 或 `cat /proc/irq/${中断号}/smp_affinity_list`中确认
+    - 那为什么中断号只设置一个CPU Core呢？而不是为每一个中断号设置多个CPU Core平行处理？
 
-        - 那为什么中断号只设置一个CPU Core呢？而不是为每一个中断号设置多个CPU Core平行处理？
+        - 经过测试，发现当给中断设置了多个`CPU Core`后，它也仅能由设置的第一个`CPU Core`来处理，其他的`CPU Core`并不会参与中断处理
 
-            - 经过测试，发现当给中断设置了多个`CPU Core`后，它也仅能由设置的第一个`CPU Core`来处理，其他的`CPU Core`并不会参与中断处理
+            - 原因猜想是当CPU可以平行收包时，不同的CPU core收取了同一个queue的数据包，但处理速度不一致，导致提交到IP层后的顺序也不一致，这就会产生乱序的问题，由同一个CPU core来处理可以避免了乱序问题。
 
-                - 原因猜想是当CPU可以平行收包时，不同的CPU core收取了同一个queue的数据包，但处理速度不一致，导致提交到IP层后的顺序也不一致，这就会产生乱序的问题，由同一个CPU core来处理可以避免了乱序问题。
+    - 但是，当我们配置了多个Core处理中断后，发现Redis的慢查询数量有明显上升，甚至部分业务也受到了影响，慢查询增多直接导致可用性降低，因此方案仍需进一步优化。
 
-        - 但是，当我们配置了多个Core处理中断后，发现Redis的慢查询数量有明显上升，甚至部分业务也受到了影响，慢查询增多直接导致可用性降低，因此方案仍需进一步优化。
+- 2.Redis进程亲缘性设置
 
-    - 2.Redis进程亲缘性设置
+    - 问题：
 
-        - 问题：
+        - 如果某个CPU Core正在处理Redis的调用，执行到一半时产生了中断，那么CPU不得不停止当前的工作转而处理中断请求
 
-            - 如果某个CPU Core正在处理Redis的调用，执行到一半时产生了中断，那么CPU不得不停止当前的工作转而处理中断请求
+            - 中断期间Redis也无法转交给其他core继续运行，必须等处理完中断后才能继续运行。
 
-                - 中断期间Redis也无法转交给其他core继续运行，必须等处理完中断后才能继续运行。
+        - Redis本身定位就是高速缓存，线上的平均端到端响应时间小于1ms，如果频繁被中断，那么响应时间必然受到极大影响。
 
-            - Redis本身定位就是高速缓存，线上的平均端到端响应时间小于1ms，如果频繁被中断，那么响应时间必然受到极大影响。
+            - 由最初的CPU 0单核处理中断，改进到多核处理中断，Redis进程被中断影响的几率增大了，因此我们需要对Redis进程也设置CPU亲缘性，使其与处理中断的Core互相错开，避免受到影响。
 
-                - 由最初的CPU 0单核处理中断，改进到多核处理中断，Redis进程被中断影响的几率增大了，因此我们需要对Redis进程也设置CPU亲缘性，使其与处理中断的Core互相错开，避免受到影响。
+    ```sh
+    # 设置cpu亲缘性
+    taskset -cp cpu-list pid
+    ```
 
+- 3.NUMA 架构下的中断优化
+
+    - 经过一番压测，我们发现使用8个core处理中断时，流量直至打满双万兆网卡也不会出现丢包，因此决定将中断的亲缘性设置为物理机上前8个core，Redis进程的亲缘性设置为剩下的所有core。调整后，确实有明显的效果，慢查询数量大幅优化，但对比初始情况，仍然还是高了一些些，还有没有优化空间呢？
+        ![image](./Pictures/net-kernel/redis-slowlog优化前后对比.avif)
+
+    - 通过观察，我们发现一个有趣的现象，当只有CPU 0处理中断时，Redis进程更倾向于运行在CPU 0，以及CPU 0同一物理CPU下的其他核上。
+
+        - 于是有了以下推测：我们设置的中断亲缘性，是直接选取了前8个核心，但这8个core却可能是来自两块物理CPU的，在`/proc/cpuinfo`中，通过字段processor和physical id 能确认这一点，那么响应慢是否和物理CPU有关呢？物理CPU又和NUMA架构关联，每个物理CPU对应一个NUMA node，那么接下来就要从NUMA角度进行分析。
+
+        - 当两个NUMA节点处理中断时，CPU实例化的`softnet_data`以及驱动分配的`sk_buffer`都可能是跨Node的，数据接收后对上层应用Redis来说，跨Node访问的几率也大大提高，并且无法充分利用L2、L3 cache，增加了延时。
+
+        - 由于`Linux wake affinity`特性，如果两个进程频繁互动，调度系统会觉得它们很有可能共享同样的数据，把它们放到同一CPU核心或NUMA Node有助于提高缓存和内存的访问性能，所以当一个进程唤醒另一个的时候，被唤醒的进程可能会被放到相同的CPU core或者相同的NUMA节点上。
+
+            - 所有的网络中断都分配给CPU 0去处理，当中断处理完成时，由于`wakeup affinity`特性的作用，所唤醒的用户进程也被安排给CPU 0或其所在的numa节点上其他core。
+
+    - 而当两个NUMA node处理中断时，这种调度特性有可能导致Redis进程在CPU core之间频繁迁移，造成性能损失。
+    - 综合上述，将中断都分配在同一NUMA Node中，中断处理函数和应用程序充分利用同NUMA下的L2、L3缓存、以及同Node下的内存，结合调度系统的`wake affinity`特性，能够更进一步降低延迟。
+        ![image](./Pictures/net-kernel/redis-slowlog优化前后对比1.avif)
+
+### 网卡发送数据包的流程
+
+- 比接收逻辑逻辑简单
+
+![image](./Pictures/net-kernel/nic-发送数据包的流程.avif)
+![image](./Pictures/net-kernel/nic-发送数据包的流程1.avif)
+
+- 1.应用程序发送消息（sendmsg或其他）
+- 2.TCP 发送报文分配 skb_buff
+- 3.它将 skb 放入大小`tcp_wmem`
+    ```sh
+    # 三个数值分别是 min，default，max，系统会根据这些设置，自动调整 TCP 接收 / 发送缓冲区的大小
+    sysctl net.ipv4.tcp_wmem
+    net.ipv4.tcp_wmem = 4096	16384	4194304
+    ```
+
+- 4.构建 TCP 标头（源端口和目标端口、校验和）
+- 5.调用 L3 处理程序（在本例中ipv4为tcp_write_xmit和tcp_transmit_skb）
+- 6.L3( ip_queue_xmit) 完成其工作：构建 IP 报头并调用 netfilter( LOCAL_OUT)
+- 7.调用输出路由操作
+- 8.调用 netfilter( POST_ROUTING)
+- 9.对数据包进行分片 ( ip_output)
+- 10.调用 L2 发送函数 ( dev_queue_xmit)
+- 11.txqueuelen使用其算法将长度为输出（QDisc）的队列输入default_qdisc
+
+    ```sh
+    # 默认队列规则
+    sysctl net.core.default_qdisc
+    net.core.default_qdisc = fq_codel
+
+    # 或者
+    cat /proc/sys/net/core/default_qdisc
+    fq_codel
+    ```
+    ```sh
+    ifconfig wlan0 | grep txqueuelen
+    ether 60:45:2e:b9:d7:5f  txqueuelen 1000  (Ethernet)
+    ```
+
+- 12.驱动程序代码将数据包排入`ring buffer tx`
+- 13.soft IRQ (NET_TX_SOFTIRQ)驱动程序将在超时后执行tx-usecs或tx-frames
+- 14.重新启用 NIC 的硬 IRQ
+- 15.驱动程序会将所有要发送的数据包映射到某个 DMA 区域
+- 16.NIC 通过 DMA 从 RAM 获取数据包并进行传输
+- 17.传输完成后，NIC 将发出一个hard IRQ信号来表示传输完成
+- 18.驱动程序将处理此 IRQ（将其关闭）
+- 19.并安排（soft IRQ）NAPI 投票系统
+- 110.NAPI 将处理接收数据包信号并释放 RAM
+
+### 网络优化
+
+#### sysctl命令
+
+- [sysctl-ArchWiki](https://wiki.archlinux.org/index.php/sysctl#Improving_performance)
+
+- [linux sysctl net 字段 文档](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt)
+- [linux sysctl 每个字段文档](https://sysctl-explorer.net/)
+- [linux net.netfilter 文档](https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
+
+sysctl 在运行时检查和更改内核参数的工具,在`procfs文件系统`(也就是`/proc`路径)中实现的
+
+- 基本用法：
+
+```sh
+# 以下两条命令相同，重启后失效，如需持久化需配置 /etc/sysctl.conf
+echo bar > /proc/sys/net/foo
+sysctl -w net.foo=bar
+
+# 写入/etc/sysctl.conf的配置，需要以下命令进行加载
+sysctl --system
+
+# 查看所有配置
+sysctl --all
+```
+
+#### [arthurchiao：Linux 网络栈接收数据（RX）：配置调优（2022）](http://arthurchiao.art/blog/linux-net-stack-tuning-rx-zh/)
+
+- 调整`ring buffer`（环形缓冲区）
+
+    - RX/TX queue数量
         ```sh
-        # 设置cpu亲缘性
-        taskset -cp cpu-list pid
+        # 查看是否支持 RSS/多队列
+        ethtool -l eth0
+
+        # 修改rx、tx queue的数量为8
+        ethtool -L eth0 rx 8
+        ethtool -L eth0 tx 8
         ```
 
-    - 3.NUMA 架构下的中断优化
+    - RX 队列大小
+        ```sh
+        # 查看队列大小
+        ethtool -g eth0
 
-        - 经过一番压测，我们发现使用8个core处理中断时，流量直至打满双万兆网卡也不会出现丢包，因此决定将中断的亲缘性设置为物理机上前8个core，Redis进程的亲缘性设置为剩下的所有core。调整后，确实有明显的效果，慢查询数量大幅优化，但对比初始情况，仍然还是高了一些些，还有没有优化空间呢？
-            ![image](./Pictures/net-kernel/redis-slowlog优化前后对比.avif)
+        # 修改为4096
+        ethtool -G eth0 rx 4096
+        ```
 
-        - 通过观察，我们发现一个有趣的现象，当只有CPU 0处理中断时，Redis进程更倾向于运行在CPU 0，以及CPU 0同一物理CPU下的其他核上。
+    - RX 队列权重（weight）。权重越大， 每次网卡 poll() 能处理的包越多。
 
-            - 于是有了以下推测：我们设置的中断亲缘性，是直接选取了前8个核心，但这8个core却可能是来自两块物理CPU的，在`/proc/cpuinfo`中，通过字段processor和physical id 能确认这一点，那么响应慢是否和物理CPU有关呢？物理CPU又和NUMA架构关联，每个物理CPU对应一个NUMA node，那么接下来就要从NUMA角度进行分析。
+        - queue 一般是和 CPU 绑定
 
-            - 当两个NUMA节点处理中断时，CPU实例化的`softnet_data`以及驱动分配的`sk_buffer`都可能是跨Node的，数据接收后对上层应用Redis来说，跨Node访问的几率也大大提高，并且无法充分利用L2、L3 cache，增加了延时。
+        ```sh
+        # 查看是否支持 flow indirection
+        ethtool -x eth0
 
-            - 由于`Linux wake affinity`特性，如果两个进程频繁互动，调度系统会觉得它们很有可能共享同样的数据，把它们放到同一CPU核心或NUMA Node有助于提高缓存和内存的访问性能，所以当一个进程唤醒另一个的时候，被唤醒的进程可能会被放到相同的CPU core或者相同的NUMA节点上。
+        RX flow hash indirection table for eth0 with 40 RX ring(s):
+            0:      0     1     2     3     4     5     6     7
+            8:      8     9    10    11    12    13    14    15
+           16:     16    17    18    19    20    21    22    23
+           24:     24    25    26    27    28    29    30    31
+           32:     32    33    34    35    36    37    38    39
+           40:      0     1     2     3     4     5     6     7
+           48:      8     9    10    11    12    13    14    15
+        ```
 
-                - 所有的网络中断都分配给CPU 0去处理，当中断处理完成时，由于`wakeup affinity`特性的作用，所唤醒的用户进程也被安排给CPU 0或其所在的numa节点上其他core。
+            - 第一行的哈希值是 0~7，分别对应 RX queue 0~7；
+            - 第六行的哈希值是 40~47，分别对应的也是 RX queue 0~7。
 
-        - 而当两个NUMA node处理中断时，这种调度特性有可能导致Redis进程在CPU core之间频繁迁移，造成性能损失。
-        - 综合上述，将中断都分配在同一NUMA Node中，中断处理函数和应用程序充分利用同NUMA下的L2、L3缓存、以及同Node下的内存，结合调度系统的`wake affinity`特性，能够更进一步降低延迟。
-            ![image](./Pictures/net-kernel/redis-slowlog优化前后对比1.avif)
+        ```sh
+        # 在前两个 RX queue 之间均匀的分发接收到的包
+        ethtool -X eth0 equal 2
+
+        # 设置自定义权重：给 rx queue 0 和 1 不同的权重：6 和 2
+        ethtool -X eth0 weight 6 2
+        ```
+
+- 一些网卡支持 “ntuple filtering” 特性。可以在硬件过滤包
+    ```sh
+    # 查看是否开启ntuple
+    ethtool -k eth0 | grep -i ntuple
+
+    # 开启ntuple
+    ethtool -K eth0 ntuple on
+
+    # 查看当前的 ntuple rules
+    ethtool -u eth0
+
+    # 设置规则 80 目的端口，绑定到 CPU 2 处理
+    ethtool -U eth0 flow-type tcp4 dst-port 80 action 2
+    ```
+
+- `NAPI` 从 `rx ring buffer`（环形缓冲区）轮询数据。相关参数
+
+    ```sh
+    # 触发二者中任何一个条件后，都会导致一次轮询结束
+    sysctl -a | grep netdev_budget
+    net.core.netdev_budget = 300         # 一个 CPU 单次轮询所允许的最大收包数量
+    net.core.netdev_budget_usecs = 2000  # 最长允许时间，单位是 us
+
+    # 临时修改值（重启后失效）
+    sysctl -w net.core.netdev_budget=3000
+    sysctl -w net.core.netdev_budget_usecs = 10000
+    ```
+
+- 硬中断合并：rx-usecs、tx-usecs、rx-frames、tx-frames
+
+    - 中断合并：NIC 排队引用接收`rx ring buffer`（环形缓冲区） rx 中的数据包，直到 rx-usecs 超时或 rx-frames，然后引发 HardIRQ（硬中断）。
+        - 中断过早：系统性能不佳（内核停止正在运行的任务来处理硬中断）
+        - 中断太晚：流量没有及时从 NIC 上分离出来 -> 更多流量 -> 覆盖 -> 流量丢失！
+        - 网络将接收/传输的流量（帧数）rx/tx-frames，或接收/传输流量后经过的时间（超时）rx/tx-usecs。
+
+    - 优点：防止中断风暴，提升吞吐，降低 CPU 使用量
+    - 缺点：延迟变大
+
+    ```sh
+    # 查看是否支持
+    ethtool -c eth0
+    Coalesce parameters for eth0:
+    Adaptive RX: on  TX: on        # 自适应中断合并
+    ......
+    rx-usecs: 16
+    rx-frames: 44
+    rx-usecs-irq: 0
+    rx-frames-irq: 0
+
+    # 开启中断合并
+    ethtool -C eth0 adaptive-rx on rx-usecs 0 rx-frames 0
+    ```
+
+- `NAPI` 从 `rx ring buffer`环形缓冲区轮询数据。
+    - 数据包超过了`netdev_max_backlog`会丢弃
+    ```sh
+    # backlog默认值为1000
+    sysctl -w net.core.netdev_max_backlog=3000
+
+    # 内核在 NAPI 中断上可以处理的最大数据包数量。默认值64
+    sysctl -w net.core.dev_weight=600
+    ```
+
+- 开启GRO（generic-receive-offload）
+    ```sh
+    # 查看是否开启GRO
+    ethtool -k eth0 | grep generic-receive-offload
+
+    # 修改 GRO 配置会涉及先 down 再 up 这个网卡
+    ethtool -K eth0 gro on
+    ```
+
+- RPS 记录一个全局的 hash table，包含所有 flow 的信息
+    ```sh
+    # 查看hash table 的大小
+    sysctl -a | grep rps_
+    net.core.rps_sock_flow_entries = 0 # kernel 5.10 默认值
+
+    # 临时修改
+    sysctl -w net.core.rps_sock_flow_entries=32768
+
+    # 设置每个 RX queue 的 flow 数量
+    sudo bash -c 'echo 2048 > /sys/class/net/eth0/queues/rx-0/rps_flow_cnt'
+    ```
+
+- IRQ 亲和性：
+    - smp_affinity它定义了允许执行该 IRQ 的中断服务例程 (ISR) 的 CPU 核心。
+    ```sh
+    # 守护进程控制`irqbalancer`
+    systemctl status irqbalance.service
+
+    # 但如果需要，也可以手动平衡，以确定是否irqbalance未以最佳方式平衡 IRQ，从而导致数据包丢失。
+    systemctl stop irqbalance.service
+
+    # 特定 IRQ 号的中断亲和性值存储在关联/proc/irq/<IRQ_NUMBER>/smp_affinity文件中，root 用户可以查看和修改该文件。存储在此文件中的值是一个十六进制位掩码，代表系统中的所有 CPU 核心。
+    # 要在具有 4 个核心的服务器上设置以太网驱动程序的中断亲和性（例如）：
+    grep eth0 /proc/interrupts
+    32:   0     140      45       850264      PCI-MSI-edge      eth0
+
+    cat /proc/irq/32/smp_affinity
+    f
+    echo 1 > /proc/irq/32/smp_affinity
+
+    cat /proc/irq/40/smp_affinity
+    ffffffff,ffffffff
+
+    echo 0xffffffff,00000000 > /proc/irq/40/smp_affinity
+
+    cat /proc/irq/40/smp_affinity
+    ffffffff,00000000
+    ```
+
+- [Linux 网络调优：内核网络栈参数篇](https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/#Linux_ingress)
+
+```bash
+# 回环接口的缓冲区大小
+net.core.netdev_max_backlog = 16384
+
+# 连接数上限
+net.core.somaxconn = 8192
+
+net.core.rmem_default = 1048576
+net.core.rmem_max = 16777216
+net.core.wmem_default = 1048576
+net.core.wmem_max = 16777216
+net.core.optmem_max = 65536
+net.ipv4.tcp_rmem = 4096 1048576 2097152
+net.ipv4.tcp_wmem = 4096 65536 16777216
+net.ipv4.udp_rmem_min = 8192
+net.ipv4.udp_wmem_min = 8192
+
+# tcp-fast-open是tcp拓展，允许在tcp syn第一次握手期间建立连接,交换数据,减少握手的网络延迟
+net.ipv4.tcp_fastopen = 3
+
+# 最大传输单元（MTU）越长，性能越好，但可靠性越差。
+net.ipv4.tcp_mtu_probing = 1
+```
+
+防止 ddos 攻击:
+
+```bash
+# tcp syn等待ack的最大队列长度
+net.ipv4.tcp_max_syn_backlog = 8192
+
+# TIME_WAIT状态下的最大套接字数
+net.ipv4.tcp_max_tw_buckets = 2000000
+
+# fin 秒数
+net.ipv4.tcp_fin_timeout = 10
+
+# 有助于抵御SYN flood攻击
+net.ipv4.tcp_syncookies = 1
+
+# 启用rp_filter(反向路径过滤)，内核将对所有接口收到的数据包进行源验证，可以防止攻击者使用IP欺骗
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.conf.all.rp_filter = 1
+
+# 禁止 icmp 重定向接受
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+net.ipv4.conf.all.secure_redirects = 0
+net.ipv4.conf.default.secure_redirects = 0
+net.ipv6.conf.all.accept_redirects = 0
+net.ipv6.conf.default.accept_redirects = 0
+
+# 在非路由上禁止 icmp 重定向发送
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+
+# 忽略 icmp echo 请求
+net.ipv4.icmp_echo_ignore_all = 1
+net.ipv6.icmp.echo_ignore_all = 1
+```
+
+Tcp keepalive
+
+```bash
+# 设置为等待一分钟
+net.ipv4.tcp_keepalive_time = 60
+net.ipv4.tcp_keepalive_intvl = 10
+net.ipv4.tcp_keepalive_probes = 6
+```
+
+关闭 tcp 慢启动:
+
+- 因为 http1.1 采用多连接和域名分片,当一些连接闲置时,连接的网速会下降
+
+- 以及 web 服务器的流量是间歇性
+
+```bash
+net.ipv4.tcp_slow_start_after_idle = 0
+```
+
+#### [洋芋编程：想要支持百万长连接，需要调优哪些参数？](https://mp.weixin.qq.com/s/7cdkLa_8OtycU0x10QmL4g)
+
+- 1.文件描述符限制
+    - 系统级别限制：操作系统会设置一个全局的文件描述符限制，控制整个系统能同时打开的最大文件数
+    - 用户级别限制：每个用户会有一个文件描述符的限制，控制这个用户能够同时打开的最大文件数
+    - 进程级别限制：每个进程也会有一个文件描述符的限制，控制单个进程能够同时打开的最大文件数
+
+    - `too many open files`, 产生这个问题的根本原因是: 短时间内打开大量网络 (文件) 连接，超过了操作系统对单个进程允许打开的文件描述符（file descriptor）数量限制。
+    ```sh
+    # 文件描述符数量，默认输出 1024 或者 65535。表示单个进程同时最多只能维持 1024 个网络 (例如 TCP) 连接。
+    ulimit -n
+    1024
+
+    # 临时性调整。只在当前会话 (终端) 中有效，退出或重启后失效
+    ulimit -HSn 1048576
+
+    # 永久性设置。重启永久生效
+    sudo vim /etc/security/limits.conf
+    # 调整文件描述符限制
+    # 注意: 实际生效时会以两者中的较小值为准 (所以最好的方法就是保持两个值相同)
+    * soft nofile 1048576
+    * hard nofile 1048576
+    root soft nofile 1048576
+    root hard nofile 1048576
+
+    # 运行 sysctl -p 命令生效，重启之后仍然有效
+    sysctl -p
+    ```
+
+    - 单个进程打开的文件描述符数量 不能超过 操作系统所有进程文件描述符数量 `/proc/sys/fs/file-max`, 所以需要修改对应的值:
+    ```sh
+    sudo vim /etc/sysctl.conf
+
+    # 操作系统所有进程一共可以打开的文件数量
+    # 增加/修改以下内容
+    # 注意: 该设置只对非 root 用户进行限制, root 不受影响
+    fs.file-max = 16777216
+
+    # 进程级别可以打开的文件数量
+    # 或者可以设置为一个比 soft nofile 和 hard nofile 略大的值
+    fs.nr_open = 16777216
+
+
+    # 运行 sysctl -p 命令生效，重启之后仍然有效。
+    sysctl -p
+
+    # 查看配置
+    cat /proc/sys/fs/file-nr
+    # 第一个数表示当前系统使用的文件描述符数
+    # 第二个数表示分配后已释放的文件描述符数
+    # 第三个数等于 file-max
+    1344    0       1048576
+    ```
+
+- Linux 内核参数调优
+
+    - 打开系统配置文件 `/etc/sysctl.conf`，增加 (或修改) 以下配置数据，参数名称及其作用已经写在了注释中。
+
+    ```sh
+    # 设置系统的 TCP TIME_WAIT 数量，如果超过该值
+    # 不需要等待 2MSL，直接关闭
+    net.ipv4.tcp_max_tw_buckets = 1048576
+
+    # 将处于 TIME_WAIT 状态的套接字重用于新的连接
+    # 如果新连接的时间戳 大于 旧连接的最新时间戳
+    # 重用该状态下的现有 TIME_WAIT 连接，这两个参数主要针对接收方 (服务端)
+    # 对于发送方 (客户端) ，这两个参数没有任何作用
+    net.ipv4.tcp_tw_reuse = 1
+    # 必须配合使用
+    net.ipv4.tcp_timestamps = 1
+
+    # 启用快速回收 TIME_WAIT 资源
+    # net.ipv4.tcp_tw_recycle = 1
+    # 能够更快地回收 TIME_WAIT 套接字
+    # 此选项会导致处于 NAT 网络的客户端超时，建议设置为 0
+    # 因为当来自同一公网 IP 地址的不同主机尝试与服务器建立连接时，服务器会因为时间戳的不匹配而拒绝新的连接
+    # 这是因为内核会认为这些连接是旧连接的重传
+    # 该配置会在 Linux/4.12 被移除
+    # 在之后的版本中查看/设置会提示 "cannot stat /proc/sys/net/ipv4/tcp_tw_recycle"
+    # net.ipv4.tcp_tw_recycle = 0
+
+    # 缩短 Keepalive 探测失败后，连接失效之前发送的保活探测包数量
+    net.ipv4.tcp_keepalive_probes = 3
+
+    # 缩短发送 Keepalive 探测包的间隔时间
+    net.ipv4.tcp_keepalive_intvl = 15
+
+    # 缩短最后一次数据包到 Keepalive 探测包的间隔时间
+
+    # 减小 TCP 连接保活时间
+    # 决定了 TCP 连接在没有数据传输时，多久发送一次保活探测包，以确保连接的另一端仍然存在
+    # 默认为 7200 秒
+    net.ipv4.tcp_keepalive_time = 600
+
+    # 控制 TCP 的超时重传次数，决定了在 TCP 连接丢失或没有响应的情况下，内核重传数据包的最大次数
+    # 如果超过这个次数仍未收到对方的确认包，TCP 连接将被终止
+    net.ipv4.tcp_retries2 = 10
+
+    # 缩短处于 TIME_WAIT 状态的超时时间
+    # 决定了在发送 FIN（Finish）包之后，TCP 连接保持在 FIN-WAIT-2 状态的时间 (对 FIN-WAIT-1 状态无效)
+    # 主要作用是在 TCP 连接关闭时，为了等待对方关闭连接而保留资源的时间
+    # 如果超过这个时间仍未收到 FIN 包，连接将被关闭
+    # 更快地检测和释放无响应的连接，释放资源
+    net.ipv4.tcp_fin_timeout = 15
+
+    # 调整 TCP 接收和发送窗口的大小，以提高吞吐量
+    # 三个数值分别是 min，default，max，系统会根据这些设置，自动调整 TCP 接收 / 发送缓冲区的大小
+    net.ipv4.tcp_mem = 8388608 12582912 16777216
+    net.ipv4.tcp_rmem = 8192 87380 16777216
+    net.ipv4.tcp_wmem = 8192 65535 16777216
+
+    # 定义了系统中每一个端口监听队列的最大长度
+    net.core.somaxconn = 65535
+
+    # 增加半连接队列容量
+    # 除了系统参数外 (net.core.somaxconn, net.ipv4.tcp_max_syn_backlog)
+    # 程序设置的 backlog 参数也会影响，以三者中的较小值为准
+    net.ipv4.tcp_max_syn_backlog = 65535
+
+    # 全连接队列已满后，如何处理新到连接 ?
+    # 如果设置为 0 (默认情况)
+    #   客户端发送的 ACK 报文会被直接丢掉，然后服务端重新发送 SYN+ACK (重传) 报文
+    #       如果客户端设置的连接超时时间比较短，很容易在这里就超时了，返回 connection timeout 错误，自然也就没有下文了
+    #       如果客户端设置的连接超时时间比较长，收到服务端的 SYN+ACK (重传) 报文之后，会认为之前的 ACK 报文丢包了
+    #       于是再次发送 ACK 报文，也许可以等到服务端全连接队列有空闲之后，建立连接完成
+    #   当服务端重试次数到达上限 (tcp_synack_retries) 之后，发送 RST 报文给客户端
+    #       默认情况下，tcp_synack_retries 参数等于 5, 而且采用指数退避算法
+    #       也就是说，5 次的重试时间间隔为 1s, 2s, 4s, 8s, 16s, 总共 31s
+    #       第 5 次重试发出后还要等 32s 才能知道第 5 次重试也超时了，所以总共需要等待 1s + 2s + 4s+ 8s+ 16s + 32s = 63s
+    # 如果设置为 1
+    #   服务端直接发送 RST 报文给客户端，返回 connection reset by peer
+    #   设置为 1, 可以避免服务端给客户端发送 SYN+ACK
+    #   但是会带来另外一个问题: 客户端无法根据 RST 报文判断出，服务端拒绝的具体原因:
+    #   因为对应的端口没有应用程序监听，还是全队列满了
+    # 除了系统参数外 (net.core.somaxconn)
+    # 程序设置的 backlog 参数也会影响，以两者中的较小值为准
+    # 所以全连接队列大小 = min(backlog, somaxconn)
+    net.ipv4.tcp_abort_on_overflow = 1
+
+    # 增大每个套接字的缓冲区大小
+    net.core.optmem_max = 81920
+    # 增大套接字接收缓冲区大小
+    net.core.rmem_max = 16777216
+    # 增大套接字发送缓冲区大小
+    net.core.wmem_max = 16777216
+
+    # 增加网络接口队列长度，可以避免在高负载情况下丢包
+    # 在每个网络接口接收数据包的速率比内核处理这些包的速率快时，允许送到队列的数据包的最大数量
+    net.core.netdev_max_backlog = 65535
+
+    # 增加连接追踪表的大小，可以支持更多的并发连接
+    # 注意：如果防火墙没开则会提示 error: "net.netfilter.nf_conntrack_max" is an unknown key，忽略即可
+    net.netfilter.nf_conntrack_max = 1048576
+
+    # 缩短连接追踪表中处于 TIME_WAIT 状态连接的超时时间
+    net.netfilter.nf_conntrack_tcp_timeout_time_wait = 30
+    ```
+
+    ```sh
+    # 运行 sysctl -p 命令生效，重启之后仍然有效。
+    sysctl -p
+    ```
+
+- 客户端参数
+
+    - 当服务器充当 “客户端角色” 时 (例如代理服务器)，连接后端服务器器时，每个连接需要分配一个临时端口号。
+
+    ```sh
+    # 查询系统配置的临时端口号范围
+    sysctl net.ipv4.ip_local_port_range
+
+    # 增加系统配置的临时端口号范围
+    sysctl -w net.ipv4.ip_local_port_range="10000 65535"
+    ```
+
 
 # Overlay虚拟化技术
 
@@ -5906,7 +6530,11 @@ sudo tc qdisc del dev eth0 root
 
 ## SD-WAN（Software-Defined Wide Area Network）
 
-# DPDK
+# DPDK（英特尔数据平面开发工具集）
+
+> 简单来说：就是绕开内核技术，直接将网络数据包从网卡传递到用户态应用程序
+
+- 严重依赖硬件。
 
 - Intel DPDK 全称为 Intel Data Plane Development Kit，直译为“英特尔数据平面开发工具集”，它可以摆脱 UNIX 网络数据包处理机制的局限，实现超高速的网络包处理。
 
@@ -6009,415 +6637,6 @@ sudo tc qdisc del dev eth0 root
             - 慢速 API：比如说 gettimeofday，虽然在 64 位下通过 vDSO 已经不需要陷入内核态，只是一个纯内存访问，每秒也能达到几千万的级别。但是，不要忘记了我们在 10GE 下，每秒的处理能力就要达到几千万。所以即使是 gettimeofday 也属于慢速 API。
 
             - DPDK 提供 Cycles 接口，例如 rte_get_tsc_cycles 接口，基于 HPET 或 TSC 实现。
-
-# sysctl
-
-- [sysctl-ArchWiki](https://wiki.archlinux.org/index.php/sysctl#Improving_performance)
-
-- [linux sysctl net 字段 文档](https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt)
-- [linux sysctl 每个字段文档](https://sysctl-explorer.net/)
-- [linux net.netfilter 文档](https://www.kernel.org/doc/Documentation/networking/nf_conntrack-sysctl.txt)
-
-sysctl 在运行时检查和更改内核参数的工具,在`procfs文件系统`(也就是`/proc`路径)中实现的
-
-- 基本用法：
-
-```sh
-# 以下两条命令相同，重启后失效，如需持久化需配置 /etc/sysctl.conf
-echo bar > /proc/sys/net/foo
-sysctl -w net.foo=bar
-
-# 写入/etc/sysctl.conf的配置，需要以下命令进行加载
-sysctl --system
-
-# 查看所有配置
-sysctl --all
-```
-
-# 网络优化
-
-- [arthurchiao：Linux 网络栈接收数据（RX）：配置调优（2022）](http://arthurchiao.art/blog/linux-net-stack-tuning-rx-zh/)
-
-    - 这里的RX queue应该就是ringbuffer
-
-    - RX/TX queue数量
-        ```sh
-        # 查看是否支持 RSS/多队列
-        ethtool -l eth0
-
-        # 修改rx、tx queue的数量为8
-        ethtool -L eth0 rx 8
-        ethtool -L eth0 tx 8
-        ```
-
-    - RX 队列大小
-        ```sh
-        # 查看队列大小
-        ethtool -g eth0
-
-        # 修改为4096
-        ethtool -G eth0 rx 4096
-        ```
-
-    - RX 队列权重（weight）。权重越大， 每次网卡 poll() 能处理的包越多。
-
-        - queue 一般是和 CPU 绑定
-
-        ```sh
-        # 查看是否支持 flow indirection
-        ethtool -x eth0
-
-        RX flow hash indirection table for eth0 with 40 RX ring(s):
-            0:      0     1     2     3     4     5     6     7
-            8:      8     9    10    11    12    13    14    15
-           16:     16    17    18    19    20    21    22    23
-           24:     24    25    26    27    28    29    30    31
-           32:     32    33    34    35    36    37    38    39
-           40:      0     1     2     3     4     5     6     7
-           48:      8     9    10    11    12    13    14    15
-        ```
-
-            - 第一行的哈希值是 0~7，分别对应 RX queue 0~7；
-            - 第六行的哈希值是 40~47，分别对应的也是 RX queue 0~7。
-
-        ```sh
-        # 在前两个 RX queue 之间均匀的分发接收到的包
-        ethtool -X eth0 equal 2
-
-        # 设置自定义权重：给 rx queue 0 和 1 不同的权重：6 和 2
-        ethtool -X eth0 weight 6 2
-        ```
-
-    - 一些网卡支持 “ntuple filtering” 特性。可以在硬件过滤包
-        ```sh
-        # 查看是否开启ntuple
-        ethtool -k eth0 | grep -i ntuple
-
-        # 开启ntuple
-        ethtool -K eth0 ntuple on
-
-        # 查看当前的 ntuple rules
-        ethtool -u eth0
-
-        # 设置规则 80 目的端口，绑定到 CPU 2 处理
-        ethtool -U eth0 flow-type tcp4 dst-port 80 action 2
-        ```
-
-    - 硬中断合并
-
-        - 优点：防止中断风暴，提升吞吐，降低 CPU 使用量
-        - 缺点：延迟变大
-
-        ```sh
-        # 查看是否支持
-        ethtool -c eth0
-        Coalesce parameters for eth0:
-        Adaptive RX: on  TX: on        # 自适应中断合并
-        ......
-
-        # 开启中断合并
-        ethtool -C eth0 adaptive-rx on
-        ```
-
-    - cpu轮询收包的相关参数
-
-        ```sh
-        # 触发二者中任何一个条件后，都会导致一次轮询结束
-        sysctl -a | grep netdev_budget
-        net.core.netdev_budget = 300         # 一个 CPU 单次轮询所允许的最大收包数量
-        net.core.netdev_budget_usecs = 2000  # 最长允许时间，单位是 us
-
-        # 临时修改值（重启后失效）
-        sysctl -w net.core.netdev_budget=3000
-        sysctl -w net.core.netdev_budget_usecs = 10000
-        ```
-
-    - 开启GRO（generic-receive-offload）
-        ```sh
-        # 查看是否开启GRO
-        ethtool -k eth0 | grep generic-receive-offload
-
-        # 修改 GRO 配置会涉及先 down 再 up 这个网卡
-        ethtool -K eth0 gro on
-        ```
-
-    - RPS 记录一个全局的 hash table，包含所有 flow 的信息
-        ```sh
-        # 查看hash table 的大小
-        sysctl -a | grep rps_
-        net.core.rps_sock_flow_entries = 0 # kernel 5.10 默认值
-
-        # 临时修改
-        sysctl -w net.core.rps_sock_flow_entries=32768
-
-        # 设置每个 RX queue 的 flow 数量
-        sudo bash -c 'echo 2048 > /sys/class/net/eth0/queues/rx-0/rps_flow_cnt'
-        ```
-
-    - 老驱动调优
-        ```sh
-        # backlog默认值为1000
-        sysctl -w net.core.netdev_max_backlog=3000
-
-        # backlog poll loop 可以消耗的整体 budget。默认值64
-        sysctl -w net.core.dev_weight=600
-        ```
-
-- [Linux 网络调优：内核网络栈参数篇](https://www.starduster.me/2020/03/02/linux-network-tuning-kernel-parameter/#Linux_ingress)
-
-    ```bash
-    # 回环接口的缓冲区大小
-    net.core.netdev_max_backlog = 16384
-
-    # 连接数上限
-    net.core.somaxconn = 8192
-
-    net.core.rmem_default = 1048576
-    net.core.rmem_max = 16777216
-    net.core.wmem_default = 1048576
-    net.core.wmem_max = 16777216
-    net.core.optmem_max = 65536
-    net.ipv4.tcp_rmem = 4096 1048576 2097152
-    net.ipv4.tcp_wmem = 4096 65536 16777216
-    net.ipv4.udp_rmem_min = 8192
-    net.ipv4.udp_wmem_min = 8192
-
-    # tcp-fast-open是tcp拓展，允许在tcp syn第一次握手期间建立连接,交换数据,减少握手的网络延迟
-    net.ipv4.tcp_fastopen = 3
-
-    # 最大传输单元（MTU）越长，性能越好，但可靠性越差。
-    net.ipv4.tcp_mtu_probing = 1
-    ```
-
-    防止 ddos 攻击:
-
-    ```bash
-    # tcp syn等待ack的最大队列长度
-    net.ipv4.tcp_max_syn_backlog = 8192
-
-    # TIME_WAIT状态下的最大套接字数
-    net.ipv4.tcp_max_tw_buckets = 2000000
-
-    # fin 秒数
-    net.ipv4.tcp_fin_timeout = 10
-
-    # 有助于抵御SYN flood攻击
-    net.ipv4.tcp_syncookies = 1
-
-    # 启用rp_filter(反向路径过滤)，内核将对所有接口收到的数据包进行源验证，可以防止攻击者使用IP欺骗
-    net.ipv4.conf.default.rp_filter = 1
-    net.ipv4.conf.all.rp_filter = 1
-
-    # 禁止 icmp 重定向接受
-    net.ipv4.conf.all.accept_redirects = 0
-    net.ipv4.conf.default.accept_redirects = 0
-    net.ipv4.conf.all.secure_redirects = 0
-    net.ipv4.conf.default.secure_redirects = 0
-    net.ipv6.conf.all.accept_redirects = 0
-    net.ipv6.conf.default.accept_redirects = 0
-
-    # 在非路由上禁止 icmp 重定向发送
-    net.ipv4.conf.all.send_redirects = 0
-    net.ipv4.conf.default.send_redirects = 0
-
-    # 忽略 icmp echo 请求
-    net.ipv4.icmp_echo_ignore_all = 1
-    net.ipv6.icmp.echo_ignore_all = 1
-    ```
-
-    Tcp keepalive
-
-    ```bash
-    # 设置为等待一分钟
-    net.ipv4.tcp_keepalive_time = 60
-    net.ipv4.tcp_keepalive_intvl = 10
-    net.ipv4.tcp_keepalive_probes = 6
-    ```
-
-    关闭 tcp 慢启动:
-
-    - 因为 http1.1 采用多连接和域名分片,当一些连接闲置时,连接的网速会下降
-
-    - 以及 web 服务器的流量是间歇性
-
-    ```bash
-    net.ipv4.tcp_slow_start_after_idle = 0
-    ```
-
-## [洋芋编程：想要支持百万长连接，需要调优哪些参数？](https://mp.weixin.qq.com/s/7cdkLa_8OtycU0x10QmL4g)
-
-- 1.文件描述符限制
-    - 系统级别限制：操作系统会设置一个全局的文件描述符限制，控制整个系统能同时打开的最大文件数
-    - 用户级别限制：每个用户会有一个文件描述符的限制，控制这个用户能够同时打开的最大文件数
-    - 进程级别限制：每个进程也会有一个文件描述符的限制，控制单个进程能够同时打开的最大文件数
-
-    - `too many open files`, 产生这个问题的根本原因是: 短时间内打开大量网络 (文件) 连接，超过了操作系统对单个进程允许打开的文件描述符（file descriptor）数量限制。
-    ```sh
-    # 文件描述符数量，默认输出 1024 或者 65535。表示单个进程同时最多只能维持 1024 个网络 (例如 TCP) 连接。
-    ulimit -n
-    1024
-
-    # 临时性调整。只在当前会话 (终端) 中有效，退出或重启后失效
-    ulimit -HSn 1048576
-
-    # 永久性设置。重启永久生效
-    sudo vim /etc/security/limits.conf
-    # 调整文件描述符限制
-    # 注意: 实际生效时会以两者中的较小值为准 (所以最好的方法就是保持两个值相同)
-    * soft nofile 1048576
-    * hard nofile 1048576
-    root soft nofile 1048576
-    root hard nofile 1048576
-
-    # 运行 sysctl -p 命令生效，重启之后仍然有效
-    sysctl -p
-    ```
-
-    - 单个进程打开的文件描述符数量 不能超过 操作系统所有进程文件描述符数量 `/proc/sys/fs/file-max`, 所以需要修改对应的值:
-    ```sh
-    sudo vim /etc/sysctl.conf
-
-    # 操作系统所有进程一共可以打开的文件数量
-    # 增加/修改以下内容
-    # 注意: 该设置只对非 root 用户进行限制, root 不受影响
-    fs.file-max = 16777216
-
-    # 进程级别可以打开的文件数量
-    # 或者可以设置为一个比 soft nofile 和 hard nofile 略大的值
-    fs.nr_open = 16777216
-
-
-    # 运行 sysctl -p 命令生效，重启之后仍然有效。
-    sysctl -p
-
-    # 查看配置
-    cat /proc/sys/fs/file-nr
-    # 第一个数表示当前系统使用的文件描述符数
-    # 第二个数表示分配后已释放的文件描述符数
-    # 第三个数等于 file-max
-    1344    0       1048576
-    ```
-
-- Linux 内核参数调优
-
-    - 打开系统配置文件 `/etc/sysctl.conf`，增加 (或修改) 以下配置数据，参数名称及其作用已经写在了注释中。
-
-    ```sh
-    # 设置系统的 TCP TIME_WAIT 数量，如果超过该值
-    # 不需要等待 2MSL，直接关闭
-    net.ipv4.tcp_max_tw_buckets = 1048576
-
-    # 将处于 TIME_WAIT 状态的套接字重用于新的连接
-    # 如果新连接的时间戳 大于 旧连接的最新时间戳
-    # 重用该状态下的现有 TIME_WAIT 连接，这两个参数主要针对接收方 (服务端)
-    # 对于发送方 (客户端) ，这两个参数没有任何作用
-    net.ipv4.tcp_tw_reuse = 1
-    # 必须配合使用
-    net.ipv4.tcp_timestamps = 1
-
-    # 启用快速回收 TIME_WAIT 资源
-    # net.ipv4.tcp_tw_recycle = 1
-    # 能够更快地回收 TIME_WAIT 套接字
-    # 此选项会导致处于 NAT 网络的客户端超时，建议设置为 0
-    # 因为当来自同一公网 IP 地址的不同主机尝试与服务器建立连接时，服务器会因为时间戳的不匹配而拒绝新的连接
-    # 这是因为内核会认为这些连接是旧连接的重传
-    # 该配置会在 Linux/4.12 被移除
-    # 在之后的版本中查看/设置会提示 "cannot stat /proc/sys/net/ipv4/tcp_tw_recycle"
-    # net.ipv4.tcp_tw_recycle = 0
-
-    # 缩短 Keepalive 探测失败后，连接失效之前发送的保活探测包数量
-    net.ipv4.tcp_keepalive_probes = 3
-
-    # 缩短发送 Keepalive 探测包的间隔时间
-    net.ipv4.tcp_keepalive_intvl = 15
-
-    # 缩短最后一次数据包到 Keepalive 探测包的间隔时间
-
-    # 减小 TCP 连接保活时间
-    # 决定了 TCP 连接在没有数据传输时，多久发送一次保活探测包，以确保连接的另一端仍然存在
-    # 默认为 7200 秒
-    net.ipv4.tcp_keepalive_time = 600
-
-    # 控制 TCP 的超时重传次数，决定了在 TCP 连接丢失或没有响应的情况下，内核重传数据包的最大次数
-    # 如果超过这个次数仍未收到对方的确认包，TCP 连接将被终止
-    net.ipv4.tcp_retries2 = 10
-
-    # 缩短处于 TIME_WAIT 状态的超时时间
-    # 决定了在发送 FIN（Finish）包之后，TCP 连接保持在 FIN-WAIT-2 状态的时间 (对 FIN-WAIT-1 状态无效)
-    # 主要作用是在 TCP 连接关闭时，为了等待对方关闭连接而保留资源的时间
-    # 如果超过这个时间仍未收到 FIN 包，连接将被关闭
-    # 更快地检测和释放无响应的连接，释放资源
-    net.ipv4.tcp_fin_timeout = 15
-
-    # 调整 TCP 接收和发送窗口的大小，以提高吞吐量
-    # 三个数值分别是 min，default，max，系统会根据这些设置，自动调整 TCP 接收 / 发送缓冲区的大小
-    net.ipv4.tcp_mem = 8388608 12582912 16777216
-    net.ipv4.tcp_rmem = 8192 87380 16777216
-    net.ipv4.tcp_wmem = 8192 65535 16777216
-
-    # 定义了系统中每一个端口监听队列的最大长度
-    net.core.somaxconn = 65535
-
-    # 增加半连接队列容量
-    # 除了系统参数外 (net.core.somaxconn, net.ipv4.tcp_max_syn_backlog)
-    # 程序设置的 backlog 参数也会影响，以三者中的较小值为准
-    net.ipv4.tcp_max_syn_backlog = 65535
-
-    # 全连接队列已满后，如何处理新到连接 ?
-    # 如果设置为 0 (默认情况)
-    #   客户端发送的 ACK 报文会被直接丢掉，然后服务端重新发送 SYN+ACK (重传) 报文
-    #       如果客户端设置的连接超时时间比较短，很容易在这里就超时了，返回 connection timeout 错误，自然也就没有下文了
-    #       如果客户端设置的连接超时时间比较长，收到服务端的 SYN+ACK (重传) 报文之后，会认为之前的 ACK 报文丢包了
-    #       于是再次发送 ACK 报文，也许可以等到服务端全连接队列有空闲之后，建立连接完成
-    #   当服务端重试次数到达上限 (tcp_synack_retries) 之后，发送 RST 报文给客户端
-    #       默认情况下，tcp_synack_retries 参数等于 5, 而且采用指数退避算法
-    #       也就是说，5 次的重试时间间隔为 1s, 2s, 4s, 8s, 16s, 总共 31s
-    #       第 5 次重试发出后还要等 32s 才能知道第 5 次重试也超时了，所以总共需要等待 1s + 2s + 4s+ 8s+ 16s + 32s = 63s
-    # 如果设置为 1
-    #   服务端直接发送 RST 报文给客户端，返回 connection reset by peer
-    #   设置为 1, 可以避免服务端给客户端发送 SYN+ACK
-    #   但是会带来另外一个问题: 客户端无法根据 RST 报文判断出，服务端拒绝的具体原因:
-    #   因为对应的端口没有应用程序监听，还是全队列满了
-    # 除了系统参数外 (net.core.somaxconn)
-    # 程序设置的 backlog 参数也会影响，以两者中的较小值为准
-    # 所以全连接队列大小 = min(backlog, somaxconn)
-    net.ipv4.tcp_abort_on_overflow = 1
-
-    # 增大每个套接字的缓冲区大小
-    net.core.optmem_max = 81920
-    # 增大套接字接收缓冲区大小
-    net.core.rmem_max = 16777216
-    # 增大套接字发送缓冲区大小
-    net.core.wmem_max = 16777216
-
-    # 增加网络接口队列长度，可以避免在高负载情况下丢包
-    # 在每个网络接口接收数据包的速率比内核处理这些包的速率快时，允许送到队列的数据包的最大数量
-    net.core.netdev_max_backlog = 65535
-
-    # 增加连接追踪表的大小，可以支持更多的并发连接
-    # 注意：如果防火墙没开则会提示 error: "net.netfilter.nf_conntrack_max" is an unknown key，忽略即可
-    net.netfilter.nf_conntrack_max = 1048576
-
-    # 缩短连接追踪表中处于 TIME_WAIT 状态连接的超时时间
-    net.netfilter.nf_conntrack_tcp_timeout_time_wait = 30
-    ```
-
-    ```sh
-    # 运行 sysctl -p 命令生效，重启之后仍然有效。
-    sysctl -p
-    ```
-
-- 客户端参数
-
-    - 当服务器充当 “客户端角色” 时 (例如代理服务器)，连接后端服务器器时，每个连接需要分配一个临时端口号。
-
-    ```sh
-    # 查询系统配置的临时端口号范围
-    sysctl net.ipv4.ip_local_port_range
-
-    # 增加系统配置的临时端口号范围
-    sysctl -w net.ipv4.ip_local_port_range="10000 65535"
-    ```
 
 # DDOS攻击
 

@@ -4082,6 +4082,8 @@ docker run --rm -ti \
         redis-server --slaveof 172.31.17.84 6379
     ```
 
+- [imgx：将本地镜像文件推送至远程主机](https://github.com/devzhi/imgx)
+
 # reference article(优秀文章)
 
 - [docker 官方文档](https://docs.docker.com/engine/reference/run/)

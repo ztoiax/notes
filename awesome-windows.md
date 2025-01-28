@@ -102,6 +102,8 @@
     - 支持 Find Everywhere 快速跳转
     - 支持数据加密
 
+- [WeChatMsg：提取微信聊天记录的工具。导出成 HTML、Word、Excel 和 txt 等格式的文档。导出的 HTML 文档，还原了微信聊天界面，而且包含文本、图片、视频、表情包、语音、文件、转账等记录，导出的数据可用于永久保存、生成年度报告和训练个人聊天助手。](https://github.com/LC044/WeChatMsg)
+
 ## 手机与电脑交互
 
 - [intel unison：手机电脑消息、文件传输]()

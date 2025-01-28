@@ -19,9 +19,6 @@
     * [ngrep（抓包）](#ngrep抓包)
     * [mitmproxy(代理http, 并抓包)](#mitmproxy代理http-并抓包)
     * [socat](#socat)
-    * [tc(traffic control队列控制)](#tctraffic-control队列控制)
-    * [tailscale：WireGuard vpn](#tailscalewireguard-vpn)
-    * [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](#chisel在-http-通信上建立-tcpudp-隧道)
   * [应用层](#应用层)
     * [http](#http)
       * [curl](#curl)
@@ -46,6 +43,10 @@
       * [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](#dns-detector从-dns-服务器获取某个网站的所有-ip-地址逐一进行延迟测试)
     * [socks](#socks)
       * [tun2socks：将tcp/udp等流量转换为socks](#tun2socks将tcpudp等流量转换为socks)
+    * [vpn、组网](#vpn组网)
+      * [tailscale：WireGuard vpn](#tailscalewireguard-vpn)
+      * [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](#chisel在-http-通信上建立-tcpudp-隧道)
+      * [Easytier：异地组网](#easytier异地组网)
   * [表示层](#表示层)
     * [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](#testssl测试网站是否支持ssltls以及检测漏洞)
   * [传输层](#传输层)
@@ -54,6 +55,7 @@
       * [捕抓 TCP SYN，ACK 和 FIN 包](#捕抓-tcp-synack-和-fin-包)
     * [tshark、editcap、capinfos：抓包](#tsharkeditcapcapinfos抓包)
     * [wireshark：tcpdump gui版](#wiresharktcpdump-gui版)
+    * [stratoshark：云环境的wireshark](#stratoshark云环境的wireshark)
     * [ptcpdump：抓包](#ptcpdump抓包)
     * [netcap：跟踪整个协议栈的抓包工具](#netcap跟踪整个协议栈的抓包工具)
     * [nmap](#nmap)
@@ -84,9 +86,11 @@
         * [复杂规则](#复杂规则)
       * [iptables和NAT](#iptables和nat)
     * [TCP_Wrappers（第二层防火墙）](#tcp_wrappers第二层防火墙)
+  * [数据链路层](#数据链路层)
     * [ethtool](#ethtool)
     * [arp](#arp)
     * [arpwatch](#arpwatch)
+    * [tc(traffic control队列控制)](#tctraffic-control队列控制)
 * [性能监控](#性能监控)
   * [观察工具](#观察工具)
     * [查看吞吐率，PPS（Packet Per Second 包 / 秒）](#查看吞吐率ppspacket-per-second-包--秒)
@@ -569,57 +573,6 @@ sudo mv /run/mysqld/mysqld.sock /run/mysqld/mysqld.sock.original
 sudo socat -t100 -x -v UNIX-LISTEN:/run/mysqld/mysqld.sock,mode=777,reuseaddr,fork UNIX-CONNECT:mysqld.sock.original
 ```
 
-
-### tc(traffic control队列控制)
-
-qdisc:
-
-```bash
-# 查看队列
-tc -d qdisc
-
-# 查看队列流量
-tc -s qdisc
-
-# 设置根队列 1000 MBit/s
-tc qdisc add dev ens3 root handle 1: \
-    cbq avpkt 1000 bandwidth 1000Mbit
-
-# 分别设置3类,1M,10M,100M
-tc class add dev ens3 parent 1: classid 1:1 \
-    cbq rate 1Mbit allot 1500 bounded
-
-tc class add dev ens3 parent 1: classid 1:2 \
-    cbq rate 10Mbit allot 1500 bounded
-
-tc class add dev ens3 parent 1: classid 1:3 \
-    cbq rate 100Mbit allot 1500 bounded
-
-# 过滤5001目标端口
-tc filter add dev ens3 parent 1: \
-    protocol ip u32 match ip dport 5001 0xffff flowid 1:1
-
-tc filter add dev ens3 parent 1: \
-    protocol ip u32 match ip protocol 6 0xff \
-    match ip dport 5001 0xffff flowid 1:2
-
-tc filter add dev ens3 parent 1: \
-    protocol ipv6 u32 match ip6 protocol 6 0xff \
-    match ip6 dport 5001 0xffff flowid 1:3
-```
-
-### [tailscale：WireGuard vpn](https://github.com/tailscale/tailscale)
-
-```sh
-# 发送文件
-sudo tailscale file cp filename ip:
-
-# 设置接受文件的目录
-sudo tailscale file get .
-```
-
-### [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](https://github.com/jpillora/chisel)
-
 ## 应用层
 
 ### http
@@ -1070,6 +1023,25 @@ dig
 
 #### [tun2socks：将tcp/udp等流量转换为socks](https://github.com/xjasonlyu/tun2socks)
 
+### vpn、组网
+
+#### [tailscale：WireGuard vpn](https://github.com/tailscale/tailscale)
+
+```sh
+# 发送文件
+sudo tailscale file cp filename ip:
+
+# 设置接受文件的目录
+sudo tailscale file get .
+```
+
+#### [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](https://github.com/jpillora/chisel)
+
+#### [Easytier：异地组网](https://github.com/EasyTier/EasyTier)
+
+- [Github 星标 2.3 K: 异地组网新工具 Easytier，助你轻松实现跨地域设备互联](https://mp.weixin.qq.com/s/JyRo48qNRyytFAp0cwdvTA)
+
+- EasyTier 默认是不区分客户端还是服务端，故本次部署即是服务端又是客户端。一般情况下 开放监听端口为服务端，不开放监听端口为客户端
 ## 表示层
 
 ### [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](https://github.com/drwetter/testssl.sh)
@@ -1357,6 +1329,8 @@ tshark -q -n -r test.pcapng -z ip_srcdst,tree
 ### [wireshark：tcpdump gui版](https://github.com/wireshark/wireshark)
 
 - [（视频）技术爬爬虾：网络顶级掠食者 Wireshark抓包从入门到实战](https://www.bilibili.com/video/BV12X6gYUEqA)
+
+### [stratoshark：云环境的wireshark](https://stratoshark.org/)
 
 ### [ptcpdump：抓包](https://github.com/mozillazg/ptcpdump)
 
@@ -2619,6 +2593,8 @@ yum install tcp_wrappers
     sshd : ALL: spawn (echo "Security notice from host $(/bin/hostname)" | /bin/mail -s "reject %d-%h ssh" root)
     ```
 
+## 数据链路层
+
 ### ethtool
 
 - 这个命令之所以能查看⽹卡收发包统计、能修改⽹卡⾃适应模式、能调整 RX 队列的数量和⼤⼩，是因为 ethtool 命令最终调⽤到了⽹卡驱动的相应⽅法，⽽不是 ethtool 本身有这个超能⼒
@@ -2654,6 +2630,45 @@ arp -d 192.168.1.1
 ```bash
 arpwatch -i enp27s0 -f arpwatch.log
 ```
+
+### tc(traffic control队列控制)
+
+qdisc:
+
+```bash
+# 查看队列
+tc -d qdisc
+
+# 查看队列流量
+tc -s qdisc
+
+# 设置根队列 1000 MBit/s
+tc qdisc add dev ens3 root handle 1: \
+    cbq avpkt 1000 bandwidth 1000Mbit
+
+# 分别设置3类,1M,10M,100M
+tc class add dev ens3 parent 1: classid 1:1 \
+    cbq rate 1Mbit allot 1500 bounded
+
+tc class add dev ens3 parent 1: classid 1:2 \
+    cbq rate 10Mbit allot 1500 bounded
+
+tc class add dev ens3 parent 1: classid 1:3 \
+    cbq rate 100Mbit allot 1500 bounded
+
+# 过滤5001目标端口
+tc filter add dev ens3 parent 1: \
+    protocol ip u32 match ip dport 5001 0xffff flowid 1:1
+
+tc filter add dev ens3 parent 1: \
+    protocol ip u32 match ip protocol 6 0xff \
+    match ip dport 5001 0xffff flowid 1:2
+
+tc filter add dev ens3 parent 1: \
+    protocol ipv6 u32 match ip6 protocol 6 0xff \
+    match ip6 dport 5001 0xffff flowid 1:3
+```
+
 
 # 性能监控
 ## 观察工具

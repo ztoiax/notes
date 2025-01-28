@@ -142,6 +142,7 @@
     * [tengine](#tengine)
     * [Kong](#kong)
   * [reference](#reference)
+* [caddy](#caddy)
 
 <!-- mtoc-end -->
 
@@ -6348,3 +6349,6 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 
 - [开发内功修炼：万字多图，搞懂 Nginx 高性能网络工作原理！](https://mp.weixin.qq.com/s/AX6Fval8RwkgzptdjlU5kg)
 
+# caddy
+
+- [（视频）技术爬爬虾：全自动HTTPS加密，开箱即用，Caddy基础入门，反向代理，负载均衡，网站托管全流程](https://www.bilibili.com/video/BV1z5w6ekE1L)

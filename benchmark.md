@@ -58,6 +58,7 @@
   * [httpstat](#httpstat)
   * [bandwhich: tui](#bandwhich-tui)
   * [iptraf-ng：统计端口收发包（tui）](#iptraf-ng统计端口收发包tui)
+  * [wavemon：wifi。有多种显示模式，可以显示wifi信号](#wavemonwifi有多种显示模式可以显示wifi信号)
 * [Web](#web)
   * [ab：web 压力测试](#abweb-压力测试)
   * [siege：和ab命令一样，并且还支持 HTTP 和 HTTPS 协议。](#siege和ab命令一样并且还支持-http-和-https-协议)
@@ -112,7 +113,10 @@
     * [查看 `I/O Scheduler(调度器)` 的缓存](#查看-io-scheduler调度器-的缓存)
 * [GPU](#gpu)
   * [nvidia-smi](#nvidia-smi)
-  * [nvtop](#nvtop)
+  * [nvtop：支持nvidia、intel、amd的gpu](#nvtop支持nvidiaintelamd的gpu)
+  * [radeontop：amd gpu](#radeontopamd-gpu)
+  * [amdgpu_top：amd gpu](#amdgpu_topamd-gpu)
+  * [nvitop：nvidia gpu](#nvitopnvidia-gpu)
   * [gpustat](#gpustat)
   * [gmonitor](#gmonitor)
 * [Debug](#debug)
@@ -129,6 +133,7 @@
     * [perf other](#perf-other)
   * [enhance pstree (进程树)](#enhance-pstree-进程树)
   * [trace-cmd](#trace-cmd)
+  * [sysdig](#sysdig)
 * [reference](#reference)
 
 <!-- mtoc-end -->
@@ -1185,6 +1190,8 @@ bandwhich --raw | grep firefox
 ![image](./Pictures/benchmark/iptraf-ng4.avif)
 ![image](./Pictures/benchmark/iptraf-ng5.avif)
 
+## [wavemon：wifi。有多种显示模式，可以显示wifi信号](https://github.com/uoaerg/wavemon)
+
 # Web
 
 ## ab：web 压力测试
@@ -1901,9 +1908,15 @@ echo bfq > /sys/block/sda/queue/scheduler
 nvidia-smi pmon -i 0 -s u -o T
 ```
 
-## [nvtop](https://github.com/Syllo/nvtop)
+## [nvtop：支持nvidia、intel、amd的gpu](https://github.com/Syllo/nvtop)
 
 ![image](./Pictures/benchmark/nvtop.avif)
+
+## [radeontop：amd gpu](https://github.com/clbr/radeontop)
+
+## [amdgpu_top：amd gpu](https://github.com/Umio-Yasuno/amdgpu_top)
+
+## [nvitop：nvidia gpu](https://github.com/XuehaiPan/nvitop)
 
 ## [gpustat](https://github.com/wookayin/gpustat)
 
@@ -2419,6 +2432,8 @@ trace-cmd report | head -20
 # 追踪指定进程(echo $$表示当前shell进程)
 trace-cmd record -P $(echo $$) -p function_graph
 ```
+
+## [sysdig](https://github.com/draios/sysdig)
 
 # reference
 

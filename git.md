@@ -34,7 +34,7 @@
     * [commitgpt（ai自动生成git commit）](#commitgptai自动生成git-commit)
     * [git-cliff：对history生成markdown日志](#git-cliff对history生成markdown日志)
     * [github/gitignore：A collection of useful .gitignore templates](#githubgitignorea-collection-of-useful-gitignore-templates)
-    * [gitbutler：git的gui](#gitbutlergit的gui)
+    * [gitbutler：新型的 Git 客户端。该项目采用 Tauri/Rust/Svelte 构建，拥有较高的颜值。用户可以将多个分支上的改动，通过拖拽的方式快速地聚合到一个独立分支上，实现灵活地跨分支操作，适用于 Windows、macOS 和 Linux 平台。](#gitbutler新型的-git-客户端该项目采用-taurirustsvelte-构建拥有较高的颜值用户可以将多个分支上的改动通过拖拽的方式快速地聚合到一个独立分支上实现灵活地跨分支操作适用于-windowsmacos-和-linux-平台)
     * [diffnav：增强git diff功能](#diffnav增强git-diff功能)
 * [repo：google的git](#repogoogle的git)
 * [VFSForGit：微软的git](#vfsforgit微软的git)
@@ -794,7 +794,7 @@ git commit -m "..."
 
 ### [github/gitignore：A collection of useful .gitignore templates](https://github.com/github/gitignore)
 
-### [gitbutler：git的gui](https://github.com/gitbutlerapp/gitbutler)
+### [gitbutler：新型的 Git 客户端。该项目采用 Tauri/Rust/Svelte 构建，拥有较高的颜值。用户可以将多个分支上的改动，通过拖拽的方式快速地聚合到一个独立分支上，实现灵活地跨分支操作，适用于 Windows、macOS 和 Linux 平台。](https://github.com/gitbutlerapp/gitbutler)
 
 ### [diffnav：增强git diff功能](https://github.com/dlvhdr/diffnav)
 

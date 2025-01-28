@@ -48,13 +48,10 @@
 * [git](#git)
   * [gh](#gh)
     * [github-cli官方文档](#github-cli官方文档)
-  * [lazygit](#lazygit)
-    * [git tui](#git-tui)
+  * [lazygit：git tui](#lazygitgit-tui)
   * [gitui](#gitui)
-  * [bit](#bit)
-    * [instead git](#instead-git)
-  * [tig](#tig)
-    * [git log](#git-log)
+  * [bit：instead git](#bitinstead-git)
+  * [tig：git log](#tiggit-log)
   * [hub](#hub)
   * [forgit](#forgit)
   * [gitoxide:rust版git](#gitoxiderust版git)
@@ -79,18 +76,16 @@
   * [television：rust版fzf](#televisionrust版fzf)
   * [skim：rust 版fzf](#skimrust-版fzf)
   * [zf：zig版fzf](#zfzig版fzf)
-  * [diff-so-fancy](#diff-so-fancy)
-    * [highlight git diff](#highlight-git-diff)
-  * [icdiff](#icdiff)
-    * [instead diff](#instead-diff)
+  * [diff-so-fancy：highlight git diff](#diff-so-fancyhighlight-git-diff)
+  * [riff：instead diff](#riffinstead-diff)
+  * [icdiff：instead diff](#icdiffinstead-diff)
   * [git-split-diffs: github style diff](#git-split-diffs-github-style-diff)
-    * [instead git diff](#instead-git-diff)
-  * [pet](#pet)
-    * [Simple command-line snippet manager](#simple-command-line-snippet-manager)
-  * [multitail](#multitail)
-    * [instead tail](#instead-tail)
-  * [cheat](#cheat)
-    * [instead man](#instead-man)
+  * [meld：diff gui工具](#melddiff-gui工具)
+  * [moar：instead more](#moarinstead-more)
+  * [pet：Simple command-line snippet manager](#petsimple-command-line-snippet-manager)
+  * [multitail：instead tail](#multitailinstead-tail)
+  * [cheat：instead man](#cheatinstead-man)
+  * [tealdeer：instead man tldr ](#tealdeerinstead-man-tldr-)
   * [fx](#fx)
     * [Command-line JSON processing tool](#command-line-json-processing-tool)
   * [navi: fzf command bookmark](#navi-fzf-command-bookmark)
@@ -113,6 +108,7 @@
     * [instead du](#instead-du)
   * [gdu：tui模式的du](#gdutui模式的du)
 * [process](#process)
+  * [px：instead ps、top](#pxinstead-pstop)
   * [procs](#procs)
     * [instead ps](#instead-ps)
   * [pueue(任务管理)](#pueue任务管理)
@@ -169,6 +165,7 @@
   * [netease-music-tui：网易云音乐tui](#netease-music-tui网易云音乐tui)
 * [游戏相关](#游戏相关)
   * [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](#shadps4开源的-ps4-模拟器虽然项目仍处于早期开发阶段能运行的游戏有限但最新版已经能够成功运行血源诅咒和黑暗之魂ii等游戏)
+* [代码相关](#代码相关)
 * [other](#other)
   * [chsrc：全平台通用换源工具与框架](#chsrc全平台通用换源工具与框架)
   * [progress：显示cp、mv进度条](#progress显示cpmv进度条)
@@ -204,10 +201,15 @@
   * [amber：编译成bash的编程语言，包含类型安全](#amber编译成bash的编程语言包含类型安全)
   * [trufflehog：发现和验证 Git 仓库中泄露的凭证和敏感信息。](#trufflehog发现和验证-git-仓库中泄露的凭证和敏感信息)
   * [newsboat：rss订阅](#newsboatrss订阅)
+  * [HivisionIDPhotos：ai证件。能够生成标准证件照和六寸排版照。它提供了简洁的 Web 界面和 API 服务](#hivisionidphotosai证件能够生成标准证件照和六寸排版照它提供了简洁的-web-界面和-api-服务)
+  * [devzat：程序员专属的 SSH 聊天室。这是一个通过 SSH 连接的聊天室，用户无需安装客户端，仅需一条 SSH 命令即可登录。它支持私人消息、多聊天室、图片和代码高亮等功能，还可以集成第三方服务、自托管 SSH 聊天室。](#devzat程序员专属的-ssh-聊天室这是一个通过-ssh-连接的聊天室用户无需安装客户端仅需一条-ssh-命令即可登录它支持私人消息多聊天室图片和代码高亮等功能还可以集成第三方服务自托管-ssh-聊天室)
+  * [upx：可执行文件压缩工具，支持多种可执行文件格式（Windows、Linux、macOS）。它拥有出色的压缩比（50-70%），压缩后的文件可直接运行，适用于程序分发和大规模存储的场景。](#upx可执行文件压缩工具支持多种可执行文件格式windowslinuxmacos它拥有出色的压缩比50-70压缩后的文件可直接运行适用于程序分发和大规模存储的场景)
+  * [bunster：把 shell 脚本转换为 Go 代码，然后利用 Go 工具链将其编译为二进制可执行文件，弥补了传统 shell 脚本在性能、可移植性和安全性方面的不足。](#bunster把-shell-脚本转换为-go-代码然后利用-go-工具链将其编译为二进制可执行文件弥补了传统-shell-脚本在性能可移植性和安全性方面的不足)
 * [系统相关](#系统相关)
   * [kmon：内核模块、dmesg的tui](#kmon内核模块dmesg的tui)
   * [nemu：qemu的tui](#nemuqemu的tui)
   * [osqueryi：使用sql语句查询操作系统](#osqueryi使用sql语句查询操作系统)
+  * [isd：systemd tui](#isdsystemd-tui)
 * [磁盘备份](#磁盘备份)
   * [restic](#restic)
 * [pdf、mobi、epub](#pdfmobiepub)
@@ -218,6 +220,7 @@
   * [Stirling-PDF：自部署 PDF 处理工具](#stirling-pdf自部署-pdf-处理工具)
   * [PDFMathTranslate：pdf翻译中文](#pdfmathtranslatepdf翻译中文)
   * [ebook2audiobook：电子书转为有声书](#ebook2audiobook电子书转为有声书)
+  * [audiblez：将 Epub 电子书转成有声书，支持中文。](#audiblez将-epub-电子书转成有声书支持中文)
 * [markdown](#markdown)
   * [浏览markdown文件](#浏览markdown文件)
   * [mdBook：markdown转book，可以在线浏览](#mdbookmarkdown转book可以在线浏览)
@@ -477,9 +480,7 @@ gh release list
 
 ### github-cli[官方文档](https://cli.github.com/manual/)
 
-## [lazygit](https://github.com/jesseduffield/lazygit)
-
-### git tui
+## [lazygit：git tui](https://github.com/jesseduffield/lazygit)
 
 ![image](./Pictures/awesomecli/lazygit.avif)
 
@@ -487,15 +488,11 @@ gh release list
 
 ![image](./Pictures/awesomecli/gitui.avif)
 
-## [bit](https://github.com/chriswalz/bit)
-
-### instead git
+## [bit：instead git](https://github.com/chriswalz/bit)
 
 ![image](./Pictures/awesomecli/15.avif)
 
-## [tig](https://github.com/jonas/tig)
-
-### git log
+## [tig：git log](https://github.com/jonas/tig)
 
 ![image](./Pictures/awesomecli/tig.avif)
 
@@ -564,35 +561,31 @@ fzf -e
 
 ## [zf：zig版fzf](https://github.com/natecraddock/zf)
 
-## [diff-so-fancy](https://github.com/so-fancy/diff-so-fancy)
+## [diff-so-fancy：highlight git diff](https://github.com/so-fancy/diff-so-fancy)
 
 ![image](./Pictures/awesomecli/10.avif)
 
-### highlight git diff
+## [riff：instead diff](https://github.com/walles/riff)
 
-## [icdiff](https://github.com/jeffkaufman/icdiff)
-
-### instead diff
+## [icdiff：instead diff](https://github.com/jeffkaufman/icdiff)
 
 ## [git-split-diffs: github style diff](https://github.com/banga/git-split-diffs)
 
-### instead git diff
+## [meld：diff gui工具](https://github.com/GNOME/meld)
 
-## [pet](https://github.com/knqyf263/pet)
+## [moar：instead more](https://github.com/walles/moar)
+
+## [pet：Simple command-line snippet manager](https://github.com/knqyf263/pet)
 
 ![image](./Pictures/awesomecli/3.avif)
 
-### Simple command-line snippet manager
+## multitail：instead tail
 
-## multitail
-
-### instead tail
-
-## [cheat](https://github.com/cheat/cheat)
+## [cheat：instead man](https://github.com/cheat/cheat)
 
 ![image](./Pictures/awesomecli/cheat.avif)
 
-### instead man
+## [tealdeer：instead man tldr](https://github.com/tealdeer-rs/tealdeer) 
 
 ## [fx](https://github.com/antonmedv/fx)
 
@@ -690,6 +683,12 @@ ls filename | sad '1' '2' | delta
 ## [gdu：tui模式的du](https://github.com/dundee/gdu)
 
 # process
+
+## [px：instead ps、top](https://github.com/walles/px)
+
+```sh
+paru -S px_ptop
+```
 
 ## [procs](https://github.com/dalance/procs)
 
@@ -970,6 +969,10 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 
 ## [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)
 
+# 代码相关
+
+- [code2prompt：将代码库转换为 LLM 提示的工具。会将所有代码变成markdown格式的文件](https://github.com/mufeedvh/code2prompt)
+
 # other
 
 ## [chsrc：全平台通用换源工具与框架](https://github.com/RubyMetric/chsrc)
@@ -1136,6 +1139,29 @@ silicon test.py -o main.png
 
 ## [newsboat：rss订阅](https://github.com/newsboat/newsboat)
 
+## [HivisionIDPhotos：ai证件。能够生成标准证件照和六寸排版照。它提供了简洁的 Web 界面和 API 服务](https://github.com/Zeyi-Lin/HivisionIDPhotos)
+
+## [devzat：程序员专属的 SSH 聊天室。这是一个通过 SSH 连接的聊天室，用户无需安装客户端，仅需一条 SSH 命令即可登录。它支持私人消息、多聊天室、图片和代码高亮等功能，还可以集成第三方服务、自托管 SSH 聊天室。](https://github.com/quackduck/devzat)
+
+## [upx：可执行文件压缩工具，支持多种可执行文件格式（Windows、Linux、macOS）。它拥有出色的压缩比（50-70%），压缩后的文件可直接运行，适用于程序分发和大规模存储的场景。](https://mp.weixin.qq.com/s/BB9Y3QT59zJp8w1y8IgYEQ)
+
+## [bunster：把 shell 脚本转换为 Go 代码，然后利用 Go 工具链将其编译为二进制可执行文件，弥补了传统 shell 脚本在性能、可移植性和安全性方面的不足。](https://github.com/yassinebenaid/bunster)
+
+```sh
+# 创建shell脚本
+cat > test.sh <<EOF
+echo 'hello world'
+EOF
+
+# 转换成二进制文件
+bunster build test.sh -o my-program
+# 执行
+./my-program
+
+# 转换成go语言代码
+bunster generate test.sh -o my-module
+```
+
 # 系统相关
 
 ## [kmon：内核模块、dmesg的tui](https://github.com/orhun/kmon)
@@ -1156,6 +1182,8 @@ SELECT DISTINCT processes.name, listening_ports.port, processes.pid
   FROM listening_ports JOIN processes USING (pid)
   WHERE listening_ports.address = '0.0.0.0';
 ```
+
+## [isd：systemd tui](https://github.com/isd-project/isd)
 
 # 磁盘备份
 
@@ -1201,6 +1229,8 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 ## [PDFMathTranslate：pdf翻译中文](https://github.com/Byaidu/PDFMathTranslate)
 
 ## [ebook2audiobook：电子书转为有声书](https://github.com/DrewThomasson/ebook2audiobook)
+
+## [audiblez：将 Epub 电子书转成有声书，支持中文。](https://github.com/santinic/audiblez)
 
 # markdown
 
@@ -1311,6 +1341,7 @@ journalctl -o json | lnav
 ## llm大模型
 
 - [ollama](https://github.com/ollama/ollama)
+    - [ollama：支持的大模型](https://ollama.com/search)
 
     - [open-webui：ollama web ui](https://github.com/open-webui/open-webui)
 
@@ -1331,6 +1362,16 @@ journalctl -o json | lnav
 
 - [LM Studio：ollama gui版](https://lmstudio.ai/)
     - [lms：LM Studio command line](https://github.com/lmstudio-ai/lms)
+
+- [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/Mintplex-Labs/anything-llm)
+
+    ```sh
+    # linux安装
+    curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
+
+    # 启动
+    ./AnythingLLMDesktop/start
+    ```
 
 - [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)
 

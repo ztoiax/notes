@@ -16,6 +16,7 @@
     * [隐藏检查](#隐藏检查)
     * [游戏相关](#游戏相关)
     * [第三方客户端](#第三方客户端)
+    * [自动化](#自动化)
 * [刷机](#刷机)
   * [刷入recovery、magisk、lsposed](#刷入recoverymagisklsposed)
   * [frida](#frida)
@@ -209,6 +210,10 @@
 
 - [KeyMapper：可以自定义 Android 设备的按键、指纹和手势操作。无需 ROOT 权限，支持蓝牙和有线键盘，提供灵活的按键重映射体验。](https://github.com/keymapperorg/KeyMapper)
 
+- [anx-reader：这是一款用 Flutter 编写的电子书阅读软件，它免费且没广告，支持 WebDAV 同步电子书、笔记和阅读进度，适用于 Android 手机和平板电脑。](https://github.com/Anxcye/anx-reader)
+
+- [moonlight-android：屏幕共享客户端](https://github.com/moonlight-stream/moonlight-android)
+
 ### 应用管理
 
 - [AppManager](https://github.com/MuntashirAkon/AppManager)
@@ -307,7 +312,11 @@
 
 ### 第三方客户端
 
-- [pilipala：bilibili](https://github.com/guozhigq/pilipala)
+- [pilipala：该项目是用 Flutter 开发的 B 站第三方客户端，支持 Android 和 iOS 平台。它提供了推荐视频列表、热门直播、番剧、离线缓存、回复评论、弹幕和搜索等功能。](https://github.com/guozhigq/pilipala)
+
+### 自动化
+
+- [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
 
 # 刷机
 

@@ -21,6 +21,7 @@
 * [note](#note)
 * [ide](#ide)
 * [硬件](#硬件)
+* [ai](#ai)
 * [other](#other)
 * [类似项目](#类似项目)
 
@@ -162,6 +163,10 @@
 
 - [Umi-OCR：ocr](https://github.com/hiroi-sora/Umi-OCR)
 
+- [kooha：wayland录屏](https://github.com/SeaDve/Kooha)
+
+- [wayfarer：录屏](https://github.com/stronnag/wayfarer)
+
 # 视频
 
 - [pyvideotrans：给视频配音、翻译配音、添加字幕](https://github.com/jianchang512/pyvideotrans)
@@ -169,6 +174,9 @@
 - [lossless-cut：视频剪切软件，目标是成为 FFmpeg 的图形前端。](https://github.com/mifi/lossless-cut)
 
 # 远程控制
+
+- [Sunshine：屏幕共享](https://github.com/LizardByte/Sunshine)
+- [moonlight-qt：屏幕共享客户端](https://github.com/moonlight-stream/moonlight-qt)
 
 - [rustdesk](https://github.com/rustdesk/rustdesk)
 
@@ -215,6 +223,10 @@
 - [corectrl：查看cpu、gpu信息，显示监控曲线图](https://gitlab.com/corectrl/corectrl)
 
 - [LACT：amd gpu控制器](https://github.com/ilya-zlobintsev/LACT)
+
+# ai
+
+- [NextChat：支持各种llm的客户端](https://github.com/ChatGPTNextWeb/NextChat)
 
 # other
 
@@ -341,6 +353,8 @@
     ```
 
 - [aya：简化对安卓设备的操作控制，可以看作 ADB 的图形用户界面](https://github.com/liriliri/aya)
+
+- [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
 
 # 类似项目
 

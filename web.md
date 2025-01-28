@@ -78,6 +78,12 @@
 
 - [DeepSeekAI](https://github.com/DeepLifeStudio/DeepSeekAI)
 
+- [midscenejs：它的最大特点，就是自然语言驱动（需要自行接入 AI 模型），操作浏览器，以及理解网页内容，将结果以 JSON 数据返回。可以编写 YAML 脚本，完成浏览器自动化；也可以将它接入 Puppeteer 和 Playwright，让后两者接受自然语言指令。](https://midscenejs.com/zh/)
+
+- [md-reader：markdown文件浏览插件](https://github.com/md-reader/md-reader)
+
+- [page-assist：本地ollama 部署的ai llm的web ui](https://github.com/n4ze3m/page-assist)
+
 # CGI和FastCGI
 
 - Web服务器能解析HTTP请求，返回静态资源（HTML页、图片等），但要输出动态内容，必须得PHP/C#/Ruby/Java/Python/C/C++这些外部程序来实现。

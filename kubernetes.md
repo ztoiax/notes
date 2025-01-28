@@ -55,6 +55,8 @@
 * [在线网站工具](#在线网站工具)
 * [优秀文章](#优秀文章)
 * [未读](#未读)
+* [openshift](#openshift)
+  * [与kubernetes的区别](#与kubernetes的区别)
 
 <!-- mtoc-end -->
 
@@ -2414,6 +2416,8 @@ curl https://argocd.kubernets.cn -I
 
 - [awesome-k8s-resources](https://github.com/tomhuang12/awesome-k8s-resources)
 
+- [云原生运维圈：提升工作效率：2024 年最受欢迎的 26 款 Kubernetes 工具](https://mp.weixin.qq.com/s/ZvilVBdWGfj1HY4Em17-qg)
+
 ## 服务端
 
 - [kubernetes-network-policy-recipes](https://github.com/ahmetb/kubernetes-network-policy-recipes)
@@ -2521,3 +2525,9 @@ curl https://argocd.kubernets.cn -I
 # 未读
 
 - [崔亮的博客：k8s学习笔记](https://m.cuiliangblog.cn/catalog/1939058)
+
+# openshift
+
+## 与kubernetes的区别
+
+- [knowclub：OpenShift与Kubernetes：选择与实践](https://mp.weixin.qq.com/s/CKvAwtYpAf8qBSdmtYwxEQ)

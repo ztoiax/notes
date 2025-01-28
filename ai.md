@@ -22,6 +22,7 @@
     * [图片和视频理解](#图片和视频理解)
     * [文生成图片](#文生成图片)
     * [文生成视频](#文生成视频)
+    * [文生成音乐](#文生成音乐)
   * [SAM](#sam)
   * [图片视频](#图片视频)
   * [语音转文字](#语音转文字)
@@ -337,15 +338,23 @@
 
 - [HunyuanDiT：腾讯的文生图](https://github.com/Tencent/HunyuanDiT)
 
+- [flux](https://github.com/black-forest-labs/flux)
+
 ### 文生成视频
 
 - [Open-Sora：生成图片或视频、图生视频、视频编辑](https://github.com/hpcaitech/Open-Sora)
 
-- [深入理解Sora技术原理｜得物技术](https://mp.weixin.qq.com/s/e1DqTa1Tgyi4OWpgwrj48Q)
+    - [深入理解Sora技术原理｜得物技术](https://mp.weixin.qq.com/s/e1DqTa1Tgyi4OWpgwrj48Q)
 
 - [可灵AI：快手的](https://klingai.kuaishou.com/text-to-video/new)
 
 - [CogVideo：清华大学的](https://github.com/THUDM/CogVideo)
+
+- [pika](https://pika.art/)
+
+### 文生成音乐
+
+- [Suno](https://suno.com/)
 
 ## SAM
 
