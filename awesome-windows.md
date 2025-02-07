@@ -104,6 +104,8 @@
 
 - [WeChatMsg：提取微信聊天记录的工具。导出成 HTML、Word、Excel 和 txt 等格式的文档。导出的 HTML 文档，还原了微信聊天界面，而且包含文本、图片、视频、表情包、语音、文件、转账等记录，导出的数据可用于永久保存、生成年度报告和训练个人聊天助手。](https://github.com/LC044/WeChatMsg)
 
+- [transok：局域网文件传输](https://github.com/bent2685/transok-wails)
+
 ## 手机与电脑交互
 
 - [intel unison：手机电脑消息、文件传输]()
@@ -124,6 +126,8 @@
 ## 游戏相关
 
 - [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)
+
+- [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
 
 - [Game-Cheats-Manager：游戏修改器管理工具](https://github.com/dyang886/Game-Cheats-Manager)
 

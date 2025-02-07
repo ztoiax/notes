@@ -15,7 +15,8 @@
       * [http转https](#http转https)
       * [tls](#tls)
     * [frpc-desktop：跨平台的 frp 桌面客户端。](#frpc-desktop跨平台的-frp-桌面客户端)
-    * [mtr](#mtr)
+    * [go-proxy：反向代理gui](#go-proxy反向代理gui)
+    * [mtr结合了 ping 和 traceroute 的功能](#mtr结合了-ping-和-traceroute-的功能)
     * [ngrep（抓包）](#ngrep抓包)
     * [mitmproxy(代理http, 并抓包)](#mitmproxy代理http-并抓包)
     * [socat](#socat)
@@ -466,9 +467,25 @@ xdg-open http://127.0.0.1:8081/dir/
 
 ### [frpc-desktop：跨平台的 frp 桌面客户端。](https://github.com/luckjiawei/frpc-desktop)
 
-### mtr
+### [go-proxy：反向代理gui](https://github.com/yusing/go-proxy)
+
+### mtr结合了 ping 和 traceroute 的功能
+
+| 列    | 说明                   |
+| ----- | ---------------------- |
+| Host  | 节点的名称或 IP 地址。 |
+| Loss% | 节点的丢包率。         |
+| Snt   | 发送的数据包数量。     |
+| Last  | 最近一次的延迟时间。   |
+| Avg   | 平均延迟时间。         |
+| Best  | 最小延迟时间。         |
+| Worst | 最大延迟时间。         |
+| StDev | 延迟的标准偏差。       |
 
 ```sh
+# ping命令和traceroute命令的结合
+mtr www.baidu.com
+
 # 查看连接baidu的丢包率，默认用icmp包
 mtr --report www.baidu.com
 

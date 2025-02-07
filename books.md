@@ -647,6 +647,8 @@
 
 - [图解Git](https://marklodato.github.io/visual-git-guide/index-zh-cn.html)
 
+- [Beej's Guide to Git：著名教程作者 Beej 的最新 Git 教程，基于他向大学学生的课堂讲义。](https://beej.us/guide/bggit/html/split/index.html)
+
 - [introduction-to-git-and-github-ebook](https://github.com/bobbyiliev/introduction-to-git-and-github-ebook)
 
 - [《Spring 实战》 (第6版)](https://leonli0102.github.io/spring-in-action-v6/)
@@ -1422,10 +1424,22 @@ RabbitMQ实战指南》作者
     - [Houge_Langley](https://space.bilibili.com/40420441)
 
     - [unixchad：linux不常用软件折腾](https://space.bilibili.com/34569411)
+    - [OS视界：linux相关新闻介绍](https://space.bilibili.com/1918016728)
 
     - HelloGithub
     - Python猫
     - 奇妙的Linux世界
+    - Linux公社
+        > linux相关新闻介绍
+        
+    - Hacking Time
+        > linux相关新闻介绍
+
+    - 山河以无恙
+        > linux运维相关
+
+    - 运维漫谈
+        > linux运维相关
 
 - 折腾android相关：
 
@@ -2255,6 +2269,8 @@ RabbitMQ实战指南》作者
     - [小Lin说](https://space.bilibili.com/520819684)
 
     - [小Lin竖着说](https://space.bilibili.com/3546638236781247)
+
+    - [巫师财经](https://space.bilibili.com/472747194)
 
 - 微信公众号
 

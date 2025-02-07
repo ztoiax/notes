@@ -74,6 +74,8 @@
     * [nosql](#nosql)
     * [关系型数据库](#关系型数据库)
   * [与裸机性能对比](#与裸机性能对比)
+* [常见问题](#常见问题)
+  * [pull问题](#pull问题)
 * [第三方软件](#第三方软件)
   * [服务端](#服务端)
   * [客户端](#客户端)
@@ -3927,6 +3929,22 @@ docker container exec -it opensuse_1 bash
         - 每秒请求数（RPS）：Kubernetes约为裸机值的 80%。 Kubernetes 环境中使用的底层容器网络堆栈，因此在 Kubernetes 中运行 NGINX Ingress Controller 会导致这种网络密集型操作的性能大幅下降。
 
         - 每秒SSL/TLS 事务数 (TPS)：几乎无甚差异
+
+# 常见问题
+
+## pull问题
+
+- 无法连接unix socket
+    ```sh
+    docker pull ghcr.io/yusing/go-proxy:latest
+    Cannot connect to the Docker daemon at unix:///home/tz/.docker/desktop/docker.sock. Is the docker daemon running?
+    ```
+
+- 解决方法
+    ```sh
+    # 修改环境变量后就可以
+    export DOCKER_HOST=unix:///var/run/docker.sock
+    ```
 
 # 第三方软件
 

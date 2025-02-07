@@ -22,6 +22,7 @@
 * [ide](#ide)
 * [硬件](#硬件)
 * [ai](#ai)
+* [模拟器](#模拟器)
 * [other](#other)
 * [类似项目](#类似项目)
 
@@ -227,6 +228,10 @@
 # ai
 
 - [NextChat：支持各种llm的客户端](https://github.com/ChatGPTNextWeb/NextChat)
+
+# 模拟器
+
+- [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
 
 # other
 

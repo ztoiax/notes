@@ -5,18 +5,16 @@
   * [all in one（非unix）哲学](#all-in-one非unix哲学)
   * [init程序发展的三个阶段](#init程序发展的三个阶段)
   * [systemd](#systemd-1)
-    * [基本使用](#基本使用)
-    * [创建systemd unit 服务](#创建systemd-unit-服务)
+    * [查看启动时间](#查看启动时间)
+    * [创建service](#创建service)
       * [介绍](#介绍)
       * [例子](#例子)
         * [例子：随机mac地址](#例子随机mac地址)
-        * [例子：timer定时器单元替代传统的 cron](#例子timer定时器单元替代传统的-cron)
-    * [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](#咸鱼运维杂谈运维排查--systemd-之服务停止后状态为-failed)
+      * [常见问题](#常见问题)
+        * [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](#咸鱼运维杂谈运维排查--systemd-之服务停止后状态为-failed)
   * [systemctl](#systemctl)
-    * [unmask](#unmask)
-    * [常见启动问题](#常见启动问题)
-      * [爱可生开源社区：故障分析 | MySQL 通过 systemd 启动时 hang 住了……](#爱可生开源社区故障分析--mysql-通过-systemd-启动时-hang-住了)
-  * [hostnamectl, localectl, timedatectl, loginctl命令](#hostnamectl-localectl-timedatectl-loginctl命令)
+    * [基本命令](#基本命令)
+    * [mask 和 unmask屏蔽（禁用）服务](#mask-和-unmask屏蔽禁用服务)
   * [journalctl（日志）](#journalctl日志)
     * [systemd-journald的进程服务](#systemd-journald的进程服务)
     * [持久化存储or内存存储](#持久化存储or内存存储)
@@ -26,11 +24,24 @@
       * [kmsg](#kmsg)
       * [console](#console)
       * [wall](#wall)
-    * [基本使用](#基本使用-1)
+    * [基本使用](#基本使用)
     * [实战调试](#实战调试)
       * [查看错误](#查看错误)
       * [解决办法](#解决办法)
-  * [Timers（定时器）](#timers定时器)
+  * [path（监控文件变化）](#path监控文件变化)
+  * [timers（定时器）](#timers定时器)
+    * [创建timer定时器](#创建timer定时器)
+      * [例子：timer定时器单元替代传统的 cron](#例子timer定时器单元替代传统的-cron)
+  * [hostnamectl, localectl, timedatectl, loginctl命令](#hostnamectl-localectl-timedatectl-loginctl命令)
+  * [systemd-homed用户登陆和管理](#systemd-homed用户登陆和管理)
+  * [systemd-run](#systemd-run)
+    * [前台进程](#前台进程)
+    * [后台进程](#后台进程)
+    * [命令的输出变成日志](#命令的输出变成日志)
+  * [run0取代sudo](#run0取代sudo)
+  * [systemd-boot代替GRUB引导程序](#systemd-boot代替grub引导程序)
+* [第三方优秀软件](#第三方优秀软件)
+  * [isd：systemd tui](#isdsystemd-tui)
 * [referece](#referece)
 
 <!-- mtoc-end -->
@@ -38,6 +49,8 @@
 # systemd
 
 - [鹅厂架构师：systemd详解](https://zhuanlan.zhihu.com/p/860259695)
+
+- [山河已无恙：关于 Linux 中 systemd 的一些笔记](https://mp.weixin.qq.com/s/G8d7MlTiZlToUD3gAetQyQ)
 
 ## all in one（非unix）哲学
 
@@ -58,6 +71,8 @@
 - upstart：在sysvinit的基础上，对没有关联依赖的进程并行启动。
 
 - systemd：
+
+    ![image](./Pictures/systemd/systemd架构图.avif)
 
     - 主要特点：
 
@@ -97,14 +112,9 @@
             - 替代 cron 等传统定时任务调度器。
             - 可以为服务配置定时启动和周期性执行。
 
-    - 单元（Units）：systemd 以单元为基本管理对象，每个单元代表系统中的一个资源或服务。
-        - 服务单元（.service）：管理系统服务。
-        - 目标单元（.target）：表示系统的状态或运行级别。
-        - 挂载单元（.mount）：管理文件系统挂载点。
-        - 套接字单元（.socket）：用于套接字激活机制。
-        - 定时器单元（.timer）：管理定时任务。
-        - 设备单元（.device）：表示内核识别的设备。
-        - 路径单元（.path）：监控文件系统中的路径变化。
+    - systemd 通过`cgroup`(控制组)来追踪进程，而不是 PID
+
+        - 当一个进程创建了子进程，子进程会继承父进程的 cgroup
 
 ```sh
 # 第一个进程init实际是systemd
@@ -178,7 +188,7 @@ lrwxrwxrwx 22 root  3 May 14:41 /sbin/init -> ../lib/systemd/systemd
 
     - 5.`local-fs.target`：不会启动用户相关的服务，它只处理底层核心服务,它会根据`/etc/fstab`和`/etc/inittab`来执行相关操作。
 
-### 基本使用
+### 查看启动时间
 
 ```sh
 # 查看启动时间
@@ -200,7 +210,7 @@ google-chrome-stable boot.svg #用浏览器打开
 
 ![image](./Pictures/systemd/1.avif)
 
-### 创建systemd unit 服务
+### 创建service
 
 #### 介绍
 
@@ -420,52 +430,9 @@ systemctl enable macspoof.service
 systemctl disable macspoof.service
 ```
 
-##### 例子：timer定时器单元替代传统的 cron
+#### 常见问题
 
-- 1.创建定时器服务单元：
-
-    - 创建服务文件 `/etc/systemd/system/mytask.service`：
-    ```ini
-    [Unit]
-    Description=My Scheduled Task
-
-    [Service]
-    Type=oneshot
-    ExecStart=/usr/bin/mycommand --option
-    ```
-
-- 2.创建定时器文件 /etc/systemd/system/mytask.timer：
-
-    ```ini
-    [Unit]
-    Description=Run MyTask every day at 2 AM
-
-    [Timer]
-    OnCalendar=*-*-* 02:00:00
-    Persistent=true
-
-    [Install]
-    WantedBy=timers.target
-    ```
-
-    - OnCalendar：定义任务的调度时间。
-    - Persistent：如果错过了预定时间，系统启动后立即执行。
-
-- 3.启用并启动定时器：
-
-    ```sh
-    sudo systemctl daemon-reload
-    sudo systemctl enable mytask.timer
-    sudo systemctl start mytask.timer
-    ```
-
-- 4.查看定时器状态：
-
-    ```sh
-    systemctl list-timers
-    ```
-
-### [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](https://mp.weixin.qq.com/s/l30kvYhga3YZO__ac0-cWg)
+##### [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](https://mp.weixin.qq.com/s/l30kvYhga3YZO__ac0-cWg)
 
 - zookeeper 是通过源码编译来安装，为了方便管理，决定改成通过 systemd 来管理。
 
@@ -524,11 +491,7 @@ systemctl disable macspoof.service
 
 ## systemctl
 
-- systemd 通过`cgroup`(控制组)来追踪进程，而不是 PID
-
-    - 当一个进程创建了子进程，子进程会继承父进程的 cgroup
-
-- systemd通过`unit`配置文件管理服务。根据其后缀名分为12种不同的类型：
+- 单元（Units）：systemd 以单元为基本管理对象，每个单元代表系统中的一个资源或服务。根据其后缀名分为12种不同的类型：
 
     | Unit      | 类型                                                                                                                                                                                                                                                                    |
     |-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -544,21 +507,58 @@ systemctl disable macspoof.service
     | path      | 监控指定目录或者文件的变化，根据变化触发其他配置单元服务的运行。                                                                                                                                                                                                        |
     | scope     | 从 systemd 外部创建的进程。                                                                                                                                                                                                                                             |
     | slice     | 通过在 cgroup 中创建一个节点实现资源的控制，一般包含 scope 与 service 单元。                                                                                                                                                                                            |
-    - Unit 文件主要的存储目录：
 
-        | system                |
-        |-----------------------|
-        | /etc/systemd/system/* |
-        | /run/systemd/system/* |
-        | /lib/systemd/system/* |
+    ```sh
+    systemctl status cockpit.socket #CocKpit驾驶舱 和SSH类似，用于远程控制，类似于阿里云的控制台。为初级管理员提供基本操作，通过web端的控制台，访问地址：服务器IP:9090
+    ● cockpit.socket - Cockpit Web Service Socket
+       Loaded: loaded (/usr/lib/systemd/system/cockpit.socket; disabled; vendor preset: disabled)
+       Active: inactive (dead)
+         Docs: man:cockpit-ws(8)
+       Listen: [::]:9090 (Stream)
+    ```
 
-        | user                          |
-        |-------------------------------|
-        | ~/.config/systemd/user/*      |
-        | /etc/systemd/user/*           |
-        | /usr/lib/systemd/user/*       |
-        | /run/systemd/user/*           |
-        | ~/.local/share/systemd/user/* |
+- Unit 文件主要的存储目录：
+
+    | system优先级同上到下  |
+    |-----------------------|
+    | /etc/systemd/system/* |
+    | /run/systemd/system/* |
+    | /lib/systemd/system/* |
+
+    | user                          |
+    |-------------------------------|
+    | ~/.config/systemd/user/*      |
+    | /etc/systemd/user/*           |
+    | /usr/lib/systemd/user/*       |
+    | /run/systemd/user/*           |
+    | ~/.local/share/systemd/user/* |
+
+    - 默认的服务配置文件位置：`/usr/lib/systemd/system`
+
+        ```sh
+        systemctl status sshd | head  -2
+        ○ sshd.service - OpenSSH Daemon
+             Loaded: loaded (/usr/lib/systemd/system/sshd.service; disabled; preset: disabled)
+        ```
+
+    - 添加优先级
+        ```sh
+        # 添加高优先级配置文件：/run/systemd/system
+        cp /usr/lib/systemd/system/sshd.service /run/systemd/system/sshd.service
+        systemctl daemon-reload
+        systemctl status sshd | head  -2
+        ● sshd.service - OpenSSH server daemon
+           Loaded: loaded (/run/systemd/system/sshd.service; enabled; vendor preset: enabled)
+
+        # 添加高优先级配置文件，/etc/systemd/system
+        cp /usr/lib/systemd/system/sshd.service /etc/systemd/system/
+        systemctl daemon-reload
+        systemctl status sshd | head  -2
+        ● sshd.service - OpenSSH server daemon
+           Loaded: loaded (/etc/systemd/system/sshd.service; enabled; vendor preset: enabled)
+        ```
+
+### 基本命令
 
 - 查看 `units`
 
@@ -566,23 +566,34 @@ systemctl disable macspoof.service
 systemctl                        # 列出正在运行的 Unit
 systemctl --all                  # 列出所有Unit，包括没有找到配置文件的或者启动失败的
 systemctl --all --state=inactive # 列出所有没有运行的 Unit
-systemctl --failed               # 列出所有加载失败的 Unit
-systemctl list-units --type=service # 列出所有正在运行的、类型为 service 的 Unit
 
-# 查看依赖关系
-systemctl list-dependencies sshd.target
-# 查看依赖关系，并展开target
-systemctl list-dependencies -all sshd.target
 
-# 查看target
-systemctl list-units --type=target
+# 查看所有处于 加载状态（loaded）的单元units
+# UNIT:服务单元名称。
+# LOAD: systemd是否正确解析了单元的配置并将该单元加载到内存中。
+# ACTIVE:单元的高级别激活状态。此信息表明单元是否已成功启动。
+# SUB:单元的低级别激活状态。此信息指示有关该单完的更多详细信息。信息视单元类型、状态以及单元的执行方式而异。
+# DESCRIPTION:单元的简短描述。
+systemctl list-units
+# 处于 加载状态（loaded）的service
+systemctl list-units --type=service
 
-# 查看 units的所有状态
+# 查看所有单元units
 systemctl list-unit-files
-systemctl list-unit-files --user #只查看user
+# 查看所有service
+systemctl list-unit-files --type service
 
-# 查看timers
-systemctl list-timers
+# 列出所有加载失败的 Unit
+systemctl --failed
+# 查看所有失败的service
+systemctl --failed --type service
+
+# 查看直接依赖关系。正向依赖，在httpd之前启动
+systemctl list-dependencies httpd.service
+# 查看直接依赖关系。反向依赖，在httpd之后启动
+systemctl list-dependencies httpd.service --reverse
+# 递归显示 httpd.service 的所有依赖关系，包括直接依赖和间接依赖，输出更详细。
+systemctl list-dependencies -all httpd.service
 ```
 
 - 基本使用
@@ -607,7 +618,11 @@ systemctl enabled sshd.service
 # 关闭开机启动
 systemctl disable sshd.service
 
-# 修改/usr/lib/systemd/system/目录下的配置文件
+# 修改/etc/systemd/system/目录下的配置文件
+systemctl edit sshd.service
+# 修改/run/systemd/system/目录下的配置文件。只有临时性
+systemctl edit --runtime sshd.service
+# 修改/usr/lib/systemd/system/目录下的配置文件，并且复制到/etc/systemd/system/目录下。谨慎使用
 systemctl edit --full sshd.service
 # 还原为最初的版本
 systemctl revert sshd.service
@@ -703,110 +718,25 @@ systemctl --user restart --now pipewire-pulse.service
 systemctl --user status --now pipewire-pulse.service
 ```
 
-### unmask
+### mask 和 unmask屏蔽（禁用）服务
 
-systemd 支持 mask 操作，如果一个服务被 mask 了，那么它无法被手动启动或者被其他服务所启动，也无法被设置为开机启动。
+- 屏蔽（禁用）一个服务，防止其被启动（无论是手动还是自动）。
+
+    - 使用 `systemctl start` 也会失败。
+
+- 实现原理：在 /etc/systemd/system/ 目录下创建一个指向 /dev/null 的符号链接，覆盖原始服务单元文件。
 
 ```sh
+# mask 禁用httpd服务
+systemctl mask httpd.service
+Created symlink '/etc/systemd/system/httpd.service' → '/dev/null'.
+
+# 被mask后无法启动
+systemctl start httpd.service
+Failed to start httpd.service: Unit httpd.service is masked.
+
+# unmask解除禁用
 systemctl unmask httpd.service
-```
-
-### 常见启动问题
-
-#### [爱可生开源社区：故障分析 | MySQL 通过 systemd 启动时 hang 住了……](https://mp.weixin.qq.com/s/vNA9Hny9wmF5ZFCAJfEXXQ)
-
-- 问题：正如题目所述，在自动化测试场景下，通过 systemd 无法启动 MySQL。连续 kill -9 结束实例进程，检测 mysqld 在退出后是否会被正确拉起。
-
-- 原因：
-
-    - systemd 启动 mysqld 的过程中，会先根据 service 模板中的配置，执行：
-        - 1.ExecStart（启动 mysqld）
-        - 2.mysqld 启动创建 pid 文件
-        - 3.ExecStartPost（自定义的一些后置脚本：调整权限、将 pid 写入 cgroup 等）
-
-        - 在 步骤 2-3 的中间态，也就是 pid 文件刚创建出来时，主机上接收到了自动化测试下发的命令：`sudo -S kill -9 $(cat /opt/mysql/data/11690/mysqld.pid)`
-
-        - 由于这个 pid 文件和 pid 进程确实存在（如果不存在 kill 命令或 cat 会报错）
-            - 自动化的 CASE 认为 kill 操作已成功结束。
-            - 但由于 mysqld.pid 这个文件是由 MySQL 自身维护的，在 systemd 的视角中，还需要继续等待 步骤 3 完成，才认为启动成功。
-
-        - 在 systemd 使用 forking 模式时，会根据子进程的 PID 值判断服务是否成功启动。
-
-            - 如果子进程成功启动，并且没有发生意外退出，则 systemd 会认为服务已启动，并将子进程的 PID 作为 MAIN PID。
-            - 而如果子进程启动失败或意外退出，则 systemd 会认为服务未能成功启动。
-
-    - 总结：在执行 ExecStartPost 时，由于子进程 ID 31036 已经被 kill 掉，后置 shell 缺少了启动参数，但 ExecStart 步骤已完成，导致 MAIN PID 31036 成为了只存在于 systemd 里的 僵尸进程。
-
-- 排除过程和复现过程（省略...）
-- 解决方法：
-
-    - 先 kill 掉 hang 住的 systemctl start 命令，执行 systemctl stop mysqld_11690.service，这可以让 systemd 主动结束僵尸进程，虽然 stop 命令可能会报错但这并不影响。
-
-    - 等待 stop 执行完成后再次使用 start 命令启动，恢复正常。
-
-- 虽然文章跟 MySQL 没太大关系，但重要的是分析偶发故障的思考过程 :)
-## hostnamectl, localectl, timedatectl, loginctl命令
-
-- `hostnamectl`
-```sh
-# 查看主机信息
-hostnamectl
-# output
- Static hostname: tz-pc
-       Icon name: computer-desktop
-         Chassis: desktop 🖥️
-      Machine ID: c571bebab04ca267ffe5ec875f22a566
-         Boot ID: ae5fe9fc75f1450abd39c294a9020222
-Operating System: Arch Linux
-          Kernel: Linux 6.1.27-1-lts
-    Architecture: x86-64
- Hardware Vendor: Micro-Star International Co., Ltd.
-  Hardware Model: MS-7B84
-Firmware Version: 2.30
-   Firmware Date: Fri 2018-11-02
-
-# 修改hostname
-hostnamectl set-hostname tz
-```
-
-- `localectl`
-```sh
-# 查看本地化设置
-localectl
-# output
-System Locale: LANG=en_US.UTF-8
-    VC Keymap: (unset)
-   X11 Layout: (unset)
-
-# 设置本地化参数。
-localectl set-locale LANG=en_GB.utf8
-localectl set-keymap en_GB
-```
-
-- `timedatectl`
-```sh
-# 查看当前时区
-timedatectl
-
-# 查看可选的时区
-timedatectl list-timezones
-
-# 设置当前时区
-timedatectl set-timezone America/New_York
-timedatectl set-time YYYY-MM-DD
-timedatectl set-time HH:MM:SS
-```
-
-- `loginctl`
-```sh
-# 查看当前session
-loginctl list-sessions
-
-# 查看当前登陆用户
-loginctl list-users
-
-# 查看指定用户
-loginctl show-user tz
 ```
 
 ## journalctl（日志）
@@ -1161,20 +1091,132 @@ sudo echo "blacklist sp5100_tco" > /etc/modprobe.d/sp5100_tco.conf
 kvm 是因为存储池里有之前临时挂载 vm，现在没有挂载也就读取错误
 解决办法取消存储池错误的 vm 即可
 
-## Timers（定时器）
+## path（监控文件变化）
+
+| 参数              | 说明                                           |
+| -                 | -                                              |
+| PathExists        | 监控指定路径是否存在，如果存在则启动关联单元。 |
+| PathExistsGlob    | 监控是否存在与指定模式匹配的路径。             |
+| PathChanged       | 监控指定路径的写入句柄是否被关闭。             |
+| PathModified      | 监控指定路径的最后修改时间是否发生变化。       |
+| DirectoryNotEmpty | 监控指定目录是否非空。                         |
+
+- `PathModified`监控文件变化：/etc/nginx/nginx.conf 文件变化并重新加载 Nginx 的 systemd.path 配置示例：
+
+    ```ini
+    [Unit]
+    Description=Monitor Nginx configuration file
+
+    [Path]
+    PathModified=/etc/nginx/nginx.conf
+    Unit=nginx-reload.service
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+
+- 监控目录变化：有新文件就执行`command.service`
+
+    - path单元配置文件`path-test.path`
+        ```ini
+        # /etc/systemd/system/path-test.path
+        [Unit]
+        Description=Monitor /tmp/test for new files
+
+        [Path]
+        DirectoryNotEmpty=/tmp/test
+        # 执行的服务
+        Unit=command.service
+
+        [Install]
+        WantedBy=multi-user.target
+        ```
+
+    - 执行的命令`command.service`
+        ```ini
+        # /etc/systemd/system/command.service
+        [Unit]
+        Description=Execute command when new files are detected in /tmp/test
+
+        [Service]
+        Type=oneshot
+        ExecStart=/bin/sh -c "echo 'new files' >> /var/log/path-test.log"
+        ```
+
+    - 测试
+        ```sh
+        mkdir /tmp/test
+
+        # 启动
+        systemctl restart path-test.path
+        systemctl restart command.service
+
+        # 测试
+        touch /var/log/path-test.log
+        tail -f /var/log/path-test.log
+
+        mkdir /tmp/test/1
+        mkdir /tmp/test/2
+        ```
+
+- 当文件被删除时触发服务。
+    ```ini
+    # /etc/systemd/system/lockfile-monitor.path
+    [Unit]
+    Description=Monitor /tmp/lockfile for deletion
+
+    [Path]
+    PathExists=/tmp/lockfile
+    PathExistsGlob=/tmp/lockfile
+    # 执行的服务
+    Unit=command.service
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+
+- 文件创建
+    ```ini
+    # /etc/systemd/system/myapp-pid-monitor.path
+    [Unit]
+    Description=Monitor /var/run/myapp.pid for creation
+
+    [Path]
+    PathExists=/var/run/myapp.pid
+    # 执行的服务
+    Unit=command.service
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+## timers（定时器）
 
 - [arch文档](https://wiki.archlinux.org/title/Systemd/Timers)
 
 - 可以代替cron。并且有日志管理；可以设置cpu，内存额度；可以依赖其它systemd unit
 
-- 瞬间计算器
-```sh
-# 30秒后运行命令
-systemd-run --on-active=30 /bin/touch /tmp/foo
+- 查看定时器
+    ```sh
+    # 查看所有
+    systemctl list-timers
 
-# 12小时30分钟后启动某个服务
-systemd-run --on-active="12h 30m" --unit someunit.service
-```
+    # 查看当前已经生效的定时器
+    systemctl list-timers --no-pager
+
+    # 查看指定的定时器
+    systemctl list-timers systemd-tmpfiles-clean.timer
+    ```
+
+- 设置多少时间后执行命令
+    ```sh
+    # 30秒后运行命令
+    systemd-run --on-active=30 /bin/touch /tmp/foo
+
+    # 12小时30分钟后启动某个服务
+    systemd-run --on-active="12h 30m" --unit someunit.service
+    ```
+
+### 创建timer定时器
 
 - 在`/usr/lib/systemd/system`目录下，新建一个`mytimer.timer`文件
 
@@ -1193,26 +1235,689 @@ systemd-run --on-active="12h 30m" --unit someunit.service
     | Persistent        | 如果设置了该字段，即使定时器到时没有启动，也会自动执行相应的单元 |
     | WakeSystem        | 如果系统休眠，是否自动唤醒系统                                   |
 
-    - `OnUnitActiveSec=Mon *-*-* 02:00:00`：表示每周一凌晨两点
+    ```ini
+    [Unit]
+    Description=Runs mytimer every hour
 
-    - `OnUnitActiveSec=1h`：表示每小时执行一次
-        ```systemd
-        [Unit]
-        Description=Runs mytimer every hour
+    [Timer]
+    # 表示每小时执行一次
+    OnUnitActiveSec=1h
+    Unit=mytimer.service
 
-        [Timer]
-        OnUnitActiveSec=1h
-        Unit=mytimer.service
+    [Install]
+    WantedBy=multi-user.target
+    ```
 
-        [Install]
-        WantedBy=multi-user.target
-        ```
+- `OnUnitActiveSec=Mon`表达式
 
-    - 基本命令
+    - `* *-*-* *:*:*`
+        - `*` ：表示一周中的某一天，例如：Sat,Thu,Mon
+        - `*-*-*` ：表示日历日期。这意味着它分解为 year-month-date。
+            - `2021-10-15` 是 10 月 15 日
+            - `*-10-15` 表示每年的 10 月 15 日
+            - `*-01-01`意味着每个新年。
+        - `*:*:*` 是表示日历事件的时间分量 `hour:minute:second`
+
+    - 常见的表达式:
+        - 每周一凌晨两点：`*-*-* 02:00:00`
+        - 每一分钟 `*-*-* *:*:00`
+        - 每 5 分钟 `*-*-* *:*/5:00`
+        - 每 60 分钟 `*-*-* */1:00:00`
+        - 每 1 小时 `*-*-* *:00:00`
+        - 每 3 小时 `*-*-* */3:00:00`
+        - 每隔一小时 `*-*-* */2:00:00`
+        - 每 12 小时 `*-*-* */12:00:00`
+        - 在特定时间之间 `*-*-* 9-17:00:00`
+        - 每天 `*-*-* 00:00:00`
+        - 每天凌晨 1 点 `*-*-* 01:00:00`
+        - 每晚午夜 `*-*-* 00:00:00`
+        - 每周六 Sat `*-*-* 00:00:00`
+        - 星期一到星期五 Mon...Fri `*-*-* 00:00:00`
+        - 每周末 Sat,Sun `*-*-* 00:00:00`
+        - 每 7 天 `* *-*-* 00:00:00`
+        - 每个月 `* *-*-01 00:00:00`
+        - 每个季度 `* *-01,04,07,10-01 00:00:00`
+        - 每 6 个月 `* *-01,07-01 00:00:00`
+        - 每年 `* *-01-01 00:00:00`
+
+#### 例子：timer定时器单元替代传统的 cron
+
+- 1.创建定时器服务单元：
+
+    - 创建服务文件 `/etc/systemd/system/mytask.service`：
+    ```ini
+    [Unit]
+    Description=My Scheduled Task
+
+    [Service]
+    Type=oneshot
+    ExecStart=/usr/bin/mycommand --option
+    ```
+
+- 2.创建定时器文件 /etc/systemd/system/mytask.timer：
+
+    ```ini
+    [Unit]
+    Description=Run MyTask every day at 2 AM
+
+    [Timer]
+    OnCalendar=*-*-* 02:00:00
+    Persistent=true
+
+    [Install]
+    WantedBy=timers.target
+    ```
+
+    - OnCalendar：定义任务的调度时间。
+    - Persistent：如果错过了预定时间，系统启动后立即执行。
+
+- 3.启用并启动定时器：
+
     ```sh
-    # 查看当前timers
+    sudo systemctl daemon-reload
+    sudo systemctl enable mytask.timer
+    sudo systemctl start mytask.timer
+    ```
+
+- 4.查看定时器状态：
+
+    ```sh
     systemctl list-timers
     ```
+## hostnamectl, localectl, timedatectl, loginctl命令
+
+- `hostnamectl`
+```sh
+# 查看主机信息
+hostnamectl
+# output
+ Static hostname: tz-pc
+       Icon name: computer-desktop
+         Chassis: desktop 🖥️
+      Machine ID: c571bebab04ca267ffe5ec875f22a566
+         Boot ID: ae5fe9fc75f1450abd39c294a9020222
+Operating System: Arch Linux
+          Kernel: Linux 6.1.27-1-lts
+    Architecture: x86-64
+ Hardware Vendor: Micro-Star International Co., Ltd.
+  Hardware Model: MS-7B84
+Firmware Version: 2.30
+   Firmware Date: Fri 2018-11-02
+
+# 修改hostname
+hostnamectl set-hostname tz
+```
+
+- `localectl`
+```sh
+# 查看本地化设置
+localectl
+# output
+System Locale: LANG=en_US.UTF-8
+    VC Keymap: (unset)
+   X11 Layout: (unset)
+
+# 设置本地化参数。
+localectl set-locale LANG=en_GB.utf8
+localectl set-keymap en_GB
+```
+
+- `timedatectl`
+```sh
+# 查看当前时区
+timedatectl
+
+# 查看可选的时区
+timedatectl list-timezones
+
+# 设置当前时区
+timedatectl set-timezone America/New_York
+timedatectl set-time YYYY-MM-DD
+timedatectl set-time HH:MM:SS
+```
+
+- `loginctl`
+```sh
+# 查看当前session
+loginctl list-sessions
+
+# 查看当前登陆用户
+loginctl list-users
+
+# 查看所有会话及属性
+loginctl -a
+
+# 查看会话配置消息
+loginctl show-session
+
+# 查看指定用户
+loginctl show-user tz
+```
+
+## systemd-homed用户登陆和管理
+
+- systemd-homed
+    - 用户信息（如用户名、用户组、密码哈希等）存储在主目录中的一个 JSON 文件中`/var/lib/systemd/home/<username>.identity`，而不是分散在 /etc/passwd 和 /etc/shadow 等系统文件中
+    - 会加密用户主目录
+    - 用户账户只有在登录时才会被激活，未登录时账户处于休眠状态。
+    - 用户账户和主目录可以在不同的 Linux 系统之间迁移。
+
+```sh
+# 查看systemd-homed
+systemctl status systemd-homed
+# 启动systemd-homed
+systemctl start systemd-homed
+```
+
+- 常用命令
+    ```sh
+    # 查看所有用户
+    homectl list
+
+    # 创建名为test的用户
+    homectl create test
+
+    # 创建名为test的用户，使用luks加密
+    homectl create test --storage=luks
+
+    # 创建名为test的用户，使用fscrypt加密
+    homectl create test --storage=fscrypt
+
+    # 创建名为test的用户，并设置shell、uid、group
+    homectl create test --shell=/usr/bin/zsh --uid=60100 --member-of=wheel,adm,uucp
+
+    # 查看test用户。默认文件系统为btrfs
+    homectl inspect test
+
+    # systemd-homed会把用户信息保存到为test.identity的json文件
+    sudo cat /var/lib/systemd/home/test.identity
+
+    # 修改用户test的信息
+    sudo homectl update test --fs-type=ext4
+    sudo homectl update test --shell=/usr/bin/fish
+    sudo homectl update test --uid=1001 --gid=1001
+    sudo homectl update test --storage=fscrypt # 使用fscrypt加密
+
+    # 激活用户test。激活后，用户的主目录会被挂载到指定路径（如 /home/<username>）
+    homectl activate test
+
+    # 登陆用户test。systemd-homed推荐使用machinectl shell
+    machinectl shell test@
+    # 或者
+    su test -
+
+    # 停用用户test。停用后，用户的主目录会被卸载并重新加密（如果使用了加密存储）。
+    homectl deactivate test
+
+    # 可以查看State属性是否被激活
+    homectl inspect test | grep -i State
+
+    # 删除test用户
+    homectl remove test
+    ```
+
+- ssh：systemd-homed会使用密码加密主目录，
+
+    - `/etc/ssh/sshd_config`
+        ```
+        PasswordAuthentication yes
+        PubkeyAuthentication yes
+        AuthenticationMethods publickey,password
+        ```
+
+    ```sh
+    homectl update username --ssh-authorized-keys=@/path/to/mounted/home/.ssh/authorized_keys
+    ```
+
+- 迁移到不同linux
+
+    - 备份
+        ```sh
+        # 停用用户
+        homectl deactivate <username>
+
+        # 备份包含用户信息的json配置文件
+        cp /var/lib/systemd/home/<username>.json /path/to/backup/
+
+        # 备份用户的目录
+        cp -r /home/<username> /path/to/backup/
+        # 如果是加密的用户目录
+        cp /home/<username>.home /path/to/backup/
+        ```
+
+    - 恢复：就是备份的放过来。
+        ```sh
+        # 如果uid、gid冲突则需要修改
+        homectl update <username> --uid=<new-uid> --gid=<new-gid>
+        ```
+
+## systemd-run
+
+- [山河已无恙：关于 Linux 中使用 systemd-run 创建临时 cgroup 限制 ad-hoc 资源消耗的一些笔记](https://mp.weixin.qq.com/s/_DhnqsfhEgP05SjMyDJNOA)
+
+- systemd-run 命令我们可以创建一个临时的cgroup并且可以在这个cgroup中运行临时命令。从而达到对资源的限制。
+
+- 把临时命令封装为一个service 或者 scope 单元(systemd 的资源单位类型为：service、scope、slice)，然后单元放到了 创建的 cgroup层级下(slice)用于资源管理。
+
+- `service` : 一个或一组进程，由 systemd 依据单位配置文件启动。service 对指定进程进行封装，这样进程可以作为一个整体被启动或终止。
+- `scope` : 一组外部创建的进程。由强制进程通过 fork() 函数启动和终止、之后被 systemd 在运行时注册的进程，scope 会将其封装。例如：用户会话、 容器和虚拟机被认为是 scope。
+- `slice` : 一组按层级排列的单位。slice 并不包含进程，但会组建一个层级，并将 scope 和 service 都放置其中。真正的进程包含在 scope 或 service 中。在这一被划分层级的树中，每一个 slice 单位的名字对应通向层级中一个位置的路径。小横线（"-"）起分离路径组件的作用。
+
+- 对`service`、`scope` 单元做资源限制，也就是我们的临时命令，是通过指定单元中的属性来实现的。通过 `-p` 来传递
+
+    ```sh
+    # scope。作为前台进程存在的。命令如果有输出，会直接打印出来，即换句话讲，它是同步的。
+    systemd-run -p MemoryLimit=5M --unit=name --scope --slice=slice_name command
+
+    # 当不指定为 scope ,默认是作为  service 存在。即后台非同步启动进程。它们从 systemd 进程中被调用。--unit=name 为单元生成的名字 --slice=slice_name: 为生成的 cgroup 层级的名字
+    systemd-run -p MemoryLimit=5M --unit=name --slice=slice_name command
+    ```
+
+- 基本命令
+
+    ```sh
+    # 如需使用命令列来限定 httpd.service 的 CPU 和内存占用量，请输入：
+    systemctl set-property httpd.service CPUShares=600 MemoryLimit=500M
+
+    # 如希望此更改为临时更改，请添加 --runtime 选项。单元文件，默认在 API文件系统  /run 下, 生命周期和临时的进程周期相同。
+    systemctl set-property --runtime httpd.service CPUShares=600 MemoryLimit=500M
+    ```
+
+### 前台进程
+
+- 1.同步进程。一种是需要设置 `--scope`：指定为一个scope资源，除非命令运行结束或者强制执行，否则会一直挂在前台。这条命令10秒后结束，对应的单元文件也会随之消失
+
+    ```sh
+    systemd-run -p MemoryLimit=5M -p CPUShares=100 --unit=sleep-10 --scope --slice=test sleep 10
+
+    # 查看单元文件。注意这里的service名字不是sleep-10，要在后面加上.scope。服务还没有运行结束时，才能查看
+    systemctl cat sleep-10.scope
+    # /run/systemd/transient/sleep-10.scope
+    # This is a transient unit file, created programmatically via the systemd API. Do not edi>
+    [Unit]
+    Description=[systemd-run] /usr/bin/sleep 10
+
+    [Scope]
+    MemoryLimit=5242880
+    CPUShares=100
+    Slice=test.slice
+
+    # 查看状态。服务还没有运行结束时，才能查看
+    systemctl status sleep-10.scope
+    ● sleep-10.scope - [systemd-run] /usr/bin/sleep 10
+         Loaded: loaded (/run/systemd/transient/sleep-10.scope; transient)
+      Transient: yes
+         Active: active (running) since Fri 2025-02-07 16:18:29 CST; 3s ago
+     Invocation: 56094854ee594b88806d3a50285f2105
+          Tasks: 1 (limit: 15093)
+         Memory: 176K (limit: 5M, peak: 288K)
+            CPU: 1ms
+         CGroup: /test.slice/sleep-10.scope
+                 └─19038 /usr/bin/sleep 10
+
+    Feb 07 16:18:29 tc-pc systemd[1]: Started [systemd-run] /usr/bin/sleep 10.
+
+    # systemctl show 查看cgroup资源限制
+    systemctl show sleep-10.scope
+
+    # 查看依赖关系
+    systemctl list-dependencies sleep-10.scope
+
+    # 查看日志。日志就算服务运行结束了，也可以查看。
+    journalctl -u sleep-10.scope
+    Feb 07 16:11:48 tc-pc systemd[1]: Started [systemd-run] /usr/bin/sleep 10.
+    Feb 07 16:11:58 tc-pc systemd[1]: sleep-10.scope: Deactivated successfully.
+    ```
+
+- 2.-t 命令将当前 bash 放到 service 单元中
+
+    ```sh
+    systemd-run -p MemoryLimit=5M -p CPUShares=100 --unit=bash-limit --slice=bash-test -t /bin/bash
+
+    # cat查看service单元文件。服务还没有运行结束时，才能查看
+    systemctl cat bash-limit.service
+    # /run/systemd/transient/bash-limit.service
+    # This is a transient unit file, created programmatically via the systemd API. Do not edi>
+    [Unit]
+    Description=[systemd-run] /bin/bash
+
+    [Service]
+    MemoryLimit=5242880
+    CPUShares=100
+    Slice=bash-test.slice
+    TTYPath=/dev/pts/4
+    Environment="TERM=st-256color"
+    ExecStart=
+    ExecStart="/bin/bash"
+
+    # 查看状态。
+    systemctl status bash-limit.service
+    ● bash-limit.service - [systemd-run] /bin/bash
+         Loaded: loaded (/run/systemd/transient/bash-limit.service; transient)
+      Transient: yes
+         Active: active (running) since Fri 2025-02-07 16:14:34 CST; 12s ago
+     Invocation: cc5d7f4b240d4b079e437d4a247bf4e7
+       Main PID: 17035 (bash)
+          Tasks: 1 (limit: 15093)
+         Memory: 2.6M (limit: 5M, peak: 3.1M)
+            CPU: 36ms
+         CGroup: /bash.slice/bash-test.slice/bash-limit.service
+                 └─17035 /bin/bash
+
+    Feb 07 16:14:34 tc-pc systemd[1]: Started [systemd-run] /bin/bash.
+
+    # systemctl show 查看cgroup资源限制
+    systemctl show bash-limit.service
+
+    # 查看依赖关系
+    systemctl list-dependencies bash-limit.service
+
+    # 关闭service
+    systemctl disable bash-limit.service --now
+
+    # 再次查看状态。已经failed
+    systemctl status bash-limit.service
+    × bash-limit.service - [systemd-run] /bin/bash
+         Loaded: loaded (/run/systemd/transient/bash-limit.service; transient)
+      Transient: yes
+         Active: failed (Result: timeout) since Fri 2025-02-07 16:24:40 CST; 13min ago
+       Duration: 8min 35.326s
+     Invocation: cc5d7f4b240d4b079e437d4a247bf4e7
+        Process: 17035 ExecStart=/bin/bash (code=killed, signal=KILL)
+       Main PID: 17035 (code=killed, signal=KILL)
+       Mem peak: 3.1M
+            CPU: 41ms
+
+    Feb 07 16:23:09 tc-pc systemd[1]: /run/systemd/transient/bash-limit.service:6: Unit uses >
+    Feb 07 16:23:09 tc-pc systemd[1]: /run/systemd/transient/bash-limit.service:7: Unit uses >
+    Feb 07 16:23:09 tc-pc systemd[1]: Stopping [systemd-run] /bin/bash...
+    Feb 07 16:23:35 tc-pc systemd[1]: /run/systemd/transient/bash-limit.service:6: Unit uses >
+    Feb 07 16:23:35 tc-pc systemd[1]: /run/systemd/transient/bash-limit.service:7: Unit uses >
+    Feb 07 16:24:40 tc-pc systemd[1]: bash-limit.service: State 'stop-sigterm' timed out. Kil>
+    Feb 07 16:24:40 tc-pc systemd[1]: bash-limit.service: Killing process 17035 (bash) with s>
+    Feb 07 16:24:40 tc-pc systemd[1]: bash-limit.service: Main process exited, code=killed, s>
+    Feb 07 16:24:40 tc-pc systemd[1]: bash-limit.service: Failed with result 'timeout'.
+    Feb 07 16:24:40 tc-pc systemd[1]: Stopped [systemd-run] /bin/bash.
+
+    # 尝试再次运行。结果已经无法再次运行该命令
+    systemd-run -p MemoryLimit=5M -p CPUShares=100 --unit=bash-limit --slice=bash-test -t /bin/bash
+    Failed to start transient service unit: Unit bash-limit.service was already loaded or has a fragment file.
+
+    # 尝试重启后
+    systemctl restart bash-limit
+    Failed to restart bash-limit.service: Unit bash-limit.service not found.
+
+    # 再次运行。结果这次可以运行。
+    systemd-run -p MemoryLimit=5M -p CPUShares=100 --unit=bash-limit --slice=bash-test -t /bin/bash
+    # exit命令主动退出
+    exit
+
+    # 查看日志
+    journalctl -u bash-limit
+    Feb 07 16:13:35 tc-pc systemd[1]: Started [systemd-run] /bin/bash.
+    Feb 07 16:14:20 tc-pc systemd[1]: bash-limit.service: Deactivated successfully.
+    Feb 07 16:14:34 tc-pc systemd[1]: Started [systemd-run] /bin/bash.
+    Feb 07 16:23:09 tc-pc systemd[1]: /run/systemd/transient/bash-limit.service:6: Unit uses >
+    Feb 07 16:23:09 tc-pc systemd[1]: /run/systemd/transient/bash-limit.service:7: Unit uses >
+    Feb 07 16:23:09 tc-pc systemd[1]: Stopping [systemd-run] /bin/bash...
+    Feb 07 16:23:35 tc-pc systemd[1]: /run/systemd/transient/bash-limit.service:6: Unit uses >
+    Feb 07 16:23:35 tc-pc systemd[1]: /run/systemd/transient/bash-limit.service:7: Unit uses >
+    Feb 07 16:24:40 tc-pc systemd[1]: bash-limit.service: State 'stop-sigterm' timed out. Kil>
+    Feb 07 16:24:40 tc-pc systemd[1]: bash-limit.service: Killing process 17035 (bash) with s>
+    Feb 07 16:24:40 tc-pc systemd[1]: bash-limit.service: Main process exited, code=killed, s>
+    Feb 07 16:24:40 tc-pc systemd[1]: bash-limit.service: Failed with result 'timeout'.
+    Feb 07 16:24:40 tc-pc systemd[1]: Stopped [systemd-run] /bin/bash.
+    Feb 07 16:39:46 tc-pc systemd[1]: Started [systemd-run] /bin/bash.
+    Feb 07 16:39:46 tc-pc systemd[1]: bash-limit.service: Deactivated successfully.
+    Feb 07 16:39:50 tc-pc systemd[1]: bash-limit.service: Failed to open /run/systemd/transie>
+    Feb 07 16:39:55 tc-pc systemd[1]: bash-limit.service: Failed to open /run/systemd/transie>
+    Feb 07 16:42:25 tc-pc systemd[1]: Started [systemd-run] /bin/bash.
+    Feb 07 16:44:34 tc-pc systemd[1]: bash-limit.service: Deactivated successfully.
+    ```
+
+### 后台进程
+
+- 1.后台非守护进程不需要 --scope 参数，在后台执行，默认是一个 service
+
+    ```sh
+    systemd-run -p  MemoryLimit=5M  -p CPUShares=100 --unit=sleep-50 --slice=test sleep 50
+
+    # 查看单元文件
+    systemctl cat sleep-50
+    # /run/systemd/transient/sleep-50.service
+    # This is a transient unit file, created programmatically via the systemd API. Do not edi>
+    [Unit]
+    Description=[systemd-run] /usr/bin/sleep 50
+
+    [Service]
+    MemoryLimit=5242880
+    CPUShares=100
+    Slice=test.slice
+    ExecStart=
+    ExecStart="/usr/bin/sleep" "50"
+
+    # 查看状态
+    systemctl status sleep-50
+    ● sleep-50.service - [systemd-run] /usr/bin/sleep 50
+         Loaded: loaded (/run/systemd/transient/sleep-50.service; transient)
+      Transient: yes
+         Active: active (running) since Fri 2025-02-07 16:28:48 CST; 6s ago
+     Invocation: 20eaab9bf5e34579b60b7e376bcd02d8
+       Main PID: 23494 (sleep)
+          Tasks: 1 (limit: 15093)
+         Memory: 196K (limit: 5M, peak: 1.6M)
+            CPU: 4ms
+         CGroup: /test.slice/sleep-50.service
+                 └─23494 /usr/bin/sleep 50
+
+    Feb 07 16:28:48 tc-pc systemd[1]: Started [systemd-run] /usr/bin/sleep 50.
+
+    # systemctl show 查看cgroup资源限制
+    systemctl show sleep-50
+
+    # 查看依赖关系
+    systemctl list-dependencies sleep-50
+
+    # 查看日志
+    journalctl -u sleep-50.service
+    Feb 07 16:28:33 tc-pc systemd[1]: Started [systemd-run] /usr/bin/sleep 50.
+    Feb 07 16:28:43 tc-pc systemd[1]: sleep-50.service: Deactivated successfully.
+    ```
+
+- 2.后台守护进程。需要一个一直运行的临时命令。不会死掉
+
+    ```sh
+    systemd-run -p  MemoryLimit=5M  -p CPUShares=100 --unit=top-print --slice=test top -b
+
+    # 查看单元文件
+    systemctl cat top-print.service
+
+    # /run/systemd/transient/top-print.service
+    # This is a transient unit file, created programmatically via the systemd API. Do not edi>
+    [Unit]
+    Description=[systemd-run] /usr/bin/top -b
+
+    [Service]
+    MemoryLimit=5242880
+    CPUShares=100
+    Slice=test.slice
+    ExecStart=
+    ExecStart="/usr/bin/top" "-b"
+
+    # 查看状态
+    systemctl status top-print.service
+    ● top-print.service - [systemd-run] /usr/bin/top -b
+         Loaded: loaded (/run/systemd/transient/top-print.service; transient)
+      Transient: yes
+         Active: active (running) since Fri 2025-02-07 16:47:22 CST; 7min ago
+     Invocation: e8bfebcc202e432cbd8663e6e00335d3
+       Main PID: 32431 (top)
+          Tasks: 1 (limit: 15093)
+         Memory: 3M (limit: 5M, peak: 3.5M)
+            CPU: 1.454s
+         CGroup: /test.slice/top-print.service
+                 └─32431 /usr/bin/top -b
+
+    Feb 07 16:54:24 tc-pc top[32431]:   32173 root       0 -20       0      0      0 I   0.0 >
+    Feb 07 16:54:24 tc-pc top[32431]:   32421 root      20   0       0      0      0 I   0.0 >
+    Feb 07 16:54:24 tc-pc top[32431]:   32670 root      20   0       0      0      0 I   0.0 >
+    Feb 07 16:54:24 tc-pc top[32431]:   33521 root      20   0       0      0      0 I   0.0 >
+    Feb 07 16:54:24 tc-pc top[32431]:   33526 root      20   0       0      0      0 I   0.0 >
+    Feb 07 16:54:24 tc-pc top[32431]:   33564 root      20   0       0      0      0 I   0.0 >
+    Feb 07 16:54:24 tc-pc top[32431]:   33810 root      20   0   15068   6012   5244 S   0.0 >
+    Feb 07 16:54:24 tc-pc top[32431]:   33811 root      20   0   15068   6012   5244 S   0.0 >
+    Feb 07 16:54:24 tc-pc top[32431]:   33812 root      20   0   15068   6024   5256 S   0.0 >
+    Feb 07 16:54:24 tc-pc top[32431]:   34583 root      20   0   35828   6680   3396 S   0.0 >
+
+    # systemctl show 查看cgroup资源限制
+    systemctl show top-print
+
+    # 查看依赖关系
+    systemctl list-dependencies top-print.service
+
+    # 查看cgroup关系
+    systemd-cgls | grep -a1b1 top-print.service
+    9577-├─test.slice
+    9594:│ └─top-print.service
+    9622-│   └─32431 /usr/bin/top -b
+
+    # 查看日志
+    journalctl -u top-print.service
+    Feb 07 16:47:22 tc-pc systemd[1]: Started [systemd-run] /usr/bin/top -b.
+    Feb 07 16:47:22 tc-pc top[32431]: top - 16:47:22 up  1:14,  1 user,  load average: 1.48, >
+    Feb 07 16:47:22 tc-pc top[32431]: Tasks: 439 total, 1 running, 436 sleep, 1 d-sleep, 0 st>
+    Feb 07 16:47:22 tc-pc top[32431]: %Cpu(s):  2.2 us,  1.7 sy,  0.0 ni, 95.0 id,  0.6 wa,  >
+    Feb 07 16:47:22 tc-pc top[32431]: MiB Mem :  12768.3 total,    395.0 free,   7839.2 used,>
+    Feb 07 16:47:22 tc-pc top[32431]: MiB Swap:  12770.6 total,  10919.1 free,   1851.5 used.>
+    Feb 07 16:47:22 tc-pc top[32431]:     PID USER      PR  NI    VIRT    RES    SHR S  %CPU >
+    Feb 07 16:47:22 tc-pc top[32431]:     576 root     -51   0       0      0      0 S   9.1 >
+    Feb 07 16:47:22 tc-pc top[32431]:    1506 tz        20   0 2922080 137984 109440 S   9.1 >
+    Feb 07 16:47:22 tc-pc top[32431]:    1643 tz        20   0 4198372  65444  53864 S   9.1 >
+    Feb 07 16:47:22 tc-pc top[32431]:    1646 tz        20   0 5364876 107148  71888 S   9.1 >
+    Feb 07 16:47:22 tc-pc top[32431]:    2710 tz        20   0 1393.9g 118120  96260 S   9.1 >
+    Feb 07 16:47:22 tc-pc top[32431]:   32347 root      20   0   35828   6680   3396 S   9.1 >
+    Feb 07 16:47:22 tc-pc top[32431]:       1 root      20   0   23268  14304   9784 S   0.0 >
+    Feb 07 16:47:22 tc-pc top[32431]:       2 root      20   0       0      0      0 S   0.0 >
+
+    # 结束服务
+    systemctl stop top-print
+    ```
+
+### 命令的输出变成日志
+
+- [山河已无恙：关于Linux下通过ping/mtr 长期监控网络输出日志报告的一些笔记](https://mp.weixin.qq.com/s/2KE6rSSkoqcNjkEZ_GoGxg)
+
+- `ping`命令运行结束后。可以查看日志
+
+    ```sh
+    systemd-run --unit ping-print --slice ping  /usr/bin/ping www.baidu.com
+
+    # 查看是否还运行
+    systemctl is-active ping-print.service
+    active
+
+    # 查看日志
+    journalctl -u ping-print | tail -n 5
+
+    # 导出日志
+    journalctl -u ping-print.service  > ping.192.168.29.154.log
+
+    # 结束服务
+    systemctl stop ping-print.service
+    ```
+
+- `mtr`命令。我们通过配置定时输出报告的方式，启动 临时 time 每分钟执行一次 mtr 命令输出一次报告
+
+    ```sh
+    systemd-run --on-calendar=*:*:00  --unit mtr-print-log --slice mtr /usr/sbin/mtr -r -b www.baidu.com
+
+    # 查看timer的状态
+    systemctl status mtr-print-log.service
+
+    # 查看下次执行时间
+    systemctl list-timers mtr-print-log.timer
+    NEXT                        LEFT LAST                         PASSED UNIT                >
+    Fri 2025-02-07 17:15:00 CST  25s Fri 2025-02-07 17:14:00 CST 33s ago mtr-print-log.timer >
+
+    # 查看日志
+    journalctl -u mtr-print-log.service
+
+    # 结束服务
+    systemctl stop mtr-print-log.timer
+    ```
+
+## run0取代sudo
+
+- run0 是基于 systemd-run 的一个工具
+
+    - 服务化运行命令：Run0 将目标命令以短暂的服务形式运行，命令完成后，权限立即恢复为普通用户身份。
+
+        - run0要求系统管理器使用指定的用户ID启动一个shell或进程，并创建一个新的伪终端（PTY），并在当前终端（TTY）和它之间传输数据。这种行为更类似于使用ssh而不是传统的sudo运行。特权进程在一个由进程PID 1生成而不是由用户进程生成的隔离上下文中运行，即不继承用户环境的属性，除了转发$TERM环境变量。转发是通过一个明确允许的属性列表进行的，而不是试图禁止危险属性（即白名单的概念，而不是黑名单）。
+
+    - 严格的每次认证：Run0 不再允许“认证宽限期”，每次运行命令都需要重新输入密码，大幅提高安全性。
+
+    - 隔离认证与命令执行：Run0 使用 polkit 来处理认证，避免了认证信息暴露给目标命令的风险。
+        - 没有像/etc/sudoers 这样的配置文件。
+
+    - 无需 SUID 文件支持：通过 Run0，特权命令不需要依赖 SUID 位，简化了系统的权限配置，降低了出错概率。
+
+        - sudo通常使用该标志。在sudo中使用SUID标志会带来额外的风险，因为SUID进程继承了许多由非特权用户控制的执行上下文属性，比如环境变量、文件描述符、调度器选项和cgroup绑定。这些属性可能会被攻击者利用，而在诸如sudo等复杂SUID程序中仍然经常发现漏洞。
+
+- run0 的设计理念是最小化特权，只授予执行特定命令所需的最小权限。它还集成了 systemd 的日志记录功能，提供更全面、更易于分析的审计日志。
+
+- 常用命令
+
+    ```sh
+    # 相当于su。没有像su -那样继承环境变量
+    run0
+
+    # 相当于sudo，以root用户运行命令，默认为红色背景
+    run0 ls /root
+
+    # 以test用户运行命令
+    run0 -u test ls /test
+
+    # 更换为蓝色背景
+    run0 --background=44 ls /root
+
+    # 不要任何背景颜色
+    run0 --background= ls /root
+
+    # 修改主目录
+    run0 --chdir=/var pwd
+
+    # 修改nice优先值
+    run0 --nice=19 ls /root
+
+    # 临时定义单元
+    run0 --unit=hello --description="test" echo 'hello'
+    run0 --nice=19 --unit=hello --description="test" echo 'hello'
+
+    # 设置变量
+    run0 --setenv=hello=true env | grep hello
+    hello=true
+    ```
+
+- 进程运行环境设置。如沙盒机制
+
+    ```sh
+    # 查看支持的属性
+    systemctl show dmesg.service
+
+    # ProtectSystem设置为文件系统只读
+    run0 --property=ProtectSystem=strict bash -c 'echo test > /var/log/write-test'
+    /usr/bin/bash: line 1: /var/log/write-test: Read-only file system
+    ```
+
+## systemd-boot代替GRUB引导程序
+
+# 第三方优秀软件
+
+## [isd：systemd tui](https://github.com/isd-project/isd)
+
+```sh
+pip install isd-tui
+```
 
 # referece
 - [systemd教程和在线测试](https://systemd-by-example.com/)

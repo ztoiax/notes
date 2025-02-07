@@ -3,12 +3,14 @@
 * [terminal simulator (终端模拟器)](#terminal-simulator-终端模拟器)
   * [alacritty](#alacritty)
   * [wezterm:用rust写, 支持gpu加速](#wezterm用rust写-支持gpu加速)
+  * [warp：自带ai的termianl](#warp自带ai的termianl)
   * [tabby](#tabby)
   * [ttyd: 浏览器terminal](#ttyd-浏览器terminal)
   * [termpair: 网页操作终端](#termpair-网页操作终端)
   * [sshx：通过浏览器远程访问，共享的终端。体验有点卡](#sshx通过浏览器远程访问共享的终端体验有点卡)
   * [ghostty：用zig写的](#ghostty用zig写的)
   * [waveterm：ts写的，支持ai提醒](#wavetermts写的支持ai提醒)
+  * [WindTerm：c写的类似vscode布局的终端](#windtermc写的类似vscode布局的终端)
 * [File Browser](#file-browser)
   * [ranger](#ranger)
   * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
@@ -21,6 +23,7 @@
   * [twf：vim模式的文件树](#twfvim模式的文件树)
   * [superfile](#superfile)
 * [File](#file)
+  * [mmv：批量命名mv](#mmv批量命名mv)
   * [[advcpmv: instead cp, my(https://github.com/jarun/advcpmv)](#advcpmv-instead-cp-myhttpsgithubcomjarunadvcpmv)
   * [fd: instead find](#fd-instead-find)
   * [tmsu: taging file and mount tag file](#tmsu-taging-file-and-mount-tag-file)
@@ -256,6 +259,8 @@
 
 ## [wezterm:用rust写, 支持gpu加速](https://github.com/wez/wezterm)
 
+## [warp：自带ai的termianl](https://github.com/warpdotdev/Warp)
+
 ## [tabby](https://github.com/Eugeny/tabby)
 
 ## [ttyd: 浏览器terminal](https://github.com/tsl0922/ttyd)
@@ -267,6 +272,8 @@
 ## [ghostty：用zig写的](https://github.com/ghostty-org/ghostty)
 
 ## [waveterm：ts写的，支持ai提醒](https://github.com/wavetermdev/waveterm)
+
+## [WindTerm：c写的类似vscode布局的终端](https://github.com/kingToolbox/WindTerm)
 
 # File Browser
 
@@ -308,6 +315,10 @@ sudo make O_NERD=1
 ![image](./Pictures/awesomecli/superfile.avif)
 
 # File
+
+## [mmv：批量命名mv](https://github.com/itchyny/mmv)
+
+- [运维漫谈：比mv命令更强大！教你如何在Linux用mmv命令实现高级文件重命名](https://mp.weixin.qq.com/s/Y-Q4XyYOfhjx1cSUWOv0-w)
 
 ## [advcpmv: instead cp, my(https://github.com/jarun/advcpmv)
 
@@ -1185,6 +1196,10 @@ SELECT DISTINCT processes.name, listening_ports.port, processes.pid
 
 ## [isd：systemd tui](https://github.com/isd-project/isd)
 
+```sh
+pip install isd-tui
+```
+
 # 磁盘备份
 
 ## [restic](https://github.com/restic/restic)
@@ -1340,6 +1355,8 @@ journalctl -o json | lnav
 
 ## llm大模型
 
+- [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
+
 - [ollama](https://github.com/ollama/ollama)
     - [ollama：支持的大模型](https://ollama.com/search)
 
@@ -1372,6 +1389,8 @@ journalctl -o json | lnav
     # 启动
     ./AnythingLLMDesktop/start
     ```
+
+- [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可）](https://github.com/CherryHQ/cherry-studio)
 
 - [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)
 

@@ -1,56 +1,41 @@
 <!-- mtoc-start -->
 
-* [思想](#思想)
-* [技术](#技术)
-  * [Mojo：面向 AI 的编程语言](#mojo面向-ai-的编程语言)
-  * [LLM](#llm)
-    * [原理](#原理)
-    * [使用](#使用)
-    * [商业](#商业)
-    * [项目](#项目)
-      * [在线模型](#在线模型)
-    * [prompt提示词](#prompt提示词)
-    * [RAG框架](#rag框架)
-    * [有趣的文章、访谈](#有趣的文章访谈)
-      * [OpenAI工程师：模型不是关键，语料才是关键。](#openai工程师模型不是关键语料才是关键)
-      * [2024年llm总结Things we learned about LLMs in 2024](#2024年llm总结things-we-learned-about-llms-in-2024)
-      * [DeepSeek模型作者的访谈](#deepseek模型作者的访谈)
+* [LLM](#llm)
+  * [原理](#原理)
+  * [使用](#使用)
+  * [商业](#商业)
+  * [项目](#项目)
+    * [在线模型](#在线模型)
+  * [prompt提示词](#prompt提示词)
+  * [RAG框架](#rag框架)
+  * [有趣的文章、访谈](#有趣的文章访谈)
+    * [Sam Altman：Moore's Law for Everything](#sam-altmanmoores-law-for-everything)
+    * [OpenAI工程师：模型不是关键，语料才是关键。](#openai工程师模型不是关键语料才是关键)
+    * [2024年llm总结Things we learned about LLMs in 2024](#2024年llm总结things-we-learned-about-llms-in-2024)
+    * [DeepSeek模型作者的访谈](#deepseek模型作者的访谈)
 * [ai项目](#ai项目)
   * [Transformer](#transformer)
-  * [ai编程，代码生成和代码补全](#ai编程代码生成和代码补全)
   * [图片与视频等多媒体相关](#图片与视频等多媒体相关)
     * [图片和视频理解](#图片和视频理解)
     * [文生成图片](#文生成图片)
     * [文生成视频](#文生成视频)
     * [文生成音乐](#文生成音乐)
-  * [SAM](#sam)
-  * [图片视频](#图片视频)
+  * [ai处理图片、视频](#ai处理图片视频)
+    * [SAM：对图片和视频一键抠图](#sam对图片和视频一键抠图)
   * [语音转文字](#语音转文字)
-* [文字传语音](#文字传语音)
-  * [操作系统](#操作系统)
+  * [文字传语音](#文字传语音)
+  * [ai编程，代码生成和代码补全](#ai编程代码生成和代码补全)
+  * [ai编程语言](#ai编程语言)
+  * [ai操作系统](#ai操作系统)
   * [ai程序员](#ai程序员)
-* [ai测试](#ai测试)
+* [ai性能测试](#ai性能测试)
 * [在线ai工具](#在线ai工具)
 
 <!-- mtoc-end -->
 
-# 思想
+# LLM
 
-- [Sam Altman：Moore's Law for Everything](https://moores.samaltman.com/)
-
-- [演讲实录 | CAAI常务理事焦李成院士——物理学启发的人工智能：思考与挑战]()
-
-# 技术
-
-## [Mojo：面向 AI 的编程语言](https://github.com/modularml/mojo)
-
-- 目标是提供python的易用性，c语言的性能
-
-- 创始人chris lattner是swift语言和llvm项目的发起者
-
-## LLM
-
-### 原理
+## 原理
 
 - [llm-course](https://github.com/mlabonne/llm-course)
 
@@ -62,7 +47,7 @@
 
 - [腾讯云开发者：一文搞懂大模型！基础知识、 LLM 应用、 RAG 、 Agent 与未来发展](https://mp.weixin.qq.com/s/groI097gj0w7XMHIy3eERA)
 
-### 使用
+## 使用
 
 - [畅游 LLM 的世界（英文）](https://www.bentoml.com/blog/navigating-the-world-of-large-language-models)
     - 如果在家用电脑上安装 LLM（大型语言模型），应该选择哪一个模型？
@@ -76,11 +61,11 @@
 
 - [铭毅天下Elasticsearch：吴恩达 x Open AI ChatGPT ——如何写出好的提示词视频核心笔记](https://mp.weixin.qq.com/s/VkLNKRtN7KR3Gjttk1cpPg)
 
-### 商业
+## 商业
 
 - [新职业|我用GPT给电子厂带货](https://t.cj.sina.com.cn/articles/view/6286736254/176b7fb7e01901df3u?display=0&retcode=0)
 
-### 项目
+## 项目
 
 - LLM性能排行
 
@@ -104,6 +89,25 @@
 
 - [DeepSeek-V3：在中国大模型市场掀起了第一场价格战，因而被网友称为 AI 界的“拼多多”。](https://github.com/deepseek-ai/DeepSeek-V3)
 
+- [DeepSeek-R1和DeepSeek-R1 zero：推理模型](https://github.com/deepseek-ai/DeepSeek-R1)
+
+    > DeepSeek-R1 是一个基于强化学习(RL)训练的大型语言模型(LLM), 旨在提高其推理能力 。它通过两个RL阶段和两个监督微调(SFT)阶段进行训练,以发现更好的推理模式并与人类偏好保持一致。
+    - DeepSeek-R1-Zero：通过纯强化学习（RL）训练的基础模型，无监督微调（SFT）阶段，探索性强但存在输出不稳定问题。
+    - DeepSeek-R1：在 R1-Zero 基础上引入冷启动数据（少量 SFT）优化后的版本，解决输出问题并提升推理能力。
+    - DeepSeek-R1-Distill：从 R1 蒸馏到小型开源模型（如 Qwen、Llama）的轻量级推理模型，性能接近原版但更易部署。
+
+    - DeepSeek-R1-Distill 系列的小模型
+
+        - DeepSeek-R1-Distill-Qwen-1.5B
+        - DeepSeek-R1-Distill-Qwen-7B
+        - DeepSeek-R1-Distill-Llama-8B
+        - DeepSeek-R1-Distill-Qwen-14B
+        - DeepSeek-R1-Distill-Qwen-32B
+        - DeepSeek-R1-Distill-Llama-70B
+
+    - DeepSeek-R1 非蒸馏版模型是671B
+        - 国内著名程序员章亦春用8块H200跑DeepSeek-V3满血版和DeepSeek-R1的671B版。结果[V3输出吞吐量有3800tokens/秒](http://m.weibo.cn/status/5131311536668680?)而[R1输出吞吐量只有不到22.8tokens/秒](https://m.weibo.cn/status/5131064928897158?)
+
 - [Grok-1：马斯克的 xAI 公司开源的 314B 参数、MoE（混合专家模型）的大型语言模型](https://github.com/xai-org/grok-1)
 
 - [corenet：苹果手机端大模型](https://github.com/apple/corenet)
@@ -126,7 +130,11 @@
     - 作者曾就职于特斯拉的自动驾驶部门负责人、OpenAI 的创始成员。
 
 - [storm](https://github.com/stanford-oval/storm)这是一个基于 LLM 的应用，可通过搜集网上的内容，从零编写类似维基百科的文章。使用者仅需提出问题，它便会上网收集资料并生成大纲，然后根据大纲和参考文献进行创作，生成的文章质量欠佳，还需要人为修改后才可以发布。
-#### 在线模型
+
+### 在线模型
+
+- [huggingface](https://huggingface.co/)
+    - [（视频）秋芝2046：Huggingface小白AI入门，你必须了解的免费开源模型大超市](https://www.bilibili.com/video/BV1Mr4MewEY5)
 
 - [LLM Pricing：AI 模型价格对比和试用链接](https://llmpricecheck.com/)
 
@@ -145,6 +153,7 @@
 - [coze：自定义gpt机器人，可以集成到telegram和discord](https://www.coze.com/home)
 
 - 国产
+    - [deepseek](https://chat.deepseek.com/a/chat/)
     - [kimi](https://kimi.moonshot.cn/chat)
     - [智谱清言](https://chatglm.cn/main/)
 
@@ -154,7 +163,7 @@
 - 提示生成 App
     - [DeepSeek Coder：基于 DeepSeek V3 模型](https://deepbolt.xyz/)
 
-### prompt提示词
+## prompt提示词
 
 - [awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts)
 
@@ -162,15 +171,18 @@
 
 - [腾讯云开发者：一文掌握Prompt：万能框架+优化技巧+常用指标](https://mp.weixin.qq.com/s/oKB8m_wX6p8SHNMx1R_hzw)
 
-### RAG框架
+## RAG框架
 
 - [RAG_Techniques：检索增强生成（RAG）教程集合。该项目提供了 20 多种先进的 RAG 技术教程，包含实现指南和示例代码，并定期更新。内容涵盖检索查询、上下文增强、融合检索（Fusion Retrieval）、分层索引、上下文压缩、知识图谱整合等多种 RAG 技术。](https://github.com/NirDiamant/RAG_Techniques)
 
 - [graphrag：微软RAG框架](https://github.com/microsoft/graphrag)
+    - [（视频）黄益贺：GraphRAG：很好，但很贵！](https://www.bilibili.com/video/BV1dZ421K7sz)
 
-### 有趣的文章、访谈
+## 有趣的文章、访谈
 
-#### OpenAI工程师：模型不是关键，语料才是关键。
+### [Sam Altman：Moore's Law for Everything](https://moores.samaltman.com/)
+
+### OpenAI工程师：模型不是关键，语料才是关键。
 
 - OpenAI 的工程师，著名“文生图”模型 DALL-E 的第一作者 James Betker 的观点：模型不是关键，语料才是关键。
 
@@ -186,7 +198,7 @@
         - 1.哪一家公司的语料的数量多、质量好，它的模型就会强于其他公司。
         - 2.开源模型完全可以替代闭源模型，前提是训练语料要足够。
 
-#### 2024年llm总结[Things we learned about LLMs in 2024](https://simonwillison.net/2024/Dec/31/llms-in-2024/)
+### 2024年llm总结[Things we learned about LLMs in 2024](https://simonwillison.net/2024/Dec/31/llms-in-2024/)
 
     > 作者是英国程序员西蒙·威利森（Simon Willison）最近两年非常出名，他的个人网站有很多文章，介绍 AI 的最新进展。
 
@@ -210,7 +222,7 @@
 
     - 西方媒体就非常好奇，DeepSeek 是怎么做到的？
 
-#### DeepSeek模型作者的访谈
+### DeepSeek模型作者的访谈
 
 - [揭秘DeepSeek:一个更极致的中国技术理想主义故事](https://mp.weixin.qq.com/s/r9zZaEgqAa_lml_fOEZmjg)
 
@@ -324,17 +336,28 @@
 
     - OpenAI 开源了一款用于分析小型语言模型内部行为的工具：Transformer Debugger (TDB)，它将自动可解释性技术与稀疏自动编码器相结合，无需写代码就能快速探索模型。基于 Transformer 的语言模型就像个黑盒，该项目可以解密 Transfomer 的内部结构和预测行为。
 
-## ai编程，代码生成和代码补全
-
-- [CodeGeeX4：清华大学的模型](https://github.com/THUDM/CodeGeeX4)
-
 ## 图片与视频等多媒体相关
 
 ### 图片和视频理解
 
 - [MiniCPM-V：只需8b参数的模型，就可以实现图片和视频理解，并宣称超越GPT-4V](https://github.com/OpenBMB/MiniCPM-V)
 
+- [DeepSeek-VL2](https://github.com/deepseek-ai/DeepSeek-VL2)
+    - 大型混合专家(MoE)视觉语言模型系列,显著改进了其前身DeepSeek-VL。
+    - DeepSeek-VL2在各种任务中表现出色,包括但不限于视觉问答、光学字符识别、文档/表格/图表理解和视觉定位。
+
+    - DeepSeek-VL2 没有找到对应的在线体验版本
+
+    - 该模型系列包括三个变体:
+
+        - DeepSeek-VL2-Tiny: 10亿 个激活参数
+        - DeepSeek-VL2-Small： 28亿个激活参数
+            - 需要80GB GPU内存才能使用 
+        - DeepSeek-VL2,45亿个激活参数
+
 ### 文生成图片
+
+- [Janus-Pro和Janus-Flow：deepseek的多模态模型。既能理解图片，又能生成图片](https://github.com/deepseek-ai/Janus)
 
 - [HunyuanDiT：腾讯的文生图](https://github.com/Tencent/HunyuanDiT)
 
@@ -356,15 +379,7 @@
 
 - [Suno](https://suno.com/)
 
-## SAM
-
-- 对图片和视频一键抠图
-
-- [segment-anything：mata的sam](https://github.com/facebookresearch/segment-anything)
-
-- [segment-anything-2：mata的sam](https://github.com/facebookresearch/segment-anything-2)
-
-## 图片视频
+## ai处理图片、视频
 
 - [dandere2x：使用waifu2x提升视频质量](https://github.com/akai-katto/dandere2x)
 
@@ -372,15 +387,33 @@
 
 - [UVR5：分离人声和背景音乐](https://github.com/Anjok07/ultimatevocalremovergui)
 
+### SAM：对图片和视频一键抠图
+
+- [segment-anything：mata的sam](https://github.com/facebookresearch/segment-anything)
+
+- [segment-anything-2：mata的sam](https://github.com/facebookresearch/segment-anything-2)
+
 ## 语音转文字
 
 - [whisper：openai的模型](https://github.com/openai/whisper)
 
-# 文字传语音
+## 文字传语音
 
 - [edge-tts：微软的模型](https://github.com/rany2/edge-tts)
 
-## 操作系统
+## ai编程，代码生成和代码补全
+
+- [CodeGeeX4：清华大学的模型](https://github.com/THUDM/CodeGeeX4)
+
+## ai编程语言
+
+- [Mojo：面向 AI 的编程语言](https://github.com/modularml/mojo)
+
+    - 目标是提供python的易用性，c语言的性能
+
+    - 创始人chris lattner是swift语言和llvm项目的发起者
+
+## ai操作系统
 
 - [AIOS：LLM 代理操作系统](https://github.com/agiresearch/AIOS)
     - 将大语言模型嵌入到操作系统中，使操作系统“有灵魂”。旨在优化资源分配，促进跨代理的上下文切换，实现代理的并发执行，为代理提供工具服务，维护代理的访问控制。
@@ -389,12 +422,11 @@
 
 - [devika：Devin 的开源替代品](https://github.com/stitionai/devika)
 
-# ai测试
+# ai性能测试
 
 - [Google Gemini 的图像能力测试](https://blog.roboflow.com/first-impressions-with-google-gemini/)
 
 # 在线ai工具
 
-- [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
 - [chat-pdf](https://damngood.tools/tools/chat-pdf)
 - [chatdoc：对pdf、eppub、md文件进行总结](https://chatdoc.com/)

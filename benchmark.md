@@ -29,6 +29,7 @@
   * [tiptop](#tiptop)
   * [bottom](#bottom)
   * [Remotery：cpu和gpu](#remoterycpu和gpu)
+  * [monitorets：gui](#monitoretsgui)
 * [CPU](#cpu)
   * [cpu info](#cpu-info)
   * [mpstat(sysstat)：单独监测单个 CPU 情况](#mpstatsysstat单独监测单个-cpu-情况)
@@ -38,6 +39,7 @@
   * [CPU-X：类似windows的cpu-z](#cpu-x类似windows的cpu-z)
 * [Memory](#memory)
   * [smem](#smem)
+  * [ps_mem](#ps_mem)
   * [hugepage(巨型页)](#hugepage巨型页)
   * [KSM](#ksm)
   * [base](#base)
@@ -121,6 +123,7 @@
   * [gmonitor](#gmonitor)
 * [Debug](#debug)
   * [strace](#strace)
+  * [ltrace](#ltrace)
   * [eBPF](#ebpf)
     * [bcc](#bcc)
       * [stackcount](#stackcount)
@@ -848,6 +851,8 @@ sysbench --test=fileio --file-total-size=5G prepare
 
 ![image](./Pictures/benchmark/Remotery.gif)
 
+## [monitorets：gui](https://github.com/jorchube/monitorets)
+
 # CPU
 
 ## cpu info
@@ -982,6 +987,111 @@ smem -k -P nginx
 smem -u
 ```
 
+## ps_mem
+
+```sh
+ps_mem
+ Private  +   Shared  =  RAM used	Program
+
+  4.0 KiB +  15.5 KiB =  19.5 KiB	fusermount3
+ 32.0 KiB + 114.5 KiB = 146.5 KiB	dconf-service
+  4.0 KiB + 145.5 KiB = 149.5 KiB	dbus-broker-launch
+176.0 KiB +   4.5 KiB = 180.5 KiB	wl-copy
+184.0 KiB +  14.5 KiB = 198.5 KiB	acpid
+ 32.0 KiB + 204.0 KiB = 236.0 KiB	cat (2)
+132.0 KiB + 106.5 KiB = 238.5 KiB	(sd-pam)
+192.0 KiB +  51.0 KiB = 243.0 KiB	wl-paste (2)
+248.0 KiB +  60.5 KiB = 308.5 KiB	rtkit-daemon
+112.0 KiB + 217.5 KiB = 329.5 KiB	systemd-userdbd
+156.0 KiB + 174.5 KiB = 330.5 KiB	keynav
+360.0 KiB +  23.5 KiB = 383.5 KiB	dbus-broker
+236.0 KiB + 162.5 KiB = 398.5 KiB	xdg-permission-store
+372.0 KiB +  44.0 KiB = 416.0 KiB	dnsmasq (4)
+272.0 KiB + 159.5 KiB = 431.5 KiB	at-spi-bus-launcher
+328.0 KiB + 141.5 KiB = 469.5 KiB	at-spi2-registryd
+288.0 KiB + 193.5 KiB = 481.5 KiB	gvfsd-fuse
+292.0 KiB + 203.5 KiB = 495.5 KiB	adb
+456.0 KiB + 168.5 KiB = 624.5 KiB	xdg-document-portal
+ 12.0 KiB + 704.5 KiB = 716.5 KiB	lact
+412.0 KiB + 357.5 KiB = 769.5 KiB	systemd-machined
+524.0 KiB + 410.5 KiB = 934.5 KiB	gvfsd
+576.0 KiB + 365.5 KiB = 941.5 KiB	systemd-timesyncd
+  4.0 KiB + 976.5 KiB = 980.5 KiB	sddm
+532.0 KiB + 459.5 KiB = 991.5 KiB	dhcpcd (5)
+936.0 KiB +  70.5 KiB =   1.0 MiB	bluetoothd
+992.0 KiB +  43.0 KiB =   1.0 MiB	chrome_crashpad_handler (2)
+320.0 KiB + 722.5 KiB =   1.0 MiB	systemd-networkd
+ 28.0 KiB +   1.2 MiB =   1.2 MiB	kwalletd6
+884.0 KiB + 424.5 KiB =   1.3 MiB	gnome-keyring-daemon
+  1.3 MiB +  15.5 KiB =   1.3 MiB	iwd
+  1.0 MiB + 467.5 KiB =   1.4 MiB	wenativehost
+  1.1 MiB + 402.5 KiB =   1.5 MiB	systemd-logind
+ 84.0 KiB +   1.4 MiB =   1.5 MiB	WebKitNetworkProcess
+900.0 KiB + 801.5 KiB =   1.7 MiB	sddm-helper
+  1.2 MiB + 479.0 KiB =   1.7 MiB	mount.ntfs (2)
+  1.5 MiB + 292.5 KiB =   1.8 MiB	udisksd
+  1.7 MiB + 159.5 KiB =   1.9 MiB	polkitd
+  1.5 MiB + 356.5 KiB =   1.9 MiB	systemd-udevd
+  1.3 MiB + 658.5 KiB =   1.9 MiB	xdg-desktop-portal
+  1.7 MiB + 801.5 KiB =   2.5 MiB	xdg-desktop-portal-hyprland
+  2.3 MiB + 276.5 KiB =   2.6 MiB	upowerd
+  2.1 MiB +   1.0 MiB =   3.1 MiB	xdg-desktop-portal-gtk
+  1.3 MiB +   1.8 MiB =   3.1 MiB	xdg-desktop-portal-lxqt
+  1.7 MiB +   1.7 MiB =   3.4 MiB	sudo (2)
+  2.7 MiB + 899.5 KiB =   3.5 MiB	systemd-userwork (3)
+  1.3 MiB +   2.3 MiB =   3.6 MiB	polkit-kde-authentication-agent-1
+  3.9 MiB +  18.5 KiB =   3.9 MiB	battery-notify
+  3.1 MiB +   1.0 MiB =   4.1 MiB	pipewire
+  4.3 MiB + 820.5 KiB =   5.1 MiB	gvfsd-http
+  1.9 MiB +   3.4 MiB =   5.3 MiB	plasma-browser-integration-host
+  4.6 MiB + 905.5 KiB =   5.5 MiB	libvirtd
+  3.6 MiB +   1.9 MiB =   5.5 MiB	wireplumber
+  2.0 MiB +   4.3 MiB =   6.3 MiB	kdeconnectd
+  6.8 MiB + 662.5 KiB =   7.4 MiB	pipewire-pulse
+  5.0 MiB +   2.6 MiB =   7.6 MiB	udiskie
+  6.6 MiB +   1.7 MiB =   8.3 MiB	systemd (2)
+  8.2 MiB + 156.5 KiB =   8.3 MiB	zsh
+  7.0 MiB +   2.0 MiB =   9.0 MiB	wpaperd
+  1.7 MiB +   7.4 MiB =   9.1 MiB	hyprswitch
+  9.2 MiB +  14.5 KiB =   9.2 MiB	cod
+  8.6 MiB +   1.3 MiB =   9.9 MiB	Xorg
+  8.1 MiB +   2.3 MiB =  10.4 MiB	pot
+  9.7 MiB +   1.2 MiB =  10.9 MiB	systemd-journald
+  8.1 MiB +   3.7 MiB =  11.9 MiB	swaync
+  6.1 MiB +   5.8 MiB =  11.9 MiB	wluma
+  6.7 MiB +   5.3 MiB =  12.0 MiB	kdeconnect-app
+ 12.1 MiB + 564.5 KiB =  12.6 MiB	mariadbd
+ 12.1 MiB +   2.5 MiB =  14.6 MiB	Xwayland
+ 14.7 MiB +  16.5 KiB =  14.7 MiB	prometheus-node-exporter
+ 16.8 MiB + 883.5 KiB =  17.6 MiB	taplo
+ 19.4 MiB +  80.5 KiB =  19.5 MiB	v2raya
+ 19.3 MiB + 316.0 KiB =  19.6 MiB	dbus-daemon (2)
+ 18.3 MiB +   2.7 MiB =  21.0 MiB	fdm
+ 12.1 MiB +  11.2 MiB =  23.3 MiB	waybar
+ 27.1 MiB + 112.5 KiB =  27.2 MiB	yazi
+ 25.3 MiB +   2.6 MiB =  27.9 MiB	WebKitWebProcess
+ 22.5 MiB +   8.8 MiB =  31.3 MiB	swayosd-server
+ 30.7 MiB +   3.7 MiB =  34.4 MiB	Hyprland
+ 40.7 MiB +  15.5 KiB =  40.7 MiB	containerd
+ 52.9 MiB +   0.5 KiB =  52.9 MiB	xray
+ 61.2 MiB +  84.5 KiB =  61.3 MiB	dockerd
+ 85.5 MiB +  79.5 KiB =  85.6 MiB	grafana
+ 92.6 MiB +   0.5 KiB =  92.6 MiB	prometheus
+ 67.9 MiB +  27.4 MiB =  95.3 MiB	alacritty (2)
+ 83.0 MiB +  21.1 MiB = 104.1 MiB	localsend
+137.6 MiB +   7.2 MiB = 144.7 MiB	fcitx5
+152.0 MiB + 945.5 KiB = 152.9 MiB	marksman-linux-x64
+155.0 MiB +   3.7 MiB = 158.6 MiB	syncthing (2)
+170.8 MiB + 128.5 KiB = 170.9 MiB	nvim
+175.4 MiB +  26.7 MiB = 202.2 MiB	netease-cloud-music (3)
+203.7 MiB +  28.5 MiB = 232.1 MiB	neovide
+191.3 MiB +  44.4 MiB = 235.8 MiB	node (2)
+805.8 MiB +  27.5 KiB = 805.9 MiB	lua-language-server
+  2.6 GiB + 266.4 MiB =   2.8 GiB	chrome (45)
+---------------------------------
+                          5.9 GiB
+=================================
+```
 ## hugepage(巨型页)
 
 - 配置 `/sys/kernel/mm/hugepages/`
@@ -1985,6 +2095,10 @@ strace -o file ls
 ```
 
 - [（视频）：现代CPP随笔_0CCh：Linux实用工具 之 strace，深入理解系统调用的利器](https://www.bilibili.com/video/BV1CxcgefEpM/?spm_id_from=333.1365.top_right_bar_window_history.content.click)
+
+## ltrace
+
+- [现代CPP随笔_0CCh：Linux实用工具 之 ltrace，深入理解库函数调用的利器](https://www.bilibili.com/video/BV1TjwUe5EUP)
 
 ## eBPF
 
