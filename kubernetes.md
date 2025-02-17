@@ -2492,6 +2492,8 @@ curl https://argocd.kubernets.cn -I
     stern . -n kube-system --tail 0
     ```
 
+- [khi：日志可视化工具](https://github.com/GoogleCloudPlatform/khi)
+
 ## 云原生
 
 - [云原生应用市场](https://hub.grapps.cn/)

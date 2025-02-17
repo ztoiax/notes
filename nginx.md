@@ -143,6 +143,7 @@
     * [Kong](#kong)
   * [reference](#reference)
 * [caddy](#caddy)
+* [Pingora：Cloudflare 发布 Nginx 开源替代品](#pingoracloudflare-发布-nginx-开源替代品)
 
 <!-- mtoc-end -->
 
@@ -6352,3 +6353,5 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 # caddy
 
 - [（视频）技术爬爬虾：全自动HTTPS加密，开箱即用，Caddy基础入门，反向代理，负载均衡，网站托管全流程](https://www.bilibili.com/video/BV1z5w6ekE1L)
+
+# [Pingora：Cloudflare 发布 Nginx 开源替代品](https://github.com/cloudflare/pingora)

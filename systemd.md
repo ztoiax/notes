@@ -9,6 +9,7 @@
     * [创建service](#创建service)
       * [介绍](#介绍)
       * [例子](#例子)
+        * [例子：关机前执行脚本](#例子关机前执行脚本)
         * [例子：随机mac地址](#例子随机mac地址)
       * [常见问题](#常见问题)
         * [咸鱼运维杂谈：运维排查 | Systemd 之服务停止后状态为 failed](#咸鱼运维杂谈运维排查--systemd-之服务停止后状态为-failed)
@@ -17,7 +18,7 @@
     * [mask 和 unmask屏蔽（禁用）服务](#mask-和-unmask屏蔽禁用服务)
   * [journalctl（日志）](#journalctl日志)
     * [systemd-journald的进程服务](#systemd-journald的进程服务)
-    * [持久化存储or内存存储](#持久化存储or内存存储)
+    * [systemd-coredump.socket（核心转储）](#systemd-coredumpsocket核心转储)
     * [速率限制](#速率限制)
     * [日志接收和转发](#日志接收和转发)
       * [rsyslog](#rsyslog)
@@ -39,6 +40,9 @@
     * [后台进程](#后台进程)
     * [命令的输出变成日志](#命令的输出变成日志)
   * [run0取代sudo](#run0取代sudo)
+  * [systemd-networkd代替NetworkManager](#systemd-networkd代替networkmanager)
+  * [systemd-resolved代替dnsmasq。本地的 DNS 缓存和转发服务](#systemd-resolved代替dnsmasq本地的-dns-缓存和转发服务)
+  * [systemd-timesyncd代替ntpd和chronyd](#systemd-timesyncd代替ntpd和chronyd)
   * [systemd-boot代替GRUB引导程序](#systemd-boot代替grub引导程序)
 * [第三方优秀软件](#第三方优秀软件)
   * [isd：systemd tui](#isdsystemd-tui)
@@ -401,6 +405,27 @@ google-chrome-stable boot.svg #用浏览器打开
     # 查看服务日志
     journalctl -u myservice.service
     ```
+
+##### 例子：关机前执行脚本
+
+- Systemd 使用不同的关机目标来表示关机过程的不同阶段，例如 `halt.target`、`reboot.target` 或 `poweroff.target`
+    - 要更改脚本的关联关系，将 `WantedBy` 部分的值更改为所需的关机目标。
+
+```sh
+cat > pre-shutdown-script.service << 'EOF'
+[Unit]
+Description=Pre-Shutdown Script
+
+[Service]
+Type=oneshot
+ExecStart=/path/to/your/script.sh
+StandardOutput=file:/path/to/logfile.log
+StandardError=file:/path/to/errorlog.log
+
+[Install]
+WantedBy=poweroff.target
+EOF
+```
 
 ##### 例子：随机mac地址
 
@@ -796,7 +821,7 @@ systemctl unmask httpd.service
     Symlinks=/dev/log
     ```
 
-### 持久化存储or内存存储
+### systemd-coredump.socket（核心转储）
 
 - journald默认使用`violatile`也就是内存存储。
 
@@ -831,6 +856,19 @@ systemctl unmask httpd.service
         ```
         --vacuum-size=, --vacuum-time=, --vacuum-files=
         ```
+
+- systemd-coredump.socket
+    - 配置文件：`/etc/systemd/coredump.conf`
+    ```sh
+    # 查看服务
+    systemctl status systemd-coredump.socket
+
+    # 查看coredump文件的大小。coredump会保存在/var/lib/systemd/coredump
+    du -sh /var/lib/systemd/coredump
+
+    # 将核心转储文件的存储限制设置为 0，从而删除所有核心转储文件。
+    sudo journalctl --vacuum-size=0
+    ```
 
 ### 速率限制
 
@@ -1093,13 +1131,24 @@ kvm 是因为存储池里有之前临时挂载 vm，现在没有挂载也就读�
 
 ## path（监控文件变化）
 
+- systemd path的底层使用的是inotify，所以受限于inotify的缺陷，systemd path只能监控本地文件系统，而无法监控网络文件系统。
+
 | 参数              | 说明                                           |
 | -                 | -                                              |
-| PathExists        | 监控指定路径是否存在，如果存在则启动关联单元。 |
+| PathExists        | 监控指定路径是否存在。                         |
 | PathExistsGlob    | 监控是否存在与指定模式匹配的路径。             |
 | PathChanged       | 监控指定路径的写入句柄是否被关闭。             |
 | PathModified      | 监控指定路径的最后修改时间是否发生变化。       |
 | DirectoryNotEmpty | 监控指定目录是否非空。                         |
+
+- `systemd-run`命令临时监控文件变化
+
+    ```sh
+    systemd-run --path-property=PathModified=/tmp/test echo 'file changed'
+
+    # 查看当前已启动的systemd path实例，包括临时监控实例：
+    systemctl --type=path list-units --no-pager
+    ```
 
 - `PathModified`监控文件变化：/etc/nginx/nginx.conf 文件变化并重新加载 Nginx 的 systemd.path 配置示例：
 
@@ -1207,13 +1256,20 @@ kvm 是因为存储池里有之前临时挂载 vm，现在没有挂载也就读�
     systemctl list-timers systemd-tmpfiles-clean.timer
     ```
 
-- 设置多少时间后执行命令
+- `systemd-run`临时执行：设置多少时间后执行命令
     ```sh
     # 30秒后运行命令
     systemd-run --on-active=30 /bin/touch /tmp/foo
 
     # 12小时30分钟后启动某个服务
     systemd-run --on-active="12h 30m" --unit someunit.service
+
+    # 每两秒touch一次/tmp/foo，且精确触发
+    systemd-run \
+    --on-calendar="*:*:1/2" \
+    --timer-property="AccuracySec=1us" \
+    --timer-property="RandomizedDelaySec=0" \
+    /bin/touch /tmp/foo
     ```
 
 ### 创建timer定时器
@@ -1908,6 +1964,223 @@ systemctl start systemd-homed
     run0 --property=ProtectSystem=strict bash -c 'echo test > /var/log/write-test'
     /usr/bin/bash: line 1: /var/log/write-test: Read-only file system
     ```
+
+## systemd-networkd代替NetworkManager
+
+- [运维漫谈：查询Linux中网络链接的状态：networkctl](https://mp.weixin.qq.com/s/4qPSbAQUBWSQADa1VAs9Gg)
+
+```sh
+# 查看状态
+networkctl status
+
+# 查看eth0状态
+networkctl status eth0
+
+# 列出所有网络连接
+networkctl list
+
+# 启用链接：
+networkctl up <interface>
+# 禁用链接：
+networkctl down <interface>
+# 重新启动链接：
+networkctl reload <interface>
+
+# 查看日志
+journalctl -u systemd-networkd
+```
+
+- 配置文件目录：`/etc/systemd/network/`
+
+- 配置dhcp：`/etc/systemd/network/10-eth0.network`
+    ```ini
+    [Match]
+    Name=eth0
+
+    [Network]
+    DHCP=yes
+    ```
+
+- 配置静态ip地址：`/etc/systemd/network/10-eth0.network`
+    ```ini
+    [Match]
+    Name=eth0
+
+    [Network]
+    Address=192.168.1.100/24
+    Gateway=192.168.1.1
+    DNS=8.8.8.8
+    ```
+
+- 配置vlan：`/etc/systemd/network/10-eth0.network`
+    ```ini
+    [Match]
+    Name=eth0
+
+    [Network]
+    VLAN=vlan1
+
+    [VLAN]
+    Id=1
+    ```
+
+- 修改配置后记得重启服务
+    ```sh
+    sudo systemctl restart systemd-networkd
+    ```
+
+- 企业网络配置
+    - 在企业环境中，可以通过 networkctl 和 systemd-networkd 配置复杂的网络环境，例如多接口绑定、VLAN、静态路由等。以下是一个示例配置：
+    - 这个配置文件集将 eth0 和 eth1 接口绑定到 bond0 接口，并为 bond0 配置静态 IP 地址。
+
+
+    - `/etc/systemd/network/10-bond0.netdev`
+        ```ini
+        [NetDev]
+        Name=bond0
+        Kind=bond
+
+        [Bond]
+        Mode=802.3ad
+        MIIMonitorSec=1s
+        ```
+
+    - `/etc/systemd/network/10-eth0.network`
+        ```ini
+        [Match]
+        Name=eth0
+
+        [Network]
+        Bond=bond0
+        ```
+
+    - `/etc/systemd/network/10-eth1.network`
+        ```ini
+        [Match]
+        Name=eth1
+
+        [Network]
+        Bond=bond0
+        ```
+
+    - `/etc/systemd/network/10-bond0.network`
+        ```ini
+        [Match]
+        Name=bond0
+
+        [Network]
+        Address=192.168.1.100/24
+        Gateway=192.168.1.1
+        DNS=8.8.8.8
+        ```
+
+## systemd-resolved代替dnsmasq。本地的 DNS 缓存和转发服务
+
+- [archlinux文档](https://wiki.archlinuxcn.org/wiki/Systemd-resolved)
+
+```sh
+# 查看状态
+resolvectl status
+
+# 清空dns缓存
+sudo systemd-resolved --flush-caches
+```
+
+- 配置文件：`/etc/systemd/resolved.conf`和`/etc/systemd/resolved.conf.d/`
+
+- 配置dns服务器：`/etc/systemd/resolved.conf.d/dns_servers.conf`
+    ```ini
+    [Resolve]
+    DNS=192.168.35.1 fd7b:d0bd:7a6e::1
+    Domains=~.
+    ```
+
+- 配置备用dns服务器：`/etc/systemd/resolved.conf.d/fallback_dns.conf`
+
+    ```ini
+    [Resolve]
+    FallbackDNS=127.0.0.1 ::1
+    ; 什么都不填，代表禁用备用dns服务器
+    ; FallbackDNS=
+    ```
+
+- 验证DNSSEC：`/etc/systemd/resolved.conf.d/dnssec.conf`
+    ```ini
+    [Resolve]
+    DNSSEC=true
+    ```
+    ```sh
+    # 通过查询一个具有无效签名的域名来测试DNSSEC验证：
+    resolvectl query badsig.go.dnscheck.tools
+
+    # 测试一个具有有效签名的域名
+    resolvectl query go.dnscheck.tools
+    ```
+
+- DNS over TLS（默认禁用）：`/etc/systemd/resolved.conf.d/dns_over_tls.conf`
+    - 如果`DNSOverTLS=yes`，使用的DNS服务器必须支持DNS over TLS，否则所有DNS请求都将失败。
+    - 或者，只有当服务器支持`DNSOverTLS=opportunistic`时，才可以使用DNS over TLS。如果使用的DNS服务器不支持DNS over TLS，systemd-resolved将回退到常规的未加密DNS。
+
+    ```ini
+    [Resolve]
+    DNS=9.9.9.9#dns.quad9.net
+    DNSOverTLS=yes
+    ```
+
+    - ngrep包可用于测试DNS over TLS是否工作，因为DNS over TLS始终使用853端口而且从不使用53端口。
+
+- 默认情况下，systemd-resolved通过环回接口响应本地应用程序的DNS请求。要使systemd-resolved在默认接口之外的额外接口或地址上响应DNS请求：`/etc/systemd/resolved.conf.d/additional-listening-interfaces.conf`
+    ```ini
+    [Resolve]
+    DNSStubListenerExtra=192.168.10.10
+    DNSStubListenerExtra=2001:db8:0:f102::10
+    DNSStubListenerExtra=192.168.10.11:9953
+    ```
+
+## systemd-timesyncd代替ntpd和chronyd
+
+- [奔跑啊乌龟：systemd做时间同步](https://mp.weixin.qq.com/s/w4T-GolJDOoWQ865peAtXA)
+
+- CentOS 8中已经移除了`ntp`和`ntpdate`，它们也没有集成在基础包中。
+
+    - CentOS 8使用`chronyd`作为时间服务器，但如果只是简单做时间同步，可直接使用`systemd-timesyncd`组件。
+
+- `systemd-timesyncd`虽然没有`chronyd`更健壮，但胜在简单方便，只需配置一项配置文件并执行一个命令启动便可定时同步。配置文件`/etc/systemd/timesyncd.conf`
+
+    ```ini
+    [Time]
+    #NTP=
+    #FallbackNTP=0.arch.pool.ntp.org 1.arch.pool.ntp.org 2.arch.pool.ntp.org 3.arch.pool.ntp.org
+
+    # 阿里云ntp服务器
+    NTP=ntp.aliyun.com
+    FallbackNTP=ntp1.aliyun.com ntp2.aliyun.com ntp3.aliyun.com ntp4.aliyun.com ntp5.aliyun.com ntp6.aliyun.com ntp7.aliyun.com
+    ```
+
+- 其它常用的网络时间服务器：
+    ```
+    cn.pool.ntp.org
+    1.cn.pool.ntp.org
+    2.cn.pool.ntp.org
+    3.cn.pool.ntp.org
+    0.cn.pool.ntp.org
+
+    ntp1.aliyun.com
+    ntp2.aliyun.com
+    ntp3.aliyun.com
+    ntp4.aliyun.com
+    ntp5.aliyun.com
+    ntp6.aliyun.com
+    ntp7.aliyun.com
+    ```
+```sh
+# 启动systemd-timesyncd时间同步服务
+timedatectl set-ntp true
+
+# 查看状态
+timedatectl status
+timedatectl show
+```
 
 ## systemd-boot代替GRUB引导程序
 

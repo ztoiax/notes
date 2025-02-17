@@ -14,6 +14,8 @@
     * [rsync](#rsync)
       * [UDR模式](#udr模式)
     * [scp](#scp)
+    * [rsync和scp的区别](#rsync和scp的区别)
+    * [restic：备份工具](#restic备份工具)
     * [split](#split)
     * [fsarchiver](#fsarchiver)
     * [find](#find)
@@ -21,6 +23,7 @@
     * [locate:定位文件](#locate定位文件)
     * [shred：安全地抹去磁盘数据。代替rm](#shred安全地抹去磁盘数据代替rm)
   * [char (字符串操作)](#char-字符串操作)
+    * [tee](#tee)
     * [column](#column)
     * [tr](#tr)
     * [cut](#cut)
@@ -34,6 +37,7 @@
       * [个人觉得perl6中有趣的设计](#个人觉得perl6中有趣的设计)
     * [shred：安全删除文件](#shred安全删除文件)
     * [加密文件](#加密文件)
+    * [pv：显示进度条](#pv显示进度条)
   * [other](#other)
     * [xargs](#xargs)
     * [date](#date)
@@ -42,7 +46,6 @@
     * [openssl](#openssl)
     * [gnuplot](#gnuplot)
     * [shellcheck](#shellcheck)
-    * [pandoc 文档转换](#pandoc-文档转换)
     * [jobs, fg, bg, nohup, disown, reptyr](#jobs-fg-bg-nohup-disown-reptyr)
   * [expect交互](#expect交互)
   * [调整分区大小](#调整分区大小)
@@ -176,6 +179,13 @@ lsof -c mysql
 
 # 指定pid
 lsof -p 7148
+
+# 列出已经被删除的但还被进程占用的文件
+lsof | grep -i "delete" | grep <filename>
+# 进入那个进程
+cd /proc/8445/fd
+# 恢复文件
+cat 3 > ~/<filename>
 ```
 
 ### rsync
@@ -289,6 +299,77 @@ scp -q file tz@192.168.1.102:/home/tz/
 scp -c 3des file tz@192.168.1.102:/home/tz/
 # 限制传输速度为50kb/s。 需要记住的一点是，带宽是以千比特/秒(kbps)指定的。这意味着8位等于1字节
 scp -l 400 file tz@192.168.1.102:/home/tz/
+```
+
+### rsync和scp的区别
+
+- [（视频）林哥讲运维：一分钟认识：rsync和scp的区别](https://www.bilibili.com/video/BV1GT421r71r)
+
+- rsync需要远程主机也需要安装rsync
+- rsync有同步功能
+
+- 性能：
+    - 第1次传输：
+        - rsync时间更长、cpu使用率更高
+        - scp时间更短、cpu使用率更低
+
+    - 再次传输相同文件或目录：
+        - rsync会判断文件，实现秒传
+        - scp则重传
+
+    - 如果是传输增量的文件
+        - rsync只会传输增量的文件
+        - scp则完整传输
+
+### [restic：备份工具](https://github.com/restic/restic)
+
+- [缘生小助手：开源备份软件Restic简单教程](https://mp.weixin.qq.com/s/xVLllH48eYqPO7xNSGrBfw)
+
+- 安装好了Restic后，还需要配置下存储方式(本地或者远程), 配置过程中都会要你输入密码。
+
+    - 记住密码很重要！如果你失去了它，你就不能够访问存储库中存储的数据.
+```sh
+# 初始化当前目录。需要输入密码
+restic init --repo .
+
+# 查看初始化后生成的文件和目录
+ll
+.r--------   1 155 tz tz 13 Feb 14:26 -I config
+drwx------ 258   - tz tz 13 Feb 14:26 -I data/
+drwx------   2   - tz tz 13 Feb 14:26 -I index/
+drwx------   2   - tz tz 13 Feb 14:26 -I keys/
+drwx------   2   - tz tz 13 Feb 14:26 -I locks/
+drwx------   2   - tz tz 13 Feb 14:26 -I snapshots/
+
+# 将/tmp/test目录，备份到当前目录。需要输入密码
+restic -r . backup /tmp/test
+
+# 查看备份的情况。需要输入密码
+restic -r . snapshots
+# 查看具体路径的备份情况。需要输入密码
+restic -r . snapshots --path /tmp/test
+
+# 验证所有数据都正确地存储在存储库中。应该定期运行此命令。需要输入密码
+restic check -r .
+# 不检测数据库磁盘上文件是否被修改,以使用restic命令也验证存储库中包文件的完整性
+restic -r . check --read-data。需要输入密码
+
+# 恢复数据。会在目标路径/后面恢复tmp/test1。需要输入密码
+restic -r . restore 42ba609a --target /
+
+# 删除快照
+restic -r . forget 42ba609a
+# 虽然上述命令将快照删除了，但文件引用的数据仍然存储在存储库中, 要清除未引用的数据，必须运行prune命令
+restic -r . prune
+# 当然也可以综合这两步一起操作。仅保留最新的快照
+restic forget -r . --keep-last 1 --prune
+
+# 根据策略删除快照
+# 保留每天一个快照，最多保留最近的 4 天的快照。举个例子，如果你有 10 天的备份，这个选项会删除除了最近 4 天以外的每天的备份
+restic -r . forget --keep-daily 4 --dry-run
+
+# restic本身支持的存储库有限，但是rclone支持多，于是乎支持rclone集成
+restic -r rclone:foo:bar init
 ```
 
 ### split
@@ -479,6 +560,40 @@ shred -v -n 1 --random-source=/dev/urandom /dev/sdb
 ```
 
 ## char (字符串操作)
+
+### tee
+
+- [（视频）林哥讲运维：一分钟学会：tee命令的使用技巧](https://www.bilibili.com/video/BV1Rz421b7RJ)
+
+- `|`只是把标准输出传递给下一条命令的标准输入
+
+- tee自己实现标准输出，并把标准输入通过`|`，传递给下一条命令
+    ```sh
+    ls | tee /tmp/filename | less
+    ```
+
+```sh
+# 一边保存视频文件（标准输出），一边观看视频（标准输入）
+ssh root@file.mp4 | tee file.mp4 | mpv -
+
+# 拷贝多份磁盘
+dd if=/dev/sda bs=128k | tee >(dd of=/dev/sdb bs=128k) >(dd of=/dev/sdc bs=128k)
+
+# 把ssh登陆后的操作，保存为日志
+ssh root@192.168.110.4 | tee /tmp/ssh-$(date "+%F_%T").log
+
+# 解决sudo问题
+sudo echo '123' > /root/filename
+zsh: permission denied: /root/filename
+echo '123' | sudo tee /root/filename
+
+# 多台主机执行相同命令。我这里为2台主机同时执行ip a命令
+echo 'ip a' | tee >(ssh -T root@192.168.110.4) >(ssh -T root@192.168.110.5) > /dev/null
+
+# 有2个用户同时登陆，将当前屏幕输出投影给另一个用户
+who
+script /dev/null | tee /dev/pts/0
+```
 
 ### column
 
@@ -960,6 +1075,16 @@ gpg -c --cipher-algo aes256 file
 gpg -d file
 ```
 
+### pv：显示进度条
+
+```sh
+# 显示dd命令的进度条
+dd if=/dev/urandom | pv | dd of=/dev/null
+
+# 像打字一样的效果。以30的输出速度，打开文件。
+pv -qL 30 <file>
+```
+
 ## other
 
 ### xargs
@@ -1100,28 +1225,6 @@ plot "filename" using 1 w lines
 ```sh
 # 测试有没有问题
 shellcheck --format=gcc test.sh
-```
-
-### [pandoc 文档转换](https://github.com/jgm/pandoc)
-
-```sh
-# 列出支持的文档格式
-pandoc --list-output-formats
-
-# md转word
-pandoc README.md -o README.docx
-
-# md转html
-pandoc README.md -o README.html
-
-# md转ppt
-pandoc README.md -o README.html -t revealjs -s
-
-# md转ppt 指定主题
-pandoc Resume.md -o README.html -t revealjs -s -V theme=beige
-
-# 输入不一定是文件, 可以输入url, 将html文件转换mardown
-pandoc -f html -t markdown https://www.sogou.com > sogou.md
 ```
 
 ### jobs, fg, bg, nohup, disown, reptyr

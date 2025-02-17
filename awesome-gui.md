@@ -1,3 +1,9 @@
+---
+id: awesome-gui
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -16,6 +22,7 @@
     * [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](#caesium-image-compressor图片压缩配备了实时预览和批量处理的功能)
   * [截图](#截图)
 * [视频](#视频)
+* [音乐](#音乐)
 * [远程控制](#远程控制)
   * [ssh客户端](#ssh客户端)
 * [note](#note)
@@ -23,6 +30,7 @@
 * [硬件](#硬件)
 * [ai](#ai)
 * [模拟器](#模拟器)
+* [文章知识管理、阅读器](#文章知识管理阅读器)
 * [other](#other)
 * [类似项目](#类似项目)
 
@@ -43,10 +51,6 @@
 - [filelight](https://kde.org/applications/en/filelight)
 
     ![image](./Pictures/awesomegui/filelight.avif)
-
-- [bleachbit: 清理工具](https://www.bleachbit.org/)
-
-    ![image](./Pictures/awesomegui/bleachbit.avif)
 
 - [stacer](https://github.com/oguzhaninan/Stacer)
 
@@ -85,6 +89,10 @@
 - [xplorer](https://github.com/kimlimjustin/xplorer)
 
 ## 文件清理
+
+- [bleachbit: 清理工具](https://www.bleachbit.org/)
+
+    ![image](./Pictures/awesomegui/bleachbit.avif)
 
 - [czkawka：多功能文件清理工具](https://github.com/qarmin/czkawka)
 
@@ -174,6 +182,10 @@
 
 - [lossless-cut：视频剪切软件，目标是成为 FFmpeg 的图形前端。](https://github.com/mifi/lossless-cut)
 
+# 音乐
+
+- [NSMusicS：支持各种云端平台](https://github.com/Super-Badmen-Viper/NSMusicS)
+
 # 远程控制
 
 - [Sunshine：屏幕共享](https://github.com/LizardByte/Sunshine)
@@ -232,6 +244,14 @@
 # 模拟器
 
 - [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
+
+- [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
+
+# 文章知识管理、阅读器
+
+- [obsidian](https://github.com/obsidianmd/obsidian-releases)
+
+- [Zettlr](https://github.com/Zettlr/Zettlr)
 
 # other
 
@@ -360,6 +380,8 @@
 - [aya：简化对安卓设备的操作控制，可以看作 ADB 的图形用户界面](https://github.com/liriliri/aya)
 
 - [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
+
+- [stock：股票分析](https://github.com/myhhub/stock)
 
 # 类似项目
 

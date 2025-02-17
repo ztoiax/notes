@@ -1,3 +1,9 @@
+---
+id: books
+aliases: []
+tags: []
+---
+
 <!-- mtoc-start -->
 
 * [免费在线书籍](#免费在线书籍)
@@ -45,6 +51,9 @@
   * [数据科学](#数据科学-1)
   * [game(游戏)](#game游戏)
   * [AI(人工智能)](#ai人工智能)
+    * [机器学习](#机器学习)
+    * [深度学习](#深度学习)
+    * [llm大模型](#llm大模型)
   * [机器人](#机器人)
   * [硬件](#硬件)
     * [GPU](#gpu)
@@ -296,6 +305,8 @@
 - [《JavaScript 工程师的 Python 指南》](https://github.com/luckrnx09/python-guide-for-javascript-engineers)|
 
 - [《Pytorch实用教程》第二版](https://tingsongyu.github.io/PyTorch-Tutorial-2nd/)
+
+- [《Architecture Patterns with Python》](https://www.cosmicpython.com/book/preface.html)
 
 #### 数据科学
 
@@ -743,6 +754,45 @@
 
 - [AI光影社：马老师教AI](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzkzNDY0Nzc0OA==&action=getalbum&album_id=3334320359428292610&scene=126#wechat_redirect)
 
+- [Awesome-AIGC-Tutorials](https://github.com/luban-agi/Awesome-AIGC-Tutorials)
+
+- [generative-ai-for-beginners](https://github.com/microsoft/generative-ai-for-beginners)
+
+- [AIGC 课程, 目前已支持 ChatGPT, Midjourney, Runway, Stable Diffusion, AI数字人，AI声音&音乐，大模型微调](https://www.learnprompt.pro/)
+
+- [OpenAI 的前首席科学家 Ilya Sutskever 开出了一份论文清单，一共包含30篇论文。](https://arc.net/folder/D0472A20-9C20-4D3F-B145-D2865C0A9FEE)他说："如果你真正学会了所有这些，你就会知道当今 AI 的 90% 重要内容。"
+
+- [《Paradigms of Artificial Intelligence Programming》书籍以及lisp代码](https://github.com/norvig/paip-lisp)
+
+- [产品经理的人工智能学习库](https://easyai.tech/)
+
+- [Markov Chains(马尔可夫链)](https://setosa.io/blog/2014/07/26/markov-chains/)
+
+- [《动手实战人工智能 AI By Doing》](https://aibydoing.com/intro)
+
+### 机器学习
+
+-  鸢尾花书：从加减乘除到机器学习
+    - [《编程不难》](https://github.com/Visualize-ML/Book1_Python-For-Beginners)
+    - [《可视之美》](https://github.com/Visualize-ML/Book2_Beauty-of-Data-Visualization)
+    - [《数学要素》](https://github.com/Visualize-ML/Book3_Elements-of-Mathematics)
+    - [《矩阵力量》](https://github.com/Visualize-ML/Book4_Power-of-Matrix)
+    - [《统计至简》](https://github.com/Visualize-ML/Book5_Essentials-of-Probability-and-Statistics)
+    - [《数据有道》](https://github.com/Visualize-ML/Book6_First-Course-in-Data-Science)
+    - [《机器学习》](https://github.com/Visualize-ML/Book7_Visualizations-for-Machine-Learning)
+
+- [《Machine Learning Yearning》(中文)](https://deeplearning-ai.github.io/machine-learning-yearning-cn/)
+
+- [《概率机器学习》。该项目包含凯文·墨菲的三本书籍，分别为《机器学习：概率视角》、《概率机器学习：简介》、《概率机器学习：高级》](https://github.com/probml/pml-book)
+
+- [machine-learning-roadmap](https://github.com/mrdbourke/machine-learning-roadmap)
+
+- [Machine Learning University (MLU)可视化机器学习](https://mlu-explain.github.io/)
+
+### 深度学习
+
+- [《Understanding Deep Learning》：理解深度学习。该书是由 Simon J.D. Prince 编写的一本关于深度学习的专业书籍，内容涵盖深度学习的理论基础、性能评估、卷积网络、Transformers、图神经网络、生成对抗网络（GANs）、扩散模型（Diffusion Models）、强化学习等主题，并附有大量练习题。](https://udlbook.github.io/udlbook/)
+
 - [《动手学深度学习》](https://zh.d2l.ai/)
 
 - [《TensorFlow深度学习》](https://github.com/dragen1860/Deep-Learning-with-TensorFlow-book)
@@ -751,52 +801,24 @@
 
 - [PyTorch-Tutorial-2nd：《PyTorch实用教程》（第二版）](https://github.com/TingsongYu/PyTorch-Tutorial-2nd)
 
-- [《Machine Learning Yearning》(中文)](https://deeplearning-ai.github.io/machine-learning-yearning-cn/)
+- [《学习 PyTorch 进行深度学习：从零到精通》。该项目提供了丰富的图文教程、代码示例、视频讲解和实战项目，旨在通过实践的方式帮助初学者掌握 PyTorch 框架和深度学习技术。](https://github.com/yunjey/pytorch-tutorial)
 
-- [《Understanding Deep Learning》：理解深度学习。该书是由 Simon J.D. Prince 编写的一本关于深度学习的专业书籍，内容涵盖深度学习的理论基础、性能评估、卷积网络、Transformers、图神经网络、生成对抗网络（GANs）、扩散模型（Diffusion Models）、强化学习等主题，并附有大量练习题。](https://udlbook.github.io/udlbook/)
+- [magnetron：从零开始开发的 PyTorch](https://github.com/MarioSieg/magnetron)
 
-- [《概率机器学习》。该项目包含凯文·墨菲的三本书籍，分别为《机器学习：概率视角》、《概率机器学习：简介》、《概率机器学习：高级》](https://github.com/probml/pml-book)
+- [从零到神经网络高手：这是一门从基础开始的神经网络课程，包含视频、练习和配套源码，帮助初学者初逐步掌握神经网络的基本概念，并通过实例代码来加深理解。](https://github.com/karpathy/nn-zero-to-hero)
 
-- [《动手实战人工智能 AI By Doing》](https://aibydoing.com/intro)
+### llm大模型
 
 - [《大语言模型》：这是一本为想入门大模型技术的程序员/学生准备的开源书籍，内容不仅涵盖了大模型的基础原理和关键技术，还提供了配套的代码工具库和大模型，帮助读者快速入门并实践。](https://llmbook-zh.github.io/)
 
 - [《大模型基础》。该书是由浙江大学 DAILY 实验室开源的大语言模型教材，内容涵盖传统语言模型、大语言模型架构演化、Prompt 工程、参数高效微调、模型编辑、检索增强生成等方面。](https://github.com/ZJU-LLMs/Foundations-of-LLMs)
 
-- [《学习 PyTorch 进行深度学习：从零到精通》。该项目提供了丰富的图文教程、代码示例、视频讲解和实战项目，旨在通过实践的方式帮助初学者掌握 PyTorch 框架和深度学习技术。](https://github.com/yunjey/pytorch-tutorial)
-
-- [machine-learning-roadmap](https://github.com/mrdbourke/machine-learning-roadmap)
-
-- [Machine Learning University (MLU)可视化机器学习](https://mlu-explain.github.io/)
-
-- [Markov Chains(马尔可夫链)](https://setosa.io/blog/2014/07/26/markov-chains/)
-
-- [《Paradigms of Artificial Intelligence Programming》书籍以及lisp代码](https://github.com/norvig/paip-lisp)
-
-- [ai知识库搜索](https://easyai.tech/)
-
-- [提示工程指南](https://www.promptingguide.ai/zh)
-
-- [Prompt-Engineering-Guide：全面的提示工程实战指南。这份教程致力于帮助用户掌握与大型语言模型（LLM）沟通的技巧。内容涵盖从基础到高级的提示工程技术，附有详细的实现指南和示例代码。](https://github.com/dair-ai/Prompt-Engineering-Guide)
-
-- [Awesome-AIGC-Tutorials](https://github.com/luban-agi/Awesome-AIGC-Tutorials)
-
-- [generative-ai-for-beginners](https://github.com/microsoft/generative-ai-for-beginners)
-
-- [AIGC 课程, 目前已支持 ChatGPT, Midjourney, Runway, Stable Diffusion, AI数字人，AI声音&音乐，大模型微调](https://www.learnprompt.pro/)
-
-- [从零到神经网络高手：这是一门从基础开始的神经网络课程，包含视频、练习和配套源码，帮助初学者初逐步掌握神经网络的基本概念，并通过实例代码来加深理解。](https://github.com/karpathy/nn-zero-to-hero)
-
 - [《LLMs-from-scratch》](https://github.com/rasbt/LLMs-from-scratch)
     - 这是一本讲述如何从头制作一个类似 ChatGPT 的大语言模型的书，它介绍了 LLMs 的工作原理，并教你如何创建自己的 LLM，内含丰富的图示和代码示例，目前该书还在编写中未完结。
 
-- [《大语言模型》](https://llmbook-zh.github.io/)
-
 - [llm-universe：本项目是一个面向小白开发者的大模型应用开发教程](https://datawhalechina.github.io/llm-universe/#/)
 
-- [OpenAI 的前首席科学家 Ilya Sutskever 开出了一份论文清单，一共包含30篇论文。](https://arc.net/folder/D0472A20-9C20-4D3F-B145-D2865C0A9FEE)他说："如果你真正学会了所有这些，你就会知道当今 AI 的 90% 重要内容。"
-
-- [Pml-book:概率机器学习](https://github.com/probml/pml-book)
+- [minimind：从0训练微型语言模型。2小时完全从0训练26M的小参数GPT](https://github.com/jingyaogong/minimind)
 
 ## 机器人
 
@@ -1366,6 +1388,21 @@
 
 - ai
 
+    - [檀东东Tango](https://space.bilibili.com/14739873)
+        > ai大模型评测
+
+    - [沧海九粟](https://space.bilibili.com/28357052)
+        > ai、langchain
+
+    - [秋芝2046](https://space.bilibili.com/385670211)
+        > ai大模型、其他ai工具等
+
+    - [五里墩茶社](https://space.bilibili.com/615957867)
+        > ai大模型
+
+    - [AI超元域](https://space.bilibili.com/3493277319825652)
+        > ai大模型、其他ai工具等
+
     - 中国人工智能学会
     - 腾讯CDC体验设计
         > 设计、ai
@@ -1399,6 +1436,8 @@
     - 格友
 
 - 运维
+    - [林哥讲运维](https://space.bilibili.com/438573744/)
+        > 世界500强企业的运维总监，拥有10余年沉淀的Linux和Oracle运维经验。
 
     - 咸鱼运维杂谈
     - 运维记事
@@ -1416,6 +1455,7 @@ RabbitMQ实战指南》作者
 
     - [阮一峰的网络日志](https://www.ruanyifeng.com/blog/)
     - [Koala聊开源](https://space.bilibili.com/489667127)
+    - [IT咖啡馆：githb周报](https://space.bilibili.com/65564239)
     - [北京大学Linux俱乐部](https://space.bilibili.com/3461562830424779)
     - [glepnir](https://space.bilibili.com/321783076)
     - [LitterHouge](https://space.bilibili.com/2041146642)
@@ -1425,6 +1465,8 @@ RabbitMQ实战指南》作者
 
     - [unixchad：linux不常用软件折腾](https://space.bilibili.com/34569411)
     - [OS视界：linux相关新闻介绍](https://space.bilibili.com/1918016728)
+
+    - [我不是咕咕鸽：介绍各种linux适合服务器部署的、好玩的项目](https://space.bilibili.com/19956596/upload/video)
 
     - HelloGithub
     - Python猫
@@ -1474,6 +1516,7 @@ RabbitMQ实战指南》作者
     - [小白debug](https://space.bilibili.com/100785033)
     - [epcdiy](https://space.bilibili.com/12590)
     - [小刘不是程序员](https://space.bilibili.com/519550178)
+    - [技术胖](https://space.bilibili.com/165659472)
 
     - 腾讯大讲堂
         > 各种计算机技术、架构、管理等
@@ -1513,9 +1556,6 @@ RabbitMQ实战指南》作者
 ## 科技
 
 - bilibili
-
-    - ai大模型评测
-        - [檀东东Tango](https://space.bilibili.com/14739873)
 
     - 笔记本评测：
         - [笔吧评测室](https://space.bilibili.com/367877)
@@ -1590,8 +1630,6 @@ RabbitMQ实战指南》作者
     - [二进制的老王：硬盘评测、硬盘数据恢复](https://space.bilibili.com/18731657)
 
     - [钱韦德：硬盘评测、nas体验](https://space.bilibili.com/20274090)
-
-    - [秋芝2046：ai大模型](https://space.bilibili.com/385670211)
 
 - 微信公众号
 

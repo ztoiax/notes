@@ -1,3 +1,9 @@
+---
+id: awesome-cli
+aliases: []
+tags: []
+---
+
 <!-- mtoc-start -->
 
 * [terminal simulator (终端模拟器)](#terminal-simulator-终端模拟器)
@@ -11,6 +17,7 @@
   * [ghostty：用zig写的](#ghostty用zig写的)
   * [waveterm：ts写的，支持ai提醒](#wavetermts写的支持ai提醒)
   * [WindTerm：c写的类似vscode布局的终端](#windtermc写的类似vscode布局的终端)
+  * [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](#nexterm适合多服务器管理支持ssh-vnc-and-rdp支持sftp支持proxmox-lxc-和-qemu-containers)
 * [File Browser](#file-browser)
   * [ranger](#ranger)
   * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
@@ -48,6 +55,7 @@
   * [mutagen：文件同步到远程服务器，也可以充当中间人在2个远程文件系统之间同步](#mutagen文件同步到远程服务器也可以充当中间人在2个远程文件系统之间同步)
   * [zrok：端对端共享文件](#zrok端对端共享文件)
   * [termscp：ftp、scp等的tui](#termscpftpscp等的tui)
+  * [entr：监控文件变化时，执行命令](#entr监控文件变化时执行命令)
 * [git](#git)
   * [gh](#gh)
     * [github-cli官方文档](#github-cli官方文档)
@@ -208,6 +216,8 @@
   * [devzat：程序员专属的 SSH 聊天室。这是一个通过 SSH 连接的聊天室，用户无需安装客户端，仅需一条 SSH 命令即可登录。它支持私人消息、多聊天室、图片和代码高亮等功能，还可以集成第三方服务、自托管 SSH 聊天室。](#devzat程序员专属的-ssh-聊天室这是一个通过-ssh-连接的聊天室用户无需安装客户端仅需一条-ssh-命令即可登录它支持私人消息多聊天室图片和代码高亮等功能还可以集成第三方服务自托管-ssh-聊天室)
   * [upx：可执行文件压缩工具，支持多种可执行文件格式（Windows、Linux、macOS）。它拥有出色的压缩比（50-70%），压缩后的文件可直接运行，适用于程序分发和大规模存储的场景。](#upx可执行文件压缩工具支持多种可执行文件格式windowslinuxmacos它拥有出色的压缩比50-70压缩后的文件可直接运行适用于程序分发和大规模存储的场景)
   * [bunster：把 shell 脚本转换为 Go 代码，然后利用 Go 工具链将其编译为二进制可执行文件，弥补了传统 shell 脚本在性能、可移植性和安全性方面的不足。](#bunster把-shell-脚本转换为-go-代码然后利用-go-工具链将其编译为二进制可执行文件弥补了传统-shell-脚本在性能可移植性和安全性方面的不足)
+  * [direnv：不同目录不同环境变量](#direnv不同目录不同环境变量)
+  * [mise：node、python、neovim等版本管理；有类似direnv的环境变量功能；有task功能](#misenodepythonneovim等版本管理有类似direnv的环境变量功能有task功能)
 * [系统相关](#系统相关)
   * [kmon：内核模块、dmesg的tui](#kmon内核模块dmesg的tui)
   * [nemu：qemu的tui](#nemuqemu的tui)
@@ -215,19 +225,27 @@
   * [isd：systemd tui](#isdsystemd-tui)
 * [磁盘备份](#磁盘备份)
   * [restic](#restic)
-* [pdf、mobi、epub](#pdfmobiepub)
-  * [Web2pdf](#web2pdf)
-  * [ocrmypdf: pdf图片转文字](#ocrmypdf-pdf图片转文字)
+* [pdf、mobi、epub、md](#pdfmobiepubmd)
+  * [转换工具](#转换工具)
+    * [在线使用](#在线使用)
+    * [pandoc 文档转换](#pandoc-文档转换)
+    * [MinerU：pdf转markdown、html。支持布局检测、ocr图片识别、数学公式识别、表格识别](#minerupdf转markdownhtml支持布局检测ocr图片识别数学公式识别表格识别)
+    * [marker：pdf和图片转markdown、html](#markerpdf和图片转markdownhtml)
+    * [ocrmypdf: pdf图片转文字](#ocrmypdf-pdf图片转文字)
+    * [kreuzberg：python提取库。提取 PDF、图片、office 文档](#kreuzbergpython提取库提取-pdf图片office-文档)
+    * [Web2pdf](#web2pdf)
+    * [zerox：pdf转markdown](#zeroxpdf转markdown)
+    * [markitdown：微软官方推出的工具，将各种格式的文件（主要是 Office 文件）转成 Markdown 格式。](#markitdown微软官方推出的工具将各种格式的文件主要是-office-文件转成-markdown-格式)
   * [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](#weread-exporter将微信读书中的书籍导出成epubpdfmobi等格式)
-  * [zerox：pdf转markdown](#zeroxpdf转markdown)
+  * [OCRmyPDF：通过ocr搜索和复制扫描版的pdf文本](#ocrmypdf通过ocr搜索和复制扫描版的pdf文本)
   * [Stirling-PDF：自部署 PDF 处理工具](#stirling-pdf自部署-pdf-处理工具)
   * [PDFMathTranslate：pdf翻译中文](#pdfmathtranslatepdf翻译中文)
   * [ebook2audiobook：电子书转为有声书](#ebook2audiobook电子书转为有声书)
   * [audiblez：将 Epub 电子书转成有声书，支持中文。](#audiblez将-epub-电子书转成有声书支持中文)
+  * [AI-reads-books-page-by-page：AI 逐页从 PDF 提取知识与生成摘要](#ai-reads-books-page-by-pageai-逐页从-pdf-提取知识与生成摘要)
 * [markdown](#markdown)
   * [浏览markdown文件](#浏览markdown文件)
   * [mdBook：markdown转book，可以在线浏览](#mdbookmarkdown转book可以在线浏览)
-  * [markitdown：微软官方推出的工具，将各种格式的文件（主要是 Office 文件）转成 Markdown 格式。](#markitdown微软官方推出的工具将各种格式的文件主要是-office-文件转成-markdown-格式)
   * [mlc:检测markdown文件的连接](#mlc检测markdown文件的连接)
   * [slidev: markdown写ppt](#slidev-markdown写ppt)
   * [markdown写ppt](#markdown写ppt)
@@ -240,6 +258,19 @@
 * [邮件](#邮件)
 * [ai](#ai)
   * [llm大模型](#llm大模型)
+    * [awesome-chatgpt](#awesome-chatgpt)
+    * [ollama](#ollama)
+      * [Ollama对比vllm](#ollama对比vllm)
+      * [open-webui：ollama web ui](#open-webuiollama-web-ui)
+      * [hollama：ollama web ui](#hollamaollama-web-ui)
+      * [oterm：Ollama cli客户端](#otermollama-cli客户端)
+      * [MaxKB：ollama web ui，知识库](#maxkbollama-web-ui知识库)
+      * [rag-web-ui](#rag-web-ui)
+      * [LM Studio：ollama gui版](#lm-studioollama-gui版)
+      * [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#anything-llm一个gui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
+      * [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#cherry-studiogui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
+    * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
+    * [other](#other-1)
 * [reference](#reference)
 
 <!-- mtoc-end -->
@@ -274,6 +305,8 @@
 ## [waveterm：ts写的，支持ai提醒](https://github.com/wavetermdev/waveterm)
 
 ## [WindTerm：c写的类似vscode布局的终端](https://github.com/kingToolbox/WindTerm)
+
+## [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](https://github.com/gnmyt/Nexterm)
 
 # File Browser
 
@@ -455,6 +488,17 @@ zrok share public localhost:8080
 ```
 
 ## [termscp：ftp、scp等的tui](https://github.com/veeso/termscp)
+
+## [entr：监控文件变化时，执行命令](https://github.com/eradman/entr)
+
+```sh
+# 当前目录文件发生变化时，执行echo hello。注意：只是文件变化，并不包括文件创建和删除
+ls * | entr "echo hello"
+
+# -r 在每次文件变更时，会先杀死之前启动的子进程（如果有的话），然后再重新执行指定的命令。
+find . -name "*.c" | entr -r make
+ls *.js | entr -r node app.js
+```
 
 # git
 
@@ -1173,6 +1217,144 @@ bunster build test.sh -o my-program
 bunster generate test.sh -o my-module
 ```
 
+## [direnv：不同目录不同环境变量](https://github.com/direnv/direnv)
+
+```sh
+# 添加进配置文件。这样才能将direnv的设置和配置同步到系统。
+echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
+
+# 设置环境变量
+MY_VAR=1
+
+# 新建目录
+mkdir /tmp/test
+# 在当前目录添加环境变量进配置文件
+echo export MY_VAR=2 > .envrc
+# 启动加载配置文件.envrc
+direnv allow .
+# 查看
+direnv status
+
+# 修改.envrc配置文件后，重启
+direnv reload
+
+# 测试
+echo $MY_VAR
+# 离开目录后测试
+cd ..
+echo $MY_VAR
+
+# 关闭direnv
+cd /tmp/test
+direnv deny
+```
+
+## [mise：node、python、neovim等版本管理；有类似direnv的环境变量功能；有task功能](https://github.com/jdx/mise)
+
+- [官方文档](https://mise.jdx.dev/getting-started.html)
+
+- 启动：
+
+    ```sh
+    mise activate
+    # 添加到配置文件。这样才能将mise的设置和配置同步到系统。
+    echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
+    ```
+
+- 版本管理：
+
+    - 基本命令
+
+        ```sh
+        # 查看可以安装的binary
+        mise plugins list-all
+
+        # 查看当前node版本
+        mise exec -- node -v
+        # 或者。前提是把mise activate添加到配置文件
+        node -v
+
+        # 下载安装node22版本
+        mise use --global node@22
+
+        # 查看安装的版本是否成功应用
+        which node
+        # 或者
+        node -v
+
+        # 查看已经安装binary
+        mise ls
+
+        # 只更新你选择的当前node版本，如选择了22也只会更新22版本。
+        mise upgrade node
+        # 更新你选择的node版本，如选择了22会更新到最新的比如24版本
+        mise upgrade --bump node
+
+        # 删除安装的node22版本
+        mise rm node@22
+        ```
+
+    - 配置文件：`~/.config/mise/config.toml`
+
+        ```ini
+        [tools]
+        node = "22"
+
+        [env]
+        # 安装的路径
+        _.path = "./node_modules/.bin"
+        ```
+
+- 自动化版本切换。当您修改 .mise.toml 文件（例如将 Node.js 版本改为 18.0.0）时，mise watch 会自动检测到变化并重新加载环境，切换到新的 Node.js 版本。
+
+    - 基本命令
+        ```sh
+        mise watch
+        ```
+
+    - 配置文件：`.mise.toml`
+        ```ini
+        [tools]
+        nodejs = "16.14.0"
+        python = "3.9.7"
+        ```
+
+- 环境变量：
+
+    - 基本命令
+        ```sh
+        mise set MY_VAR=123
+        # 前提是把mise activate添加到配置文件
+        echo $MY_VAR
+        ```
+
+    - 配置文件：`~/.config/mise/config.toml`
+        ```ini
+        [env]
+        MY_VAR = "123"
+        ```
+
+- Tasks：定义项目执行的命令
+
+    - 基本命令
+        ```sh
+        mise run build
+        mise run test
+        ```
+
+    - 配置文件：`~/.config/mise/config.toml`
+        ```ini
+        [tasks]
+        build = "npm run build"
+        test = "npm test"
+        ```
+
+    - 在`mise-tasks/build`目录下
+        ```sh
+        #!/bin/bash
+        npm run build
+        ```
+
 # 系统相关
 
 ## [kmon：内核模块、dmesg的tui](https://github.com/orhun/kmon)
@@ -1218,11 +1400,45 @@ restic init --repo /tmp/backup
 restic --repo /tmp/backup backup ~/st
 ```
 
-# pdf、mobi、epub
+# pdf、mobi、epub、md
 
-## [Web2pdf](https://github.com/dvcoolarun/web2pdf)
+## 转换工具
 
-## [ocrmypdf: pdf图片转文字](https://github.com/ocrmypdf/OCRmyPDF)
+### 在线使用
+
+- [MinerU：pdf转markdown、html。支持布局检测、ocr图片识别、数学公式识别、表格识别](https://mineru.net/)
+
+- [mathpix：pdf转换工具](https://snip.mathpix.com/home)
+
+- [pdf24：pdf工具箱](https://tools.pdf24.org/zh/)
+
+### [pandoc 文档转换](https://github.com/jgm/pandoc)
+
+```sh
+# 列出支持的文档格式
+pandoc --list-output-formats
+
+# md转word
+pandoc README.md -o README.docx
+
+# md转html
+pandoc README.md -o README.html
+
+# md转ppt
+pandoc README.md -o README.html -t revealjs -s
+
+# md转ppt 指定主题
+pandoc Resume.md -o README.html -t revealjs -s -V theme=beige
+
+# 输入不一定是文件, 可以输入url, 将html文件转换mardown
+pandoc -f html -t markdown https://www.sogou.com > sogou.md
+```
+
+### [MinerU：pdf转markdown、html。支持布局检测、ocr图片识别、数学公式识别、表格识别](https://github.com/opendatalab/MinerU)
+
+### [marker：pdf和图片转markdown、html](https://github.com/VikParuchuri/marker)
+
+### [ocrmypdf: pdf图片转文字](https://github.com/ocrmypdf/OCRmyPDF)
 
 ```sh
 # 安装程序
@@ -1235,9 +1451,25 @@ pacman -S tesseract-data-chi_sim tesseract-data-eng
 ocrmypdf -l chi_sim file.pdf new_file.pdf
 ```
 
+### [kreuzberg：python提取库。提取 PDF、图片、office 文档](https://github.com/Goldziher/kreuzberg)
+
+### [Web2pdf](https://github.com/dvcoolarun/web2pdf)
+
+### [zerox：pdf转markdown](https://github.com/getomni-ai/zerox)
+
+### [markitdown：微软官方推出的工具，将各种格式的文件（主要是 Office 文件）转成 Markdown 格式。](https://github.com/microsoft/markitdown)
+
+```sh
+# 安装
+pip install markitdown
+
+# pdf传md
+markitdown path-to-file.pdf > document.md
+```
+
 ## [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](https://github.com/drunkdream/weread-exporter)
 
-## [zerox：pdf转markdown](https://github.com/getomni-ai/zerox)
+## [OCRmyPDF：通过ocr搜索和复制扫描版的pdf文本](https://github.com/ocrmypdf/OCRmyPDF)
 
 ## [Stirling-PDF：自部署 PDF 处理工具](https://github.com/Stirling-Tools/Stirling-PDF)
 
@@ -1246,6 +1478,8 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
 ## [ebook2audiobook：电子书转为有声书](https://github.com/DrewThomasson/ebook2audiobook)
 
 ## [audiblez：将 Epub 电子书转成有声书，支持中文。](https://github.com/santinic/audiblez)
+
+## [AI-reads-books-page-by-page：AI 逐页从 PDF 提取知识与生成摘要](https://github.com/echohive42/AI-reads-books-page-by-page)
 
 # markdown
 
@@ -1296,16 +1530,6 @@ ocrmypdf -l chi_sim file.pdf new_file.pdf
     mdbook build
     ```
 
-## [markitdown：微软官方推出的工具，将各种格式的文件（主要是 Office 文件）转成 Markdown 格式。](https://github.com/microsoft/markitdown)
-
-```sh
-# 安装
-pip install markitdown
-
-# pdf传md
-markitdown path-to-file.pdf > document.md
-```
-
 ## [mlc:检测markdown文件的连接](https://github.com/becheran/mlc)
 
 ## [slidev: markdown写ppt](https://github.com/slidevjs/slidev)
@@ -1355,18 +1579,15 @@ journalctl -o json | lnav
 
 ## llm大模型
 
-- [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
+### [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
 
-- [ollama](https://github.com/ollama/ollama)
-    - [ollama：支持的大模型](https://ollama.com/search)
+### [ollama](https://github.com/ollama/ollama)
 
-    - [open-webui：ollama web ui](https://github.com/open-webui/open-webui)
+- [漫谈云原生：最全 Ollama 大模型部署指南](https://mp.weixin.qq.com/s/Esqw0zViQBiq_4VXEXKz_Q)
 
-    - [hollama：ollama web ui](https://github.com/fmaclen/hollama)
+- [ollama：支持的大模型](https://ollama.com/search)
 
-    - [oterm：Ollama cli客户端](https://github.com/ggozad/oterm)
-
-    - [MaxKB：ollama web ui，知识库](https://github.com/1Panel-dev/MaxKB)
+- 基本命令
 
     ```sh
     # 启动ollama
@@ -1375,22 +1596,158 @@ journalctl -o json | lnav
     # 所有可供下载的模型 https://ollama.com/search
     # 下载并运行deepseek-v3（被称为拼多多版大模型）
     ollama run nezahatkorkmaz/deepseek-v3
+
+    # 从内存中卸载模型
+    ollama stop nezahatkorkmaz/deepseek-v3
+
+    # 下载向量数据库
+    ollama pull nomic-embed-text
+
+    # /show parameters 查看参数
+    ollama run deepseek-r1:latest
+    >>> /show parameters
+    Model defined parameters:
+    stop                           "<｜begin▁of▁sentence｜>"
+    stop                           "<｜end▁of▁sentence｜>"
+    stop                           "<｜User｜>"
+    stop                           "<｜Assistant｜>"
+
+    # 修改参数。默认情况下，Ollama 上下文窗口大小为 2048，要改成 4096 可以执行
+    >>> /set parameter num_ctx 4096
     ```
 
-- [LM Studio：ollama gui版](https://lmstudio.ai/)
-    - [lms：LM Studio command line](https://github.com/lmstudio-ai/lms)
-
-- [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/Mintplex-Labs/anything-llm)
-
+- Kubernetes 运行 Ollama
     ```sh
-    # linux安装
-    curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
+    # 配置 Helm Chart
+    helm repo add ollama <https://feisky.xyz/ollama-kubernetes>
+    helm repo update
 
-    # 启动
-    ./AnythingLLMDesktop/start
+    # 部署 Ollama
+    helm upgrade --install ollama ollama/ollama \
+        --namespace=ollama \
+        --create-namespace
+
+    # 开启端口转发
+    kubectl -n ollama port-forward \
+       service/ollama-webui 8080:80
     ```
 
-- [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可）](https://github.com/CherryHQ/cherry-studio)
+- 变量：
+
+    - Ollama 的存储路径为：
+
+        - macOS: `~/.ollama/models`
+        - Linux: `/usr/share/ollama/.ollama/models`
+        - Windows: `C:\Users\%username%\.ollama\models`
+
+        ```sh
+        # 修改存储路径
+        export OLLAMA_MODELS=~/ollama-data
+        ```
+
+    - 默认情况下，模型会在内存中保留 5 分钟后卸载。如果短时间向 LLM 发送大量请求，这可以提供更快的响应时间。
+
+        ```sh
+        # 设置为 1 小时
+        export OLLAMA_KEEP_ALIVE=1h
+        ```
+
+    - Flash Attention 是大多数现代模型的一项功能，可以在上下文大小增加时显著减少内存使用。
+
+        ```sh
+        # 开启Flash Attention
+        export OLLAMA_FLASH_ATTENTION=1
+        ```
+
+    - 设置 K/V 缓存的量化类型：启用 Flash Attention 时，K/V 上下文缓存可以进行量化，以显著减少内存使用。
+
+        - 缓存量化对模型质量的影响：
+
+            - 通常 GQA 分高的模型（比如 Qwen2）可能比 GQA 分低的模型更容易受到量化对精度影响。
+
+            - 建议你尝试不同的量化类型，通过测试找到内存使用与质量之间最佳平衡点。
+
+
+        - 要在 Ollama 中使用量化的 K/V 缓存，可以设置 `OLLAMA_KV_CACHE_TYPE` 环境变量：
+
+        - `f16` - 高精度和高内存使用（默认）。
+        - `q8_0` - 8 位量化，使用约为 f16 一半的内存，精度损失非常小，这通常对模型质量没有明显影响。
+        - `q4_0` - 4 位量化，使用约为 f16 四分之一的内存，在较大上下文大小时会出现精度损失。
+
+- 运行第三方 GGUF 模型
+
+    - GGUF 是 llama.cpp 定义的一种高效存储和交换大模型预训练结果的二进制格式。你可以通过 Modelfile 文件中导入 GGUF 模型。
+
+    - 首先创建一个 Modelfile：
+
+        ```
+        FROM <model-path>.gguf
+        PARAMETER temperature 1
+        PARAMETER num_ctx 4096
+        SYSTEM You are Mario from super mario bros, acting as an assistant.
+        ```
+    - 然后，执行下面的命令加载运行模型：
+
+        ```sh
+        # 你可以加上 -q Q4_K_M 对模型量化
+        ollama create myllama -f Modelfile
+        ollama run myllama
+        ```
+
+    - 对于其他格式的模型，你可以通过 llama.cpp 转换为 GGUF 格式再使用。
+
+#### Ollama对比[vllm](https://github.com/vllm-project/vllm)
+
+- Ollama 是一个运行大模型的工具，可以看成是大模型领域的 Docker，可以下载所需的大模型并暴露 Ollama API，极大的简化了大模型的部署。
+
+- vLLM 与 Ollama 类似，也是一个运行大模型的工具，但它针对推理做了很多优化，提高了模型的运行效率和性能，使得在资源有限的情况下也能高效运行大语言模型，另外，它提供兼容 OpenAI 的 API。
+
+- 选择 Ollama 还是 vLLM？
+
+    - Ollama 的特点：个人用户或本地开发环境使用 Ollama 很方便，对各种 GPU 硬件和大模型的兼容性很好，不需要复杂的配置就能跑起来，但性能上不如 vLLM。
+
+    - vLLM 的特点：推理性能更好，也更节约资源，适合部署到服务器供多人使用，还支持多机多卡分布式部署，上限更高，但能适配的 GPU 硬件比 Ollama 少，且需要根据不同 GPU 和大模型来调整 vllm 的启动参数才能跑起来或者获得更好的性能表现。
+
+    - 选型建议：如果有一定的技术能力且愿意折腾，能用 vLLM 成功跑起来更推荐用 vLLM 将大模型部署到 Kubernetes 中，否则就用 Ollama ，两种方式在本文中都有相应的部署示例。
+
+#### [open-webui：ollama web ui](https://github.com/open-webui/open-webui)
+
+#### [hollama：ollama web ui](https://github.com/fmaclen/hollama)
+
+#### [oterm：Ollama cli客户端](https://github.com/ggozad/oterm)
+
+#### [MaxKB：ollama web ui，知识库](https://github.com/1Panel-dev/MaxKB)
+
+- [（视频）Rontalks：Ollama + deepseek + maxkb 搭建本地个人专属AI机器人，或者叫本地专属问答知识库](https://www.bilibili.com/video/BV15gFbefEYP)
+
+- 自带知识库中的嵌入文本模型maxkb-embedding
+
+#### [rag-web-ui](https://github.com/rag-web-ui/rag-web-ui)
+
+#### [LM Studio：ollama gui版](https://lmstudio.ai/)
+
+- [lms：LM Studio command line](https://github.com/lmstudio-ai/lms)
+
+#### [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/Mintplex-Labs/anything-llm)
+
+```sh
+# linux安装
+curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
+
+# 启动
+./AnythingLLMDesktop/start
+```
+
+#### [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/CherryHQ/cherry-studio)
+
+### [transformers.js：在浏览器运行大模型（如deepseek-r1）](https://github.com/huggingface/transformers.js-examples/tree/main/deepseek-r1-webgpu)
+
+- [（视频）五里墩茶社：在浏览器内运行DeepSeek R1 = WebGPU + Transformers.js](https://www.bilibili.com/video/BV1ZbFneCEkr)
+
+- 显卡要支持webgpu：
+    - 浏览器开启webgpu：`chrome://flags`下搜索`webgpu`然后启用。
+
+### other
 
 - [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)
 

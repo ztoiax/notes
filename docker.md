@@ -75,7 +75,7 @@
     * [关系型数据库](#关系型数据库)
   * [与裸机性能对比](#与裸机性能对比)
 * [常见问题](#常见问题)
-  * [pull问题](#pull问题)
+  * [无法连接unix socket](#无法连接unix-socket)
 * [第三方软件](#第三方软件)
   * [服务端](#服务端)
   * [客户端](#客户端)
@@ -3932,13 +3932,12 @@ docker container exec -it opensuse_1 bash
 
 # 常见问题
 
-## pull问题
+## 无法连接unix socket
 
-- 无法连接unix socket
-    ```sh
-    docker pull ghcr.io/yusing/go-proxy:latest
-    Cannot connect to the Docker daemon at unix:///home/tz/.docker/desktop/docker.sock. Is the docker daemon running?
-    ```
+```sh
+docker pull ghcr.io/yusing/go-proxy:latest
+Cannot connect to the Docker daemon at unix:///home/tz/.docker/desktop/docker.sock. Is the docker daemon running?
+```
 
 - 解决方法
     ```sh

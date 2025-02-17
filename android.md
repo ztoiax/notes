@@ -1,3 +1,9 @@
+---
+id: android
+aliases: []
+tags: []
+---
+
 <!-- mtoc-start -->
 
 * [Android](#android)
@@ -17,6 +23,7 @@
     * [游戏相关](#游戏相关)
     * [第三方客户端](#第三方客户端)
     * [自动化](#自动化)
+    * [ai](#ai)
 * [刷机](#刷机)
   * [刷入recovery、magisk、lsposed](#刷入recoverymagisklsposed)
   * [frida](#frida)
@@ -214,6 +221,10 @@
 
 - [moonlight-android：屏幕共享客户端](https://github.com/moonlight-stream/moonlight-android)
 
+- [chatbox：支持各种llm大模型的客户端](https://github.com/Bin-Huang/chatbox)
+
+- [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
+
 ### 应用管理
 
 - [AppManager](https://github.com/MuntashirAkon/AppManager)
@@ -317,6 +328,11 @@
 ### 自动化
 
 - [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
+
+### ai
+
+- [pocketpal-ai：手机部署大模型的app](https://github.com/a-ghorbani/pocketpal-ai)
+    - [（视频）在下莫老师：手机电脑都能用，DeepSeek本地部署指南！](https://www.bilibili.com/video/BV1RJN3e4ETj)
 
 # 刷机
 

@@ -52,6 +52,7 @@
   * [IP](#ip)
     * [nstat(iproute2)](#nstatiproute2)
   * [iperf3](#iperf3)
+  * [ntttcp：多线程测试带宽](#ntttcp多线程测试带宽)
   * [masscan](#masscan)
   * [iftop](#iftop)
   * [nethogs](#nethogs)
@@ -1245,6 +1246,16 @@ iperf3 -c
 iperf3 -C bbr -c 127.0.0.1:5201
 ```
 
+## [ntttcp：多线程测试带宽](https://github.com/microsoft/ntttcp-for-linux)
+
+```sh
+# 服务端
+ntttcp -r
+
+# 客户端
+ntttcp -s <服务端ip>
+```
+
 ## [masscan](https://github.com/robertdavidgraham/masscan)
 
 - [1.4 万 Star！迄今为止速度最快的端口扫描器](https://mp.weixin.qq.com/s?src=11&timestamp=1607576697&ver=2757&signature=EZccuiVphxpLvYprZNgS7xjfuXqW2kgBwRLM35AWvstT-obGhkL-6e9aFmxHBdGU3oE5R7WyeVEgUfHY1jQqO6v0xsfDna4fqFrbyK1VxRgBX4zD60M5wB6hAZm6EV*B&new=1)
@@ -1667,6 +1678,8 @@ agedu -w
     ```
 
 ## [htop](https://github.com/hishamhm/htop)
+
+- [（视频）现代CPP随笔_0CCh：Linux实用工具 之 htop，实时监控系统资源的好帮手](https://www.bilibili.com/video/BV1LwFfe2EtM)
 
 ![image](./Pictures/benchmark/htop.avif)
 
@@ -2098,7 +2111,7 @@ strace -o file ls
 
 ## ltrace
 
-- [现代CPP随笔_0CCh：Linux实用工具 之 ltrace，深入理解库函数调用的利器](https://www.bilibili.com/video/BV1TjwUe5EUP)
+- [（视频）现代CPP随笔_0CCh：Linux实用工具 之 ltrace，深入理解库函数调用的利器](https://www.bilibili.com/video/BV1TjwUe5EUP)
 
 ## eBPF
 

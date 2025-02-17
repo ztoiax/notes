@@ -66,6 +66,8 @@
 
 - [MD3-Windows：windows美化](https://github.com/Runixe786/MD3-Windows)
 
+- [breeze-shell：鼠标右键的菜单简化为一级，并加入流畅动画](https://github.com/std-microblock/breeze-shell)
+
 ## app
 
 - [TortoiseGit：windows最好的git gui客户端](https://github.com/TortoiseGit/TortoiseGit)
@@ -106,6 +108,10 @@
 
 - [transok：局域网文件传输](https://github.com/bent2685/transok-wails)
 
+- [mRemoteNG：远程连接管理工具，支持 RDP、VNC、SSH 等多种主流协议。它提供了标签式界面，用户可同时管理和切换多个远程连接](https://mp.weixin.qq.com/s/dA__7EPVZ11KoyGza16T5Q)
+
+- [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
+
 ## 手机与电脑交互
 
 - [intel unison：手机电脑消息、文件传输]()
@@ -128,6 +134,8 @@
 - [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)
 
 - [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
+
+- [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
 
 - [Game-Cheats-Manager：游戏修改器管理工具](https://github.com/dyang886/Game-Cheats-Manager)
 

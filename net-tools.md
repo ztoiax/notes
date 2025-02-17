@@ -59,6 +59,7 @@
     * [stratoshark：云环境的wireshark](#stratoshark云环境的wireshark)
     * [ptcpdump：抓包](#ptcpdump抓包)
     * [netcap：跟踪整个协议栈的抓包工具](#netcap跟踪整个协议栈的抓包工具)
+    * [ngrep：抓包版grep](#ngrep抓包版grep)
     * [nmap](#nmap)
     * [zmap](#zmap)
     * [RustScan：端口扫描](#rustscan端口扫描)
@@ -67,6 +68,7 @@
     * [hping](#hping)
     * [ngrok：内网穿透（端口转发）](#ngrok内网穿透端口转发)
     * [portr：python写的ngrok代替品](#portrpython写的ngrok代替品)
+    * [bore：tcp隧道](#boretcp隧道)
   * [网络层](#网络层)
     * [ifconfig(net-tools)](#ifconfignet-tools)
     * [ip(iproute2)](#ipiproute2)
@@ -1059,6 +1061,71 @@ sudo tailscale file get .
 - [Github 星标 2.3 K: 异地组网新工具 Easytier，助你轻松实现跨地域设备互联](https://mp.weixin.qq.com/s/JyRo48qNRyytFAp0cwdvTA)
 
 - EasyTier 默认是不区分客户端还是服务端，故本次部署即是服务端又是客户端。一般情况下 开放监听端口为服务端，不开放监听端口为客户端
+
+- 配置文件：`/etc/et/config.toml`
+
+    ```toml
+    instance_name = "default"
+    # easytier组网的ip地址
+    ipv4 = "192.168.66.80"
+    dhcp = false
+    exit_nodes = []
+    # api地址,记得改成本地监听
+    rpc_portal = "127.0.0.1:15888"
+    # 自定义 使用 32379 32380 端口作为监听发现服务 默认监听IPv4/IPv6, 服务端可以根据自己实际情况配置，可以全开，也可以为空不开listeners = []，客户端可以不开
+    listeners = [
+        "tcp://0.0.0.0:32379",
+        "udp://0.0.0.0:32379",
+        "udp://[::]:32379",
+        "tcp://[::]:32379",
+        "wss://0.0.0.0:32380/",
+        "wss://[::]:32380/",
+    ]
+
+    # 组网凭证
+    [network_identity]
+    network_name = "xxxx"
+    network_secret = "xxxx"
+
+    # tcp://public.easytier.transform: translateY(11010 是自定义要连的其他节点, 如果是第一个节点，可以不用配置, 这里以官方的节点为例
+    [[peer]]
+    uri = "tcp://public.easytier.top:11010"
+
+    # 其他参数
+    [flags]
+    dev_name = "easytier0"
+    enable_ipv6 = true
+    ```
+
+- systemd
+    ```sh
+    cat > /etc/systemd/system/easytier.service <<EOF
+    [Unit]
+    Description=EasyTier
+    After=network.target
+
+    [Service]
+    Type=simple
+    WorkingDirectory=/etc/et
+    # ExecStart=/usr/bin/easytier-core -i 192.168.66.80 --network-name ysicing --network-secret ysicing -e tcp://public.easytier.transform: translateY(11010 --dev-name easytier0 --rpc-portal 127.0.0.1:15888 --no-listener
+    ExecStart=/usr/bin/easytier-core -c /etc/et/config.toml
+    Restart=always
+    RestartSec=10
+    User=root
+    Group=root
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+    ```
+
+- 基本命令
+    ```sh
+    # 启动后查看节点配置文件
+    easytier-cli node config
+
+    # 查询服务是否正常
+    easytier-cli peer
+    ```
 ## 表示层
 
 ### [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](https://github.com/drwetter/testssl.sh)
@@ -1363,6 +1430,28 @@ tshark -q -n -r test.pcapng -z ip_srcdst,tree
 
 - 与 tcpdump 工具只能作用于内核网络协议栈准备发包和收包的固定点相比，netcap 可以几乎跟踪整个内核网络协议栈（有skb作为参数的函数）。
 
+### [ngrep：抓包版grep](https://github.com/jpr5/ngrep)
+
+```sh
+# 抓取特定协议
+ngrep tcp
+ngrep udp
+ngrep icmp
+
+# 抓取特定网络接口
+ngrep -d eth0
+
+# 抓取特定ip地址
+ngrep host 192.168.1.1
+
+# 抓取特定端口
+ngrep port 80
+ngrep port 443
+
+# 验证 DNS over TLS 是否正常工作
+ngrep -d any port 853
+```
+
 ### nmap
 
 - [（视频）技术蛋老师：许多Nmap课程都缺乏的入门理论知识](https://www.bilibili.com/video/BV18kqhYKEPK)
@@ -1546,6 +1635,8 @@ hping3 --traceroute -V -1 www.baidu.com
 ### [ngrok：内网穿透（端口转发）](https://github.com/inconshreveable/ngrok)
 
 ### [portr：python写的ngrok代替品](https://github.com/amalshaji/portr)
+
+### [bore：tcp隧道](https://github.com/ekzhang/bore)
 
 ## 网络层
 
@@ -2684,8 +2775,12 @@ tc filter add dev ens3 parent 1: \
 tc filter add dev ens3 parent 1: \
     protocol ipv6 u32 match ip6 protocol 6 0xff \
     match ip6 dport 5001 0xffff flowid 1:3
-```
 
+# 模拟网络延迟。ping命令延迟600ms
+tc qdisc add dev wlan0 root netem delay 600ms
+# 删除
+tc qdisc del dev wlan0 root netem delay 600ms
+```
 
 # 性能监控
 ## 观察工具

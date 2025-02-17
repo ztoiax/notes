@@ -6,6 +6,7 @@
   * [初次运行 Git 前的配置](#初次运行-git-前的配置)
   * [连接远程github仓库](#连接远程github仓库)
   * [基本命令](#基本命令)
+  * [pull](#pull)
   * [push多个仓库](#push多个仓库)
   * [branch(分支)](#branch分支)
     * [分支策略](#分支策略)
@@ -20,8 +21,9 @@
     * [撤销](#撤销)
       * [基本命令](#基本命令-2)
       * [合并 3 次分支(保留文件)](#合并-3-次分支保留文件)
-      * [回退单个文件](#回退单个文件)
-      * [stash(暂存)](#stash暂存)
+      * [撤销工作区的单个文件](#撤销工作区的单个文件)
+      * [stash(存放区)](#stash存放区)
+    * [合并中间的commit](#合并中间的commit)
   * [bisect](#bisect)
   * [remote](#remote)
   * [LFS](#lfs)
@@ -42,8 +44,9 @@
 * [github](#github)
   * [api](#api)
   * [github工作流](#github工作流)
+  * [lfs大文件系统](#lfs大文件系统)
   * [code action](#code-action)
-  * [个人网站](#个人网站)
+  * [pages（个人网站）](#pages个人网站)
   * [clone下载子目录](#clone下载子目录)
   * [第三方github工具](#第三方github工具)
 * [reference](#reference)
@@ -85,6 +88,8 @@
 
 ## 初次运行 Git 前的配置
 
+- 默认配置文件保存路径为`~/.gitconfig`
+
 ```bash
 # 设置userid，email，editor
 git config --global user.name "John Doe"
@@ -93,6 +98,18 @@ git config --global core.editor emacs
 
 # 如果不想在每一次推送时都输入用户名与密码，你可以设置一个 “credential cache”
 git config --global credential.helper cache
+
+# 设置diff工具为nvim -Rd命令。也可以选择meld等
+git config --global diff.tool nvim
+git config --global difftool.nvim.cmd "nvim -Rd \$LOCAL \$REMOTE"
+# 是否每次diff工具都提示
+git config --global difftool.prompt false
+
+# mergetool工具为nvim -Rd命令
+git config --global merge.tool nvim
+git config --global mergetool.nvim.cmd "nvim -Rd \$LOCAL \$REMOTE -c 'vert diffsplit \$MERGED'"
+# 是否每次mergetool工具都提示
+git config --global mergetool.prompt false
 
 # 显示设置
 git config --list
@@ -122,12 +139,6 @@ git branch -m main
 # -M强制执行
 git branch -M main
 
-# 把远程仓库同步到本地
-git pull origin main
-
-# 如果本地的commit log与远程不一致，rebase参数可以将本地的commit作为最新的commit
-git pull rebase origin main
-
 # 同步到远程仓库。-u表示以后默认这个远程地址
 git push -u origin main
 ```
@@ -156,6 +167,8 @@ git init
 git status
 # 添加进暂存区
 git add <FILE>
+# 将文件移除暂存区。是git add命令的撤销
+git restore --staged <FILE>
 
 # 当前目录下所有文件全部添加
 git add --all
@@ -209,10 +222,31 @@ xargs -0 tar rvf ~/backup-untracked.zip
 git gc --prune=now --aggressive
 ```
 
-- 不要 `pull`，要  `fetch`
+## pull
 
-    - 很多教程都说 push 和 pull 是在本地和远程 repo 之间同步的指令。但是其实 push 是基础指令，pull 不是。它是 fetch 当前分支->和本地分支合并->reset 到合并后的顶端。
-    - 这里就产生了不必要的合并。
+- [（视频）技术爬爬虾：直接使用git pull拉代码，被同事狠狠diss了！](https://www.bilibili.com/video/BV1McyYYtEX4)
+
+- `pull` = `fetch` + `merge`
+
+```sh
+# 把远程仓库同步到本地
+git pull
+git pull origin main
+
+# 如果本地的commit log与远程不一致，rebase参数可以将本地的commit作为最新的commit
+git pull --rebase
+git pull --rebase origin main
+
+# 如果本地的commit log与远程不一致，rebase参数可以将远程的commit作为最新的commit。如果本地有未提交的更改执行stash
+git pull --rebase --autostash
+```
+
+- `git pull` 对比 `git pull --rebase`
+    - 单纯`git pull`如果有冲突merge，会留下merge commit。因此最好使用 `git pull --rebase`
+    ```sh
+    # 设置git pull为git pull --rebase
+    git config pull.rabase true
+    ```
 
 ## push多个仓库
 
@@ -448,8 +482,13 @@ git config merge.tool nvimdiff
 # 合并分支
 git merge branch2
 
-# 合并单个或多个分支的commit hash
-git cherry-pick <hash> <hash>
+# 合并单个或多个分支的commit hash。cherry-pick：从其他分支中选择特定的提交（commit）并将其应用到当前分支
+git cherry-pick <hash-of-E> <hash-of-F>
+# 将 feature 分支中的提交 E 和 F 应用到 main 分支
+Branch A: A --- B --- C --- D (main)
+Branch B:       \--- E --- F (feature)
+# cherry-pick操作完成后，main 分支的历史可能变为：
+A --- B --- C --- D --- E' --- F' (main)
 
 # 分支冲突, 解决后.会保留一个显示diff的file.orig
 git mergetool
@@ -569,9 +608,31 @@ git reflog
 #### 基本命令
 
 ```sh
-# 撤销文件的修改(文件回退到当前的commit)
-git restore <FILE>
+# 撤销工作区所有文件的修改(文件回退到当前的commit)。相当于撤销工作区的更改
+git restore .
+# 或者。restore没有输出显示，而checkout会输出有多少个文件撤销
+git checkout .
 
+# 撤销最新的git commit。相当于从本地仓库撤销回暂存区。
+git reset --soft HEAD~1
+
+# 撤销最新的git commit和git add。相当于从本地仓库撤销回工作区。
+git reset HEAD~1
+# 或者
+git reset --mixed HEAD~1
+
+# 撤销最新commit的所有更改（最新的git commit和git add和工作区的文件修改）。如果不小心执行了该命令，可以通过git reflog找到<commit-hash>然后在reset --hard恢复
+git reset --hard HEAD~1
+
+# 创建新commit达到撤销效果。由于reset会丢失记录, 而revert是创建新的记录，一般公有分支（多个人使用）不用reset而用revert，而个人私有分支（就只有你使用）会使用reset；因为commit只能往前走，不能往后退。
+git revert HEAD
+
+# -n等于--no-commit。表示不创造新commit达到撤销效果。
+git revert -n HEAD
+```
+
+- reset
+```sh
 # 撤销到hash值所代表的commit(不保留文件)
 git reset --hard <HASD>
 
@@ -581,11 +642,8 @@ git reset --hard origin/master
 # 撤销到hash值所代表的commit(保留文件)
 git reset --soft <HASD>
 
-# reset会丢失记录, 而revert是创建新的记录, 达到撤销的效果
-git revert -n <HASD>
-
 # 回退后强制push远程分支
-git push -u origin +master
+git push -f
 ```
 
 #### 合并 3 次分支(保留文件)
@@ -598,20 +656,35 @@ git commit -m "reset head~3"
 执行合并后撤销
 
 ```sh
+# reflog 默认保存 30 天
 git reflog
 # 找到要回退的hash，执行reset
 git reset --hard <HASD>
 ```
 
-#### 回退单个文件
+#### 撤销工作区的单个文件
 
 ```bash
-git reset <commit_id> <file_path>
-# git reset作用于文件时，只会修改暂存区
-git checkout .
+git restore <file_path>
+# checkout除了切换分支外，也可以撤销。restore没有输出显示，而checkout会输出有多少个文件撤销
+git checkout <file_path>
+
+# 对单个文件，撤销到指定commit
+git restore --source=<commit log> <file_path>
+# 上面命令执行撤销后，恢复到最新的分支
+git restore --source=HEAD <file_path>
+# 如果当前分支是master，master等同于HEAD
+git restore --source=master <file_path>
+
+# 或者。使用git checkout命令
+git checkout <commit log> <file_path>
+# 上面命令执行撤销后，恢复到最新的分支
+git checkout HEAD <file_path>
+# 如果当前分支是master，master等同于HEAD
+git checkout master <file_path>
 ```
 
-#### stash(暂存)
+#### stash(存放区)
 
 - 可以在不同的分支上使用
 ```sh
@@ -641,6 +714,26 @@ git stash drop stash@{0}
 
 # 删除所有暂存
 git stash clear
+```
+
+### 合并中间的commit
+
+```sh
+# B 和 C 合并为一个提交
+A --- B --- C --- D --- E (main)
+A --- BC --- D --- E (main)
+
+# 启动交互式rebase，从A commit开始
+git rebase -i <A-commit-hash>
+
+# 将 C 的 pick 改为 squash（或简写为 s）
+pick B Commit message for B
+squash C Commit message for C
+pick D Commit message for D
+pick E Commit message for E
+
+# 结束rebase
+git rebase --continue
 ```
 
 ## bisect
@@ -850,13 +943,28 @@ curl -s https://api.github.com/repos/prometheus/mysqld_exporter/releases/latest 
 
 - [码农高天：十分钟学会正确的github工作流，和开源作者们使用同一套流程](https://www.bilibili.com/video/BV19e4y1q7JJ)
 
+## lfs大文件系统
+
+- [（视频）技术爬爬虾：盘点GitHub限量高级功能，Package，LFS，CodeSpace，Action是什么？如何使用](https://www.bilibili.com/video/BV1Agm6YLEJL)
+
+- github文件大小默认限制100M以内，超过就是大文件
+    - 使用github 的lfs，会把大文件单独存放在一个独立的大文件系统里面，仓库中的大文件只是对其引用，整个过程全自动。
+
+```sh
+# 安装
+git install lfs
+
+# 指定大文件
+git lfs track "*.mp4"
+```
+
 ## code action
 
 - [GitHub Actions by Example](https://www.actionsbyexample.com/?utm_source=hackernewsletter&utm_medium=email&utm_term=code)
 
 - [（视频）技术爬爬虾：Github的王炸功能，但很少人知道怎么用？免费运行程序，流水线编译部署，天气推送 签到薅羊毛 领京豆 CI/CD持续集成持续部署](https://www.bilibili.com/video/BV11e411i7Xx)
 
-## 个人网站
+## pages（个人网站）
 
 - [（视频）技术爬爬虾：Github王炸功能Pages,免费免服务器上线网站,详细教程](https://www.bilibili.com/video/BV12H4y1N7Q4)
 

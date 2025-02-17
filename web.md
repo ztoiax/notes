@@ -84,6 +84,8 @@
 
 - [page-assist：本地ollama 部署的ai llm的web ui](https://github.com/n4ze3m/page-assist)
 
+- [ncurator：通过导入文件或者爬取网页，建立自己的知识库，与内容聊天](https://www.ncurator.com/zh)
+
 # CGI和FastCGI
 
 - Web服务器能解析HTTP请求，返回静态资源（HTML页、图片等），但要输出动态内容，必须得PHP/C#/Ruby/Java/Python/C/C++这些外部程序来实现。
