@@ -1,3 +1,9 @@
+---
+id: docker
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -7,8 +13,12 @@
   * [基本概念](#基本概念)
   * [深入docker内部运行逻辑](#深入docker内部运行逻辑)
   * [without sudo](#without-sudo)
-  * [换源](#换源)
   * [基本命令](#基本命令)
+  * [docker image 镜像](#docker-image-镜像)
+    * [换源](#换源)
+    * [基本命令](#基本命令-1)
+    * [registry镜像仓库](#registry镜像仓库)
+    * [docker-registry-ui](#docker-registry-ui)
   * [docker run创建容器](#docker-run创建容器)
     * [--link 连接容器](#--link-连接容器)
     * [--gpus](#--gpus)
@@ -59,7 +69,6 @@
       * [未读](#未读)
     * [构建属于自己的 centos 容器](#构建属于自己的-centos-容器)
     * [hadolint：自动检查您的Dockerfile是否存在任何问题](#hadolint自动检查您的dockerfile是否存在任何问题)
-  * [registry仓库](#registry仓库)
   * [Docker Compose定义和运行多容器](#docker-compose定义和运行多容器)
     * [docker-compose.yml示例](#docker-composeyml示例)
     * [Docker Compose的常用命令](#docker-compose的常用命令)
@@ -204,38 +213,6 @@ sudo systemctl restart docker
 logout
 ```
 
-## 换源
-
-- 新闻：[国内多个Docker hub镜像加速器被下架](https://mp.weixin.qq.com/s/o9OwEkNzR3gzFBI_ruY8tQ)
-
-- 解决方法1：
-
-    - 修改`/etc/docker/daemon.json`
-
-        ```json
-        {
-          "registry-mirrors": [
-            "https://hub-mirror.c.163.com",
-            "https://registry.cn-hangzhou.aliyuncs.com",
-            "https://docker.m.daocloud.io",
-            "https://docker.1panel.live"
-          ]
-        }
-        ```
-
-    - 重启docker
-
-        ```sh
-        systemctl daemon-reload
-        systemctl restart docker
-        ```
-
-- 解决方法2：在`docker.io`前面加上`m.daocloud.io`
-
-    ```sh
-    docker pull m.daocloud.io/docker.io/library/nginx:latest
-    ```
-
 ## 基本命令
 
 - 容器的生命周期
@@ -322,6 +299,136 @@ docker cp nginx:/etc/nginx/nginx.conf .
 # 从宿主机Copy到容器
 docker cp test nginx:/opt
 ```
+
+## docker image 镜像
+
+### 换源
+
+- 新闻：[国内多个Docker hub镜像加速器被下架](https://mp.weixin.qq.com/s/o9OwEkNzR3gzFBI_ruY8tQ)
+
+```sh
+# 查看源。Registry Mirrors:字段
+docker info
+```
+- 解决方法1：
+
+    - 修改`/etc/docker/daemon.json`
+
+        ```json
+        {
+          "registry-mirrors": [
+            "https://hub-mirror.c.163.com",
+            "https://registry.cn-hangzhou.aliyuncs.com",
+            "https://docker.m.daocloud.io",
+            "https://docker.1panel.live"
+          ]
+        }
+        ```
+
+    - 重启docker
+
+        ```sh
+        systemctl daemon-reload
+        systemctl restart docker
+        ```
+
+- 解决方法2：在`docker.io`前面加上`m.daocloud.io`
+
+    ```sh
+    docker pull m.daocloud.io/docker.io/library/nginx:latest
+    ```
+
+### 基本命令
+
+```sh
+# 搜索镜像
+docker search nginx
+
+# 拉取镜像
+docker pull nginx:latest
+
+# 查看与image相关的命令
+docker images
+
+# 查看下载的所有镜像
+docker image ls
+
+# 查看具体镜像nginx详细信息
+docker image inspect nginx
+
+# 根据Dockerfile的内容构建镜像
+docker build -t tz/centos .
+
+# 查看镜像历史
+docker image history nginx:latest
+
+# 备份镜像
+docker image save -o nginx.tar nginx:latest
+# 从tar文件恢复镜像
+docker image load -i nginx.tar
+
+# 打标签
+docker image tag nginx:latest my-nginx:custom
+
+# 删除镜像
+docker image rm <image-id>
+docker image rm nginx:latest
+
+# 删除无标签镜像
+docker image prune
+
+# 删除未被使用的镜像。可通过docker ps -a查看正在使用的
+docker image prune -a
+
+# 将容器保存为镜像。启动容器后，我这里的容器ID是b3b94ffeccf5，保存名为tz-nginx的镜像
+docker run nginx
+docker commit b3b94ffeccf5 tz-nginx
+# 默认情况下，docker commit 会在提交时暂停容器以确保一致性。如果不需要暂停，可以使用 --pause=false
+docker commit --pause=false b3b94ffeccf5 tz-nginx
+# 为新镜像添加提交信息
+docker commit -m "Added custom configuration" b3b94ffeccf5 tz-nginx
+# 为新镜像指定作者
+docker commit -a "Your Name <your.email@example.com>" b3b94ffeccf5 tz-nginx
+# 在提交时通过 -c 参数修改镜像的默认命令：
+docker commit -c 'CMD ["nginx", "-g", "daemon off;"]' b3b94ffeccf5 tz-nginx
+```
+
+### registry镜像仓库
+
+- 类似于 github 代码仓库，只不过registry是docker镜像仓库
+- 有官方的registry仓库dockerhub，我们也可以搭建私人的仓库
+
+创建本地 `registry`
+
+```bash
+# 下载镜像
+docker pull registry
+
+# 启动
+docker run -p 5000:5000 registry
+
+# 打上tag标签
+docker tag IMAGE_ID localhost:5000/tz/opensuse
+
+# 查看
+docker image ls
+
+# 推送到本地registry
+docker push localhost:5000/tz/opensuse
+
+# 运行
+docker run -it localhost:5000/tz/opensuse /bin/bash
+```
+
+容器启动后立即退出解决方法:
+
+```bash
+docker container create -it --name opensuse_1 opensuse
+docker container start opensuse_1
+docker container exec -it opensuse_1 bash
+```
+
+### [docker-registry-ui](https://github.com/Joxit/docker-registry-ui)
 
 ## docker run创建容器
 
@@ -3207,41 +3314,6 @@ Dockerfile:1 DL3006 warning: Always tag the version of an image explicitly
 Dockerfile:7 DL3020 error: Use COPY instead of ADD for files and folders
 ```
 
-## registry仓库
-
-- 类似于 github 代码仓库，只不过registry是docker镜像仓库
-- 有官方的registry仓库dockerhub，我们也可以搭建私人的仓库
-
-创建本地 `registry`
-
-```bash
-# 下载镜像
-docker pull registry
-
-# 启动
-docker run -p 5000:5000 registry
-
-# 打上tag标签
-docker tag IMAGE_ID localhost:5000/tz/opensuse
-
-# 查看
-docker image ls
-
-# 推送到本地registry
-docker push localhost:5000/tz/opensuse
-
-# 运行
-docker run -it localhost:5000/tz/opensuse /bin/bash
-```
-
-容器启动后立即退出解决方法:
-
-```bash
-docker container create -it --name opensuse_1 opensuse
-docker container start opensuse_1
-docker container exec -it opensuse_1 bash
-```
-
 ## Docker Compose定义和运行多容器
 
 - [docker官方的各种compose文件例子](https://github.com/docker/awesome-compose)
@@ -3393,11 +3465,16 @@ docker container exec -it opensuse_1 bash
 - `docker-compose down`停止移除相关命令
 
     ```sh
-    # 这会停止并移除通过 docker-compose up 启动的所有容器，并移除相关的网络和卷。
+    # 这会停止并移除通过 docker-compose up 启动的所有容器，并移除相关的网络。但不会移除相关的卷。
     docker-compose down
 
     # 使用 -f 选项可以指定要使用的 Compose 文件，默认情况下是 docker-compose.yml
     docker-compose -f docker-compose.prod.yml down
+
+    # 删除当前 docker-compose.yml 文件中定义的服务相关的所有镜像。但不会移除相关的卷。
+    docker compose down --rmi all
+    # 同时删除相关卷
+    docker compose down --volumes --rmi all
 
     # 使用 --volumes 选项可以同时移除相关的卷。这会删除所有定义在 docker-compose.yml 中的 volumes 字段中的卷。
     docker-compose down --volumes

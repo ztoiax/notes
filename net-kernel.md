@@ -1,3 +1,9 @@
+---
+id: net-kernel
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -6,6 +12,7 @@
     * [HTTP](#http)
       * [状态码](#状态码)
       * [客户端缓存（浏览器缓存）](#客户端缓存浏览器缓存)
+      * [content-type](#content-type)
       * [Cookie](#cookie)
       * [压缩算法](#压缩算法)
       * [HTTP1.1 keepalive](#http11-keepalive)
@@ -338,6 +345,66 @@
     - 优先级：Service Worker -> Memory Cache -> Disk Cache -> Push Cache
 
     - Chrome 的DevTools Network可以看到`Memory Cache`（內存缓存）和`Disk Cache`（硬盘缓存）
+
+#### content-type
+
+- [山河已无恙：AI大模型文本流如何持续吐到前端，服务端实时通信技术 SSE(Server-Sent Events) 认知](https://mp.weixin.qq.com/s/-MQPl_f1_b5O7-yDHbn8SQ)
+
+- 好奇大模型回答的文本流推送的是一句句话，还是一个个分词，然后看了下，才发现用的并不是 `WebSocket` ，是 `SSE`
+
+    ![image](./Pictures/net-kernel/http-content-type-SSE.avif)
+
+- 下面是部分请求头，我们可以看到，请求报文类型为 `content-type:text/event-stream; charset=utf-8`
+    ![image](./Pictures/net-kernel/http-content-type-SSE-header.avif)
+
+    ```
+    access-control-allow-credentials:true
+    content-type:text/event-stream; charset=utf-8
+    date:Mon, 17 Feb 2025 09:22:15 GMT
+    server:elb
+    strict-transport-security:max-age=31536000; includeSubDomains; preload
+    x-content-type-options:nosniff
+    x-ds-trace-id:3c7406083242070f1e179370a7d2a492
+    ```
+
+- `text/event-stream`： 是一种 `Server-Sent Events（SSE）` 的 `MIME` 类型。
+
+- `SSE` 是一种允许服务器向客户端推送实时更新的技术，它基于 HTTP 协议，适用于需要服务端单向、实时数据传输的场景，如股票行情、新闻推送、社交媒体更新等。
+
+- 需要注意的是：
+
+    - 当不使用 HTTP/2 时，服务器发送事件（SSE）受到打开连接数的限制，这个限制是对于浏览器的，并且设置为非常低的数字`6`，打开多个选项卡时可能会特别痛苦。
+        - 在 Chrome 和 Firefox 中，这个问题已被标记为“不会修复”。这个限制是每个浏览器和域名的，这意味着你可以在所有标签页中打开 6 个 SSE 连接到 www.example1.com，以及另外 6 个 SSE 连接到 www.example2.com（来源：Stackoverflow）。
+
+    - 当使用 HTTP/2 时，最大并发 HTTP 流的数量是由服务器和客户端协商的（默认为 100）。 
+
+- 缺点：
+
+    - 单向通信：SSE仅支持服务器向客户端的单向通信，客户端无法主动向服务器发送数据
+    - 浏览器并发限制：HTTP/1 浏览器对单个域名的EventSource连接数有限制（通常为6个）
+    - 仅支持文本数据：SSE只能传输UTF-8文本，不支持二进制数据（如图片、音频、视频流），限制了其在多媒体应用中的使用。
+
+- 优点：
+
+    - 基于 HTTP 协议：直接复用现有 HTTP 基础设施，无需额外协议（如 WebSocket 的 ws:// 或 wss://），也无需处理复杂的握手和协议升级。
+    - 浏览器原生支持：通过 EventSource API 直接使用，无需引入第三方库
+    - 低带宽消耗：相比 WebSocket 的帧头开销，SSE 的协议头更简单，适合高频小数据量推送（如实时日志、状态更新）。
+    - 内置重连机制：连接中断时，浏览器会自动尝试重新连接，开发者无需手动处理。
+    - 支持历史事件 ID：可通过 last-event-id 请求头实现断点续传，避免数据丢失。
+    - 长连接复用：一个 HTTP 连接支持多次数据推送，减少频繁建立连接的开销（对比短轮询）。
+    - 无双向通信风险：由于 SSE 是单向的（服务器→客户端），减少了客户端主动攻击的入口面。
+
+- 所以选择 SSE 的场景：
+
+    - 当需要服务器向客户端持续推送数据，且无需客户端频繁回传时，SSE 是比 WebSocket 更简单高效的解决方案。同时相比 http 轮询的方式，节省了资源，实现长链接复用，对于分布式的场景，可以考虑使用 MQ 或则 Redis 实现分布式广播。
+
+- 常见应用：
+
+    - 实时通知：如邮件提醒、社交媒体动态更新。
+    - 数据流监控：服务器日志流、IoT 设备状态推送,大模型的问答分词数据流。
+    - 实时数据展示：股票行情、新闻推送、赛事比分。
+
+- 当然 SSE 主要面向 B/S 架构，是浏览器实现服务器推送的轻量级方案。非浏览器场景下 SSE 可用但非最优,对 C/S 架构或服务间通信，需权衡实现成本与需求（如单向性、HTTP 兼容性）。若需双向通信或高性能数据传输，建议选择 WebSocket、gRPC 或 MQTT。
 
 #### Cookie
 

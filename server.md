@@ -1,3 +1,9 @@
+---
+id: server
+aliases: []
+tags: []
+---
+
 <!-- mtoc-start -->
 
 * [server(服务配置)](#server服务配置)
@@ -37,6 +43,23 @@
       * [wireguard](#wireguard)
     * [文件传输](#文件传输)
       * [samba](#samba)
+  * [系统监控](#系统监控)
+    * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
+  * [自动化任务](#自动化任务)
+    * [cron](#cron)
+    * [anacron](#anacron)
+    * [jenkins](#jenkins)
+      * [安装](#安装)
+      * [插件与配置](#插件与配置)
+      * [新建任务 Maven项目](#新建任务-maven项目)
+      * [pipeline流水线](#pipeline流水线)
+      * [Jenkins：手把手教会你 Jenkins 备份与恢复](#jenkins手把手教会你-jenkins-备份与恢复)
+    * [Gitlab-CI](#gitlab-ci)
+  * [Gitlab-CE](#gitlab-ce)
+    * [安装](#安装-1)
+  * [日志软件](#日志软件)
+    * [logrotate（自带的日志分割工具）](#logrotate自带的日志分割工具)
+    * [rsyslog](#rsyslog)
   * [安全(security)](#安全security)
     * [以redis为例的服务检查](#以redis为例的服务检查)
     * [ssh](#ssh-1)
@@ -61,27 +84,11 @@
     * [clamav：cisco的反病毒引擎](#clamavcisco的反病毒引擎)
     * [gophish：开源的网络钓鱼平台。该项目提供了一个开箱即用的网络钓鱼平台，可用于模拟钓鱼攻击。它拥有友好的 Web 管理后台，支持邮件模板、批量发送邮件、网站克隆和数据可视化，适用于企业安全培训和渗透测试等场景。](#gophish开源的网络钓鱼平台该项目提供了一个开箱即用的网络钓鱼平台可用于模拟钓鱼攻击它拥有友好的-web-管理后台支持邮件模板批量发送邮件网站克隆和数据可视化适用于企业安全培训和渗透测试等场景)
     * [cve-bin-tool：二进制漏洞扫描工具](#cve-bin-tool二进制漏洞扫描工具)
-  * [攻击](#攻击)
-    * [aircrack-ng：wifi破解](#aircrack-ngwifi破解)
-    * [hydra：密码破解](#hydra密码破解)
-    * [burp-suite：浏览器抓包](#burp-suite浏览器抓包)
-  * [系统监控](#系统监控)
-    * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
-  * [自动化任务](#自动化任务)
-    * [cron](#cron)
-    * [anacron](#anacron)
-    * [jenkins](#jenkins)
-      * [安装](#安装)
-      * [插件与配置](#插件与配置)
-      * [新建任务 Maven项目](#新建任务-maven项目)
-      * [pipeline流水线](#pipeline流水线)
-      * [Jenkins：手把手教会你 Jenkins 备份与恢复](#jenkins手把手教会你-jenkins-备份与恢复)
-    * [Gitlab-CI](#gitlab-ci)
-  * [Gitlab-CE](#gitlab-ce)
-    * [安装](#安装-1)
-  * [日志软件](#日志软件)
-    * [logrotate（自带的日志分割工具）](#logrotate自带的日志分割工具)
-    * [rsyslog](#rsyslog)
+    * [攻击](#攻击)
+      * [aircrack-ng：wifi破解](#aircrack-ngwifi破解)
+      * [hydra：密码破解](#hydra密码破解)
+      * [burp-suite：浏览器抓包](#burp-suite浏览器抓包)
+      * [在线工具](#在线工具)
 * [未读](#未读)
 
 <!-- mtoc-end -->
@@ -1098,6 +1105,457 @@ openvpn --genkey secret /etc/openvpn/server/ta.key
     smbclient //127.0.0.1/public
     ```
 
+## 系统监控
+
+### cockpit(系统监控的webui)
+
+- port: 9090
+
+```sh
+systemctl enable cockpit.socket
+systemctl start cockpit.socket
+
+# 防火墙设置
+firewall-cmd --add-service=cockpit --permanent
+```
+
+## 自动化任务
+
+### cron
+
+- 查看任务
+
+```sh
+sudo cat /var/spool/cron/root
+```
+
+```bash
+# 开启服务
+systemctl start cronie.service
+```
+
+- [在线计算工具](https://tool.lu/crontab/)
+
+```bash
+# .---------------- 分 (0 - 59)
+# |  .------------- 时 (0 - 23)
+# |  |  .---------- 日 (1 - 31)
+# |  |  |  .------- 月 (1 - 12)
+# |  |  |  |  .---- 星期 (0 - 7) (星期日可为0或7)
+# |  |  |  |  |
+# *  *  *  *  * 执行的命令
+```
+
+- `sudo crontab -e` #编辑 root 的任务
+- `crontab -e` #编辑当前用户的任务
+- `crontab -l` #显示任务
+- `crontab -r` #删除所有任务
+
+```
+* * * * * COMMAND      # 每分钟
+*/5 * * * * COMMAND    # 每5分钟
+
+0 * * * * COMMAND      # 每小时
+0,5,10 * * * * COMMAND # 每小时运行三次，分别在第 0、 5 和 10 分钟运行
+
+0 0 * * * COMMAND      # 每日凌晨0点执行
+0 3 * * * COMMAND      # 每日凌晨3点执行
+
+0 0 1 * * COMMAND      # 每月1号0点执行
+0 3 1-10 * * COMMAND   # 每月1日到10日凌晨3点执行
+
+0 0 * * 1 COMMAND      # 每周一0点执行
+```
+
+### anacron
+
+- 配置文件: `/etc/anacrontab`
+
+| cron                         | anacron                                                              |
+| ---------------------------- | -------------------------------------------------------------------- |
+| 它是守护进程                 | 它不是守护进程                                                       |
+| 适合服务器                   | 适合桌面/笔记本电脑                                                  |
+| 可以让你以分钟级运行计划任务 | 只能让你以天为基础来运行计划任务                                     |
+| 关机时不会执行计划任务       | 如果计划任务到期，机器是关机的，那么它会在机器下次开机后执行计划任务 |
+| 普通用户和 root 用户         | 只有 root 用户可以使用（使用特定的配置启动普通任务）                 |
+
+```
+7	5	cron.weekly	/bin/bash /home/user/.mybin/logs.sh
+```
+
+```bash
+# 测试配置
+anacron -T
+
+# 启动
+anacron -d
+```
+
+### jenkins
+
+- 默认端口: `http://127.0.0.1:8090/`
+
+- 主目录: `/var/lib/jenkins`
+- 项目路径: `/var/lib/jenkins/workspace/项目名`
+
+#### 安装
+
+- docker安装
+
+    ```yml
+    version: '3.8'
+    # 执行脚本；docker-compose -f docker-compose-v1.0.yml up -d
+    services:
+      jenkins:
+        image: jenkins/jenkins:2.439
+        container_name: jenkins
+        privileged: true
+        user: root
+        ports:
+          - "9090:8080"
+          - "50001:50000"
+        volumes:
+          - ./jenkins_home:/var/jenkins_home # 如果不配置到云服务器路径下，则可以配置 jenkins_home 会创建一个数据卷使用
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /usr/bin/docker:/usr/local/bin/docker
+          - ./maven/conf/settings.xml:/usr/local/maven/conf/settings.xml # 这里只提供了 maven 的 settings.xml 主要用于修改 maven 的镜像地址
+          - ./jdk/jdk1.8.0_202:/usr/local/jdk1.8.0_202 # 提供了 jdk1.8，如果你需要其他版本也可以配置使用。
+        environment:
+          - JAVA_OPTS=-Djenkins.install.runSetupWizard=false # 禁止安装向导「如果需要密码则不要配置」docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+        restart: unless-stopped
+
+    volumes:
+      jenkins_home:
+    ```
+
+    ```sh
+    docker-compose -f docker-compose-v1.0.yml up -d
+    ```
+
+#### 插件与配置
+
+- 换源：在http://127.0.0.1:8090/manage/pluginManager/advanced
+
+    - 原本是：`https://updates.jenkins.io/update-center.json`
+    - 替换成华为：`https://mirrors.huaweicloud.com/jenkins/updates/update-center.json`
+        - [其他源地址](https://www.jenkins-zh.cn/tutorial/management/plugin/update-center/)
+
+- 有用的插件：[插件搜索](https://plugins.jenkins.io/)
+
+    - locale 汉化插件
+        - 安装后，需要重启生效
+    - Git
+    - docker
+    - Maven Integration
+
+- 在[全局工具配置](http://localhost:8090/manage/configureTools/)里配置插件
+
+    - 用于构建部署的 SpringBoot 应用的环境，都需要在全局工具中配置好。包括；Maven、JDK、Git、Docker。注意这里的环境路径配置，如果配置了是会提示你没有对应的路径文件夹。
+
+        ![image](./Pictures/server/jenkins-全局工具配置.avif)
+
+- [添加凭证](http://localhost:8090/manage/credentials/store/system/domain/_/)
+    - 配置了Git仓库的连接凭证，才能从Git仓库拉取代码。
+    - 如果你还需要操作如 ssh 也需要配置凭证。
+
+    - 可以选择csdn的gitcode的用户和密码。新建任务时源码管理的git地址为你自己的gitcode仓库。
+
+        ![image](./Pictures/server/jenkins-添加凭证.avif)
+
+- jenkins-cli命令[说明和下载](http://127.0.0.1:8090/manage/cli/)
+    ```sh
+    # 下载jenkins-cli.jar
+    curl -LO http://127.0.0.1:8090/jnlpJars/jenkins-cli.jar
+
+    # 执行help命令
+    java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd help
+
+    # 启动名为test的任务
+    java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd enable-job test
+
+    # 获取test任务的xml
+    java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd get-job test
+    ```
+
+#### 新建任务 Maven项目
+
+- [bugstack虫洞栈：用上了 Jenkins，个人部署项目是真方便！](https://mp.weixin.qq.com/s/tWuse0ejDOTQho2182iYWw)
+
+#### pipeline流水线
+
+- [360技术工程：Jenkins实践——创建Pipeline的两种方式](https://mp.weixin.qq.com/s/Hh5IOjrF4XZse730XaCM_Q)
+
+- [阿里巴巴中间件：通过Jenkins构建CI/CD实现全链路灰度](https://mp.weixin.qq.com/s/JLuSqcYMwrqhyn1993t7lg)
+
+#### [Jenkins：手把手教会你 Jenkins 备份与恢复](https://mp.weixin.qq.com/s/fU7YFvJoaK2lX9yW_Q_IDw)
+
+### Gitlab-CI
+
+- [岁寒博客：初创公司 CI 系统终极解决方案：gitlab-ci]()
+
+- Continuous Integration，持续集成，本意是指编写大量的单元测试和集成测试，在尽量小的代码变更粒度上进行 提交 -> 测试 -> 自动部署 的完整流程。
+
+    - 因为测试很难覆盖所有业务场景特别是前端场景，而且测试只会在最重要的地方存在，因为写测试理论上讲比写业务逻辑更费时间，而且枯燥。
+
+    - 所以，中国互联网界的 CI 多数只有两个目的：① 跑测试保证核心模块质量顺便消灭低级错误 ② APP 打包。
+
+- CI 基本原理
+    - 检测到 git 有新的代码提交（定时检测或主动触发），生成任务
+    - agent（真正干活的进程，可以分布在多台机器） 领取任务，拉取代码，运行一段脚本（无论是单元测试还是 APP 打包，都可以用脚本完成）
+    - 展示结果：成功与否、测试覆盖率、apk ipa 下载链接等
+
+- Gitlab-CI
+
+    - 优点：
+
+        - Gitlab-CI 是 Gitlab 自带的持续集成引擎，免去了第三方 CI 服务器只能定时检测 git 仓库带来的延迟和对 git server 造成的性能压力。我司弃用 oschina 的原因就是 CI 服务器一分钟检测一次，压力太大导致仓库被封。
+
+        - 触发成本低，系统已经提供了完善的触发功能
+        - 结果直接展示在 Gitlab 页面上的多个地方：成功/失败，测试覆盖率等
+        - 无需复杂配置。（Jenkins 的页面逻辑太落后了，极其的复杂。TeamCity 我本以为配置算简单的，直到我用上了 Gitlab-CI）
+            - yaml 语言描述的 CI 配置，很容易读懂
+
+    - 缺点：
+
+        - 资源消耗过高。它需要 2G 内存机器，而且在 pull 或 push 的瞬间磁盘 IO 相当高，部署在阿里云会直接导致虚拟机假死，只适合内存大，磁盘强的物理机部署。
+
+        - 必须使用 Gitlab
+
+## Gitlab-CE
+
+- [hellogitlab：GitLab的安装和配置](https://hellogitlab.com/CI/gitlab/)
+
+- GitLab Runner：如果有多台服务器的话，不建议将GitLab Runner安装在GitLab服务器上，运行GitLab Runner可能消耗大量内存。
+
+#### 安装
+
+- yum安装
+
+- 新建一个gitlab的repo
+    ```sh
+    cat > /etc/yum.repos.d/gitlab-ce.repo << EOF
+    [gitlab-ce]
+    name=Gitlab CE Repository
+    # 清华源
+    baseurl=https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el\$releasever/
+    gpgcheck=0
+    enabled=1
+    EOF
+    ```
+
+    ```sh
+    # 查找yum源中gitlab-ce的版本
+    yum list gitlab-ce --showduplicates
+
+    # 安装需要的版本
+    yum install -y gitlab-ce-16.8.1
+    ```
+
+- 手动下载安装
+
+    ```sh
+    # 下载
+    wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-16.8.1-ce.0.el7.x86_64.rpm
+
+    # 安装
+    rpm -ivh gitlab-ce-16.8.1-ce.0.el7.x86_64.rpm
+    ```
+
+- 配置文件：`/etc/gitlab/gitlab.rb`
+    ```sh
+    # 先备份配置文件
+    cp /etc/gitlab/gitlab.rb /etc/gitlab/gitlab.rb.bak
+    ```
+
+    ```
+    # gitlab访问地址。内网主机的 ip 地址
+    external_url 'http://gitlab.example.com'
+
+    # 设置为tcp,而不是unix
+    gitlab_workhorse['listen_network'] = "tcp"
+
+    # ip和端口
+    gitlab_workhorse['listen_addr'] = "127.0.0.1:8181"
+
+    # 将IP子网段添加到可信代理中
+    gitlab_rails['trusted_proxies'] = ['127.0.0.1']
+
+    # git仓库路径。记得mkdir /root/gitlab-gitdir
+    git_data_dirs({
+      "default" => {
+        "path" => "/root/gitlab-gitdir"
+       }
+    })
+
+    # 设置时区为上海
+    gitlab_rails['time_zone'] = 'Asia/Shanghai'
+
+    # 设置邮箱
+    gitlab_rails['gitlab_email_enabled'] = true
+    # 设置自己的邮箱
+    gitlab_rails['gitlab_email_from'] = 'mzh_love_linux@163.com'
+    gitlab_rails['gitlab_email_display_name'] = 'Example'
+    # 设置自己的邮箱
+    gitlab_rails['gitlab_email_reply_to'] = 'mzh_love_linux@163.com'
+    gitlab_rails['gitlab_email_subject_suffix'] = '[GitLab]'
+
+    # 设置smtp
+    gitlab_rails['smtp_enable'] = true
+    gitlab_rails['smtp_address'] = "smtp.163.com"
+    gitlab_rails['smtp_port'] = 465
+    gitlab_rails['smtp_user_name'] = "mzh_love_linux@163.com"
+    gitlab_rails['smtp_password'] = "authCode"  # <--- 说明：先在邮箱设置中开启客户端授权码，防止密码泄露，此处填写网易邮箱的授权码，不要填写真实密码
+    gitlab_rails['smtp_domain'] = "163.com"
+    gitlab_rails['smtp_authentication'] = "login"
+    gitlab_rails['smtp_enable_starttls_auto'] = true
+    gitlab_rails['smtp_tls'] = true
+
+    # 禁止用户修改用户名
+    gitlab_rails['gitlab_username_changing_enabled'] = true
+
+    # Git用户和组信息
+    user['username'] = "git"
+    user['group'] = "git"
+    user['home'] = "/home/git"
+    user['git_user_name'] = "GitLab"
+    user['git_user_email'] = "mzh_love_linux@163.com"
+
+    # web服务器
+    web_server['external_users'] = ['nginx', 'root']
+    web_server['username'] = 'nginx'
+    web_server['group'] = 'nginx'
+
+    # 默认自带了nginx，不需要手动配置。以下为禁用gitlab自带的nginx
+    nginx['enable'] = false
+    ```
+
+- 配置nginx集成gitlab
+
+- 启动gitlab和nginx
+    ```sh
+    # 加载配置
+    systemctl start gitlab-runsvdir
+    gitlab-ctl reconfigure
+
+    # 启动gitlab
+    gitlab-ctl start
+
+    # 启动nginx
+    systemctl start nginx
+    ```
+
+## 日志软件
+
+- [小米技术：Linux日志服务初识]()
+
+- [Linux开源日志分析](https://cloud.tencent.com/developer/inventory/116450)
+
+| 路径             | 描述                                                                                                                         |
+|------------------|------------------------------------------------------------------------------------------------------------------------------|
+| /var/log/message | 核心系统日志文件，包含系统启动引导，系统运行状态和大部分错误信息等都会记录到这个文件，因此这个日志是故障诊断的首要查看对象。 |
+| /var/log/dmesg   | 核心启动日志，系统启动时会在屏幕显示与硬件有关的信息，这些信息会保存在这个文件里面。                                         |
+| /var/log/secure  | 验证，授权和安全日志，常见的用户登录验证相关日志就存放在这里。                                                               |
+| /var/log/spooler | UUCP和news设备相关的日志信息                                                                                                 |
+| /var/log/cron    | 与定时任务相关的日志信息                                                                                                     |
+| /var/log/maillog | 记录每一个发送至系统或者从系统发出的邮件活动                                                                                 |
+| /var/log/boot    | 系统引导日志                                                                                                                 |
+
+### logrotate（自带的日志分割工具）
+
+- 默认配置`/etc/logrotate.conf`
+```
+# 按周轮训
+weekly
+
+# 保留4周日志备份
+rotate 4
+
+# 标记分割日志并创建当前日志
+create
+
+# 使用时间作为后缀
+dateext
+
+# 对 logrotate.d 目录下面的日志种类使用
+include /etc/logrotate.d
+
+# 对于wtmp 和 btmp 日志处理在这里进行设置
+/var/log/wtmp {
+    monthly
+    create 0664 root utmp
+ minsize 1M
+    rotate 1
+}
+/var/log/btmp {
+    missingok
+    monthly
+    create 0600 root utmp
+    rotate 1
+}
+```
+### rsyslog
+
+- [前端日志展示工具 loganalyzer，其利用的工具有 httpd，php和mysql。](https://github.com/rsyslog/loganalyzer)
+
+- 需要注意的是，虽然rsyslog支持直接从/dev/log中读取日志，但是当前上游以及发行版都关闭了此选项，默认从journal获取日志，防止与journal争夺/dev/log的所有权。
+
+- rsyslog 是syslog 的升级版
+
+- rsyslog负责/var/log/下大部分日志文件的日志生产，当前在/etc/rsyslog.conf中这些日志文件都有默认的配置。
+
+    ```
+    *.info;mail.none;authpriv.none;cron.none                /var/log/messages <== 记录除了mail、authpriv、cron之外，所有的info等级以上的日志
+    authpriv.*                                              /var/log/secure <== 记录权限相关日志pam
+    mail.*                                                  -/var/log/maillog <== 记录邮件相关日志
+    cron.*                                                  /var/log/cron <== 记录定时任务相关日志
+    *.emerg                                                 :omusrmsg:* <== omusrmsg：后的*表示所有用户都会接收到emerg等级的消息，这里可以指定用户
+    uucp,news.crit                                          /var/log/spooler  <== 新闻相关日志
+    local7.*                                                /var/log/boot.log <== 启动相关的所有等级日志(local*用来实现灵活配置设施，local7用于记录系统启动和关机)
+    ```
+
+- rsyslog中，日志按严重程度从低到高，分为下面11类
+
+    ```
+    debug, info, notice, warning, warn (same as warning), err, error (same as err), crit, alert, emerg, panic (same as emerg)
+    ```
+
+    - 以 systemd 中打印日志为例，打印emerg等级的日志函数log_emergency_errno最后就是通过给journal socket发送消息完成，后续日志的回显和打印都是交给journal操作。
+
+- 两种配置模式：
+
+    - 1.客户端-服务器：客户端发送日志到服务器
+
+    - 2.服务器-远程服务器：服务器在网络收集主机的日志，发送到远程服务器
+
+- 客户端-服务器模式：
+
+    - 服务器配置：
+        ```sh
+        # 取消这2行注释，开启udp514端口
+        $ModLoad imudp
+        $UDPServerRun 514
+
+        # 在$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat下面添加这5行
+        # 根据客户端的IP单独存放主机日志在不同目录，设置远程日志存放路径及文件名格式
+        $template Remote,"/var/log/syslog/%fromhost-ip%/%fromhost-ip%_%$YEAR%-%$MONTH%-%$DAY%.log"
+
+        # 排除本地主机IP日志记录，只记录远程主机日志
+        :fromhost-ip, !isequal, "127.0.0.1" ?Remote
+        ```
+
+    - 客户端配置：
+        ```sh
+        # 取消这5行注释
+        $ActionQueueFileName fwdRule1
+        $ActionQueueMaxDiskSpace 1g
+        $ActionQueueSaveOnShutdown on
+        $ActionQueueType LinkedList
+        $ActionResumeRetryCount -1
+
+        # 在最后一行添加服务器IP地址。@表示使用udp
+        *.* @192.168.31.80
+        ```
+
 ## 安全(security)
 
 ### 以redis为例的服务检查
@@ -1620,9 +2078,9 @@ systemctl status clamav-daemon
 
 ### [cve-bin-tool：二进制漏洞扫描工具](https://github.com/intel/cve-bin-tool)
 
-## 攻击
+### 攻击
 
-### [aircrack-ng：wifi破解](https://github.com/aircrack-ng/aircrack-ng)
+#### [aircrack-ng：wifi破解](https://github.com/aircrack-ng/aircrack-ng)
 
 - [airgorah：gui版](https://github.com/martin-olivier/airgorah)
 
@@ -1710,461 +2168,30 @@ paru -S hashcat-utils
     aircrack-ng -a2 -b 08:4F:C9:66:77:3A -w rockyou.txt hackme.cap
     ```
 
-### [hydra：密码破解](https://github.com/vanhauser-thc/thc-hydra)
+#### [hydra：密码破解](https://github.com/vanhauser-thc/thc-hydra)
 
-### burp-suite：浏览器抓包
+#### burp-suite：浏览器抓包
 
-## 系统监控
 
-### cockpit(系统监控的webui)
+#### 在线工具
 
-- port: 9090
+- 网络资产测绘工具
 
-```sh
-systemctl enable cockpit.socket
-systemctl start cockpit.socket
+    - [fofa（佛法）](https://en.fofa.info/)
 
-# 防火墙设置
-firewall-cmd --add-service=cockpit --permanent
-```
+    - [shodan](https://www.shodan.io/)
 
-## 自动化任务
+    - [zoomeye](https://www.zoomeye.org/)
 
-### cron
+    - [360](https://quake.360.net/quake/#/index)
 
-- 查看任务
+    - [hunter：奇安信的](https://hunter.qianxin.com/)
 
-```sh
-sudo cat /var/spool/cron/root
-```
+    - [censys](https://search.censys.io/)
 
-```bash
-# 开启服务
-systemctl start cronie.service
-```
 
-- [在线计算工具](https://tool.lu/crontab/)
-
-```bash
-# .---------------- 分 (0 - 59)
-# |  .------------- 时 (0 - 23)
-# |  |  .---------- 日 (1 - 31)
-# |  |  |  .------- 月 (1 - 12)
-# |  |  |  |  .---- 星期 (0 - 7) (星期日可为0或7)
-# |  |  |  |  |
-# *  *  *  *  * 执行的命令
-```
-
-- `sudo crontab -e` #编辑 root 的任务
-- `crontab -e` #编辑当前用户的任务
-- `crontab -l` #显示任务
-- `crontab -r` #删除所有任务
-
-```
-* * * * * COMMAND      # 每分钟
-*/5 * * * * COMMAND    # 每5分钟
-
-0 * * * * COMMAND      # 每小时
-0,5,10 * * * * COMMAND # 每小时运行三次，分别在第 0、 5 和 10 分钟运行
-
-0 0 * * * COMMAND      # 每日凌晨0点执行
-0 3 * * * COMMAND      # 每日凌晨3点执行
-
-0 0 1 * * COMMAND      # 每月1号0点执行
-0 3 1-10 * * COMMAND   # 每月1日到10日凌晨3点执行
-
-0 0 * * 1 COMMAND      # 每周一0点执行
-```
-
-### anacron
-
-- 配置文件: `/etc/anacrontab`
-
-| cron                         | anacron                                                              |
-| ---------------------------- | -------------------------------------------------------------------- |
-| 它是守护进程                 | 它不是守护进程                                                       |
-| 适合服务器                   | 适合桌面/笔记本电脑                                                  |
-| 可以让你以分钟级运行计划任务 | 只能让你以天为基础来运行计划任务                                     |
-| 关机时不会执行计划任务       | 如果计划任务到期，机器是关机的，那么它会在机器下次开机后执行计划任务 |
-| 普通用户和 root 用户         | 只有 root 用户可以使用（使用特定的配置启动普通任务）                 |
-
-```
-7	5	cron.weekly	/bin/bash /home/user/.mybin/logs.sh
-```
-
-```bash
-# 测试配置
-anacron -T
-
-# 启动
-anacron -d
-```
-
-### jenkins
-
-- 默认端口: `http://127.0.0.1:8090/`
-
-- 主目录: `/var/lib/jenkins`
-- 项目路径: `/var/lib/jenkins/workspace/项目名`
-
-#### 安装
-
-- docker安装
-
-    ```yml
-    version: '3.8'
-    # 执行脚本；docker-compose -f docker-compose-v1.0.yml up -d
-    services:
-      jenkins:
-        image: jenkins/jenkins:2.439
-        container_name: jenkins
-        privileged: true
-        user: root
-        ports:
-          - "9090:8080"
-          - "50001:50000"
-        volumes:
-          - ./jenkins_home:/var/jenkins_home # 如果不配置到云服务器路径下，则可以配置 jenkins_home 会创建一个数据卷使用
-          - /var/run/docker.sock:/var/run/docker.sock
-          - /usr/bin/docker:/usr/local/bin/docker
-          - ./maven/conf/settings.xml:/usr/local/maven/conf/settings.xml # 这里只提供了 maven 的 settings.xml 主要用于修改 maven 的镜像地址
-          - ./jdk/jdk1.8.0_202:/usr/local/jdk1.8.0_202 # 提供了 jdk1.8，如果你需要其他版本也可以配置使用。
-        environment:
-          - JAVA_OPTS=-Djenkins.install.runSetupWizard=false # 禁止安装向导「如果需要密码则不要配置」docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
-        restart: unless-stopped
-
-    volumes:
-      jenkins_home:
-    ```
-
-    ```sh
-    docker-compose -f docker-compose-v1.0.yml up -d
-    ```
-
-#### 插件与配置
-
-- 换源：在http://127.0.0.1:8090/manage/pluginManager/advanced
-
-    - 原本是：`https://updates.jenkins.io/update-center.json`
-    - 替换成华为：`https://mirrors.huaweicloud.com/jenkins/updates/update-center.json`
-        - [其他源地址](https://www.jenkins-zh.cn/tutorial/management/plugin/update-center/)
-
-- 有用的插件：[插件搜索](https://plugins.jenkins.io/)
-
-    - locale 汉化插件
-        - 安装后，需要重启生效
-    - Git
-    - docker
-    - Maven Integration
-
-- 在[全局工具配置](http://localhost:8090/manage/configureTools/)里配置插件
-
-    - 用于构建部署的 SpringBoot 应用的环境，都需要在全局工具中配置好。包括；Maven、JDK、Git、Docker。注意这里的环境路径配置，如果配置了是会提示你没有对应的路径文件夹。
-
-        ![image](./Pictures/server/jenkins-全局工具配置.avif)
-
-- [添加凭证](http://localhost:8090/manage/credentials/store/system/domain/_/)
-    - 配置了Git仓库的连接凭证，才能从Git仓库拉取代码。
-    - 如果你还需要操作如 ssh 也需要配置凭证。
-
-    - 可以选择csdn的gitcode的用户和密码。新建任务时源码管理的git地址为你自己的gitcode仓库。
-
-        ![image](./Pictures/server/jenkins-添加凭证.avif)
-
-- jenkins-cli命令[说明和下载](http://127.0.0.1:8090/manage/cli/)
-    ```sh
-    # 下载jenkins-cli.jar
-    curl -LO http://127.0.0.1:8090/jnlpJars/jenkins-cli.jar
-
-    # 执行help命令
-    java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd help
-
-    # 启动名为test的任务
-    java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd enable-job test
-
-    # 获取test任务的xml
-    java -jar jenkins-cli.jar -s http://127.0.0.1:8090/ -webSocket -auth user:passwd get-job test
-    ```
-
-#### 新建任务 Maven项目
-
-- [bugstack虫洞栈：用上了 Jenkins，个人部署项目是真方便！](https://mp.weixin.qq.com/s/tWuse0ejDOTQho2182iYWw)
-
-#### pipeline流水线
-
-- [360技术工程：Jenkins实践——创建Pipeline的两种方式](https://mp.weixin.qq.com/s/Hh5IOjrF4XZse730XaCM_Q)
-
-- [阿里巴巴中间件：通过Jenkins构建CI/CD实现全链路灰度](https://mp.weixin.qq.com/s/JLuSqcYMwrqhyn1993t7lg)
-
-#### [Jenkins：手把手教会你 Jenkins 备份与恢复](https://mp.weixin.qq.com/s/fU7YFvJoaK2lX9yW_Q_IDw)
-
-### Gitlab-CI
-
-- [岁寒博客：初创公司 CI 系统终极解决方案：gitlab-ci]()
-
-- Continuous Integration，持续集成，本意是指编写大量的单元测试和集成测试，在尽量小的代码变更粒度上进行 提交 -> 测试 -> 自动部署 的完整流程。
-
-    - 因为测试很难覆盖所有业务场景特别是前端场景，而且测试只会在最重要的地方存在，因为写测试理论上讲比写业务逻辑更费时间，而且枯燥。
-
-    - 所以，中国互联网界的 CI 多数只有两个目的：① 跑测试保证核心模块质量顺便消灭低级错误 ② APP 打包。
-
-- CI 基本原理
-    - 检测到 git 有新的代码提交（定时检测或主动触发），生成任务
-    - agent（真正干活的进程，可以分布在多台机器） 领取任务，拉取代码，运行一段脚本（无论是单元测试还是 APP 打包，都可以用脚本完成）
-    - 展示结果：成功与否、测试覆盖率、apk ipa 下载链接等
-
-- Gitlab-CI
-
-    - 优点：
-
-        - Gitlab-CI 是 Gitlab 自带的持续集成引擎，免去了第三方 CI 服务器只能定时检测 git 仓库带来的延迟和对 git server 造成的性能压力。我司弃用 oschina 的原因就是 CI 服务器一分钟检测一次，压力太大导致仓库被封。
-
-        - 触发成本低，系统已经提供了完善的触发功能
-        - 结果直接展示在 Gitlab 页面上的多个地方：成功/失败，测试覆盖率等
-        - 无需复杂配置。（Jenkins 的页面逻辑太落后了，极其的复杂。TeamCity 我本以为配置算简单的，直到我用上了 Gitlab-CI）
-            - yaml 语言描述的 CI 配置，很容易读懂
-
-    - 缺点：
-
-        - 资源消耗过高。它需要 2G 内存机器，而且在 pull 或 push 的瞬间磁盘 IO 相当高，部署在阿里云会直接导致虚拟机假死，只适合内存大，磁盘强的物理机部署。
-
-        - 必须使用 Gitlab
-
-## Gitlab-CE
-
-- [hellogitlab：GitLab的安装和配置](https://hellogitlab.com/CI/gitlab/)
-
-- GitLab Runner：如果有多台服务器的话，不建议将GitLab Runner安装在GitLab服务器上，运行GitLab Runner可能消耗大量内存。
-
-#### 安装
-
-- yum安装
-
-- 新建一个gitlab的repo
-    ```sh
-    cat > /etc/yum.repos.d/gitlab-ce.repo << EOF
-    [gitlab-ce]
-    name=Gitlab CE Repository
-    # 清华源
-    baseurl=https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el\$releasever/
-    gpgcheck=0
-    enabled=1
-    EOF
-    ```
-
-    ```sh
-    # 查找yum源中gitlab-ce的版本
-    yum list gitlab-ce --showduplicates
-
-    # 安装需要的版本
-    yum install -y gitlab-ce-16.8.1
-    ```
-
-- 手动下载安装
-
-    ```sh
-    # 下载
-    wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-16.8.1-ce.0.el7.x86_64.rpm
-
-    # 安装
-    rpm -ivh gitlab-ce-16.8.1-ce.0.el7.x86_64.rpm
-    ```
-
-- 配置文件：`/etc/gitlab/gitlab.rb`
-    ```sh
-    # 先备份配置文件
-    cp /etc/gitlab/gitlab.rb /etc/gitlab/gitlab.rb.bak
-    ```
-
-    ```
-    # gitlab访问地址。内网主机的 ip 地址
-    external_url 'http://gitlab.example.com'
-
-    # 设置为tcp,而不是unix
-    gitlab_workhorse['listen_network'] = "tcp"
-
-    # ip和端口
-    gitlab_workhorse['listen_addr'] = "127.0.0.1:8181"
-
-    # 将IP子网段添加到可信代理中
-    gitlab_rails['trusted_proxies'] = ['127.0.0.1']
-
-    # git仓库路径。记得mkdir /root/gitlab-gitdir
-    git_data_dirs({
-      "default" => {
-        "path" => "/root/gitlab-gitdir"
-       }
-    })
-
-    # 设置时区为上海
-    gitlab_rails['time_zone'] = 'Asia/Shanghai'
-
-    # 设置邮箱
-    gitlab_rails['gitlab_email_enabled'] = true
-    # 设置自己的邮箱
-    gitlab_rails['gitlab_email_from'] = 'mzh_love_linux@163.com'
-    gitlab_rails['gitlab_email_display_name'] = 'Example'
-    # 设置自己的邮箱
-    gitlab_rails['gitlab_email_reply_to'] = 'mzh_love_linux@163.com'
-    gitlab_rails['gitlab_email_subject_suffix'] = '[GitLab]'
-
-    # 设置smtp
-    gitlab_rails['smtp_enable'] = true
-    gitlab_rails['smtp_address'] = "smtp.163.com"
-    gitlab_rails['smtp_port'] = 465
-    gitlab_rails['smtp_user_name'] = "mzh_love_linux@163.com"
-    gitlab_rails['smtp_password'] = "authCode"  # <--- 说明：先在邮箱设置中开启客户端授权码，防止密码泄露，此处填写网易邮箱的授权码，不要填写真实密码
-    gitlab_rails['smtp_domain'] = "163.com"
-    gitlab_rails['smtp_authentication'] = "login"
-    gitlab_rails['smtp_enable_starttls_auto'] = true
-    gitlab_rails['smtp_tls'] = true
-
-    # 禁止用户修改用户名
-    gitlab_rails['gitlab_username_changing_enabled'] = true
-
-    # Git用户和组信息
-    user['username'] = "git"
-    user['group'] = "git"
-    user['home'] = "/home/git"
-    user['git_user_name'] = "GitLab"
-    user['git_user_email'] = "mzh_love_linux@163.com"
-
-    # web服务器
-    web_server['external_users'] = ['nginx', 'root']
-    web_server['username'] = 'nginx'
-    web_server['group'] = 'nginx'
-
-    # 默认自带了nginx，不需要手动配置。以下为禁用gitlab自带的nginx
-    nginx['enable'] = false
-    ```
-
-- 配置nginx集成gitlab
-
-- 启动gitlab和nginx
-    ```sh
-    # 加载配置
-    systemctl start gitlab-runsvdir
-    gitlab-ctl reconfigure
-
-    # 启动gitlab
-    gitlab-ctl start
-
-    # 启动nginx
-    systemctl start nginx
-    ```
-
-## 日志软件
-
-- [小米技术：Linux日志服务初识]()
-
-- [Linux开源日志分析](https://cloud.tencent.com/developer/inventory/116450)
-
-| 路径             | 描述                                                                                                                         |
-|------------------|------------------------------------------------------------------------------------------------------------------------------|
-| /var/log/message | 核心系统日志文件，包含系统启动引导，系统运行状态和大部分错误信息等都会记录到这个文件，因此这个日志是故障诊断的首要查看对象。 |
-| /var/log/dmesg   | 核心启动日志，系统启动时会在屏幕显示与硬件有关的信息，这些信息会保存在这个文件里面。                                         |
-| /var/log/secure  | 验证，授权和安全日志，常见的用户登录验证相关日志就存放在这里。                                                               |
-| /var/log/spooler | UUCP和news设备相关的日志信息                                                                                                 |
-| /var/log/cron    | 与定时任务相关的日志信息                                                                                                     |
-| /var/log/maillog | 记录每一个发送至系统或者从系统发出的邮件活动                                                                                 |
-| /var/log/boot    | 系统引导日志                                                                                                                 |
-
-### logrotate（自带的日志分割工具）
-
-- 默认配置`/etc/logrotate.conf`
-```
-# 按周轮训
-weekly
-
-# 保留4周日志备份
-rotate 4
-
-# 标记分割日志并创建当前日志
-create
-
-# 使用时间作为后缀
-dateext
-
-# 对 logrotate.d 目录下面的日志种类使用
-include /etc/logrotate.d
-
-# 对于wtmp 和 btmp 日志处理在这里进行设置
-/var/log/wtmp {
-    monthly
-    create 0664 root utmp
- minsize 1M
-    rotate 1
-}
-/var/log/btmp {
-    missingok
-    monthly
-    create 0600 root utmp
-    rotate 1
-}
-```
-### rsyslog
-
-- [前端日志展示工具 loganalyzer，其利用的工具有 httpd，php和mysql。](https://github.com/rsyslog/loganalyzer)
-
-- 需要注意的是，虽然rsyslog支持直接从/dev/log中读取日志，但是当前上游以及发行版都关闭了此选项，默认从journal获取日志，防止与journal争夺/dev/log的所有权。
-
-- rsyslog 是syslog 的升级版
-
-- rsyslog负责/var/log/下大部分日志文件的日志生产，当前在/etc/rsyslog.conf中这些日志文件都有默认的配置。
-
-    ```
-    *.info;mail.none;authpriv.none;cron.none                /var/log/messages <== 记录除了mail、authpriv、cron之外，所有的info等级以上的日志
-    authpriv.*                                              /var/log/secure <== 记录权限相关日志pam
-    mail.*                                                  -/var/log/maillog <== 记录邮件相关日志
-    cron.*                                                  /var/log/cron <== 记录定时任务相关日志
-    *.emerg                                                 :omusrmsg:* <== omusrmsg：后的*表示所有用户都会接收到emerg等级的消息，这里可以指定用户
-    uucp,news.crit                                          /var/log/spooler  <== 新闻相关日志
-    local7.*                                                /var/log/boot.log <== 启动相关的所有等级日志(local*用来实现灵活配置设施，local7用于记录系统启动和关机)
-    ```
-
-- rsyslog中，日志按严重程度从低到高，分为下面11类
-
-    ```
-    debug, info, notice, warning, warn (same as warning), err, error (same as err), crit, alert, emerg, panic (same as emerg)
-    ```
-
-    - 以 systemd 中打印日志为例，打印emerg等级的日志函数log_emergency_errno最后就是通过给journal socket发送消息完成，后续日志的回显和打印都是交给journal操作。
-
-- 两种配置模式：
-
-    - 1.客户端-服务器：客户端发送日志到服务器
-
-    - 2.服务器-远程服务器：服务器在网络收集主机的日志，发送到远程服务器
-
-- 客户端-服务器模式：
-
-    - 服务器配置：
-        ```sh
-        # 取消这2行注释，开启udp514端口
-        $ModLoad imudp
-        $UDPServerRun 514
-
-        # 在$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat下面添加这5行
-        # 根据客户端的IP单独存放主机日志在不同目录，设置远程日志存放路径及文件名格式
-        $template Remote,"/var/log/syslog/%fromhost-ip%/%fromhost-ip%_%$YEAR%-%$MONTH%-%$DAY%.log"
-
-        # 排除本地主机IP日志记录，只记录远程主机日志
-        :fromhost-ip, !isequal, "127.0.0.1" ?Remote
-        ```
-
-    - 客户端配置：
-        ```sh
-        # 取消这5行注释
-        $ActionQueueFileName fwdRule1
-        $ActionQueueMaxDiskSpace 1g
-        $ActionQueueSaveOnShutdown on
-        $ActionQueueType LinkedList
-        $ActionResumeRetryCount -1
-
-        # 在最后一行添加服务器IP地址。@表示使用udp
-        *.* @192.168.31.80
-        ```
-
+    - [公共 Ollama 服务列表](https://freeollama.oneplus1.top/)
+        > 其实大部分人部署并不专业，把服务暴漏在公网上。
 # 未读
 
 - [崔亮的博客：ci/cd学习笔记](https://m.cuiliangblog.cn/catalog/1939987)

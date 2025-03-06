@@ -17,6 +17,7 @@ tags: []
       * [android四大组件](#android四大组件)
     * [文件管理器、云盘](#文件管理器云盘)
     * [文件互传、远程控制](#文件互传远程控制)
+    * [数据清理](#数据清理)
     * [数据备份](#数据备份)
     * [网络相关](#网络相关)
     * [隐藏检查](#隐藏检查)
@@ -278,6 +279,10 @@ tags: []
 
 - [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
 
+### 数据清理
+
+- [sdmaid](https://github.com/d4rken-org/sdmaid-se)
+
 ### 数据备份
 
 - [Android-DataBackup：数据备份](https://github.com/XayahSuSuSu/Android-DataBackup)
@@ -330,6 +335,12 @@ tags: []
 - [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
 
 ### ai
+
+- [maid：支持部署离线下载的大模型，支持api key调用（包括兼容openai格式的api），支持调用电脑部署的ollama](https://github.com/Mobile-Artificial-Intelligence/maid)
+    - [（视频）zxdorro：【Ai教程】手机可以直接跑最新的Qwen2.5大模型？最简单的三种使用方法一个APP搞定](https://www.bilibili.com/video/BV1G7tQehEBE)
+
+- [ChatterUI：支持部署离线下载的大模型，支持api key调用（包括兼容openai格式的api），支持调用电脑部署的ollama，支持语音回答](https://github.com/Vali-98/ChatterUI)
+    - [（视频）zxdorro：【Ai教程】手机本地运行大模型新方法 Qwen2.5演示](https://www.bilibili.com/video/BV1PPxCeHEFD)
 
 - [pocketpal-ai：手机部署大模型的app](https://github.com/a-ghorbani/pocketpal-ai)
     - [（视频）在下莫老师：手机电脑都能用，DeepSeek本地部署指南！](https://www.bilibili.com/video/BV1RJN3e4ETj)

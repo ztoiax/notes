@@ -1,3 +1,9 @@
+---
+id: net-tools
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -18,7 +24,7 @@
     * [go-proxy：反向代理gui](#go-proxy反向代理gui)
     * [mtr结合了 ping 和 traceroute 的功能](#mtr结合了-ping-和-traceroute-的功能)
     * [ngrep（抓包）](#ngrep抓包)
-    * [mitmproxy(代理http, 并抓包)](#mitmproxy代理http-并抓包)
+    * [mitmproxy(代理、抓包、中间人攻击)](#mitmproxy代理抓包中间人攻击)
     * [socat](#socat)
   * [应用层](#应用层)
     * [http](#http)
@@ -28,6 +34,10 @@
         * [.curlrc配置文件](#curlrc配置文件)
         * [格式化输出和变量](#格式化输出和变量)
       * [trurl：curl作者的新作品](#trurlcurl作者的新作品)
+      * [posting：tui版postman](#postingtui版postman)
+      * [newman：postman官方推出的cli版postman](#newmanpostman官方推出的cli版postman)
+      * [hoppscotch：instead postman](#hoppscotchinstead-postman)
+      * [insomnia：instead postman](#insomniainstead-postman)
       * [posting：tui版的postman](#postingtui版的postman)
       * [webhook（微信机器人）](#webhook微信机器人)
       * [httpie](#httpie)
@@ -84,6 +94,7 @@
         * [docker与iptables](#docker与iptables)
       * [nftables](#nftables)
         * [iptables 转换成 nftables](#iptables-转换成-nftables)
+      * [ufw](#ufw)
       * [firewalld](#firewalld)
         * [基本命令](#基本命令-2)
         * [复杂规则](#复杂规则)
@@ -175,7 +186,8 @@ save
 
 ### netstat
 
-- 建议使用 `ss` 参数差不多,更快,信息更全
+- 建议使用 `ss` 参数。基于现代 Linux 内核的 `netlink` 接口实现的，直接从内核获取数据，性能更高。
+    - 而`netsat`食物读取 `/proc/net` 文件系统来获取网络信息
 - 建议开启 `sudo` 不然不会显示端口对应的程序命令
 
 | 参数   | 操作                  |
@@ -266,6 +278,9 @@ ss -itmpn dst 104.18.3.111
 
 # 查看统计信息。比netstat -s要少
 ss -s
+
+# 显示tcp、udp、socket套接字
+ss -a
 ```
 
 ### nc（连接服务器）
@@ -523,7 +538,11 @@ ngrep -W byline port 80
 ngrep -t -W byline port 80
 ```
 
-### [mitmproxy(代理http, 并抓包)](https://docs.mitmproxy.org/stable/overview-getting-started/)
+### [mitmproxy(代理、抓包、中间人攻击)](https://docs.mitmproxy.org/stable/overview-getting-started/)
+
+- [（视频）技术爬爬虾：https真安全么？ 抓包解密https的两种原理+实战 开源软件mitmproxy与wireshark如何抓包https](https://www.bilibili.com/video/BV1w7ADeLEPE)
+
+- 被代理端需要安装ca证书。linux好像默认会安装好ca证书，在`~/.mitmproxy`
 
 ```sh
 # 启动mitmproxy(默认为8080端口)
@@ -537,7 +556,14 @@ curl --proxy http://127.0.0.1:8080 www.baidu.com
 curl --proxy socks5://127.0.0.1:8080 www.baidu.com
 
 # ~/.mitmproxy目录下有虚拟的CA证书
+ls ~/.mitmproxy/
+mitmproxy-ca-cert.cer  mitmproxy-ca-cert.pem  mitmproxy-ca.pem
+mitmproxy-ca-cert.p12  mitmproxy-ca.p12       mitmproxy-dhparam.pem
+
 curl --proxy http://127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem www.baidu.com
+
+# mitmweb有网页端。代理端口为8080，网页端口为9001。然后可以在浏览器设置代理为8080，就可以对被代理端抓包，实现https解密
+mitmweb -p 8080 --set web_port=9001
 ```
 
 ### socat
@@ -906,6 +932,14 @@ trurl --url "https://example.com/?name=hello" --json
   }
 ]
 ```
+
+#### [posting：tui版postman](https://github.com/darrenburns/posting)
+
+#### [newman：postman官方推出的cli版postman](https://github.com/postmanlabs/newman)
+
+#### [hoppscotch：instead postman](https://github.com/hoppscotch/hoppscotch)
+
+#### [insomnia：instead postman](https://github.com/Kong/insomnia)
 
 #### [posting：tui版的postman](https://github.com/darrenburns/posting)
 
@@ -1544,6 +1578,9 @@ ngrep -d any port 853
 
 - 扫描其他
     ```sh
+    # 扫描包含tcp、udp的端口
+    sudo nmap -sUT localhost
+
     # 扫描系统消息
     nmap -A 127.0.0.1
 
@@ -1587,7 +1624,7 @@ nping --tcp -c 2 --win 1600 -p 80 baidu.com
 ### [hping](http://www.hping.org/)
 
 - [Hping Tips and Tricks](https://iphelix.medium.com/hping-tips-and-tricks-85698751179f)
-
+- [ ] 
 
 - tcp
 
@@ -2361,6 +2398,24 @@ nft monitor
 nft monitor new rules
 ```
 
+#### ufw
+
+```sh
+# 启动ufw服务
+systemctl start ufw
+
+# 允许端口
+sudo ufw allow 11434
+# 启动ufw
+sudo ufw enable
+# 查看
+sudo ufw status
+# 删除端口
+sudo ufw delete allow 11434
+# 关闭ufw
+sudo ufw disable
+
+```
 #### firewalld
 
 - 从centos7开始，默认没有`iptables`。而是使用firewalld动态防火墙工具

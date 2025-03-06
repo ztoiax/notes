@@ -8,9 +8,11 @@ tags: []
 
 * [体系结构](#体系结构)
 * [cpu](#cpu)
+  * [性能排行榜](#性能排行榜)
   * [RISC-V](#risc-v)
   * [国产cpu](#国产cpu)
 * [GPU](#gpu)
+  * [原理](#原理)
 * [RDMA](#rdma)
 * [FPGA](#fpga)
 
@@ -191,6 +193,10 @@ tags: []
 
 # cpu
 
+## 性能排行榜
+
+- [passmark](https://www.cpubenchmark.net/desktop.html)
+
 ## RISC-V
 
 > 要创建处理器中的「Linux」
@@ -213,6 +219,9 @@ tags: []
 - [了不起的云计算：一文读懂：国产芯片四大流派优劣势](https://mp.weixin.qq.com/s/y1VUV3V-YbUa2DTEO0HTXA)
 
 # GPU
+
+- [GPU Specs Database：查看amd、nvidia显卡参数](https://www.techpowerup.com/gpu-specs/)
+## 原理
 
 - [RethinkFun：AI 工程师都应该知道的GPU工作原理，TensorCore](https://www.bilibili.com/video/BV1rH4y1c7Zs)
 

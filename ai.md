@@ -6,6 +6,7 @@ tags: []
 
 <!-- mtoc-start -->
 
+* [ai原理](#ai原理)
 * [LLM](#llm)
   * [原理](#原理)
   * [使用](#使用)
@@ -31,7 +32,7 @@ tags: []
   * [ai图片、视频](#ai图片视频)
     * [图片和视频理解](#图片和视频理解)
     * [文字生成图片](#文字生成图片)
-    * [文字生成视频](#文字生成视频)
+    * [文字、图片生成视频](#文字图片生成视频)
     * [抠图、抠视频](#抠图抠视频)
     * [图片、视频质量提升](#图片视频质量提升)
     * [ai视频剪辑](#ai视频剪辑)
@@ -41,15 +42,25 @@ tags: []
     * [ai作曲（文字生成音乐、图片生成音乐）](#ai作曲文字生成音乐图片生成音乐)
   * [ai编程语言](#ai编程语言)
   * [ai操作系统](#ai操作系统)
-  * [ai浏览器](#ai浏览器)
+  * [ai自动化点击](#ai自动化点击)
+    * [OmniParser：微软开发的对屏幕快速截图并转换成结构化数据](#omniparser微软开发的对屏幕快速截图并转换成结构化数据)
+    * [ai浏览器](#ai浏览器)
   * [ai搜索](#ai搜索)
   * [ai编程，代码补全](#ai编程代码补全)
   * [ai编辑器](#ai编辑器)
   * [ai程序员](#ai程序员)
+  * [ai终端](#ai终端)
   * [ai爬虫和信息提取](#ai爬虫和信息提取)
+  * [ai可视化](#ai可视化)
 * [在线ai工具](#在线ai工具)
 
 <!-- mtoc-end -->
+
+# ai原理
+
+- [（视频）卢菁老师\_北大AI博士后：谁能开启通用人工智能AGI的大门？符号主义、联结主义、行为主义！人工智能技术发展](https://www.bilibili.com/video/BV179fbYiEbK)
+
+- [（视频）公园4004：符号主义 vs 联结主义:人工智能历史背后的哲学之争](https://www.bilibili.com/video/BV1fJ4m1M7Y4)
 
 # LLM
 
@@ -116,6 +127,8 @@ tags: []
 - [ChatGLM-6B：清华大学的llm](https://github.com/THUDM/ChatGLM-6B)
 - [ChatGLM2-6B：清华大学的llm](https://github.com/THUDM/ChatGLM2-6B)
 - [ChatGLM3：清华大学和智谱合作的llm](https://github.com/THUDM/ChatGLM3)
+
+- [MiniMax-01（海螺ai）：支持4M token的大模型。deepseek之后最有潜力国产大模型](https://github.com/MiniMax-AI/MiniMax-01)
 
 - [DeepSeek-V3：在中国大模型市场掀起了第一场价格战，因而被网友称为 AI 界的“拼多多”。](https://github.com/deepseek-ai/DeepSeek-V3)
 
@@ -190,10 +203,23 @@ tags: []
 
 - 国产
 
-  - [qwen2.5max：阿里的llm目前排名第6，高于deepseek v3](https://chat.qwenlm.ai/)
-  - [deepseek](https://chat.deepseek.com/a/chat/)
-  - [kimi](https://kimi.moonshot.cn/chat)
-  - [智谱清言](https://chatglm.cn/main/)
+    - [秘塔ai：支持搜索、研究（可以调用全网、文库、学术文献）。比deepseek和qwen2.5max要好](https://metaso.cn/)
+
+    - [qwen2.5max：阿里的llm目前排名第6，高于deepseek v3](https://chat.qwenlm.ai/)
+
+    - [deepseek](https://chat.deepseek.com/a/chat/)
+
+        - [国家超算互联网：支持deepsek-r1满血版](https://chat.scnet.cn/#/home)
+
+        - [awesome-deepseek-integration](https://github.com/deepseek-ai/awesome-deepseek-integration)
+
+    - [kimi](https://kimi.moonshot.cn/chat)
+
+    - [MiniMax-01（海螺ai）：支持4M token的大模型。](https://hailuoai.com)
+
+    - [stepfun（阶跃星辰）：deepseek之外最值得关注的大模型](https://yuewen.cn/chats/new)
+
+    - [智谱清言](https://chatglm.cn/main/)
 
 - 多个模型聚合
 
@@ -206,6 +232,8 @@ tags: []
   - [字节跳动的火山引擎：可以免费使用deepseek-r1等大模型](https://console.volcengine.com/ark/region:ark+cn-beijing/experience/chat)
 
     - [（视频）技术爬爬虾：最快最稳的DeepSeek，榨干微软字节两大厂，解锁知识库，联网搜索等高级功能](https://www.bilibili.com/video/BV1NCNPeZENF)
+
+    - [（视频）沧海九粟：🌋 字节火山引擎 x 🐳 DeepSeek R1 联网搜索赋能实操 🌍](https://www.bilibili.com/video/BV1ZBAVeNEpy)
 
   - [华为云：可以免费使用deepseek-r1等大模型](https://console.huaweicloud.com/modelarts/?locale=zh-cn&region=cn-southwest-2#/model-studio/deployment)
 
@@ -271,6 +299,8 @@ tags: []
 
 - [Dify](https://cloud.dify.ai/apps)
 
+- [refly](https://refly.ai/)
+
 - [coze（扣子）：国际版。字节跳动的平台，其实就是火山引擎。自定义gpt机器人，可以集成到telegram和discord](https://www.coze.com/home)
 - [coze（扣子）：国内版](https://www.coze.cn/home)
 
@@ -294,7 +324,11 @@ tags: []
 
 - [dify](https://github.com/langgenius/dify)
 
+- [refly](https://github.com/refly-ai/refly)
+
 - [ragflow](https://github.com/infiniflow/ragflow)
+
+- [Flowise](https://github.com/FlowiseAI/Flowise)
 
 ### embedding model（文本嵌入式模型）
 
@@ -318,6 +352,8 @@ tags: []
 
 - [腾讯云开发者：一文掌握Prompt：万能框架+优化技巧+常用指标](https://mp.weixin.qq.com/s/oKB8m_wX6p8SHNMx1R_hzw)
 
+- [腾讯技术工程：大模型Prompt技巧全解析](https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A)
+
 - [deepseek提示库](https://api-docs.deepseek.com/zh-cn/prompt-library/)
 
 ### 数据库
@@ -331,6 +367,16 @@ tags: []
 ## 微调
 
 - [unsloth：用于微调和优化大型语言模型（LLM）的 Python 工具库。它通过动态量化和显存优化技术，提高了模型微调速度，同时将显存占用降低 70%-80%，并支持多种硬件配置、LLM、超长上下文任务等功能。除此之外，还提供了可直接在线体验的 Jupyter Notebook 示例，降低了大模型微调的门槛。](https://github.com/unslothai/unsloth)
+
+- [ColossalAI：训练工具箱](https://github.com/hpcaitech/ColossalAI)
+
+  - DeepSeek V3/R1 满血 671B LoRA 低成本 SFT 微调
+  - 完整的强化学习工具链 PPO、GRPO、DPO、SimPO 等
+  - 无缝适配 DeepSeek 系列蒸馏模型在内的 HuggingFace 开源模型
+  - 兼容支持英伟达 GPU、华为昇腾 NPU 等多种硬件
+  - 支持混合精度训练、gradient checkpoint 等训练加速降低成本
+  - 灵活的训练配置接口，支持自定义奖励函数、损失函数等
+  - 提供灵活的并行策略配置接口，包括数据并行、模型并行、专家并行、ZeRO 和 Offload 等，以适应不同硬件规模
 
 ## 智能体
 
@@ -361,27 +407,27 @@ tags: []
 
 ### 2024年llm总结[Things we learned about LLMs in 2024](https://simonwillison.net/2024/Dec/31/llms-in-2024/)
 
-    > 作者是英国程序员西蒙·威利森（Simon Willison）最近两年非常出名，他的个人网站有很多文章，介绍 AI 的最新进展。
+> 作者是英国程序员西蒙·威利森（Simon Willison）最近两年非常出名，他的个人网站有很多文章，介绍 AI 的最新进展。
 
-    - 他提到，AI 的发展速度快得难以想象。
+- 他提到，AI 的发展速度快得难以想象。
 
-    - 一年前的2023年底，排名第一的 AI 模型是 OpenAI 公司的 GPT-4，没有其他模型能超过它。
+- 一年前的2023年底，排名第一的 AI 模型是 OpenAI 公司的 GPT-4，没有其他模型能超过它。
 
-        - 一年过去了，大家猜猜，GPT-4 现在排名多少？答案是第69位，已经有18家公司的大模型超过了它。其中的一些模型，甚至可以在笔记本电脑运行。
+  - 一年过去了，大家猜猜，GPT-4 现在排名多少？答案是第69位，已经有18家公司的大模型超过了它。其中的一些模型，甚至可以在笔记本电脑运行。
 
-        - 短短一年，榜首模型就被大量竞争者轻松超过，家用硬件就能达到它的运行效果。AI 的进化速度就是这么惊人。
+  - 短短一年，榜首模型就被大量竞争者轻松超过，家用硬件就能达到它的运行效果。AI 的进化速度就是这么惊人。
 
-    - 西蒙·威利森特别提到了来自中国的大模型 DeepSeek V3。
+- 西蒙·威利森特别提到了来自中国的大模型 DeepSeek V3。
 
-        - DeepSeek V3 是2024年12月25日发布的，来自杭州的量化基金公司幻方量化。一经发布，它就引起了国际范围的轰动。
+  - DeepSeek V3 是2024年12月25日发布的，来自杭州的量化基金公司幻方量化。一经发布，它就引起了国际范围的轰动。
 
-        - 它在多个参数上，击败了 OpenAI 公司最新的 o1 模型。目前，它在大模型排行榜上排名第7，要知道前十名里面，只有它是开源模型，而且是最少限制的 MIT 许可证，其他都是大公司的专有模型。
+  - 它在多个参数上，击败了 OpenAI 公司最新的 o1 模型。目前，它在大模型排行榜上排名第7，要知道前十名里面，只有它是开源模型，而且是最少限制的 MIT 许可证，其他都是大公司的专有模型。
 
-    - 而且，它的运行效率很高，训练成本估计只有 Meta 公司的 Llama 3.1 405B 模型的11分之一，而后者的效果还不如它。这就是说，DeepSeek 找到了高效使用硬件、提高模型效果的方法。
+- 而且，它的运行效率很高，训练成本估计只有 Meta 公司的 Llama 3.1 405B 模型的11分之一，而后者的效果还不如它。这就是说，DeepSeek 找到了高效使用硬件、提高模型效果的方法。
 
-    - 西蒙·威利斯说："DeepSeek V3 的训练成本不足600万美元，是一个极好的迹象，表明 AI 模型的训练成本可以而且应该会继续下降。"
+- 西蒙·威利斯说："DeepSeek V3 的训练成本不足600万美元，是一个极好的迹象，表明 AI 模型的训练成本可以而且应该会继续下降。"
 
-    - 西方媒体就非常好奇，DeepSeek 是怎么做到的？
+- 西方媒体就非常好奇，DeepSeek 是怎么做到的？
 
 ### DeepSeek模型作者的访谈
 
@@ -530,9 +576,13 @@ tags: []
 
 - [flux](https://github.com/black-forest-labs/flux)
 
-### 文字生成视频
+### 文字、图片生成视频
+
+- [VBench：视觉模型性能排行榜](https://vchitect.github.io/VBench-project/)
 
 - [（视频）秋芝2046：AI视频技巧集合！一口气全了解【小白速成】](https://www.bilibili.com/video/BV1HN1yY7EKD)
+- [Wan2.1：阿里开源的](https://github.com/Wan-Video/Wan2.1)
+    - [在线使用](https://tongyi.aliyun.com/wanxiang/videoCreation)
 
 - [Open-Sora：生成图片或视频、图生视频、视频编辑](https://github.com/hpcaitech/Open-Sora)
 
@@ -541,6 +591,8 @@ tags: []
 - [混元视频：腾讯开源的](https://github.com/Tencent/HunyuanVideo)
 
   - [在线使用](https://aivideo.hunyuan.tencent.com)
+
+- [Step-Video-T2V](https://github.com/stepfun-ai/Step-Video-T2V)
 
 - [可灵AI：快手的](https://klingai.kuaishou.com/text-to-video/new)
 
@@ -580,6 +632,8 @@ tags: []
 
 - [edge-tts：微软的模型](https://github.com/rany2/edge-tts)
 
+- [Step-Audio](https://github.com/stepfun-ai/Step-Audio)
+
 ### ai作曲（文字生成音乐、图片生成音乐）
 
 - [Suno](https://suno.com/)
@@ -603,7 +657,15 @@ tags: []
 - [AIOS：LLM 代理操作系统](https://github.com/agiresearch/AIOS)
   - 将大语言模型嵌入到操作系统中，使操作系统“有灵魂”。旨在优化资源分配，促进跨代理的上下文切换，实现代理的并发执行，为代理提供工具服务，维护代理的访问控制。
 
-## ai浏览器
+## ai自动化点击
+
+### [OmniParser：微软开发的对屏幕快速截图并转换成结构化数据](https://github.com/microsoft/OmniParser)
+
+- [（视频）AI超元域：🚀本地部署OmniParser v2.0与pyautogui真正实现自动化点击！支持macOS、Windows与Linux！轻松实现自动化操作电脑](https://www.bilibili.com/video/BV1u3AaeqEtm)
+
+- 配合pyautogui可以实现自动化点击
+
+### ai浏览器
 
 - [（视频）AI超元域：取代ChatGPT Operator！支持DeepSeek+Web UI！Browser Use最强AI驱动的浏览器自动化框架，Roo Code轻松实现MCP](https://www.bilibili.com/video/BV1CXPCecEUk)
 
@@ -629,10 +691,12 @@ tags: []
 
 - [scira：原名为MiniPerplx](https://github.com/zaidmukaddam/scira)
 
-- 在线
+- 在线使用
   - [perplexity](https://www.perplexity.ai/)
 
 ## ai编程，代码补全
+
+- [（视频）技术爬爬虾：Cursor太贵？分享三个免费AI编程方案+使用技巧【如何看待AI编程】](https://www.bilibili.com/video/BV1b5AeeGEFc)
 
 - [CodeGeeX4：清华大学的模型](https://github.com/THUDM/CodeGeeX4)
 
@@ -660,11 +724,19 @@ tags: []
 
 - [devika：Devin 的开源替代品](https://github.com/stitionai/devika)
 
+## ai终端
+
+- [warp：自带ai的termianl](https://github.com/warpdotdev/Warp)
+
 ## ai爬虫和信息提取
 
 - [后裔采集器](https://www.houyicaiji.com/)
 
 - [wiseflow：从网站/公众号/RSS等提取简洁的信息](https://github.com/TeamWiseFlow/wiseflow)
+
+## ai可视化
+
+- [data-formulator：微软的](https://github.com/microsoft/data-formulator)
 
 # 在线ai工具
 

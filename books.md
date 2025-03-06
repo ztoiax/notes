@@ -1357,6 +1357,8 @@ tags: []
 
 - 安全
 
+    - [边亮_网络安全](https://space.bilibili.com/379889714)
+
     - 信息安全与通信保密杂志社
 
 - 编程语言
@@ -1388,6 +1390,8 @@ tags: []
 
 - ai
 
+    - [卢菁老师_北大AI博士后](https://space.bilibili.com/503558013)
+
     - [檀东东Tango](https://space.bilibili.com/14739873)
         > ai大模型评测
 
@@ -1402,6 +1406,9 @@ tags: []
 
     - [AI超元域](https://space.bilibili.com/3493277319825652)
         > ai大模型、其他ai工具等
+
+    - [公园4004](https://space.bilibili.com/13791225)
+        > ai大模型
 
     - 中国人工智能学会
     - 腾讯CDC体验设计
@@ -1599,6 +1606,8 @@ RabbitMQ实战指南》作者
 
     - [短的发布会：手机发布会搞笑式介绍](https://space.bilibili.com/287795639)
 
+    - [车的发布会：车发布会搞笑式介绍](https://space.bilibili.com/1639930744)
+
     - [六分超超：旧手机和系统交互评测](https://space.bilibili.com/652137183)
 
     - [STRAY_数码：手机ui动画评测](https://space.bilibili.com/275678731)
@@ -1622,6 +1631,8 @@ RabbitMQ实战指南》作者
     - [立创开发板](https://space.bilibili.com/3493269579237436)
 
     - [单毅讲装修：家电、装修](https://space.bilibili.com/222157543)
+        - [防骗每日电讯：擦亮双眼，识破全屋整装合同陷阱](https://mp.weixin.qq.com/s/_NbyI8CtY7GylQIsh3dHbg)
+
 
     - [飞蚊话：linux桌面](https://space.bilibili.com/268630727)
 
@@ -1636,6 +1647,11 @@ RabbitMQ实战指南》作者
     - 电脑吧评测室
     - 笔吧评测室
     - 路由器评测
+    - IT技术分享-老张
+        > 服务器硬件
+
+    - 半导体产业纵横
+        > 芯片相关
 
 ## 汽车
 
@@ -1787,6 +1803,8 @@ RabbitMQ实战指南》作者
 
     - [特要挑](https://space.bilibili.com/435297713)
 
+    - [开心教洗护](https://space.bilibili.com/3546753842285304)
+
 - 微信公众号
 
     - 中国流行面料FabricsChina
@@ -1809,24 +1827,30 @@ RabbitMQ实战指南》作者
 
 ## 影视
 
-- [弓手冬郎](https://space.bilibili.com/35857776)：西游记和三国演义解说
-- [木鱼水心](https://space.bilibili.com/927587)：经典影视长视频解说
-- [非花映镜](https://space.bilibili.com/2810464)：黑泽明电影解说
-- [培根悖论唠唠嗑](https://space.bilibili.com/386869863)：长视频影视解说，善于开脑洞、挖细节。
+- bilibili
 
-- [CC琦先生](https://space.bilibili.com/90445151/)：金庸武侠
+    - [弓手冬郎](https://space.bilibili.com/35857776)：西游记和三国演义解说
+    - [木鱼水心](https://space.bilibili.com/927587)：经典影视长视频解说
+    - [非花映镜](https://space.bilibili.com/2810464)：黑泽明电影解说
+    - [培根悖论唠唠嗑](https://space.bilibili.com/386869863)：长视频影视解说，善于开脑洞、挖细节。
 
-- [狗大蛋子](https://space.bilibili.com/18982710/video)：笑傲江湖
+    - [CC琦先生](https://space.bilibili.com/90445151/)：金庸武侠
 
-- [边江说](https://space.bilibili.com/424170847)：《冰与火之歌》解说，自己也是个小说家
+    - [狗大蛋子](https://space.bilibili.com/18982710/video)：笑傲江湖
 
-- [貔柴](https://space.bilibili.com/70942172)：宫斗剧
+    - [边江说](https://space.bilibili.com/424170847)：《冰与火之歌》解说，自己也是个小说家
 
-- [1900影剧室](https://space.bilibili.com/17223352)
+    - [貔柴](https://space.bilibili.com/70942172)：宫斗剧
 
-- [电影最TOP](https://space.bilibili.com/17819768)
+    - [1900影剧室](https://space.bilibili.com/17223352)
 
-- [扁豆看电影](https://space.bilibili.com/33488229)
+    - [电影最TOP](https://space.bilibili.com/17819768)
+
+    - [扁豆看电影](https://space.bilibili.com/33488229)
+
+- 微信公众号
+
+    - 电影艺术杂志
 
 ## 音乐
 
@@ -2072,6 +2096,7 @@ RabbitMQ实战指南》作者
 
 - 微信公众号
 
+    - 人民大学国政评论
     - 政治学人
     - 政治学家
     - 政治科学研究

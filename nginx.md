@@ -1,3 +1,8 @@
+---
+id: nginx
+aliases: []
+tags: []
+---
 
 <!-- mtoc-start -->
 
@@ -136,14 +141,20 @@
       * [goaccess 日志监控](#goaccess-日志监控)
       * [rhit:日志浏览器](#rhit日志浏览器)
       * [ngtop：日志查看器](#ngtop日志查看器)
+      * [web-check：全面的网站检查工具。这是一款网站检查工具，可以显示指定网站更多的信息。比如：DNS 记录、服务器位置、站点性能、SSL 证书、性能、SEO 等信息，可用于分析网站的服务器架构、查看安全漏洞等场景。](#web-check全面的网站检查工具这是一款网站检查工具可以显示指定网站更多的信息比如dns-记录服务器位置站点性能ssl-证书性能seo-等信息可用于分析网站的服务器架构查看安全漏洞等场景)
   * [在线工具](#在线工具)
   * [第三方nginx](#第三方nginx)
     * [Openresty](#openresty)
     * [tengine](#tengine)
-    * [Kong](#kong)
   * [reference](#reference)
 * [caddy](#caddy)
 * [Pingora：Cloudflare 发布 Nginx 开源替代品](#pingoracloudflare-发布-nginx-开源替代品)
+* [SafeLine（雷池waf防火墙）](#safeline雷池waf防火墙)
+* [网关](#网关)
+  * [kong](#kong)
+  * [zuul：Netflix的](#zuulnetflix的)
+  * [higress：阿里的](#higress阿里的)
+  * [gateway](#gateway)
 
 <!-- mtoc-end -->
 
@@ -6289,6 +6300,8 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 
 #### [ngtop：日志查看器](https://github.com/facundoolano/ngtop)
 
+#### [web-check：全面的网站检查工具。这是一款网站检查工具，可以显示指定网站更多的信息。比如：DNS 记录、服务器位置、站点性能、SSL 证书、性能、SEO 等信息，可用于分析网站的服务器架构、查看安全漏洞等场景。](https://github.com/Lissy93/web-check)
+
 ## 在线工具
 
 - [自动生成 nginx.conf](https://www.digitalocean.com/community/tools/nginx)
@@ -6308,26 +6321,6 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 ### tengine
 
 - 主要是淘宝团队开发。特点是融入了因淘宝自身的一些业务带来的新功能。
-
-### Kong
-
-- OpenResty 的基础上迭代发布了一个新网关
-
-- 通过插件化的方式来支持网关功能的扩展，并提供了 60 多种插件。
-
-- 现在随着微服务的发展，服务被拆的非常零散，降低了耦合度的同时也给服务的统一管理增加了难度。
-
-    - 例如服务发现。在 Nginx 中，所有的后端服务都是以静态配置文件的形式记录的。每当后端服务的 IP 发生变化的时候，需要重新修改配置文件。
-
-    - 但在微服务时代，后端都是用容器部署的，每次版本发布都会导致 IP 的变化。而且微服务时代还需要动态的扩缩容，都会导致后端服务 IP 的变化。传统的修改配置文件才能重新分配流量的方式显然已经无法满足需要。
-
-    - 除了服务发现以外，微服务时代对网关还有其他一些新的需求，例如限流、协议转换、身份验证、安全防护等功能，都需要在网关中能够支持。
-
-    ![image](./Pictures/nginx/kong.avif)
-
-- kong 的环境配起来还是有一点点小复杂的。它需要 Postgres 或者 Cassandra 等数据库来管理路由配置，服务配置，upstream 配置等信息。还需要安装 konga（最好的 kong 的管理程序）。
-
-- 在腾讯云上的微服务引擎中，已经集成了 kong 网关，可以一键配置，非常的方便。
 
 ## reference
 
@@ -6355,3 +6348,38 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 - [（视频）技术爬爬虾：全自动HTTPS加密，开箱即用，Caddy基础入门，反向代理，负载均衡，网站托管全流程](https://www.bilibili.com/video/BV1z5w6ekE1L)
 
 # [Pingora：Cloudflare 发布 Nginx 开源替代品](https://github.com/cloudflare/pingora)
+
+# [SafeLine（雷池waf防火墙）](https://github.com/chaitin/SafeLine)
+
+- [官方文档](https://docs.waf-ce.chaitin.cn/zh/%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/%E5%AE%89%E8%A3%85%E9%9B%B7%E6%B1%A0)
+
+- 雷池通过过滤和监控 Web 应用与互联网之间的 HTTP 流量来保护 Web 服务。可以保护 Web 服务免受 SQL 注入、XSS、 代码注入、命令注入、CRLF 注入、ldap 注入、xpath 注入、RCE、XXE、SSRF、路径遍历、后门、暴力破解、CC、爬虫 等攻击。
+
+- 用的是腾讯的nginx版`Tengine`
+
+# 网关
+
+## [kong](https://github.com/Kong/kong)
+
+- OpenResty 的基础上迭代发布了一个新网关
+
+- 通过插件化的方式来支持网关功能的扩展，并提供了 60 多种插件。
+
+- 现在随着微服务的发展，服务被拆的非常零散，降低了耦合度的同时也给服务的统一管理增加了难度。
+
+    - 例如服务发现。在 Nginx 中，所有的后端服务都是以静态配置文件的形式记录的。每当后端服务的 IP 发生变化的时候，需要重新修改配置文件。
+
+    - 但在微服务时代，后端都是用容器部署的，每次版本发布都会导致 IP 的变化。而且微服务时代还需要动态的扩缩容，都会导致后端服务 IP 的变化。传统的修改配置文件才能重新分配流量的方式显然已经无法满足需要。
+
+    - 除了服务发现以外，微服务时代对网关还有其他一些新的需求，例如限流、协议转换、身份验证、安全防护等功能，都需要在网关中能够支持。
+
+    ![image](./Pictures/nginx/kong.avif)
+
+- kong 的环境配起来还是有一点点小复杂的。它需要 Postgres 或者 Cassandra 等数据库来管理路由配置，服务配置，upstream 配置等信息。还需要安装 konga（最好的 kong 的管理程序）。
+## [zuul：Netflix的](https://github.com/Netflix/zuul)
+
+## [higress：阿里的](https://github.com/alibaba/higress)
+
+## [gateway](https://github.com/infinilabs/gateway)
+
+- [铭毅天下Elasticsearch：极限网关核心架构解析：从 Nginx 到 INFINI Gateway 的演进](https://mp.weixin.qq.com/s/2ZnHArc8FMCJ2MVqYtrBIg)

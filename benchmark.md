@@ -1,3 +1,9 @@
+---
+id: benchmark
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -20,7 +26,7 @@
   * [flent：可以同时运行多个 netperf/iperf/ping 实例并聚合结果，通过交互式 GUI 和可扩展的绘图功能展示数据，支持本地和远程主机，支持采集 CPU 使用率、WiFi、qdisc 和 TCP 套接字统计信息等。](#flent可以同时运行多个-netperfiperfping-实例并聚合结果通过交互式-gui-和可扩展的绘图功能展示数据支持本地和远程主机支持采集-cpu-使用率wifiqdisc-和-tcp-套接字统计信息等)
   * [sysbench](#sysbench)
   * [vmstat](#vmstat)
-  * [dstat](#dstat)
+  * [dstat：结合 vmstat、iostat、netstat 等工具的功能，实时显示 CPU、内存、磁盘 I/O、网络等资源的使用情况。](#dstat结合-vmstatiostatnetstat-等工具的功能实时显示-cpu内存磁盘-io网络等资源的使用情况)
   * [sar(sysstat)](#sarsysstat)
   * [sadf(sysstat)](#sadfsysstat)
   * [nmon：tui观察系统资源，以及压测时的图表统计](#nmontui观察系统资源以及压测时的图表统计)
@@ -54,6 +60,7 @@
   * [iperf3](#iperf3)
   * [ntttcp：多线程测试带宽](#ntttcp多线程测试带宽)
   * [masscan](#masscan)
+  * [nload：实时查看网络流量的工具，能够显示出入口和出口的带宽使用情况。](#nload实时查看网络流量的工具能够显示出入口和出口的带宽使用情况)
   * [iftop](#iftop)
   * [nethogs](#nethogs)
   * [bmon](#bmon)
@@ -83,7 +90,7 @@
     * [biosnoop(bcc)](#biosnoopbcc)
 * [Disk](#disk)
   * [inotify-tools](#inotify-tools)
-  * [blktrace](#blktrace)
+  * [blktrace：跟踪和分析块设备](#blktrace跟踪和分析块设备)
   * [btrace](#btrace)
   * [dd](#dd)
     * [WoeUSB-ng: 安装windows iso](#woeusb-ng-安装windows-iso)
@@ -101,6 +108,8 @@
   * [SysMonTask](#sysmontask)
   * [pidstat：对某个进程进行全面具体的追踪](#pidstat对某个进程进行全面具体的追踪)
   * [Mission Center：类似windows的任务管理器](#mission-center类似windows的任务管理器)
+  * [earlyoom：这是一款专为 Linux 设计的 OOM 守护进程，旨在弥补内核自带的 OOM Killer 仅在内存耗尽时才触发的不足。它能够提早干预（默认 10%），自动终止占用内存最多的进程，从而防止系统因内存耗尽而陷入卡死的状态。](#earlyoom这是一款专为-linux-设计的-oom-守护进程旨在弥补内核自带的-oom-killer-仅在内存耗尽时才触发的不足它能够提早干预默认-10自动终止占用内存最多的进程从而防止系统因内存耗尽而陷入卡死的状态)
+  * [pspy：无需 Root 权限实时监控 Linux 进程的工具。这是一款无需 root 权限即可实时监控 Linux 系统中所有用户运行的命令、计划任务等进程活动。它通过遍历 /proc 收集进程信息和监听文件系统事件，能够实时捕捉新启动的进程和短命进程，适用于 CTF 竞赛、渗透测试和安全审计等场景。](#pspy无需-root-权限实时监控-linux-进程的工具这是一款无需-root-权限即可实时监控-linux-系统中所有用户运行的命令计划任务等进程活动它通过遍历-proc-收集进程信息和监听文件系统事件能够实时捕捉新启动的进程和短命进程适用于-ctf-竞赛渗透测试和安全审计等场景)
 * [开机](#开机)
   * [bootchart](#bootchart)
 * [Special file system](#special-file-system)
@@ -659,8 +668,6 @@ sysbench --num-threads=10 --test=cpu --cpu-max-prime=10000 run
 
 ## vmstat
 
-建议使用 `dstat`
-
 | 选项 | 操作                     |
 | ---- | ------------------------ |
 | si   | 匿名页换入内存           |
@@ -675,7 +682,7 @@ vmstat 1
 vmstat 1 -Sm
 ```
 
-## [dstat](http://dag.wiee.rs/home-made/dstat/)
+## [dstat：结合 vmstat、iostat、netstat 等工具的功能，实时显示 CPU、内存、磁盘 I/O、网络等资源的使用情况。](http://dag.wiee.rs/home-made/dstat/)
 
 - 已经被[dool](https://github.com/scottchiefbaker/dool)取代
 
@@ -1269,6 +1276,8 @@ masscan -p80,8000-8100 192.168.1.0/24 --echo > /tmp/xxx.conf
 masscan -c /tmp/xxx.conf --rate 1000
 ```
 
+## nload：实时查看网络流量的工具，能够显示出入口和出口的带宽使用情况。
+
 ## iftop
 
 ![image](./Pictures/benchmark/iftop.avif)
@@ -1499,12 +1508,45 @@ sudo inotifywait -mrq --timefmt '%Y/%m/%d-%H:%M:%S' --format '%T %w %f' \
  -e modify,delete,create,move,attrib .
 ```
 
-## blktrace
+## [blktrace：跟踪和分析块设备](https://github.com/sdsc/blktrace)
 
+- 默认会将记录保存为当期目录下的文件
 ```bash
+# 跟踪sda
 blktrace /dev/sda
 
+# 跟踪sda1。记录文件的格式默认为sda.blktrace.0 sda.blktrace.1等
+blktrace /dev/sda1
+=== sda1 ===
+  CPU  0:                    0 events,        0 KiB data
+  CPU  1:                   45 events,        3 KiB data
+  CPU  2:                   89 events,        5 KiB data
+  CPU  3:                   11 events,        1 KiB data
+  CPU  4:                   28 events,        2 KiB data
+  CPU  5:                   17 events,        1 KiB data
+  CPU  6:                    9 events,        1 KiB data
+  CPU  7:                   20 events,        1 KiB data
+  CPU  8:                   12 events,        1 KiB data
+  CPU  9:                   40 events,        2 KiB data
+  CPU 10:                   61 events,        3 KiB data
+  CPU 11:                   48 events,        3 KiB data
+  CPU 12:                   47 events,        3 KiB data
+  CPU 13:                   18 events,        1 KiB data
+  CPU 14:                    3 events,        1 KiB data
+  CPU 15:                    6 events,        1 KiB data
+  Total:                   454 events (dropped 0),       22 KiB data
+
+# -o 自定义记录格式，-D 保存目录为/tmp
+blktrace -d /dev/sda -o sda_trace -D /tmp
+
+# btt命令分析
+btt -i sda_trace
+
+# blkparse分析工具。通过管道，可以实现记录一边保存文件，一边直接输出
 blktrace -d /dev/sda -o -|blkparse -i -
+
+# 跟踪多个设备
+sudo blktrace -d /dev/sda -d /dev/sdb -o multi_trace
 
 # 统计30秒每个cpu的io事件
 blktrace -w 30 -d /dev/sda -o io-debugging
@@ -1675,6 +1717,9 @@ agedu -w
 
     # 看下进程上次的启动时间是什么时候。
     ps -o lstart <pid>
+
+    # 查看进程启动了多少时间
+    ps -o etime -p <pid>
     ```
 
 ## [htop](https://github.com/hishamhm/htop)
@@ -1879,6 +1924,10 @@ htop -p 20316
     ```
 
 ## [Mission Center：类似windows的任务管理器](https://missioncenter.io/)
+## [earlyoom：这是一款专为 Linux 设计的 OOM 守护进程，旨在弥补内核自带的 OOM Killer 仅在内存耗尽时才触发的不足。它能够提早干预（默认 10%），自动终止占用内存最多的进程，从而防止系统因内存耗尽而陷入卡死的状态。](https://github.com/rfjakob/earlyoom)
+
+## [pspy：无需 Root 权限实时监控 Linux 进程的工具。这是一款无需 root 权限即可实时监控 Linux 系统中所有用户运行的命令、计划任务等进程活动。它通过遍历 /proc 收集进程信息和监听文件系统事件，能够实时捕捉新启动的进程和短命进程，适用于 CTF 竞赛、渗透测试和安全审计等场景。](https://github.com/DominicBreuker/pspy)
+
 # 开机
 
 ## bootchart

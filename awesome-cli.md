@@ -100,8 +100,8 @@ tags: []
   * [fx](#fx)
     * [Command-line JSON processing tool](#command-line-json-processing-tool)
   * [navi: fzf command bookmark](#navi-fzf-command-bookmark)
-  * [trash-cli](#trash-cli)
-    * [回收站](#回收站)
+  * [trash-cli：回收站。instead rm](#trash-cli回收站instead-rm)
+  * [gtrash：带tui的回收站。instead rm、trash-cli](#gtrash带tui的回收站instead-rmtrash-cli)
   * [choose: instead od](#choose-instead-od)
   * [peco: 搜索过滤器](#peco-搜索过滤器)
   * [grex：自动生成正则表达式](#grex自动生成正则表达式)
@@ -163,6 +163,7 @@ tags: []
   * [timg: 在终端下查看图片和视频](#timg-在终端下查看图片和视频)
   * [imgdiff:图片对比](#imgdiff图片对比)
   * [video2x：视频和图像无损放大工具。该项目集成了多种超分辨率算法（如 Waifu2x、Anime4K、Real-ESRGAN），能够有效提高视频和图像的分辨率，并提供了图形界面（GUI）、Docker 和命令行界面（CLI）的使用方式](#video2x视频和图像无损放大工具该项目集成了多种超分辨率算法如-waifu2xanime4kreal-esrgan能够有效提高视频和图像的分辨率并提供了图形界面guidocker-和命令行界面cli的使用方式)
+  * [manga-image-translator：一键翻译图片内文字的工具。这是一个用于识别并翻译图片内文字的 Python 项目，支持日语、中文、英语和韩语等多种语言，适用于翻译漫画、插图中的文字内容。](#manga-image-translator一键翻译图片内文字的工具这是一个用于识别并翻译图片内文字的-python-项目支持日语中文英语和韩语等多种语言适用于翻译漫画插图中的文字内容)
 * [downloader](#downloader)
   * [cobalt：下载视频、音频](#cobalt下载视频音频)
   * [lux: 视频下载器](#lux-视频下载器)
@@ -237,6 +238,7 @@ tags: []
     * [zerox：pdf转markdown](#zeroxpdf转markdown)
     * [markitdown：微软官方推出的工具，将各种格式的文件（主要是 Office 文件）转成 Markdown 格式。](#markitdown微软官方推出的工具将各种格式的文件主要是-office-文件转成-markdown-格式)
   * [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](#weread-exporter将微信读书中的书籍导出成epubpdfmobi等格式)
+  * [olmocr：使用视觉大模型提取pdf文件的文字、表格、公式等](#olmocr使用视觉大模型提取pdf文件的文字表格公式等)
   * [OCRmyPDF：通过ocr搜索和复制扫描版的pdf文本](#ocrmypdf通过ocr搜索和复制扫描版的pdf文本)
   * [Stirling-PDF：自部署 PDF 处理工具](#stirling-pdf自部署-pdf-处理工具)
   * [PDFMathTranslate：pdf翻译中文](#pdfmathtranslatepdf翻译中文)
@@ -245,6 +247,7 @@ tags: []
   * [AI-reads-books-page-by-page：AI 逐页从 PDF 提取知识与生成摘要](#ai-reads-books-page-by-pageai-逐页从-pdf-提取知识与生成摘要)
 * [markdown](#markdown)
   * [浏览markdown文件](#浏览markdown文件)
+  * [mdq：jq版markdown](#mdqjq版markdown)
   * [mdBook：markdown转book，可以在线浏览](#mdbookmarkdown转book可以在线浏览)
   * [mlc:检测markdown文件的连接](#mlc检测markdown文件的连接)
   * [slidev: markdown写ppt](#slidev-markdown写ppt)
@@ -270,7 +273,7 @@ tags: []
       * [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#anything-llm一个gui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
       * [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#cherry-studiogui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
     * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
-    * [other](#other-1)
+  * [other](#other-1)
 * [reference](#reference)
 
 <!-- mtoc-end -->
@@ -648,9 +651,9 @@ fzf -e
 
 ## [navi: fzf command bookmark](https://github.com/denisidoro/navi)
 
-## [trash-cli](https://github.com/andreafrancia/trash-cli)
+## [trash-cli：回收站。instead rm](https://github.com/andreafrancia/trash-cli)
 
-### 回收站
+## [gtrash：带tui的回收站。instead rm、trash-cli](https://github.com/umlx5h/gtrash)
 
 ## [choose: instead od](https://github.com/theryangeary/choose)
 
@@ -983,6 +986,8 @@ python -m video2x \               # execute the video2x module
     -n3                           # set noise level to 3
 ```
 
+## [manga-image-translator：一键翻译图片内文字的工具。这是一个用于识别并翻译图片内文字的 Python 项目，支持日语、中文、英语和韩语等多种语言，适用于翻译漫画、插图中的文字内容。](https://github.com/zyddnys/manga-image-translator)
+
 # downloader
 
 ## [cobalt：下载视频、音频](https://github.com/imputnet/cobalt)
@@ -1032,6 +1037,10 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 
 ## [chsrc：全平台通用换源工具与框架](https://github.com/RubyMetric/chsrc)
 
+```sh
+# docker源
+sudo chsrc set docker
+```
 ## [progress：显示cp、mv进度条](https://github.com/Xfennec/progress)
 
 ## [haxor-news: hacker new](https://github.com/donnemartin/haxor-news)
@@ -1469,6 +1478,8 @@ markitdown path-to-file.pdf > document.md
 
 ## [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](https://github.com/drunkdream/weread-exporter)
 
+## [olmocr：使用视觉大模型提取pdf文件的文字、表格、公式等](https://github.com/allenai/olmocr)
+
 ## [OCRmyPDF：通过ocr搜索和复制扫描版的pdf文本](https://github.com/ocrmypdf/OCRmyPDF)
 
 ## [Stirling-PDF：自部署 PDF 处理工具](https://github.com/Stirling-Tools/Stirling-PDF)
@@ -1499,6 +1510,8 @@ markitdown path-to-file.pdf > document.md
     ```sh
     grip ai.md
     ```
+
+## [mdq：jq版markdown](https://github.com/yshavit/mdq)
 
 ## [mdBook：markdown转book，可以在线浏览](https://github.com/rust-lang/mdBook)
 
@@ -1582,6 +1595,9 @@ journalctl -o json | lnav
 ### [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
 
 ### [ollama](https://github.com/ollama/ollama)
+
+- [公共 Ollama 服务列表](https://freeollama.oneplus1.top/)
+    > 其实大部分人部署并不专业，把服务暴漏在公网上。
 
 - [漫谈云原生：最全 Ollama 大模型部署指南](https://mp.weixin.qq.com/s/Esqw0zViQBiq_4VXEXKz_Q)
 
@@ -1747,7 +1763,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - 显卡要支持webgpu：
     - 浏览器开启webgpu：`chrome://flags`下搜索`webgpu`然后启用。
 
-### other
+## other
 
 - [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)
 

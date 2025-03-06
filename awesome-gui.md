@@ -20,17 +20,19 @@ tags: []
     * [qt](#qt)
     * [gtk](#gtk)
     * [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](#caesium-image-compressor图片压缩配备了实时预览和批量处理的功能)
+  * [digikam：本地图片管理](#digikam本地图片管理)
   * [截图](#截图)
 * [视频](#视频)
 * [音乐](#音乐)
 * [远程控制](#远程控制)
   * [ssh客户端](#ssh客户端)
+* [pdf、epub、mobi阅读器](#pdfepubmobi阅读器)
 * [note](#note)
+* [markdown文章知识管理、阅读器](#markdown文章知识管理阅读器)
 * [ide](#ide)
 * [硬件](#硬件)
 * [ai](#ai)
 * [模拟器](#模拟器)
-* [文章知识管理、阅读器](#文章知识管理阅读器)
 * [other](#other)
 * [类似项目](#类似项目)
 
@@ -62,11 +64,6 @@ tags: []
 
     ![image](./Pictures/awesomegui/typora.avif)
 
-- [sioyek: pdf阅读器](https://github.com/ahrm/sioyek)
-
-- [zathura: pdf, epub阅读器](https://github.com/pwmt/zathura)
-
-- [foliate: pdf, epub阅读器](https://github.com/johnfactotum/foliate)
 
 - [syncthing：文件同步](https://github.com/syncthing/syncthing)
 
@@ -162,6 +159,8 @@ tags: []
 
 ![image](./Pictures/awesomegui/caesium-image-compressor.avif)
 
+## [digikam：本地图片管理](https://www.digikam.org/)
+
 ## 截图
 
 - [deepin-screen-recorder：deepin的截图软件。支持录屏，长截图](https://github.com/linuxdeepin/deepin-screen-recorder)
@@ -221,11 +220,27 @@ tags: []
     - 支持 Find Everywhere 快速跳转
     - 支持数据加密
 
+# pdf、epub、mobi阅读器
+
+- [sioyek: pdf阅读器](https://github.com/ahrm/sioyek)
+
+- [zathura: pdf, epub阅读器](https://github.com/pwmt/zathura)
+
+- [foliate: pdf, epub阅读器](https://github.com/johnfactotum/foliate)
+
+- [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
+
 # note
 
 - [zotero：文献管理工具](https://github.com/zotero/zotero)
 
 - [zotero-gpt](https://github.com/MuiseDestiny/zotero-gpt)
+
+# markdown文章知识管理、阅读器
+
+- [obsidian](https://github.com/obsidianmd/obsidian-releases)
+
+- [Zettlr](https://github.com/Zettlr/Zettlr)
 
 # ide
 
@@ -246,12 +261,6 @@ tags: []
 - [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
 
 - [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
-
-# 文章知识管理、阅读器
-
-- [obsidian](https://github.com/obsidianmd/obsidian-releases)
-
-- [Zettlr](https://github.com/Zettlr/Zettlr)
 
 # other
 
@@ -378,8 +387,6 @@ tags: []
     ```
 
 - [aya：简化对安卓设备的操作控制，可以看作 ADB 的图形用户界面](https://github.com/liriliri/aya)
-
-- [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
 
 - [stock：股票分析](https://github.com/myhhub/stock)
 

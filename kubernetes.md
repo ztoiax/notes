@@ -1,3 +1,9 @@
+---
+id: kubernetes
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -2430,6 +2436,9 @@ curl https://argocd.kubernets.cn -I
 - [KubeWall](https://github.com/kubewall/kubewall)
     > Kubernetes 多集群管理工具，采用单一二进制文件的简便部署方式，为用户提供直观且易用的 Web 界面，用于高效管理和监控 Kubernetes 集群。
 
+- [vcluster：轻量级的虚拟 K8s 集群解决方案](https://github.com/loft-sh/vcluster)
+    > 这是一个用于在 Kubernetes 集群内创建虚拟集群的工具。相较于传统 Kubernetes 集群的数十分钟启动时间，虚拟集群启动仅需几秒且成本更低。它采用轻量化架构，支持快速创建独立的虚拟集群，每个虚拟集群拥有独立的 API Server 和控制平面，确保多个租户之间完全隔离。适用于多种 Kubernetes 发行版，同时兼容 Helm 和 kubectl 工具。
+
 - [k0s](https://github.com/k0sproject/k0s)
     > k0s 是一个包含所有功能的单一二进制 Kubernetes 发行版，它预先配置了所有所需的 bell 和 whistle，使构建 Kubernetes 集群只需将可执行文件复制到每个主机并运行它即可。
 
@@ -2479,7 +2488,7 @@ curl https://argocd.kubernets.cn -I
 - [Lens：k8s ide](https://github.com/lensapp/lens)
 - [K8Studio：k8s ide](https://k8studio.io/)
 
-- [k9s：tui管理pod](https://github.com/derailed/k9s)
+- [k9s：tui管理pod。可实时跟踪集群中的应用运行状态，并支持多种资源管理（Pods、Deployments、Services 等）、查看日志、自定义配置和插件扩展等功能。](https://github.com/derailed/k9s)
 
 - [plural：web ui](https://github.com/pluralsh/plural)
 
@@ -2494,6 +2503,7 @@ curl https://argocd.kubernets.cn -I
 
 - [khi：日志可视化工具](https://github.com/GoogleCloudPlatform/khi)
 
+- [KubeDoor：多K8S集群统一远程存储、监控、告警、通知、展示的一站式K8S监控平台](https://github.com/CassInfra/KubeDoor)
 ## 云原生
 
 - [云原生应用市场](https://hub.grapps.cn/)
