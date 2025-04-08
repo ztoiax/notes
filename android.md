@@ -226,6 +226,11 @@ tags: []
 
 - [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
 
+- [Seal：各大视频平台下载器](https://github.com/JunkFood02/Seal)
+
+- [MusicFree：音乐播放器。通过插件可以播放各大平台的音乐](https://github.com/maotoumao/MusicFree)
+    - 插件：https://gitee.com/maotoumao/MusicFreePlugins/raw/master/plugins.json
+
 ### 应用管理
 
 - [AppManager](https://github.com/MuntashirAkon/AppManager)
@@ -261,10 +266,17 @@ tags: []
 
 - [mixplorer](https://mixplorer.com)
 
-- [AListFlutter：alist安卓版，局域网视频观看](https://github.com/jing332/AListFlutter)
+- [Emby服务端](https://emby.media/server-android.html)
+
+- [AListFlutter：alist服务端和客户端，局域网视频观看](https://github.com/jing332/AListFlutter)
 
     - [在下莫老师：旧手机变网盘！无需代码，在手机上快速部署Alist](https://www.bilibili.com/video/BV1vq421c7kW)
 
+- [AlistClient：alist客户端](https://github.com/BFWXKJGS/AlistClient)
+
+- [PureMusic（棉花音乐）：音乐播放器。支持本地歌曲、百度网盘、阿里云盘、WebDAV、GoogleDrive、OneDrive、Dropbox等网盘歌曲播放，支持Plex、Emby、Jelly、Subsonic媒体服务器。](https://github.com/pure-music/PureMusic)
+
+- [StreamMusic（音流）：音乐播放器。支持 Android、iOS、MacOS、Windows 平台的 Subsonic/Navidrome/Jellyfin/Emby/AudioStation/Plex 客户端。](https://github.com/gitbobobo/StreamMusic)
 - [蜗牛云盘](https://github.com/liupan1890/aliyunpan/issues/901)
 
 - [clouddrive：云盘管理](https://github.com/cloud-fs/cloud-fs.github.io/releases)

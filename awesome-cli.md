@@ -125,6 +125,7 @@ tags: []
   * [pueue(任务管理)](#pueue任务管理)
   * [killport：输入指定端口，杀掉进程](#killport输入指定端口杀掉进程)
   * [devbox：隔离空间运行](#devbox隔离空间运行)
+  * [nq：轻量级命令行队列工具，用户可以将任务添加到队列中，并在后台按顺序执行。](#nq轻量级命令行队列工具用户可以将任务添加到队列中并在后台按顺序执行)
 * [net](#net)
   * [curlconverter：将curl转换为编程语言的代码](#curlconverter将curl转换为编程语言的代码)
   * [prettyping: instead ping](#prettyping-instead-ping)
@@ -219,6 +220,7 @@ tags: []
   * [bunster：把 shell 脚本转换为 Go 代码，然后利用 Go 工具链将其编译为二进制可执行文件，弥补了传统 shell 脚本在性能、可移植性和安全性方面的不足。](#bunster把-shell-脚本转换为-go-代码然后利用-go-工具链将其编译为二进制可执行文件弥补了传统-shell-脚本在性能可移植性和安全性方面的不足)
   * [direnv：不同目录不同环境变量](#direnv不同目录不同环境变量)
   * [mise：node、python、neovim等版本管理；有类似direnv的环境变量功能；有task功能](#misenodepythonneovim等版本管理有类似direnv的环境变量功能有task功能)
+  * [ttyd：把终端变成服务，可以用浏览器访问](#ttyd把终端变成服务可以用浏览器访问)
 * [系统相关](#系统相关)
   * [kmon：内核模块、dmesg的tui](#kmon内核模块dmesg的tui)
   * [nemu：qemu的tui](#nemuqemu的tui)
@@ -237,6 +239,7 @@ tags: []
     * [Web2pdf](#web2pdf)
     * [zerox：pdf转markdown](#zeroxpdf转markdown)
     * [markitdown：微软官方推出的工具，将各种格式的文件（主要是 Office 文件）转成 Markdown 格式。](#markitdown微软官方推出的工具将各种格式的文件主要是-office-文件转成-markdown-格式)
+  * [PDF-Guru：pdf gui处理工具](#pdf-gurupdf-gui处理工具)
   * [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](#weread-exporter将微信读书中的书籍导出成epubpdfmobi等格式)
   * [olmocr：使用视觉大模型提取pdf文件的文字、表格、公式等](#olmocr使用视觉大模型提取pdf文件的文字表格公式等)
   * [OCRmyPDF：通过ocr搜索和复制扫描版的pdf文本](#ocrmypdf通过ocr搜索和复制扫描版的pdf文本)
@@ -252,6 +255,7 @@ tags: []
   * [mlc:检测markdown文件的连接](#mlc检测markdown文件的连接)
   * [slidev: markdown写ppt](#slidev-markdown写ppt)
   * [markdown写ppt](#markdown写ppt)
+  * [presenterm：以ppt形式在终端播放markdown](#presenterm以ppt形式在终端播放markdown)
   * [rucola：markdown管理tui](#rucolamarkdown管理tui)
   * [mermaid-cli：markdown转思维导图](#mermaid-climarkdown转思维导图)
 * [log](#log)
@@ -767,6 +771,9 @@ devbox init
 # 启动shell。需要安装nix
 devbox shell
 ```
+
+
+## [nq：轻量级命令行队列工具，用户可以将任务添加到队列中，并在后台按顺序执行。](https://github.com/leahneukirchen/nq)
 
 # net
 
@@ -1364,6 +1371,21 @@ direnv deny
         npm run build
         ```
 
+## [ttyd：把终端变成服务，可以用浏览器访问](https://github.com/tsl0922/ttyd)
+
+```sh
+# 启动服务
+ttyd bash
+
+
+# 浏览器打开
+http://127.0.0.1:7681/
+
+# 指定端口启动服务
+ttyd -p 8080 bash
+```
+
+
 # 系统相关
 
 ## [kmon：内核模块、dmesg的tui](https://github.com/orhun/kmon)
@@ -1421,6 +1443,8 @@ restic --repo /tmp/backup backup ~/st
 
 - [pdf24：pdf工具箱](https://tools.pdf24.org/zh/)
 
+- [deeppdf：免费的 PDF 文件翻译网站，比如英文 PDF 翻译成中文，保留排版不变。](https://deeppdf.ai/pdf-translator)
+
 ### [pandoc 文档转换](https://github.com/jgm/pandoc)
 
 ```sh
@@ -1475,6 +1499,8 @@ pip install markitdown
 # pdf传md
 markitdown path-to-file.pdf > document.md
 ```
+
+## [PDF-Guru：pdf gui处理工具](https://github.com/kevin2li/PDF-Guru)
 
 ## [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](https://github.com/drunkdream/weread-exporter)
 
@@ -1549,12 +1575,14 @@ markitdown path-to-file.pdf > document.md
 
 ## [markdown写ppt](https://github.com/webpro/reveal-md/)
 
+## [presenterm：以ppt形式在终端播放markdown](https://github.com/mfontanini/presenterm)
+
 ## [rucola：markdown管理tui](https://github.com/Linus-Mussmaecher/rucola)
 
 ## [mermaid-cli：markdown转思维导图](https://github.com/mermaid-js/mermaid-cli)
 
 ```sh
-mmdc -i input.mmd -o output.svg
+mmdc -i input.md -o output.svg
 ```
 
 # log
@@ -1616,8 +1644,10 @@ journalctl -o json | lnav
     # 从内存中卸载模型
     ollama stop nezahatkorkmaz/deepseek-v3
 
-    # 下载向量数据库
+    # 下载文本嵌入式模型
     ollama pull nomic-embed-text
+    # 比nomic更好的文本嵌入式模型
+    ollama pull snowflake-arctic-embed2
 
     # /show parameters 查看参数
     ollama run deepseek-r1:latest
@@ -1630,6 +1660,18 @@ journalctl -o json | lnav
 
     # 修改参数。默认情况下，Ollama 上下文窗口大小为 2048，要改成 4096 可以执行
     >>> /set parameter num_ctx 4096
+    ```
+
+- 使用[modelscope（魔塔）](https://www.modelscope.cn/models)加速下载大模型文件，比ollama快
+    ```sh
+    pip install modelscope
+
+    # 下载千问qwq-32B大模型
+    modelscope download --model"Qwen/QwQ-32B-GGUF" --local_dir=./QwQ-32B
+
+    # 比较大的模型是拆分多个文件的需要进行使用llama.cpp项目工具合并
+    llama.cpp merge <所有gguf文件>
+
     ```
 
 - Kubernetes 运行 Ollama

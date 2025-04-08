@@ -134,6 +134,7 @@ tags: []
   * [第三方软件](#第三方软件)
     * [服务端](#服务端)
       * [njs：是 JavaScript 语言的一个子集，它允许扩展 nginx 的功能](#njs是-javascript-语言的一个子集它允许扩展-nginx-的功能)
+      * [gixy：让 NGINX 配置更安全。这是一个活跃的 NGINX 配置静态分析工具，专注于发现配置中的安全问题。它能够检测多种常见的 NGINX 配置漏洞，如服务器端请求伪造、主机伪造、路径遍历等，支持命令行或在 Docker 和 Kubernetes 中使用。](#gixy让-nginx-配置更安全这是一个活跃的-nginx-配置静态分析工具专注于发现配置中的安全问题它能够检测多种常见的-nginx-配置漏洞如服务器端请求伪造主机伪造路径遍历等支持命令行或在-docker-和-kubernetes-中使用)
     * [客户端](#客户端)
       * [nginx-ui：Nginx 在线管理平台，它开箱即用、功能丰富，支持流量统计、在线查看 Nginx 日志、编辑 Nginx 配置文件、自动检查和重载配置文件等功能。](#nginx-uinginx-在线管理平台它开箱即用功能丰富支持流量统计在线查看-nginx-日志编辑-nginx-配置文件自动检查和重载配置文件等功能)
       * [nginx-proxy-manager：有漂亮干净的 Web UI。还可以获得受信任的 SSL 证书，并通过单独的配置、自定义和入侵保护来管理多个代理。](#nginx-proxy-manager有漂亮干净的-web-ui还可以获得受信任的-ssl-证书并通过单独的配置自定义和入侵保护来管理多个代理)
@@ -6231,6 +6232,8 @@ http {
 ### 服务端
 
 #### [njs：是 JavaScript 语言的一个子集，它允许扩展 nginx 的功能](http:#//nginx.org/en/docs/njs/)
+
+#### [gixy：让 NGINX 配置更安全。这是一个活跃的 NGINX 配置静态分析工具，专注于发现配置中的安全问题。它能够检测多种常见的 NGINX 配置漏洞，如服务器端请求伪造、主机伪造、路径遍历等，支持命令行或在 Docker 和 Kubernetes 中使用。](https://github.com/yandex/gixy)
 
 ### 客户端
 

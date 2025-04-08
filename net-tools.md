@@ -52,6 +52,7 @@ tags: []
       * [whois(查看域名注册信息)](#whois查看域名注册信息)
       * [dnspeep：记录程序的dns请求,响应](#dnspeep记录程序的dns请求响应)
       * [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](#dns-detector从-dns-服务器获取某个网站的所有-ip-地址逐一进行延迟测试)
+      * [dns-benchmark：测试全世界的 DNS 服务器](#dns-benchmark测试全世界的-dns-服务器)
     * [socks](#socks)
       * [tun2socks：将tcp/udp等流量转换为socks](#tun2socks将tcpudp等流量转换为socks)
     * [vpn、组网](#vpn组网)
@@ -1071,6 +1072,8 @@ dig
 
 
 #### [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](https://github.com/sun0day/dns-detector)
+
+#### [dns-benchmark：测试全世界的 DNS 服务器](https://github.com/xxnuo/dns-benchmark)
 
 ### socks
 

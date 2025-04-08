@@ -360,6 +360,8 @@ tags: []
 
 - [《Hello，算法》](https://www.hello-algo.com/)
 
+- [《数据结构月算法（Rust语言描述）》：Rust 数据结构与算法的开源书籍。这是一本讲解 Rust 数据结构和算法的开源书籍，支持简/繁体中文和英文三种语言版本。全书共 10 章，内容涵盖 Rust 基础、计算机科学概念、算法分析、基本数据结构、递归、搜索、排序、树、图以及实战等。](https://github.com/QMHTMY/RustBook)
+
 - [Data Structure Visualizations（可视化）](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
 
 - [algorithm-visualizer（可视化）](https://algorithm-visualizer.org/)
@@ -425,6 +427,8 @@ tags: []
 - [sql-basics：设计精美的sql互动教学网站](https://sql.programmable.net/lessons/sql-basics)
 
 ### mysql
+
+- [《软件工程中的问题解决艺术：如何让 MySQL 更好》。这是一本通过实际案例分析和解决 MySQL 问题的书籍，结合深入讨论，帮助读者更好地理解逻辑推理、数据结构、算法等计算机基础知识。](https://github.com/enhancedformysql/The-Art-of-Problem-Solving-in-Software-Engineering_How-to-Make-MySQL-Better)
 
 - [爱可生开源社区的课间、演讲、书籍如《Mysql大智小技》](https://github.com/actiontech/slides)
 
@@ -815,6 +819,10 @@ tags: []
 
 - [《LLMs-from-scratch》](https://github.com/rasbt/LLMs-from-scratch)
     - 这是一本讲述如何从头制作一个类似 ChatGPT 的大语言模型的书，它介绍了 LLMs 的工作原理，并教你如何创建自己的 LLM，内含丰富的图示和代码示例，目前该书还在编写中未完结。
+
+- [llm-course](https://github.com/mlabonne/llm-course)
+
+- [ai-agents-for-beginners：微软开源的 AI Agent 初学者教程。该项目是微软专为初学者打造的 AI 智能代理（AI Agents）教程，内容分为 10 个课程，包含详细的教程、视频和示例代码。](https://github.com/microsoft/ai-agents-for-beginners)
 
 - [llm-universe：本项目是一个面向小白开发者的大模型应用开发教程](https://datawhalechina.github.io/llm-universe/#/)
 
@@ -1765,6 +1773,9 @@ RabbitMQ实战指南》作者
 - [老郭美食](https://space.bilibili.com/1206156500)
     > 水产解剖、挑选
 
+- [吃经](https://space.bilibili.com/1907059049)
+    > 水果挑选
+
 ## 做菜
 
 - [猪肉婆吴素芬](https://space.bilibili.com/3493271997253876)
@@ -1847,6 +1858,8 @@ RabbitMQ实战指南》作者
     - [电影最TOP](https://space.bilibili.com/17819768)
 
     - [扁豆看电影](https://space.bilibili.com/33488229)
+
+    - [M的蒙太奇笔记](https://space.bilibili.com/14427045)：哲学角度解说
 
 - 微信公众号
 
@@ -2084,6 +2097,8 @@ RabbitMQ实战指南》作者
 
     - [傅正](https://space.bilibili.com/1522003987)
 
+    - [学院派Academia](https://space.bilibili.com/96639395)
+
     - [包刚升教授](https://space.bilibili.com/701220372)
 
     - [李筠教授](https://space.bilibili.com/1593690059)
@@ -2097,6 +2112,7 @@ RabbitMQ实战指南》作者
 - 微信公众号
 
     - 人民大学国政评论
+    - 澄海全球发展与安全高研院
     - 政治学人
     - 政治学家
     - 政治科学研究
@@ -2122,6 +2138,9 @@ RabbitMQ实战指南》作者
     - 世界观察局
     - 南洋问题研究
         > 东南亚、东南亚犯罪
+
+    - Nov
+        > 硅谷与政治，科技与政治
 
 ## 军事
 
@@ -2208,6 +2227,8 @@ RabbitMQ实战指南》作者
 
     - [付鹏的财经世界](https://space.bilibili.com/662660667)
 
+    - [黄文政老师](https://space.bilibili.com/3546833336928563)
+
 - 微信公众号
 
     - 中国人民银行
@@ -2219,6 +2240,7 @@ RabbitMQ实战指南》作者
     - 财政研究
     - 证劵时报
     - 当代经济学基金会
+    - 万博新经济观察
     - 西京研究所
     - 西京投资管理
     - 西京洞察
@@ -2229,6 +2251,7 @@ RabbitMQ实战指南》作者
     - 复旦大学中国研究院
     - 人大重阳
     - 人大财税研究所
+    - 中国财政科学研究院
     - IMI财经观察
     - 财经智库CASS
     - 经济学管理学刊
@@ -2391,6 +2414,9 @@ RabbitMQ实战指南》作者
 
 - bilibili
 
+    - [林盆同学](https://space.bilibili.com/471039637)
+        > 电商
+
     - [老猫鱼不吃鱼](https://space.bilibili.com/238365787)
         > 快递物流、城市产业
 
@@ -2492,6 +2518,9 @@ RabbitMQ实战指南》作者
 
     - 方圆
         > 最高检的杂志。有各种案例、防诈骗案例
+
+    - 数字社会发展与研究
+        > 科技
 
 - bilibili
 

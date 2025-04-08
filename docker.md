@@ -16,6 +16,7 @@ tags: []
   * [基本命令](#基本命令)
   * [docker image 镜像](#docker-image-镜像)
     * [换源](#换源)
+    * [docxy：轻量级 Docker 镜像代理服务，解决国内访问 Docker Hub 受限问题。](#docxy轻量级-docker-镜像代理服务解决国内访问-docker-hub-受限问题)
     * [基本命令](#基本命令-1)
     * [registry镜像仓库](#registry镜像仓库)
     * [docker-registry-ui](#docker-registry-ui)
@@ -337,6 +338,8 @@ docker info
     ```sh
     docker pull m.daocloud.io/docker.io/library/nginx:latest
     ```
+
+### [docxy：轻量级 Docker 镜像代理服务，解决国内访问 Docker Hub 受限问题。](https://github.com/harrisonwang/docxy)
 
 ### 基本命令
 

@@ -33,6 +33,7 @@ tags: []
 * [硬件](#硬件)
 * [ai](#ai)
 * [模拟器](#模拟器)
+* [微信相关](#微信相关)
 * [other](#other)
 * [类似项目](#类似项目)
 
@@ -101,11 +102,13 @@ tags: []
 
 - [clouddrive：云盘管理](https://github.com/cloud-fs/cloud-fs.github.io/releases)
 
+- [小白羊网盘](https://github.com/gaozhangmin/aliyunpan)
+
 - [alist:可添加各种网盘的网页文件管理器](https://github.com/alist-org/alist)
     - 使用davfs2挂载
     ```sh
     # 安装davfs2
-    sudo pacman -S davfs2
+    sudo paclman -S davfs2
 
     # mount到yun目录
     mkdir yun
@@ -204,7 +207,7 @@ tags: []
 
 - [shell360](https://github.com/shell360)
 
-- [xpipe](https://github.com/xpipe-io/xpipe)
+- [xpipe：通过图形界面，将所有的服务器连接在一个地方管理。](https://github.com/xpipe-io/xpipe)
 
 - [termora](https://github.com/TermoraDev/termora)
 
@@ -261,6 +264,10 @@ tags: []
 - [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
 
 - [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
+
+# 微信相关
+
+- [WechatRealFriends：查看有没有朋友偷偷删掉或者拉黑你](https://github.com/StrayMeteor3337/WechatRealFriends)
 
 # other
 
@@ -337,6 +344,8 @@ tags: []
     scrcpy -s localhost:5555
     ```
 
+- [linkandroid：开源的手机连接助手，方便连接 Android 和电脑。](https://github.com/modstart-lib/linkandroid)
+
 - [waydroid：安卓系统。并不是模拟器，而是直接构建](https://github.com/waydroid/waydroid)
 
     - [waydroid-helper：gui配置waydroid](https://github.com/ayasa520/waydroid-helper)
@@ -389,6 +398,8 @@ tags: []
 - [aya：简化对安卓设备的操作控制，可以看作 ADB 的图形用户界面](https://github.com/liriliri/aya)
 
 - [stock：股票分析](https://github.com/myhhub/stock)
+
+- [MouseClick：鼠标连点器](https://github.com/SeaYJ/MouseClick)
 
 # 类似项目
 

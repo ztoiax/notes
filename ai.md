@@ -6,11 +6,11 @@ tags: []
 
 <!-- mtoc-start -->
 
-* [ai原理](#ai原理)
+* [ai哲学](#ai哲学)
 * [LLM](#llm)
   * [原理](#原理)
   * [使用](#使用)
-  * [商业](#商业)
+  * [性能排行榜](#性能排行榜)
   * [项目](#项目)
     * [在线使用](#在线使用)
     * [专门领域项目](#专门领域项目)
@@ -36,10 +36,12 @@ tags: []
     * [抠图、抠视频](#抠图抠视频)
     * [图片、视频质量提升](#图片视频质量提升)
     * [ai视频剪辑](#ai视频剪辑)
+    * [图生图工作流](#图生图工作流)
   * [ai语音、音乐](#ai语音音乐)
     * [语音转文字](#语音转文字)
     * [文字转语音](#文字转语音)
     * [ai作曲（文字生成音乐、图片生成音乐）](#ai作曲文字生成音乐图片生成音乐)
+  * [ai翻译](#ai翻译)
   * [ai编程语言](#ai编程语言)
   * [ai操作系统](#ai操作系统)
   * [ai自动化点击](#ai自动化点击)
@@ -52,11 +54,14 @@ tags: []
   * [ai终端](#ai终端)
   * [ai爬虫和信息提取](#ai爬虫和信息提取)
   * [ai可视化](#ai可视化)
+  * [mcp](#mcp)
 * [在线ai工具](#在线ai工具)
 
 <!-- mtoc-end -->
 
-# ai原理
+# ai哲学
+
+- [文化纵横：从“半截维特根斯坦”到完整的人：AI 时代文科教育的使命](https://mp.weixin.qq.com/s/e_nYjjax7ArxA82L_s3YKg)
 
 - [（视频）卢菁老师\_北大AI博士后：谁能开启通用人工智能AGI的大门？符号主义、联结主义、行为主义！人工智能技术发展](https://www.bilibili.com/video/BV179fbYiEbK)
 
@@ -66,19 +71,12 @@ tags: []
 
 ## 原理
 
-- [llm-course](https://github.com/mlabonne/llm-course)
-
 - [llm-viz：3D 可视化 GPT 大语言模型。](https://bbycroft.net/llm)
 
 - [wolfram作者：What Is ChatGPT Doing … and Why Does It Work?](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)
 
-- [腾讯技术工程：一文带你了解大模型——智能体（Agent）](https://mp.weixin.qq.com/s/oMIPPgHjvJDyf98K9yNQbQ)
-
-- [腾讯云开发者：一文搞懂大模型！基础知识、 LLM 应用、 RAG 、 Agent 与未来发展](https://mp.weixin.qq.com/s/groI097gj0w7XMHIy3eERA)
-
-- [阿里云开发者：漫谈DeepSeek及其背后的核心技术](https://mp.weixin.qq.com/s/W4LzpMb3cIn0zVlW2oVung)
-
-- [腾讯云开发者：23张PPT搞懂DeepSeek核心技术！](https://mp.weixin.qq.com/s/c-CECCBa3JFQP-rRoMtLiw)
+- [爱思考的老梨：大模型，关键问题！](https://mp.weixin.qq.com/s/BUvp5UMIuAdpjbFGmg6BLw)
+    - [（视频）爱思考的老梨：【深度】万字解读，Deepseek、OpenAI背后，大语言模型的底层逻辑！](https://www.bilibili.com/video/BV13eAZe2EfP)
 
 ## 使用
 
@@ -95,93 +93,112 @@ tags: []
 
 - [铭毅天下Elasticsearch：吴恩达 x Open AI ChatGPT ——如何写出好的提示词视频核心笔记](https://mp.weixin.qq.com/s/VkLNKRtN7KR3Gjttk1cpPg)
 
-## 商业
+## 性能排行榜
 
-- [新职业|我用GPT给电子厂带货](https://t.cj.sina.com.cn/articles/view/6286736254/176b7fb7e01901df3u?display=0&retcode=0)
+- [chatbot-arena-leaderboard：传统静态数据测试集榜](https://lmarena.ai/?leaderboard)
+
+- [chinese-llm-benchmark：中文能力](https://github.com/jeinlee1991/chinese-llm-benchmark)
+
+- [ZeroEval：零样本学习能力（直接处理未见过的任务指令或数据）评测榜单](https://huggingface.co/spaces/allenai/ZeroEval)
+
+- [AIME24：数学能力](https://paperswithcode.com/sota/mathematical-reasoning-on-aime24)
+
+- [LiveCodeBench：代码能力](https://livecodebench.github.io/leaderboard.html)
+
+- [LiveBench：Meta 首席 AI 科学家杨立昆（Yann LeCun）联合 Abacus.AI、纽约大学等机构推出的一个极具挑战性的大语言模型（LLM）基准测试项目。它被业界誉为“最难糊弄的 LLMs 评测榜”](https://livebench.ai/#/)
+
+- [BFCL：加州大学伯克利分校等提出的评估准确调用函数或工具方面的测试](https://gorilla.cs.berkeley.edu/leaderboard.html#leaderboard)
 
 ## 项目
 
-- LLM性能排行
+- 国外
 
-  - [chatbot-arena-leaderboard](https://lmarena.ai/?leaderboard)
+    - [llama.cpp：facebook实现的运行llm大模型的项目](https://github.com/ggerganov/llama.cpp)
 
-  - [chinese-llm-benchmark](https://github.com/jeinlee1991/chinese-llm-benchmark)
+        - [llama配置要求](http://www.bimant.com/blog/llama-consumer-hardware-requirements/)
+        - [Llama2-Chinese：Llama中文社区](https://github.com/LlamaFamily/Llama-Chinese)
 
-  - [ZeroEval](https://huggingface.co/spaces/allenai/ZeroEval)
+    - [llama3：facebook2024年的llm](https://github.com/meta-llama/llama3)
 
-- [awesome-LLMs-In-China](https://github.com/wgwang/awesome-LLMs-In-China)
+      - [llama3-chinese：以Meta-Llama-3-8B为底座，使用 DORA + LORA+ 的训练方法，在50w高质量中文多轮SFT数据 + 10w英文多轮SFT数据 + 2000单轮自我认知数据训练而来的大模型。](https://github.com/seanzhang-zhichen/llama3-chinese)
 
-- [ktransformers：清华大学实现的，比llama.cpp要快，可以实现在4090 + 1T内存跑deepseek-r1 671B满血版](https://github.com/kvcache-ai/ktransformers)
+    - [Gemma：google的llm](https://github.com/google-deepmind/gemma)
 
-- [llama.cpp：facebook实现的运行llm大模型的项目](https://github.com/ggerganov/llama.cpp)
+    - [Grok-1：马斯克的 xAI 公司开源的 314B 参数、MoE（混合专家模型）的大型语言模型](https://github.com/xai-org/grok-1)
 
-  - [llama配置要求](http://www.bimant.com/blog/llama-consumer-hardware-requirements/)
-  - [Llama2-Chinese：Llama中文社区](https://github.com/LlamaFamily/Llama-Chinese)
+    - [corenet：苹果手机端大模型](https://github.com/apple/corenet)
 
-- [llama3：facebook2024年的llm](https://github.com/meta-llama/llama3)
+- 国产
 
-  - [llama3-chinese：以Meta-Llama-3-8B为底座，使用 DORA + LORA+ 的训练方法，在50w高质量中文多轮SFT数据 + 10w英文多轮SFT数据 + 2000单轮自我认知数据训练而来的大模型。](https://github.com/seanzhang-zhichen/llama3-chinese)
+    - [awesome-LLMs-In-China](https://github.com/wgwang/awesome-LLMs-In-China)
 
-- [Gemma：google的llm](https://github.com/google-deepmind/gemma)
+    - [ChatGLM-6B：清华大学的llm](https://github.com/THUDM/ChatGLM-6B)
+    - [ChatGLM2-6B：清华大学的llm](https://github.com/THUDM/ChatGLM2-6B)
+    - [ChatGLM3：清华大学和智谱合作的llm](https://github.com/THUDM/ChatGLM3)
 
-- [ChatGLM-6B：清华大学的llm](https://github.com/THUDM/ChatGLM-6B)
-- [ChatGLM2-6B：清华大学的llm](https://github.com/THUDM/ChatGLM2-6B)
-- [ChatGLM3：清华大学和智谱合作的llm](https://github.com/THUDM/ChatGLM3)
+    - [MiniMax-01（海螺ai）：支持4M token的大模型。deepseek之后最有潜力国产大模型](https://github.com/MiniMax-AI/MiniMax-01)
 
-- [MiniMax-01（海螺ai）：支持4M token的大模型。deepseek之后最有潜力国产大模型](https://github.com/MiniMax-AI/MiniMax-01)
+    - [DeepSeek-V3：在中国大模型市场掀起了第一场价格战，因而被网友称为 AI 界的“拼多多”。](https://github.com/deepseek-ai/DeepSeek-V3)
 
-- [DeepSeek-V3：在中国大模型市场掀起了第一场价格战，因而被网友称为 AI 界的“拼多多”。](https://github.com/deepseek-ai/DeepSeek-V3)
+    - [DeepSeek-R1和DeepSeek-R1 zero：推理模型](https://github.com/deepseek-ai/DeepSeek-R1)
 
-- [DeepSeek-R1和DeepSeek-R1 zero：推理模型](https://github.com/deepseek-ai/DeepSeek-R1)
+      > DeepSeek-R1 是一个基于强化学习(RL)训练的大型语言模型(LLM), 旨在提高其推理能力 。它通过两个RL阶段和两个监督微调(SFT)阶段进行训练,以发现更好的推理模式并与人类偏好保持一致。
 
-  > DeepSeek-R1 是一个基于强化学习(RL)训练的大型语言模型(LLM), 旨在提高其推理能力 。它通过两个RL阶段和两个监督微调(SFT)阶段进行训练,以发现更好的推理模式并与人类偏好保持一致。
+      - DeepSeek-R1-Zero：通过纯强化学习（RL）训练的基础模型，无监督微调（SFT）阶段，探索性强但存在输出不稳定问题。
+      - DeepSeek-R1：在 R1-Zero 基础上引入冷启动数据（少量 SFT）优化后的版本，解决输出问题并提升推理能力。
+      - DeepSeek-R1-Distill：从 R1 蒸馏到小型开源模型（如 Qwen、Llama）的轻量级推理模型，性能接近原版但更易部署。
 
-  - DeepSeek-R1-Zero：通过纯强化学习（RL）训练的基础模型，无监督微调（SFT）阶段，探索性强但存在输出不稳定问题。
-  - DeepSeek-R1：在 R1-Zero 基础上引入冷启动数据（少量 SFT）优化后的版本，解决输出问题并提升推理能力。
-  - DeepSeek-R1-Distill：从 R1 蒸馏到小型开源模型（如 Qwen、Llama）的轻量级推理模型，性能接近原版但更易部署。
+      - DeepSeek-R1-Distill 系列的小模型
 
-  - DeepSeek-R1-Distill 系列的小模型
+        - DeepSeek-R1-Distill-Qwen-1.5B
+        - DeepSeek-R1-Distill-Qwen-7B
+        - DeepSeek-R1-Distill-Llama-8B
+        - DeepSeek-R1-Distill-Qwen-14B
+        - DeepSeek-R1-Distill-Qwen-32B
+        - DeepSeek-R1-Distill-Llama-70B
 
-    - DeepSeek-R1-Distill-Qwen-1.5B
-    - DeepSeek-R1-Distill-Qwen-7B
-    - DeepSeek-R1-Distill-Llama-8B
-    - DeepSeek-R1-Distill-Qwen-14B
-    - DeepSeek-R1-Distill-Qwen-32B
-    - DeepSeek-R1-Distill-Llama-70B
+      - DeepSeek-R1 非蒸馏版模型是671B
 
-  - DeepSeek-R1 非蒸馏版模型是671B
+        - 国内著名程序员章亦春用8块H200跑DeepSeek-V3满血版和DeepSeek-R1的671B版。结果[V3输出吞吐量有3800tokens/秒](http://m.weibo.cn/status/5131311536668680?)而[R1输出吞吐量只有不到22.8tokens/秒](https://m.weibo.cn/status/5131064928897158?)
 
-    - 国内著名程序员章亦春用8块H200跑DeepSeek-V3满血版和DeepSeek-R1的671B版。结果[V3输出吞吐量有3800tokens/秒](http://m.weibo.cn/status/5131311536668680?)而[R1输出吞吐量只有不到22.8tokens/秒](https://m.weibo.cn/status/5131064928897158?)
+      - DeepSeek-R1 671B的满血版可以实现prompt：`用html实现小球在三角形里跳动`
 
-  - DeepSeek-R1 671B的满血版可以实现prompt：`用html实现小球在三角形里跳动`
+    - [DeepSeek-V3-0324：被评价为与Claude 3.7 Sonnet 同一水平](https://huggingface.co/deepseek-ai/DeepSeek-V3-0324)
 
-- [open-r1：DeepSeek-R1 的完全开源复现](https://github.com/huggingface/open-r1)
+        - 模型参数为 6850 亿，较初代 V3 版本的 6710 亿有小幅增长。
 
-- [Grok-1：马斯克的 xAI 公司开源的 314B 参数、MoE（混合专家模型）的大型语言模型](https://github.com/xai-org/grok-1)
 
-- [corenet：苹果手机端大模型](https://github.com/apple/corenet)
+    - [Qwen2.5-Omni：阿里的大模型。7B尺寸实现全球最强性能](https://github.com/QwenLM/Qwen2.5-Omni)
 
-- [ChatPilot：支持Google搜索、文件网址对话（RAG）、代码解释器功能，复现了Kimi Chat(文件，拖进来；网址，发出来)](https://github.com/shibing624/ChatPilot)
+    - [OpenManus：manus的开源版](https://github.com/mannaandpoem/OpenManus)
 
-- [LaWGPT：在通用中文基座模型（如 Chinese-LLaMA、ChatGLM 等）的基础上扩充法律领域专有词表、大规模中文法律语料预训练](https://github.com/pengxiao-song/LaWGPT)
+    - [open-r1：DeepSeek-R1 的完全开源复现](https://github.com/huggingface/open-r1)
 
-- [DB-GPT（部署数据库交互llm。防止数据隐私上传平台）](https://github.com/eosphoros-ai/DB-GPT)
 
-- [llm-course：免费的 LLM 课程，包含面向新手入门 LLM 的基础知识，面向程序员和科学家的 LLMs 产品和部署 LLM 应用的知识和笔记。](https://github.com/mlabonne/llm-course)
+- llm相关项目
 
-- [nanoGPT：是用于训练/微调中等规模 GPT 模型的库。它是对 minGPT 的重写](https://github.com/karpathy/nanoGPT)
+    - [ktransformers：清华大学实现的，比llama.cpp要快，可以实现在4090 + 1T内存跑deepseek-r1 671B满血版](https://github.com/kvcache-ai/ktransformers)
 
-- [llm.c：1k 行的 C 代码就完成了 GPT-2 模型的训练，代码纯手撸、不依赖任何机器学习框架。](https://github.com/karpathy/llm.c)
+    - [ChatPilot：支持Google搜索、文件网址对话（RAG）、代码解释器功能，复现了Kimi Chat(文件，拖进来；网址，发出来)](https://github.com/shibing624/ChatPilot)
 
-  - 教学意义大于实用价值
+    - [LaWGPT：在通用中文基座模型（如 Chinese-LLaMA、ChatGLM 等）的基础上扩充法律领域专有词表、大规模中文法律语料预训练](https://github.com/pengxiao-song/LaWGPT)
 
-  - 作者曾就职于特斯拉的自动驾驶部门负责人、OpenAI 的创始成员。
+    - [DB-GPT（部署数据库交互llm。防止数据隐私上传平台）](https://github.com/eosphoros-ai/DB-GPT)
+
+    - [nanoGPT：是用于训练/微调中等规模 GPT 模型的库。它是对 minGPT 的重写](https://github.com/karpathy/nanoGPT)
+    - [llm.c：1k 行的 C 代码就完成了 GPT-2 模型的训练，代码纯手撸、不依赖任何机器学习框架。](https://github.com/karpathy/llm.c)
+
+      - 教学意义大于实用价值
+
+      - 作者曾就职于特斯拉的自动驾驶部门负责人、OpenAI 的创始成员。
 
 ### 在线使用
 
-- [huggingface](https://huggingface.co/)
+- [huggingface：模型下载](https://huggingface.co/)
 
-  - [（视频）秋芝2046：Huggingface小白AI入门，你必须了解的免费开源模型大超市](https://www.bilibili.com/video/BV1Mr4MewEY5)
+    - [（视频）秋芝2046：Huggingface小白AI入门，你必须了解的免费开源模型大超市](https://www.bilibili.com/video/BV1Mr4MewEY5)
+
+- [modelscope：模型下载](https://modelscope.cn/models)
 
 - [LLM Pricing：AI 模型价格对比和试用链接](https://llmpricecheck.com/)
 
@@ -355,6 +372,8 @@ tags: []
 - [腾讯技术工程：大模型Prompt技巧全解析](https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A)
 
 - [deepseek提示库](https://api-docs.deepseek.com/zh-cn/prompt-library/)
+
+- [阿里云开发者：AI联网搜索时的prompt小技巧](https://mp.weixin.qq.com/s/ZTdZY-jsyWwC2ELLF8byoQ)
 
 ### 数据库
 
@@ -576,6 +595,10 @@ tags: []
 
 - [flux](https://github.com/black-forest-labs/flux)
 
+- 在线使用
+
+    - [即梦：字节的](https://jimeng.jianying.com/ai-tool/home?ref=ai-bot.cn)
+
 ### 文字、图片生成视频
 
 - [VBench：视觉模型性能排行榜](https://vchitect.github.io/VBench-project/)
@@ -595,6 +618,8 @@ tags: []
 - [Step-Video-T2V](https://github.com/stepfun-ai/Step-Video-T2V)
 
 - [可灵AI：快手的](https://klingai.kuaishou.com/text-to-video/new)
+
+- [goku：字节的](https://github.com/Saiyan-World/goku)
 
 - [CogVideo：清华大学的](https://github.com/THUDM/CogVideo)
 
@@ -620,6 +645,10 @@ tags: []
 
 - [filmora：商业软件需要付费，不支持linux](https://filmora.wondershare.com/)
 
+### 图生图工作流
+
+- [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
+
 ## ai语音、音乐
 
 - [UVR5：分离人声和背景音乐](https://github.com/Anjok07/ultimatevocalremovergui)
@@ -634,6 +663,8 @@ tags: []
 
 - [Step-Audio](https://github.com/stepfun-ai/Step-Audio)
 
+- [Spark-TTS](https://github.com/SparkAudio/Spark-TTS)
+
 ### ai作曲（文字生成音乐、图片生成音乐）
 
 - [Suno](https://suno.com/)
@@ -643,6 +674,12 @@ tags: []
 - [YuE：开源的全曲音乐生成模型，类似于 Suno.ai](https://github.com/multimodal-art-projection/YuE)
 
 - [InspireMusic：阿里的](https://github.com/FunAudioLLM/InspireMusic)
+
+## ai翻译
+
+- [MTranServer：离线翻译服务器](https://github.com/xxnuo/MTranServer)
+
+- [firefox-translations-models：firefox社区的翻译模型](https://github.com/mozilla/firefox-translations-models)
 
 ## ai编程语言
 
@@ -708,11 +745,15 @@ tags: []
 
 - [marscode：字节的豆包模型](https://www.marscode.com/)
 
+- [augmentcode：微软和谷歌的工程师离职开发的](https://www.augmentcode.com/)
+
 ## ai编辑器
 
 - [codeium的windsurf](https://codeium.com/windsurf)
 
 - [cursor：基于vscode的ai编辑器](https://github.com/getcursor/cursor)
+
+    - [cursor-tools](https://github.com/eastlondoner/cursor-tools)
 
 - [aide：ai编辑器](https://github.com/codestoryai/aide)
 
@@ -737,6 +778,12 @@ tags: []
 ## ai可视化
 
 - [data-formulator：微软的](https://github.com/microsoft/data-formulator)
+
+## mcp
+
+- [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
+
+- [Claude MCP 服务器目录](https://www.claudemcp.com/zh/servers)
 
 # 在线ai工具
 

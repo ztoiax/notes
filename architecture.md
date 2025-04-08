@@ -13,6 +13,7 @@ tags: []
   * [国产cpu](#国产cpu)
 * [GPU](#gpu)
   * [原理](#原理)
+  * [cuda](#cuda)
 * [RDMA](#rdma)
 * [FPGA](#fpga)
 
@@ -232,6 +233,11 @@ tags: []
 - [Tales of the M1 GPU](https://asahilinux.org/2022/11/tales-of-the-m1-gpu/)
 
 - [Which GPU(s) to Get for Deep Learning: My Experience and Advice for Using GPUs in Deep Learning](https://timdettmers.com/2023/01/30/which-gpu-for-deep-learning/)
+
+## cuda
+
+- [infoq：12 人小团队如何成就英伟达万亿市值？CUDA 架构师首次亲述真正的算力“壁垒”形成过程](https://mp.weixin.qq.com/s/fSXQSRDOMMrUZGq9uVqovg)
+
 
 # RDMA
 

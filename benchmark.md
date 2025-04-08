@@ -36,6 +36,7 @@ tags: []
   * [bottom](#bottom)
   * [Remotery：cpu和gpu](#remoterycpu和gpu)
   * [monitorets：gui](#monitoretsgui)
+  * [perfetto：谷歌开发的 Android, Linux and Chrome性能测试工具](#perfetto谷歌开发的-android-linux-and-chrome性能测试工具)
 * [CPU](#cpu)
   * [cpu info](#cpu-info)
   * [mpstat(sysstat)：单独监测单个 CPU 情况](#mpstatsysstat单独监测单个-cpu-情况)
@@ -860,6 +861,8 @@ sysbench --test=fileio --file-total-size=5G prepare
 ![image](./Pictures/benchmark/Remotery.gif)
 
 ## [monitorets：gui](https://github.com/jorchube/monitorets)
+
+## [perfetto：谷歌开发的 Android, Linux and Chrome性能测试工具](https://github.com/google/perfetto)
 
 # CPU
 
