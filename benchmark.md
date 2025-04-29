@@ -37,6 +37,7 @@ tags: []
   * [Remotery：cpu和gpu](#remoterycpu和gpu)
   * [monitorets：gui](#monitoretsgui)
   * [perfetto：谷歌开发的 Android, Linux and Chrome性能测试工具](#perfetto谷歌开发的-android-linux-and-chrome性能测试工具)
+  * [NodeQuality: 在沙箱环境中运行vps测试脚本，并排版测试结果](#nodequality-在沙箱环境中运行vps测试脚本并排版测试结果)
 * [CPU](#cpu)
   * [cpu info](#cpu-info)
   * [mpstat(sysstat)：单独监测单个 CPU 情况](#mpstatsysstat单独监测单个-cpu-情况)
@@ -82,6 +83,7 @@ tags: []
       * [cachetop(bcc)](#cachetopbcc)
       * [cachestat(bcc)](#cachestatbcc)
       * [pcstat](#pcstat)
+      * [hcache: 基于 pcstat 工具改进的增强版，专为 Linux 系统设计，能够深度分析内存中缓存（buff/cache）的分布情况。](#hcache-基于-pcstat-工具改进的增强版专为-linux-系统设计能够深度分析内存中缓存buffcache的分布情况)
       * [hcache](#hcache)
     * [opensnoop(bcc)](#opensnoopbcc)
     * [fileslower(bcc)](#fileslowerbcc)
@@ -139,6 +141,7 @@ tags: []
     * [bcc](#bcc)
       * [stackcount](#stackcount)
     * [0xtools](#0xtools)
+    * [coroot:可观测工具。可作为datadog和newrelic的替代品，能够收集metrics、traces、logs、profiles等。](#coroot可观测工具可作为datadog和newrelic的替代品能够收集metricstraceslogsprofiles等)
   * [perf-tool](#perf-tool)
     * [perf list](#perf-list)
     * [perf stat](#perf-stat)
@@ -864,6 +867,8 @@ sysbench --test=fileio --file-total-size=5G prepare
 
 ## [perfetto：谷歌开发的 Android, Linux and Chrome性能测试工具](https://github.com/google/perfetto)
 
+## [NodeQuality: 在沙箱环境中运行vps测试脚本，并排版测试结果](https://github.com/LloydAsp/NodeQuality)
+
 # CPU
 
 ## cpu info
@@ -1411,6 +1416,10 @@ httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,1
 ```bash
 pcstat *
 ```
+
+#### [hcache: 基于 pcstat 工具改进的增强版，专为 Linux 系统设计，能够深度分析内存中缓存（buff/cache）的分布情况。](https://github.com/silenceshell/hcache)
+
+- 与原生工具相比，hcache 新增了 全局缓存排序、进程级缓存分析 和 多格式输出 等核心功能。通过它，你可以快速定位占用缓存最多的文件或进程，从而优化内存使用或排查异常问题。
 
 #### [hcache](https://github.com/silenceshell/hcache)
 
@@ -2323,6 +2332,8 @@ stackcollapse.pl < out.stacks | flamegraph.pl --color=mem \
 - [Memory Leak (and Growth) Flame Graphs](http://www.brendangregg.com/FlameGraphs/memoryflamegraphs.html)
 
 ### [0xtools](https://github.com/tanelpoder/0xtools)
+
+### [coroot:可观测工具。可作为datadog和newrelic的替代品，能够收集metrics、traces、logs、profiles等。](https://github.com/coroot/coroot)
 
 ## [perf-tool](http://www.brendangregg.com/perf.html)
 

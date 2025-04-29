@@ -142,6 +142,7 @@ tags: []
       * [goaccess 日志监控](#goaccess-日志监控)
       * [rhit:日志浏览器](#rhit日志浏览器)
       * [ngtop：日志查看器](#ngtop日志查看器)
+      * [NixVis：日志分析工具](#nixvis日志分析工具)
       * [web-check：全面的网站检查工具。这是一款网站检查工具，可以显示指定网站更多的信息。比如：DNS 记录、服务器位置、站点性能、SSL 证书、性能、SEO 等信息，可用于分析网站的服务器架构、查看安全漏洞等场景。](#web-check全面的网站检查工具这是一款网站检查工具可以显示指定网站更多的信息比如dns-记录服务器位置站点性能ssl-证书性能seo-等信息可用于分析网站的服务器架构查看安全漏洞等场景)
   * [在线工具](#在线工具)
   * [第三方nginx](#第三方nginx)
@@ -6302,6 +6303,8 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 #### [rhit:日志浏览器](https://github.com/Canop/rhit)
 
 #### [ngtop：日志查看器](https://github.com/facundoolano/ngtop)
+
+#### [NixVis：日志分析工具](https://github.com/BeyondXinXin/nixvis)
 
 #### [web-check：全面的网站检查工具。这是一款网站检查工具，可以显示指定网站更多的信息。比如：DNS 记录、服务器位置、站点性能、SSL 证书、性能、SEO 等信息，可用于分析网站的服务器架构、查看安全漏洞等场景。](https://github.com/Lissy93/web-check)
 

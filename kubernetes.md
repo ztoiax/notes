@@ -2507,6 +2507,8 @@ curl https://argocd.kubernets.cn -I
 
 - [retina：微软开发的监控k8s网络](https://github.com/microsoft/retina)
 
+- [Headlamp：k8s ui](https://headlamp.dev/)
+
 ## 云原生
 
 - [云原生应用市场](https://hub.grapps.cn/)

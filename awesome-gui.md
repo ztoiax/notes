@@ -26,7 +26,7 @@ tags: []
 * [音乐](#音乐)
 * [远程控制](#远程控制)
   * [ssh客户端](#ssh客户端)
-* [pdf、epub、mobi阅读器](#pdfepubmobi阅读器)
+* [pdf、epub、mobi、markdown阅读器](#pdfepubmobimarkdown阅读器)
 * [note](#note)
 * [markdown文章知识管理、阅读器](#markdown文章知识管理阅读器)
 * [ide](#ide)
@@ -223,7 +223,7 @@ tags: []
     - 支持 Find Everywhere 快速跳转
     - 支持数据加密
 
-# pdf、epub、mobi阅读器
+# pdf、epub、mobi、markdown阅读器
 
 - [sioyek: pdf阅读器](https://github.com/ahrm/sioyek)
 
@@ -232,6 +232,8 @@ tags: []
 - [foliate: pdf, epub阅读器](https://github.com/johnfactotum/foliate)
 
 - [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
+
+- [note-gen:跨平台的 Markdown 笔记软件，支持接入 AI 模型](https://github.com/codexu/note-gen)
 
 # note
 

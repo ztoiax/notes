@@ -239,6 +239,7 @@ tags: []
     * [Web2pdf](#web2pdf)
     * [zerox：pdf转markdown](#zeroxpdf转markdown)
     * [markitdown：微软官方推出的工具，将各种格式的文件（主要是 Office 文件）转成 Markdown 格式。](#markitdown微软官方推出的工具将各种格式的文件主要是-office-文件转成-markdown-格式)
+  * [pdf-craft：将扫描的 PDF 文件转为 Markdown 和 EPUB，并通过 AI 进行 OCR。](#pdf-craft将扫描的-pdf-文件转为-markdown-和-epub并通过-ai-进行-ocr)
   * [PDF-Guru：pdf gui处理工具](#pdf-gurupdf-gui处理工具)
   * [weread-exporter：将微信读书中的书籍导出成epub、pdf、mobi等格式](#weread-exporter将微信读书中的书籍导出成epubpdfmobi等格式)
   * [olmocr：使用视觉大模型提取pdf文件的文字、表格、公式等](#olmocr使用视觉大模型提取pdf文件的文字表格公式等)
@@ -1499,6 +1500,8 @@ pip install markitdown
 # pdf传md
 markitdown path-to-file.pdf > document.md
 ```
+
+## [pdf-craft：将扫描的 PDF 文件转为 Markdown 和 EPUB，并通过 AI 进行 OCR。](https://github.com/oomol-lab/pdf-craft)
 
 ## [PDF-Guru：pdf gui处理工具](https://github.com/kevin2li/PDF-Guru)
 

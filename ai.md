@@ -54,7 +54,9 @@ tags: []
   * [ai终端](#ai终端)
   * [ai爬虫和信息提取](#ai爬虫和信息提取)
   * [ai可视化](#ai可视化)
-  * [mcp](#mcp)
+  * [ai自动化](#ai自动化)
+  * [MCP](#mcp)
+  * [A2A](#a2a)
 * [在线ai工具](#在线ai工具)
 
 <!-- mtoc-end -->
@@ -665,6 +667,8 @@ tags: []
 
 - [Spark-TTS](https://github.com/SparkAudio/Spark-TTS)
 
+- [KrillinAI: 基于AI大模型的视频翻译和配音工具，专业级翻译，一键部署全流程，可以生成适配抖音，小红书，哔哩哔哩，视频号，TikTok，Youtube Shorts等形态的内容](https://github.com/krillinai/KrillinAI)
+
 ### ai作曲（文字生成音乐、图片生成音乐）
 
 - [Suno](https://suno.com/)
@@ -724,6 +728,11 @@ tags: []
   python webui.py --ip 127.0.0.1 --port 7788
   ```
 
+- [nanobrowser：一个开源的 Chrome 插件，基于 AI 大模型，使用自然语言操纵浏览器，可以看作 OpenAI Operator 的替代品。](https://github.com/nanobrowser/nanobrowser)
+
+- [BrowserMCP: 用 AI 自动化浏览器](https://browsermcp.io/)
+- [dia：原生ai浏览器](https://www.diabrowser.com/)
+
 ## ai搜索
 
 - [scira：原名为MiniPerplx](https://github.com/zaidmukaddam/scira)
@@ -754,6 +763,10 @@ tags: []
 - [cursor：基于vscode的ai编辑器](https://github.com/getcursor/cursor)
 
     - [cursor-tools](https://github.com/eastlondoner/cursor-tools)
+    - [cursor-free-vip:免费享受 Pro 版](https://github.com/yeongpin/cursor-free-vip)
+
+
+- [firebase：谷歌开发的](https://studio.firebase.google.com/?hl=zh-cn)
 
 - [aide：ai编辑器](https://github.com/codestoryai/aide)
 
@@ -769,6 +782,8 @@ tags: []
 
 - [warp：自带ai的termianl](https://github.com/warpdotdev/Warp)
 
+- [codex: openai的](https://github.com/openai/codex?tab=Apache-2.0-1-ov-file)
+
 ## ai爬虫和信息提取
 
 - [后裔采集器](https://www.houyicaiji.com/)
@@ -779,11 +794,19 @@ tags: []
 
 - [data-formulator：微软的](https://github.com/microsoft/data-formulator)
 
-## mcp
+## ai自动化
+
+- [n8n: 可扩展的工作流程自动化工具，它提供了直观的界面，让用户可以通过拖放方式连接不同的应用程序和服务，从而创建自定义的自动化流程。](https://github.com/n8n-io/n8n)
+
+## MCP
 
 - [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
 
 - [Claude MCP 服务器目录](https://www.claudemcp.com/zh/servers)
+
+- [git-mcp: 让 AI 理解 GitHub 项目](https://github.com/idosal/git-mcp)
+
+## [A2A](https://github.com/google/A2A)
 
 # 在线ai工具
 

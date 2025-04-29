@@ -1,3 +1,9 @@
+---
+id: awesome-windows
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -105,6 +111,8 @@
     - 支持数据加密
 
 - [WeChatMsg：提取微信聊天记录的工具。导出成 HTML、Word、Excel 和 txt 等格式的文档。导出的 HTML 文档，还原了微信聊天界面，而且包含文本、图片、视频、表情包、语音、文件、转账等记录，导出的数据可用于永久保存、生成年度报告和训练个人聊天助手。](https://github.com/LC044/WeChatMsg)
+
+- [chatlog: 专为微信聊天记录管理而设计的开源工具。它采用 Go 语言开发，提供了 TUI 界面、命令行工具和 HTTP API 服务，支持从本地数据库查询聊天记录、联系人、群聊等功能，以及 MCP SSE 协议，可与 AI 助手无缝集成。](https://github.com/sjzar/chatlog)
 
 - [transok：局域网文件传输](https://github.com/bent2685/transok-wails)
 
