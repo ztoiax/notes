@@ -13,6 +13,7 @@ tags: []
       * [交互模式](#交互模式)
     * [netstat](#netstat)
     * [ss (iproute2)](#ss-iproute2)
+    * [theopfr/somo: A human-friendly alternative to netstat for socket and port monitoring on Linux.](#theopfrsomo-a-human-friendly-alternative-to-netstat-for-socket-and-port-monitoring-on-linux)
     * [nc（连接服务器）](#nc连接服务器)
     * [frp: 反向代理(内网穿透)](#frp-反向代理内网穿透)
       * [端口](#端口)
@@ -50,6 +51,7 @@ tags: []
       * [websocat:创建websocat](#websocat创建websocat)
       * [websocketd:创建websocket服务执行命令](#websocketd创建websocket服务执行命令)
     * [dns](#dns)
+      * [tldx: 一键查找可用域名的工具。这是一款快速查询可用域名的命令行工具。它能够根据关键词、前缀、后缀和多种顶级域名，智能生成域名组合，并快速检测其可用性。](#tldx-一键查找可用域名的工具这是一款快速查询可用域名的命令行工具它能够根据关键词前缀后缀和多种顶级域名智能生成域名组合并快速检测其可用性)
       * [whois(查看域名注册信息)](#whois查看域名注册信息)
       * [dnspeep：记录程序的dns请求,响应](#dnspeep记录程序的dns请求响应)
       * [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](#dns-detector从-dns-服务器获取某个网站的所有-ip-地址逐一进行延迟测试)
@@ -284,6 +286,8 @@ ss -s
 # 显示tcp、udp、socket套接字
 ss -a
 ```
+
+### [theopfr/somo: A human-friendly alternative to netstat for socket and port monitoring on Linux.](https://github.com/theopfr/somo)
 
 ### nc（连接服务器）
 
@@ -1016,6 +1020,8 @@ h2spec -t -S -h www.bilibili.com -p 443
 grpcurl grpc.server.com:443 my.custom.server.Service/Method
 ```
 
+- [suxin2017/lynx-server:开源服务器，代理 HTTP/HTTPS 和 WebSocket 流量，内置 Web 管理界面。](https://github.com/suxin2017/lynx-server)
+
 ### websocket
 
 #### [wscat](https://github.com/websockets/wscat)
@@ -1070,6 +1076,8 @@ nslookup www.baidu.com
 # dig命令中的SERVER
 dig
 ```
+
+#### [tldx: 一键查找可用域名的工具。这是一款快速查询可用域名的命令行工具。它能够根据关键词、前缀、后缀和多种顶级域名，智能生成域名组合，并快速检测其可用性。](https://github.com/brandonyoungdev/tldx)
 
 #### whois(查看域名注册信息)
 

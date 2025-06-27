@@ -818,6 +818,8 @@ tags: []
 
 - [《大模型基础》。该书是由浙江大学 DAILY 实验室开源的大语言模型教材，内容涵盖传统语言模型、大语言模型架构演化、Prompt 工程、参数高效微调、模型编辑、检索增强生成等方面。](https://github.com/ZJU-LLMs/Foundations-of-LLMs)
 
+- [Happy-LLM：深入理解 LLM 核心原理，动手实现你的第一个大模型](https://datawhalechina.github.io/happy-llm/#/)
+
 - [《LLMs-from-scratch》](https://github.com/rasbt/LLMs-from-scratch)
     - 这是一本讲述如何从头制作一个类似 ChatGPT 的大语言模型的书，它介绍了 LLMs 的工作原理，并教你如何创建自己的 LLM，内含丰富的图示和代码示例，目前该书还在编写中未完结。
 
@@ -826,6 +828,8 @@ tags: []
 - [ai-agents-for-beginners：微软开源的 AI Agent 初学者教程。该项目是微软专为初学者打造的 AI 智能代理（AI Agents）教程，内容分为 10 个课程，包含详细的教程、视频和示例代码。](https://github.com/microsoft/ai-agents-for-beginners)
 
 - [llm-universe：本项目是一个面向小白开发者的大模型应用开发教程](https://datawhalechina.github.io/llm-universe/#/)
+
+- [nano-vllm: 从零开始构建的轻量级 vLLM。该项目是用 Python 实现的轻量级 vLLM（大语言模型推理引擎）项目，核心代码仅 1000 多行。它结构清晰、易于阅读，推理速度媲美 vLLM 原版，并集成了前缀缓存（Prefix Caching）、张量并行（Tensor Parallelism）和 Torch 编译等推理优化技术。](https://github.com/GeeeekExplorer/nano-vllm)
 
 - [minimind：从0训练微型语言模型。2小时完全从0训练26M的小参数GPT](https://github.com/jingyaogong/minimind)
 
@@ -1727,6 +1731,7 @@ RabbitMQ实战指南》作者
     - 腾讯医典
     - 广东卫生信息
     - 健康时报
+    - CCTV生活圈
     - 曾哥每日科普
 
     - 营养师顾中一
@@ -1748,6 +1753,8 @@ RabbitMQ实战指南》作者
     - 刘少伟教授
     - 南都鉴定评测实验室
         > 各种评测
+
+    - 餐宝典
 
 ## 美食探店
 
@@ -1775,6 +1782,9 @@ RabbitMQ实战指南》作者
     > 水产解剖、挑选
 
 - [吃经](https://space.bilibili.com/1907059049)
+    > 水果挑选
+
+- [馋嘴老木](https://space.bilibili.com/629674823)
     > 水果挑选
 
 ## 做菜
@@ -1875,6 +1885,8 @@ RabbitMQ实战指南》作者
 
     - 电影艺术杂志
 
+    - 北京文艺观察
+
 ## 音乐
 
 - bilibili
@@ -1893,6 +1905,15 @@ RabbitMQ实战指南》作者
 
     - 人民音乐杂志
     - 杨燕迪音乐人文笔录
+    - 音乐研究
+    - 中国音乐学
+    - 音乐艺术
+        > 上海音乐学院学报
+    - 星海音乐学院学报
+    - 呆若木一
+        > 综艺评论
+    - 耳帝
+        > 综艺评论
 
 ## 科学
 
@@ -1987,6 +2008,7 @@ RabbitMQ实战指南》作者
     - 视灵者之梦
     - 事实与事态
     - 熙屿文化
+    - 世界宗教研究
 
     - 嘉映哲学
         > 陈嘉映
@@ -1994,9 +2016,11 @@ RabbitMQ实战指南》作者
         > 邓晓芒
     - 古典学研究
         > 刘小枫
+    - 经典与解释
+        > 刘小枫
+
     - 公民哲学
     - 复旦哲学思想
-
     - 文艺：
         - 文艺研究
         - 文艺争鸣
@@ -2006,14 +2030,20 @@ RabbitMQ实战指南》作者
         - 中国科学院哲学研究所
         - 自然辩证法通讯
 
+    - 古希腊：
+        - philellas
+
     - 德国哲学：
         - 现象学
         - 现象学与德国古典哲学
         - 陈直Dharma
+        - 同济大学学报社会科学版
+            > 孙周兴、杨光
 
     - 马克思：
         - 实践与文本
         - 当代马克思主义评论
+        - 当代国外马克思主义评论
         - 马伦研究动态
         - 马美研究
         - 马克思主义哲学研究
@@ -2038,19 +2068,32 @@ RabbitMQ实战指南》作者
             > 陈来
         - 船山学社
         - 孔子研究杂志
+        - 孔子研究院
         - 孟子研究院
         - 中国文化研究
         - 中国文化书院
         - 华夏文化书院
         - 天水伏羲故里国学院
+        - 南京大学中华文化研究院
+            > 赖永海
+        - 新亚学报
+            > 香港中文大学
 
 ## 美术
+
+- bilibili
 
     - [玩艺术的吴雅琳](https://space.bilibili.com/637679816)
         > 美术、雕塑
 
     - [孙乃树](https://space.bilibili.com/1348664019)
         > 美术
+
+- 微信公众号
+
+    - 当代美术家
+    - 山水澄明
+
 ## 文学
 
 - bilibili
@@ -2073,6 +2116,8 @@ RabbitMQ实战指南》作者
     - 鲁迅研究月刊
     - 鲁迅研究界
     - 蔡丹君
+    - 人文共和
+        > 北京师范大学文学院人文研究中心
 
 ## 历史
 
@@ -2200,6 +2245,11 @@ RabbitMQ实战指南》作者
         > 和时事相关的论文
 
     - 社会理论
+    - 广东社会科学
+    - 斯文在线
+        > 上海社会科学研究院文学研究所
+
+    - 北京大学学报
 
 ## 法律
 
@@ -2343,6 +2393,9 @@ RabbitMQ实战指南》作者
 
     - 黄文政讲人口问题
         > 人口问题
+
+    - 莫干山研究院
+        > 9号院的门生
 
 ## 金融
 
@@ -2497,6 +2550,9 @@ RabbitMQ实战指南》作者
 
     - [卢克文工作室](https://www.bilibili.com/video/BV1bUwGe1Eew)
 
+    - [动新闻](https://space.bilibili.com/482843134/upload/video)
+        > 短视频动画地图还原新闻
+
 - 微信公众号
 
     - 中国政府网
@@ -2536,9 +2592,13 @@ RabbitMQ实战指南》作者
 
 - bilibili
 
+    - [马沙阿姨和肥肥叔叔投稿视频：粤语歌](https://space.bilibili.com/3543159/upload/video)
+
     - [粤地诡录](https://space.bilibili.com/1844371398)
 
     - [溪山野行：广州花鸟鱼虫](https://space.bilibili.com/479060651)
+
+    - [劳历事：粤语，粤文化](https://space.bilibili.com/2071267686/upload/video)
 
 - 广东相关的微信公众号
 
@@ -2560,6 +2620,8 @@ RabbitMQ实战指南》作者
     - 广州旧闻
 
     - 羊城纵览
+
+    - 广州房探
 
 # 数据
 

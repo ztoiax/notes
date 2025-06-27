@@ -81,6 +81,7 @@ tags: []
     * [highlight cat](#highlight-cat)
   * [alder](#alder)
     * [highlight tree](#highlight-tree)
+  * [lstr：instead tree](#lstrinstead-tree)
   * [ag](#ag)
     * [instead grep](#instead-grep)
   * [fzf](#fzf)
@@ -95,6 +96,7 @@ tags: []
   * [moar：instead more](#moarinstead-more)
   * [pet：Simple command-line snippet manager](#petsimple-command-line-snippet-manager)
   * [multitail：instead tail](#multitailinstead-tail)
+  * [logdy:内置 Web 界面，可通过浏览器像 tail -f 一样实时查看与过滤日志，支持多种输入模式和自定义解析器。](#logdy内置-web-界面可通过浏览器像-tail--f-一样实时查看与过滤日志支持多种输入模式和自定义解析器)
   * [cheat：instead man](#cheatinstead-man)
   * [tealdeer：instead man tldr ](#tealdeerinstead-man-tldr-)
   * [fx](#fx)
@@ -109,8 +111,8 @@ tags: []
   * [sad：instead sed](#sadinstead-sed)
   * [CopyQ：剪切板管理，支持图片](#copyq剪切板管理支持图片)
 * [disk](#disk)
-  * [dfc](#dfc)
-    * [instead df](#instead-df)
+  * [dysk：instead df](#dyskinstead-df)
+  * [dfc：instead df](#dfcinstead-df)
   * [cfdisk](#cfdisk)
     * [instead fdisk](#instead-fdisk)
   * [duf](#duf)
@@ -603,6 +605,8 @@ gh release list
 
 ![image](./Pictures/awesomecli/14.avif)
 
+## [lstr：instead tree](https://github.com/bgreenwell/lstr)
+
 ## ag
 
 ### instead grep
@@ -643,6 +647,17 @@ fzf -e
 ![image](./Pictures/awesomecli/3.avif)
 
 ## multitail：instead tail
+
+## [logdy:内置 Web 界面，可通过浏览器像 tail -f 一样实时查看与过滤日志，支持多种输入模式和自定义解析器。](https://github.com/logdyhq/logdy-core)
+```sh
+# Use with any shell command
+$ tail -f file.log | logdy
+WebUI started, visit http://localhost:8080
+
+# Read log files
+$ logdy follow app-out.log --full-read
+WebUI started, visit http://localhost:8080
+```
 
 ## [cheat：instead man](https://github.com/cheat/cheat)
 
@@ -717,11 +732,14 @@ ls filename | sad '1' '2' | delta
 
 # disk
 
-## [dfc](https://github.com/Rolinh/dfc)
+## [dysk：instead df](https://github.com/Canop/dysk)
 
-![image](./Pictures/awesomecli/6.avif)
+- [别再用 df 了！这款 GitHub 新晋顶流磁盘管理工具，3 秒帮你揪出占满磁盘的元凶文件！](https://mp.weixin.qq.com/s/Wq2fVALVKR4JhrSolpBPBw)
 
-### instead df
+## [dfc：instead df](https://github.com/Rolinh/dfc)
+
+
+### 
 
 ## cfdisk
 
@@ -1525,6 +1543,16 @@ markitdown path-to-file.pdf > document.md
 
 ## 浏览markdown文件
 
+- [quarkdown:这是一个现代化的 Markdown 排版系统，通过强大的扩展功能，助力将创意转化为书籍、文章或 PPT。它引入了函数调用、自定义函数和变量定义等扩展，支持布局构建、数学计算、条件语句和循环等功能，可输出 HTML、PDF、幻灯片和分页文档等多种格式。当前采用 CLI 命令行操作，支持自动内容重载和实时预览。](https://github.com/iamgio/quarkdown)
+
+    ```sh
+    # 在浏览器预览ai.md文件
+    quarkdown c ai.md -p -w
+
+    # 输出 PDF 格式
+    quarkdown c file.qmd --pdf
+    ```
+
 - [see：markdown好看的浏览](https://github.com/guilhermeprokisch/see)
 
 - [glow：markdown好看的浏览](https://github.com/charmbracelet/glow)
@@ -1824,6 +1852,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [aider](https://github.com/paul-gauthier/aider)这是一款运行在终端里的 AI 辅助编码工具，能够将你本地 git 仓库中的代码与 LLMs 结合起来。开发者通过 add 命令引入文件，然后用自然语言描述需求，它就可以对现有的代码进行修改并自动提交，支持接入多种大模型，包括 GPT 3.5、GPT-4 和 Claude 3 Opus 等。
 
 - [exo：组建ai集群](https://github.com/exo-explore/exo)
+- [liujuntao123/smart-mermaid: 一款基于 AI 技术的 Web 应用程序，可将文本内容智能转换为 Mermaid 格式的代码，并将其渲染成可视化图表。](https://github.com/liujuntao123/smart-mermaid)
 
 # reference
 

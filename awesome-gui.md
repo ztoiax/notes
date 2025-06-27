@@ -115,6 +115,8 @@ tags: []
     sudo mount -t davfs http://127.0.0.1:5244/dav yun
     ```
 
+- [OpenList: alist被收购，这是alist社区版。](https://github.com/OpenListTeam/OpenList)
+
 # 下载器
 
 - [Motrix](https://github.com/agalwood/Motrix)
@@ -135,6 +137,8 @@ tags: []
 - [mediago：视频下载器，支持m3u8](https://github.com/caorushizi/mediago)
 
 - [ab-download-manager：类似idm的下载器](https://github.com/amir1376/ab-download-manager)
+
+- [JDownloader.org - Official Homepage](https://jdownloader.org/home/index)
 
 # 图片
 
@@ -203,6 +207,8 @@ tags: []
 
 - [linkandroid：连接android](https://github.com/modstart-lib/linkandroid)
 
+
+[liriliri/aya: Android ADB desktop app](https://github.com/liriliri/aya)
 ## ssh客户端
 
 - [shell360](https://github.com/shell360)
@@ -270,6 +276,8 @@ tags: []
 # 微信相关
 
 - [WechatRealFriends：查看有没有朋友偷偷删掉或者拉黑你](https://github.com/StrayMeteor3337/WechatRealFriends)
+
+- [WeClone: 🚀从聊天记录创造数字分身的一站式解决方案💡 使用聊天记录微调大语言模型，让大模型有“那味儿”，并绑定到聊天机器人，实现自己的数字分身。 数字克隆/数字分身/数字永生/LLM/聊天机器人/LoRA](https://github.com/xming521/WeClone)
 
 # other
 

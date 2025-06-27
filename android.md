@@ -10,6 +10,7 @@ tags: []
 * [原理](#原理)
   * [apk](#apk)
 * [第三方优秀资源](#第三方优秀资源)
+  * [下载商店](#下载商店)
   * [cli](#cli)
   * [gui](#gui)
   * [app](#app)
@@ -55,6 +56,10 @@ tags: []
 - [（视频）Janwrice：关于Apks的一切|MT管理器|NP管理器|SAI](https://www.bilibili.com/video/BV1Xe4y1M7v9)
 
 # 第三方优秀资源
+
+## 下载商店
+
+- [IzzyOnDroid F-Droid Repository](https://apt.izzysoft.de/fdroid/)
 
 ## cli
 
@@ -268,6 +273,9 @@ tags: []
 
 - [Emby服务端](https://emby.media/server-android.html)
 
+
+- [AListLite：openlist（alist社区版，alist已经被收购）服务端](https://github.com/LeoHaoVIP/AListLiteAndroid)
+
 - [AListFlutter：alist服务端和客户端，局域网视频观看](https://github.com/jing332/AListFlutter)
 
     - [在下莫老师：旧手机变网盘！无需代码，在手机上快速部署Alist](https://www.bilibili.com/video/BV1vq421c7kW)
@@ -347,6 +355,8 @@ tags: []
 - [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
 
 ### ai
+
+- [google-ai-edge/gallery: Google AI Edge 团队开源，旨在让用户能够在手机设备上轻松运行和测试 Edge AI 模型。它开箱即用、轻松切换模型，模型加载后可离线体验 AI 能力，支持多轮对话、图像问答、实时显示模型性能和提示词实验室等功能。](https://github.com/google-ai-edge/gallery)
 
 - [maid：支持部署离线下载的大模型，支持api key调用（包括兼容openai格式的api），支持调用电脑部署的ollama](https://github.com/Mobile-Artificial-Intelligence/maid)
     - [（视频）zxdorro：【Ai教程】手机可以直接跑最新的Qwen2.5大模型？最简单的三种使用方法一个APP搞定](https://www.bilibili.com/video/BV1G7tQehEBE)

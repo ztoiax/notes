@@ -4104,6 +4104,7 @@ docker run -d \
     --privileged \
     rancher/rancher
 ```
+- [arcane: docker 网页ui的监控管理平台](https://github.com/ofkm/arcane/)
 
 - [beszel：轻量级高颜值的 Docker 监控平台。这是一个轻量级的服务器监控平台，包括 Docker 统计、历史数据和警报功能。它拥有友好的 Web 界面，配置简单、开箱即用，支持自动备份、多用户、OAuth 认证和 API 访问等功能。](https://github.com/henrygd/beszel)
   ![image](./Pictures/docker/beszel.avif)

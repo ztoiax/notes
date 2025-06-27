@@ -55,6 +55,7 @@ tags: []
   * [ai爬虫和信息提取](#ai爬虫和信息提取)
   * [ai可视化](#ai可视化)
   * [ai自动化](#ai自动化)
+  * [ai控制手机](#ai控制手机)
   * [MCP](#mcp)
   * [A2A](#a2a)
 * [在线ai工具](#在线ai工具)
@@ -766,6 +767,8 @@ tags: []
     - [cursor-free-vip:免费享受 Pro 版](https://github.com/yeongpin/cursor-free-vip)
 
 
+- [void： Cursor 的开源平替](https://github.com/voideditor/void)
+
 - [firebase：谷歌开发的](https://studio.firebase.google.com/?hl=zh-cn)
 
 - [aide：ai编辑器](https://github.com/codestoryai/aide)
@@ -783,6 +786,9 @@ tags: []
 - [warp：自带ai的termianl](https://github.com/warpdotdev/Warp)
 
 - [codex: openai的](https://github.com/openai/codex?tab=Apache-2.0-1-ov-file)
+- [claude-code: 终端里的 Claude 编码助手。该项目是 Claude 官方开源的 AI 编码助手，集成于终端内，能够理解整个代码库，并通过简单的自然语言命令，帮助开发者更高效地完成各类编码任务。](https://github.com/anthropics/claude-code)
+
+- [gemini-cli: 谷歌 Gemini 命令行工具。该项目是 Gemini 官方开源的命令行工具，将 Google Gemini 的强大能力集成到终端环境。它基于百万级上下文，能够理解大型代码库的架构和逻辑，支持多模态输入输出、Google 搜索以及 MCP 等功能。](https://github.com/google-gemini/gemini-cli)
 
 ## ai爬虫和信息提取
 
@@ -798,6 +804,9 @@ tags: []
 
 - [n8n: 可扩展的工作流程自动化工具，它提供了直观的界面，让用户可以通过拖放方式连接不同的应用程序和服务，从而创建自定义的自动化流程。](https://github.com/n8n-io/n8n)
 
+## ai控制手机
+
+- [droidrun：通过大模型，以自然语言操作安卓手机的 APP](https://github.com/droidrun/droidrun)
 ## MCP
 
 - [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)

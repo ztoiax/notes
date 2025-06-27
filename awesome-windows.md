@@ -46,6 +46,8 @@ tags: []
 
 - [GlazeWM窗口管理器](https://github.com/lars-berger/GlazeWM)
 
+- [agent-kilo/jwno:平铺窗口管理器，键盘驱动](https://github.com/agent-kilo/jwno)
+
 - [clink：让 Windows 原生的 cmd.exe 拥有类似 bash 一样强大的自动补全、历史记录、行编辑等功能](https://github.com/chrisant996/clink)
 
 - [Shell：拓展右键](https://github.com/moudey/Shell)
@@ -73,6 +75,8 @@ tags: []
 - [MD3-Windows：windows美化](https://github.com/Runixe786/MD3-Windows)
 
 - [breeze-shell：鼠标右键的菜单简化为一级，并加入流畅动画](https://github.com/std-microblock/breeze-shell)
+- [AlexanderPro/SmartSystemMenu: 窗口菜单增强工具。这是一款用于扩展 Windows 系统窗口菜单功能的工具。它可以为所有窗口的系统菜单（即右键标题栏弹出的菜单）添加丰富且实用的自定义选项，如窗口置顶、调整透明度、改变窗口标题/图标、窗口对齐、跨屏移动、批量隐藏/最小化、窗口截图、剪贴板操作等。](https://github.com/AlexanderPro/SmartSystemMenu)
+- [w4po/ExplorerTabUtility:文件资源管理器增强工具，能够自动将多个窗口合并为单窗口多标签页模式。支持路径去重、标签搜索、批量打开/关闭/还原等功能，轻松告别桌面窗口杂乱的烦恼。](https://github.com/w4po/ExplorerTabUtility)
 
 ## app
 
@@ -137,6 +141,7 @@ tags: []
 
 - [Screenbox：视频播放器](https://github.com/huynhsontung/Screenbox)
 
+- [jark006/jarkViewer:  看图软件，适用于日常图片浏览及专业摄影作品预览等多种场景。它操作方便，支持多种快捷键，例如按下 I 键可快速查看图片详细信息。还支持读取 AI 生成图像的提示词（如有）、自动记忆上次窗口的位置和大小等实用功能。](https://github.com/jark006/jarkViewer)
 ## 游戏相关
 
 - [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)
@@ -146,7 +151,7 @@ tags: []
 - [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
 
 - [Game-Cheats-Manager：游戏修改器管理工具](https://github.com/dyang886/Game-Cheats-Manager)
-
+- [w4po/ExplorerTabUtility:开箱即用的游戏变速器。这是一款完全免费、开源的 Windows 游戏加速工具。它通过 Hook 系统时间函数，实现对游戏速度的灵活调节，并提供简单易用的界面，兼容多种单机游戏。请勿用于网络游戏，以免导致账号被封！](https://github.com/w4po/ExplorerTabUtility)
 ## pe系统
 
 - [在下莫老师：5款WindowsPE系统，纯净，强大，无广告](https://www.bilibili.com/video/BV19T411G7gW)
