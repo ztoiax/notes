@@ -2509,6 +2509,7 @@ curl https://argocd.kubernets.cn -I
 
 - [Headlamp：k8s ui](https://headlamp.dev/)
 
+- [lens:  Kubernetes IDE可以代替kubectl命令。Lens 不仅仅是一个“看板工具”，它集成了日志查看、终端访问、Prometheus 监控、Helm 商店等功能，堪称 K8s 管理的“瑞士军刀”。](https://github.com/lensapp/lens)
 ## 云原生
 
 - [云原生应用市场](https://hub.grapps.cn/)

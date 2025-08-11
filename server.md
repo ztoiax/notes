@@ -34,6 +34,7 @@ tags: []
   * [服务(server)](#服务server)
     * [DNS](#dns)
       * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
+      * [Technitium DNS Server：自带web gui的dns 服务器](#technitium-dns-server自带web-gui的dns-服务器)
     * [nfs](#nfs)
     * [proxy(代理)服务器](#proxy代理服务器)
       * [squid](#squid)
@@ -803,6 +804,8 @@ systemd-resolve --statistics
 # 测试是否开启dns over tls
 ngrep port 853
 ```
+
+#### [Technitium DNS Server：自带web gui的dns 服务器](https://technitium.com/dns/)
 
 ### nfs
 

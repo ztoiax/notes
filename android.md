@@ -14,6 +14,12 @@ tags: []
   * [cli](#cli)
   * [gui](#gui)
   * [app](#app)
+    * [其他](#其他)
+    * [多媒体相关](#多媒体相关)
+      * [阅读器](#阅读器)
+      * [图片相关](#图片相关)
+      * [视频播放器或视频下载](#视频播放器或视频下载)
+      * [音乐播放器](#音乐播放器)
     * [应用管理](#应用管理)
       * [android四大组件](#android四大组件)
     * [文件管理器、云盘](#文件管理器云盘)
@@ -82,6 +88,8 @@ tags: []
 
 ## app
 
+### 其他
+
 - [GmsCore：谷歌服务框架的开源替代品。该项目是一个开源的替代 Google Play 服务的解决方案，它可以让无法安装或不想用 Google 服务的用户，运行依赖谷歌服务的 Android 应用。](https://github.com/microg/GmsCore)
 
 - [busybox](https://github.com/meefik/busybox)
@@ -138,8 +146,6 @@ tags: []
 
 - [AuroraStore：匿名googleplay商店](https://github.com/whyorean/AuroraStore)
 
-- [NewPipe：youtube开源版，可以按时间顺序浏览up的视频](https://github.com/TeamNewPipe/NewPipe)
-
 - [fcitx5：开源输入法](https://github.com/fcitx5-android/fcitx5-android)
 
 - [AidLearning-FrameWork](https://github.com/aidlearning/AidLearning-FrameWork)
@@ -156,8 +162,6 @@ tags: []
 
 - [李跳跳：跳过广告](https://litiaotiao.cn/)
 
-- [阅读](https://github.com/gedoor/MyBookshelf)
-
 - [KernelFlasher：刷、备份、恢复内核](https://github.com/capntrips/KernelFlasher)
 
 - [自定义屏幕点击](https://github.com/gkd-kit/gkd)
@@ -169,7 +173,6 @@ tags: []
 
 - [fdroidclient](https://github.com/f-droid/fdroidclient)免费、开源的 Android 应用商店。该项目是 F-Droid 的 Android 客户端，专门收集各类开源安卓软件（FOSS）的应用商店。
 
-- [AfuseKt：视频播放器](https://github.com/AttemptD/AfuseKt-release)支持协议：Alist，SMB，Webdav，Emby（直连），Local，jellyfin（直连），阿里网盘
 
 - [feeel：锻炼动作教学](https://github.com/EnjoyingFOSS/feeel)
 
@@ -177,16 +180,11 @@ tags: []
 
 - [FocusReader：rss订阅](https://github.com/allentown521/FocusReader)
 
+- [Folo: 聚合阅读器，有点类似于rss](https://github.com/RSSNext/Folo)
+
 - [Acode：代码编辑工具](https://github.com/deadlyjack/Acode)轻量级的 Web IDE，具有即时预览、控制台和丰富的插件等特点
 
     ![image](./Pictures/android/Acode.avif)
-
-- [xbmc：kodi服务端](https://github.com/xbmc/xbmc)
-- [Kore：kodi客户端](https://github.com/xbmc/Kore)
-
-- [jellyfin-android：jellyfin视频服务的客户端](https://github.com/jellyfin/jellyfin-android)
-
-    - [jellyfin-androidtv：电视客户端](https://github.com/jellyfin/jellyfin-androidtv)
 
 - [ente](https://github.com/ente-io/ente)：提供端到端加密的服务，内含基于此服务（Ente）的两款产品，它们分别是云相册（免费试用）和 2FA 验证器（永久免费）。永久免费的 Ente Auth，它可帮助你在移动设备上生成并存储两步验证 (2FA) 令牌。
 
@@ -194,21 +192,14 @@ tags: []
 
 - [shell360：ssh客户端](https://github.com/shell360)
 
-- [dart_simple_live：一个 APP 上看各种主流直播平台](https://github.com/xiaoyaocz/dart_simple_live)
-
 - [Ente Auth：一个开源的双因素认证码管理器](https://github.com/ente-io/ente)
 
-- [tvbox手机版](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile)
-
-- [mytv-android：电视直播](https://github.com/yaoxieyoulei/mytv-android)
 
 - [GoGoGo：地图定位修改](https://github.com/ZCShou/GoGoGo)
 
 - [NewPipe：youtube客户端，免广告、免登陆订阅、有下载功能、免会员观看](https://github.com/TeamNewPipe/NewPipe)
 
 - [EtchDroid：无需root，将img写入插入otg线的u盘](https://github.com/EtchDroid/EtchDroid)
-
-- [ImageToolbox：Android 设计的图像编辑工具。它完全免费，支持批量处理、滤镜、背景移除、尺寸调整和裁剪等多种功能。](https://github.com/T8RIN/ImageToolbox)
 
 - [AnLinux-App：安装linux](https://github.com/EXALAB/AnLinux-App)
     - [在下莫老师：坏了，这回给手机装Linux更简单了，利用Anlinux来手机变电脑](https://www.bilibili.com/video/BV1sK2nYpEEg)
@@ -223,18 +214,52 @@ tags: []
 
 - [KeyMapper：可以自定义 Android 设备的按键、指纹和手势操作。无需 ROOT 权限，支持蓝牙和有线键盘，提供灵活的按键重映射体验。](https://github.com/keymapperorg/KeyMapper)
 
-- [anx-reader：这是一款用 Flutter 编写的电子书阅读软件，它免费且没广告，支持 WebDAV 同步电子书、笔记和阅读进度，适用于 Android 手机和平板电脑。](https://github.com/Anxcye/anx-reader)
-
 - [moonlight-android：屏幕共享客户端](https://github.com/moonlight-stream/moonlight-android)
+- [ChangeDetection: 网站变更监控神器](https://github.com/bernaferrari/ChangeDetection)
 
-- [chatbox：支持各种llm大模型的客户端](https://github.com/Bin-Huang/chatbox)
+### 多媒体相关
+
+#### 阅读器
+
+- [anx-reader：这是一款用 Flutter 编写的电子书阅读软件，它免费且没广告，支持 WebDAV 同步电子书、笔记和阅读进度，适用于 Android 手机和平板电脑。](https://github.com/Anxcye/anx-reader)
 
 - [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
 
+- [阅读](https://github.com/gedoor/MyBookshelf)
+
+- [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
+
+#### 图片相关
+
+- [aves: 相册](https://github.com/deckerst/aves)
+
+- [ImageToolbox：Android 设计的图像编辑工具。它完全免费，支持批量处理、滤镜、背景移除、尺寸调整和裁剪等多种功能。](https://github.com/T8RIN/ImageToolbox)
+
+#### 视频播放器或视频下载
+
+- [tvbox手机版](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile)
+
+- [mytv-android：电视直播](https://github.com/yaoxieyoulei/mytv-android)
+
+- [dart_simple_live：一个 APP 上看各种主流直播平台](https://github.com/xiaoyaocz/dart_simple_live)
+
 - [Seal：各大视频平台下载器](https://github.com/JunkFood02/Seal)
+
+- [AfuseKt：视频播放器](https://github.com/AttemptD/AfuseKt-release)支持协议：Alist，SMB，Webdav，Emby（直连），Local，jellyfin（直连），阿里网盘
+
+- [xbmc：kodi服务端](https://github.com/xbmc/xbmc)
+- [Kore：kodi客户端](https://github.com/xbmc/Kore)
+
+- [jellyfin-android：jellyfin视频服务的客户端](https://github.com/jellyfin/jellyfin-android)
+
+    - [jellyfin-androidtv：电视客户端](https://github.com/jellyfin/jellyfin-androidtv)
+
+#### 音乐播放器
 
 - [MusicFree：音乐播放器。通过插件可以播放各大平台的音乐](https://github.com/maotoumao/MusicFree)
     - 插件：https://gitee.com/maotoumao/MusicFreePlugins/raw/master/plugins.json
+
+- [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
 
 ### 应用管理
 
@@ -295,7 +320,11 @@ tags: []
 
 - [localsend：文件互传](https://github.com/localsend/localsend)
 
+- [snapdrop-android: pairdrop客户端](https://github.com/fm-sys/snapdrop-android)
+
 - [kdeconnect：文件传输、剪切板同步、远程控制等](https://github.com/KDE/kdeconnect-android)
+
+- [deltachat-android: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-android)
 
 - [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
 
@@ -350,11 +379,15 @@ tags: []
 
 - [pilipala：该项目是用 Flutter 开发的 B 站第三方客户端，支持 Android 和 iOS 平台。它提供了推荐视频列表、热门直播、番剧、离线缓存、回复评论、弹幕和搜索等功能。](https://github.com/guozhigq/pilipala)
 
+
+- [NewPipe：youtube开源版，可以按时间顺序浏览up的视频](https://github.com/TeamNewPipe/NewPipe)
 ### 自动化
 
 - [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
 
 ### ai
+
+- [chatbox：支持各种llm大模型的客户端](https://github.com/Bin-Huang/chatbox)
 
 - [google-ai-edge/gallery: Google AI Edge 团队开源，旨在让用户能够在手机设备上轻松运行和测试 Edge AI 模型。它开箱即用、轻松切换模型，模型加载后可离线体验 AI 能力，支持多轮对话、图像问答、实时显示模型性能和提示词实验室等功能。](https://github.com/google-ai-edge/gallery)
 

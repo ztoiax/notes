@@ -10,6 +10,7 @@ tags: []
 * [windows](#windows)
   * [系统](#系统)
   * [系统相关](#系统相关)
+  * [逆向](#逆向)
   * [app](#app)
   * [手机与电脑交互](#手机与电脑交互)
   * [多媒体](#多媒体)
@@ -78,6 +79,14 @@ tags: []
 - [AlexanderPro/SmartSystemMenu: 窗口菜单增强工具。这是一款用于扩展 Windows 系统窗口菜单功能的工具。它可以为所有窗口的系统菜单（即右键标题栏弹出的菜单）添加丰富且实用的自定义选项，如窗口置顶、调整透明度、改变窗口标题/图标、窗口对齐、跨屏移动、批量隐藏/最小化、窗口截图、剪贴板操作等。](https://github.com/AlexanderPro/SmartSystemMenu)
 - [w4po/ExplorerTabUtility:文件资源管理器增强工具，能够自动将多个窗口合并为单窗口多标签页模式。支持路径去重、标签搜索、批量打开/关闭/还原等功能，轻松告别桌面窗口杂乱的烦恼。](https://github.com/w4po/ExplorerTabUtility)
 
+- [kweatherman/Folcolor: 给文件夹上颜色](https://github.com/kweatherman/Folcolor)
+- [Maplespe/DWMBlurGlass: 给文件资源管理器加入毛玻璃效果](https://github.com/Maplespe/DWMBlurGlass)
+- [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
+
+## 逆向
+
+[OpenArk：逆向工具](https://github.com/BlackINT3/OpenArk)
+
 ## app
 
 - [TortoiseGit：windows最好的git gui客户端](https://github.com/TortoiseGit/TortoiseGit)
@@ -124,6 +133,8 @@ tags: []
 
 - [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
 
+- [EcoPaste: 🎉跨平台的剪贴板管理工具](https://github.com/EcoPasteHub/EcoPaste)
+
 ## 手机与电脑交互
 
 - [intel unison：手机电脑消息、文件传输]()
@@ -142,6 +153,9 @@ tags: []
 - [Screenbox：视频播放器](https://github.com/huynhsontung/Screenbox)
 
 - [jark006/jarkViewer:  看图软件，适用于日常图片浏览及专业摄影作品预览等多种场景。它操作方便，支持多种快捷键，例如按下 I 键可快速查看图片详细信息。还支持读取 AI 生成图像的提示词（如有）、自动记忆上次窗口的位置和大小等实用功能。](https://github.com/jark006/jarkViewer)
+
+- [SubtitleEdit/subtitleedit: 生产视频字幕和翻译字幕](https://github.com/SubtitleEdit/subtitleedit)
+
 ## 游戏相关
 
 - [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)

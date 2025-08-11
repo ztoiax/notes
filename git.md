@@ -1,3 +1,9 @@
+---
+id: git
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -977,6 +983,8 @@ git lfs track "*.mp4"
 # 只clone下载ags目录
 github-dlr https://github.com/Aylur/dotfiles/tree/main/ags
 ```
+
+- [AmintaCCCP/GithubStarsManager: 一个gui 用 AI 管理你的 GitHub Stars，自动对项目进行分类，支持自然语言搜索](https://github.com/AmintaCCCP/GithubStarsManager)
 
 ## 第三方github工具
 

@@ -39,6 +39,7 @@ tags: []
       * [posting：tui版postman](#postingtui版postman)
       * [newman：postman官方推出的cli版postman](#newmanpostman官方推出的cli版postman)
       * [hoppscotch：instead postman](#hoppscotchinstead-postman)
+      * [apidash: 可以取代postman的gui客户端。Flutter打造，从HTTP到GraphQL，再到WebSocket和gRPC，API Dash几乎覆盖了所有常见的API协议。 ](#apidash-可以取代postman的gui客户端flutter打造从http到graphql再到websocket和grpcapi-dash几乎覆盖了所有常见的api协议-)
       * [insomnia：instead postman](#insomniainstead-postman)
       * [posting：tui版的postman](#postingtui版的postman)
       * [webhook（微信机器人）](#webhook微信机器人)
@@ -60,6 +61,7 @@ tags: []
       * [tun2socks：将tcp/udp等流量转换为socks](#tun2socks将tcpudp等流量转换为socks)
     * [vpn、组网](#vpn组网)
       * [tailscale：WireGuard vpn](#tailscalewireguard-vpn)
+      * [wg-easy/wg-easy:WireGuard web管理界面](#wg-easywg-easywireguard-web管理界面)
       * [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](#chisel在-http-通信上建立-tcpudp-隧道)
       * [Easytier：异地组网](#easytier异地组网)
   * [表示层](#表示层)
@@ -74,10 +76,14 @@ tags: []
     * [ptcpdump：抓包](#ptcpdump抓包)
     * [netcap：跟踪整个协议栈的抓包工具](#netcap跟踪整个协议栈的抓包工具)
     * [ngrep：抓包版grep](#ngrep抓包版grep)
+    * [ntop/ntopng: 在继承了ntop的核心优势后，全面升级为基于Web的现代化流量分析工具。](#ntopntopng-在继承了ntop的核心优势后全面升级为基于web的现代化流量分析工具)
+    * [packetd: 查看网络数据包。是一个基于 `ebpf` 的高性能无侵入网络观测项目。packetd 遵循了 Prometheus 以及 OpenTelemetry 社区的 metrics/traces 设计规范。](#packetd-查看网络数据包是一个基于-ebpf-的高性能无侵入网络观测项目packetd-遵循了-prometheus-以及-opentelemetry-社区的-metricstraces-设计规范)
     * [nmap](#nmap)
     * [zmap](#zmap)
     * [RustScan：端口扫描](#rustscan端口扫描)
+    * [Sniffnet：统计流量的gui网络工具](#sniffnet统计流量的gui网络工具)
     * [vmessping：可以ping vmess://的地址](#vmessping可以ping-vmess的地址)
+    * [trippy（rust编写的tui，结合ping和traceroute）](#trippyrust编写的tui结合ping和traceroute)
     * [nping(代替 ping)](#nping代替-ping)
     * [hping](#hping)
     * [ngrok：内网穿透（端口转发）](#ngrok内网穿透端口转发)
@@ -949,6 +955,8 @@ trurl --url "https://example.com/?name=hello" --json
 
 #### [hoppscotch：instead postman](https://github.com/hoppscotch/hoppscotch)
 
+#### [apidash: 可以取代postman的gui客户端。Flutter打造，从HTTP到GraphQL，再到WebSocket和gRPC，API Dash几乎覆盖了所有常见的API协议。 ](https://github.com/foss42/apidash)
+
 #### [insomnia：instead postman](https://github.com/Kong/insomnia)
 
 #### [posting：tui版的postman](https://github.com/darrenburns/posting)
@@ -1103,6 +1111,9 @@ sudo tailscale file cp filename ip:
 # 设置接受文件的目录
 sudo tailscale file get .
 ```
+
+
+#### [wg-easy/wg-easy:WireGuard web管理界面](https://github.com/wg-easy/wg-easy)
 
 #### [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](https://github.com/jpillora/chisel)
 
@@ -1502,6 +1513,9 @@ ngrep port 443
 ngrep -d any port 853
 ```
 
+### [ntop/ntopng: 在继承了ntop的核心优势后，全面升级为基于Web的现代化流量分析工具。](https://github.com/ntop/ntopng)
+
+### [packetd: 查看网络数据包。是一个基于 `ebpf` 的高性能无侵入网络观测项目。packetd 遵循了 Prometheus 以及 OpenTelemetry 社区的 metrics/traces 设计规范。](https://github.com/packetd/packetd)
 ### nmap
 
 - [（视频）技术蛋老师：许多Nmap课程都缺乏的入门理论知识](https://www.bilibili.com/video/BV18kqhYKEPK)
@@ -1612,7 +1626,12 @@ ngrep -d any port 853
 
 - 能够在 3 秒内扫描指定 IP 的所有端口。它提供了灵活的脚本引擎，支持 Python、Lua 和 Shell 脚本，开发者可以根据需求自定义脚本，实现个性化的扫描和处理逻辑。
 
+### [Sniffnet：统计流量的gui网络工具](https://github.com/GyulyVGC/sniffnet)
+
+
 ### [vmessping：可以ping vmess://的地址](https://github.com/v2fly/vmessping)
+
+### [trippy（rust编写的tui，结合ping和traceroute）](https://github.com/fujiapple852/trippy)
 
 ### nping(代替 ping)
 

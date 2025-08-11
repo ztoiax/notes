@@ -7,7 +7,6 @@ tags: []
 
 <!-- mtoc-start -->
 
-* [常用](#常用)
 * [操作系统](#操作系统)
 * [file](#file)
   * [文件传输](#文件传输)
@@ -39,10 +38,6 @@ tags: []
 
 <!-- mtoc-end -->
 
-# 常用
-
-- [SPlayer：网易云音乐](https://github.com/imsyy/SPlayer)
-
 # 操作系统
 
 - [LibreELEC：基于KODI，适合用于电视；有docker等功能；复古游戏模拟器；自带smb](https://github.com/LibreELEC/LibreELEC.tv)
@@ -70,11 +65,15 @@ tags: []
 
 - [photoprism：ai相册管理](https://github.com/photoprism/photoprism)
 
+- [PairDrop: 文件传输，通过web浏览器](https://github.com/schlagmichdoch/PairDrop)
+
 ## 文件传输
 
 - [localsend](https://github.com/localsend/localsend)
 
 - [kdeconnect：还可以控制手机](https://github.com/KDE/kdeconnect-kde)
+
+- [deltachat-desktop: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-desktop)
 
 ## 文件管理器
 
@@ -191,10 +190,15 @@ tags: []
 # 音乐
 
 - [NSMusicS：支持各种云端平台](https://github.com/Super-Badmen-Viper/NSMusicS)
+- [iAJue/MoeKoeMusic: 一款开源简洁高颜值的酷狗第三方客户端](https://github.com/iAJue/MoeKoeMusic)
+
+- [SPlayer：网易云音乐](https://github.com/imsyy/SPlayer)
+
+- [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
 
 # 远程控制
 
-- [Sunshine：屏幕共享](https://github.com/LizardByte/Sunshine)
+- [Sunshine：屏幕共享服务端](https://github.com/LizardByte/Sunshine)
 - [moonlight-qt：屏幕共享客户端](https://github.com/moonlight-stream/moonlight-qt)
 
 - [rustdesk](https://github.com/rustdesk/rustdesk)
@@ -252,6 +256,8 @@ tags: []
 - [obsidian](https://github.com/obsidianmd/obsidian-releases)
 
 - [Zettlr](https://github.com/Zettlr/Zettlr)
+
+- [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
 
 # ide
 
@@ -329,6 +335,8 @@ tags: []
 - [neko：该项目是运行在 Docker 容器中的自托管虚拟浏览器环境，为用户提供安全、隔离和功能齐全的虚拟浏览器。](https://github.com/m1k1o/neko)
 
 - [fluent-reader：rss订阅和阅读器](https://github.com/yang991178/fluent-reader)
+
+- [Folo: 聚合阅读器，有点类似于rss](https://github.com/RSSNext/Folo)
 
 - [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
 
@@ -410,6 +418,9 @@ tags: []
 - [stock：股票分析](https://github.com/myhhub/stock)
 
 - [MouseClick：鼠标连点器](https://github.com/SeaYJ/MouseClick)
+
+- [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
+- [EcoPaste: 🎉跨平台的剪贴板管理工具](https://github.com/EcoPasteHub/EcoPaste)
 
 # 类似项目
 

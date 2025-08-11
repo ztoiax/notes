@@ -1,3 +1,9 @@
+---
+id: ansible
+aliases: []
+tags: []
+---
+
 <!-- mtoc-start -->
 
 * [ansible](#ansible)
@@ -1565,6 +1571,8 @@ ansible-vault encrypt test.yml
 # 第三方软件
 
 - [semaphore：ansible ui](https://github.com/ansible-semaphore/semaphore)
+
+- [sky22333/ansible-ui: 轻量级，简单易用的Ansible Web管理面板，提供批量主机管理、运行剧本任务、命令执行、文件传输和Web终端等功能。](https://github.com/sky22333/ansible-ui)
 
 # reference
 

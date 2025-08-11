@@ -181,6 +181,7 @@ tags: []
 * [游戏相关](#游戏相关)
   * [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](#shadps4开源的-ps4-模拟器虽然项目仍处于早期开发阶段能运行的游戏有限但最新版已经能够成功运行血源诅咒和黑暗之魂ii等游戏)
 * [代码相关](#代码相关)
+* [备份](#备份)
 * [other](#other)
   * [chsrc：全平台通用换源工具与框架](#chsrc全平台通用换源工具与框架)
   * [progress：显示cp、mv进度条](#progress显示cpmv进度条)
@@ -193,6 +194,7 @@ tags: []
   * [npkill: 查找和清理node_module](#npkill-查找和清理node_module)
   * [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](#zx-更优秀的shell编程google用nodejs写的一个shell包装器)
   * [syncthing: 同步文件](#syncthing-同步文件)
+  * [kopia: 备份工具](#kopia-备份工具)
   * [croc: 文件传输](#croc-文件传输)
   * [q: sql语法查询文件](#q-sql语法查询文件)
   * [sunloginclient-cli(向日葵运程控制cli版)](#sunloginclient-cli向日葵运程控制cli版)
@@ -228,6 +230,7 @@ tags: []
   * [nemu：qemu的tui](#nemuqemu的tui)
   * [osqueryi：使用sql语句查询操作系统](#osqueryi使用sql语句查询操作系统)
   * [isd：systemd tui](#isdsystemd-tui)
+  * [gocron: 代替cron，并提供web界面](#gocron-代替cron并提供web界面)
 * [磁盘备份](#磁盘备份)
   * [restic](#restic)
 * [pdf、mobi、epub、md](#pdfmobiepubmd)
@@ -1058,6 +1061,9 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 # 代码相关
 
 - [code2prompt：将代码库转换为 LLM 提示的工具。会将所有代码变成markdown格式的文件](https://github.com/mufeedvh/code2prompt)
+# 备份
+
+- [borg: Deduplicating archiver with compression and authenticated encryption.](https://github.com/borgbackup/borg)
 
 # other
 
@@ -1106,6 +1112,8 @@ cat test.py | curl -F 'f:1=<-' ix.io
 ## [zx: 更优秀的shell编程,Google用nodejs写的一个shell包装器](https://github.com/google/zx)
 
 ## [syncthing: 同步文件](https://github.com/syncthing/syncthing)
+
+## [kopia: 备份工具](https://github.com/kopia/kopia?tab=readme-ov-file)
 
 ## [croc: 文件传输](https://github.com/schollz/croc)
 
@@ -1432,6 +1440,7 @@ SELECT DISTINCT processes.name, listening_ports.port, processes.pid
 pip install isd-tui
 ```
 
+## [gocron: 代替cron，并提供web界面](https://github.com/go-co-op/gocron)
 # 磁盘备份
 
 ## [restic](https://github.com/restic/restic)
@@ -1852,6 +1861,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [aider](https://github.com/paul-gauthier/aider)这是一款运行在终端里的 AI 辅助编码工具，能够将你本地 git 仓库中的代码与 LLMs 结合起来。开发者通过 add 命令引入文件，然后用自然语言描述需求，它就可以对现有的代码进行修改并自动提交，支持接入多种大模型，包括 GPT 3.5、GPT-4 和 Claude 3 Opus 等。
 
 - [exo：组建ai集群](https://github.com/exo-explore/exo)
+
 - [liujuntao123/smart-mermaid: 一款基于 AI 技术的 Web 应用程序，可将文本内容智能转换为 Mermaid 格式的代码，并将其渲染成可视化图表。](https://github.com/liujuntao123/smart-mermaid)
 
 # reference

@@ -15,13 +15,11 @@ tags: []
     * [在线使用](#在线使用)
     * [专门领域项目](#专门领域项目)
   * [RAG和向量数据库](#rag和向量数据库)
-    * [在线使用](#在线使用-1)
     * [框架](#框架)
     * [embedding model（文本嵌入式模型）](#embedding-model文本嵌入式模型)
   * [prompt提示词](#prompt提示词)
     * [数据库](#数据库)
   * [微调](#微调)
-  * [智能体](#智能体)
   * [有趣的文章、访谈](#有趣的文章访谈)
     * [Sam Altman：Moore's Law for Everything](#sam-altmanmoores-law-for-everything)
     * [OpenAI工程师：模型不是关键，语料才是关键](#openai工程师模型不是关键语料才是关键)
@@ -54,11 +52,13 @@ tags: []
   * [ai终端](#ai终端)
   * [ai爬虫和信息提取](#ai爬虫和信息提取)
   * [ai可视化](#ai可视化)
-  * [ai自动化](#ai自动化)
   * [ai控制手机](#ai控制手机)
+  * [ai agent（智能体）](#ai-agent智能体)
+    * [在线使用](#在线使用-1)
   * [MCP](#mcp)
   * [A2A](#a2a)
 * [在线ai工具](#在线ai工具)
+* [获取最新ai新闻](#获取最新ai新闻)
 
 <!-- mtoc-end -->
 
@@ -172,8 +172,6 @@ tags: []
 
 
     - [Qwen2.5-Omni：阿里的大模型。7B尺寸实现全球最强性能](https://github.com/QwenLM/Qwen2.5-Omni)
-
-    - [OpenManus：manus的开源版](https://github.com/mannaandpoem/OpenManus)
 
     - [open-r1：DeepSeek-R1 的完全开源复现](https://github.com/huggingface/open-r1)
 
@@ -315,17 +313,6 @@ tags: []
 - [KAG：蚂蚁集团开发的。类似微软的graphrag](https://github.com/OpenSPG/KAG)
   - [（视频）五里墩茶社：【KAG】知识增强式生成 - 比RAG更强大的检索与推理框架](https://www.bilibili.com/video/BV1f9kZYgEnL)
 
-### 在线使用
-
-- [Dify](https://cloud.dify.ai/apps)
-
-- [refly](https://refly.ai/)
-
-- [coze（扣子）：国际版。字节跳动的平台，其实就是火山引擎。自定义gpt机器人，可以集成到telegram和discord](https://www.coze.com/home)
-- [coze（扣子）：国内版](https://www.coze.cn/home)
-
-- dify vs coze：经过我个人的测试dify的知识库检索质量比coze要好很多
-
 ### 框架
 
 - [langchain](https://github.com/langchain-ai/langchain)
@@ -399,13 +386,6 @@ tags: []
   - 支持混合精度训练、gradient checkpoint 等训练加速降低成本
   - 灵活的训练配置接口，支持自定义奖励函数、损失函数等
   - 提供灵活的并行策略配置接口，包括数据并行、模型并行、专家并行、ZeRO 和 Offload 等，以适应不同硬件规模
-
-## 智能体
-
-- [autogen：微软的智能体框架](https://github.com/microsoft/autogen)
-
-- [langgraph](https://github.com/langchain-ai/langgraph)
-  - [agent-service-toolkit：用 Python 快速搭建和运行基于 LangGraph 框架的 AI 代理服务。它结合 FastAPI、Streamlit 和 Pydantic 等技术栈，提供了用户界面、自定义 Agent、流式传输等功能，并集成了内容审核（LlamaGuard）和用户反馈机制（LangSmith），极大地简化了 AI Agent 应用的开发和优化过程。](https://github.com/JoshuaC215/agent-service-toolkit)
 
 ## 有趣的文章、访谈
 
@@ -734,6 +714,8 @@ tags: []
 - [BrowserMCP: 用 AI 自动化浏览器](https://browsermcp.io/)
 - [dia：原生ai浏览器](https://www.diabrowser.com/)
 
+- [opendia: 浏览器插件，通过大模型控制浏览器。支持本地大模型](https://github.com/aaronjmars/opendia?tab=readme-ov-file)
+
 ## ai搜索
 
 - [scira：原名为MiniPerplx](https://github.com/zaidmukaddam/scira)
@@ -790,6 +772,9 @@ tags: []
 
 - [gemini-cli: 谷歌 Gemini 命令行工具。该项目是 Gemini 官方开源的命令行工具，将 Google Gemini 的强大能力集成到终端环境。它基于百万级上下文，能够理解大型代码库的架构和逻辑，支持多模态输入输出、Google 搜索以及 MCP 等功能。](https://github.com/google-gemini/gemini-cli)
 
+- [QwenLM/qwen-code: 阿里的code](https://github.com/QwenLM/qwen-code)
+
+
 ## ai爬虫和信息提取
 
 - [后裔采集器](https://www.houyicaiji.com/)
@@ -800,13 +785,37 @@ tags: []
 
 - [data-formulator：微软的](https://github.com/microsoft/data-formulator)
 
-## ai自动化
-
-- [n8n: 可扩展的工作流程自动化工具，它提供了直观的界面，让用户可以通过拖放方式连接不同的应用程序和服务，从而创建自定义的自动化流程。](https://github.com/n8n-io/n8n)
-
 ## ai控制手机
 
 - [droidrun：通过大模型，以自然语言操作安卓手机的 APP](https://github.com/droidrun/droidrun)
+
+## ai agent（智能体）
+
+- [awesome-ai-agents: A list of AI autonomous agents](https://github.com/e2b-dev/awesome-ai-agents)
+
+- [n8n: 可扩展的工作流程自动化工具，它提供了直观的界面，让用户可以通过拖放方式连接不同的应用程序和服务，从而创建自定义的自动化流程。](https://github.com/n8n-io/n8n)
+
+- [coze-studio（扣子）: 字节code的开源版](https://github.com/coze-dev/coze-studio)
+
+- [dify: Production-ready platform for agentic workflow development.](https://github.com/langgenius/dify)
+
+- [OpenManus：manus的开源版](https://github.com/mannaandpoem/OpenManus)
+
+- [autogen：微软的智能体框架](https://github.com/microsoft/autogen)
+
+- [langgraph](https://github.com/langchain-ai/langgraph)
+  - [agent-service-toolkit：用 Python 快速搭建和运行基于 LangGraph 框架的 AI 代理服务。它结合 FastAPI、Streamlit 和 Pydantic 等技术栈，提供了用户界面、自定义 Agent、流式传输等功能，并集成了内容审核（LlamaGuard）和用户反馈机制（LangSmith），极大地简化了 AI Agent 应用的开发和优化过程。](https://github.com/JoshuaC215/agent-service-toolkit)
+### 在线使用
+
+- [Dify](https://cloud.dify.ai/apps)
+
+- [refly](https://refly.ai/)
+
+- [coze（扣子）：国际版。字节跳动的平台，其实就是火山引擎。自定义gpt机器人，可以集成到telegram和discord](https://www.coze.com/home)
+- [coze（扣子）：国内版](https://www.coze.cn/home)
+
+- dify vs coze：经过我个人的测试dify的知识库检索质量比coze要好很多
+
 ## MCP
 
 - [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
@@ -821,3 +830,7 @@ tags: []
 
 - [chat-pdf](https://damngood.tools/tools/chat-pdf)
 - [chatdoc：对pdf、eppub、md文件进行总结](https://chatdoc.com/)
+
+# 获取最新ai新闻
+
+- 阿里云云栖号的一周AI大事件

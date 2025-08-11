@@ -1,3 +1,9 @@
+---
+id: web
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -85,6 +91,10 @@
 - [page-assist：本地ollama 部署的ai llm的web ui](https://github.com/n4ze3m/page-assist)
 
 - [ncurator：通过导入文件或者爬取网页，建立自己的知识库，与内容聊天](https://www.ncurator.com/zh)
+- [read-frog: 陪读蛙 - 开源沉浸式翻译](https://github.com/mengxi-ream/read-frog?tab=readme-ov-file)
+- [hoverzoom: 鼠标悬浮放大图片和视频](https://github.com/extesy/hoverzoom)
+
+- [opendia: 浏览器插件，通过大模型控制浏览器。支持本地大模型](https://github.com/aaronjmars/opendia?tab=readme-ov-file)
 
 # CGI和FastCGI
 
