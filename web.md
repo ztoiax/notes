@@ -96,6 +96,13 @@ tags: []
 
 - [opendia: 浏览器插件，通过大模型控制浏览器。支持本地大模型](https://github.com/aaronjmars/opendia?tab=readme-ov-file)
 
+- [FluentRead：开源的浏览器翻译插件。这是一款沉浸式开源浏览器翻译插件，支持 20 多种传统和 AI 翻译引擎，以及双语对照、划词翻译等功能，帮助用户实现多语言网页沉浸式阅读体验。适用于外语学习、国际网站浏览和文档翻译等场景。](https://github.com/Bistutu/FluentRead)
+
+- [screenity: 录屏](https://github.com/alyssaxuu/screenity)
+- [Xget-Now: 为 Chromium 和 Firefox 浏览器提供的 Xget 下载加速扩展，支持 GitHub、GitLab、npm、PyPI 等众多平台的文件下载加速](https://github.com/xixu-me/Xget-Now)
+
+- [BookmarkHub: 将浏览器书签导入到github的gist上](https://github.com/dudor/BookmarkHub)
+
 # CGI和FastCGI
 
 - Web服务器能解析HTTP请求，返回静态资源（HTML页、图片等），但要输出动态内容，必须得PHP/C#/Ruby/Java/Python/C/C++这些外部程序来实现。

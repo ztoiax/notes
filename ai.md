@@ -116,6 +116,8 @@ tags: []
 
 - 国外
 
+    - [openai/gpt-oss: openai的开源模型](https://github.com/openai/gpt-oss)
+
     - [llama.cpp：facebook实现的运行llm大模型的项目](https://github.com/ggerganov/llama.cpp)
 
         - [llama配置要求](http://www.bimant.com/blog/llama-consumer-hardware-requirements/)
@@ -310,6 +312,8 @@ tags: []
 
   - [（视频）黄益贺：GraphRAG：很好，但很贵！](https://www.bilibili.com/video/BV1dZ421K7sz)
 
+- [PageIndex: 非传统rag，采用基于推理树型搜索](https://github.com/VectifyAI/PageIndex)
+
 - [KAG：蚂蚁集团开发的。类似微软的graphrag](https://github.com/OpenSPG/KAG)
   - [（视频）五里墩茶社：【KAG】知识增强式生成 - 比RAG更强大的检索与推理框架](https://www.bilibili.com/video/BV1f9kZYgEnL)
 
@@ -344,6 +348,8 @@ tags: []
 - [mxbai-embed-large](https://huggingface.co/mixedbread-ai/mxbai-embed-large-v1)
 
 ## prompt提示词
+
+- [poml: 微软开发的提示词标准化语言，类似html](https://github.com/microsoft/poml)-
 
 - [oenpai官方prompt工程](https://platform.openai.com/docs/guides/prompt-engineering)
 
@@ -769,11 +775,18 @@ tags: []
 
 - [codex: openai的](https://github.com/openai/codex?tab=Apache-2.0-1-ov-file)
 - [claude-code: 终端里的 Claude 编码助手。该项目是 Claude 官方开源的 AI 编码助手，集成于终端内，能够理解整个代码库，并通过简单的自然语言命令，帮助开发者更高效地完成各类编码任务。](https://github.com/anthropics/claude-code)
+    - [Claude-Code-Usage-Monitor: Claude 用量实时监控助手。这是一个用于实时监控和记录开发者在使用 Claude AI 时产生的 Token 用量及费用的工具，支持用量统计、预算告警和套餐设置等功能。](https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor)
 
 - [gemini-cli: 谷歌 Gemini 命令行工具。该项目是 Gemini 官方开源的命令行工具，将 Google Gemini 的强大能力集成到终端环境。它基于百万级上下文，能够理解大型代码库的架构和逻辑，支持多模态输入输出、Google 搜索以及 MCP 等功能。](https://github.com/google-gemini/gemini-cli)
 
 - [QwenLM/qwen-code: 阿里的code](https://github.com/QwenLM/qwen-code)
 
+- codebuddy：腾讯的code
+
+    ```sh
+    # 安装
+    npm install -g @tencent-ai/codebuddy-code
+    ```
 
 ## ai爬虫和信息提取
 
@@ -794,6 +807,8 @@ tags: []
 - [awesome-ai-agents: A list of AI autonomous agents](https://github.com/e2b-dev/awesome-ai-agents)
 
 - [n8n: 可扩展的工作流程自动化工具，它提供了直观的界面，让用户可以通过拖放方式连接不同的应用程序和服务，从而创建自定义的自动化流程。](https://github.com/n8n-io/n8n)
+
+- [n8n-workflows:该项目收集了 2000+ 高质量、开箱即用的 n8n 自动工作流模板，涵盖官方示例、社区精华和用户实用场景。它内置一个基于 FastAPI 的本地搜索服务，支持全文搜索、分类筛选和 Mermaid 可视化展示，可一键下载 JSON 文件，方便导入你的 n8n 实例。](https://github.com/Zie619/n8n-workflows)
 
 - [coze-studio（扣子）: 字节code的开源版](https://github.com/coze-dev/coze-studio)
 
@@ -817,6 +832,8 @@ tags: []
 - dify vs coze：经过我个人的测试dify的知识库检索质量比coze要好很多
 
 ## MCP
+
+- [microsoft/mcp-for-beginners: 微软mcp教程](https://github.com/microsoft/mcp-for-beginners)
 
 - [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)
 

@@ -35,6 +35,7 @@ tags: []
     * [DNS](#dns)
       * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
       * [Technitium DNS Server：自带web gui的dns 服务器](#technitium-dns-server自带web-gui的dns-服务器)
+      * [smartdns:一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT，DoQ。](#smartdns一个本地dns服务器获取最快的网站ip获得最佳上网体验支持dohdotdoq)
     * [nfs](#nfs)
     * [proxy(代理)服务器](#proxy代理服务器)
       * [squid](#squid)
@@ -61,6 +62,7 @@ tags: []
   * [日志软件](#日志软件)
     * [logrotate（自带的日志分割工具）](#logrotate自带的日志分割工具)
     * [rsyslog](#rsyslog)
+    * [gonzo: 日志分析的tui](#gonzo-日志分析的tui)
   * [安全(security)](#安全security)
     * [以redis为例的服务检查](#以redis为例的服务检查)
     * [ssh](#ssh-1)
@@ -90,6 +92,8 @@ tags: []
       * [hydra：密码破解](#hydra密码破解)
       * [burp-suite：浏览器抓包](#burp-suite浏览器抓包)
       * [在线工具](#在线工具)
+* [存储](#存储)
+  * [rustfs:基于 Rust 的企业级分布式存储系统，旨在成为 MinIO 的一个开源替代品。](#rustfs基于-rust-的企业级分布式存储系统旨在成为-minio-的一个开源替代品)
 * [未读](#未读)
 
 <!-- mtoc-end -->
@@ -806,6 +810,10 @@ ngrep port 853
 ```
 
 #### [Technitium DNS Server：自带web gui的dns 服务器](https://technitium.com/dns/)
+
+#### [smartdns:一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT，DoQ。](https://github.com/pymumu/smartdns)
+
+- 与 DNSmasq 的 all-servers 不同，SmartDNS 返回的是访问速度最快的解析结果。
 
 ### nfs
 
@@ -1559,6 +1567,25 @@ include /etc/logrotate.d
         *.* @192.168.31.80
         ```
 
+
+### [gonzo: 日志分析的tui](https://github.com/control-theory/gonzo)
+
+- Gonzo 是一个基于 Go 语言开发的终端用户界面（TUI）日志分析工具，灵感来源于 Kubernetes 的神器 k9s。
+
+- 它专为开发者、运维工程师和数据爱好者设计，目标是让日志分析变得直观、高效。它支持实时日志流处理，内置 OpenTelemetry（OTLP）支持，还能通过 AI 提供智能分析。无论是排查 bug、监控系统，还是挖掘数据洞察，Gonzo 都能让你事半功倍。
+
+- Gonzo 内置 AI 分析功能，能自动检测日志中的模式和异常。无论是反复出现的错误，还是潜在的性能瓶颈，AI 都会给出建议。它支持多种模型（如 GPT-4、Ollama），甚至可以完全离线运行。本地 AI 让你的数据更安全，分析更高效。
+
+```sh
+# 分析日志文件
+cat mylogfile.log | gonzo
+# 或
+gonzo -f mylogfile.log
+
+# 想接收 OTLP 日志？用以下命令启动内置 gRPC 服务器：
+gonzo --otlp
+```
+
 ## 安全(security)
 
 ### 以redis为例的服务检查
@@ -2195,6 +2222,13 @@ paru -S hashcat-utils
 
     - [公共 Ollama 服务列表](https://freeollama.oneplus1.top/)
         > 其实大部分人部署并不专业，把服务暴漏在公网上。
+
+# 存储
+
+## [rustfs:基于 Rust 的企业级分布式存储系统，旨在成为 MinIO 的一个开源替代品。](https://github.com/rustfs/rustfs)
+
+- [从被喷“假开源”到登顶 GitHub 热榜，这个开源项目上演王者归来！](https://mp.weixin.qq.com/s/7__cVbOQTIwan0laPvYIbg)
+
 # 未读
 
 - [崔亮的博客：ci/cd学习笔记](https://m.cuiliangblog.cn/catalog/1939987)

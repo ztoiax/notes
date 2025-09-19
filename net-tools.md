@@ -64,6 +64,7 @@ tags: []
       * [wg-easy/wg-easy:WireGuard web管理界面](#wg-easywg-easywireguard-web管理界面)
       * [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](#chisel在-http-通信上建立-tcpudp-隧道)
       * [Easytier：异地组网](#easytier异地组网)
+      * [vnt: An efficient VPN. 简便高效的异地组网、内网穿透工具](#vnt-an-efficient-vpn-简便高效的异地组网内网穿透工具)
   * [表示层](#表示层)
     * [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](#testssl测试网站是否支持ssltls以及检测漏洞)
   * [传输层](#传输层)
@@ -73,11 +74,13 @@ tags: []
     * [tshark、editcap、capinfos：抓包](#tsharkeditcapcapinfos抓包)
     * [wireshark：tcpdump gui版](#wiresharktcpdump-gui版)
     * [stratoshark：云环境的wireshark](#stratoshark云环境的wireshark)
+    * [oryx：基于 eBPF的 Linux 网络流量分析工具tui。这是一款基于 eBPF 技术的网络流量嗅探分析工具，在 Linux 上秒开网络流量全景监控。它提供终端可视化界面，详细展示流量统计信息，支持防火墙规则管理、模糊搜索和数据导出等功能](#oryx基于-ebpf的-linux-网络流量分析工具tui这是一款基于-ebpf-技术的网络流量嗅探分析工具在-linux-上秒开网络流量全景监控它提供终端可视化界面详细展示流量统计信息支持防火墙规则管理模糊搜索和数据导出等功能)
     * [ptcpdump：抓包](#ptcpdump抓包)
     * [netcap：跟踪整个协议栈的抓包工具](#netcap跟踪整个协议栈的抓包工具)
     * [ngrep：抓包版grep](#ngrep抓包版grep)
     * [ntop/ntopng: 在继承了ntop的核心优势后，全面升级为基于Web的现代化流量分析工具。](#ntopntopng-在继承了ntop的核心优势后全面升级为基于web的现代化流量分析工具)
     * [packetd: 查看网络数据包。是一个基于 `ebpf` 的高性能无侵入网络观测项目。packetd 遵循了 Prometheus 以及 OpenTelemetry 社区的 metrics/traces 设计规范。](#packetd-查看网络数据包是一个基于-ebpf-的高性能无侵入网络观测项目packetd-遵循了-prometheus-以及-opentelemetry-社区的-metricstraces-设计规范)
+    * [netop: 可以自定义过滤网络流量规则的tui（类似于top）。使用 bpf 规则过滤](#netop-可以自定义过滤网络流量规则的tui类似于top使用-bpf-规则过滤)
     * [nmap](#nmap)
     * [zmap](#zmap)
     * [RustScan：端口扫描](#rustscan端口扫描)
@@ -1187,6 +1190,10 @@ sudo tailscale file get .
     # 查询服务是否正常
     easytier-cli peer
     ```
+
+#### [vnt: An efficient VPN. 简便高效的异地组网、内网穿透工具](https://github.com/vnt-dev/vnt)
+
+
 ## 表示层
 
 ### [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](https://github.com/drwetter/testssl.sh)
@@ -1477,6 +1484,8 @@ tshark -q -n -r test.pcapng -z ip_srcdst,tree
 
 ### [stratoshark：云环境的wireshark](https://stratoshark.org/)
 
+### [oryx：基于 eBPF的 Linux 网络流量分析工具tui。这是一款基于 eBPF 技术的网络流量嗅探分析工具，在 Linux 上秒开网络流量全景监控。它提供终端可视化界面，详细展示流量统计信息，支持防火墙规则管理、模糊搜索和数据导出等功能](github.com/pythops/oryx)
+
 ### [ptcpdump：抓包](https://github.com/mozillazg/ptcpdump)
 
 - [奇妙的Linux世界：ptcpdump: 新一代抓包神器，可捕获任何进程、容器或 Pod 的网络流量](https://mp.weixin.qq.com/s/CbOyeQ42D776XuCOTj4Pow)
@@ -1516,6 +1525,9 @@ ngrep -d any port 853
 ### [ntop/ntopng: 在继承了ntop的核心优势后，全面升级为基于Web的现代化流量分析工具。](https://github.com/ntop/ntopng)
 
 ### [packetd: 查看网络数据包。是一个基于 `ebpf` 的高性能无侵入网络观测项目。packetd 遵循了 Prometheus 以及 OpenTelemetry 社区的 metrics/traces 设计规范。](https://github.com/packetd/packetd)
+
+### [netop: 可以自定义过滤网络流量规则的tui（类似于top）。使用 bpf 规则过滤](https://github.com/ZingerLittleBee/netop)
+
 ### nmap
 
 - [（视频）技术蛋老师：许多Nmap课程都缺乏的入门理论知识](https://www.bilibili.com/video/BV18kqhYKEPK)

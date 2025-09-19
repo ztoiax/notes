@@ -13,6 +13,7 @@ tags: []
   * [文件管理器](#文件管理器)
   * [文件清理](#文件清理)
   * [云盘](#云盘)
+  * [other](#other)
 * [下载器](#下载器)
 * [图片](#图片)
   * [image viewer(图片查看器)](#image-viewer图片查看器)
@@ -33,7 +34,7 @@ tags: []
 * [ai](#ai)
 * [模拟器](#模拟器)
 * [微信相关](#微信相关)
-* [other](#other)
+* [other](#other-1)
 * [类似项目](#类似项目)
 
 <!-- mtoc-end -->
@@ -46,27 +47,6 @@ tags: []
 
 # file
 
-- [filelight](https://kde.org/applications/en/filelight)
-
-    ![image](./Pictures/awesomegui/filelight.avif)
-
-- [stacer](https://github.com/oguzhaninan/Stacer)
-
-    ![image](./Pictures/awesomegui/stacer.avif)
-
-- [timeshif: backup](https://github.com/teejee2008/timeshift.avif)
-
-- [typora](https://www.typora.io/)
-
-    ![image](./Pictures/awesomegui/typora.avif)
-
-
-- [syncthing：文件同步](https://github.com/syncthing/syncthing)
-
-- [photoprism：ai相册管理](https://github.com/photoprism/photoprism)
-
-- [PairDrop: 文件传输，通过web浏览器](https://github.com/schlagmichdoch/PairDrop)
-
 ## 文件传输
 
 - [localsend](https://github.com/localsend/localsend)
@@ -74,6 +54,8 @@ tags: []
 - [kdeconnect：还可以控制手机](https://github.com/KDE/kdeconnect-kde)
 
 - [deltachat-desktop: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-desktop)
+
+- [PairDrop: 文件传输，通过web浏览器](https://github.com/schlagmichdoch/PairDrop)
 
 ## 文件管理器
 
@@ -92,6 +74,13 @@ tags: []
     ![image](./Pictures/awesomegui/bleachbit.avif)
 
 - [czkawka：多功能文件清理工具](https://github.com/qarmin/czkawka)
+    - 重复文件终结者
+    - 空文件夹清理
+    - 相似图片识别：连水印都不放过
+    - 视频清理：视觉相似的“侦探”
+    - 坏文件侦测：数据管理的“安全卫士”
+    - 无效符号链接修复：让系统更健康
+    - 垃圾文件清理：临时文件的“天敌”
 
 ## 云盘
 
@@ -115,6 +104,29 @@ tags: []
     ```
 
 - [OpenList: alist被收购，这是alist社区版。](https://github.com/OpenListTeam/OpenList)
+
+## other
+
+- [filelight](https://kde.org/applications/en/filelight)
+
+    ![image](./Pictures/awesomegui/filelight.avif)
+
+- [stacer](https://github.com/oguzhaninan/Stacer)
+
+    ![image](./Pictures/awesomegui/stacer.avif)
+
+- [timeshif: backup](https://github.com/teejee2008/timeshift.avif)
+
+- [typora](https://www.typora.io/)
+
+    ![image](./Pictures/awesomegui/typora.avif)
+
+
+- [syncthing：文件同步](https://github.com/syncthing/syncthing)
+
+- [PeaZip: ：免费开源的文件压缩解压工具。这是一款免费、开源、跨平台的文件压缩和解压工具，支持超过 200 种压缩格式（7Z、ZIP、RAR、TAR、ISO、Zstd），具备文件压缩、解压、加密、分卷、校验、格式转换和批量操作等功能。支持linux、windows、macos](https://github.com/peazip/PeaZip)
+
+- [dupeguru: 查找重复文件](https://github.com/arsenetar/dupeguru)
 
 # 下载器
 
@@ -186,6 +198,8 @@ tags: []
 - [pyvideotrans：给视频配音、翻译配音、添加字幕](https://github.com/jianchang512/pyvideotrans)
 
 - [lossless-cut：视频剪切软件，目标是成为 FFmpeg 的图形前端。](https://github.com/mifi/lossless-cut)
+
+- [videocr: 字幕提取](https://github.com/apm1467/videocr)
 
 # 音乐
 
@@ -294,6 +308,8 @@ tags: []
 - [sunloginclient(向日葵运程控制gui版)](https://sunlogin.oray.com/download)
 
 - [keynav：键盘控制鼠标](https://github.com/jordansissel/keynav)
+
+- [keyviz: 实时显示键盘按键](https://github.com/mulaRahul/keyviz)
 
 - [lx-music-desktop：一个基于 electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
 

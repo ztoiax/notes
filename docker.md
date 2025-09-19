@@ -4181,6 +4181,8 @@ docker run --rm -ti \
     ```
 
 - [imgx：将本地镜像文件推送至远程主机](https://github.com/devzhi/imgx)
+- [dockman:gui版 Docker Compose 管理工具](https://github.com/RA341/dockman)
+    - [告别繁琐配置！这款开源工具让 Docker 管理变得超简单](https://mp.weixin.qq.com/s/R5iAfRJjE84-LzEdJsF8vg)
 
 # reference article(优秀文章)
 

@@ -18,6 +18,7 @@ tags: []
   * [waveterm：ts写的，支持ai提醒](#wavetermts写的支持ai提醒)
   * [WindTerm：c写的类似vscode布局的终端](#windtermc写的类似vscode布局的终端)
   * [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](#nexterm适合多服务器管理支持ssh-vnc-and-rdp支持sftp支持proxmox-lxc-和-qemu-containers)
+  * [electerm: 设计理念是将终端、文件管理器和远程连接工具融为一体，类似于XShell和Guake的结合体，但功能更全面，支持更多协议。Terminal/ssh/sftp/ftp/telnet/serialport/RDP/VNC client(linux, mac, win)](#electerm-设计理念是将终端文件管理器和远程连接工具融为一体类似于xshell和guake的结合体但功能更全面支持更多协议terminalsshsftpftptelnetserialportrdpvnc-clientlinux-mac-win)
 * [File Browser](#file-browser)
   * [ranger](#ranger)
   * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
@@ -29,6 +30,7 @@ tags: []
   * [mc](#mc)
   * [twf：vim模式的文件树](#twfvim模式的文件树)
   * [superfile](#superfile)
+  * [filebrowser: 即使文件浏览器，也是文件服务器。支持在线播放视频和音频](#filebrowser-即使文件浏览器也是文件服务器支持在线播放视频和音频)
 * [File](#file)
   * [mmv：批量命名mv](#mmv批量命名mv)
   * [[advcpmv: instead cp, my(https://github.com/jarun/advcpmv)](#advcpmv-instead-cp-myhttpsgithubcomjarunadvcpmv)
@@ -182,8 +184,10 @@ tags: []
   * [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](#shadps4开源的-ps4-模拟器虽然项目仍处于早期开发阶段能运行的游戏有限但最新版已经能够成功运行血源诅咒和黑暗之魂ii等游戏)
 * [代码相关](#代码相关)
 * [备份](#备份)
-* [other](#other)
+* [解决网络下载问题，如换源等](#解决网络下载问题如换源等)
   * [chsrc：全平台通用换源工具与框架](#chsrc全平台通用换源工具与框架)
+  * [xixu-me/Xget: 超高性能、安全的一站式开源资源访问加速引擎。其性能远超传统加速器，为您提供跨多个平台的统一高效的加速体验，涵盖代码储存库、包管理、AI 推理 API、容器镜像、模型及数据集等 | Ultra-high performance, secure, all-in-one open-source resource acceleration engine. Significantly outperforms traditional accelerators, providing unified and efficient acceleration across multiple platforms](#xixu-mexget-超高性能安全的一站式开源资源访问加速引擎其性能远超传统加速器为您提供跨多个平台的统一高效的加速体验涵盖代码储存库包管理ai-推理-api容器镜像模型及数据集等--ultra-high-performance-secure-all-in-one-open-source-resource-acceleration-engine-significantly-outperforms-traditional-accelerators-providing-unified-and-efficient-acceleration-across-multiple-platforms)
+* [other](#other)
   * [progress：显示cp、mv进度条](#progress显示cpmv进度条)
   * [haxor-news: hacker new](#haxor-news-hacker-new)
   * [xonsh: python shell](#xonsh-python-shell)
@@ -212,6 +216,7 @@ tags: []
   * [ast-grep：结构化搜索与替换（SSR）](#ast-grep结构化搜索与替换ssr)
   * [lazynpm：npm的tui](#lazynpmnpm的tui)
   * [sshs：ssh的tui](#sshsssh的tui)
+  * [lazyssh: 类似lazydocker 和 k9s的ssh tui](#lazyssh-类似lazydocker-和-k9s的ssh-tui)
   * [termpscp：scp的tui](#termpscpscp的tui)
   * [ugm：用户、组的tui](#ugm用户组的tui)
   * [glance：自定义dashboard：rss、github release、twitch channel等](#glance自定义dashboardrssgithub-releasetwitch-channel等)
@@ -282,6 +287,7 @@ tags: []
       * [LM Studio：ollama gui版](#lm-studioollama-gui版)
       * [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#anything-llm一个gui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
       * [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#cherry-studiogui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
+    * [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](#shimmy一个只有-5mb-的单文件程序的ollama的代替品)
     * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
   * [other](#other-1)
 * [reference](#reference)
@@ -321,6 +327,8 @@ tags: []
 
 ## [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](https://github.com/gnmyt/Nexterm)
 
+## [electerm: 设计理念是将终端、文件管理器和远程连接工具融为一体，类似于XShell和Guake的结合体，但功能更全面，支持更多协议。Terminal/ssh/sftp/ftp/telnet/serialport/RDP/VNC client(linux, mac, win)](https://github.com/electerm/electerm)
+
 # File Browser
 
 ## [ranger](https://github.com/ranger/ranger)
@@ -359,6 +367,8 @@ sudo make O_NERD=1
 ## [superfile](https://github.com/yorukot/superfile)
 
 ![image](./Pictures/awesomecli/superfile.avif)
+
+## [filebrowser: 即使文件浏览器，也是文件服务器。支持在线播放视频和音频](https://github.com/filebrowser/filebrowser)
 
 # File
 
@@ -1061,13 +1071,19 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 # 代码相关
 
 - [code2prompt：将代码库转换为 LLM 提示的工具。会将所有代码变成markdown格式的文件](https://github.com/mufeedvh/code2prompt)
+- [fuck-u-code: Legacy-Mess Detector – assess the “legacy-mess level” of your code and output a beautiful terminal report | 屎山代码检测器，评估代码的“屎山等级”并输出美观的终端报告](https://github.com/Done-0/fuck-u-code)
+
 # 备份
 
 - [borg: Deduplicating archiver with compression and authenticated encryption.](https://github.com/borgbackup/borg)
 
-# other
+# 解决网络下载问题，如换源等
 
 ## [chsrc：全平台通用换源工具与框架](https://github.com/RubyMetric/chsrc)
+
+## [xixu-me/Xget: 超高性能、安全的一站式开源资源访问加速引擎。其性能远超传统加速器，为您提供跨多个平台的统一高效的加速体验，涵盖代码储存库、包管理、AI 推理 API、容器镜像、模型及数据集等 | Ultra-high performance, secure, all-in-one open-source resource acceleration engine. Significantly outperforms traditional accelerators, providing unified and efficient acceleration across multiple platforms](https://github.com/xixu-me/Xget)
+
+# other
 
 ```sh
 # docker源
@@ -1224,6 +1240,8 @@ silicon test.py -o main.png
 ## [lazynpm：npm的tui](https://github.com/jesseduffield/lazynpm)
 
 ## [sshs：ssh的tui](https://github.com/quantumsheep/sshs)
+
+## [lazyssh: 类似lazydocker 和 k9s的ssh tui](https://github.com/Adembc/lazyssh)
 
 ## [termpscp：scp的tui](https://github.com/veeso/termscp)
 
@@ -1837,6 +1855,14 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 ```
 
 #### [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/CherryHQ/cherry-studio)
+
+### [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](https://github.com/Michael-A-Kuykendall/shimmy)
+
+- 启动时间＜100ms，秒开！
+- 内存只占50MB，后台无感运行
+- 基于 Rust 编写，极致优化
+- 不需要复杂配置！自动分配端口！
+- 自动发现模型源：Hugging Face、Ollama、本地文件夹…通通识别！
 
 ### [transformers.js：在浏览器运行大模型（如deepseek-r1）](https://github.com/huggingface/transformers.js-examples/tree/main/deepseek-r1-webgpu)
 
