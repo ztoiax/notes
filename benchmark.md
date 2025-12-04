@@ -100,6 +100,7 @@ tags: []
   * [hdparm](#hdparm)
   * [agedu](#agedu)
     * [只统计.conf 文件](#只统计conf-文件)
+  * [CrossPlatformDiskTest: 多平台硬盘性能测试工具。这是一款开源的存储与内存性能测试工具，适用于固态硬盘、机械硬盘、U 盘等存储设备。支持顺序和随机读写测试，提供 IOPS 和 MB/s 等性能指标，兼容 Windows、macOS、Linux、Android 系统。](#crossplatformdisktest-多平台硬盘性能测试工具这是一款开源的存储与内存性能测试工具适用于固态硬盘机械硬盘u-盘等存储设备支持顺序和随机读写测试提供-iops-和-mbs-等性能指标兼容-windowsmacoslinuxandroid-系统)
 * [Process](#process)
   * [ps命令](#ps命令)
   * [htop](#htop)
@@ -134,6 +135,8 @@ tags: []
   * [nvitop：nvidia gpu](#nvitopnvidia-gpu)
   * [gpustat](#gpustat)
   * [gmonitor](#gmonitor)
+  * [torch-performance-test-data：gpu FP32, FP16, BF16, FP8 基准测试。并且有网页天梯排行榜](#torch-performance-test-datagpu-fp32-fp16-bf16-fp8-基准测试并且有网页天梯排行榜)
+  * [gpu-hot: 🔥 Real-time NVIDIA GPU dashboard](#gpu-hot--real-time-nvidia-gpu-dashboard)
 * [Debug](#debug)
   * [strace](#strace)
   * [ltrace](#ltrace)
@@ -1717,6 +1720,9 @@ agedu -w
 
 ![image](./Pictures/benchmark/2.avif)
 
+
+## [CrossPlatformDiskTest: 多平台硬盘性能测试工具。这是一款开源的存储与内存性能测试工具，适用于固态硬盘、机械硬盘、U 盘等存储设备。支持顺序和随机读写测试，提供 IOPS 和 MB/s 等性能指标，兼容 Windows、macOS、Linux、Android 系统。](https://github.com/maxim-saplin/CrossPlatformDiskTest)
+
 # Process
 
 ## ps命令
@@ -2109,6 +2115,12 @@ nvidia-smi pmon -i 0 -s u -o T
 ## [gmonitor](https://github.com/mountassir/gmonitor)
 
 ![image](./Pictures/benchmark/gmonitor.avif)
+
+## [torch-performance-test-data：gpu FP32, FP16, BF16, FP8 基准测试。并且有网页天梯排行榜](https://github.com/zzc0721/torch-performance-test-data?tab=readme-ov-file)
+
+- [网页天梯排行榜](https://perf.svcfusion.com/)
+
+## [gpu-hot: 🔥 Real-time NVIDIA GPU dashboard](https://github.com/psalias2006/gpu-hot)
 
 # Debug
 

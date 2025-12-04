@@ -1,3 +1,9 @@
+---
+id: linux-command
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -13,6 +19,7 @@
     * [lsof](#lsof)
     * [rsync](#rsync)
       * [UDR模式](#udr模式)
+    * [rsyncy: 有进度条的rsync](#rsyncy-有进度条的rsync)
     * [scp](#scp)
     * [rsync和scp的区别](#rsync和scp的区别)
     * [restic：备份工具](#restic备份工具)
@@ -270,6 +277,8 @@ git clone https://github.com/allisonheath/UDR.git
 cd UDR
 make -e os=XXX arch=YYY
 ```
+
+### [rsyncy: 有进度条的rsync](https://github.com/laktak/rsyncy)
 
 ### scp
 

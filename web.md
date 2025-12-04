@@ -60,6 +60,9 @@ tags: []
 
 ## chrome插件
 
+- [Crx搜搜：中国网络加速的chrome插件下载](https://www.crxsoso.com/)
+
+
 - [Bypass Paywalls：](https://github.com/iamadamdev/bypass-paywalls-chrome)帮助用户绕过一些新闻网站和其他网站的付费墙，让用户可以免费阅读这些网站的文章和内容。
     - 实现原理：因为付费网站的付费内容为了搜索流量就给谷歌爬虫开白名单，允许抓取付费内容。这样，谷歌就有了付费文章缓存，然后插件把网站链接的内容替换为谷歌的缓存内容，以此绕过付费。
     - 目前 Chrome 商店和 Firefox 商店都已经将 Bypass Paywalls 下架，所以只能离线安装。
@@ -72,7 +75,7 @@ tags: []
 
 - [materialYouNewTab：标签页](https://github.com/XengShi/materialYouNewTab)
 
-- [微信网页版](https://github.com/lqzhgood/wechat-need-web)
+- [wechat-need-web: 让微信网页版可用 / Allow the use of WeChat via webpage access](https://github.com/lqzhgood/wechat-need-web)
 
 - [All Fingerprint Defender：Fingerprint防御](https://chromewebstore.google.com/detail/all-fingerprint-defender/meojnmfhjkahlfcecpdcdgjclcilmaij)
 
@@ -102,6 +105,13 @@ tags: []
 - [Xget-Now: 为 Chromium 和 Firefox 浏览器提供的 Xget 下载加速扩展，支持 GitHub、GitLab、npm、PyPI 等众多平台的文件下载加速](https://github.com/xixu-me/Xget-Now)
 
 - [BookmarkHub: 将浏览器书签导入到github的gist上](https://github.com/dudor/BookmarkHub)
+- [N-Tab: 浏览器插件，《标签管理工具，替代OneTab》，支持Chrome和Edge](https://github.com/scoful/N-Tab)
+
+- [NativeMindExtension: 连接 Ollama 本地 LLMs](https://github.com/NativeMindBrowser/NativeMindExtension)
+
+- [automa:自定义爬虫工作流](https://github.com/AutomaApp/automa)
+
+- [code-box: 本插件可以用于CSDN/知乎/脚本之家/博客园/掘金等网站,一键下载文章html或markdown文件;实现无需登录一键复制代码;支持选中代码;或者代码右上角按钮的一键复制;解除关注博主即可阅读全文提示;去除登录弹窗;去除跳转APP弹窗.](https://github.com/027xiguapi/code-box)
 
 # CGI和FastCGI
 

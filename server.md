@@ -25,6 +25,7 @@ tags: []
       * [将隔离环境中的web端口映射到本地（本地代理）](#将隔离环境中的web端口映射到本地本地代理)
       * [指定算法来强制client端使用某种和server一致的加密方式](#指定算法来强制client端使用某种和server一致的加密方式)
       * [SSH 三大转发模式](#ssh-三大转发模式)
+    * [EternalTerminal: 基于 SSH 的远程登录工具，自动重连上一次的会话，即不会发生会话中断。](#eternalterminal-基于-ssh-的远程登录工具自动重连上一次的会话即不会发生会话中断)
     * [autossh：启动 ssh 服务并进行监控的命令行应用程序，可以在程序问题或者是网络问题的时候，重启 ssh 服务。](#autossh启动-ssh-服务并进行监控的命令行应用程序可以在程序问题或者是网络问题的时候重启-ssh-服务)
     * [ssh3：使用 QUIC + TLS 重新实现的 SSH 加密登陆工具，支持 UDP 端口转发](#ssh3使用-quic--tls-重新实现的-ssh-加密登陆工具支持-udp-端口转发)
     * [sshfs：ssh将远程目录挂载到本地](#sshfsssh将远程目录挂载到本地)
@@ -45,6 +46,8 @@ tags: []
       * [wireguard](#wireguard)
     * [文件传输](#文件传输)
       * [samba](#samba)
+    * [密钥管理平台](#密钥管理平台)
+      * [infisical: 密钥管理，生命周期检测。并且可以与github，k8s等主流平台无缝集成，实现密钥自动注入和同步](#infisical-密钥管理生命周期检测并且可以与githubk8s等主流平台无缝集成实现密钥自动注入和同步)
   * [系统监控](#系统监控)
     * [cockpit(系统监控的webui)](#cockpit系统监控的webui)
   * [自动化任务](#自动化任务)
@@ -81,6 +84,7 @@ tags: []
     * [clamav: 病毒扫描](#clamav-病毒扫描)
     * [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](#sqlmap-自动检测和利用-sql-注入漏洞获得数据库服务器的权限)
     * [ghauri：自动检测和利用 SQL 注入漏洞](#ghauri自动检测和利用-sql-注入漏洞)
+    * [strix: AI 的安全测试工具，可自动对应用进行安全测试的 AI Agent。它能够集成到 CI/CD 流程，实现自动拉取代码并启动应用，然后模拟黑客行为寻找隐藏漏洞，支持漏洞检测/复现、自动修复、生成报告等功能。](#strix-ai-的安全测试工具可自动对应用进行安全测试的-ai-agent它能够集成到-cicd-流程实现自动拉取代码并启动应用然后模拟黑客行为寻找隐藏漏洞支持漏洞检测复现自动修复生成报告等功能)
     * [beef: web渗透测试](#beef-web渗透测试)
     * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
     * [fscan：开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。](#fscan开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描它使用方便功能全面支持端口扫描常见的服务器爆破web-应用漏洞扫描netbios-嗅探等功能)
@@ -685,6 +689,8 @@ curl 127.0.0.1:8088
     RemoteForward local-IP:local-port target-ip:target-port
     ```
 
+### [EternalTerminal: 基于 SSH 的远程登录工具，自动重连上一次的会话，即不会发生会话中断。](https://github.com/MisterTea/EternalTerminal?tab=readme-ov-file)
+
 ### autossh：启动 ssh 服务并进行监控的命令行应用程序，可以在程序问题或者是网络问题的时候，重启 ssh 服务。
 
 ```sh
@@ -814,6 +820,8 @@ ngrep port 853
 #### [smartdns:一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT，DoQ。](https://github.com/pymumu/smartdns)
 
 - 与 DNSmasq 的 all-servers 不同，SmartDNS 返回的是访问速度最快的解析结果。
+
+- [easymosdns: 基于Mosdns-x的精准DNS分流策略，仅需几分钟即可搭建一台支持ECS的无污染DNS服务器。](https://github.com/pmkol/easymosdns)
 
 ### nfs
 
@@ -1115,6 +1123,10 @@ openvpn --genkey secret /etc/openvpn/server/ta.key
     # 访问smb
     smbclient //127.0.0.1/public
     ```
+
+### 密钥管理平台
+
+#### [infisical: 密钥管理，生命周期检测。并且可以与github，k8s等主流平台无缝集成，实现密钥自动注入和同步](https://github.com/Infisical/infisical)
 
 ## 系统监控
 
@@ -1968,6 +1980,9 @@ clamscan -r --remove /
 - 支持 urlencoding 跳过
 - 支持基于布尔值/时间注入的提取字符验证
 - 支持根据用户需求处理重定向
+
+
+### [strix: AI 的安全测试工具，可自动对应用进行安全测试的 AI Agent。它能够集成到 CI/CD 流程，实现自动拉取代码并启动应用，然后模拟黑客行为寻找隐藏漏洞，支持漏洞检测/复现、自动修复、生成报告等功能。](https://github.com/usestrix/strix)
 
 ### [beef: web渗透测试](https://github.com/beefproject/beef)
 

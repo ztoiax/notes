@@ -42,23 +42,39 @@ tags: []
     * [commitgpt（ai自动生成git commit）](#commitgptai自动生成git-commit)
     * [git-cliff：对history生成markdown日志](#git-cliff对history生成markdown日志)
     * [github/gitignore：A collection of useful .gitignore templates](#githubgitignorea-collection-of-useful-gitignore-templates)
+    * [vignore: tui工具。它可以将你的.gitignore忽略规则可视化，让你一目了然地看到哪些文件被忽略，哪些文件被包含。告别盲猜，精准掌控！](#vignore-tui工具它可以将你的gitignore忽略规则可视化让你一目了然地看到哪些文件被忽略哪些文件被包含告别盲猜精准掌控)
     * [gitbutler：新型的 Git 客户端。该项目采用 Tauri/Rust/Svelte 构建，拥有较高的颜值。用户可以将多个分支上的改动，通过拖拽的方式快速地聚合到一个独立分支上，实现灵活地跨分支操作，适用于 Windows、macOS 和 Linux 平台。](#gitbutler新型的-git-客户端该项目采用-taurirustsvelte-构建拥有较高的颜值用户可以将多个分支上的改动通过拖拽的方式快速地聚合到一个独立分支上实现灵活地跨分支操作适用于-windowsmacos-和-linux-平台)
     * [diffnav：增强git diff功能](#diffnav增强git-diff功能)
-* [repo：google的git](#repogoogle的git)
+    * [filter-repo-rs: 一个 Rust 语言写的工具，用来改写 Git 仓库历史，比如不小心提交了敏感信息，可以用它来修改提交历史。](#filter-repo-rs-一个-rust-语言写的工具用来改写-git-仓库历史比如不小心提交了敏感信息可以用它来修改提交历史)
+    * [lazygit：git tui](#lazygitgit-tui)
+    * [gitui](#gitui)
+    * [bit：instead git](#bitinstead-git)
+    * [tig：git log](#tiggit-log)
+    * [hub](#hub)
+    * [forgit](#forgit)
+    * [gitoxide:rust版git](#gitoxiderust版git)
+    * [delta：highlight git diff](#deltahighlight-git-diff)
+    * [gitlogue:回放你的 Git 提交历史。这是一个能够将 Git 提交历史转化为动画的命令行工具，通过打字动画和代码高亮，在终端里生动展示每一次变更。](#gitlogue回放你的-git-提交历史这是一个能够将-git-提交历史转化为动画的命令行工具通过打字动画和代码高亮在终端里生动展示每一次变更)
+  * [repo：google的git](#repogoogle的git)
 * [VFSForGit：微软的git](#vfsforgit微软的git)
 * [scalar：微软的新git](#scalar微软的新git)
 * [github](#github)
   * [api](#api)
   * [github工作流](#github工作流)
   * [lfs大文件系统](#lfs大文件系统)
-  * [code action](#code-action)
+  * [github action](#github-action)
   * [pages（个人网站）](#pages个人网站)
   * [clone下载子目录](#clone下载子目录)
   * [第三方github工具](#第三方github工具)
+    * [gh](#gh)
+    * [github-cli官方文档](#github-cli官方文档)
+    * [gh-dash](#gh-dash)
+    * [eget:一键获取 GitHub Release 安装包。这是一个用 Go 编写的命令行工具，可自动从 GitHub 检索、下载并安装开源项目已发布的二进制文件（Releases），无需手动查找和下载安装包。](#eget一键获取-github-release-安装包这是一个用-go-编写的命令行工具可自动从-github-检索下载并安装开源项目已发布的二进制文件releases无需手动查找和下载安装包)
+    * [dra: GitHub Release 文件下载利器，支持自动化下载、智能匹配和一键安装](#dra-github-release-文件下载利器支持自动化下载智能匹配和一键安装)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
 * [关于 Git 的书](#关于-git-的书)
-* [online tools](#online-tools)
+* [在线工具](#在线工具)
 
 <!-- mtoc-end -->
 
@@ -893,6 +909,8 @@ git commit -m "..."
 
 ### [github/gitignore：A collection of useful .gitignore templates](https://github.com/github/gitignore)
 
+### [vignore: tui工具。它可以将你的.gitignore忽略规则可视化，让你一目了然地看到哪些文件被忽略，哪些文件被包含。告别盲猜，精准掌控！](https://github.com/James4Ever0/vignore?tab=readme-ov-file)
+
 ### [gitbutler：新型的 Git 客户端。该项目采用 Tauri/Rust/Svelte 构建，拥有较高的颜值。用户可以将多个分支上的改动，通过拖拽的方式快速地聚合到一个独立分支上，实现灵活地跨分支操作，适用于 Windows、macOS 和 Linux 平台。](https://github.com/gitbutlerapp/gitbutler)
 
 ### [diffnav：增强git diff功能](https://github.com/dlvhdr/diffnav)
@@ -901,7 +919,37 @@ git commit -m "..."
 git diff | diffnav
 ```
 
-# repo：google的git
+### [filter-repo-rs: 一个 Rust 语言写的工具，用来改写 Git 仓库历史，比如不小心提交了敏感信息，可以用它来修改提交历史。](https://github.com/Cactusinhand/filter-repo-rs)
+
+### [lazygit：git tui](https://github.com/jesseduffield/lazygit)
+
+![image](./Pictures/git/lazygit.avif)
+
+### [gitui](https://github.com/extrawurst/gitui)
+
+![image](./Pictures/git/gitui.avif)
+
+### [bit：instead git](https://github.com/chriswalz/bit)
+
+![image](./Pictures/git/bit.avif)
+
+### [tig：git log](https://github.com/jonas/tig)
+
+![image](./Pictures/git/tig.avif)
+
+### [hub](https://hub.github.com/)
+
+### [forgit](https://github.com/wfxr/forgit)
+
+![image](./Pictures/git/forgit.avif)
+
+### [gitoxide:rust版git](https://github.com/Byron/gitoxide)
+
+### [delta：highlight git diff](https://github.com/dandavison/delta)
+
+### [gitlogue:回放你的 Git 提交历史。这是一个能够将 Git 提交历史转化为动画的命令行工具，通过打字动画和代码高亮，在终端里生动展示每一次变更。](https://github.com/unhappychoice/gitlogue)
+
+## repo：google的git
 
 - 要解决存放 Android 源代码的需求，Google 有个工具叫“repo”。它可以管理多个 git repo，就好像一个巨大的 repo 一样。这个工具支持 Linux 和 macOS，但是 Windows 上基本没法用。
     - 同时，因为本质上其实还是一堆git库的集合，把文件从一个 git 挪到另一个，就会丢失历史。Google 的另一个工作是 Git protocol v2。它可以加速 repo 之间传输的速度。
@@ -964,11 +1012,13 @@ git install lfs
 git lfs track "*.mp4"
 ```
 
-## code action
+## github action
 
 - [GitHub Actions by Example](https://www.actionsbyexample.com/?utm_source=hackernewsletter&utm_medium=email&utm_term=code)
 
 - [（视频）技术爬爬虾：Github的王炸功能，但很少人知道怎么用？免费运行程序，流水线编译部署，天气推送 签到薅羊毛 领京豆 CI/CD持续集成持续部署](https://www.bilibili.com/video/BV11e411i7Xx)
+
+- [mimotion: 小米运动刷步数（微信支付宝）支持邮箱登录](https://github.com/TonyJiangWJ/mimotion)
 
 ## pages（个人网站）
 
@@ -988,15 +1038,54 @@ github-dlr https://github.com/Aylur/dotfiles/tree/main/ags
 
 ## 第三方github工具
 
-- [gh-dash](https://github.com/dlvhdr/gh-dash?ref=terminaltrove)
-    ![image](./Pictures/git/gh-dash.gif)
-    ```sh
-    # 安装
-    gh extension install dlvhdr/gh-dash
+### [gh](https://github.com/cli/cli)
 
-    # 使用
-    gh dash
-    ```
+```sh
+# 登陆
+gh auth login
+
+# 查看登陆
+gh auth status
+
+# 创建仓库
+gh repo create gh-test
+
+# 查看所有仓库
+gh repo list
+
+# 查看指定仓库
+gh repo view https://github.com/ztoiax/nvim
+
+# 创建issue
+gh issue create
+
+# 查看issue
+gh issue list
+
+# 创建release
+gh release create r1
+
+# 查看release
+gh release list
+```
+
+### github-cli[官方文档](https://cli.github.com/manual/)
+
+
+### [gh-dash](https://github.com/dlvhdr/gh-dash?ref=terminaltrove)
+
+![image](./Pictures/git/gh-dash.gif)
+```sh
+# 安装
+gh extension install dlvhdr/gh-dash
+
+# 使用
+gh dash
+```
+
+### [eget:一键获取 GitHub Release 安装包。这是一个用 Go 编写的命令行工具，可自动从 GitHub 检索、下载并安装开源项目已发布的二进制文件（Releases），无需手动查找和下载安装包。](https://github.com/zyedidia/eget)
+
+### [dra: GitHub Release 文件下载利器，支持自动化下载、智能匹配和一键安装](https://github.com/devmatteini/dra)
 
 # reference
 
@@ -1023,6 +1112,9 @@ github-dlr https://github.com/Aylur/dotfiles/tree/main/ags
 - [git book 官方教材](https://git-scm.com/book/zh/v2)
 - [git magic](http://www-cs-students.stanford.edu/~blynn/gitmagic/intl/zh_cn/index.html#_%E8%87%B4%E8%B0%A2)
 asd
-# online tools
+
+# 在线工具
+
+- [DownGit：下载github仓库的某个文件夹](https://downgit.evecalm.com/#/home)
 
 - [Learn Git Branching](https://learngitbranching.js.org/?demo=&locale=zh_CN)

@@ -26,6 +26,23 @@ tags: []
     * [2024年llm总结Things we learned about LLMs in 2024](#2024年llm总结things-we-learned-about-llms-in-2024)
     * [DeepSeek模型作者的访谈](#deepseek模型作者的访谈)
 * [ai项目](#ai项目)
+  * [命令行相关工具](#命令行相关工具)
+    * [llm大模型](#llm大模型)
+      * [awesome-chatgpt](#awesome-chatgpt)
+      * [ollama](#ollama)
+        * [Ollama对比vllm](#ollama对比vllm)
+        * [open-webui：ollama web ui](#open-webuiollama-web-ui)
+        * [open-coreui:  Rust 语言重写的 Open WebUI，降低了内存和资源消耗，有服务器版和桌面版。](#open-coreui--rust-语言重写的-open-webui降低了内存和资源消耗有服务器版和桌面版)
+        * [hollama：ollama web ui](#hollamaollama-web-ui)
+        * [oterm：Ollama cli客户端](#otermollama-cli客户端)
+        * [MaxKB：ollama web ui，知识库](#maxkbollama-web-ui知识库)
+        * [rag-web-ui](#rag-web-ui)
+        * [LM Studio：ollama gui版](#lm-studioollama-gui版)
+        * [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#anything-llm一个gui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
+        * [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#cherry-studiogui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
+      * [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](#shimmy一个只有-5mb-的单文件程序的ollama的代替品)
+      * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
+    * [其他命令行相关工具](#其他命令行相关工具)
   * [Transformer](#transformer)
   * [ai图片、视频](#ai图片视频)
     * [图片和视频理解](#图片和视频理解)
@@ -39,6 +56,8 @@ tags: []
     * [语音转文字](#语音转文字)
     * [文字转语音](#文字转语音)
     * [ai作曲（文字生成音乐、图片生成音乐）](#ai作曲文字生成音乐图片生成音乐)
+    * [ai声音克隆（tts），可以实现让电影里的演员的英文配音变成国语](#ai声音克隆tts可以实现让电影里的演员的英文配音变成国语)
+  * [ai ocr](#ai-ocr)
   * [ai翻译](#ai翻译)
   * [ai编程语言](#ai编程语言)
   * [ai操作系统](#ai操作系统)
@@ -47,6 +66,7 @@ tags: []
     * [ai浏览器](#ai浏览器)
   * [ai搜索](#ai搜索)
   * [ai编程，代码补全](#ai编程代码补全)
+  * [ai为github代码仓库生成wiki](#ai为github代码仓库生成wiki)
   * [ai编辑器](#ai编辑器)
   * [ai程序员](#ai程序员)
   * [ai终端](#ai终端)
@@ -341,6 +361,8 @@ tags: []
 
 - [Flowise](https://github.com/FlowiseAI/Flowise)
 
+- [supermemory: 记忆系统。支持url,pdf,文本等，支持mcp调用，把rag抽象为一个可以允许其他应用调用的服务层](https://github.com/supermemoryai/supermemory)
+
 ### embedding model（文本嵌入式模型）
 
 - [nomic-embed-text](https://huggingface.co/nomic-ai/nomic-embed-text-v1.5)
@@ -546,6 +568,226 @@ tags: []
 
 # ai项目
 
+## 命令行相关工具
+
+### llm大模型
+
+#### [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
+
+#### [ollama](https://github.com/ollama/ollama)
+
+- [公共 Ollama 服务列表](https://freeollama.oneplus1.top/)
+    > 其实大部分人部署并不专业，把服务暴漏在公网上。
+
+- [漫谈云原生：最全 Ollama 大模型部署指南](https://mp.weixin.qq.com/s/Esqw0zViQBiq_4VXEXKz_Q)
+
+- [ollama：支持的大模型](https://ollama.com/search)
+
+- 基本命令
+
+    ```sh
+    # 启动ollama
+    sudo systemctl restart ollama
+
+    # 所有可供下载的模型 https://ollama.com/search
+    # 下载并运行deepseek-v3（被称为拼多多版大模型）
+    ollama run nezahatkorkmaz/deepseek-v3
+
+    # 从内存中卸载模型
+    ollama stop nezahatkorkmaz/deepseek-v3
+
+    # 下载文本嵌入式模型
+    ollama pull nomic-embed-text
+    # 比nomic更好的文本嵌入式模型
+    ollama pull snowflake-arctic-embed2
+
+    # /show parameters 查看参数
+    ollama run deepseek-r1:latest
+    >>> /show parameters
+    Model defined parameters:
+    stop                           "<｜begin▁of▁sentence｜>"
+    stop                           "<｜end▁of▁sentence｜>"
+    stop                           "<｜User｜>"
+    stop                           "<｜Assistant｜>"
+
+    # 修改参数。默认情况下，Ollama 上下文窗口大小为 2048，要改成 4096 可以执行
+    >>> /set parameter num_ctx 4096
+    ```
+
+- 使用[modelscope（魔塔）](https://www.modelscope.cn/models)加速下载大模型文件，比ollama快
+    ```sh
+    pip install modelscope
+
+    # 下载千问qwq-32B大模型
+    modelscope download --model"Qwen/QwQ-32B-GGUF" --local_dir=./QwQ-32B
+
+    # 比较大的模型是拆分多个文件的需要进行使用llama.cpp项目工具合并
+    llama.cpp merge <所有gguf文件>
+
+    ```
+
+- Kubernetes 运行 Ollama
+    ```sh
+    # 配置 Helm Chart
+    helm repo add ollama <https://feisky.xyz/ollama-kubernetes>
+    helm repo update
+
+    # 部署 Ollama
+    helm upgrade --install ollama ollama/ollama \
+        --namespace=ollama \
+        --create-namespace
+
+    # 开启端口转发
+    kubectl -n ollama port-forward \
+       service/ollama-webui 8080:80
+    ```
+
+- 变量：
+
+    - Ollama 的存储路径为：
+
+        - macOS: `~/.ollama/models`
+        - Linux: `/usr/share/ollama/.ollama/models`
+        - Windows: `C:\Users\%username%\.ollama\models`
+
+        ```sh
+        # 修改存储路径
+        export OLLAMA_MODELS=~/ollama-data
+        ```
+
+    - 默认情况下，模型会在内存中保留 5 分钟后卸载。如果短时间向 LLM 发送大量请求，这可以提供更快的响应时间。
+
+        ```sh
+        # 设置为 1 小时
+        export OLLAMA_KEEP_ALIVE=1h
+        ```
+
+    - Flash Attention 是大多数现代模型的一项功能，可以在上下文大小增加时显著减少内存使用。
+
+        ```sh
+        # 开启Flash Attention
+        export OLLAMA_FLASH_ATTENTION=1
+        ```
+
+    - 设置 K/V 缓存的量化类型：启用 Flash Attention 时，K/V 上下文缓存可以进行量化，以显著减少内存使用。
+
+        - 缓存量化对模型质量的影响：
+
+            - 通常 GQA 分高的模型（比如 Qwen2）可能比 GQA 分低的模型更容易受到量化对精度影响。
+
+            - 建议你尝试不同的量化类型，通过测试找到内存使用与质量之间最佳平衡点。
+
+
+        - 要在 Ollama 中使用量化的 K/V 缓存，可以设置 `OLLAMA_KV_CACHE_TYPE` 环境变量：
+
+        - `f16` - 高精度和高内存使用（默认）。
+        - `q8_0` - 8 位量化，使用约为 f16 一半的内存，精度损失非常小，这通常对模型质量没有明显影响。
+        - `q4_0` - 4 位量化，使用约为 f16 四分之一的内存，在较大上下文大小时会出现精度损失。
+
+- 运行第三方 GGUF 模型
+
+    - GGUF 是 llama.cpp 定义的一种高效存储和交换大模型预训练结果的二进制格式。你可以通过 Modelfile 文件中导入 GGUF 模型。
+
+    - 首先创建一个 Modelfile：
+
+        ```
+        FROM <model-path>.gguf
+        PARAMETER temperature 1
+        PARAMETER num_ctx 4096
+        SYSTEM You are Mario from super mario bros, acting as an assistant.
+        ```
+    - 然后，执行下面的命令加载运行模型：
+
+        ```sh
+        # 你可以加上 -q Q4_K_M 对模型量化
+        ollama create myllama -f Modelfile
+        ollama run myllama
+        ```
+
+    - 对于其他格式的模型，你可以通过 llama.cpp 转换为 GGUF 格式再使用。
+
+##### Ollama对比[vllm](https://github.com/vllm-project/vllm)
+
+- Ollama 是一个运行大模型的工具，可以看成是大模型领域的 Docker，可以下载所需的大模型并暴露 Ollama API，极大的简化了大模型的部署。
+
+- vLLM 与 Ollama 类似，也是一个运行大模型的工具，但它针对推理做了很多优化，提高了模型的运行效率和性能，使得在资源有限的情况下也能高效运行大语言模型，另外，它提供兼容 OpenAI 的 API。
+
+- 选择 Ollama 还是 vLLM？
+
+    - Ollama 的特点：个人用户或本地开发环境使用 Ollama 很方便，对各种 GPU 硬件和大模型的兼容性很好，不需要复杂的配置就能跑起来，但性能上不如 vLLM。
+
+    - vLLM 的特点：推理性能更好，也更节约资源，适合部署到服务器供多人使用，还支持多机多卡分布式部署，上限更高，但能适配的 GPU 硬件比 Ollama 少，且需要根据不同 GPU 和大模型来调整 vllm 的启动参数才能跑起来或者获得更好的性能表现。
+
+    - 选型建议：如果有一定的技术能力且愿意折腾，能用 vLLM 成功跑起来更推荐用 vLLM 将大模型部署到 Kubernetes 中，否则就用 Ollama ，两种方式在本文中都有相应的部署示例。
+
+##### [open-webui：ollama web ui](https://github.com/open-webui/open-webui)
+
+##### [open-coreui:  Rust 语言重写的 Open WebUI，降低了内存和资源消耗，有服务器版和桌面版。](https://github.com/xxnuo/open-coreui)
+
+##### [hollama：ollama web ui](https://github.com/fmaclen/hollama)
+
+##### [oterm：Ollama cli客户端](https://github.com/ggozad/oterm)
+
+##### [MaxKB：ollama web ui，知识库](https://github.com/1Panel-dev/MaxKB)
+
+- [（视频）Rontalks：Ollama + deepseek + maxkb 搭建本地个人专属AI机器人，或者叫本地专属问答知识库](https://www.bilibili.com/video/BV15gFbefEYP)
+
+- 自带知识库中的嵌入文本模型maxkb-embedding
+
+##### [rag-web-ui](https://github.com/rag-web-ui/rag-web-ui)
+
+##### [LM Studio：ollama gui版](https://lmstudio.ai/)
+
+- [lms：LM Studio command line](https://github.com/lmstudio-ai/lms)
+
+##### [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/Mintplex-Labs/anything-llm)
+
+```sh
+## linux安装
+curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
+
+## 启动
+./AnythingLLMDesktop/start
+```
+
+##### [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/CherryHQ/cherry-studio)
+
+#### [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](https://github.com/Michael-A-Kuykendall/shimmy)
+
+- 启动时间＜100ms，秒开！
+- 内存只占50MB，后台无感运行
+- 基于 Rust 编写，极致优化
+- 不需要复杂配置！自动分配端口！
+- 自动发现模型源：Hugging Face、Ollama、本地文件夹…通通识别！
+
+#### [transformers.js：在浏览器运行大模型（如deepseek-r1）](https://github.com/huggingface/transformers.js-examples/tree/main/deepseek-r1-webgpu)
+
+- [（视频）五里墩茶社：在浏览器内运行DeepSeek R1 = WebGPU + Transformers.js](https://www.bilibili.com/video/BV1ZbFneCEkr)
+
+- 显卡要支持webgpu：
+    - 浏览器开启webgpu：`chrome://flags`下搜索`webgpu`然后启用。
+
+### 其他命令行相关工具
+
+- [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)
+
+- [reor：ai私人助手](https://github.com/reorproject/reor)
+
+- [reader：将网址放到https://r.jina.ai/便可获取markdown文档的总结](https://github.com/jina-ai/reader)
+    - [在线网址](https://jina.ai/reader/)
+
+    ```sh
+    curl -H "Accept: text/event-stream" https://r.jina.ai/https://www.bilibili.com/video/BV1bD421n7dg
+    ```
+
+- [aider:这是一款运行在终端里的 AI 辅助编码工具，能够将你本地 git 仓库中的代码与 LLMs 结合起来。开发者通过 add 命令引入文件，然后用自然语言描述需求，它就可以对现有的代码进行修改并自动提交，支持接入多种大模型，包括 GPT 3.5、GPT-4 和 Claude 3 Opus 等。](https://github.com/paul-gauthier/aider)
+
+- [exo：组建ai集群](https://github.com/exo-explore/exo)
+
+- [liujuntao123/smart-mermaid: 一款基于 AI 技术的 Web 应用程序，可将文本内容智能转换为 Mermaid 格式的代码，并将其渲染成可视化图表。](https://github.com/liujuntao123/smart-mermaid)
+
+- [toon: 这是一种专为 LLM 提示词设计的数据序列化格式，比 JSON 节省 30-60% 的 Token。它融合了 YAML 和 CSV 的特点，紧凑且容易理解。官方提供了 TypeScript SDK 和命令行工具，能够轻松将 JSON 数据转换为 TOON 格式。](https://github.com/toon-format/toon)
+
 ## Transformer
 
 - [transformer-debugger](https://github.com/openai/transformer-debugger)
@@ -666,6 +908,16 @@ tags: []
 
 - [InspireMusic：阿里的](https://github.com/FunAudioLLM/InspireMusic)
 
+### ai声音克隆（tts），可以实现让电影里的演员的英文配音变成国语
+
+- [index-tts: b站的模型](https://github.com/index-tts/index-tts)
+
+## ai ocr
+
+- [chandra: OCR model that handles complex tables, forms, handwriting with full layout.](https://github.com/datalab-to/chandra)
+
+- [DeepSeek-OCR: Contexts Optical Compression](https://github.com/deepseek-ai/DeepSeek-OCR)
+
 ## ai翻译
 
 - [MTranServer：离线翻译服务器](https://github.com/xxnuo/MTranServer)
@@ -695,6 +947,10 @@ tags: []
 
 ### ai浏览器
 
+- [ChatGPT Atlas：openai 的ai浏览器。基于 Chromium 内核构建，并把 ChatGPT 嵌入了浏览器的主页、侧边栏以及任意输入框中](https://chatgpt.com/zh-Hans-CN/atlas/)
+
+- [Comet Browser: Perplexity AI推出的Comet](https://www.perplexity.ai/comet)
+
 - [（视频）AI超元域：取代ChatGPT Operator！支持DeepSeek+Web UI！Browser Use最强AI驱动的浏览器自动化框架，Roo Code轻松实现MCP](https://www.bilibili.com/video/BV1CXPCecEUk)
 
 - [browser-use：没有ui界面，依靠代码操作浏览器](https://github.com/browser-use/browser-use)
@@ -718,9 +974,13 @@ tags: []
 - [nanobrowser：一个开源的 Chrome 插件，基于 AI 大模型，使用自然语言操纵浏览器，可以看作 OpenAI Operator 的替代品。](https://github.com/nanobrowser/nanobrowser)
 
 - [BrowserMCP: 用 AI 自动化浏览器](https://browsermcp.io/)
+
 - [dia：原生ai浏览器](https://www.diabrowser.com/)
 
-- [opendia: 浏览器插件，通过大模型控制浏览器。支持本地大模型](https://github.com/aaronjmars/opendia?tab=readme-ov-file)
+- [opendia: 浏览器插件，通过大模型控制浏览器。支持本地大模型](https://github.com/aaronjmars/opendia)
+
+- [BrowserOS: 开源的 AI 浏览器。该项目是基于 Chromium 的开源 AI 浏览器，能够在本地浏览器中运行 AI Agents，可作为 ChatGPT Atlas、Perplexity Comet 和 Dia 的开源替代方案。在保留 Chrome 熟悉界面与扩展兼容性的同时，帮助用户实现 AI 驱动的浏览器自动化与智能问答任务，并支持自定义 LLM 服务或本地大模型。](https://github.com/browseros-ai/BrowserOS)
+
 
 ## ai搜索
 
@@ -745,6 +1005,10 @@ tags: []
 
 - [augmentcode：微软和谷歌的工程师离职开发的](https://www.augmentcode.com/)
 
+## ai为github代码仓库生成wiki
+
+- [Code Wiki: google的](https://codewiki.google/)
+
 ## ai编辑器
 
 - [codeium的windsurf](https://codeium.com/windsurf)
@@ -758,6 +1022,8 @@ tags: []
 - [void： Cursor 的开源平替](https://github.com/voideditor/void)
 
 - [firebase：谷歌开发的](https://studio.firebase.google.com/?hl=zh-cn)
+
+- [Google Antigravity:谷歌开发的](https://antigravity.google/)
 
 - [aide：ai编辑器](https://github.com/codestoryai/aide)
 
@@ -774,10 +1040,12 @@ tags: []
 - [warp：自带ai的termianl](https://github.com/warpdotdev/Warp)
 
 - [codex: openai的](https://github.com/openai/codex?tab=Apache-2.0-1-ov-file)
+
 - [claude-code: 终端里的 Claude 编码助手。该项目是 Claude 官方开源的 AI 编码助手，集成于终端内，能够理解整个代码库，并通过简单的自然语言命令，帮助开发者更高效地完成各类编码任务。](https://github.com/anthropics/claude-code)
     - [Claude-Code-Usage-Monitor: Claude 用量实时监控助手。这是一个用于实时监控和记录开发者在使用 Claude AI 时产生的 Token 用量及费用的工具，支持用量统计、预算告警和套餐设置等功能。](https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor)
 
 - [gemini-cli: 谷歌 Gemini 命令行工具。该项目是 Gemini 官方开源的命令行工具，将 Google Gemini 的强大能力集成到终端环境。它基于百万级上下文，能够理解大型代码库的架构和逻辑，支持多模态输入输出、Google 搜索以及 MCP 等功能。](https://github.com/google-gemini/gemini-cli)
+- [copilot-cli: GitHub Copilot CLI brings the power of Copilot coding agent directly to your terminal.](https://github.com/github/copilot-cli)
 
 - [QwenLM/qwen-code: 阿里的code](https://github.com/QwenLM/qwen-code)
 
@@ -787,6 +1055,11 @@ tags: []
     # 安装
     npm install -g @tencent-ai/codebuddy-code
     ```
+
+- [GLM-4.5: 智谱的](https://github.com/zai-org/GLM-4.5)
+
+- [Seed-Coder: 字节的豆包](https://github.com/ByteDance-Seed/Seed-Coder)
+    - [国产大模型接入 Claude Code 教程：以 Doubao-Seed-Code 为例](https://mp.weixin.qq.com/s/ptRFIddHT3eLLmQVPzOx_g)
 
 ## ai爬虫和信息提取
 

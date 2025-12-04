@@ -1,3 +1,9 @@
+---
+id: systemd
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -46,6 +52,7 @@
   * [systemd-boot代替GRUB引导程序](#systemd-boot代替grub引导程序)
 * [第三方优秀软件](#第三方优秀软件)
   * [isd：systemd tui](#isdsystemd-tui)
+  * [kjournaldbrowser：systemd 的gui，一个KDE的 应用程序](#kjournaldbrowsersystemd-的gui一个kde的-应用程序)
 * [referece](#referece)
 
 <!-- mtoc-end -->
@@ -2187,6 +2194,8 @@ timedatectl show
 # 第三方优秀软件
 
 ## [isd：systemd tui](https://github.com/isd-project/isd)
+
+## [kjournaldbrowser：systemd 的gui，一个KDE的 应用程序](https://apps.kde.org/zh-cn/kjournaldbrowser/)
 
 ```sh
 pip install isd-tui

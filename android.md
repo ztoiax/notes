@@ -214,8 +214,11 @@ tags: []
 
 - [KeyMapper：可以自定义 Android 设备的按键、指纹和手势操作。无需 ROOT 权限，支持蓝牙和有线键盘，提供灵活的按键重映射体验。](https://github.com/keymapperorg/KeyMapper)
 
-- [moonlight-android：屏幕共享客户端](https://github.com/moonlight-stream/moonlight-android)
+- [moonlight-android：投屏(屏幕共享)客户端](https://github.com/moonlight-stream/moonlight-android)
+
 - [ChangeDetection: 网站变更监控神器](https://github.com/bernaferrari/ChangeDetection)
+- [yike-app: 一个简约而不简单的记账 App](https://github.com/xiaojinzi123/yike-app)
+- [Voice-Recorder:极简的 Android 语音录音应用。这是一款极简易用的 Android 语音录音应用，支持离线录音、无广告、界面清爽，适用于会议记录、课堂笔记、采访、日常备忘等场景。](https://github.com/FossifyOrg/Voice-Recorder)
 
 ### 多媒体相关
 
@@ -228,6 +231,7 @@ tags: []
 - [阅读](https://github.com/gedoor/MyBookshelf)
 
 - [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
+- [legado-with-MD3: 使用 Material Design 3 全新设计的阅读 3.0](https://github.com/HapeLee/legado-with-MD3)
 
 #### 图片相关
 
@@ -239,7 +243,12 @@ tags: []
 
 - [tvbox手机版](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile)
 
-- [mytv-android：电视直播](https://github.com/yaoxieyoulei/mytv-android)
+- [my-tv-0: 我的電視·〇 電視視頻播放軟件，可以自定義視頻源](https://github.com/lizongying/my-tv-0)
+
+- 直播源
+
+    - [fanmingming/live: ✯ 可直连访问的电视/广播图标库与相关工具项目 ✯ 🔕 永久免费 直连访问 完整开源 不断完善的台标 支持IPv4/IPv6双栈访问 🔕](https://github.com/fanmingming/live)
+    - [suxuang/myIPTV: 【典藏版】高清直播源涵盖几乎所有卫视节目，内置完美台标加节目预告](https://github.com/suxuang/myIPTV)
 
 - [dart_simple_live：一个 APP 上看各种主流直播平台](https://github.com/xiaoyaocz/dart_simple_live)
 
@@ -399,6 +408,8 @@ tags: []
 
 - [pocketpal-ai：手机部署大模型的app](https://github.com/a-ghorbani/pocketpal-ai)
     - [（视频）在下莫老师：手机电脑都能用，DeepSeek本地部署指南！](https://www.bilibili.com/video/BV1RJN3e4ETj)
+- [SummaryExpressive: 总结YouTube, BiliBili, articles, images and documents with AI/LLM](https://github.com/kid1412621/SummaryExpressive)
+- [local-dream:在 Android 设备上运行 Stable Diffusion。这是一款专为 Android 用户打造的本地 Stable Diffusion AI 绘画应用，完全离线运行，兼容高通骁龙 NPU、CPU 和 GPU，支持文生图、图生图和图片修复等功能。](https://github.com/xororz/local-dream)
 
 # 刷机
 
@@ -644,6 +655,9 @@ tags: []
 
     - [当贝市场：bilibili主页](https://space.bilibili.com/13359751)
 
+- 类似项目
+
+    - [TVAPP: 收集全网 Android TV电视盒子应用，涵盖影视、直播、K歌、工具、游戏等类型，整理优质APK资源，支持便捷下载与自动更新。提供安全验证、分类索引与兼容性标注，助力用户打造家庭影音娱乐中心！ ✅ TVBox/影视仓等影音壳接口配置源。](https://github.com/youhunwl/TVAPP)
 
 - 应用商店
     - 当贝市场

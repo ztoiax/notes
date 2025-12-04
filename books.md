@@ -54,6 +54,7 @@ tags: []
     * [机器学习](#机器学习)
     * [深度学习](#深度学习)
     * [llm大模型](#llm大模型)
+      * [agent](#agent)
   * [机器人](#机器人)
   * [硬件](#硬件)
     * [GPU](#gpu)
@@ -88,6 +89,7 @@ tags: []
   * [健康](#健康-1)
   * [食品和食品安全](#食品和食品安全)
   * [美食探店](#美食探店)
+  * [旅游](#旅游)
   * [买菜](#买菜)
   * [做菜](#做菜)
   * [农业和水产](#农业和水产)
@@ -692,6 +694,8 @@ tags: []
 
     - 为了让你在实战中学习 CDN 的工作原理，这里会从创建一个单一的后端服务开始，逐渐扩展到多个节点、模拟延迟、可视化、可测试的 CDN 服务。因为设计 CDN 会涉及 Nginx、Lua、Docker、Grafana 等知识点，所以学习该教程需要有一定的编程基础。
 
+- [How-To-Secure-A-Linux-Server: An evolving how-to guide for securing a Linux server.](https://github.com/imthenachoman/How-To-Secure-A-Linux-Server)
+
 ### cloud
 
 - [《Docker — 从入门到实践》](https://vuepress.mirror.docker-practice.com/)
@@ -835,7 +839,11 @@ tags: []
 
 - [minimind：从0训练微型语言模型。2小时完全从0训练26M的小参数GPT](https://github.com/jingyaogong/minimind)
 
-- [self-llm: 《开源大模型食用指南》针对中国宝宝量身打造的基于Linux环境快速微调（全参数/Lora）、部署国内外开源大模型（LLM）/多模态大模型（MLLM）教程](https://github.com/datawhalechina/self-llm)
+- [self-llm: 《开源大模型食用指南》针对中国宝宝量身打造的基于Linux环境快速微调（全参数/Lora）、部署国内外开源大模型（LLM）/多模态大模型（MLLM）教程](https://github.com/datawhalechina/self-llm#)
+
+#### agent
+
+- [agentic-design-patterns-cn: 《Agentic Design Patterns》中文翻译版。这本书系统性地介绍了构建现代 AI 智能体（Agent）的实践方法与设计模式，包括提示链、RAG、MCP 和多智能体协作等内容。](https://github.com/ginobefun/agentic-design-patterns-cn)
 
 ## 机器人
 
@@ -848,6 +856,8 @@ tags: []
 ### GPU
 
 - [tiny-gpu](https://github.com/adam-maj/tiny-gpu)该项目是用 Verilog 语言实现的教育型 GPU 处理器，目的是讲解 GPU 硬件层面的基本原理，包括 GPU 的架构、并行和内存等方面。
+
+- [leetgpu-challenges: GPU 编程实战挑战。该项目提供了一系列类似 LeetCode 风格的 GPU 编程练习题，内含参考答案、测试用例和多种 GPU 编程框架的模板代码。](https://github.com/AlphaGPU/leetgpu-challenges)
 
 ## 数据科学
 
@@ -1487,18 +1497,32 @@ RabbitMQ实战指南》作者
 
     - [阮一峰的网络日志](https://www.ruanyifeng.com/blog/)
     - [Koala聊开源](https://space.bilibili.com/489667127)
-    - [IT咖啡馆：githb周报](https://space.bilibili.com/65564239)
+    - [IT咖啡馆](https://space.bilibili.com/65564239)
+        > github开源项目周报
+
+    - [玄离199](https://space.bilibili.com/67079745)
+        > github开源项目周报，科技新闻周报
+
     - [北京大学Linux俱乐部](https://space.bilibili.com/3461562830424779)
+
     - [glepnir](https://space.bilibili.com/321783076)
+
     - [LitterHouge](https://space.bilibili.com/2041146642)
+
     - [PegasusWang](https://space.bilibili.com/288339968)
+
     - [TheCW](https://space.bilibili.com/13081489)
+
     - [Houge_Langley](https://space.bilibili.com/40420441)
 
-    - [unixchad：linux不常用软件折腾](https://space.bilibili.com/34569411)
-    - [OS视界：linux相关新闻介绍](https://space.bilibili.com/1918016728)
+    - [unixchad](https://space.bilibili.com/34569411)
+        . linux不常用软件折腾
 
-    - [我不是咕咕鸽：介绍各种linux适合服务器部署的、好玩的项目](https://space.bilibili.com/19956596/upload/video)
+    - [OS视界](https://space.bilibili.com/1918016728)
+        > linux相关新闻介绍
+
+    - [我不是咕咕鸽](https://space.bilibili.com/19956596/upload/video)
+        > 介绍各种linux适合服务器部署的、好玩的项目
 
     - HelloGithub
     - Python猫
@@ -1596,6 +1620,8 @@ RabbitMQ实战指南》作者
     - 芯片性能评测：
         - [极客湾Geekerwan](https://space.bilibili.com/25876945)
 
+        - [Kurnal](https://space.bilibili.com/427356495)
+
     - 安卓搞机和路由器：
         [晨钟酱Official](https://space.bilibili.com/251013709)
 
@@ -1615,9 +1641,9 @@ RabbitMQ实战指南》作者
 
     - app评测：
 
-        - [玄离199：app评测](https://space.bilibili.com/67079745)
-
         - [苏星河牛通：常见app评测](https://space.bilibili.com/598464467)
+
+        - [软件硬吃：苏星河牛通小号](https://space.bilibili.com/3546943355619807)
 
     - 电视评测：
 
@@ -1625,47 +1651,65 @@ RabbitMQ实战指南》作者
 
         - [知乎蓝大仙人：电视评测。智能电视选购网创始人](https://space.bilibili.com/34586446)
 
-    - [TESTV官方频道：各种数码产品体验](https://space.bilibili.com/11336264)
+    - [TESTV官方频道](https://space.bilibili.com/11336264)
+        > 各种数码产品体验
 
-    - [硬件茶谈：数码知识科普。三维动画做得好](https://space.bilibili.com/14871346)
+    - [硬件茶谈](https://space.bilibili.com/14871346)
+        > 数码知识科普。三维动画做得好
 
-    - [短的发布会：手机发布会搞笑式介绍](https://space.bilibili.com/287795639)
+    - [短的发布会](https://space.bilibili.com/287795639)
+        > 手机发布会搞笑式介绍
 
-    - [车的发布会：车发布会搞笑式介绍](https://space.bilibili.com/1639930744)
+    - [车的发布会](https://space.bilibili.com/1639930744)
+        > 车发布会搞笑式介绍
 
-    - [六分超超：旧手机和系统交互评测](https://space.bilibili.com/652137183)
+    - [六分超超](https://space.bilibili.com/652137183)
+        > 旧手机和系统交互评测
 
-    - [STRAY_数码：手机ui动画评测](https://space.bilibili.com/275678731)
+    - [STRAY_数码](https://space.bilibili.com/275678731)
+        > 手机ui动画评测
 
-    - [橙红Iris：先看评测出来的](https://space.bilibili.com/19226160)
+    - [橙红Iris](https://space.bilibili.com/19226160)
+        > 先看评测出来的
 
-    - [陈抱一：物联网评测](https://space.bilibili.com/3530725)
+    - [陈抱一](https://space.bilibili.com/3530725)
+        > 物联网评测
 
-    - [在下莫老师：折腾pe系统，游戏模拟器](https://space.bilibili.com/1995424953)
+    - [在下莫老师](https://space.bilibili.com/1995424953)
+        > 折腾pe系统，游戏模拟器
 
-    - [技术爬爬虾：linux服务折腾](https://space.bilibili.com/316183842)
+    - [技术爬爬虾](https://space.bilibili.com/316183842)
+        > linux服务折腾
 
-    - [无情开评：服务器硬件评测](https://space.bilibili.com/514160575)
+    - [无情开评](https://space.bilibili.com/514160575)
+        > 服务器硬件评测
 
-    - [索拉里斯风：硬件nas折腾](https://space.bilibili.com/15392425)
+    - [索拉里斯风](https://space.bilibili.com/15392425)
+        > 硬件nas折腾
 
-    - [司波图：硬件nas、kodi影音搞机](https://space.bilibili.com/28457)
+    - [司波图](https://space.bilibili.com/28457)
+        > 硬件nas、kodi影音搞机
 
-    - [芯板坊：开发板](https://space.bilibili.com/2097113874)
+    - [芯板坊](https://space.bilibili.com/2097113874)
+        > 开发板
 
     - [立创开发板](https://space.bilibili.com/3493269579237436)
 
-    - [单毅讲装修：家电、装修](https://space.bilibili.com/222157543)
-        - [防骗每日电讯：擦亮双眼，识破全屋整装合同陷阱](https://mp.weixin.qq.com/s/_NbyI8CtY7GylQIsh3dHbg)
+    - [单毅讲装修](https://space.bilibili.com/222157543)
+        > 家电、装修
 
 
-    - [飞蚊话：linux桌面](https://space.bilibili.com/268630727)
+    - [飞蚊话](https://space.bilibili.com/268630727)
+        > linux桌面
 
-    - [LuvLetter：安卓、ios技术科普](https://space.bilibili.com/546418)
+    - [LuvLetter](https://space.bilibili.com/546418)
+        > 安卓、ios技术科普
 
-    - [二进制的老王：硬盘评测、硬盘数据恢复](https://space.bilibili.com/18731657)
+    - [二进制的老王](https://space.bilibili.com/18731657)
+        > 硬盘评测、硬盘数据恢复
 
-    - [钱韦德：硬盘评测、nas体验](https://space.bilibili.com/20274090)
+    - [钱韦德](https://space.bilibili.com/20274090)
+        > 硬盘评测、nas体验
 
 - 微信公众号
 
@@ -1682,7 +1726,14 @@ RabbitMQ实战指南》作者
 
 - bilibili
 
-    - [三驱兄弟：购车指南](https://space.bilibili.com/690820158)
+    - [三驱兄弟](https://space.bilibili.com/690820158)
+        > 购车建议
+
+    - [超哥超车](https://space.bilibili.com/3546724748495813)
+        > 购车建议，事故分析，营销分析
+
+    - [牛哥说车](https://space.bilibili.com/397666641/upload/video)
+        > 驾驶案例分析，驾驶常识
 
 - 微信公众号
 
@@ -1701,14 +1752,27 @@ RabbitMQ实战指南》作者
 
     - [地球知识局](https://space.bilibili.com/100785033)
 
-    - [中气爱](https://space.bilibili.com/547072854)：天气预报员+背后气象原理科普
+    - [中气爱](https://space.bilibili.com/547072854)
+        > 天气预报员+背后气象原理科普
 
-    - [星球研究所](https://space.bilibili.com/326427334)：风景和动画做得好
+    - [星球研究所](https://space.bilibili.com/326427334)
+        > 介绍地理。风景和动画做得好
+
+    - [有点意思研究所](https://space.bilibili.com/33397277)
+        > 历史地理
+
+    - [三维地球](https://space.bilibili.com/1710265121)
+        > 历史地理
+
+    - [光陷](https://space.bilibili.com/492351069)
+        > 城市地理
 
 - 微信公众号
 
     - 地球知识局
     - 腔调地图
+    - 王缉宪 缉步成章
+        > 香港大学地理学主任
 
 ## 运动
 
@@ -1735,6 +1799,9 @@ RabbitMQ实战指南》作者
     - [TonyJeffries：08年北京奥运会拳击铜牌得主、世界第一拳击教育家](https://space.bilibili.com/3546373657987544)
 
 ## 健康
+
+- bilibili
+    - [洗头研究所](https://space.bilibili.com/535743630)
 
 - 微信公众号
 
@@ -1782,6 +1849,16 @@ RabbitMQ实战指南》作者
 - [Dishtravel](https://space.bilibili.com/549772766)
     > 广东城市旅游体验，会有各种文化介绍
 
+- [为食Go](https://space.bilibili.com/628705741/upload)
+    > 广州各种饭店探店，会告诉你菜好不好，以及其他相关知识
+
+- [喵游记MuaWoo](https://space.bilibili.com/22951108?spm_id_from=333.337.0.0)
+    > 全中国赶集
+
+## 旅游
+
+- [行夫走卒](https://space.bilibili.com/2134726833/upload/video)
+
 ## 买菜
 
 - [市场博物](https://space.bilibili.com/470747758)
@@ -1800,6 +1877,8 @@ RabbitMQ实战指南》作者
     > 水果挑选
 
 ## 做菜
+
+- [万能工具人阿伟](https://space.bilibili.com/689222371)
 
 - [猪肉婆吴素芬](https://space.bilibili.com/3493271997253876)
     > 顺德美食
@@ -1895,6 +1974,8 @@ RabbitMQ实战指南》作者
     - [扁豆看电影](https://space.bilibili.com/33488229)
 
     - [M的蒙太奇笔记](https://space.bilibili.com/14427045)：哲学角度解说
+
+    - [费洛凡](https://space.bilibili.com/355155672/upload/video)：西方戏剧解说
 
 - 微信公众号
 
@@ -1998,6 +2079,8 @@ RabbitMQ实战指南》作者
     - [梁中和](https://space.bilibili.com/123229893)
         > 古希腊哲学
 
+    - [赵汀阳](https://space.bilibili.com/3632310553413638/upload/video)
+
     - [折射棱镜Prisma](https://space.bilibili.com/294859132/upload/video)
         > 后现代哲学
 
@@ -2012,6 +2095,7 @@ RabbitMQ实战指南》作者
     - 实践哲学研究
     - 文史哲杂志
     - 伦理学术
+    - 外国美学
     - 英国观念论研究
     - 清华西方哲学研究
     - 外国哲学研究
@@ -2041,6 +2125,10 @@ RabbitMQ实战指南》作者
     - 事实与事态
     - 熙屿文化
     - 世界宗教研究
+    - 法国哲学研究
+    - 法国理论
+    - 法语现象学
+    - 中国基督宗教研究
 
     - 嘉映哲学
         > 陈嘉映
@@ -2050,6 +2138,9 @@ RabbitMQ实战指南》作者
         > 刘小枫
     - 经典与解释
         > 刘小枫
+    - 东方哲学践行
+        > 王志成
+    - 启示与理性
 
     - 哲学五人谈
     - 天行LAB
@@ -2074,7 +2165,6 @@ RabbitMQ实战指南》作者
     - 德国哲学：
         - 现象学
         - 现象学与德国古典哲学
-        - 陈直Dharma
         - 同济大学学报社会科学版
             > 孙周兴、杨光
 
@@ -2117,6 +2207,16 @@ RabbitMQ实战指南》作者
         - 新亚学报
             > 香港中文大学
 
+        - 燕园礼学
+
+        - 中国诸子研究院
+            > 华东师范大学
+
+    - 民间大众的哲学评论
+        - 陈直Dharma
+        - 现象学生活指南
+        - 设计哲学
+
 ## 艺术
 
 - bilibili
@@ -2140,6 +2240,7 @@ RabbitMQ实战指南》作者
     - [可可周老师](https://space.bilibili.com/513531271)
 
     - [钱理群讲鲁迅](https://space.bilibili.com/1892359255)
+    - [许子东讲文学](https://space.bilibili.com/1360180011/upload/video)
 
     - [二二酸酸](https://space.bilibili.com/106685726)
 
@@ -2160,6 +2261,11 @@ RabbitMQ实战指南》作者
     - 蔡丹君
     - 人文共和
         > 北京师范大学文学院人文研究中心
+    - NK 文学与文化
+        > 南京大学文学院
+
+    - 小说评论
+    - 媒介 | 批评
 
 ## 历史
 
@@ -2185,6 +2291,7 @@ RabbitMQ实战指南》作者
 
     - 史学理论研究官方公众号
     - 史学史研究编辑部
+    - 世界中世纪史研究
     - 施展世界
     - 全球研究Global Studies Forum
     - 新史学丛刊
@@ -2212,8 +2319,11 @@ RabbitMQ实战指南》作者
 - 微信公众号
 
     - 治理研究
+    - 苏区研究
     - 南亚观察
+    - 南亚研究通讯
     - 东北亚学刊
+    - 东北亚研究通讯
     - 东亚视界
     - 人民大学国政评论
     - 澄海全球发展与安全高研院
@@ -2236,6 +2346,8 @@ RabbitMQ实战指南》作者
     - 王骁Albert
     - 复旦中美友好互信合作计划
     - 中国现代国际关系研究院
+    - 厦大台研院GifTS
+        > 台海问题研究
     - 大湾区评论
         > 郑永年
     - 科社共运动态+
@@ -2244,11 +2356,16 @@ RabbitMQ实战指南》作者
     - 南洋问题研究
         > 东南亚、东南亚犯罪
 
+    - 东北亚研究通讯
+    - 东亚研究
     - Nov
         > 硅谷与政治，科技与政治
 
     - 实验主义治理
         > 清华大学崔之元教授团队维护。主要是政治经济学、人工智能、哲学、开源软件
+
+
+    - 学术月刊
 
 ## 军事
 
@@ -2301,6 +2418,12 @@ RabbitMQ实战指南》作者
         > 上海社会科学研究院文学研究所
 
     - 北京大学学报
+    - 许纪霖之窗
+        > 介绍公共领域，不同城市的文化和中产阶级
+
+- bilibili
+
+    - [竹竹暴风雪](https://space.bilibili.com/354183985)
 
 ## 法律
 
@@ -2336,11 +2459,16 @@ RabbitMQ实战指南》作者
 
     - [徐高_经济学家](https://space.bilibili.com/129146667)
 
+    - [陆铭](https://space.bilibili.com/508835396)
+
     - [货币法则研习社](https://space.bilibili.com/24559221)
 
     - [付鹏的财经世界](https://space.bilibili.com/662660667)
 
     - [黄文政老师](https://space.bilibili.com/3546833336928563)
+
+    - [CLS同学](https://space.bilibili.com/1575688490/upload/video)
+        > 每月经济报告
 
 - 微信公众号
 
@@ -2377,6 +2505,8 @@ RabbitMQ实战指南》作者
     - 人口规模与美好生活
     - 育娲人口研究
     - 何亚福园地
+    - renkouxuekan
+        > 人口学刊
 
     - Global U
         > 国仁全球大学堂
@@ -2507,6 +2637,15 @@ RabbitMQ实战指南》作者
     - 爱选科技
         > 保险
 
+    - 等深线
+        > 中国经营报旗下的深度财经新闻，还有黑产相关内容
+
+    - 中国经营报
+        > 每天的财经新闻，主要看它的一眼新闻
+
+    - 财新
+        > 深度的财经新闻，但需要付费
+
 ## 城市规划
 
 - bilibili
@@ -2615,6 +2754,12 @@ RabbitMQ实战指南》作者
     - [动新闻](https://space.bilibili.com/482843134/upload/video)
         > 短视频动画地图还原新闻
 
+    - [咨云君](https://space.bilibili.com/1064527785)
+        > 企业金融犯罪等
+
+    - [赵皓阳](https://space.bilibili.com/25776635)
+        > 禁止右转的b站号
+
 - 微信公众号
 
     - 中国政府网
@@ -2646,8 +2791,14 @@ RabbitMQ实战指南》作者
     - 原子智库-腾讯新闻
         > 什么都有
 
+    - 棱镜
+        > 腾讯新闻旗下的
+
     - 方圆
         > 最高检的杂志。有各种案例、防诈骗案例
+
+    - 风声岛
+        > 政治，商业案例
 
     - 数字社会发展与研究
         > 科技
@@ -2655,18 +2806,30 @@ RabbitMQ实战指南》作者
     - 菠菜档案
         > 国际刑警组织发布的犯罪信息（毒品、人口贩卖等）
 
-    - 等深线
-        > 财经新闻背后的灰黑产
+    - 阿龙闯荡记
+        > 东南亚电诈
+
+    - 柬单网plus
+        > 柬埔寨新闻,柬埔寨电诈
+
+    - 东南亚报姐
+        > 东南亚新闻，东南亚电诈
+
+    - 七星实验室
+        > 加密货币新闻,加密货币诈骗
 
 - bilibili
 
-    - [马沙阿姨和肥肥叔叔投稿视频：粤语歌](https://space.bilibili.com/3543159/upload/video)
+    - [马沙阿姨和肥肥叔叔](https://space.bilibili.com/3543159/upload/video)
+        > 粤语歌
 
     - [粤地诡录](https://space.bilibili.com/1844371398)
 
-    - [溪山野行：广州花鸟鱼虫](https://space.bilibili.com/479060651)
+    - [溪山野行](https://space.bilibili.com/479060651)
+        > 广州花鸟鱼虫
 
-    - [劳历事：粤语，粤文化](https://space.bilibili.com/2071267686/upload/video)
+    - [劳历事](https://space.bilibili.com/2071267686/upload/video)
+        > 粤语，粤文化
 
 - 广东相关的微信公众号
 

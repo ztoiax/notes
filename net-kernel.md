@@ -8,9 +8,8 @@ tags: []
 <!-- mtoc-start -->
 
 * [OSI 7层](#osi-7层)
-  * [应用层](#应用层)
-    * [HTTP](#http)
-      * [状态码](#状态码)
+  * [HTTP](#http)
+    * [状态码](#状态码)
       * [客户端缓存（浏览器缓存）](#客户端缓存浏览器缓存)
       * [content-type](#content-type)
       * [Cookie](#cookie)
@@ -151,7 +150,7 @@ tags: []
 ![image](./Pictures/net-kernel/osi2.avif)
 ![image](./Pictures/net-kernel/osi3.avif)
 
-## 应用层
+- [ ] ## 应用层
 
 ### HTTP
 
@@ -2154,7 +2153,6 @@ dig @8.8.8.8 math.stackexchange.com
     - DNS fallback 正是利用了这一点，在 tun2socks 给过来的 UDP 流量中识别出 DNS 请求，然后伪造一个设置了 truncated flag 的答复返回给客户端，客户端就会转用 TCP 来做 DNS 请求了。
 
 - DNS fallback 的实现也是非常简单的，有兴趣可以看一下 [这里的代码](https://github.com/eycorsican/go-tun2socks/blob/master/proxy/dnsfallback/udp.go)。
-
 
 ## 表示层
 

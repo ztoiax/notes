@@ -4184,6 +4184,8 @@ docker run --rm -ti \
 - [dockman:gui版 Docker Compose 管理工具](https://github.com/RA341/dockman)
     - [告别繁琐配置！这款开源工具让 Docker 管理变得超简单](https://mp.weixin.qq.com/s/R5iAfRJjE84-LzEdJsF8vg)
 
+- [sen: tui](https://github.com/TomasTomecek/sen)
+
 # reference article(优秀文章)
 
 - [docker 官方文档](https://docs.docker.com/engine/reference/run/)

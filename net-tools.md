@@ -8,6 +8,8 @@ tags: []
 <!-- mtoc-start -->
 
 * [OSI 7层](#osi-7层)
+  * [wifi工具](#wifi工具)
+    * [impala: 🛜 TUI for managing wifi on Linux](#impala--tui-for-managing-wifi-on-linux)
   * [综合工具](#综合工具)
     * [nmcli](#nmcli)
       * [交互模式](#交互模式)
@@ -27,6 +29,7 @@ tags: []
     * [mtr结合了 ping 和 traceroute 的功能](#mtr结合了-ping-和-traceroute-的功能)
     * [ngrep（抓包）](#ngrep抓包)
     * [mitmproxy(代理、抓包、中间人攻击)](#mitmproxy代理抓包中间人攻击)
+    * [AdGuardian-Term: 基于终端的实时网络监控工具，专门为 AdGuard Home 设计的](#adguardian-term-基于终端的实时网络监控工具专门为-adguard-home-设计的)
     * [socat](#socat)
   * [应用层](#应用层)
     * [http](#http)
@@ -37,9 +40,11 @@ tags: []
         * [格式化输出和变量](#格式化输出和变量)
       * [trurl：curl作者的新作品](#trurlcurl作者的新作品)
       * [posting：tui版postman](#postingtui版postman)
+      * [atac: rust开发的tui版postman ](#atac-rust开发的tui版postman-)
       * [newman：postman官方推出的cli版postman](#newmanpostman官方推出的cli版postman)
       * [hoppscotch：instead postman](#hoppscotchinstead-postman)
       * [apidash: 可以取代postman的gui客户端。Flutter打造，从HTTP到GraphQL，再到WebSocket和gRPC，API Dash几乎覆盖了所有常见的API协议。 ](#apidash-可以取代postman的gui客户端flutter打造从http到graphql再到websocket和grpcapi-dash几乎覆盖了所有常见的api协议-)
+      * [yaak:离线优先的桌面 API 客户端。这是一款快速、离线优先的桌面 API 客户端，支持 REST、GraphQL、SSE、WebSocket 和 gRPC 协议。它基于 Rust、Tauri 和 React 构建，界面友好、跨平台可用，无遥测和云端锁定，提供简洁纯粹、不受干扰的使用体验。](#yaak离线优先的桌面-api-客户端这是一款快速离线优先的桌面-api-客户端支持-restgraphqlssewebsocket-和-grpc-协议它基于-rusttauri-和-react-构建界面友好跨平台可用无遥测和云端锁定提供简洁纯粹不受干扰的使用体验)
       * [insomnia：instead postman](#insomniainstead-postman)
       * [posting：tui版的postman](#postingtui版的postman)
       * [webhook（微信机器人）](#webhook微信机器人)
@@ -57,6 +62,7 @@ tags: []
       * [dnspeep：记录程序的dns请求,响应](#dnspeep记录程序的dns请求响应)
       * [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](#dns-detector从-dns-服务器获取某个网站的所有-ip-地址逐一进行延迟测试)
       * [dns-benchmark：测试全世界的 DNS 服务器](#dns-benchmark测试全世界的-dns-服务器)
+      * [dns-benchmark-tool: 测试 DNS 服务器的命令行工具，可以测试本地到 DNS 服务器的延迟，以及 DNS 解析获取域名的 IP 地址的耗时。](#dns-benchmark-tool-测试-dns-服务器的命令行工具可以测试本地到-dns-服务器的延迟以及-dns-解析获取域名的-ip-地址的耗时)
     * [socks](#socks)
       * [tun2socks：将tcp/udp等流量转换为socks](#tun2socks将tcpudp等流量转换为socks)
     * [vpn、组网](#vpn组网)
@@ -65,6 +71,8 @@ tags: []
       * [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](#chisel在-http-通信上建立-tcpudp-隧道)
       * [Easytier：异地组网](#easytier异地组网)
       * [vnt: An efficient VPN. 简便高效的异地组网、内网穿透工具](#vnt-an-efficient-vpn-简便高效的异地组网内网穿透工具)
+    * [下载工具](#下载工具)
+      * [aim: 支持断点下载](#aim-支持断点下载)
   * [表示层](#表示层)
     * [testssl(测试网站是否支持ssl/tls，以及检测漏洞)](#testssl测试网站是否支持ssltls以及检测漏洞)
   * [传输层](#传输层)
@@ -73,6 +81,7 @@ tags: []
       * [捕抓 TCP SYN，ACK 和 FIN 包](#捕抓-tcp-synack-和-fin-包)
     * [tshark、editcap、capinfos：抓包](#tsharkeditcapcapinfos抓包)
     * [wireshark：tcpdump gui版](#wiresharktcpdump-gui版)
+    * [EasyTshark: tshark的gui，提供实时抓包和离线分析功能，支持数据包的SQLite存储和XML/JSON格式转换](#easytshark-tshark的gui提供实时抓包和离线分析功能支持数据包的sqlite存储和xmljson格式转换)
     * [stratoshark：云环境的wireshark](#stratoshark云环境的wireshark)
     * [oryx：基于 eBPF的 Linux 网络流量分析工具tui。这是一款基于 eBPF 技术的网络流量嗅探分析工具，在 Linux 上秒开网络流量全景监控。它提供终端可视化界面，详细展示流量统计信息，支持防火墙规则管理、模糊搜索和数据导出等功能](#oryx基于-ebpf的-linux-网络流量分析工具tui这是一款基于-ebpf-技术的网络流量嗅探分析工具在-linux-上秒开网络流量全景监控它提供终端可视化界面详细展示流量统计信息支持防火墙规则管理模糊搜索和数据导出等功能)
     * [ptcpdump：抓包](#ptcpdump抓包)
@@ -127,6 +136,7 @@ tags: []
     * [wrk2: wrp的变种](#wrk2-wrp的变种)
     * [oth：Rust 驱动的 HTTP 压测工具。这是一个用 Rust 开发的 HTTP 请求压测工具，它操作简单、带 TUI 动画界面，支持生成请求延迟、吞吐量等指标的报告，以及动态 URL 和更灵活的请求间隔（burst-delay）等功能。](#othrust-驱动的-http-压测工具这是一个用-rust-开发的-http-请求压测工具它操作简单带-tui-动画界面支持生成请求延迟吞吐量等指标的报告以及动态-url-和更灵活的请求间隔burst-delay等功能)
     * [lighthouse(chrome 网页性能测试)](#lighthousechrome-网页性能测试)
+    * [ali: 实时的tui](#ali-实时的tui)
 * [优秀文章](#优秀文章)
 * [在线工具](#在线工具)
 
@@ -152,6 +162,10 @@ tags: []
 | netstat          | ip -s, ss, ip route     |
 | brctl            | bridge                  |
 |                  | tc(qos)                 |
+
+## wifi工具
+
+### [impala: 🛜 TUI for managing wifi on Linux](https://github.com/pythops/impala)
 
 ## 综合工具
 
@@ -585,12 +599,24 @@ curl --proxy http://127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem w
 mitmweb -p 8080 --set web_port=9001
 ```
 
+### [AdGuardian-Term: 基于终端的实时网络监控工具，专门为 AdGuard Home 设计的](https://github.com/Lissy93/AdGuardian-Term)
+
+- 可以实时显示家里所有设备的 DNS 查询情况，哪个设备在访问什么网站，一目了然！
+
+- 快速查看被拦截、允许通过的请求数量，让你清楚知道 AdGuard 到底帮你挡掉了多少烦人的广告和追踪！ 
+
+- 过滤列表状态：显示你启用的所有广告拦截规则列表，看看哪些规则最给力，帮你拦截最多垃圾内容！
+
+
+- 热门域名排行：统计访问最频繁的网站域名，不管是被拦截的还是正常访问的
+
 ### socat
 
 - [韦一笑](https://www.zhihu.com/people/tzxiao)
 
 ```bash
-# 测试两台机器的tcp连接
+
+=# 测试两台机器的tcp连接
 socat - TCP-LISTEN:8080    # server listen
 socat - TCP:localhost:8080 # client connect
 
@@ -636,6 +662,7 @@ socat - UDP-LISTEN:8080,fork,reuseaddr
 sudo mv /run/mysqld/mysqld.sock /run/mysqld/mysqld.sock.original
 sudo socat -t100 -x -v UNIX-LISTEN:/run/mysqld/mysqld.sock,mode=777,reuseaddr,fork UNIX-CONNECT:mysqld.sock.original
 ```
+
 
 ## 应用层
 
@@ -954,11 +981,15 @@ trurl --url "https://example.com/?name=hello" --json
 
 #### [posting：tui版postman](https://github.com/darrenburns/posting)
 
+#### [atac: rust开发的tui版postman ](https://github.com/Julien-cpsn/ATAC)
+
 #### [newman：postman官方推出的cli版postman](https://github.com/postmanlabs/newman)
 
 #### [hoppscotch：instead postman](https://github.com/hoppscotch/hoppscotch)
 
 #### [apidash: 可以取代postman的gui客户端。Flutter打造，从HTTP到GraphQL，再到WebSocket和gRPC，API Dash几乎覆盖了所有常见的API协议。 ](https://github.com/foss42/apidash)
+
+#### [yaak:离线优先的桌面 API 客户端。这是一款快速、离线优先的桌面 API 客户端，支持 REST、GraphQL、SSE、WebSocket 和 gRPC 协议。它基于 Rust、Tauri 和 React 构建，界面友好、跨平台可用，无遥测和云端锁定，提供简洁纯粹、不受干扰的使用体验。](https://github.com/mountain-loop/yaak)
 
 #### [insomnia：instead postman](https://github.com/Kong/insomnia)
 
@@ -1099,6 +1130,8 @@ dig
 
 #### [dns-benchmark：测试全世界的 DNS 服务器](https://github.com/xxnuo/dns-benchmark)
 
+#### [dns-benchmark-tool: 测试 DNS 服务器的命令行工具，可以测试本地到 DNS 服务器的延迟，以及 DNS 解析获取域名的 IP 地址的耗时。](https://github.com/frankovo/dns-benchmark-tool?tab=readme-ov-file#installation)
+
 ### socks
 
 #### [tun2socks：将tcp/udp等流量转换为socks](https://github.com/xjasonlyu/tun2socks)
@@ -1193,6 +1226,9 @@ sudo tailscale file get .
 
 #### [vnt: An efficient VPN. 简便高效的异地组网、内网穿透工具](https://github.com/vnt-dev/vnt)
 
+### 下载工具
+
+#### [aim: 支持断点下载](https://github.com/mihaigalos/aim)
 
 ## 表示层
 
@@ -1481,6 +1517,7 @@ tshark -q -n -r test.pcapng -z ip_srcdst,tree
 ### [wireshark：tcpdump gui版](https://github.com/wireshark/wireshark)
 
 - [（视频）技术爬爬虾：网络顶级掠食者 Wireshark抓包从入门到实战](https://www.bilibili.com/video/BV12X6gYUEqA)
+### [EasyTshark: tshark的gui，提供实时抓包和离线分析功能，支持数据包的SQLite存储和XML/JSON格式转换](https://github.com/hhhweihan/EasyTshark)
 
 ### [stratoshark：云环境的wireshark](https://stratoshark.org/)
 
@@ -2952,6 +2989,7 @@ oha --rand-regex-url http://127.0.0.1/[a-z][a-z][0-9]
 
 ### [lighthouse(chrome 网页性能测试)](https://github.com/GoogleChrome/lighthouse)
 
+### [ali: 实时的tui](https://github.com/nakabonne/ali)
 
 # 优秀文章
 

@@ -19,6 +19,7 @@ tags: []
   * [WindTerm：c写的类似vscode布局的终端](#windtermc写的类似vscode布局的终端)
   * [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](#nexterm适合多服务器管理支持ssh-vnc-and-rdp支持sftp支持proxmox-lxc-和-qemu-containers)
   * [electerm: 设计理念是将终端、文件管理器和远程连接工具融为一体，类似于XShell和Guake的结合体，但功能更全面，支持更多协议。Terminal/ssh/sftp/ftp/telnet/serialport/RDP/VNC client(linux, mac, win)](#electerm-设计理念是将终端文件管理器和远程连接工具融为一体类似于xshell和guake的结合体但功能更全面支持更多协议terminalsshsftpftptelnetserialportrdpvnc-clientlinux-mac-win)
+  * [waveterm: 多功能终端。集合AI，浏览器，文件管理器，通过wsh命令可以浏览markdown、图片、视频等文件。](#waveterm-多功能终端集合ai浏览器文件管理器通过wsh命令可以浏览markdown图片视频等文件)
 * [File Browser](#file-browser)
   * [ranger](#ranger)
   * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
@@ -31,6 +32,7 @@ tags: []
   * [twf：vim模式的文件树](#twfvim模式的文件树)
   * [superfile](#superfile)
   * [filebrowser: 即使文件浏览器，也是文件服务器。支持在线播放视频和音频](#filebrowser-即使文件浏览器也是文件服务器支持在线播放视频和音频)
+  * [eddy: 加密文件](#eddy-加密文件)
 * [File](#file)
   * [mmv：批量命名mv](#mmv批量命名mv)
   * [[advcpmv: instead cp, my(https://github.com/jarun/advcpmv)](#advcpmv-instead-cp-myhttpsgithubcomjarunadvcpmv)
@@ -48,6 +50,7 @@ tags: []
   * [htmlq:html版jq](#htmlqhtml版jq)
   * [yq:yaml查看器](#yqyaml查看器)
   * [xsv:csv查看器](#xsvcsv查看器)
+  * [xan: 终端里的 CSV 数据魔术师。这是一个能够处理 GB 级超大 CSV 文件的命令行工具，支持预览、过滤、切片、聚合、排序等操作，并可在终端里通过直方图、热力图等方式进行数据可视化。](#xan-终端里的-csv-数据魔术师这是一个能够处理-gb-级超大-csv-文件的命令行工具支持预览过滤切片聚合排序等操作并可在终端里通过直方图热力图等方式进行数据可视化)
   * [tabiew：tui查看csv、tsv、json](#tabiewtui查看csvtsvjson)
   * [csvlens：tui查看csv、json](#csvlenstui查看csvjson)
   * [OctoSQL: sql语句查看文件](#octosql-sql语句查看文件)
@@ -56,19 +59,10 @@ tags: []
   * [vidir: 编辑器批量改名](#vidir-编辑器批量改名)
   * [mutagen：文件同步到远程服务器，也可以充当中间人在2个远程文件系统之间同步](#mutagen文件同步到远程服务器也可以充当中间人在2个远程文件系统之间同步)
   * [zrok：端对端共享文件](#zrok端对端共享文件)
+  * [magic-wormhole: 命令行的文本传输和文件传输](#magic-wormhole-命令行的文本传输和文件传输)
   * [termscp：ftp、scp等的tui](#termscpftpscp等的tui)
   * [entr：监控文件变化时，执行命令](#entr监控文件变化时执行命令)
-* [git](#git)
-  * [gh](#gh)
-    * [github-cli官方文档](#github-cli官方文档)
-  * [lazygit：git tui](#lazygitgit-tui)
-  * [gitui](#gitui)
-  * [bit：instead git](#bitinstead-git)
-  * [tig：git log](#tiggit-log)
-  * [hub](#hub)
-  * [forgit](#forgit)
-  * [gitoxide:rust版git](#gitoxiderust版git)
-  * [delta：highlight git diff](#deltahighlight-git-diff)
+  * [rsyncy: 有进度条的rsync](#rsyncy-有进度条的rsync)
 * [char](#char)
   * [tp：tui实时输出基础命令。如find、grep、jq等](#tptui实时输出基础命令如findgrepjq等)
   * [docfd：tui的grep。支持fuzzy](#docfdtui的grep支持fuzzy)
@@ -130,6 +124,7 @@ tags: []
   * [killport：输入指定端口，杀掉进程](#killport输入指定端口杀掉进程)
   * [devbox：隔离空间运行](#devbox隔离空间运行)
   * [nq：轻量级命令行队列工具，用户可以将任务添加到队列中，并在后台按顺序执行。](#nq轻量级命令行队列工具用户可以将任务添加到队列中并在后台按顺序执行)
+  * [tre: instead tree](#tre-instead-tree)
 * [net](#net)
   * [curlconverter：将curl转换为编程语言的代码](#curlconverter将curl转换为编程语言的代码)
   * [prettyping: instead ping](#prettyping-instead-ping)
@@ -183,6 +178,9 @@ tags: []
 * [游戏相关](#游戏相关)
   * [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](#shadps4开源的-ps4-模拟器虽然项目仍处于早期开发阶段能运行的游戏有限但最新版已经能够成功运行血源诅咒和黑暗之魂ii等游戏)
 * [代码相关](#代码相关)
+  * [code2prompt：将代码库转换为 LLM 提示的工具。会将所有代码变成markdown格式的文件](#code2prompt将代码库转换为-llm-提示的工具会将所有代码变成markdown格式的文件)
+  * [fuck-u-code: Legacy-Mess Detector – assess the “legacy-mess level” of your code and output a beautiful terminal report | 屎山代码检测器，评估代码的“屎山等级”并输出美观的终端报告](#fuck-u-code-legacy-mess-detector--assess-the-legacy-mess-level-of-your-code-and-output-a-beautiful-terminal-report--屎山代码检测器评估代码的屎山等级并输出美观的终端报告)
+  * [lychee:检查网页是否可访问。适配html、md等文件](#lychee检查网页是否可访问适配htmlmd等文件)
 * [备份](#备份)
 * [解决网络下载问题，如换源等](#解决网络下载问题如换源等)
   * [chsrc：全平台通用换源工具与框架](#chsrc全平台通用换源工具与框架)
@@ -230,12 +228,15 @@ tags: []
   * [direnv：不同目录不同环境变量](#direnv不同目录不同环境变量)
   * [mise：node、python、neovim等版本管理；有类似direnv的环境变量功能；有task功能](#misenodepythonneovim等版本管理有类似direnv的环境变量功能有task功能)
   * [ttyd：把终端变成服务，可以用浏览器访问](#ttyd把终端变成服务可以用浏览器访问)
+  * [cotp: tui版的两步验证码。 TOTP/HOTP 身份验证器，它将繁琐的图形界面抛在脑后，让你在终端中也能轻松管理你的两步验证码。](#cotp-tui版的两步验证码-totphotp-身份验证器它将繁琐的图形界面抛在脑后让你在终端中也能轻松管理你的两步验证码)
 * [系统相关](#系统相关)
   * [kmon：内核模块、dmesg的tui](#kmon内核模块dmesg的tui)
   * [nemu：qemu的tui](#nemuqemu的tui)
   * [osqueryi：使用sql语句查询操作系统](#osqueryi使用sql语句查询操作系统)
   * [isd：systemd tui](#isdsystemd-tui)
   * [gocron: 代替cron，并提供web界面](#gocron-代替cron并提供web界面)
+  * [tufw: ufw防火墙的tui](#tufw-ufw防火墙的tui)
+  * [iptable-web：iptable防火墙的web gui](#iptable-webiptable防火墙的web-gui)
 * [磁盘备份](#磁盘备份)
   * [restic](#restic)
 * [pdf、mobi、epub、md](#pdfmobiepubmd)
@@ -271,25 +272,10 @@ tags: []
   * [mermaid-cli：markdown转思维导图](#mermaid-climarkdown转思维导图)
 * [log](#log)
   * [lnav：tui的vim模式，查看log、json文件](#lnavtui的vim模式查看logjson文件)
+  * [hl: A fast and powerful log viewer and processor that converts JSON logs or logfmt logs into a clear human-readable format.](#hl-a-fast-and-powerful-log-viewer-and-processor-that-converts-json-logs-or-logfmt-logs-into-a-clear-human-readable-format)
   * [logdy](#logdy)
 * [modern unix](#modern-unix)
 * [邮件](#邮件)
-* [ai](#ai)
-  * [llm大模型](#llm大模型)
-    * [awesome-chatgpt](#awesome-chatgpt)
-    * [ollama](#ollama)
-      * [Ollama对比vllm](#ollama对比vllm)
-      * [open-webui：ollama web ui](#open-webuiollama-web-ui)
-      * [hollama：ollama web ui](#hollamaollama-web-ui)
-      * [oterm：Ollama cli客户端](#otermollama-cli客户端)
-      * [MaxKB：ollama web ui，知识库](#maxkbollama-web-ui知识库)
-      * [rag-web-ui](#rag-web-ui)
-      * [LM Studio：ollama gui版](#lm-studioollama-gui版)
-      * [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#anything-llm一个gui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
-      * [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#cherry-studiogui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
-    * [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](#shimmy一个只有-5mb-的单文件程序的ollama的代替品)
-    * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
-  * [other](#other-1)
 * [reference](#reference)
 
 <!-- mtoc-end -->
@@ -328,6 +314,8 @@ tags: []
 ## [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](https://github.com/gnmyt/Nexterm)
 
 ## [electerm: 设计理念是将终端、文件管理器和远程连接工具融为一体，类似于XShell和Guake的结合体，但功能更全面，支持更多协议。Terminal/ssh/sftp/ftp/telnet/serialport/RDP/VNC client(linux, mac, win)](https://github.com/electerm/electerm)
+
+## [waveterm: 多功能终端。集合AI，浏览器，文件管理器，通过wsh命令可以浏览markdown、图片、视频等文件。](https://github.com/wavetermdev/waveterm)
 
 # File Browser
 
@@ -369,6 +357,8 @@ sudo make O_NERD=1
 ![image](./Pictures/awesomecli/superfile.avif)
 
 ## [filebrowser: 即使文件浏览器，也是文件服务器。支持在线播放视频和音频](https://github.com/filebrowser/filebrowser)
+
+## [eddy: 加密文件](https://github.com/70sh1/eddy)
 
 # File
 
@@ -488,6 +478,8 @@ xsv select input,output test.csv
 xsv search -s input '[0-4]' test.csv
 ```
 
+## [xan: 终端里的 CSV 数据魔术师。这是一个能够处理 GB 级超大 CSV 文件的命令行工具，支持预览、过滤、切片、聚合、排序等操作，并可在终端里通过直方图、热力图等方式进行数据可视化。](https://github.com/medialab/xan)
+
 ## [tabiew：tui查看csv、tsv、json](https://github.com/shshemi/tabiew)
 
 ## [csvlens：tui查看csv、json](https://github.com/YS-L/csvlens)
@@ -510,6 +502,8 @@ find . -type f | vidir -
 zrok share public localhost:8080
 ```
 
+## [magic-wormhole: 命令行的文本传输和文件传输](https://github.com/magic-wormhole/magic-wormhole)
+
 ## [termscp：ftp、scp等的tui](https://github.com/veeso/termscp)
 
 ## [entr：监控文件变化时，执行命令](https://github.com/eradman/entr)
@@ -523,66 +517,7 @@ find . -name "*.c" | entr -r make
 ls *.js | entr -r node app.js
 ```
 
-# git
-
-## [gh](https://github.com/cli/cli)
-
-```sh
-# 登陆
-gh auth login
-
-# 查看登陆
-gh auth status
-
-# 创建仓库
-gh repo create gh-test
-
-# 查看所有仓库
-gh repo list
-
-# 查看指定仓库
-gh repo view https://github.com/ztoiax/nvim
-
-# 创建issue
-gh issue create
-
-# 查看issue
-gh issue list
-
-# 创建release
-gh release create r1
-
-# 查看release
-gh release list
-```
-
-### github-cli[官方文档](https://cli.github.com/manual/)
-
-## [lazygit：git tui](https://github.com/jesseduffield/lazygit)
-
-![image](./Pictures/awesomecli/lazygit.avif)
-
-## [gitui](https://github.com/extrawurst/gitui)
-
-![image](./Pictures/awesomecli/gitui.avif)
-
-## [bit：instead git](https://github.com/chriswalz/bit)
-
-![image](./Pictures/awesomecli/15.avif)
-
-## [tig：git log](https://github.com/jonas/tig)
-
-![image](./Pictures/awesomecli/tig.avif)
-
-## [hub](https://hub.github.com/)
-
-## [forgit](https://github.com/wfxr/forgit)
-
-![image](./Pictures/awesomecli/forgit.avif)
-
-## [gitoxide:rust版git](https://github.com/Byron/gitoxide)
-
-## [delta：highlight git diff](https://github.com/dandavison/delta)
+## [rsyncy: 有进度条的rsync](https://github.com/laktak/rsyncy)
 
 # char
 
@@ -806,6 +741,8 @@ devbox shell
 
 
 ## [nq：轻量级命令行队列工具，用户可以将任务添加到队列中，并在后台按顺序执行。](https://github.com/leahneukirchen/nq)
+
+## [tre: instead tree](https://github.com/dduan/tre)
 
 # net
 
@@ -1070,9 +1007,11 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 
 # 代码相关
 
-- [code2prompt：将代码库转换为 LLM 提示的工具。会将所有代码变成markdown格式的文件](https://github.com/mufeedvh/code2prompt)
-- [fuck-u-code: Legacy-Mess Detector – assess the “legacy-mess level” of your code and output a beautiful terminal report | 屎山代码检测器，评估代码的“屎山等级”并输出美观的终端报告](https://github.com/Done-0/fuck-u-code)
+## [code2prompt：将代码库转换为 LLM 提示的工具。会将所有代码变成markdown格式的文件](https://github.com/mufeedvh/code2prompt)
 
+## [fuck-u-code: Legacy-Mess Detector – assess the “legacy-mess level” of your code and output a beautiful terminal report | 屎山代码检测器，评估代码的“屎山等级”并输出美观的终端报告](https://github.com/Done-0/fuck-u-code)
+
+## [lychee:检查网页是否可访问。适配html、md等文件](https://github.com/lycheeverse/lychee)
 # 备份
 
 - [borg: Deduplicating archiver with compression and authenticated encryption.](https://github.com/borgbackup/borg)
@@ -1430,6 +1369,7 @@ http://127.0.0.1:7681/
 ttyd -p 8080 bash
 ```
 
+## [cotp: tui版的两步验证码。 TOTP/HOTP 身份验证器，它将繁琐的图形界面抛在脑后，让你在终端中也能轻松管理你的两步验证码。](https://github.com/replydev/cotp)
 
 # 系统相关
 
@@ -1459,6 +1399,13 @@ pip install isd-tui
 ```
 
 ## [gocron: 代替cron，并提供web界面](https://github.com/go-co-op/gocron)
+
+## [tufw: ufw防火墙的tui](https://github.com/peltho/tufw)
+
+## [iptable-web：iptable防火墙的web gui](https://gitee.com/shiya_liu/iptables-web)
+
+- [cyme: instead lsusb](https://github.com/tuna-f1sh/cyme)
+
 # 磁盘备份
 
 ## [restic](https://github.com/restic/restic)
@@ -1570,6 +1517,8 @@ markitdown path-to-file.pdf > document.md
 
 ## 浏览markdown文件
 
+- [gh-markdown-preview: 通过在web预览类似github风格的markdown文件](https://github.com/yusukebe/gh-markdown-preview)
+
 - [quarkdown:这是一个现代化的 Markdown 排版系统，通过强大的扩展功能，助力将创意转化为书籍、文章或 PPT。它引入了函数调用、自定义函数和变量定义等扩展，支持布局构建、数学计算、条件语句和循环等功能，可输出 HTML、PDF、幻灯片和分页文档等多种格式。当前采用 CLI 命令行操作，支持自动内容重载和实时预览。](https://github.com/iamgio/quarkdown)
 
     ```sh
@@ -1665,7 +1614,10 @@ journalctl -o short-iso | lnav
 journalctl -o json | lnav
 ```
 
+## [hl: A fast and powerful log viewer and processor that converts JSON logs or logfmt logs into a clear human-readable format.](https://github.com/pamburus/hl)
+
 ## [logdy](https://github.com/logdyhq/logdy-core)
+
 # modern unix
 
 - [tailspin](https://github.com/bensadeh/tailspin)
@@ -1673,223 +1625,6 @@ journalctl -o json | lnav
 # 邮件
 
 - [himalaya：邮件tui](https://github.com/pimalaya/himalaya)
-
-# ai
-
-## llm大模型
-
-### [awesome-chatgpt](https://github.com/sindresorhus/awesome-chatgpt)
-
-### [ollama](https://github.com/ollama/ollama)
-
-- [公共 Ollama 服务列表](https://freeollama.oneplus1.top/)
-    > 其实大部分人部署并不专业，把服务暴漏在公网上。
-
-- [漫谈云原生：最全 Ollama 大模型部署指南](https://mp.weixin.qq.com/s/Esqw0zViQBiq_4VXEXKz_Q)
-
-- [ollama：支持的大模型](https://ollama.com/search)
-
-- 基本命令
-
-    ```sh
-    # 启动ollama
-    sudo systemctl restart ollama
-
-    # 所有可供下载的模型 https://ollama.com/search
-    # 下载并运行deepseek-v3（被称为拼多多版大模型）
-    ollama run nezahatkorkmaz/deepseek-v3
-
-    # 从内存中卸载模型
-    ollama stop nezahatkorkmaz/deepseek-v3
-
-    # 下载文本嵌入式模型
-    ollama pull nomic-embed-text
-    # 比nomic更好的文本嵌入式模型
-    ollama pull snowflake-arctic-embed2
-
-    # /show parameters 查看参数
-    ollama run deepseek-r1:latest
-    >>> /show parameters
-    Model defined parameters:
-    stop                           "<｜begin▁of▁sentence｜>"
-    stop                           "<｜end▁of▁sentence｜>"
-    stop                           "<｜User｜>"
-    stop                           "<｜Assistant｜>"
-
-    # 修改参数。默认情况下，Ollama 上下文窗口大小为 2048，要改成 4096 可以执行
-    >>> /set parameter num_ctx 4096
-    ```
-
-- 使用[modelscope（魔塔）](https://www.modelscope.cn/models)加速下载大模型文件，比ollama快
-    ```sh
-    pip install modelscope
-
-    # 下载千问qwq-32B大模型
-    modelscope download --model"Qwen/QwQ-32B-GGUF" --local_dir=./QwQ-32B
-
-    # 比较大的模型是拆分多个文件的需要进行使用llama.cpp项目工具合并
-    llama.cpp merge <所有gguf文件>
-
-    ```
-
-- Kubernetes 运行 Ollama
-    ```sh
-    # 配置 Helm Chart
-    helm repo add ollama <https://feisky.xyz/ollama-kubernetes>
-    helm repo update
-
-    # 部署 Ollama
-    helm upgrade --install ollama ollama/ollama \
-        --namespace=ollama \
-        --create-namespace
-
-    # 开启端口转发
-    kubectl -n ollama port-forward \
-       service/ollama-webui 8080:80
-    ```
-
-- 变量：
-
-    - Ollama 的存储路径为：
-
-        - macOS: `~/.ollama/models`
-        - Linux: `/usr/share/ollama/.ollama/models`
-        - Windows: `C:\Users\%username%\.ollama\models`
-
-        ```sh
-        # 修改存储路径
-        export OLLAMA_MODELS=~/ollama-data
-        ```
-
-    - 默认情况下，模型会在内存中保留 5 分钟后卸载。如果短时间向 LLM 发送大量请求，这可以提供更快的响应时间。
-
-        ```sh
-        # 设置为 1 小时
-        export OLLAMA_KEEP_ALIVE=1h
-        ```
-
-    - Flash Attention 是大多数现代模型的一项功能，可以在上下文大小增加时显著减少内存使用。
-
-        ```sh
-        # 开启Flash Attention
-        export OLLAMA_FLASH_ATTENTION=1
-        ```
-
-    - 设置 K/V 缓存的量化类型：启用 Flash Attention 时，K/V 上下文缓存可以进行量化，以显著减少内存使用。
-
-        - 缓存量化对模型质量的影响：
-
-            - 通常 GQA 分高的模型（比如 Qwen2）可能比 GQA 分低的模型更容易受到量化对精度影响。
-
-            - 建议你尝试不同的量化类型，通过测试找到内存使用与质量之间最佳平衡点。
-
-
-        - 要在 Ollama 中使用量化的 K/V 缓存，可以设置 `OLLAMA_KV_CACHE_TYPE` 环境变量：
-
-        - `f16` - 高精度和高内存使用（默认）。
-        - `q8_0` - 8 位量化，使用约为 f16 一半的内存，精度损失非常小，这通常对模型质量没有明显影响。
-        - `q4_0` - 4 位量化，使用约为 f16 四分之一的内存，在较大上下文大小时会出现精度损失。
-
-- 运行第三方 GGUF 模型
-
-    - GGUF 是 llama.cpp 定义的一种高效存储和交换大模型预训练结果的二进制格式。你可以通过 Modelfile 文件中导入 GGUF 模型。
-
-    - 首先创建一个 Modelfile：
-
-        ```
-        FROM <model-path>.gguf
-        PARAMETER temperature 1
-        PARAMETER num_ctx 4096
-        SYSTEM You are Mario from super mario bros, acting as an assistant.
-        ```
-    - 然后，执行下面的命令加载运行模型：
-
-        ```sh
-        # 你可以加上 -q Q4_K_M 对模型量化
-        ollama create myllama -f Modelfile
-        ollama run myllama
-        ```
-
-    - 对于其他格式的模型，你可以通过 llama.cpp 转换为 GGUF 格式再使用。
-
-#### Ollama对比[vllm](https://github.com/vllm-project/vllm)
-
-- Ollama 是一个运行大模型的工具，可以看成是大模型领域的 Docker，可以下载所需的大模型并暴露 Ollama API，极大的简化了大模型的部署。
-
-- vLLM 与 Ollama 类似，也是一个运行大模型的工具，但它针对推理做了很多优化，提高了模型的运行效率和性能，使得在资源有限的情况下也能高效运行大语言模型，另外，它提供兼容 OpenAI 的 API。
-
-- 选择 Ollama 还是 vLLM？
-
-    - Ollama 的特点：个人用户或本地开发环境使用 Ollama 很方便，对各种 GPU 硬件和大模型的兼容性很好，不需要复杂的配置就能跑起来，但性能上不如 vLLM。
-
-    - vLLM 的特点：推理性能更好，也更节约资源，适合部署到服务器供多人使用，还支持多机多卡分布式部署，上限更高，但能适配的 GPU 硬件比 Ollama 少，且需要根据不同 GPU 和大模型来调整 vllm 的启动参数才能跑起来或者获得更好的性能表现。
-
-    - 选型建议：如果有一定的技术能力且愿意折腾，能用 vLLM 成功跑起来更推荐用 vLLM 将大模型部署到 Kubernetes 中，否则就用 Ollama ，两种方式在本文中都有相应的部署示例。
-
-#### [open-webui：ollama web ui](https://github.com/open-webui/open-webui)
-
-#### [hollama：ollama web ui](https://github.com/fmaclen/hollama)
-
-#### [oterm：Ollama cli客户端](https://github.com/ggozad/oterm)
-
-#### [MaxKB：ollama web ui，知识库](https://github.com/1Panel-dev/MaxKB)
-
-- [（视频）Rontalks：Ollama + deepseek + maxkb 搭建本地个人专属AI机器人，或者叫本地专属问答知识库](https://www.bilibili.com/video/BV15gFbefEYP)
-
-- 自带知识库中的嵌入文本模型maxkb-embedding
-
-#### [rag-web-ui](https://github.com/rag-web-ui/rag-web-ui)
-
-#### [LM Studio：ollama gui版](https://lmstudio.ai/)
-
-- [lms：LM Studio command line](https://github.com/lmstudio-ai/lms)
-
-#### [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/Mintplex-Labs/anything-llm)
-
-```sh
-# linux安装
-curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
-
-# 启动
-./AnythingLLMDesktop/start
-```
-
-#### [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/CherryHQ/cherry-studio)
-
-### [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](https://github.com/Michael-A-Kuykendall/shimmy)
-
-- 启动时间＜100ms，秒开！
-- 内存只占50MB，后台无感运行
-- 基于 Rust 编写，极致优化
-- 不需要复杂配置！自动分配端口！
-- 自动发现模型源：Hugging Face、Ollama、本地文件夹…通通识别！
-
-### [transformers.js：在浏览器运行大模型（如deepseek-r1）](https://github.com/huggingface/transformers.js-examples/tree/main/deepseek-r1-webgpu)
-
-- [（视频）五里墩茶社：在浏览器内运行DeepSeek R1 = WebGPU + Transformers.js](https://www.bilibili.com/video/BV1ZbFneCEkr)
-
-- 显卡要支持webgpu：
-    - 浏览器开启webgpu：`chrome://flags`下搜索`webgpu`然后启用。
-
-## other
-
-- [shell_gpt：生成命令行](https://github.com/TheR1D/shell_gpt)
-
-- [reor：ai私人助手](https://github.com/reorproject/reor)
-
-- [reader：将网址放到https://r.jina.ai/便可获取markdown文档的总结](https://github.com/jina-ai/reader)
-    - [在线网址](https://jina.ai/reader/)
-
-    ```sh
-    curl -H "Accept: text/event-stream" https://r.jina.ai/https://www.bilibili.com/video/BV1bD421n7dg
-    ```
-
-- [aider](https://github.com/paul-gauthier/aider)这是一款运行在终端里的 AI 辅助编码工具，能够将你本地 git 仓库中的代码与 LLMs 结合起来。开发者通过 add 命令引入文件，然后用自然语言描述需求，它就可以对现有的代码进行修改并自动提交，支持接入多种大模型，包括 GPT 3.5、GPT-4 和 Claude 3 Opus 等。
-
-- [exo：组建ai集群](https://github.com/exo-explore/exo)
-
-- [liujuntao123/smart-mermaid: 一款基于 AI 技术的 Web 应用程序，可将文本内容智能转换为 Mermaid 格式的代码，并将其渲染成可视化图表。](https://github.com/liujuntao123/smart-mermaid)
-
 # reference
 
 - [现代版命令行基础工具](https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/)
