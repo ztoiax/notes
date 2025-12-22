@@ -39,6 +39,7 @@ tags: []
         * [.curlrc配置文件](#curlrc配置文件)
         * [格式化输出和变量](#格式化输出和变量)
       * [trurl：curl作者的新作品](#trurlcurl作者的新作品)
+      * [yaak: Rust+Tauri的postman代替版。支持一键导入 Postman/Insomnia 数据，轻松无缝切换。无论是 REST、GraphQL 还是 gRPC，都能完美支持。](#yaak-rusttauri的postman代替版支持一键导入-postmaninsomnia-数据轻松无缝切换无论是-restgraphql-还是-grpc都能完美支持)
       * [posting：tui版postman](#postingtui版postman)
       * [atac: rust开发的tui版postman ](#atac-rust开发的tui版postman-)
       * [newman：postman官方推出的cli版postman](#newmanpostman官方推出的cli版postman)
@@ -978,6 +979,8 @@ trurl --url "https://example.com/?name=hello" --json
   }
 ]
 ```
+
+#### [yaak: Rust+Tauri的postman代替版。支持一键导入 Postman/Insomnia 数据，轻松无缝切换。无论是 REST、GraphQL 还是 gRPC，都能完美支持。](https://github.com/mountain-loop/yaak)
 
 #### [posting：tui版postman](https://github.com/darrenburns/posting)
 

@@ -83,7 +83,6 @@ tags: []
 * [优质的b站up主、微信公众号等](#优质的b站up主微信公众号等)
   * [计算机](#计算机)
   * [科技](#科技)
-  * [汽车](#汽车)
   * [地理和气象](#地理和气象)
   * [运动](#运动)
   * [健康](#健康-1)
@@ -172,6 +171,8 @@ tags: []
 
 - [《C++ 17 The Complete Guide》翻译](https://github.com/CnTransGroup/Cpp17TheCompleteGuideChinese)
 
+- [Contents • Build Your Own Lisp：介绍怎么用 C 语言写编译器，以 Lisp 语言的编译器为例。](https://buildyourownlisp.com/contents)
+
 ### Java
 
 - [《Java 编程思想》 第四版](https://wizardforcel.gitbooks.io/thinking-in-java/content/)
@@ -257,6 +258,8 @@ tags: []
 - [《The Scheme Programming Language Fourth Edition》](https://www.scheme.com/tspl4/)
 
 - [《Learn Lisp The Hard Way》](https://llthw.common-lisp.dev/)
+
+- [Contents • Build Your Own Lisp：介绍怎么用 C 语言写编译器，以 Lisp 语言的编译器为例。](https://buildyourownlisp.com/contents)
 
 ### Haskell
 
@@ -1449,6 +1452,8 @@ tags: []
     - 腾讯CDC体验设计
         > 设计、ai
 
+    - 数字开物
+        > ai相关的各种计算机大佬演讲
     - 走向未来
     - AI光影社
     - 程序员半支烟
@@ -1503,20 +1508,28 @@ RabbitMQ实战指南》作者
     - [玄离199](https://space.bilibili.com/67079745)
         > github开源项目周报，科技新闻周报
 
+    - [PegasusWang](https://space.bilibili.com/288339968)
+        > 推荐好用的软件
+
     - [北京大学Linux俱乐部](https://space.bilibili.com/3461562830424779)
 
     - [glepnir](https://space.bilibili.com/321783076)
+        > nvim高手
 
-    - [LitterHouge](https://space.bilibili.com/2041146642)
-
-    - [PegasusWang](https://space.bilibili.com/288339968)
+    - [夜未央-天将亮](https://space.bilibili.com/517516711)
+        > linux桌面折腾
 
     - [TheCW](https://space.bilibili.com/13081489)
+        > linux桌面折腾
+
+    - [LitterHouge](https://space.bilibili.com/2041146642)
+        > gentoo linux，linux比较底层的折腾，以及不同指令集硬件上的linux折腾
 
     - [Houge_Langley](https://space.bilibili.com/40420441)
+        > gentoo linux，linux比较底层的折腾，以及不同指令集硬件上的linux折腾
 
     - [unixchad](https://space.bilibili.com/34569411)
-        . linux不常用软件折腾
+        > linux不常用软件折腾
 
     - [OS视界](https://space.bilibili.com/1918016728)
         > linux相关新闻介绍
@@ -1555,9 +1568,6 @@ RabbitMQ实战指南》作者
 
     - 大话存储
         > 《大话存储》作者
-
-    - 企业存储技术
-        > cpu、gpu、存储
 
     - 了不起的云计算
         > 科普硬件技术知识
@@ -1698,6 +1708,11 @@ RabbitMQ实战指南》作者
     - [单毅讲装修](https://space.bilibili.com/222157543)
         > 家电、装修
 
+    - [五金少女](https://space.bilibili.com/303517323)
+        > 五金、装修
+
+    - [4AM居士](https://space.bilibili.com/1310639484)
+        > 五金、装修
 
     - [飞蚊话](https://space.bilibili.com/268630727)
         > linux桌面
@@ -1716,28 +1731,6 @@ RabbitMQ实战指南》作者
     - 电脑吧评测室
     - 笔吧评测室
     - 路由器评测
-    - IT技术分享-老张
-        > 服务器硬件
-
-    - 半导体产业纵横
-        > 芯片相关
-
-## 汽车
-
-- bilibili
-
-    - [三驱兄弟](https://space.bilibili.com/690820158)
-        > 购车建议
-
-    - [超哥超车](https://space.bilibili.com/3546724748495813)
-        > 购车建议，事故分析，营销分析
-
-    - [牛哥说车](https://space.bilibili.com/397666641/upload/video)
-        > 驾驶案例分析，驾驶常识
-
-- 微信公众号
-
-    - 中国汽车流通协会
         > 汽车行业和数据
 
     - 中国汽车流通协会有形市场分会
@@ -1879,6 +1872,7 @@ RabbitMQ实战指南》作者
 ## 做菜
 
 - [万能工具人阿伟](https://space.bilibili.com/689222371)
+    > 教做菜的原理
 
 - [猪肉婆吴素芬](https://space.bilibili.com/3493271997253876)
     > 顺德美食
@@ -2084,6 +2078,9 @@ RabbitMQ实战指南》作者
     - [折射棱镜Prisma](https://space.bilibili.com/294859132/upload/video)
         > 后现代哲学
 
+    - [小骆爱空谈](https://space.bilibili.com/3494364386953276/upload/video)
+        > 对国内哲学老师个人和他们之间的争论进行评论
+
 - 微信公众号
 
     - 哲学研究
@@ -2140,6 +2137,8 @@ RabbitMQ实战指南》作者
         > 刘小枫
     - 东方哲学践行
         > 王志成
+    - 双体实验室
+        > 金观涛
     - 启示与理性
 
     - 哲学五人谈
@@ -2198,6 +2197,7 @@ RabbitMQ实战指南》作者
         - 孔子研究杂志
         - 孔子研究院
         - 孟子研究院
+        - 经血评论
         - 中国文化研究
         - 中国文化书院
         - 华夏文化书院
@@ -2249,6 +2249,7 @@ RabbitMQ实战指南》作者
 - 微信公众号
 
     - 现当代文学研究动态
+    - 中国当代文学研究
     - 文学思想史
     - 文学评论
     - 外国文学评论
@@ -2266,6 +2267,8 @@ RabbitMQ实战指南》作者
 
     - 小说评论
     - 媒介 | 批评
+    - 文学与影视批评
+    - 国际比较文学
 
 ## 历史
 
@@ -2488,7 +2491,6 @@ RabbitMQ实战指南》作者
     - 奥地利经济学评论
     - 横琴智慧金融研究院
     - 中国金融地产会
-    - 北大国发院
     - 复旦大学中国研究院
     - 人大重阳
     - 人大财税研究所
@@ -2578,6 +2580,9 @@ RabbitMQ实战指南》作者
 
     - 莫干山研究院
         > 9号院的门生
+
+    - Marxian Economic Theory
+        > 当代的马克思经济理论
 
     - 经济思想史
         - 经济思想史学刊
@@ -2760,6 +2765,9 @@ RabbitMQ实战指南》作者
     - [赵皓阳](https://space.bilibili.com/25776635)
         > 禁止右转的b站号
 
+    - [半耳聆](https://space.bilibili.com/495979927/upload/video)
+        > 网络热门新闻的解读
+
 - 微信公众号
 
     - 中国政府网
@@ -2783,6 +2791,8 @@ RabbitMQ实战指南》作者
     - WorldCommunistParties
         > 共运
 
+    - 腾讯新闻大声思考
+        > 政治，经济，社会相关
     - 禁止右转
 
     - 无法可说
@@ -2849,6 +2859,8 @@ RabbitMQ实战指南》作者
     - 广州市规划院
 
     - 广州旧闻
+
+    - 民国粤事
 
     - 羊城纵览
 

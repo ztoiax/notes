@@ -2503,8 +2503,6 @@ curl https://argocd.kubernets.cn -I
 
 - [khi：日志可视化工具](https://github.com/GoogleCloudPlatform/khi)
 
-- [KubeDoor：多K8S集群统一远程存储、监控、告警、通知、展示的一站式K8S监控平台](https://github.com/CassInfra/KubeDoor)
-
 - [retina：微软开发的监控k8s网络](https://github.com/microsoft/retina)
 
 - [Headlamp：k8s ui](https://headlamp.dev/)
@@ -2512,6 +2510,8 @@ curl https://argocd.kubernets.cn -I
 - [lens:  Kubernetes IDE可以代替kubectl命令。Lens 不仅仅是一个“看板工具”，它集成了日志查看、终端访问、Prometheus 监控、Helm 商店等功能，堪称 K8s 管理的“瑞士军刀”。](https://github.com/lensapp/lens)
 
 - [kite: 这是一款轻量级、现代化的 Kubernetes 可视化管理平台，适用于管理和监控 K8s 集群。它拥有直观易用的界面，支持查看 Pod 日志、执行容器命令、编辑 YAML 配置、管理用户权限等功能。](https://github.com/zxh326/kite)
+
+- [KubeDoor: 花折：基于K8S准入控制机制的微服务管控平台，多K8S统一监控、告警、展示最佳实践](https://github.com/CassInfra/KubeDoor)
 
 ## 云原生
 

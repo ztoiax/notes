@@ -29,7 +29,6 @@ tags: []
   * [other](#other-1)
 * [音乐](#音乐)
 * [投屏和远程控制](#投屏和远程控制)
-  * [安卓投屏和远程控制](#安卓投屏和远程控制)
   * [ssh客户端](#ssh客户端)
 * [pdf、epub、mobi、markdown阅读器](#pdfepubmobimarkdown阅读器)
 * [note](#note)
@@ -61,6 +60,7 @@ tags: []
 - [deltachat-desktop: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-desktop)
 
 - [PairDrop: 文件传输，通过web浏览器](https://github.com/schlagmichdoch/PairDrop)
+- [alt-sendme: 这是一款采用 Rust 和 Tauri 构建的开源 P2P 文件传输工具，无需注册和服务器，即可实现端到端的文件传输。用户只需将文件拖入应用，将随机生成的传输凭证发给接收方，对方输入后即可轻松接收文件。](https://github.com/tonyantony300/alt-sendme)
 
 ## 文件管理器
 
@@ -212,6 +212,8 @@ tags: []
 
 - [wayfarer：录屏](https://github.com/stronnag/wayfarer)
 
+- [openscreen: 录屏加部分剪辑功能，可以更换背景，调整窗口大小，放大缩小等动效，添加文字等。满足最基本的录屏剪辑需求](https://github.com/siddharthvaddem/openscreen)
+
 ## 图片压缩
 
 - [PicSharp: A modern, full-featured, high-performance, cross-platform image compression application 具有现代化UI、功能齐全、高性能、跨平台的图像压缩工具](https://github.com/AkiraBit/PicSharp)
@@ -243,9 +245,14 @@ tags: []
 - [lossless-cut：视频剪切软件，目标是成为 FFmpeg 的图形前端。](https://github.com/mifi/lossless-cut)
 
 - [videocr: 字幕提取](https://github.com/apm1467/videocr)
+
+- [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
+
+- [jellyfin-desktop: Jellyfin Desktop Client](https://github.com/jellyfin/jellyfin-desktop)
+
 # 音乐
 
-- [NSMusicS：支持各种云端平台](https://github.com/Super-Badmen-Viper/NSMusicS)
+- [NSMusicS：支持各种云端平台](https://gitwhub.com/Super-Badmen-Viper/NSMusicS)
 - [iAJue/MoeKoeMusic: 一款开源简洁高颜值的酷狗第三方客户端](https://github.com/iAJue/MoeKoeMusic)
 
 - [SPlayer：网易云音乐](https://github.com/imsyy/SPlayer)
@@ -269,16 +276,6 @@ tags: []
 - [deskflow：键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/deskflow/deskflow)
 
 - [crossdesk: 一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。](https://github.com/kunkundi/crossdesk)
-
-## 安卓投屏和远程控制
-
-- [linkandroid：连接android](https://github.com/modstart-lib/linkandroid)
-
-- [aya: adb gui版.支持投屏,可以监控手机cpu,内存等](https://github.com/liriliri/aya)
-
-- [scrcpy: 投屏](https://github.com/Genymobile/scrcpy)
-
-- [QtScrcpy: 更好的scrcpy投屏](https://github.com/barry-ran/QtScrcpy)
 
 ## ssh客户端
 
@@ -406,6 +403,8 @@ tags: []
 - [neko：该项目是运行在 Docker 容器中的自托管虚拟浏览器环境，为用户提供安全、隔离和功能齐全的虚拟浏览器。](https://github.com/m1k1o/neko)
 
 - [fluent-reader：rss订阅和阅读器](https://github.com/yang991178/fluent-reader)
+
+- [MrRSS: A modern, cross-platform desktop RSS reader. 一个现代化、跨平台的 RSS 阅读器.](https://github.com/WCY-dt/MrRSS)
 
 - [Folo: 聚合阅读器，有点类似于rss](https://github.com/RSSNext/Folo)
 

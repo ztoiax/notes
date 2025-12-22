@@ -76,7 +76,7 @@ tags: []
     # 电脑同步到手机         adb-sync -d ~/Downloads /sdcard/Download/
     ```
 
-- [sndcpy：将手机音频转发到电脑](https://github.com/rom1v/sndcpy)
+- [sndcpy：声音投屏（将手机音频转发到电脑）](https://github.com/rom1v/sndcpy)
 
 - [android_aircrack：wifi破解](https://github.com/kriswebdev/android_aircrack)
 
@@ -85,6 +85,16 @@ tags: []
 - [kite：小米性能监控工具](https://kite.mi.com/#/documents/instructions/quickstart?id=%e5%bf%ab%e9%80%9f%e5%bc%80%e5%a7%8b)
 
 - [ADB ToolboX：adb gui只支持windows](https://qx.wysteam.cn/download/)
+
+- [linkandroid：连接android](https://github.com/modstart-lib/linkandroid)
+
+- [aya: adb gui版.支持投屏,可以监控手机cpu,内存等](https://github.com/liriliri/aya)
+
+- [scrcpy: 投屏](https://github.com/Genymobile/scrcpy)
+
+- [QtScrcpy: 更好的scrcpy投屏](https://github.com/barry-ran/QtScrcpy)
+
+- [escrcpy: 📱 Display and control your Android device graphically with scrcpy.](https://github.com/viarotel-org/escrcpy)
 
 ## app
 
@@ -336,6 +346,7 @@ tags: []
 - [deltachat-android: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-android)
 
 - [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
+- [connectbot: ssh](https://github.com/connectbot/connectbot)
 
 ### 数据清理
 

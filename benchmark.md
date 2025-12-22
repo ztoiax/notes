@@ -114,6 +114,7 @@ tags: []
   * [Mission Center：类似windows的任务管理器](#mission-center类似windows的任务管理器)
   * [earlyoom：这是一款专为 Linux 设计的 OOM 守护进程，旨在弥补内核自带的 OOM Killer 仅在内存耗尽时才触发的不足。它能够提早干预（默认 10%），自动终止占用内存最多的进程，从而防止系统因内存耗尽而陷入卡死的状态。](#earlyoom这是一款专为-linux-设计的-oom-守护进程旨在弥补内核自带的-oom-killer-仅在内存耗尽时才触发的不足它能够提早干预默认-10自动终止占用内存最多的进程从而防止系统因内存耗尽而陷入卡死的状态)
   * [pspy：无需 Root 权限实时监控 Linux 进程的工具。这是一款无需 root 权限即可实时监控 Linux 系统中所有用户运行的命令、计划任务等进程活动。它通过遍历 /proc 收集进程信息和监听文件系统事件，能够实时捕捉新启动的进程和短命进程，适用于 CTF 竞赛、渗透测试和安全审计等场景。](#pspy无需-root-权限实时监控-linux-进程的工具这是一款无需-root-权限即可实时监控-linux-系统中所有用户运行的命令计划任务等进程活动它通过遍历-proc-收集进程信息和监听文件系统事件能够实时捕捉新启动的进程和短命进程适用于-ctf-竞赛渗透测试和安全审计等场景)
+  * [PCtrl: tui和gui](#pctrl-tui和gui)
 * [开机](#开机)
   * [bootchart](#bootchart)
 * [Special file system](#special-file-system)
@@ -1945,6 +1946,8 @@ htop -p 20316
 ## [earlyoom：这是一款专为 Linux 设计的 OOM 守护进程，旨在弥补内核自带的 OOM Killer 仅在内存耗尽时才触发的不足。它能够提早干预（默认 10%），自动终止占用内存最多的进程，从而防止系统因内存耗尽而陷入卡死的状态。](https://github.com/rfjakob/earlyoom)
 
 ## [pspy：无需 Root 权限实时监控 Linux 进程的工具。这是一款无需 root 权限即可实时监控 Linux 系统中所有用户运行的命令、计划任务等进程活动。它通过遍历 /proc 收集进程信息和监听文件系统事件，能够实时捕捉新启动的进程和短命进程，适用于 CTF 竞赛、渗透测试和安全审计等场景。](https://github.com/DominicBreuker/pspy)
+
+## [PCtrl: tui和gui](https://github.com/MohamedSherifNoureldin/PCtrl)
 
 # 开机
 

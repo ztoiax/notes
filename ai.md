@@ -824,6 +824,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [HunyuanDiT：腾讯的文生图](https://github.com/Tencent/HunyuanDiT)
 
+- [Z-Image-Turbo：阿里的](https://huggingface.co/Tongyi-MAI/Z-Image-Turbo)
+
 - [flux](https://github.com/black-forest-labs/flux)
 
 - 在线使用
@@ -909,6 +911,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [InspireMusic：阿里的](https://github.com/FunAudioLLM/InspireMusic)
 
 ### ai声音克隆（tts），可以实现让电影里的演员的英文配音变成国语
+
+- [VibeVoice: 微软的](https://github.com/microsoft/VibeVoice)
 
 - [index-tts: b站的模型](https://github.com/index-tts/index-tts)
 
@@ -1045,6 +1049,9 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
     - [Claude-Code-Usage-Monitor: Claude 用量实时监控助手。这是一个用于实时监控和记录开发者在使用 Claude AI 时产生的 Token 用量及费用的工具，支持用量统计、预算告警和套餐设置等功能。](https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor)
 
 - [gemini-cli: 谷歌 Gemini 命令行工具。该项目是 Gemini 官方开源的命令行工具，将 Google Gemini 的强大能力集成到终端环境。它基于百万级上下文，能够理解大型代码库的架构和逻辑，支持多模态输入输出、Google 搜索以及 MCP 等功能。](https://github.com/google-gemini/gemini-cli)
+
+    - [gemini-cli-tips: Gemini CLI 使用指南](https://github.com/addyosmani/gemini-cli-tips)
+
 - [copilot-cli: GitHub Copilot CLI brings the power of Copilot coding agent directly to your terminal.](https://github.com/github/copilot-cli)
 
 - [QwenLM/qwen-code: 阿里的code](https://github.com/QwenLM/qwen-code)
@@ -1075,9 +1082,14 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [droidrun：通过大模型，以自然语言操作安卓手机的 APP](https://github.com/droidrun/droidrun)
 
+
+- [Open-AutoGLM: 智谱的手机端智能助理框架](https://github.com/zai-org/Open-AutoGLM)
+
 ## ai agent（智能体）
 
 - [awesome-ai-agents: A list of AI autonomous agents](https://github.com/e2b-dev/awesome-ai-agents)
+
+- [500-AI-Agents-Projects: AI Agent 合集](https://github.com/ashishpatel26/500-AI-Agents-Projects)
 
 - [n8n: 可扩展的工作流程自动化工具，它提供了直观的界面，让用户可以通过拖放方式连接不同的应用程序和服务，从而创建自定义的自动化流程。](https://github.com/n8n-io/n8n)
 

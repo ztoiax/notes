@@ -32,7 +32,7 @@ tags: []
   * [twf：vim模式的文件树](#twfvim模式的文件树)
   * [superfile](#superfile)
   * [filebrowser: 即使文件浏览器，也是文件服务器。支持在线播放视频和音频](#filebrowser-即使文件浏览器也是文件服务器支持在线播放视频和音频)
-  * [eddy: 加密文件](#eddy-加密文件)
+  * [eddy: 加密文件，不支持加密文件夹](#eddy-加密文件不支持加密文件夹)
 * [File](#file)
   * [mmv：批量命名mv](#mmv批量命名mv)
   * [[advcpmv: instead cp, my(https://github.com/jarun/advcpmv)](#advcpmv-instead-cp-myhttpsgithubcomjarunadvcpmv)
@@ -229,6 +229,7 @@ tags: []
   * [mise：node、python、neovim等版本管理；有类似direnv的环境变量功能；有task功能](#misenodepythonneovim等版本管理有类似direnv的环境变量功能有task功能)
   * [ttyd：把终端变成服务，可以用浏览器访问](#ttyd把终端变成服务可以用浏览器访问)
   * [cotp: tui版的两步验证码。 TOTP/HOTP 身份验证器，它将繁琐的图形界面抛在脑后，让你在终端中也能轻松管理你的两步验证码。](#cotp-tui版的两步验证码-totphotp-身份验证器它将繁琐的图形界面抛在脑后让你在终端中也能轻松管理你的两步验证码)
+  * [YouPlot: cli下画统计图](#youplot-cli下画统计图)
 * [系统相关](#系统相关)
   * [kmon：内核模块、dmesg的tui](#kmon内核模块dmesg的tui)
   * [nemu：qemu的tui](#nemuqemu的tui)
@@ -358,7 +359,7 @@ sudo make O_NERD=1
 
 ## [filebrowser: 即使文件浏览器，也是文件服务器。支持在线播放视频和音频](https://github.com/filebrowser/filebrowser)
 
-## [eddy: 加密文件](https://github.com/70sh1/eddy)
+## [eddy: 加密文件，不支持加密文件夹](https://github.com/70sh1/eddy)
 
 # File
 
@@ -1370,6 +1371,8 @@ ttyd -p 8080 bash
 ```
 
 ## [cotp: tui版的两步验证码。 TOTP/HOTP 身份验证器，它将繁琐的图形界面抛在脑后，让你在终端中也能轻松管理你的两步验证码。](https://github.com/replydev/cotp)
+
+## [YouPlot: cli下画统计图](https://github.com/red-data-tools/YouPlot)
 
 # 系统相关
 

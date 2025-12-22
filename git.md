@@ -55,6 +55,7 @@ tags: []
     * [gitoxide:rust版git](#gitoxiderust版git)
     * [delta：highlight git diff](#deltahighlight-git-diff)
     * [gitlogue:回放你的 Git 提交历史。这是一个能够将 Git 提交历史转化为动画的命令行工具，通过打字动画和代码高亮，在终端里生动展示每一次变更。](#gitlogue回放你的-git-提交历史这是一个能够将-git-提交历史转化为动画的命令行工具通过打字动画和代码高亮在终端里生动展示每一次变更)
+    * [serie: git commit tui](#serie-git-commit-tui)
   * [repo：google的git](#repogoogle的git)
 * [VFSForGit：微软的git](#vfsforgit微软的git)
 * [scalar：微软的新git](#scalar微软的新git)
@@ -948,6 +949,8 @@ git diff | diffnav
 ### [delta：highlight git diff](https://github.com/dandavison/delta)
 
 ### [gitlogue:回放你的 Git 提交历史。这是一个能够将 Git 提交历史转化为动画的命令行工具，通过打字动画和代码高亮，在终端里生动展示每一次变更。](https://github.com/unhappychoice/gitlogue)
+
+### [serie: git commit tui](https://github.com/lusingander/serie)
 
 ## repo：google的git
 

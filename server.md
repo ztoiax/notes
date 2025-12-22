@@ -68,6 +68,8 @@ tags: []
     * [gonzo: 日志分析的tui](#gonzo-日志分析的tui)
   * [安全(security)](#安全security)
     * [以redis为例的服务检查](#以redis为例的服务检查)
+    * [WAF（web应用防火墙）](#wafweb应用防火墙)
+      * [SafeLine（雷池）: 通过过滤和监控 Web 应用与互联网之间的 HTTP 流量来保护 Web 服务。可以保护 Web 服务免受 SQL 注入、XSS、 代码注入、命令注入、CRLF 注入、ldap 注入、xpath 注入、RCE、XXE、SSRF、路径遍历、后门、暴力破解、CC、爬虫 等攻击。](#safeline雷池-通过过滤和监控-web-应用与互联网之间的-http-流量来保护-web-服务可以保护-web-服务免受-sql-注入xss-代码注入命令注入crlf-注入ldap-注入xpath-注入rcexxessrf路径遍历后门暴力破解cc爬虫-等攻击)
     * [ssh](#ssh-1)
       * [sshguard：阻止SSH暴力攻击](#sshguard阻止ssh暴力攻击)
       * [fail2ban：阻止SSH暴力攻击](#fail2ban阻止ssh暴力攻击)
@@ -1622,6 +1624,11 @@ nmap -A -p 6379 -script redis-info 127.0.0.1
     # redis.conf
     requirepass password
     ```
+
+
+### WAF（web应用防火墙）
+
+#### [SafeLine（雷池）: 通过过滤和监控 Web 应用与互联网之间的 HTTP 流量来保护 Web 服务。可以保护 Web 服务免受 SQL 注入、XSS、 代码注入、命令注入、CRLF 注入、ldap 注入、xpath 注入、RCE、XXE、SSRF、路径遍历、后门、暴力破解、CC、爬虫 等攻击。](https://github.com/chaitin/SafeLine)
 
 ### ssh
 

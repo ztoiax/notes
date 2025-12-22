@@ -36,6 +36,8 @@ tags: []
 
 ## 系统相关
 
+- [WSABuilds: Android子系统，可以启用android应用](https://github.com/MustardChef/WSABuilds)
+
 - [Microsoft-Activation-Scripts：破解windows、office](https://github.com/massgravel/Microsoft-Activation-Scripts)
 
 - [SophiApp：微调windows10，windows11](https://github.com/Sophia-Community/SophiApp)
@@ -179,6 +181,8 @@ tags: []
 - [Cap: 录屏](https://github.com/CapSoftware/Cap)
 
 - [crossdesk: 一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。](https://github.com/kunkundi/crossdesk)
+- [MrRSS: A modern, cross-platform desktop RSS reader. 一个现代化、跨平台的 RSS 阅读器.](https://github.com/WCY-dt/MrRSS)
+- [WeMD: 更优雅的 Markdown 公众号编辑器](https://github.com/tenngoxars/WeMD)
 
 ## 下载器
 
@@ -200,12 +204,16 @@ tags: []
 
 - [FFmpegFreeUI: 3FUI 是 ffmpeg 在 Windows 上的轻度专业交互外壳，收录大量参数，界面美观，交互友好。此项目面向国内使用环境，让普通人也能够轻松压制视频和转换格式。](https://github.com/Lake1059/FFmpegFreeUI)
 
+- [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
+
 # 播放器
 
 - [NipaPlay-Reload: NipaPlay-Reload 是一个现代化的跨平台本地视频播放器，支持 Windows、macOS、Linux、Android 和 iOS。集成了弹幕显示、多格式字幕支持、多音频轨道切换，新番查看等功能，支持挂载Emby/Jellyfin媒体库。采用 Flutter 开发，提供统一的用户体验。](https://github.com/MCDFsteve/NipaPlay-Reload)
 
 - [Screenbox：视频播放器](https://github.com/huynhsontung/Screenbox)
 - [biu: Bilibili音乐播放器](https://github.com/wood3n/biu)
+
+- [jellyfin-desktop: Jellyfin Desktop Client](https://github.com/jellyfin/jellyfin-desktop)
 
 ### 字幕
 
