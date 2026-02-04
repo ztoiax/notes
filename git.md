@@ -56,6 +56,8 @@ tags: []
     * [delta：highlight git diff](#deltahighlight-git-diff)
     * [gitlogue:回放你的 Git 提交历史。这是一个能够将 Git 提交历史转化为动画的命令行工具，通过打字动画和代码高亮，在终端里生动展示每一次变更。](#gitlogue回放你的-git-提交历史这是一个能够将-git-提交历史转化为动画的命令行工具通过打字动画和代码高亮在终端里生动展示每一次变更)
     * [serie: git commit tui](#serie-git-commit-tui)
+    * [gitmal: Git 仓库一键转静态网站。这是一款 Go 语言开发的工具，可轻松将 Git 仓库转换为静态网站。它通过解析仓库的文件结构、提交历史和代码内容，提供类似 GitHub 的浏览体验，适用于展示个人开源项目代码。](#gitmal-git-仓库一键转静态网站这是一款-go-语言开发的工具可轻松将-git-仓库转换为静态网站它通过解析仓库的文件结构提交历史和代码内容提供类似-github-的浏览体验适用于展示个人开源项目代码)
+    * [worktrunk: Worktrunk is a CLI for Git worktree management, designed for parallel AI agent workflows](#worktrunk-worktrunk-is-a-cli-for-git-worktree-management-designed-for-parallel-ai-agent-workflows)
   * [repo：google的git](#repogoogle的git)
 * [VFSForGit：微软的git](#vfsforgit微软的git)
 * [scalar：微软的新git](#scalar微软的新git)
@@ -951,6 +953,10 @@ git diff | diffnav
 ### [gitlogue:回放你的 Git 提交历史。这是一个能够将 Git 提交历史转化为动画的命令行工具，通过打字动画和代码高亮，在终端里生动展示每一次变更。](https://github.com/unhappychoice/gitlogue)
 
 ### [serie: git commit tui](https://github.com/lusingander/serie)
+
+### [gitmal: Git 仓库一键转静态网站。这是一款 Go 语言开发的工具，可轻松将 Git 仓库转换为静态网站。它通过解析仓库的文件结构、提交历史和代码内容，提供类似 GitHub 的浏览体验，适用于展示个人开源项目代码。](https://github.com/antonmedv/gitmal)
+
+### [worktrunk: Worktrunk is a CLI for Git worktree management, designed for parallel AI agent workflows](https://github.com/max-sixty/worktrunk)
 
 ## repo：google的git
 

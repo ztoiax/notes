@@ -15,10 +15,13 @@ tags: []
   * [gui](#gui)
   * [app](#app)
     * [其他](#其他)
+    * [工具](#工具)
+    * [下载器](#下载器)
     * [多媒体相关](#多媒体相关)
       * [阅读器](#阅读器)
+      * [编辑器](#编辑器)
       * [图片相关](#图片相关)
-      * [视频播放器或视频下载](#视频播放器或视频下载)
+      * [视频播放器](#视频播放器)
       * [音乐播放器](#音乐播放器)
     * [应用管理](#应用管理)
       * [android四大组件](#android四大组件)
@@ -29,6 +32,7 @@ tags: []
     * [网络相关](#网络相关)
     * [隐藏检查](#隐藏检查)
     * [游戏相关](#游戏相关)
+    * [浏览器](#浏览器)
     * [第三方客户端](#第三方客户端)
     * [自动化](#自动化)
     * [ai](#ai)
@@ -67,6 +71,10 @@ tags: []
 
 - [IzzyOnDroid F-Droid Repository](https://apt.izzysoft.de/fdroid/)
 
+- [Github-Store: 平台的 GitHub 应用商店。这是一款基于 Kotlin 开发的跨平台开源应用商店客户端，支持一键发现热门开源项目、下载安装包（如 APK、EXE、DMG 、 AppImage、DEB、RPM等），以及追踪已安装应用并提示更新。](https://github.com/rainxchzed/Github-Store)
+
+- [Obtainium: github商店](https://github.com/ImranR98/Obtainium)
+
 ## cli
 
 - [adb-sync](https://github.com/google/adb-sync)
@@ -79,6 +87,8 @@ tags: []
 - [sndcpy：声音投屏（将手机音频转发到电脑）](https://github.com/rom1v/sndcpy)
 
 - [android_aircrack：wifi破解](https://github.com/kriswebdev/android_aircrack)
+
+- [Apktool: apk逆向工具](https://github.com/iBotPeaches/Apktool)
 
 ## gui
 
@@ -95,6 +105,8 @@ tags: []
 - [QtScrcpy: 更好的scrcpy投屏](https://github.com/barry-ran/QtScrcpy)
 
 - [escrcpy: 📱 Display and control your Android device graphically with scrcpy.](https://github.com/viarotel-org/escrcpy)
+
+- [ApkToolPlus: gui版 apk 逆向分析工具](https://github.com/CYRUS-STUDIO/ApkToolPlus?tab=readme-ov-file)
 
 ## app
 
@@ -230,6 +242,26 @@ tags: []
 - [yike-app: 一个简约而不简单的记账 App](https://github.com/xiaojinzi123/yike-app)
 - [Voice-Recorder:极简的 Android 语音录音应用。这是一款极简易用的 Android 语音录音应用，支持离线录音、无广告、界面清爽，适用于会议记录、课堂笔记、采访、日常备忘等场景。](https://github.com/FossifyOrg/Voice-Recorder)
 
+- [keepass2android: 跨平台密码管理器](https://github.com/PhilippC/keepass2android)
+
+- [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
+
+- [Github-Store: A free, open-source app store for GitHub releases — browse, discover, and install apps with one click. Powered by Kotlin and Compose Multiplatform for Android & Desktop (Linux, MacOS, Windows).](https://github.com/rainxchzed/Github-Store)
+
+### 工具
+
+- [Multi-Calculator-Android: 多功能计数器。包括汇率计算、存款利息、刻度尺、指南针、亲戚称呼等](https://github.com/YangDai2003/Multi-Calculator-Android)
+
+- [Level: 水平仪和刻度尺](https://github.com/woheller69/Level)
+### 下载器
+
+- [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
+
+- [Tixati：跨平台的下载器，可以代替迅雷](https://tixati.com/)
+
+- [Seal：可以下载各大视频平台资源下载器](https://github.com/JunkFood02/Seal)
+- [ytdlnis: Full-featured audio/video downloader for Android using yt-dlp](https://github.com/deniscerri/ytdlnis)
+
 ### 多媒体相关
 
 #### 阅读器
@@ -241,7 +273,14 @@ tags: []
 - [阅读](https://github.com/gedoor/MyBookshelf)
 
 - [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
+
 - [legado-with-MD3: 使用 Material Design 3 全新设计的阅读 3.0](https://github.com/HapeLee/legado-with-MD3)
+
+#### 编辑器
+
+- [Xed-Editor: 内置 Termux 终端可运行 Python 和 Node.js，支持 200+ 编程语言语法高亮、自动缩进和文件管理等功能。](https://github.com/Xed-Editor/Xed-Editor)
+
+- [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
 
 #### 图片相关
 
@@ -249,7 +288,7 @@ tags: []
 
 - [ImageToolbox：Android 设计的图像编辑工具。它完全免费，支持批量处理、滤镜、背景移除、尺寸调整和裁剪等多种功能。](https://github.com/T8RIN/ImageToolbox)
 
-#### 视频播放器或视频下载
+#### 视频播放器
 
 - [tvbox手机版](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile)
 
@@ -262,8 +301,6 @@ tags: []
 
 - [dart_simple_live：一个 APP 上看各种主流直播平台](https://github.com/xiaoyaocz/dart_simple_live)
 
-- [Seal：各大视频平台下载器](https://github.com/JunkFood02/Seal)
-
 - [AfuseKt：视频播放器](https://github.com/AttemptD/AfuseKt-release)支持协议：Alist，SMB，Webdav，Emby（直连），Local，jellyfin（直连），阿里网盘
 
 - [xbmc：kodi服务端](https://github.com/xbmc/xbmc)
@@ -272,6 +309,9 @@ tags: []
 - [jellyfin-android：jellyfin视频服务的客户端](https://github.com/jellyfin/jellyfin-android)
 
     - [jellyfin-androidtv：电视客户端](https://github.com/jellyfin/jellyfin-androidtv)
+- [mpv-android-anime4k: 这是一个基于MPV播放器，支持Anime4K超分功能等多功能的安卓本地播放器，更多信息请看readme文件。](https://github.com/azxcvn/mpv-android-anime4k)
+
+- [nextplayer: An Android native video player](https://github.com/anilbeesetti/nextplayer)
 
 #### 音乐播放器
 
@@ -279,6 +319,9 @@ tags: []
     - 插件：https://gitee.com/maotoumao/MusicFreePlugins/raw/master/plugins.json
 
 - [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
+
+- [lx-music-mobile: 一个基于 React native 开发的音乐软件](https://github.com/lyswhut/lx-music-mobile)
+    - [lx-music-source: 洛雪音乐源](https://github.com/pdone/lx-music-source)
 
 ### 应用管理
 
@@ -376,6 +419,8 @@ tags: []
 
 - [afwall：对每个应用的iptable gui版](https://github.com/ukanth/afwall)
 
+- [traffic-light: 简的 Android 流量监控应用。这是一款免费开源、体积小且无广告的 Android 网络流量监控工具，支持状态栏显示实时网速、历史数据和应用级流量统计等功能。](https://github.com/leekleak/traffic-light)
+
 ### 隐藏检查
 
 - [root等隐藏检查app清单](https://github.com/rushiranpise/detection)
@@ -395,12 +440,17 @@ tags: []
 - [Lemuroid：游戏机模拟器](https://github.com/Swordfish90/Lemuroid)
     - [Lemuroid游戏ROM](https://www.emulatorgames.net/roms/)
 
+### 浏览器
+
+- [cromite: 支持chrome插件的手机浏览器](https://github.com/uazo/cromite)
+
 ### 第三方客户端
 
 - [pilipala：该项目是用 Flutter 开发的 B 站第三方客户端，支持 Android 和 iOS 平台。它提供了推荐视频列表、热门直播、番剧、离线缓存、回复评论、弹幕和搜索等功能。](https://github.com/guozhigq/pilipala)
 
 
 - [NewPipe：youtube开源版，可以按时间顺序浏览up的视频](https://github.com/TeamNewPipe/NewPipe)
+
 ### 自动化
 
 - [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
@@ -408,6 +458,8 @@ tags: []
 ### ai
 
 - [chatbox：支持各种llm大模型的客户端](https://github.com/Bin-Huang/chatbox)
+
+- [rikkahub: 支持各种llm大模型的客户端](https://github.com/rikkahub/rikkahub)
 
 - [google-ai-edge/gallery: Google AI Edge 团队开源，旨在让用户能够在手机设备上轻松运行和测试 Edge AI 模型。它开箱即用、轻松切换模型，模型加载后可离线体验 AI 能力，支持多轮对话、图像问答、实时显示模型性能和提示词实验室等功能。](https://github.com/google-ai-edge/gallery)
 
@@ -420,7 +472,11 @@ tags: []
 - [pocketpal-ai：手机部署大模型的app](https://github.com/a-ghorbani/pocketpal-ai)
     - [（视频）在下莫老师：手机电脑都能用，DeepSeek本地部署指南！](https://www.bilibili.com/video/BV1RJN3e4ETj)
 - [SummaryExpressive: 总结YouTube, BiliBili, articles, images and documents with AI/LLM](https://github.com/kid1412621/SummaryExpressive)
+
 - [local-dream:在 Android 设备上运行 Stable Diffusion。这是一款专为 Android 用户打造的本地 Stable Diffusion AI 绘画应用，完全离线运行，兼容高通骁龙 NPU、CPU 和 GPU，支持文生图、图生图和图片修复等功能。](https://github.com/xororz/local-dream)
+- [roubao: 开源的 AI 手机自动化助手。这是一款开源的 Android AI 手机自动化助手，无需电脑即可让用户通过自然语言指令操控手机自动完成任务。它基于视觉语言模型识别屏幕截图，结合委托执行或 GUI 自动化，能够完成复杂的 App 交互任务。](https://github.com/Turbo1123/roubao)
+
+- [happy: 用手机操控 Claude Code 和 Codex。这是一款可以远程操作 Claude Code 或 Codex 的工具，让你随时随地通过手机查看和远程控制 AI 编程助手，提供了 iOS、Android 和 Web 客户端。](https://github.com/slopus/happy)
 
 # 刷机
 
@@ -718,8 +774,6 @@ tags: []
     - [vlc](https://www.videolan.org/vlc/download-android.html)
 
     - 当贝播放
-
-    - [SmartTube](https://github.com/yuliskov/SmartTube)
 
 - nas
     - jellyfin

@@ -145,6 +145,7 @@ tags: []
       * [ngtop：日志查看器](#ngtop日志查看器)
       * [NixVis：日志分析工具](#nixvis日志分析工具)
       * [web-check：全面的网站检查工具。这是一款网站检查工具，可以显示指定网站更多的信息。比如：DNS 记录、服务器位置、站点性能、SSL 证书、性能、SEO 等信息，可用于分析网站的服务器架构、查看安全漏洞等场景。](#web-check全面的网站检查工具这是一款网站检查工具可以显示指定网站更多的信息比如dns-记录服务器位置站点性能ssl-证书性能seo-等信息可用于分析网站的服务器架构查看安全漏洞等场景)
+      * [nginxpulse: 轻量级 Nginx 访问日志分析与可视化面板，提供实时统计、PV 过滤、IP 归属地与客户端解析。](#nginxpulse-轻量级-nginx-访问日志分析与可视化面板提供实时统计pv-过滤ip-归属地与客户端解析)
   * [在线工具](#在线工具)
   * [第三方nginx](#第三方nginx)
     * [Openresty](#openresty)
@@ -6313,6 +6314,8 @@ sudo goaccess /usr/local/nginx/logs/access/80.access.log -o /tmp/report.html --l
 #### [NixVis：日志分析工具](https://github.com/BeyondXinXin/nixvis)
 
 #### [web-check：全面的网站检查工具。这是一款网站检查工具，可以显示指定网站更多的信息。比如：DNS 记录、服务器位置、站点性能、SSL 证书、性能、SEO 等信息，可用于分析网站的服务器架构、查看安全漏洞等场景。](https://github.com/Lissy93/web-check)
+
+#### [nginxpulse: 轻量级 Nginx 访问日志分析与可视化面板，提供实时统计、PV 过滤、IP 归属地与客户端解析。](https://github.com/likaia/nginxpulse)
 
 ## 在线工具
 

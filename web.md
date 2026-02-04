@@ -118,6 +118,12 @@ tags: []
 
 - [archiveweb.page: 保存网页，可以保存多级页面](https://github.com/webrecorder/archiveweb.page)
 
+- [BewlyCat: BewlyCat——基于BewlyBewly开发的Bilibili拓展](https://github.com/keleus/BewlyCat)
+
+- [survol: 鼠标悬浮显示当前网页的完整标题](https://github.com/mdolr/survol)
+
+- [myopic_defocus: 一种保护眼睛减少近视的护眼模式](https://github.com/refractify/myopic_defocus)
+
 # CGI和FastCGI
 
 - Web服务器能解析HTTP请求，返回静态资源（HTML页、图片等），但要输出动态内容，必须得PHP/C#/Ruby/Java/Python/C/C++这些外部程序来实现。

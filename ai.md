@@ -7,6 +7,7 @@ tags: []
 <!-- mtoc-start -->
 
 * [ai哲学](#ai哲学)
+  * [刘禾](#刘禾)
 * [LLM](#llm)
   * [原理](#原理)
   * [使用](#使用)
@@ -40,6 +41,7 @@ tags: []
         * [LM Studio：ollama gui版](#lm-studioollama-gui版)
         * [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#anything-llm一个gui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
         * [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#cherry-studiogui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
+        * [new-api: AI模型聚合管理中转分发系统，一个应用管理您的所有AI模型，支持将多种大模型转为统一格式调用，支持OpenAI、Claude、Gemini等格式，可供个人或者企业内部管理与分发渠道使用。🍥 A Unified AI Model Management & Distribution System. Aggregate all your LLMs into one app and access them via an OpenAI-compatible API, with native support for Claude (Messages) and Gemini formats.](#new-api-ai模型聚合管理中转分发系统一个应用管理您的所有ai模型支持将多种大模型转为统一格式调用支持openaiclaudegemini等格式可供个人或者企业内部管理与分发渠道使用-a-unified-ai-model-management--distribution-system-aggregate-all-your-llms-into-one-app-and-access-them-via-an-openai-compatible-api-with-native-support-for-claude-messages-and-gemini-formats)
       * [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](#shimmy一个只有-5mb-的单文件程序的ollama的代替品)
       * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
     * [其他命令行相关工具](#其他命令行相关工具)
@@ -51,12 +53,13 @@ tags: []
     * [抠图、抠视频](#抠图抠视频)
     * [图片、视频质量提升](#图片视频质量提升)
     * [ai视频剪辑](#ai视频剪辑)
-    * [图生图工作流](#图生图工作流)
+    * [ai生图生视频工作流](#ai生图生视频工作流)
   * [ai语音、音乐](#ai语音音乐)
     * [语音转文字](#语音转文字)
     * [文字转语音](#文字转语音)
     * [ai作曲（文字生成音乐、图片生成音乐）](#ai作曲文字生成音乐图片生成音乐)
     * [ai声音克隆（tts），可以实现让电影里的演员的英文配音变成国语](#ai声音克隆tts可以实现让电影里的演员的英文配音变成国语)
+  * [ai数字人](#ai数字人)
   * [ai ocr](#ai-ocr)
   * [ai翻译](#ai翻译)
   * [ai编程语言](#ai编程语言)
@@ -67,18 +70,23 @@ tags: []
   * [ai搜索](#ai搜索)
   * [ai编程，代码补全](#ai编程代码补全)
   * [ai为github代码仓库生成wiki](#ai为github代码仓库生成wiki)
+  * [ai知识库](#ai知识库)
   * [ai编辑器](#ai编辑器)
   * [ai程序员](#ai程序员)
   * [ai终端](#ai终端)
+  * [ai数据库终端](#ai数据库终端)
   * [ai爬虫和信息提取](#ai爬虫和信息提取)
   * [ai可视化](#ai可视化)
+  * [ai金融模型](#ai金融模型)
   * [ai控制手机](#ai控制手机)
   * [ai agent（智能体）](#ai-agent智能体)
     * [在线使用](#在线使用-1)
   * [MCP](#mcp)
   * [A2A](#a2a)
+  * [Claude skill](#claude-skill)
 * [在线ai工具](#在线ai工具)
 * [获取最新ai新闻](#获取最新ai新闻)
+* [类似项目](#类似项目)
 
 <!-- mtoc-end -->
 
@@ -90,6 +98,12 @@ tags: []
 
 - [（视频）公园4004：符号主义 vs 联结主义:人工智能历史背后的哲学之争](https://www.bilibili.com/video/BV1fJ4m1M7Y4)
 
+- [纪要｜【北京论坛·分论坛】数与智：人工智能时代的多学科融合（上）](https://mp.weixin.qq.com/s/MSfKwAgooJ2bY_vnqFSjjg)
+
+## 刘禾
+
+- [“伪人横行”的背后，是一场被精心掩藏的社会性退化](https://mp.weixin.qq.com/s/cpELKpFqf-2ZtCgO0RNKow)
+
 # LLM
 
 ## 原理
@@ -98,8 +112,7 @@ tags: []
 
 - [wolfram作者：What Is ChatGPT Doing … and Why Does It Work?](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)
 
-- [爱思考的老梨：大模型，关键问题！](https://mp.weixin.qq.com/s/BUvp5UMIuAdpjbFGmg6BLw)
-    - [（视频）爱思考的老梨：【深度】万字解读，Deepseek、OpenAI背后，大语言模型的底层逻辑！](https://www.bilibili.com/video/BV13eAZe2EfP)
+- [阿里云开发者：AI Coding 长文分享：如何真正把工具用起来，从原理到实践](https://mp.weixin.qq.com/s/MjBVTfo6Kp2RDG6v46_BPA)
 
 ## 使用
 
@@ -221,7 +234,7 @@ tags: []
 
     - [（视频）秋芝2046：Huggingface小白AI入门，你必须了解的免费开源模型大超市](https://www.bilibili.com/video/BV1Mr4MewEY5)
 
-- [modelscope：模型下载](https://modelscope.cn/models)
+- [modelscope（魔塔）：中国版huggingfacce。模型下载](https://modelscope.cn/models)
 
 - [LLM Pricing：AI 模型价格对比和试用链接](https://llmpricecheck.com/)
 
@@ -752,6 +765,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 ##### [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/CherryHQ/cherry-studio)
 
+#####  [new-api: AI模型聚合管理中转分发系统，一个应用管理您的所有AI模型，支持将多种大模型转为统一格式调用，支持OpenAI、Claude、Gemini等格式，可供个人或者企业内部管理与分发渠道使用。🍥 A Unified AI Model Management & Distribution System. Aggregate all your LLMs into one app and access them via an OpenAI-compatible API, with native support for Claude (Messages) and Gemini formats.](https://github.com/QuantumNous/new-api)
+
 #### [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](https://github.com/Michael-A-Kuykendall/shimmy)
 
 - 启动时间＜100ms，秒开！
@@ -787,6 +802,11 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [liujuntao123/smart-mermaid: 一款基于 AI 技术的 Web 应用程序，可将文本内容智能转换为 Mermaid 格式的代码，并将其渲染成可视化图表。](https://github.com/liujuntao123/smart-mermaid)
 
 - [toon: 这是一种专为 LLM 提示词设计的数据序列化格式，比 JSON 节省 30-60% 的 Token。它融合了 YAML 和 CSV 的特点，紧凑且容易理解。官方提供了 TypeScript SDK 和命令行工具，能够轻松将 JSON 数据转换为 TOON 格式。](https://github.com/toon-format/toon)
+
+
+- [aichat: All-in-one LLM CLI tool featuring Shell Assistant, Chat-REPL, RAG, AI Tools & Agents, with access to OpenAI, Claude, Gemini, Ollama, Groq, and more.](https://github.com/sigoden/aichat)
+
+- [opencode: The open source coding agent.](https://github.com/anomalyco/opencode)
 
 ## Transformer
 
@@ -824,7 +844,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [HunyuanDiT：腾讯的文生图](https://github.com/Tencent/HunyuanDiT)
 
-- [Z-Image-Turbo：阿里的](https://huggingface.co/Tongyi-MAI/Z-Image-Turbo)
+- [Z-Image：阿里的](https://github.com/Tongyi-MAI/Z-Image)
 
 - [flux](https://github.com/black-forest-labs/flux)
 
@@ -878,7 +898,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [filmora：商业软件需要付费，不支持linux](https://filmora.wondershare.com/)
 
-### 图生图工作流
+### ai生图生视频工作流
 
 - [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
 
@@ -900,6 +920,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [KrillinAI: 基于AI大模型的视频翻译和配音工具，专业级翻译，一键部署全流程，可以生成适配抖音，小红书，哔哩哔哩，视频号，TikTok，Youtube Shorts等形态的内容](https://github.com/krillinai/KrillinAI)
 
+- [KittenTTS: State-of-the-art TTS model under 25MB 😻](https://github.com/KittenML/KittenTTS)
+
 ### ai作曲（文字生成音乐、图片生成音乐）
 
 - [Suno](https://suno.com/)
@@ -910,11 +932,21 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [InspireMusic：阿里的](https://github.com/FunAudioLLM/InspireMusic)
 
+- [SongGeneration: 腾讯的](https://github.com/tencent-ailab/SongGeneration)
+
 ### ai声音克隆（tts），可以实现让电影里的演员的英文配音变成国语
 
 - [VibeVoice: 微软的](https://github.com/microsoft/VibeVoice)
 
 - [index-tts: b站的模型](https://github.com/index-tts/index-tts)
+
+- [GPT-SoVITS: 1 min voice data can also be used to train a good TTS model! (few shot voice cloning)](https://github.com/RVC-Boss/GPT-SoVITS)
+    - [花儿不哭：项目作者](https://space.bilibili.com/5760446?spm_id_from=333.788.upinfo.detail.click)
+- [chatterbox: SoTA open-source TTS](https://github.com/resemble-ai/chatterbox)
+
+## ai数字人
+
+- [InfiniteTalk: Unlimited-length talking video generation that supports image-to-video and video-to-video generation](https://github.com/MeiGen-AI/InfiniteTalk)
 
 ## ai ocr
 
@@ -985,6 +1017,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [BrowserOS: 开源的 AI 浏览器。该项目是基于 Chromium 的开源 AI 浏览器，能够在本地浏览器中运行 AI Agents，可作为 ChatGPT Atlas、Perplexity Comet 和 Dia 的开源替代方案。在保留 Chrome 熟悉界面与扩展兼容性的同时，帮助用户实现 AI 驱动的浏览器自动化与智能问答任务，并支持自定义 LLM 服务或本地大模型。](https://github.com/browseros-ai/BrowserOS)
 
+- [vibium: 一个二进制文件通过ai agent和mcp服务器自动化操作浏览器。由著名python项目selenium作者开发](https://github.com/VibiumDev/vibium)
 
 ## ai搜索
 
@@ -1013,6 +1046,14 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [Code Wiki: google的](https://codewiki.google/)
 
+## ai知识库
+
+- [notebooklm：google的。可以在线使用](https://notebooklm.google/)
+
+- [open-notebook: 开源版notebooklm](https://github.com/lfnovo/open-notebook)
+
+- [ima：腾讯的。可以在线使用](https://ima.qq.com/)
+
 ## ai编辑器
 
 - [codeium的windsurf](https://codeium.com/windsurf)
@@ -1021,7 +1062,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
     - [cursor-tools](https://github.com/eastlondoner/cursor-tools)
     - [cursor-free-vip:免费享受 Pro 版](https://github.com/yeongpin/cursor-free-vip)
-
+- [cline: Autonomous coding agent right in your IDE, capable of creating/editing files, executing commands, using the browser, and more with your permission every step of the way.](https://github.com/cline/cline)
 
 - [void： Cursor 的开源平替](https://github.com/voideditor/void)
 
@@ -1035,6 +1076,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [trae：字节跳动的基于vscode的ai编辑器。不支持linux](https://www.trae.ai/)
 
+- [Qoder：阿里的](https://caug.cn/)
+
 ## ai程序员
 
 - [devika：Devin 的开源替代品](https://github.com/stitionai/devika)
@@ -1046,9 +1089,14 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [codex: openai的](https://github.com/openai/codex?tab=Apache-2.0-1-ov-file)
 
 - [claude-code: 终端里的 Claude 编码助手。该项目是 Claude 官方开源的 AI 编码助手，集成于终端内，能够理解整个代码库，并通过简单的自然语言命令，帮助开发者更高效地完成各类编码任务。](https://github.com/anthropics/claude-code)
+
     - [Claude-Code-Usage-Monitor: Claude 用量实时监控助手。这是一个用于实时监控和记录开发者在使用 Claude AI 时产生的 Token 用量及费用的工具，支持用量统计、预算告警和套餐设置等功能。](https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor)
 
+    - [claudish: Claude Code. Any Model. The most powerful AI coding agent now speaks every language.](https://github.com/MadAppGang/claudish)
+
 - [gemini-cli: 谷歌 Gemini 命令行工具。该项目是 Gemini 官方开源的命令行工具，将 Google Gemini 的强大能力集成到终端环境。它基于百万级上下文，能够理解大型代码库的架构和逻辑，支持多模态输入输出、Google 搜索以及 MCP 等功能。](https://github.com/google-gemini/gemini-cli)
+
+    - [Gemini CLI extensions](https://geminicli.com/extensions/)
 
     - [gemini-cli-tips: Gemini CLI 使用指南](https://github.com/addyosmani/gemini-cli-tips)
 
@@ -1068,6 +1116,20 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [Seed-Coder: 字节的豆包](https://github.com/ByteDance-Seed/Seed-Coder)
     - [国产大模型接入 Claude Code 教程：以 Doubao-Seed-Code 为例](https://mp.weixin.qq.com/s/ptRFIddHT3eLLmQVPzOx_g)
 
+- [iflow-cli: 国产的claude code。还有手机版](https://github.com/iflow-ai/iflow-cli)
+
+- [Chaterm:带有 AI 功能的智能终端工具，可以用自然语言完成命令行操作。 Open source AI terminal and SSH Client for EC2, Database and Kubernetes.](https://github.com/chaterm/Chaterm)
+
+- [crush: The glamourous AI coding agent for your favourite terminal 💘](https://github.com/charmbracelet/crush)
+- [vibe-kanban: 集成claude code等终端，可以执行多个任务，因此不需要像claude code那样光等着ai执行，并且每个任务还是在git worktree下执行](https://github.com/BloopAI/vibe-kanban)
+
+## ai数据库终端
+
+- [aliyun/rdsai-cli: RDSAI CLI is a next-generation, AI-powered RDS CLI that transforms how you interact with the databasea](https://github.com/aliyun/rdsai-cli)
+    - [RDSAI-CLI - 用AI重塑数据库终端CLI体验](https://mp.weixin.qq.com/s/5Vn-D52xMMoNwQtNwb_dMg)
+
+- [pg-aiguide: MCP server and Claude plugin for Postgres skills and documentation. Helps AI coding tools generate better PostgreSQL code.](https://github.com/timescale/pg-aiguide)
+
 ## ai爬虫和信息提取
 
 - [后裔采集器](https://www.houyicaiji.com/)
@@ -1077,6 +1139,9 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 ## ai可视化
 
 - [data-formulator：微软的](https://github.com/microsoft/data-formulator)
+## ai金融模型
+
+- [Kronos: 清华大学开发的](https://github.com/shiyu-coder/Kronos)
 
 ## ai控制手机
 
@@ -1091,7 +1156,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [500-AI-Agents-Projects: AI Agent 合集](https://github.com/ashishpatel26/500-AI-Agents-Projects)
 
-- [n8n: 可扩展的工作流程自动化工具，它提供了直观的界面，让用户可以通过拖放方式连接不同的应用程序和服务，从而创建自定义的自动化流程。](https://github.com/n8n-io/n8n)
+- [n8n: 自动化工作流](https://github.com/n8n-io/n8n)
 
 - [n8n-workflows:该项目收集了 2000+ 高质量、开箱即用的 n8n 自动工作流模板，涵盖官方示例、社区精华和用户实用场景。它内置一个基于 FastAPI 的本地搜索服务，支持全文搜索、分类筛选和 Mermaid 可视化展示，可一键下载 JSON 文件，方便导入你的 n8n 实例。](https://github.com/Zie619/n8n-workflows)
 
@@ -1105,6 +1170,9 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [langgraph](https://github.com/langchain-ai/langgraph)
   - [agent-service-toolkit：用 Python 快速搭建和运行基于 LangGraph 框架的 AI 代理服务。它结合 FastAPI、Streamlit 和 Pydantic 等技术栈，提供了用户界面、自定义 Agent、流式传输等功能，并集成了内容审核（LlamaGuard）和用户反馈机制（LangSmith），极大地简化了 AI Agent 应用的开发和优化过程。](https://github.com/JoshuaC215/agent-service-toolkit)
+
+- [A2UI：google开发的让agent生成ui来回答](https://github.com/google/A2UI)
+
 ### 在线使用
 
 - [Dify](https://cloud.dify.ai/apps)
@@ -1126,7 +1194,14 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [git-mcp: 让 AI 理解 GitHub 项目](https://github.com/idosal/git-mcp)
 
+- [chrome-devtools-mcp: AI 与 Chrome 浏览器之间的桥梁。该项目是 Chrome DevTools 团队开源的官方 MCP 服务实现，将 Chrome DevTools 的能力以 MCP 工具的形式提供给 AI 编程助手，支持自动化操作、调试和性能分析。](https://github.com/ChromeDevTools/chrome-devtools-mcp)
+
+
 ## [A2A](https://github.com/google/A2A)
+
+## Claude skill
+
+- [awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows](https://github.com/ComposioHQ/awesome-claude-skills)
 
 # 在线ai工具
 
@@ -1136,3 +1211,9 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 # 获取最新ai新闻
 
 - 阿里云云栖号的一周AI大事件
+
+# 类似项目
+
+- [awesome-vibe-coding: A curated list of vibe coding references, collaborating with AI to write code.](https://github.com/filipecalegario/awesome-vibe-coding)
+
+- [vibe-coding-cn](https://github.com/2025Emma/vibe-coding-cn)

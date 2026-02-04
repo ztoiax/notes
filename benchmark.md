@@ -19,7 +19,7 @@ tags: []
     * [tuned性能调优工具](#tuned性能调优工具)
     * [cpu优化](#cpu优化)
 * [基本说明](#基本说明)
-* [all-have 综合](#all-have-综合)
+* [综合工具](#综合工具)
   * [top命令](#top命令)
     * [逐行解释top命令](#逐行解释top命令)
   * [sampler：通过yaml文件自定义监控的指标。还支持mysql、kafka等](#sampler通过yaml文件自定义监控的指标还支持mysqlkafka等)
@@ -38,13 +38,21 @@ tags: []
   * [monitorets：gui](#monitoretsgui)
   * [perfetto：谷歌开发的 Android, Linux and Chrome性能测试工具](#perfetto谷歌开发的-android-linux-and-chrome性能测试工具)
   * [NodeQuality: 在沙箱环境中运行vps测试脚本，并排版测试结果](#nodequality-在沙箱环境中运行vps测试脚本并排版测试结果)
+  * [conky: 显示硬件使用量](#conky-显示硬件使用量)
+  * [MangoHud: 在游戏中查看fps、cpu、gpu等信息](#mangohud-在游戏中查看fpscpugpu等信息)
+* [查看硬件信息](#查看硬件信息)
+  * [hardinfo2: 类似于windows的AIDA64](#hardinfo2-类似于windows的aida64)
+  * [CPU-X：类似windows的cpu-z](#cpu-x类似windows的cpu-z)
+  * [QDiskInfo: 查看硬盘信息](#qdiskinfo-查看硬盘信息)
+  * [gnome-power-statistics：笔记本电池信息gui](#gnome-power-statistics笔记本电池信息gui)
+  * [upower：笔记本电池信息cli](#upower笔记本电池信息cli)
 * [CPU](#cpu)
   * [cpu info](#cpu-info)
+  * [s-tui: Terminal-based CPU stress and monitoring utility](#s-tui-terminal-based-cpu-stress-and-monitoring-utility)
   * [mpstat(sysstat)：单独监测单个 CPU 情况](#mpstatsysstat单独监测单个-cpu-情况)
   * [获取保留两位小数的 CPU 占用率：](#获取保留两位小数的-cpu-占用率)
   * [taskset (进程绑定 cpu)](#taskset-进程绑定-cpu)
   * [hyperfine: 高级time命令](#hyperfine-高级time命令)
-  * [CPU-X：类似windows的cpu-z](#cpu-x类似windows的cpu-z)
 * [Memory](#memory)
   * [smem](#smem)
   * [ps_mem](#ps_mem)
@@ -71,12 +79,6 @@ tags: []
   * [bandwhich: tui](#bandwhich-tui)
   * [iptraf-ng：统计端口收发包（tui）](#iptraf-ng统计端口收发包tui)
   * [wavemon：wifi。有多种显示模式，可以显示wifi信号](#wavemonwifi有多种显示模式可以显示wifi信号)
-* [Web](#web)
-  * [ab：web 压力测试](#abweb-压力测试)
-  * [siege：和ab命令一样，并且还支持 HTTP 和 HTTPS 协议。](#siege和ab命令一样并且还支持-http-和-https-协议)
-  * [jmeter：一个功能强大的 Java 应用程序，可以用于模拟各种负载情况。JMeter 可以通过图形界面进行配置，支持更多协议和数据格式，包括 HTTP、HTTPS、SOAP、REST 等。](#jmeter一个功能强大的-java-应用程序可以用于模拟各种负载情况jmeter-可以通过图形界面进行配置支持更多协议和数据格式包括-httphttpssoaprest-等)
-  * [hey：go语言写的，宣传要替换ab命令](#heygo语言写的宣传要替换ab命令)
-  * [httperf](#httperf)
 * [File](#file)
   * [VFS](#vfs)
     * [cache](#cache)
@@ -101,6 +103,7 @@ tags: []
   * [agedu](#agedu)
     * [只统计.conf 文件](#只统计conf-文件)
   * [CrossPlatformDiskTest: 多平台硬盘性能测试工具。这是一款开源的存储与内存性能测试工具，适用于固态硬盘、机械硬盘、U 盘等存储设备。支持顺序和随机读写测试，提供 IOPS 和 MB/s 等性能指标，兼容 Windows、macOS、Linux、Android 系统。](#crossplatformdisktest-多平台硬盘性能测试工具这是一款开源的存储与内存性能测试工具适用于固态硬盘机械硬盘u-盘等存储设备支持顺序和随机读写测试提供-iops-和-mbs-等性能指标兼容-windowsmacoslinuxandroid-系统)
+  * [KDiskMark: 测试硬盘读写速度的gui程序](#kdiskmark-测试硬盘读写速度的gui程序)
 * [Process](#process)
   * [ps命令](#ps命令)
   * [htop](#htop)
@@ -138,6 +141,8 @@ tags: []
   * [gmonitor](#gmonitor)
   * [torch-performance-test-data：gpu FP32, FP16, BF16, FP8 基准测试。并且有网页天梯排行榜](#torch-performance-test-datagpu-fp32-fp16-bf16-fp8-基准测试并且有网页天梯排行榜)
   * [gpu-hot: 🔥 Real-time NVIDIA GPU dashboard](#gpu-hot--real-time-nvidia-gpu-dashboard)
+* [压力测试](#压力测试)
+  * [phoronix-test-suite: The Phoronix Test Suite open-source, cross-platform automated testing/benchmarking software.](#phoronix-test-suite-the-phoronix-test-suite-open-source-cross-platform-automated-testingbenchmarking-software)
 * [Debug](#debug)
   * [strace](#strace)
   * [ltrace](#ltrace)
@@ -462,7 +467,7 @@ data from brendangregg book: [Systems Performance](http://www.brendangregg.com/s
 - tcpdump
 - strace
 
-# all-have 综合
+# 综合工具
 
 ## top命令
 
@@ -873,6 +878,22 @@ sysbench --test=fileio --file-total-size=5G prepare
 
 ## [NodeQuality: 在沙箱环境中运行vps测试脚本，并排版测试结果](https://github.com/LloydAsp/NodeQuality)
 
+## [conky: 显示硬件使用量](https://github.com/brndnmtthws/conky)
+
+## [MangoHud: 在游戏中查看fps、cpu、gpu等信息](https://github.com/flightlessmango/MangoHud)
+
+# 查看硬件信息
+
+## [hardinfo2: 类似于windows的AIDA64](https://github.com/hardinfo2/hardinfo2)
+
+## [CPU-X：类似windows的cpu-z](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X)
+
+## [QDiskInfo: 查看硬盘信息](https://github.com/edisionnano/QDiskInfo)
+
+## gnome-power-statistics：笔记本电池信息gui
+
+## upower：笔记本电池信息cli
+
 # CPU
 
 ## cpu info
@@ -905,6 +926,8 @@ lstopo:
 # 查看是否支持某项技术(这里列举nx,其他技术同理)
 grep nx /proc/cpuinfo
 ```
+
+## [s-tui: Terminal-based CPU stress and monitoring utility](https://github.com/amanusk/s-tui)
 
 ## mpstat(sysstat)：单独监测单个 CPU 情况
 
@@ -967,8 +990,6 @@ echo <pid> > tasks
 
 ## [hyperfine: 高级time命令](https://github.com/sharkdp/hyperfine)
 
-
-## [CPU-X：类似windows的cpu-z](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X)
 
 # Memory
 
@@ -1334,75 +1355,6 @@ bandwhich --raw | grep firefox
 
 ## [wavemon：wifi。有多种显示模式，可以显示wifi信号](https://github.com/uoaerg/wavemon)
 
-# Web
-
-## ab：web 压力测试
-
-- 安装包`apache-tools`
-
-| 参数 | 说明                                  |
-|------|---------------------------------------|
-| n    | 总共的请求数                          |
-| c    | 并发的请求数                          |
-| t    | 测试所进行的最大秒数，默认值 为 50000 |
-| p    | 包含了需要的 POST 的数据文件          |
-| T    | POST 数据所使用的 Content-type 头信息 |
-
-```sh
-ab -c 1 -n 10000 https://127.0.0.1/index.html
-
-# 每次发送1000并发的请求数，请求数总数为5000。
-ab -n 1000 -c 5000 http://127.0.0.1/
-```
-
-> ```bash
-> # 摘取重要的输出
-> # 每秒8906次
-> Requests per second:    8906.78 [#/sec] (mean)
->
-> # 平均每次0.112ms
-> Time per request:       0.112 [ms] (mean)
->
-> # 带宽速率
-> Transfer rate:          7593.38 [Kbytes/sec] received
-> ```
-
-## [siege：和ab命令一样，并且还支持 HTTP 和 HTTPS 协议。](https://github.com/JoeDog/siege)
-
-## [jmeter：一个功能强大的 Java 应用程序，可以用于模拟各种负载情况。JMeter 可以通过图形界面进行配置，支持更多协议和数据格式，包括 HTTP、HTTPS、SOAP、REST 等。](https://github.com/apache/jmeter)
-
-## [hey：go语言写的，宣传要替换ab命令](https://github.com/rakyll/hey)
-
-## httperf
-
-- `--num-conns` 次数
-- `--wsess` 模拟会话请求
-
-`httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000`
-
-> ```bash
-> # 摘取重要的输出
-> # 每秒建立14398次链接
-> Connection rate: 14398.2 conn/s (0.1 ms/conn, <=1 concurrent connections)
->
-> # 最长链接,平均链接的时间
-> Connection time [ms]: min 0.0 avg 0.1 max 18.0 median 0.5 stddev 0.2
->
-> # 返回请求统计
-> Reply status: 1xx=0 2xx=0 3xx=0 4xx=10000 5xx=0
-> # 性能
-> CPU time [s]: user 0.11 system 0.41 (user 16.3% system 58.6% total 74.9%)
-> Net I/O: 5343.1 KB/s (43.8*10^6 bps)
->
-> # 失败的请求(这里是0)
-> Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
-> ```
-
-```bash
-# --wsess=10,10,0.1 表示10个会话，每个会话10次请求，每次请求1秒
-httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,10,0.1
-```
-
 # File
 
 用户在用户空间中处理的内容，不会直接写入磁盘。它们首先写入 VFS 页缓存，从中有各种 I/O 调度程序，设备驱动程序将与磁盘交互以写入数据。
@@ -1724,6 +1676,8 @@ agedu -w
 
 ## [CrossPlatformDiskTest: 多平台硬盘性能测试工具。这是一款开源的存储与内存性能测试工具，适用于固态硬盘、机械硬盘、U 盘等存储设备。支持顺序和随机读写测试，提供 IOPS 和 MB/s 等性能指标，兼容 Windows、macOS、Linux、Android 系统。](https://github.com/maxim-saplin/CrossPlatformDiskTest)
 
+## [KDiskMark: 测试硬盘读写速度的gui程序](https://github.com/JonMagon/KDiskMark)
+
 # Process
 
 ## ps命令
@@ -1943,6 +1897,7 @@ htop -p 20316
     ```
 
 ## [Mission Center：类似windows的任务管理器](https://missioncenter.io/)
+
 ## [earlyoom：这是一款专为 Linux 设计的 OOM 守护进程，旨在弥补内核自带的 OOM Killer 仅在内存耗尽时才触发的不足。它能够提早干预（默认 10%），自动终止占用内存最多的进程，从而防止系统因内存耗尽而陷入卡死的状态。](https://github.com/rfjakob/earlyoom)
 
 ## [pspy：无需 Root 权限实时监控 Linux 进程的工具。这是一款无需 root 权限即可实时监控 Linux 系统中所有用户运行的命令、计划任务等进程活动。它通过遍历 /proc 收集进程信息和监听文件系统事件，能够实时捕捉新启动的进程和短命进程，适用于 CTF 竞赛、渗透测试和安全审计等场景。](https://github.com/DominicBreuker/pspy)
@@ -2124,6 +2079,10 @@ nvidia-smi pmon -i 0 -s u -o T
 - [网页天梯排行榜](https://perf.svcfusion.com/)
 
 ## [gpu-hot: 🔥 Real-time NVIDIA GPU dashboard](https://github.com/psalias2006/gpu-hot)
+
+# 压力测试
+
+## [phoronix-test-suite: The Phoronix Test Suite open-source, cross-platform automated testing/benchmarking software.](https://github.com/phoronix-test-suite/phoronix-test-suite)
 
 # Debug
 

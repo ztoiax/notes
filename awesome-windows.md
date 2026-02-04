@@ -11,17 +11,21 @@ tags: []
   * [系统](#系统)
   * [系统相关](#系统相关)
   * [逆向](#逆向)
+  * [pe系统](#pe系统)
   * [app](#app)
     * [文件](#文件)
+    * [编辑器](#编辑器)
     * [终端、ssh终端](#终端ssh终端)
-    * [other](#other)
-  * [下载器](#下载器)
-  * [手机与电脑交互](#手机与电脑交互)
-  * [多媒体](#多媒体)
-* [播放器](#播放器)
-  * [字幕](#字幕)
-  * [游戏相关](#游戏相关)
-  * [pe系统](#pe系统)
+    * [下载器](#下载器)
+      * [支持下载各种平台的下载器](#支持下载各种平台的下载器)
+    * [手机与电脑交互](#手机与电脑交互)
+    * [图片](#图片)
+    * [视频](#视频)
+      * [播放器](#播放器)
+      * [字幕](#字幕)
+      * [其他](#其他)
+    * [游戏相关](#游戏相关)
+    * [其他](#其他-1)
 
 <!-- mtoc-end -->
 
@@ -104,12 +108,25 @@ tags: []
 - [zen-desktop: 系统级广告拦截和隐私保护工具，支持 Windows、macOS 和 Linux 三大平台。](https://github.com/ZenPrivacy/zen-desktop)
 - [RyTuneX: 查看状态，有禁用更新等选项，可以卸载软件](https://github.com/rayenghanmi/RyTuneX)
 
+- [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
+- [TaskExplorer: 强大的 Windows 任务管理器。这是一款适用于 Windows 平台的高级任务管理工具，相比系统自带的任务管理器，能够实时显示更详细的进程信息，包括线程堆栈、文件句柄和网络连接等。](https://github.com/DavidXanatos/TaskExplorer)
+
+- [LiteMonitor: 一款轻量、可定制的开源桌面硬件监控软件 — 实时监测 CPU、GPU、内存、磁盘、网络等系统性能。支持横竖屏显示、多语言、主题切换、透明度显示、三色报警，界面简洁且高度可配置。](https://github.com/Diorser/LiteMonitor)
+- [Sandboxie: 在沙盒中运行软件，避免不安分的软件，但数据会保留在沙盒之中](https://github.com/sandboxie-plus/Sandboxie)
+
 ## 逆向
 
 [OpenArk：逆向工具](https://github.com/BlackINT3/OpenArk)
 - [RevokeMsgPatcher: :trollface: A hex editor for WeChat/QQ/TIM - PC版微信/QQ/TIM防撤回补丁（我已经看到了，撤回也没用了）](https://github.com/huiyadanli/RevokeMsgPatcher)
 - [OpenSpeedy:加速时间.比方说加速植物大战僵尸,但要关闭垂直同步,可以加速网盘下载等等.](https://github.com/Jesae/OpenSpeedy)
 
+## pe系统
+
+- [在下莫老师：5款WindowsPE系统，纯净，强大，无广告](https://www.bilibili.com/video/BV19T411G7gW)
+
+- [firpe：支持BIOS（Legacy）与UEFI两种启动模式。支持MTP驱动，使用DriveDroid下可以读取手机文件](https://firpe.cn/)
+
+- [edgeless：自定义pe的软件](https://home.edgeless.top/)
 ## app
 
 ### 文件
@@ -121,6 +138,12 @@ tags: []
 - [transok：局域网文件传输](https://github.com/bent2685/transok-wails)
 
 - [dupeguru: 查找重复文件](https://github.com/arsenetar/dupeguru)
+
+### 编辑器
+
+- [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
+
+- [WeMD: 更优雅的 Markdown 公众号编辑器](https://github.com/tenngoxars/WeMD)
 
 ### 终端、ssh终端
 
@@ -146,7 +169,82 @@ tags: []
     - 支持 Find Everywhere 快速跳转
     - 支持数据加密
 
-### other
+### 下载器
+
+- [ab-download-manager：类似idm的下载器](https://github.com/amir1376/ab-download-manager)
+
+
+- [Tixati：跨平台的下载器，可以代替迅雷](https://tixati.com/)
+
+- [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
+
+#### 支持下载各种平台的下载器
+
+- [ytDownloader: gui下载器，支持数百种平台如youtube、bilibli等](https://github.com/aandrew-me/ytDownloader)
+
+- [res-downloader: 嗅探抓取资源。视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!](https://github.com/putyy/res-downloader?tab=readme-ov-file)
+
+### 手机与电脑交互
+
+- [intel unison：手机电脑消息、文件传输]()
+
+- [FreeControl：监控手机类似scrcpy](https://github.com/pdone/FreeControl)
+
+### 图片
+
+- [jark006/jarkViewer:  看图软件，适用于日常图片浏览及专业摄影作品预览等多种场景。它操作方便，支持多种快捷键，例如按下 I 键可快速查看图片详细信息。还支持读取 AI 生成图像的提示词（如有）、自动记忆上次窗口的位置和大小等实用功能。](https://github.com/jark006/jarkViewer)
+
+- [caesium-image-compressor: 图片压缩](https://github.com/Lymphatus/caesium-image-compressor)
+- [snow-shot: 超好用的截图工具](https://github.com/mg-chao/snow-shot)
+
+### 视频
+
+#### 播放器
+
+- [NipaPlay-Reload: NipaPlay-Reload 是一个现代化的跨平台本地视频播放器，支持 Windows、macOS、Linux、Android 和 iOS。集成了弹幕显示、多格式字幕支持、多音频轨道切换，新番查看等功能，支持挂载Emby/Jellyfin媒体库。采用 Flutter 开发，提供统一的用户体验。](https://github.com/MCDFsteve/NipaPlay-Reload)
+
+- [Screenbox：视频播放器](https://github.com/huynhsontung/Screenbox)
+- [biu: Bilibili音乐播放器](https://github.com/wood3n/biu)
+
+- [jellyfin-desktop: Jellyfin Desktop Client](https://github.com/jellyfin/jellyfin-desktop)
+
+#### 字幕
+
+- [subtitleedit: 生产视频字幕和翻译字幕](https://github.com/SubtitleEdit/subtitleedit)
+
+- [anto: 字幕文件(srt)翻译工具，Windows专用](https://github.com/speauty/anto)
+
+
+- [subtitleedit：开源的视频字幕编辑工具](https://github.com/SubtitleEdit/subtitleedit)
+    - 它开箱即用且功能强大，支持创建、调整、同步和翻录字幕，还提供了自动翻译、字幕格式转换和语音识别等功能。
+
+- [video-subtitle-extractor: 视频硬字幕提取，生成srt文件。无需申请第三方API，本地实现文本识别。基于深度学习的视频字幕提取框架，包含字幕区域检测、字幕内容提取。A GUI tool for extracting hard-coded subtitle (hardsub) from videos and generating srt files.](https://github.com/YaoFANGUK/video-subtitle-extractor)
+
+- [videocr: 字幕提取](https://github.com/apm1467/videocr)
+
+#### 其他
+
+- [Squirrel-RIFE：中文自动补帧工具。该项目是基于 RIFE 算法的补帧软件，可用于去除动漫卡顿感。](https://github.com/Justin62628/Squirrel-RIFE)
+
+- [video2x：视频和图像无损放大工具。该项目集成了多种超分辨率算法（如 Waifu2x、Anime4K、Real-ESRGAN），能够有效提高视频和图像的分辨率，并提供了图形界面（GUI）、Docker 和命令行界面（CLI）的使用方式](https://github.com/k4yt3x/video2x)
+
+- [FFmpegFreeUI: 3FUI 是 ffmpeg 在 Windows 上的轻度专业交互外壳，收录大量参数，界面美观，交互友好。此项目面向国内使用环境，让普通人也能够轻松压制视频和转换格式。](https://github.com/Lake1059/FFmpegFreeUI)
+
+- [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
+
+
+### 游戏相关
+
+- [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)
+
+- [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
+
+- [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
+
+- [Game-Cheats-Manager：游戏修改器管理工具](https://github.com/dyang886/Game-Cheats-Manager)
+- [w4po/ExplorerTabUtility:开箱即用的游戏变速器。这是一款完全免费、开源的 Windows 游戏加速工具。它通过 Hook 系统时间函数，实现对游戏速度的灵活调节，并提供简单易用的界面，兼容多种单机游戏。请勿用于网络游戏，以免导致账号被封！](https://github.com/w4po/ExplorerTabUtility)
+
+### 其他
 
 - [TortoiseGit：windows最好的git gui客户端](https://github.com/TortoiseGit/TortoiseGit)
 
@@ -157,8 +255,6 @@ tags: []
 - [GestureSign：触控板手势](https://github.com/TransposonY/GestureSign)
 
 - [glazewm：平铺窗口管理器，类似i3](https://github.com/glzr-io/glazewm)
-
-- [ab-download-manager：类似idm的下载器](https://github.com/amir1376/ab-download-manager)
 
 - [Macro-Deck：变成类似 Stream Deck 的远程自定义按键板，实现一键执行单步或多步操作，适用于直播和简化日常任务等场景。](https://github.com/Macro-Deck-App/Macro-Deck)
 
@@ -182,67 +278,10 @@ tags: []
 
 - [crossdesk: 一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。](https://github.com/kunkundi/crossdesk)
 - [MrRSS: A modern, cross-platform desktop RSS reader. 一个现代化、跨平台的 RSS 阅读器.](https://github.com/WCY-dt/MrRSS)
-- [WeMD: 更优雅的 Markdown 公众号编辑器](https://github.com/tenngoxars/WeMD)
 
-## 下载器
+- [keepassxc: 跨平台密码管理器](https://github.com/keepassxreboot/keepassxc)
 
-- [res-downloader: 视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!](https://github.com/putyy/res-downloader?tab=readme-ov-file)
+- [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
+    - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
 
-## 手机与电脑交互
-
-- [intel unison：手机电脑消息、文件传输]()
-
-- [FreeControl：监控手机类似scrcpy](https://github.com/pdone/FreeControl)
-
-## 多媒体
-
-- [Squirrel-RIFE：中文自动补帧工具。该项目是基于 RIFE 算法的补帧软件，可用于去除动漫卡顿感。](https://github.com/Justin62628/Squirrel-RIFE)
-
-- [video2x：视频和图像无损放大工具。该项目集成了多种超分辨率算法（如 Waifu2x、Anime4K、Real-ESRGAN），能够有效提高视频和图像的分辨率，并提供了图形界面（GUI）、Docker 和命令行界面（CLI）的使用方式](https://github.com/k4yt3x/video2x)
-
-- [jark006/jarkViewer:  看图软件，适用于日常图片浏览及专业摄影作品预览等多种场景。它操作方便，支持多种快捷键，例如按下 I 键可快速查看图片详细信息。还支持读取 AI 生成图像的提示词（如有）、自动记忆上次窗口的位置和大小等实用功能。](https://github.com/jark006/jarkViewer)
-
-- [FFmpegFreeUI: 3FUI 是 ffmpeg 在 Windows 上的轻度专业交互外壳，收录大量参数，界面美观，交互友好。此项目面向国内使用环境，让普通人也能够轻松压制视频和转换格式。](https://github.com/Lake1059/FFmpegFreeUI)
-
-- [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
-
-# 播放器
-
-- [NipaPlay-Reload: NipaPlay-Reload 是一个现代化的跨平台本地视频播放器，支持 Windows、macOS、Linux、Android 和 iOS。集成了弹幕显示、多格式字幕支持、多音频轨道切换，新番查看等功能，支持挂载Emby/Jellyfin媒体库。采用 Flutter 开发，提供统一的用户体验。](https://github.com/MCDFsteve/NipaPlay-Reload)
-
-- [Screenbox：视频播放器](https://github.com/huynhsontung/Screenbox)
-- [biu: Bilibili音乐播放器](https://github.com/wood3n/biu)
-
-- [jellyfin-desktop: Jellyfin Desktop Client](https://github.com/jellyfin/jellyfin-desktop)
-
-### 字幕
-
-- [subtitleedit: 生产视频字幕和翻译字幕](https://github.com/SubtitleEdit/subtitleedit)
-
-- [anto: 字幕文件(srt)翻译工具，Windows专用](https://github.com/speauty/anto)
-
-
-- [subtitleedit：开源的视频字幕编辑工具](https://github.com/SubtitleEdit/subtitleedit)
-    - 它开箱即用且功能强大，支持创建、调整、同步和翻录字幕，还提供了自动翻译、字幕格式转换和语音识别等功能。
-
-- [video-subtitle-extractor: 视频硬字幕提取，生成srt文件。无需申请第三方API，本地实现文本识别。基于深度学习的视频字幕提取框架，包含字幕区域检测、字幕内容提取。A GUI tool for extracting hard-coded subtitle (hardsub) from videos and generating srt files.](https://github.com/YaoFANGUK/video-subtitle-extractor)
-
-- [videocr: 字幕提取](https://github.com/apm1467/videocr)
-
-## 游戏相关
-
-- [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)
-
-- [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
-
-- [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
-
-- [Game-Cheats-Manager：游戏修改器管理工具](https://github.com/dyang886/Game-Cheats-Manager)
-- [w4po/ExplorerTabUtility:开箱即用的游戏变速器。这是一款完全免费、开源的 Windows 游戏加速工具。它通过 Hook 系统时间函数，实现对游戏速度的灵活调节，并提供简单易用的界面，兼容多种单机游戏。请勿用于网络游戏，以免导致账号被封！](https://github.com/w4po/ExplorerTabUtility)
-## pe系统
-
-- [在下莫老师：5款WindowsPE系统，纯净，强大，无广告](https://www.bilibili.com/video/BV19T411G7gW)
-
-- [firpe：支持BIOS（Legacy）与UEFI两种启动模式。支持MTP驱动，使用DriveDroid下可以读取手机文件](https://firpe.cn/)
-
-- [edgeless：自定义pe的软件](https://home.edgeless.top/)
+- [STranslate: A ready-to-go translation ocr tool developed with WPF/WPF 开发的一款即用即走的翻译、OCR工具](https://github.com/STranslate/STranslate)

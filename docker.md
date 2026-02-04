@@ -4049,9 +4049,6 @@ docker run -d \
     containrrr/watchtower
 ```
 
-- [trivy：容器镜像安全漏洞扫描](https://github.com/aquasecurity/trivy)
-    - [云原生运维圈：容器镜像安全漏洞扫描-Trivy](https://mp.weixin.qq.com/s?__biz=MzUxNTg5NTQ0NA==&mid=2247483780&idx=1&sn=e3e14b8d6754f95073e25a1880df4f7d&chksm=f9aef87fced9716914995a9b1334ed73b9ba91251b7ea7a79e1910ab02ec6ee00eb2138fc20d&cur_album_id=2200317766446923776&scene=190#rd)
-
 - [Dedockify：Docker镜像逆向生成Dockerfile](https://github.com/mrhavens/Dedockify)
     - [如何基于Docker镜像逆向生成Dockerfile](https://mp.weixin.qq.com/s/yUuo1IjeXY78_5u4QpkuTA)
 
@@ -4185,6 +4182,7 @@ docker run --rm -ti \
     - [告别繁琐配置！这款开源工具让 Docker 管理变得超简单](https://mp.weixin.qq.com/s/R5iAfRJjE84-LzEdJsF8vg)
 
 - [sen: tui](https://github.com/TomasTomecek/sen)
+- [unregistry: 像 rsync 一样同步 Docker 镜像。该项目可通过简单的 docker pussh 命令，将本地 Docker 镜像直接推送到远程服务器，无需依赖外部容器镜像仓库。仅传输缺失的镜像层，比 docker save/load 更快。](https://github.com/psviderski/unregistry)
 
 # reference article(优秀文章)
 

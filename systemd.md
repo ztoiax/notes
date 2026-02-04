@@ -50,10 +50,10 @@ tags: []
   * [systemd-resolved代替dnsmasq。本地的 DNS 缓存和转发服务](#systemd-resolved代替dnsmasq本地的-dns-缓存和转发服务)
   * [systemd-timesyncd代替ntpd和chronyd](#systemd-timesyncd代替ntpd和chronyd)
   * [systemd-boot代替GRUB引导程序](#systemd-boot代替grub引导程序)
+  * [systemd-oom用户空间版的OOM Killer（systemd 259版本支持）](#systemd-oom用户空间版的oom-killersystemd-259版本支持)
 * [第三方优秀软件](#第三方优秀软件)
   * [isd：systemd tui](#isdsystemd-tui)
   * [kjournaldbrowser：systemd 的gui，一个KDE的 应用程序](#kjournaldbrowsersystemd-的gui一个kde的-应用程序)
-* [referece](#referece)
 
 <!-- mtoc-end -->
 
@@ -2191,13 +2191,17 @@ timedatectl show
 
 ## systemd-boot代替GRUB引导程序
 
+## systemd-oom用户空间版的OOM Killer（systemd 259版本支持）
+
+- 解决 Linux 内核原生 OOM Killer（内存不足杀手）响应过慢或不够智能的问题。它利用 cgroup v2 和 PSI (Pressure Stall Information) 技术，在系统真正崩溃前主动终止非关键进程。
+
 # 第三方优秀软件
 
 ## [isd：systemd tui](https://github.com/isd-project/isd)
 
 ## [kjournaldbrowser：systemd 的gui，一个KDE的 应用程序](https://apps.kde.org/zh-cn/kjournaldbrowser/)
 
-```sh
+`sh
 pip install isd-tui
 ```
 

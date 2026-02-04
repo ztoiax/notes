@@ -821,6 +821,8 @@ tags: []
 
 - [从零到神经网络高手：这是一门从基础开始的神经网络课程，包含视频、练习和配套源码，帮助初学者初逐步掌握神经网络的基本概念，并通过实例代码来加深理解。](https://github.com/karpathy/nn-zero-to-hero)
 
+- [cs249r_book: 哈佛大学开源的 AI 系统工程（CS249r）课程教材，内含书籍和源码。它通过从零实现深度学习框架 TinyTorch 和将模型部署到 Arduino 与树莓派等硬件设备的实践，帮助学习者将机器学习理论与系统工程实践相结合，掌握在实际嵌入式开发中部署 AI 系统的方法。 ](https://github.com/harvard-edge/cs249r_book)
+
 ### llm大模型
 
 - [《大语言模型》：这是一本为想入门大模型技术的程序员/学生准备的开源书籍，内容不仅涵盖了大模型的基础原理和关键技术，还提供了配套的代码工具库和大模型，帮助读者快速入门并实践。](https://llmbook-zh.github.io/)
@@ -942,6 +944,8 @@ tags: []
 - [DictionaryByGPT4](https://github.com/Ceelog/DictionaryByGPT4)：一本 GPT4 生成的单词书📚，超过 8000 个单词分析，涵盖了词义、例句、词根词缀、变形、文化背景、记忆技巧和小故事
 
 - [earthworm](https://github.com/cuixueshe/earthworm)：在线学习英语网站，支持自托管和本地运行。它采用连词成句、循序渐进的方法帮你学习英语。通过不断地重复形成肌肉记忆，并结合游戏奖励和积分排名的方式，让背单词变得有趣且高效。
+
+- [everyone-can-use-english: 人人都能用英语。ai英语老师](https://github.com/ZuodaoTech/everyone-can-use-english)
 
 ## 文档
 
@@ -1442,6 +1446,9 @@ tags: []
     - [五里墩茶社](https://space.bilibili.com/615957867)
         > ai大模型
 
+    - [Git源宝](https://space.bilibili.com/38061207)
+        > ai网络热门视频鉴定，分享ai工具
+
     - [AI超元域](https://space.bilibili.com/3493277319825652)
         > ai大模型、其他ai工具等
 
@@ -1500,18 +1507,42 @@ RabbitMQ实战指南》作者
 
 - 折腾linux相关
 
+    - [OS视界](https://space.bilibili.com/1918016728)
+        > linux最新新闻、开源咨询
+
+    - [geek_UNCLE](https://space.bilibili.com/329756594)
+        > linux相关最新演讲、开源最新演讲
+
+    - [北京大学Linux俱乐部](https://space.bilibili.com/3461562830424779)
+
     - [阮一峰的网络日志](https://www.ruanyifeng.com/blog/)
+    - [Ivon的部落格](https://ivonblog.com/)
+        > 分享GNU/Linux情報、自由開源軟體、電腦手機資訊
+
     - [Koala聊开源](https://space.bilibili.com/489667127)
+    - [跨平台全软件](https://space.bilibili.com/691485318)
+        > 跨平台软件推荐
+
+    - [x-cmd](https://space.bilibili.com/2058520408)
+        > linux命令行软件分享
+
+    - [LeisureLinux](https://space.bilibili.com/517298151)
+        > linux命令行软件分享
+
+    - [小in分享](https://space.bilibili.com/524894626?spm_id_from=333.337.search-card.all.click)
+        > windows优化和日常相关的github开源项目分享
+
     - [IT咖啡馆](https://space.bilibili.com/65564239)
         > github开源项目周报
 
     - [玄离199](https://space.bilibili.com/67079745)
         > github开源项目周报，科技新闻周报
 
+    - [小北AI开源](https://space.bilibili.com/1457526717)
+        > linux服务器软件推荐
+
     - [PegasusWang](https://space.bilibili.com/288339968)
         > 推荐好用的软件
-
-    - [北京大学Linux俱乐部](https://space.bilibili.com/3461562830424779)
 
     - [glepnir](https://space.bilibili.com/321783076)
         > nvim高手
@@ -1522,6 +1553,9 @@ RabbitMQ实战指南》作者
     - [TheCW](https://space.bilibili.com/13081489)
         > linux桌面折腾
 
+    - [Reaper_6](https://space.bilibili.com/441832003)
+        > linux桌面折腾
+
     - [LitterHouge](https://space.bilibili.com/2041146642)
         > gentoo linux，linux比较底层的折腾，以及不同指令集硬件上的linux折腾
 
@@ -1530,9 +1564,6 @@ RabbitMQ实战指南》作者
 
     - [unixchad](https://space.bilibili.com/34569411)
         > linux不常用软件折腾
-
-    - [OS视界](https://space.bilibili.com/1918016728)
-        > linux相关新闻介绍
 
     - [我不是咕咕鸽](https://space.bilibili.com/19956596/upload/video)
         > 介绍各种linux适合服务器部署的、好玩的项目
@@ -1583,6 +1614,9 @@ RabbitMQ实战指南》作者
     - [epcdiy](https://space.bilibili.com/12590)
     - [小刘不是程序员](https://space.bilibili.com/519550178)
     - [技术胖](https://space.bilibili.com/165659472)
+
+    - [技术Flow](https://space.bilibili.com/392208938)
+        > 用更好的动画和讲解介绍计算机底层知识
 
     - 腾讯大讲堂
         > 各种计算机技术、架构、管理等
@@ -1705,14 +1739,23 @@ RabbitMQ实战指南》作者
 
     - [立创开发板](https://space.bilibili.com/3493269579237436)
 
+    - [小极工场](https://space.bilibili.com/3546943439505489)
+        > 家具、装修
+
     - [单毅讲装修](https://space.bilibili.com/222157543)
         > 家电、装修
 
+    - [DIY一个忠先生](https://space.bilibili.com/223699988?spm_id_from=333.788.upinfo.detail.click)
+        > 木工、DIY
+
     - [五金少女](https://space.bilibili.com/303517323)
-        > 五金、装修
+        > 五金、DIY
 
     - [4AM居士](https://space.bilibili.com/1310639484)
-        > 五金、装修
+        > 五金、DIY
+
+    - [DIY一个忠先生](https://space.bilibili.com/223699988)
+        > DIY、木工
 
     - [飞蚊话](https://space.bilibili.com/268630727)
         > linux桌面
@@ -1725,6 +1768,11 @@ RabbitMQ实战指南》作者
 
     - [钱韦德](https://space.bilibili.com/20274090)
         > 硬盘评测、nas体验
+
+    - [下尺报告](https://space.bilibili.com/387533776)
+
+    - [阿Test正经比比](https://space.bilibili.com/434376696)
+        > 科技、科技行业分析
 
 - 微信公众号
 
@@ -1845,12 +1893,17 @@ RabbitMQ实战指南》作者
 - [为食Go](https://space.bilibili.com/628705741/upload)
     > 广州各种饭店探店，会告诉你菜好不好，以及其他相关知识
 
+- [家尝便饭馆](https://space.bilibili.com/478416282)
+
 - [喵游记MuaWoo](https://space.bilibili.com/22951108?spm_id_from=333.337.0.0)
     > 全中国赶集
 
 ## 旅游
 
-- [行夫走卒](https://space.bilibili.com/2134726833/upload/video)
+- [行夫走卒](https://space.bilibili.com/2134726833)
+
+- [烤棕熊的玉米](https://space.bilibili.com/173380440)
+    > 介绍当地的民情和民情相关的元素（如建筑、文艺作品等）。
 
 ## 买菜
 
@@ -1979,6 +2032,8 @@ RabbitMQ实战指南》作者
 
     - 中国电影评论学会
 
+    - 电影评论 FILM CRITICISM
+
     - 北京文艺观察
 
     - 当代电影杂志
@@ -2098,6 +2153,7 @@ RabbitMQ实战指南》作者
     - 外国哲学研究
     - 现代外国哲学
     - 哲学探索辑刊
+    - 读书杂志
     - 思想与文化
         > 华东师范大学 中国现代思想文化研究所
     - 艺术学研究
@@ -2135,16 +2191,16 @@ RabbitMQ实战指南》作者
         > 刘小枫
     - 经典与解释
         > 刘小枫
-    - 东方哲学践行
-        > 王志成
     - 双体实验室
         > 金观涛
     - 启示与理性
+    - 混沌文理院
 
     - 哲学五人谈
     - 天行LAB
         > 北京师范大学天行教育哲学研究院
 
+    - 诠释学书评
     - 公民哲学
     - 复旦哲学思想
     - 复旦哲学青年
@@ -2202,8 +2258,6 @@ RabbitMQ实战指南》作者
         - 中国文化书院
         - 华夏文化书院
         - 天水伏羲故里国学院
-        - 南京大学中华文化研究院
-            > 赖永海
         - 新亚学报
             > 香港中文大学
 
@@ -2211,6 +2265,16 @@ RabbitMQ实战指南》作者
 
         - 中国诸子研究院
             > 华东师范大学
+
+    - 佛教与印度哲学
+        - 东方哲学与宗教
+            > 半年刊由南京大学东方这些与宗教文化研究中心主办
+        - 光华佛学
+            > 复旦大学宗教系
+        - 南京大学中华文化研究院
+            > 赖永海
+        - 东方哲学践行
+            > 王志成
 
     - 民间大众的哲学评论
         - 陈直Dharma
@@ -2356,6 +2420,8 @@ RabbitMQ实战指南》作者
     - 科社共运动态+
     - 阶级与哲学
     - 世界观察局
+    - 上外中东研究所
+        > 阿拉伯世界研究的发布者
     - 南洋问题研究
         > 东南亚、东南亚犯罪
 
@@ -2382,6 +2448,7 @@ RabbitMQ实战指南》作者
 
     - 开放时代杂志
     - 探索与争鸣
+    - 社会科学文摘
     - 实践历史与社科研究
     - 社会CJS
     - 社会学研究杂志
@@ -2413,6 +2480,8 @@ RabbitMQ实战指南》作者
     - 文化纵横
         > 和时事相关的论文
     - 修院基金会
+        > 和时事相关的论文
+    - 澎湃思想市场
         > 和时事相关的论文
 
     - 社会理论
@@ -2470,8 +2539,19 @@ RabbitMQ实战指南》作者
 
     - [黄文政老师](https://space.bilibili.com/3546833336928563)
 
+    - [新经济学家智库](https://space.bilibili.com/31555962)
+        > 经济学家演讲
+
     - [CLS同学](https://space.bilibili.com/1575688490/upload/video)
         > 每月经济报告
+
+
+    - [空山猎人](https://space.bilibili.com/3493108557809994)
+        > 分析新闻和世界背后的经济金融现象
+
+
+    - [酷玩实验室](https://space.bilibili.com/90920075)
+        > 分析新闻和世界背后的经济金融现象
 
 - 微信公众号
 
@@ -2512,6 +2592,9 @@ RabbitMQ实战指南》作者
 
     - Global U
         > 国仁全球大学堂
+
+    - New Economist
+        > 新经济学家智库
 
     - 智本社
 
@@ -2621,6 +2704,7 @@ RabbitMQ实战指南》作者
         - 中国房地产报
         - 毅哥广州共有产权房公租房
         - 善毅讲装修
+        - 楼市数据君
 
     - 汤山老王
     - 硬核姬老板
@@ -2754,6 +2838,8 @@ RabbitMQ实战指南》作者
     - [公孙田浩](https://space.bilibili.com/512574759?spm_id_from=333.337.0.0)
         > 深入了解诈骗、各种社会现象的知识类up主
 
+    - [硬核奇点](https://space.bilibili.com/508959410)
+
     - [卢克文工作室](https://www.bilibili.com/video/BV1bUwGe1Eew)
 
     - [动新闻](https://space.bilibili.com/482843134/upload/video)
@@ -2767,6 +2853,12 @@ RabbitMQ实战指南》作者
 
     - [半耳聆](https://space.bilibili.com/495979927/upload/video)
         > 网络热门新闻的解读
+
+    - [十厂长啊](https://space.bilibili.com/3546694587255191)
+        > 各国政治和真实民情
+
+    - [广州禁毒](https://space.bilibili.com/443285454)
+        > 预防毒品
 
 - 微信公众号
 
@@ -2840,6 +2932,9 @@ RabbitMQ实战指南》作者
 
     - [劳历事](https://space.bilibili.com/2071267686/upload/video)
         > 粤语，粤文化
+
+    - [咩啊博士](https://space.bilibili.com/477277783)
+        > 粤语，童年回忆
 
 - 广东相关的微信公众号
 

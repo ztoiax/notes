@@ -31,9 +31,11 @@ tags: []
   * [mc](#mc)
   * [twf：vim模式的文件树](#twfvim模式的文件树)
   * [superfile](#superfile)
+  * [clifm: 💾 The shell-like, command line terminal file manager](#clifm--the-shell-like-command-line-terminal-file-manager)
   * [filebrowser: 即使文件浏览器，也是文件服务器。支持在线播放视频和音频](#filebrowser-即使文件浏览器也是文件服务器支持在线播放视频和音频)
   * [eddy: 加密文件，不支持加密文件夹](#eddy-加密文件不支持加密文件夹)
 * [File](#file)
+  * [magika: google开发的ai识别文件，正确率99%](#magika-google开发的ai识别文件正确率99)
   * [mmv：批量命名mv](#mmv批量命名mv)
   * [[advcpmv: instead cp, my(https://github.com/jarun/advcpmv)](#advcpmv-instead-cp-myhttpsgithubcomjarunadvcpmv)
   * [fd: instead find](#fd-instead-find)
@@ -53,6 +55,8 @@ tags: []
   * [xan: 终端里的 CSV 数据魔术师。这是一个能够处理 GB 级超大 CSV 文件的命令行工具，支持预览、过滤、切片、聚合、排序等操作，并可在终端里通过直方图、热力图等方式进行数据可视化。](#xan-终端里的-csv-数据魔术师这是一个能够处理-gb-级超大-csv-文件的命令行工具支持预览过滤切片聚合排序等操作并可在终端里通过直方图热力图等方式进行数据可视化)
   * [tabiew：tui查看csv、tsv、json](#tabiewtui查看csvtsvjson)
   * [csvlens：tui查看csv、json](#csvlenstui查看csvjson)
+  * [xleak: A fast terminal Excel viewer with an interactive TUI. Features full-text search, formula display, lazy loading for large files, clipboard support, and export to CSV/JSON. Built with Rust and ratatui.](#xleak-a-fast-terminal-excel-viewer-with-an-interactive-tui-features-full-text-search-formula-display-lazy-loading-for-large-files-clipboard-support-and-export-to-csvjson-built-with-rust-and-ratatui)
+  * [excel-cli: 一个运行在终端中的轻量级 Excel 查看器，具有类 Vim 导航功能，用于查看、编辑 Excel 数据并导出为 JSON 格式。](#excel-cli-一个运行在终端中的轻量级-excel-查看器具有类-vim-导航功能用于查看编辑-excel-数据并导出为-json-格式)
   * [OctoSQL: sql语句查看文件](#octosql-sql语句查看文件)
   * [termscp: tui文件传输](#termscp-tui文件传输)
   * [fq: 二进制查看器](#fq-二进制查看器)
@@ -117,6 +121,7 @@ tags: []
     * [instead du](#instead-du)
   * [gdu：tui模式的du](#gdutui模式的du)
 * [process](#process)
+  * [witr: 查看进程背后的启动参数、父进程链、启动时间等](#witr-查看进程背后的启动参数父进程链启动时间等)
   * [px：instead ps、top](#pxinstead-pstop)
   * [procs](#procs)
     * [instead ps](#instead-ps)
@@ -145,12 +150,6 @@ tags: []
   * [cmd-wrapped：读取你的命令行操作历史记录，并生成详细的分析报告。](#cmd-wrapped读取你的命令行操作历史记录并生成详细的分析报告)
 * [硬件](#硬件)
   * [amdgpu：tui](#amdgputui)
-* [Social media](#social-media)
-  * [googler(google)](#googlergoogle)
-  * [ddgr(DuckDuckGo)](#ddgrduckduckgo)
-  * [rtv(reddit cli)](#rtvreddit-cli)
-  * [rainbowstream(twitter)](#rainbowstreamtwitter)
-  * [haxor-news(hacknew)](#haxor-newshacknew)
 * [压缩](#压缩)
   * [svgo: svg压缩](#svgo-svg压缩)
 * [音乐](#音乐)
@@ -230,6 +229,8 @@ tags: []
   * [ttyd：把终端变成服务，可以用浏览器访问](#ttyd把终端变成服务可以用浏览器访问)
   * [cotp: tui版的两步验证码。 TOTP/HOTP 身份验证器，它将繁琐的图形界面抛在脑后，让你在终端中也能轻松管理你的两步验证码。](#cotp-tui版的两步验证码-totphotp-身份验证器它将繁琐的图形界面抛在脑后让你在终端中也能轻松管理你的两步验证码)
   * [YouPlot: cli下画统计图](#youplot-cli下画统计图)
+  * [fnug: cicd tui版](#fnug-cicd-tui版)
+  * [asciinema: 终端会话录制播放](#asciinema-终端会话录制播放)
 * [系统相关](#系统相关)
   * [kmon：内核模块、dmesg的tui](#kmon内核模块dmesg的tui)
   * [nemu：qemu的tui](#nemuqemu的tui)
@@ -261,6 +262,7 @@ tags: []
   * [ebook2audiobook：电子书转为有声书](#ebook2audiobook电子书转为有声书)
   * [audiblez：将 Epub 电子书转成有声书，支持中文。](#audiblez将-epub-电子书转成有声书支持中文)
   * [AI-reads-books-page-by-page：AI 逐页从 PDF 提取知识与生成摘要](#ai-reads-books-page-by-pageai-逐页从-pdf-提取知识与生成摘要)
+  * [PasteMD: 一键将 Markdown 和网页 AI 对话（ChatGPT/DeepSeek等）完美粘贴到 Word、WPS 和 Excel 的效率工具](#pastemd-一键将-markdown-和网页-ai-对话chatgptdeepseek等完美粘贴到-wordwps-和-excel-的效率工具)
 * [markdown](#markdown)
   * [浏览markdown文件](#浏览markdown文件)
   * [mdq：jq版markdown](#mdqjq版markdown)
@@ -275,8 +277,15 @@ tags: []
   * [lnav：tui的vim模式，查看log、json文件](#lnavtui的vim模式查看logjson文件)
   * [hl: A fast and powerful log viewer and processor that converts JSON logs or logfmt logs into a clear human-readable format.](#hl-a-fast-and-powerful-log-viewer-and-processor-that-converts-json-logs-or-logfmt-logs-into-a-clear-human-readable-format)
   * [logdy](#logdy)
-* [modern unix](#modern-unix)
-* [邮件](#邮件)
+  * [tailspin](#tailspin)
+* [第三方app的命令行版](#第三方app的命令行版)
+  * [himalaya：邮件tui](#himalaya邮件tui)
+  * [go-musicfox: go-musicfox是用Go写的又一款网易云音乐命令行客户端，支持UnblockNeteaseMusic、各种音质级别、lastfm、MPRIS、MacOS交互响应（睡眠暂停、蓝牙耳机连接断开响应、菜单栏控制等）...](#go-musicfox-go-musicfox是用go写的又一款网易云音乐命令行客户端支持unblockneteasemusic各种音质级别lastfmmprismacos交互响应睡眠暂停蓝牙耳机连接断开响应菜单栏控制等)
+  * [googler(google)](#googlergoogle)
+  * [ddgr(DuckDuckGo)](#ddgrduckduckgo)
+  * [rtv(reddit cli)](#rtvreddit-cli)
+  * [rainbowstream(twitter)](#rainbowstreamtwitter)
+  * [haxor-news(hacknew)](#haxor-newshacknew)
 * [reference](#reference)
 
 <!-- mtoc-end -->
@@ -357,11 +366,16 @@ sudo make O_NERD=1
 
 ![image](./Pictures/awesomecli/superfile.avif)
 
+## [clifm: 💾 The shell-like, command line terminal file manager](https://github.com/leo-arch/clifm)
+
+
 ## [filebrowser: 即使文件浏览器，也是文件服务器。支持在线播放视频和音频](https://github.com/filebrowser/filebrowser)
 
 ## [eddy: 加密文件，不支持加密文件夹](https://github.com/70sh1/eddy)
 
 # File
+
+## [magika: google开发的ai识别文件，正确率99%](https://github.com/google/magika)
 
 ## [mmv：批量命名mv](https://github.com/itchyny/mmv)
 
@@ -484,6 +498,10 @@ xsv search -s input '[0-4]' test.csv
 ## [tabiew：tui查看csv、tsv、json](https://github.com/shshemi/tabiew)
 
 ## [csvlens：tui查看csv、json](https://github.com/YS-L/csvlens)
+
+## [xleak: A fast terminal Excel viewer with an interactive TUI. Features full-text search, formula display, lazy loading for large files, clipboard support, and export to CSV/JSON. Built with Rust and ratatui.](https://github.com/bgreenwell/xleak)
+
+## [excel-cli: 一个运行在终端中的轻量级 Excel 查看器，具有类 Vim 导航功能，用于查看、编辑 Excel 数据并导出为 JSON 格式。](https://github.com/fuhan666/excel-cli)
 
 ## [OctoSQL: sql语句查看文件](https://github.com/cube2222/octosql)
 
@@ -714,6 +732,8 @@ ls filename | sad '1' '2' | delta
 
 # process
 
+## [witr: 查看进程背后的启动参数、父进程链、启动时间等](https://github.com/pranshuparmar/witr)
+
 ## [px：instead ps、top](https://github.com/walles/px)
 
 ```sh
@@ -824,18 +844,6 @@ hurl /tmp/test
 # 硬件
 
 ## [amdgpu：tui](https://github.com/Umio-Yasuno/amdgpu_top)
-
-# Social media
-
-## [googler(google)](https://github.com/jarun/googler)
-## [ddgr(DuckDuckGo)](https://github.com/jarun/ddgr)
-
-## [rtv(reddit cli)](https://github.com/michael-lazar/rtv)
-## [rainbowstream(twitter)](https://github.com/orakaro/rainbowstream)
-![image](./Pictures/awesomecli/rtv.avif)
-
-## [haxor-news(hacknew)](https://github.com/donnemartin/haxor-news)
-
 # 压缩
 
 ## [svgo: svg压缩](https://github.com/svg/svgo)
@@ -1374,6 +1382,9 @@ ttyd -p 8080 bash
 
 ## [YouPlot: cli下画统计图](https://github.com/red-data-tools/YouPlot)
 
+## [fnug: cicd tui版](https://github.com/nickolaj-jepsen/fnug)
+## [asciinema: 终端会话录制播放](https://github.com/asciinema/asciinema)
+
 # 系统相关
 
 ## [kmon：内核模块、dmesg的tui](https://github.com/orhun/kmon)
@@ -1516,6 +1527,8 @@ markitdown path-to-file.pdf > document.md
 
 ## [AI-reads-books-page-by-page：AI 逐页从 PDF 提取知识与生成摘要](https://github.com/echohive42/AI-reads-books-page-by-page)
 
+## [PasteMD: 一键将 Markdown 和网页 AI 对话（ChatGPT/DeepSeek等）完美粘贴到 Word、WPS 和 Excel 的效率工具](https://github.com/RICHQAQ/PasteMD)
+
 # markdown
 
 ## 浏览markdown文件
@@ -1621,13 +1634,24 @@ journalctl -o json | lnav
 
 ## [logdy](https://github.com/logdyhq/logdy-core)
 
-# modern unix
+## [tailspin](https://github.com/bensadeh/tailspin)
 
-- [tailspin](https://github.com/bensadeh/tailspin)
+# 第三方app的命令行版
 
-# 邮件
+## [himalaya：邮件tui](https://github.com/pimalaya/himalaya)
 
-- [himalaya：邮件tui](https://github.com/pimalaya/himalaya)
+## [go-musicfox: go-musicfox是用Go写的又一款网易云音乐命令行客户端，支持UnblockNeteaseMusic、各种音质级别、lastfm、MPRIS、MacOS交互响应（睡眠暂停、蓝牙耳机连接断开响应、菜单栏控制等）...](https://github.com/go-musicfox/go-musicfox)
+
+## [googler(google)](https://github.com/jarun/googler)
+## [ddgr(DuckDuckGo)](https://github.com/jarun/ddgr)
+
+## [rtv(reddit cli)](https://github.com/michael-lazar/rtv)
+## [rainbowstream(twitter)](https://github.com/orakaro/rainbowstream)
+![image](./Pictures/awesomecli/rtv.avif)
+
+## [haxor-news(hacknew)](https://github.com/donnemartin/haxor-news)
+
+
 # reference
 
 - [现代版命令行基础工具](https://jvns.ca/blog/2022/04/12/a-list-of-new-ish--command-line-tools/)

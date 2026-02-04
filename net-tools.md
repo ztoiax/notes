@@ -15,7 +15,8 @@ tags: []
       * [交互模式](#交互模式)
     * [netstat](#netstat)
     * [ss (iproute2)](#ss-iproute2)
-    * [theopfr/somo: A human-friendly alternative to netstat for socket and port monitoring on Linux.](#theopfrsomo-a-human-friendly-alternative-to-netstat-for-socket-and-port-monitoring-on-linux)
+    * [somo: A human-friendly alternative to netstat for socket and port monitoring on Linux.](#somo-a-human-friendly-alternative-to-netstat-for-socket-and-port-monitoring-on-linux)
+    * [snitch: tui版 ss](#snitch-tui版-ss)
     * [nc（连接服务器）](#nc连接服务器)
     * [frp: 反向代理(内网穿透)](#frp-反向代理内网穿透)
       * [端口](#端口)
@@ -31,6 +32,7 @@ tags: []
     * [mitmproxy(代理、抓包、中间人攻击)](#mitmproxy代理抓包中间人攻击)
     * [AdGuardian-Term: 基于终端的实时网络监控工具，专门为 AdGuard Home 设计的](#adguardian-term-基于终端的实时网络监控工具专门为-adguard-home-设计的)
     * [socat](#socat)
+    * [nethogs: 统计每个进程的上传和下载的网速。相当于net 的top](#nethogs-统计每个进程的上传和下载的网速相当于net-的top)
   * [应用层](#应用层)
     * [http](#http)
       * [curl](#curl)
@@ -109,6 +111,8 @@ tags: []
     * [nali(ip地址离线数据库)](#naliip地址离线数据库)
     * [traceroute](#traceroute)
     * [tcptraceroute](#tcptraceroute)
+    * [opentrace: traceroute 跨平台gui版](#opentrace-traceroute-跨平台gui版)
+    * [ttl: rust写的tui 比traceroute和mtr更强](#ttl-rust写的tui-比traceroute和mtr更强)
     * [防火墙](#防火墙)
       * [iptables](#iptables)
         * [基本命令](#基本命令-1)
@@ -131,13 +135,21 @@ tags: []
 * [性能监控](#性能监控)
   * [观察工具](#观察工具)
     * [查看吞吐率，PPS（Packet Per Second 包 / 秒）](#查看吞吐率ppspacket-per-second-包--秒)
-    * [wondershaper：Linux 限制网络带宽的工具](#wondershaperlinux-限制网络带宽的工具)
+    * [wondershaper：对网络接口限制网络带宽](#wondershaper对网络接口限制网络带宽)
+    * [trickle: 对单个进程（只支持glibc的程序）限制网络带宽](#trickle-对单个进程只支持glibc的程序限制网络带宽)
   * [压力测试](#压力测试)
-    * [wrk](#wrk)
-    * [wrk2: wrp的变种](#wrk2-wrp的变种)
-    * [oth：Rust 驱动的 HTTP 压测工具。这是一个用 Rust 开发的 HTTP 请求压测工具，它操作简单、带 TUI 动画界面，支持生成请求延迟、吞吐量等指标的报告，以及动态 URL 和更灵活的请求间隔（burst-delay）等功能。](#othrust-驱动的-http-压测工具这是一个用-rust-开发的-http-请求压测工具它操作简单带-tui-动画界面支持生成请求延迟吞吐量等指标的报告以及动态-url-和更灵活的请求间隔burst-delay等功能)
-    * [lighthouse(chrome 网页性能测试)](#lighthousechrome-网页性能测试)
+    * [speedtest-cli: 带宽测试](#speedtest-cli-带宽测试)
     * [ali: 实时的tui](#ali-实时的tui)
+    * [Web](#web)
+      * [ab：web 压力测试](#abweb-压力测试)
+      * [siege：和ab命令一样，并且还支持 HTTP 和 HTTPS 协议。](#siege和ab命令一样并且还支持-http-和-https-协议)
+      * [hey：go语言写的，宣传要替换ab命令](#heygo语言写的宣传要替换ab命令)
+      * [wrk](#wrk)
+      * [wrk2: wrp的变种](#wrk2-wrp的变种)
+      * [oth：Rust 驱动的 HTTP 压测工具。这是一个用 Rust 开发的 HTTP 请求压测工具，它操作简单、带 TUI 动画界面，支持生成请求延迟、吞吐量等指标的报告，以及动态 URL 和更灵活的请求间隔（burst-delay）等功能。](#othrust-驱动的-http-压测工具这是一个用-rust-开发的-http-请求压测工具它操作简单带-tui-动画界面支持生成请求延迟吞吐量等指标的报告以及动态-url-和更灵活的请求间隔burst-delay等功能)
+      * [lighthouse(chrome 网页性能测试)](#lighthousechrome-网页性能测试)
+      * [jmeter：一个功能强大的 Java 应用程序，可以用于模拟各种负载情况。JMeter 可以通过图形界面进行配置，支持更多协议和数据格式，包括 HTTP、HTTPS、SOAP、REST 等。](#jmeter一个功能强大的-java-应用程序可以用于模拟各种负载情况jmeter-可以通过图形界面进行配置支持更多协议和数据格式包括-httphttpssoaprest-等)
+      * [httperf](#httperf)
 * [优秀文章](#优秀文章)
 * [在线工具](#在线工具)
 
@@ -311,7 +323,9 @@ ss -s
 ss -a
 ```
 
-### [theopfr/somo: A human-friendly alternative to netstat for socket and port monitoring on Linux.](https://github.com/theopfr/somo)
+### [somo: A human-friendly alternative to netstat for socket and port monitoring on Linux.](https://github.com/theopfr/somo)
+
+### [snitch: tui版 ss](https://github.com/karol-broda/snitch)
 
 ### nc（连接服务器）
 
@@ -664,6 +678,8 @@ sudo mv /run/mysqld/mysqld.sock /run/mysqld/mysqld.sock.original
 sudo socat -t100 -x -v UNIX-LISTEN:/run/mysqld/mysqld.sock,mode=777,reuseaddr,fork UNIX-CONNECT:mysqld.sock.original
 ```
 
+
+### [nethogs: 统计每个进程的上传和下载的网速。相当于net 的top](https://github.com/raboof/nethogs)
 
 ## 应用层
 
@@ -1930,6 +1946,10 @@ nali update
 
 tcptraceroute 命令与 traceroute 基本上是一样的，只是它能够绕过最常见的防火墙的过滤。正如该命令的手册页所述，tcptraceroute 发送 TCP SYN 数据包而不是 UDP 或 ICMP ECHO 数据包，所以其不易被阻塞。
 
+### [opentrace: traceroute 跨平台gui版](https://github.com/Archeb/opentrace)
+
+### [ttl: rust写的tui 比traceroute和mtr更强](https://github.com/lance0/ttl)
+
 ### 防火墙
 
 - `ip_rcv()` 中会处理 netfilter 和 iptable 过滤，如果你有很多或者很复杂的 netfilter 或iptables 规则，这些规则都是在软中断的上下⽂中执⾏的，会加⼤⽹络延迟。
@@ -2944,10 +2964,61 @@ sar -n EDEV 1
 sar -n TCP 1
 ```
 
-### [wondershaper：Linux 限制网络带宽的工具](https://github.com/magnific0/wondershaper)
+### [wondershaper：对网络接口限制网络带宽](https://github.com/magnific0/wondershaper)
+
+### [trickle: 对单个进程（只支持glibc的程序）限制网络带宽](https://github.com/mariusae/trickle)
+
+
+```sh
+# 查看是不是glibc程序
+ldd /bin/program | grep libc.so
+```
+
 ## 压力测试
 
-### [wrk](https://github.com/wg/wrk)
+
+### [speedtest-cli: 带宽测试](https://github.com/sivel/speedtest-cli)
+
+### [ali: 实时的tui](https://github.com/nakabonne/ali)
+
+### Web
+
+#### ab：web 压力测试
+
+- 安装包`apache-tools`
+
+| 参数 | 说明                                  |
+|------|---------------------------------------|
+| n    | 总共的请求数                          |
+| c    | 并发的请求数                          |
+| t    | 测试所进行的最大秒数，默认值 为 50000 |
+| p    | 包含了需要的 POST 的数据文件          |
+| T    | POST 数据所使用的 Content-type 头信息 |
+
+```sh
+ab -c 1 -n 10000 https://127.0.0.1/index.html
+
+### 每次发送1000并发的请求数，请求数总数为5000。
+ab -n 1000 -c 5000 http://127.0.0.1/
+```
+
+> ```bash
+> # 摘取重要的输出
+> # 每秒8906次
+> Requests per second:    8906.78 [#/sec] (mean)
+>
+> # 平均每次0.112ms
+> Time per request:       0.112 [ms] (mean)
+>
+> # 带宽速率
+> Transfer rate:          7593.38 [Kbytes/sec] received
+> ```
+
+#### [siege：和ab命令一样，并且还支持 HTTP 和 HTTPS 协议。](https://github.com/JoeDog/siege)
+
+#### [hey：go语言写的，宣传要替换ab命令](https://github.com/rakyll/hey)
+
+#### [wrk](https://github.com/wg/wrk)
 
 | 参数 | 操作     |
 |------|----------|
@@ -2959,9 +3030,9 @@ sar -n TCP 1
 wrk -t 6 -c 30000 -d 60s https://127.0.0.1:80
 ```
 
-### [wrk2: wrp的变种](https://github.com/giltene/wrk2)
+#### [wrk2: wrp的变种](https://github.com/giltene/wrk2)
 
-### [oth：Rust 驱动的 HTTP 压测工具。这是一个用 Rust 开发的 HTTP 请求压测工具，它操作简单、带 TUI 动画界面，支持生成请求延迟、吞吐量等指标的报告，以及动态 URL 和更灵活的请求间隔（burst-delay）等功能。](https://github.com/hatoo/oha)
+#### [oth：Rust 驱动的 HTTP 压测工具。这是一个用 Rust 开发的 HTTP 请求压测工具，它操作简单、带 TUI 动画界面，支持生成请求延迟、吞吐量等指标的报告，以及动态 URL 和更灵活的请求间隔（burst-delay）等功能。](https://github.com/hatoo/oha)
 
 - `oth`性能对比`hey`
 
@@ -2990,9 +3061,40 @@ oha -n 10 --burst-delay 2s --burst-rate 4 http://127.0.0.1:80
 oha --rand-regex-url http://127.0.0.1/[a-z][a-z][0-9]
 ```
 
-### [lighthouse(chrome 网页性能测试)](https://github.com/GoogleChrome/lighthouse)
+#### [lighthouse(chrome 网页性能测试)](https://github.com/GoogleChrome/lighthouse)
 
-### [ali: 实时的tui](https://github.com/nakabonne/ali)
+#### [jmeter：一个功能强大的 Java 应用程序，可以用于模拟各种负载情况。JMeter 可以通过图形界面进行配置，支持更多协议和数据格式，包括 HTTP、HTTPS、SOAP、REST 等。](https://github.com/apache/jmeter)
+
+#### httperf
+
+- `--num-conns` 次数
+- `--wsess` 模拟会话请求
+
+`httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000`
+
+> ```bash
+> # 摘取重要的输出
+> # 每秒建立14398次链接
+> Connection rate: 14398.2 conn/s (0.1 ms/conn, <=1 concurrent connections)
+>
+> # 最长链接,平均链接的时间
+> Connection time [ms]: min 0.0 avg 0.1 max 18.0 median 0.5 stddev 0.2
+>
+> # 返回请求统计
+> Reply status: 1xx=0 2xx=0 3xx=0 4xx=10000 5xx=0
+> # 性能
+> CPU time [s]: user 0.11 system 0.41 (user 16.3% system 58.6% total 74.9%)
+> Net I/O: 5343.1 KB/s (43.8*10^6 bps)
+>
+> # 失败的请求(这里是0)
+> Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+> ```
+
+```bash
+# --wsess=10,10,0.1 表示10个会话，每个会话10次请求，每次请求1秒
+httperf --hog --server=127.0.0.1 --uri=index.html --num-conns=10000 --wsess=10,10,0.1
+```
+
 
 # 优秀文章
 

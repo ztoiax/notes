@@ -15,19 +15,24 @@ tags: []
   * [云盘](#云盘)
   * [other](#other)
 * [下载器](#下载器)
+  * [支持下载各种平台的下载器](#支持下载各种平台的下载器)
 * [图片](#图片)
   * [image viewer(图片查看器)](#image-viewer图片查看器)
     * [qt](#qt)
     * [gtk](#gtk)
     * [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](#caesium-image-compressor图片压缩配备了实时预览和批量处理的功能)
   * [digikam：本地图片管理](#digikam本地图片管理)
+  * [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](#afilmory-本地图片管理modern-photo-gallery-for-photographers-with-s3github-sync-exif-details-maps-and-a-webgl-viewer)
   * [截图](#截图)
+  * [ocr截图识别文字](#ocr截图识别文字)
   * [图片压缩](#图片压缩)
 * [视频](#视频)
   * [播放器](#播放器)
   * [ai提升视频质量](#ai提升视频质量)
   * [other](#other-1)
 * [音乐](#音乐)
+* [音频](#音频)
+* [桌面软件和常见软件的第三方客户端](#桌面软件和常见软件的第三方客户端)
 * [投屏和远程控制](#投屏和远程控制)
   * [ssh客户端](#ssh客户端)
 * [pdf、epub、mobi、markdown阅读器](#pdfepubmobimarkdown阅读器)
@@ -38,7 +43,8 @@ tags: []
 * [ai](#ai)
 * [模拟器](#模拟器)
 * [微信相关](#微信相关)
-* [other](#other-2)
+* [金融](#金融)
+* [其他](#其他)
 * [类似项目](#类似项目)
 
 <!-- mtoc-end -->
@@ -56,6 +62,8 @@ tags: []
 - [localsend](https://github.com/localsend/localsend)
 
 - [kdeconnect：还可以控制手机](https://github.com/KDE/kdeconnect-kde)
+
+- [packet: android的AirDrop](https://github.com/nozwock/packet)
 
 - [deltachat-desktop: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-desktop)
 
@@ -111,6 +119,8 @@ tags: []
 - [OpenList: alist被收购，这是alist社区版。](https://github.com/OpenListTeam/OpenList)
 - [quark-auto-save: 夸克网盘签到、自动转存、命名整理、发推送提醒和刷新媒体库一条龙](https://github.com/Cp0204/quark-auto-save)
 
+- [taosync: 同步到网盘的工具。TaoSync是一个适用于OpenList v3+的自动化同步工具/Sync for OpenList/AList](https://github.com/dr34m-cn/taosync)
+
 ## other
 
 - [filelight](https://kde.org/applications/en/filelight)
@@ -138,6 +148,15 @@ tags: []
 
 - [AriaNg: aria2的web gui。需要浏览器的插件进行启动](https://github.com/mayswind/AriaNg)
 
+- [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
+    - [gopeed-extension-wxmp: Gopeed 微信公众号视频下载扩展](https://github.com/monkeyWie/gopeed-extension-wxmp)
+    - [gopeed-extension-baiduwp: Gopeed 百度网盘下载扩展。](https://github.com/monkeyWie/gopeed-extension-baiduwp)
+    - [gopeed-extension-quark: Gopeed 扩展，用于解析夸克网盘分享链接并下载文件。](https://github.com/muyan556/gopeed-extension-quark)
+    - [gopeed-extension-bilibili: Bilibili video download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-bilibili)
+    - [gopeed-extension-youtube: Youtube video download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-youtube)
+    - [gopeed-extension-twitter: Twitter media download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-twitter)
+    - [gopeed-extension-huggingface: A gopeed-extension for downloading models and datasets from huggingface, hf-mirror and modelscope. Huggingface download](https://github.com/DSYZayn/gopeed-extension-huggingface)
+
 - [axel: cli命令行下载](https://github.com/axel-download-accelerator/axel)
 
 - [Motrix](https://github.com/agalwood/Motrix)
@@ -161,18 +180,25 @@ tags: []
 
 - [JDownloader.org - Official Homepage](https://jdownloader.org/home/index)
 
-- [res-downloader: 视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!](https://github.com/putyy/res-downloader?tab=readme-ov-file)
-
 - [amule: ed2k下载](https://github.com/amule-project/amule)
 
 - [mldonkey: 支持 ED2K、Kad、BitTorrent 等多种网络](https://github.com/ygrek/mldonkey)
 - [FileCentipede: Cross-platform internet upload/download manager for HTTP(S), FTP(S), SSH, magnet-link, BitTorrent, m3u8, ed2k, and online videos. WebDAV client, FTP client, SSH client.](https://github.com/filecxx/FileCentipede)
+
+- [Tixati：跨平台的下载器，可以代替迅雷](https://tixati.com/)
+
+### 支持下载各种平台的下载器
+
+- [ytDownloader: gui下载器，支持数百种平台如youtube、bilibli等](https://github.com/aandrew-me/ytDownloader)
+
+- [res-downloader: 嗅探抓取资源。视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!](https://github.com/putyy/res-downloader?tab=readme-ov-file)
 
 # 图片
 
 - [upscayl：ai图片质量提升](https://github.com/upscayl/upscayl)
 
 - [pot-desktop：划词翻译，并支持ocr](https://github.com/pot-app/pot-desktop)
+    - [pot-app-plugin-list: 🌟Pot App Plugin Collection](https://github.com/pot-app/pot-app-plugin-list)
 
 - [PicGo：图床上传下载](https://github.com/Molunerfinn/PicGo)
 
@@ -188,15 +214,21 @@ tags: []
 
 - [qview](https://github.com/jurplel/qView)
 
+- [gwenview: KDE的](https://github.com/KDE/gwenview)
+
+- [KDE/digikam: digiKam is an advanced open-source digital photo management application that runs on Linux, Windows, and MacOS. The application provides a comprehensive set of tools for importing, managing, editing, and sharing photos and raw files.](https://github.com/KDE/digikam)
+
 ### gtk
 
-- [gthumb](https://github.com/GNOME/gthumb)
+- [gthumb：GNOME的](https://github.com/GNOME/gthumb)
 
 ### [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](caesium-image-compressor)
 
 ![image](./Pictures/awesomegui/caesium-image-compressor.avif)
 
 ## [digikam：本地图片管理](https://www.digikam.org/)
+
+## [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](https://github.com/Afilmory/afilmory)
 
 ## 截图
 
@@ -214,9 +246,16 @@ tags: []
 
 - [openscreen: 录屏加部分剪辑功能，可以更换背景，调整窗口大小，放大缩小等动效，添加文字等。满足最基本的录屏剪辑需求](https://github.com/siddharthvaddem/openscreen)
 
+## ocr截图识别文字
+
+- [TextSnatcher: 只支持英文](https://github.com/RajSolai/TextSnatcher)
+
+- [Umi-OCR: 使用PaddleOCR。支持截屏/批量导入图片，PDF文档识别，排除水印/页眉页脚，扫描/生成二维码。内置多国语言库。](https://github.com/hiroi-sora/Umi-OCR)
+
 ## 图片压缩
 
 - [PicSharp: A modern, full-featured, high-performance, cross-platform image compression application 具有现代化UI、功能齐全、高性能、跨平台的图像压缩工具](https://github.com/AkiraBit/PicSharp)
+- [caesium-image-compressor: Caesium is an image compression software that helps you store, send and share digital pictures, supporting JPG, PNG, WebP and TIFF formats. You can quickly reduce the file size (and resolution, if you want) by preserving the overall quality of the image.](https://github.com/Lymphatus/caesium-image-compressor)
 
 # 视频
 
@@ -241,6 +280,7 @@ tags: []
 - [winff: ffmpeg gtk/qt ui](https://github.com/WinFF/winff/)
 
 - [pyvideotrans：给视频配音、翻译配音、添加字幕](https://github.com/jianchang512/pyvideotrans)
+- [VideoLingo: Netflix级字幕切割、翻译、对齐、甚至加上配音，一键全自动视频搬运AI字幕组](https://github.com/Huanshere/VideoLingo)
 
 - [lossless-cut：视频剪切软件，目标是成为 FFmpeg 的图形前端。](https://github.com/mifi/lossless-cut)
 
@@ -253,11 +293,32 @@ tags: []
 # 音乐
 
 - [NSMusicS：支持各种云端平台](https://gitwhub.com/Super-Badmen-Viper/NSMusicS)
-- [iAJue/MoeKoeMusic: 一款开源简洁高颜值的酷狗第三方客户端](https://github.com/iAJue/MoeKoeMusic)
+
+- [MoeKoeMusic: 一款开源简洁高颜值的酷狗第三方客户端](https://github.com/iAJue/MoeKoeMusic)
 
 - [SPlayer：网易云音乐](https://github.com/imsyy/SPlayer)
 
 - [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
+
+- [lx-music-desktop: 一个基于 Electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
+
+    - [lx-music-source: 洛雪音乐源](https://github.com/pdone/lx-music-source)
+
+    - [lx-music-sync-server: 运行在 Node.js 上的 LX Music 数据同步服务](https://github.com/lyswhut/lx-music-sync-server)
+
+    - [any-listen: A cross-platform private music playback service](https://github.com/any-listen/any-listen?tab=readme-ov-file)
+
+# 音频
+
+- [SoundThread: Node based GUI for The Composers Desktop Project](https://github.com/j-p-higgins/SoundThread)
+
+- [easyeffects: 电脑音质提升软件-拯救你的破喇叭](https://github.com/wwmm/easyeffects)
+
+# 桌面软件和常见软件的第三方客户端
+
+- [FreeTube: youtube](https://github.com/FreeTubeApp/FreeTube)
+
+- [Github-Store: 平台的 GitHub 应用商店。这是一款基于 Kotlin 开发的跨平台开源应用商店客户端，支持一键发现热门开源项目、下载安装包（如 APK、EXE、DMG 、 AppImage、DEB、RPM等），以及追踪已安装应用并提示更新。](https://github.com/rainxchzed/Github-Store)
 
 # 投屏和远程控制
 
@@ -303,6 +364,11 @@ tags: []
 
 - [zathura: pdf, epub阅读器](https://github.com/pwmt/zathura)
 
+- [koreader: An ebook reader application supporting PDF, DjVu, EPUB, FB2 and many more formats, running on Cervantes, Kindle, Kobo, PocketBook and Android devices](https://github.com/koreader/koreader)
+
+    - [koreader/koreader-sync-server: self hostable synchronization service for koreader devices](https://github.com/koreader/koreader-sync-server)
+    - [assistant.koplugin: Assistant: AI Helper Plugin for KOReader : lets you interact with AI language models (Claude, GPT-4, Gemini, DeepSeek, Ollama etc.) while reading](https://github.com/omer-faruq/assistant.koplugin)
+
 - [foliate: pdf, epub阅读器](https://github.com/johnfactotum/foliate)
 
 - [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
@@ -310,6 +376,9 @@ tags: []
 - [note-gen:跨平台的 Markdown 笔记软件，支持接入 AI 模型](https://github.com/codexu/note-gen)
 
 - [marktext: markdown编辑器。typora免费代替品](https://github.com/marktext/marktext)
+
+- [pdfcraft: 无需上传文件的 PDF 全能工具箱。这是一款基于 Next.js 和 WebAssembly 构建的开源 PDF 工具箱，所有文件操作均在本地浏览器内完成，无需上传到外部服务器。它提供节点式编排 PDF 文件处理工作流，支持合并、拆分、OCR、格式转换等 90 多种功能。](https://github.com/PDFCraftTool/pdfcraft)
+
 
 # note
 
@@ -324,6 +393,8 @@ tags: []
 - [Zettlr](https://github.com/Zettlr/Zettlr)
 
 - [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
+
+- [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
 
 # ide
 
@@ -351,7 +422,11 @@ tags: []
 
 - [WeClone: 🚀从聊天记录创造数字分身的一站式解决方案💡 使用聊天记录微调大语言模型，让大模型有“那味儿”，并绑定到聊天机器人，实现自己的数字分身。 数字克隆/数字分身/数字永生/LLM/聊天机器人/LoRA](https://github.com/xming521/WeClone)
 
-# other
+# 金融
+
+- [OpenBB: Financial data platform for analysts, quants and AI agents.](https://github.com/OpenBB-finance/OpenBB)
+
+# 其他
 
 - [linux-wifi-hotspot](https://github.com/lakinduakash/linux-wifi-hotspot)
 
@@ -499,6 +574,14 @@ tags: []
 - [OpenStock: 免费炫酷的股票市场应用。这是一款基于 Next.js、TailwindCSS 和 MongoDB 构建的股票市场平台，提供实时行情、图表（K 线图、热力图）、新闻资讯和个性化监控等功能，专注于数据展示与分析，不支持交易。](https://github.com/Open-Dev-Society/OpenStock)
 
 - [OpenCut:剪映开源版](https://github.com/OpenCut-app/OpenCut)
+- [keepassxc: 跨平台密码管理器](https://github.com/keepassxreboot/keepassxc)
+- [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
+- [godot: 游戏引擎编辑器 Multi-platform 2D and 3D game engine](https://github.com/godotengine/godot)
+
+
+- [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
+    - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
+    - [wayland-bongocat: bongocat for your desktop ₍^. .^₎](https://github.com/saatvik333/wayland-bongocat)
 
 # 类似项目
 

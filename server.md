@@ -44,6 +44,7 @@ tags: []
     * [VPN](#vpn)
       * [openvpn](#openvpn)
       * [wireguard](#wireguard)
+      * [gotatun: rust版WireGuard](#gotatun-rust版wireguard)
     * [文件传输](#文件传输)
       * [samba](#samba)
     * [密钥管理平台](#密钥管理平台)
@@ -68,8 +69,6 @@ tags: []
     * [gonzo: 日志分析的tui](#gonzo-日志分析的tui)
   * [安全(security)](#安全security)
     * [以redis为例的服务检查](#以redis为例的服务检查)
-    * [WAF（web应用防火墙）](#wafweb应用防火墙)
-      * [SafeLine（雷池）: 通过过滤和监控 Web 应用与互联网之间的 HTTP 流量来保护 Web 服务。可以保护 Web 服务免受 SQL 注入、XSS、 代码注入、命令注入、CRLF 注入、ldap 注入、xpath 注入、RCE、XXE、SSRF、路径遍历、后门、暴力破解、CC、爬虫 等攻击。](#safeline雷池-通过过滤和监控-web-应用与互联网之间的-http-流量来保护-web-服务可以保护-web-服务免受-sql-注入xss-代码注入命令注入crlf-注入ldap-注入xpath-注入rcexxessrf路径遍历后门暴力破解cc爬虫-等攻击)
     * [ssh](#ssh-1)
       * [sshguard：阻止SSH暴力攻击](#sshguard阻止ssh暴力攻击)
       * [fail2ban：阻止SSH暴力攻击](#fail2ban阻止ssh暴力攻击)
@@ -87,12 +86,16 @@ tags: []
     * [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](#sqlmap-自动检测和利用-sql-注入漏洞获得数据库服务器的权限)
     * [ghauri：自动检测和利用 SQL 注入漏洞](#ghauri自动检测和利用-sql-注入漏洞)
     * [strix: AI 的安全测试工具，可自动对应用进行安全测试的 AI Agent。它能够集成到 CI/CD 流程，实现自动拉取代码并启动应用，然后模拟黑客行为寻找隐藏漏洞，支持漏洞检测/复现、自动修复、生成报告等功能。](#strix-ai-的安全测试工具可自动对应用进行安全测试的-ai-agent它能够集成到-cicd-流程实现自动拉取代码并启动应用然后模拟黑客行为寻找隐藏漏洞支持漏洞检测复现自动修复生成报告等功能)
-    * [beef: web渗透测试](#beef-web渗透测试)
     * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
     * [fscan：开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。](#fscan开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描它使用方便功能全面支持端口扫描常见的服务器爆破web-应用漏洞扫描netbios-嗅探等功能)
     * [clamav：cisco的反病毒引擎](#clamavcisco的反病毒引擎)
     * [gophish：开源的网络钓鱼平台。该项目提供了一个开箱即用的网络钓鱼平台，可用于模拟钓鱼攻击。它拥有友好的 Web 管理后台，支持邮件模板、批量发送邮件、网站克隆和数据可视化，适用于企业安全培训和渗透测试等场景。](#gophish开源的网络钓鱼平台该项目提供了一个开箱即用的网络钓鱼平台可用于模拟钓鱼攻击它拥有友好的-web-管理后台支持邮件模板批量发送邮件网站克隆和数据可视化适用于企业安全培训和渗透测试等场景)
     * [cve-bin-tool：二进制漏洞扫描工具](#cve-bin-tool二进制漏洞扫描工具)
+    * [trivy：漏洞扫描，一条命令就可以获取安全报告。包括容器、文件系统、虚拟机、操作系统、软件运行依赖、开源许可证是否合规使用等。](#trivy漏洞扫描一条命令就可以获取安全报告包括容器文件系统虚拟机操作系统软件运行依赖开源许可证是否合规使用等)
+    * [web](#web)
+      * [web-check: 网站分析工具](#web-check-网站分析工具)
+      * [beef: web渗透测试](#beef-web渗透测试)
+      * [SafeLine（雷池）:WAF（web应用防火墙）。 通过过滤和监控 Web 应用与互联网之间的 HTTP 流量来保护 Web 服务。可以保护 Web 服务免受 SQL 注入、XSS、 代码注入、命令注入、CRLF 注入、ldap 注入、xpath 注入、RCE、XXE、SSRF、路径遍历、后门、暴力破解、CC、爬虫 等攻击。](#safeline雷池wafweb应用防火墙-通过过滤和监控-web-应用与互联网之间的-http-流量来保护-web-服务可以保护-web-服务免受-sql-注入xss-代码注入命令注入crlf-注入ldap-注入xpath-注入rcexxessrf路径遍历后门暴力破解cc爬虫-等攻击)
     * [攻击](#攻击)
       * [aircrack-ng：wifi破解](#aircrack-ngwifi破解)
       * [hydra：密码破解](#hydra密码破解)
@@ -1084,6 +1087,8 @@ openvpn --genkey secret /etc/openvpn/server/ta.key
     wg-quick up wg0
     ```
 
+#### [gotatun: rust版WireGuard](https://github.com/mullvad/gotatun)
+
 ### 文件传输
 
 #### samba
@@ -1625,11 +1630,6 @@ nmap -A -p 6379 -script redis-info 127.0.0.1
     requirepass password
     ```
 
-
-### WAF（web应用防火墙）
-
-#### [SafeLine（雷池）: 通过过滤和监控 Web 应用与互联网之间的 HTTP 流量来保护 Web 服务。可以保护 Web 服务免受 SQL 注入、XSS、 代码注入、命令注入、CRLF 注入、ldap 注入、xpath 注入、RCE、XXE、SSRF、路径遍历、后门、暴力破解、CC、爬虫 等攻击。](https://github.com/chaitin/SafeLine)
-
 ### ssh
 
 - 修改密钥权限
@@ -1991,8 +1991,6 @@ clamscan -r --remove /
 
 ### [strix: AI 的安全测试工具，可自动对应用进行安全测试的 AI Agent。它能够集成到 CI/CD 流程，实现自动拉取代码并启动应用，然后模拟黑客行为寻找隐藏漏洞，支持漏洞检测/复现、自动修复、生成报告等功能。](https://github.com/usestrix/strix)
 
-### [beef: web渗透测试](https://github.com/beefproject/beef)
-
 ### lynis（安全审计以及加固工具）
 
 ```sh
@@ -2129,6 +2127,21 @@ systemctl status clamav-daemon
 ### [gophish：开源的网络钓鱼平台。该项目提供了一个开箱即用的网络钓鱼平台，可用于模拟钓鱼攻击。它拥有友好的 Web 管理后台，支持邮件模板、批量发送邮件、网站克隆和数据可视化，适用于企业安全培训和渗透测试等场景。](https://github.com/gophish/gophish)
 
 ### [cve-bin-tool：二进制漏洞扫描工具](https://github.com/intel/cve-bin-tool)
+
+
+### [trivy：漏洞扫描，一条命令就可以获取安全报告。包括容器、文件系统、虚拟机、操作系统、软件运行依赖、开源许可证是否合规使用等。](https://github.com/aquasecurity/trivy)
+
+
+### web
+
+#### [web-check: 网站分析工具](https://github.com/Lissy93/web-check)
+
+- [Web Check：在线使用，只需要复制网址即可](https://web-check.xyz/)
+
+
+#### [beef: web渗透测试](https://github.com/beefproject/beef)
+
+#### [SafeLine（雷池）:WAF（web应用防火墙）。 通过过滤和监控 Web 应用与互联网之间的 HTTP 流量来保护 Web 服务。可以保护 Web 服务免受 SQL 注入、XSS、 代码注入、命令注入、CRLF 注入、ldap 注入、xpath 注入、RCE、XXE、SSRF、路径遍历、后门、暴力破解、CC、爬虫 等攻击。](https://github.com/chaitin/SafeLine)
 
 ### 攻击
 
