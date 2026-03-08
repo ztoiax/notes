@@ -246,7 +246,8 @@ tags: []
 
 - [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
 
-- [Github-Store: A free, open-source app store for GitHub releases — browse, discover, and install apps with one click. Powered by Kotlin and Compose Multiplatform for Android & Desktop (Linux, MacOS, Windows).](https://github.com/rainxchzed/Github-Store)
+
+- [Gadgetbridge：开源的安卓应用，无需官方应用即可配对和管理各种智能设备（手表、手环、耳机等）。](https://gadgetbridge.org/)
 
 ### 工具
 
@@ -275,7 +276,6 @@ tags: []
 - [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
 
 - [legado-with-MD3: 使用 Material Design 3 全新设计的阅读 3.0](https://github.com/HapeLee/legado-with-MD3)
-
 #### 编辑器
 
 - [Xed-Editor: 内置 Termux 终端可运行 Python 和 Node.js，支持 200+ 编程语言语法高亮、自动缩进和文件管理等功能。](https://github.com/Xed-Editor/Xed-Editor)
@@ -287,6 +287,8 @@ tags: []
 - [aves: 相册](https://github.com/deckerst/aves)
 
 - [ImageToolbox：Android 设计的图像编辑工具。它完全免费，支持批量处理、滤镜、背景移除、尺寸调整和裁剪等多种功能。](https://github.com/T8RIN/ImageToolbox)
+
+- [RealSR-NCNN-Android: ai图片放大](https://github.com/tumuyan/RealSR-NCNN-Android)
 
 #### 视频播放器
 
@@ -313,6 +315,8 @@ tags: []
 
 - [nextplayer: An Android native video player](https://github.com/anilbeesetti/nextplayer)
 
+- [mpvEx: A beautiful media player for android, based on mpv-android and built with Jetpack Compose. Forked from mpvKt](https://github.com/marlboro-advance/mpvEx)
+
 #### 音乐播放器
 
 - [MusicFree：音乐播放器。通过插件可以播放各大平台的音乐](https://github.com/maotoumao/MusicFree)
@@ -322,6 +326,7 @@ tags: []
 
 - [lx-music-mobile: 一个基于 React native 开发的音乐软件](https://github.com/lyswhut/lx-music-mobile)
     - [lx-music-source: 洛雪音乐源](https://github.com/pdone/lx-music-source)
+- [PixelPlayer: 高颜值多功能的 Android 音乐播放器。这是一款本地优先、注重隐私的 Android 音乐播放器，拥有美观的 Material You 动态主题 ，界面可随专辑封面或手机壁纸自动变化，支持歌词显示、自定义歌曲过渡、桌面小部件、投屏播放、听歌统计等功能。](https://github.com/theovilardo/PixelPlayer)
 
 ### 应用管理
 
@@ -417,6 +422,8 @@ tags: []
 
 - [network_proxy_flutter：支持手机端的免费抓包工具](https://github.com/wanghongenpin/network_proxy_flutter)
 
+- [proxypin: 跨平台抓包gui](https://github.com/wanghongenpin/proxypin)
+
 - [afwall：对每个应用的iptable gui版](https://github.com/ukanth/afwall)
 
 - [traffic-light: 简的 Android 流量监控应用。这是一款免费开源、体积小且无广告的 Android 网络流量监控工具，支持状态栏显示实时网速、历史数据和应用级流量统计等功能。](https://github.com/leekleak/traffic-light)
@@ -451,6 +458,10 @@ tags: []
 
 - [NewPipe：youtube开源版，可以按时间顺序浏览up的视频](https://github.com/TeamNewPipe/NewPipe)
 
+- [zhihu-plus-plus: 去广告、占用低、AI大模型powered的新时代知乎安卓端体验。](https://github.com/zly2006/zhihu-plus-plus)
+
+- [olib-mobile: zlibrary第三方客户端](https://github.com/shiyi-0x7f/olib-mobile)
+
 ### 自动化
 
 - [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
@@ -477,6 +488,7 @@ tags: []
 - [roubao: 开源的 AI 手机自动化助手。这是一款开源的 Android AI 手机自动化助手，无需电脑即可让用户通过自然语言指令操控手机自动完成任务。它基于视觉语言模型识别屏幕截图，结合委托执行或 GUI 自动化，能够完成复杂的 App 交互任务。](https://github.com/Turbo1123/roubao)
 
 - [happy: 用手机操控 Claude Code 和 Codex。这是一款可以远程操作 Claude Code 或 Codex 的工具，让你随时随地通过手机查看和远程控制 AI 编程助手，提供了 iOS、Android 和 Web 客户端。](https://github.com/slopus/happy)
+- [ZeroClaw-Android: Run AI agents 24/7 on your Android phone. Native Rust core, 25+ providers (OpenAI, Claude, Gemini, Groq, DeepSeek, Ollama), encrypted key storage, plugin browser, Material You UI. Self-hosted alternative to Mac Mini setups. MIT licensed.](https://github.com/Natfii/ZeroClaw-Android)
 
 # 刷机
 
@@ -753,6 +765,8 @@ tags: []
     - 影视仓：类似于tvbox
 
     - [mytv-android](https://github.com/yaoxieyoulei/mytv-android)
+
+    - [LiteWebTV: 一款轻量优雅的WebTV电视软件](https://github.com/YukonKong/LiteWebTV)
 
     - BesTV粤视厅
 

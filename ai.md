@@ -41,10 +41,15 @@ tags: []
         * [LM Studio：ollama gui版](#lm-studioollama-gui版)
         * [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#anything-llm一个gui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
         * [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#cherry-studiogui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
+        * [AionUi: gui管理Free, local, open-source 24/7 Cowork and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!](#aionui-gui管理free-local-open-source-247-cowork-and-openclaw-for-gemini-cli-claude-code-codex-opencode-qwen-code-goose-cli-auggie-and-more---star-if-you-like-it)
+        * [cc-switch: gui配置管理。一键切换 Claude Code / Codex / Gemini CLI 的底层模型](#cc-switch-gui配置管理一键切换-claude-code--codex--gemini-cli-的底层模型)
         * [new-api: AI模型聚合管理中转分发系统，一个应用管理您的所有AI模型，支持将多种大模型转为统一格式调用，支持OpenAI、Claude、Gemini等格式，可供个人或者企业内部管理与分发渠道使用。🍥 A Unified AI Model Management & Distribution System. Aggregate all your LLMs into one app and access them via an OpenAI-compatible API, with native support for Claude (Messages) and Gemini formats.](#new-api-ai模型聚合管理中转分发系统一个应用管理您的所有ai模型支持将多种大模型转为统一格式调用支持openaiclaudegemini等格式可供个人或者企业内部管理与分发渠道使用-a-unified-ai-model-management--distribution-system-aggregate-all-your-llms-into-one-app-and-access-them-via-an-openai-compatible-api-with-native-support-for-claude-messages-and-gemini-formats)
       * [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](#shimmy一个只有-5mb-的单文件程序的ollama的代替品)
       * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
+    * [agent客户端](#agent客户端)
+    * [rag知识库相关](#rag知识库相关)
     * [其他命令行相关工具](#其他命令行相关工具)
+    * [其他应用](#其他应用)
   * [Transformer](#transformer)
   * [ai图片、视频](#ai图片视频)
     * [图片和视频理解](#图片和视频理解)
@@ -765,6 +770,10 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 ##### [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/CherryHQ/cherry-studio)
 
+##### [AionUi: gui管理Free, local, open-source 24/7 Cowork and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!](https://github.com/iOfficeAI/AionUi)
+
+##### [cc-switch: gui配置管理。一键切换 Claude Code / Codex / Gemini CLI 的底层模型](https://github.com/farion1231/cc-switch)
+
 #####  [new-api: AI模型聚合管理中转分发系统，一个应用管理您的所有AI模型，支持将多种大模型转为统一格式调用，支持OpenAI、Claude、Gemini等格式，可供个人或者企业内部管理与分发渠道使用。🍥 A Unified AI Model Management & Distribution System. Aggregate all your LLMs into one app and access them via an OpenAI-compatible API, with native support for Claude (Messages) and Gemini formats.](https://github.com/QuantumNous/new-api)
 
 #### [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](https://github.com/Michael-A-Kuykendall/shimmy)
@@ -781,6 +790,21 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - 显卡要支持webgpu：
     - 浏览器开启webgpu：`chrome://flags`下搜索`webgpu`然后启用。
+
+### agent客户端
+
+- [opencode: The open source coding agent.](https://github.com/anomalyco/opencode)
+
+- [agent-studio: AgentX is a GPU-accelerated, cross-platform desktop application that brings AI agents to your workflow. 跨平台、原生 Agent 桌面。](https://github.com/sxhxliang/agent-studio)
+- [workany: 开源的 AI Agent 桌面客户端，能够执行任务、操作文件，类似于 Claude Cowork](https://github.com/workany-ai/workany)
+
+- [dexter: 金融相关的](https://github.com/virattt/dexter)
+
+### rag知识库相关
+
+- [qmd: 本地运行的智能知识库搜索工具。这是一款完全本地运行的智能搜索引擎，可用于检索个人文档、知识库、会议记录和 Markdown 文件。它集成了本地运行轻量化模型、BM25 全文检索、向量语义搜索和重排序等功能，开箱即用、无需联网、支持 MCP 协议，可作为 AI 助手和 Agent 工作流中的知识搜索工具。](https://github.com/tobi/qmd)
+
+- [bilibili-rag: B站收藏夹RAG知识库：收藏不吃灰，B 站收藏夹 → 语音转写 → 向量检索 → 对话问答](https://github.com/via007/bilibili-rag)
 
 ### 其他命令行相关工具
 
@@ -799,14 +823,18 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [exo：组建ai集群](https://github.com/exo-explore/exo)
 
-- [liujuntao123/smart-mermaid: 一款基于 AI 技术的 Web 应用程序，可将文本内容智能转换为 Mermaid 格式的代码，并将其渲染成可视化图表。](https://github.com/liujuntao123/smart-mermaid)
+- [smart-mermaid: 一款基于 AI 技术的 Web 应用程序，可将文本内容智能转换为 Mermaid 格式的代码，并将其渲染成可视化图表。](https://github.com/liujuntao123/smart-mermaid)
 
 - [toon: 这是一种专为 LLM 提示词设计的数据序列化格式，比 JSON 节省 30-60% 的 Token。它融合了 YAML 和 CSV 的特点，紧凑且容易理解。官方提供了 TypeScript SDK 和命令行工具，能够轻松将 JSON 数据转换为 TOON 格式。](https://github.com/toon-format/toon)
 
 
 - [aichat: All-in-one LLM CLI tool featuring Shell Assistant, Chat-REPL, RAG, AI Tools & Agents, with access to OpenAI, Claude, Gemini, Ollama, Groq, and more.](https://github.com/sigoden/aichat)
 
-- [opencode: The open source coding agent.](https://github.com/anomalyco/opencode)
+- [ai-credit: 开源的命令行工具，统计代码仓库里 AI 的贡献，支持多种 AI 混用的情况。](https://github.com/debugtheworldbot/ai-credit)
+
+### 其他应用
+
+- [auto-paper-digest: 自动从 arXiv 抓取每周的热门 AI 论文，通过 NotebookLM 生成视频讲解，并能发布到抖音。](https://github.com/brianxiadong/auto-paper-digest)
 
 ## Transformer
 
@@ -1019,6 +1047,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [vibium: 一个二进制文件通过ai agent和mcp服务器自动化操作浏览器。由著名python项目selenium作者开发](https://github.com/VibiumDev/vibium)
 
+- [Tabbit 浏览器 - AI 智能浏览器](https://www.tabbit-ai.com/)
+
 ## ai搜索
 
 - [scira：原名为MiniPerplx](https://github.com/zaidmukaddam/scira)
@@ -1093,6 +1123,9 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
     - [Claude-Code-Usage-Monitor: Claude 用量实时监控助手。这是一个用于实时监控和记录开发者在使用 Claude AI 时产生的 Token 用量及费用的工具，支持用量统计、预算告警和套餐设置等功能。](https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor)
 
     - [claudish: Claude Code. Any Model. The most powerful AI coding agent now speaks every language.](https://github.com/MadAppGang/claudish)
+    - [Trellis: Claude Code & Cursor（兼容 Cursor/Opencode）的一个辅助工具，可以注入上下文、开启并行任务等](https://github.com/mindfold-ai/Trellis)
+
+    - [WellAlly-health: 一个基于 Claude Code 的个人医疗数据中心，定义了一组自己的命令和技能，用 AI 分析个人医疗数据（体检报告、影像片子、处方单、出院小结）](https://github.com/huifer/WellAlly-health)
 
 - [gemini-cli: 谷歌 Gemini 命令行工具。该项目是 Gemini 官方开源的命令行工具，将 Google Gemini 的强大能力集成到终端环境。它基于百万级上下文，能够理解大型代码库的架构和逻辑，支持多模态输入输出、Google 搜索以及 MCP 等功能。](https://github.com/google-gemini/gemini-cli)
 
@@ -1122,6 +1155,16 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [crush: The glamourous AI coding agent for your favourite terminal 💘](https://github.com/charmbracelet/crush)
 - [vibe-kanban: 集成claude code等终端，可以执行多个任务，因此不需要像claude code那样光等着ai执行，并且每个任务还是在git worktree下执行](https://github.com/BloopAI/vibe-kanban)
+
+- [openclaw: Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞](https://github.com/openclaw/openclaw)
+
+- [zeroclaw: rust版openclaw的 Agent 框架](https://github.com/zeroclaw-labs/zeroclaw)
+- [openfang: rust版openclaw的 Agent 操作系统。比zeroclaw功能更完善](https://github.com/RightNow-AI/openfang)
+
+- [nanobot: 轻量版OpenClaw](https://github.com/HKUDS/nanobot)
+
+- [openwork: Claude Cowork的平替开源版](https://github.com/different-ai/openwork)
+- [GitNexus: 无论是 Cursor 还是 Claude Code，都已经成了不少开发者每天必开的开发利器。然而，用 AI 写代码最怕遇到的是，刚修好了一个 Bug，却在意想不到的角落引爆了三个新 Bug。它能把整个代码库在本地嚼碎，将每一个依赖项、调用链条和工作流程都梳理得明明白白。接着通过极其聪明的检索机制，让 AI 真正读懂底层逻辑，不再漏掉关键上下文。](https://github.com/abhigyanpatwari/GitNexus)
 
 ## ai数据库终端
 

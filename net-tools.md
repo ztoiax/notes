@@ -40,7 +40,9 @@ tags: []
         * [发送/上传数据 POST PATCH DELETE](#发送上传数据-post-patch-delete)
         * [.curlrc配置文件](#curlrc配置文件)
         * [格式化输出和变量](#格式化输出和变量)
+      * [explain-my-curl: tui版curl.Takes a curl command and explains DNS/TLS/HTTP details step-by-step](#explain-my-curl-tui版curltakes-a-curl-command-and-explains-dnstlshttp-details-step-by-step)
       * [trurl：curl作者的新作品](#trurlcurl作者的新作品)
+      * [resterm: tui版 Terminal API client for HTTP/GraphQL/gRPC with support for SSH tunnels, WebSockets, SSE, workflows, profiling, OpenAPI and response diffs.](#resterm-tui版-terminal-api-client-for-httpgraphqlgrpc-with-support-for-ssh-tunnels-websockets-sse-workflows-profiling-openapi-and-response-diffs)
       * [yaak: Rust+Tauri的postman代替版。支持一键导入 Postman/Insomnia 数据，轻松无缝切换。无论是 REST、GraphQL 还是 gRPC，都能完美支持。](#yaak-rusttauri的postman代替版支持一键导入-postmaninsomnia-数据轻松无缝切换无论是-restgraphql-还是-grpc都能完美支持)
       * [posting：tui版postman](#postingtui版postman)
       * [atac: rust开发的tui版postman ](#atac-rust开发的tui版postman-)
@@ -87,6 +89,7 @@ tags: []
     * [EasyTshark: tshark的gui，提供实时抓包和离线分析功能，支持数据包的SQLite存储和XML/JSON格式转换](#easytshark-tshark的gui提供实时抓包和离线分析功能支持数据包的sqlite存储和xmljson格式转换)
     * [stratoshark：云环境的wireshark](#stratoshark云环境的wireshark)
     * [oryx：基于 eBPF的 Linux 网络流量分析工具tui。这是一款基于 eBPF 技术的网络流量嗅探分析工具，在 Linux 上秒开网络流量全景监控。它提供终端可视化界面，详细展示流量统计信息，支持防火墙规则管理、模糊搜索和数据导出等功能](#oryx基于-ebpf的-linux-网络流量分析工具tui这是一款基于-ebpf-技术的网络流量嗅探分析工具在-linux-上秒开网络流量全景监控它提供终端可视化界面详细展示流量统计信息支持防火墙规则管理模糊搜索和数据导出等功能)
+    * [proxypin: 跨平台抓包gui](#proxypin-跨平台抓包gui)
     * [ptcpdump：抓包](#ptcpdump抓包)
     * [netcap：跟踪整个协议栈的抓包工具](#netcap跟踪整个协议栈的抓包工具)
     * [ngrep：抓包版grep](#ngrep抓包版grep)
@@ -962,6 +965,8 @@ curl -X DELETE 'https://jsonplaceholder.typicode.com/todos/321'
               总时间:  0.223992s
     ```
 
+#### [explain-my-curl: tui版curl.Takes a curl command and explains DNS/TLS/HTTP details step-by-step](https://github.com/akgitrepos/explain-my-curl)
+
 #### [trurl：curl作者的新作品](https://github.com/curl/trurl)
 
 - trurl 是一个用于解析 URL 的专用工具
@@ -995,6 +1000,8 @@ trurl --url "https://example.com/?name=hello" --json
   }
 ]
 ```
+
+#### [resterm: tui版 Terminal API client for HTTP/GraphQL/gRPC with support for SSH tunnels, WebSockets, SSE, workflows, profiling, OpenAPI and response diffs.](https://github.com/unkn0wn-root/resterm)
 
 #### [yaak: Rust+Tauri的postman代替版。支持一键导入 Postman/Insomnia 数据，轻松无缝切换。无论是 REST、GraphQL 还是 gRPC，都能完美支持。](https://github.com/mountain-loop/yaak)
 
@@ -1541,6 +1548,8 @@ tshark -q -n -r test.pcapng -z ip_srcdst,tree
 ### [stratoshark：云环境的wireshark](https://stratoshark.org/)
 
 ### [oryx：基于 eBPF的 Linux 网络流量分析工具tui。这是一款基于 eBPF 技术的网络流量嗅探分析工具，在 Linux 上秒开网络流量全景监控。它提供终端可视化界面，详细展示流量统计信息，支持防火墙规则管理、模糊搜索和数据导出等功能](github.com/pythops/oryx)
+
+### [proxypin: 跨平台抓包gui](https://github.com/wanghongenpin/proxypin)
 
 ### [ptcpdump：抓包](https://github.com/mozillazg/ptcpdump)
 

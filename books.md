@@ -55,6 +55,8 @@ tags: []
     * [深度学习](#深度学习)
     * [llm大模型](#llm大模型)
       * [agent](#agent)
+      * [Claude Code](#claude-code)
+      * [claude skill](#claude-skill)
   * [机器人](#机器人)
   * [硬件](#硬件)
     * [GPU](#gpu)
@@ -850,6 +852,14 @@ tags: []
 
 - [agentic-design-patterns-cn: 《Agentic Design Patterns》中文翻译版。这本书系统性地介绍了构建现代 AI 智能体（Agent）的实践方法与设计模式，包括提示链、RAG、MCP 和多智能体协作等内容。](https://github.com/ginobefun/agentic-design-patterns-cn)
 
+#### Claude Code
+
+- [Claude Code in Action：Anthropic 官方的 Claude Code 免费入门教程，一共15节视频课，总长约1小时。](https://anthropic.skilljar.com/claude-code-in-action)
+- [learn-claude-code: 从零开始动手实现 AI Agent。该项目是讲解如何从零构建类似 Claude Code  的 AI Agent 工具，共计 12 节课，每节课都有一个可运行的 Python 文件。内容从最基础的 Agent 循环，逐步叠加工具调用、任务规划、子智能体、上下文压缩、多智能体协作和自主执行等功能，最终构建出一个完整的 AI Agent 系统。](https://github.com/shareAI-lab/learn-claude-code)
+#### claude skill
+
+- [anthropics/skills: Claude 官方开源的 Skills 教程。该项目是 Anthropic 官方开源的 Agent Skills 仓库，介绍如何通过标准化的 SKILL.md 文件结构，将提示词和工具调用封装为插件形式，为 AI 助手提供可动态加载的技能包，以可复用的方式更好地完成特定任务。](https://github.com/anthropics/skills)
+
 ## 机器人
 
 - [how-to-learn-robotics](https://qiu6401.gitbook.io/how-to-learn-robotics)机器人学自学指南。这本指南专为非科班的小伙伴而设计，旨在指导他们如何学习机器人学。它包含了必备知识、入门教材推荐、实践项目以及进阶方法等内容，帮助读者逐步成长为一名优秀的机器人工程师。
@@ -1569,6 +1579,7 @@ RabbitMQ实战指南》作者
         > 介绍各种linux适合服务器部署的、好玩的项目
 
     - HelloGithub
+    - GitHubDaily
     - Python猫
     - 奇妙的Linux世界
     - Linux公社
@@ -1799,6 +1810,9 @@ RabbitMQ实战指南》作者
     - [星球研究所](https://space.bilibili.com/326427334)
         > 介绍地理。风景和动画做得好
 
+    - [轨迹球TRACKBALL](https://space.bilibili.com/22338935)
+        > 城市地理，科普做得好
+
     - [有点意思研究所](https://space.bilibili.com/33397277)
         > 历史地理
 
@@ -1934,13 +1948,16 @@ RabbitMQ实战指南》作者
     > 简单的膳食制作
 
 - [硬核料理男子Tiger](https://space.bilibili.com/12383027)
+    > 科学烹饪
 
 - [吉尔的小灯塔](https://space.bilibili.com/2013555)
+    > 科学烹饪
+
+- [马蹄厨房](https://space.bilibili.com/24301201/upload/video)
+    > 粤菜
 
 - [猫哥揾食](https://space.bilibili.com/1501001552)
 
-- [吉尔的小灯塔](https://space.bilibili.com/2013555)
-    > 科研美食
 
 ## 农业和水产
 
@@ -2114,7 +2131,11 @@ RabbitMQ实战指南》作者
     - [早啊Chloe](https://space.bilibili.com/35939246)
         > 胡塞尔、海德格尔
 
+    - [Quaerite](https://space.bilibili.com/279190902)
+        > 欧陆哲学和法学
+
     - [人大刘海龙](https://space.bilibili.com/2021254363)
+        > 传播学
 
     - [做播可梦的橙子](https://space.bilibili.com/1902706043)
         > 罗兰巴特
@@ -2204,6 +2225,8 @@ RabbitMQ实战指南》作者
     - 公民哲学
     - 复旦哲学思想
     - 复旦哲学青年
+    - 理论界
+        > 辽宁报刊传媒集团
     - 文艺：
         - 文艺研究
         - 文艺争鸣
@@ -2359,6 +2382,10 @@ RabbitMQ实战指南》作者
     - 史学理论研究官方公众号
     - 史学史研究编辑部
     - 世界中世纪史研究
+    - 西域研究
+        > 新疆维吾尔自治区社会科学院
+    - 西藏研究
+        > 西藏自治区社会科学院
     - 施展世界
     - 全球研究Global Studies Forum
     - 新史学丛刊
@@ -2389,6 +2416,9 @@ RabbitMQ实战指南》作者
     - 苏区研究
     - 南亚观察
     - 南亚研究通讯
+    - 北外南亚研究
+    - 南亚问题研究小组
+    - 季风实验室
     - 东北亚学刊
     - 东北亚研究通讯
     - 东亚视界
@@ -2403,6 +2433,7 @@ RabbitMQ实战指南》作者
     - 比较政治学研究集刊CSSCI
     - 行政论坛编辑部
     - 中大行政评论
+    - 新法家网站
     - 岳麓公管学术之窗
         > 湖南大学
     - 中共中央党校（国家行政学院）学报
@@ -2420,11 +2451,17 @@ RabbitMQ实战指南》作者
     - 科社共运动态+
     - 阶级与哲学
     - 世界观察局
+    - 太平洋学报PacificJournal
+    - 区域国别学科
+    - 西亚非洲
+        > 中国社会科学院西亚非洲研究所
+    - 中东观察员
+    - 西北大学伊朗研究
     - 上外中东研究所
         > 阿拉伯世界研究的发布者
+    - 东南亚学人
     - 南洋问题研究
-        > 东南亚、东南亚犯罪
-
+        > 东南亚、东南亚犯罪 
     - 东北亚研究通讯
     - 东亚研究
     - Nov
@@ -2449,6 +2486,7 @@ RabbitMQ实战指南》作者
     - 开放时代杂志
     - 探索与争鸣
     - 社会科学文摘
+    - 民族研究ENS
     - 实践历史与社科研究
     - 社会CJS
     - 社会学研究杂志
@@ -2456,6 +2494,8 @@ RabbitMQ实战指南》作者
     - 中国青年研究
     - 性研究ing
     - 华中科技大学学报社会科学版
+    - 湖北大学学报
+    - 云南大学社会科学版
     - 社会学会社
     - 国际新闻界
     - 国家现代化建设研究
@@ -2471,6 +2511,7 @@ RabbitMQ实战指南》作者
         > 秦晖
     - 新乡土
     - 乡村发现
+    - 农民问题研究所
     - 国仁乡村发展中心
     - 国仁乡建
     - 中国农村调查
@@ -2490,6 +2531,7 @@ RabbitMQ实战指南》作者
         > 上海社会科学研究院文学研究所
 
     - 北京大学学报
+    - 中国社会科学院大学学报
     - 许纪霖之窗
         > 介绍公共领域，不同城市的文化和中产阶级
 
@@ -2831,6 +2873,7 @@ RabbitMQ实战指南》作者
     - [高剑犁](https://space.bilibili.com/59104725)
 
     - [小黛晨读](https://space.bilibili.com/1556651916)
+    - [王小七Fire](https://space.bilibili.com/680677803)
 
     - [大闲人贾白](https://space.bilibili.com/549117578)
         > 深入了解诈骗、各种社会现象的知识类up主
@@ -2839,6 +2882,7 @@ RabbitMQ实战指南》作者
         > 深入了解诈骗、各种社会现象的知识类up主
 
     - [硬核奇点](https://space.bilibili.com/508959410)
+        > 深入了解诈骗、各种社会现象的知识类up主
 
     - [卢克文工作室](https://www.bilibili.com/video/BV1bUwGe1Eew)
 
@@ -2847,6 +2891,8 @@ RabbitMQ实战指南》作者
 
     - [咨云君](https://space.bilibili.com/1064527785)
         > 企业金融犯罪等
+
+    - [路口大爷](https://space.bilibili.com/1908067732)
 
     - [赵皓阳](https://space.bilibili.com/25776635)
         > 禁止右转的b站号
@@ -2860,6 +2906,9 @@ RabbitMQ实战指南》作者
     - [广州禁毒](https://space.bilibili.com/443285454)
         > 预防毒品
 
+    - [印度胖亚瑟投稿视频-印度胖亚瑟视频分享-哔哩哔哩视频](https://space.bilibili.com/300159010)
+        > 印度新闻
+
 - 微信公众号
 
     - 中国政府网
@@ -2867,6 +2916,9 @@ RabbitMQ实战指南》作者
 
     - 职场故事荟
         > it职场
+
+    - 体制洞察
+        > 体制新闻
 
     - 云头条
         > it项目，it职场

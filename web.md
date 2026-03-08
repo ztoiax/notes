@@ -124,6 +124,11 @@ tags: []
 
 - [myopic_defocus: 一种保护眼睛减少近视的护眼模式](https://github.com/refractify/myopic_defocus)
 
+- [gemini-voyager: 增强gemini](https://github.com/Nagi-ovo/gemini-voyager)
+- [mouse-gestures: 鼠标手势](https://github.com/Chance-fyi/mouse-gestures)
+
+- [pakku.js: 拯救 B 站弹幕体验的浏览器插件。这是一款专为提升哔哩哔哩网站弹幕体验的浏览器插件，能够自动合并重复或相似的弹幕内容，还你清爽的弹幕视频体验。](https://github.com/xmcp/pakku.js)
+
 # CGI和FastCGI
 
 - Web服务器能解析HTTP请求，返回静态资源（HTML页、图片等），但要输出动态内容，必须得PHP/C#/Ruby/Java/Python/C/C++这些外部程序来实现。

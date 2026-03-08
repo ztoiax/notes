@@ -68,7 +68,6 @@ tags: []
     * [rsyslog](#rsyslog)
     * [gonzo: 日志分析的tui](#gonzo-日志分析的tui)
   * [安全(security)](#安全security)
-    * [以redis为例的服务检查](#以redis为例的服务检查)
     * [ssh](#ssh-1)
       * [sshguard：阻止SSH暴力攻击](#sshguard阻止ssh暴力攻击)
       * [fail2ban：阻止SSH暴力攻击](#fail2ban阻止ssh暴力攻击)
@@ -78,23 +77,30 @@ tags: []
     * [ntp(同步时间服务)](#ntp同步时间服务)
     * [关闭 core dump](#关闭-core-dump)
     * [selinux](#selinux)
-    * [tcp_wrappers: 第二层防火墙](#tcp_wrappers-第二层防火墙)
-    * [aide：保存当前文件的状态（新增的文件、修改时间、权限、文件哈希值），日后可以对比](#aide保存当前文件的状态新增的文件修改时间权限文件哈希值日后可以对比)
     * [metasploit](#metasploit)
-    * [rkhunter: 检查 rookit](#rkhunter-检查-rookit)
-    * [clamav: 病毒扫描](#clamav-病毒扫描)
-    * [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](#sqlmap-自动检测和利用-sql-注入漏洞获得数据库服务器的权限)
-    * [ghauri：自动检测和利用 SQL 注入漏洞](#ghauri自动检测和利用-sql-注入漏洞)
     * [strix: AI 的安全测试工具，可自动对应用进行安全测试的 AI Agent。它能够集成到 CI/CD 流程，实现自动拉取代码并启动应用，然后模拟黑客行为寻找隐藏漏洞，支持漏洞检测/复现、自动修复、生成报告等功能。](#strix-ai-的安全测试工具可自动对应用进行安全测试的-ai-agent它能够集成到-cicd-流程实现自动拉取代码并启动应用然后模拟黑客行为寻找隐藏漏洞支持漏洞检测复现自动修复生成报告等功能)
     * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
-    * [fscan：开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。](#fscan开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描它使用方便功能全面支持端口扫描常见的服务器爆破web-应用漏洞扫描netbios-嗅探等功能)
-    * [clamav：cisco的反病毒引擎](#clamavcisco的反病毒引擎)
-    * [gophish：开源的网络钓鱼平台。该项目提供了一个开箱即用的网络钓鱼平台，可用于模拟钓鱼攻击。它拥有友好的 Web 管理后台，支持邮件模板、批量发送邮件、网站克隆和数据可视化，适用于企业安全培训和渗透测试等场景。](#gophish开源的网络钓鱼平台该项目提供了一个开箱即用的网络钓鱼平台可用于模拟钓鱼攻击它拥有友好的-web-管理后台支持邮件模板批量发送邮件网站克隆和数据可视化适用于企业安全培训和渗透测试等场景)
-    * [cve-bin-tool：二进制漏洞扫描工具](#cve-bin-tool二进制漏洞扫描工具)
     * [trivy：漏洞扫描，一条命令就可以获取安全报告。包括容器、文件系统、虚拟机、操作系统、软件运行依赖、开源许可证是否合规使用等。](#trivy漏洞扫描一条命令就可以获取安全报告包括容器文件系统虚拟机操作系统软件运行依赖开源许可证是否合规使用等)
+    * [防火墙](#防火墙)
+      * [tcp_wrappers: 第二层防火墙](#tcp_wrappers-第二层防火墙)
+    * [文件相关](#文件相关)
+      * [clamav：cisco的反病毒引擎](#clamavcisco的反病毒引擎)
+      * [KubeSec：ClamAV开源的反病毒引擎](#kubesecclamav开源的反病毒引擎)
+      * [cve-bin-tool：二进制漏洞扫描工具](#cve-bin-tool二进制漏洞扫描工具)
+      * [aide：保存当前文件的状态（新增的文件、修改时间、权限、文件哈希值），日后可以对比](#aide保存当前文件的状态新增的文件修改时间权限文件哈希值日后可以对比)
+      * [rkhunter: 检查 rookit。检测基本的文件, 文件的权限, 内核模块等](#rkhunter-检查-rookit检测基本的文件-文件的权限-内核模块等)
+    * [数据库相关](#数据库相关)
+      * [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](#sqlmap-自动检测和利用-sql-注入漏洞获得数据库服务器的权限)
+      * [ghauri：自动检测和利用 SQL 注入漏洞](#ghauri自动检测和利用-sql-注入漏洞)
+      * [以redis为例的服务检查](#以redis为例的服务检查)
+    * [网络相关](#网络相关)
+      * [maltrail: 恶意流量检测。 它会自动对比各种恶意 IP 和域名的黑名单，一旦发现可疑连接就会报警。](#maltrail-恶意流量检测-它会自动对比各种恶意-ip-和域名的黑名单一旦发现可疑连接就会报警)
+      * [fscan：开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。](#fscan开源的内网安全扫描工具提供了一键自动化全方位的漏洞扫描它使用方便功能全面支持端口扫描常见的服务器爆破web-应用漏洞扫描netbios-嗅探等功能)
+      * [gophish：开源的网络钓鱼平台。该项目提供了一个开箱即用的网络钓鱼平台，可用于模拟钓鱼攻击。它拥有友好的 Web 管理后台，支持邮件模板、批量发送邮件、网站克隆和数据可视化，适用于企业安全培训和渗透测试等场景。](#gophish开源的网络钓鱼平台该项目提供了一个开箱即用的网络钓鱼平台可用于模拟钓鱼攻击它拥有友好的-web-管理后台支持邮件模板批量发送邮件网站克隆和数据可视化适用于企业安全培训和渗透测试等场景)
     * [web](#web)
       * [web-check: 网站分析工具](#web-check-网站分析工具)
       * [beef: web渗透测试](#beef-web渗透测试)
+      * [shannon: Fully autonomous AI hacker to find actual exploits in your web apps. Shannon has achieved a 96.15% success rate on the hint-free, source-aware XBOW Benchmark.](#shannon-fully-autonomous-ai-hacker-to-find-actual-exploits-in-your-web-apps-shannon-has-achieved-a-9615-success-rate-on-the-hint-free-source-aware-xbow-benchmark)
       * [SafeLine（雷池）:WAF（web应用防火墙）。 通过过滤和监控 Web 应用与互联网之间的 HTTP 流量来保护 Web 服务。可以保护 Web 服务免受 SQL 注入、XSS、 代码注入、命令注入、CRLF 注入、ldap 注入、xpath 注入、RCE、XXE、SSRF、路径遍历、后门、暴力破解、CC、爬虫 等攻击。](#safeline雷池wafweb应用防火墙-通过过滤和监控-web-应用与互联网之间的-http-流量来保护-web-服务可以保护-web-服务免受-sql-注入xss-代码注入命令注入crlf-注入ldap-注入xpath-注入rcexxessrf路径遍历后门暴力破解cc爬虫-等攻击)
     * [攻击](#攻击)
       * [aircrack-ng：wifi破解](#aircrack-ngwifi破解)
@@ -1607,29 +1613,6 @@ gonzo --otlp
 
 ## 安全(security)
 
-### 以redis为例的服务检查
-
-- 检查端口是否有暴露
-
-```sh
-# 查看本不应该对外暴露的服务redis, 是否监听0.0.0.0
-netstat -antlp
-# 查看INPUT链是否有暴露端口
-iptables -L -n
-
-# 扫描redis端口6379
-nmap -A -p 6379 -script redis-info 127.0.0.1
-```
-
-- 使用普通用户, 而不是root启动redis
-
-- redis配置文件加入密码验证
-
-    ```
-    # redis.conf
-    requirepass password
-    ```
-
 ### ssh
 
 - 修改密钥权限
@@ -1874,7 +1857,50 @@ setenforce 0
 SELINUX=disabled
 ```
 
-### tcp_wrappers: 第二层防火墙
+### [metasploit](https://github.com/rapid7/metasploit-framework)
+
+```sh
+# 启动控制台
+msfconsole
+
+# 查看模块
+show exploits
+
+# 查看辅助模块
+show auxiliary
+
+# 搜索kvm模块
+search kvm
+
+# 查看当前模块负载
+show payloads
+```
+
+### [strix: AI 的安全测试工具，可自动对应用进行安全测试的 AI Agent。它能够集成到 CI/CD 流程，实现自动拉取代码并启动应用，然后模拟黑客行为寻找隐藏漏洞，支持漏洞检测/复现、自动修复、生成报告等功能。](https://github.com/usestrix/strix)
+
+### lynis（安全审计以及加固工具）
+
+```sh
+# 扫描系统
+lynis audit system
+```
+
+   ```
+
+    ```sh
+    # 重启clamd服务
+    systemctl restart clamav-daemon
+
+    # 验证clamd是否启用了TCP socket
+    ss -tulnp | grep clamd
+    tcp   LISTEN 0      15           0.0.0.0:3310      0.0.0.0:*    users:(("clamd",pid=895,fd=4))
+    ```
+
+
+### [trivy：漏洞扫描，一条命令就可以获取安全报告。包括容器、文件系统、虚拟机、操作系统、软件运行依赖、开源许可证是否合规使用等。](https://github.com/aquasecurity/trivy)
+### 防火墙
+
+#### tcp_wrappers: 第二层防火墙
 
 > tcp_wrappers 为第二层防火墙, iptables 为第一层防火墙
 
@@ -1904,63 +1930,10 @@ ALL:ALL EXCEPT 192.168.1.1
     ```
 
 
-### aide：保存当前文件的状态（新增的文件、修改时间、权限、文件哈希值），日后可以对比
 
-```sh
-# 生成数据库，时间比较长
-aide -i
+### 文件相关
 
-# 改名
-mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
-
-# 把现在的文件对比之前保存的状态，时间比较长
-aide -C
-```
-
-### [metasploit](https://github.com/rapid7/metasploit-framework)
-
-```sh
-# 启动控制台
-msfconsole
-
-# 查看模块
-show exploits
-
-# 查看辅助模块
-show auxiliary
-
-# 搜索kvm模块
-search kvm
-
-# 查看当前模块负载
-show payloads
-```
-
-### rkhunter: 检查 rookit
-
-> 检测基本的文件, 文件的权限, 内核模块等
-
-- [archwiki](https://wiki.archlinux.org/index.php/Rkhunter)
-
-- rookit
-
-    - 1.文件级别rookit:
-
-        - 通过软件漏洞, 从而替换命令文件. 比方说/bin/login命令, 每个用户登陆都会执行该命令, 替换后从而获取密码
-
-    - 2.内核级别rookit:
-
-        - 可以修改内核, 从而劫持api, 使本是执行a程序, 变为执行b程序
-
-```bash
-# 更新数据库
-sudo rkhunter --update
-
-# 检查
-sudo rkhunter --check
-```
-
-### clamav: 病毒扫描
+#### [clamav：cisco的反病毒引擎](https://github.com/Cisco-Talos/clamav)
 
 ```sh
 # 更新病毒库
@@ -1973,36 +1946,13 @@ clamscan -r --bell -i /
 clamscan -r --remove /
 ```
 
-### [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](https://github.com/sqlmapproject/sqlmap)
-
-### [ghauri：自动检测和利用 SQL 注入漏洞](https://github.com/r0oth3x49/ghauri)
-
-- 支持布尔注入、错误注入、时间注入、堆叠注入
-- 支持 MySQL、Microsoft SQL Server、Postgres、Oracle、Microsoft Access 的注入
-- 支持基于 GET/POST的注入、基于 Header 注入、基于 Cookie 注入、表单数据注入、基于 JSON 注入
-- 支持代理选项
-- 支持从 txt 文件解析请求
-- 支持针对数据库、表、列和转储数据提取
-- 支持操作阶段恢复
-- 支持 urlencoding 跳过
-- 支持基于布尔值/时间注入的提取字符验证
-- 支持根据用户需求处理重定向
-
-
-### [strix: AI 的安全测试工具，可自动对应用进行安全测试的 AI Agent。它能够集成到 CI/CD 流程，实现自动拉取代码并启动应用，然后模拟黑客行为寻找隐藏漏洞，支持漏洞检测/复现、自动修复、生成报告等功能。](https://github.com/usestrix/strix)
-
-### lynis（安全审计以及加固工具）
-
 ```sh
-# 扫描系统
-lynis audit system
+# 有两个进程
+systemctl start clamav-daemon
+systemctl start clamav-freshclam
 ```
 
-### [fscan：开源的内网安全扫描工具](https://github.com/shadow1ng/fscan)提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。
-
-### [clamav：cisco的反病毒引擎](https://github.com/Cisco-Talos/clamav)
-
-- [KubeSec：ClamAV开源的反病毒引擎](https://mp.weixin.qq.com/s/iaTz7YqbkteaGo4XuX9lHg)
+#### [KubeSec：ClamAV开源的反病毒引擎](https://mp.weixin.qq.com/s/iaTz7YqbkteaGo4XuX9lHg)
 
 - 它广泛应用于邮件网关、文件服务器和终端设备上，用于检测和删除各种恶意软件，包括病毒、木马、间谍软件等。
 
@@ -2113,24 +2063,94 @@ systemctl status clamav-daemon
 
     # Uncomment and set the TCPAddr to your desired IP address (usually 127.0.0.1 for local access)
     TCPAddr 0.0.0.0
+ 
+#### [cve-bin-tool：二进制漏洞扫描工具](https://github.com/intel/cve-bin-tool)
+
+#### aide：保存当前文件的状态（新增的文件、修改时间、权限、文件哈希值），日后可以对比
+
+```sh
+# 生成数据库，时间比较长
+aide -i
+
+# 改名
+mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+
+# 把现在的文件对比之前保存的状态，时间比较长
+aide -C
+```
+
+#### rkhunter: 检查 rookit。检测基本的文件, 文件的权限, 内核模块等
+
+- [archwiki](https://wiki.archlinux.org/index.php/Rkhunter)
+
+- rookit
+
+    - 1.文件级别rookit:
+
+        - 通过软件漏洞, 从而替换命令文件. 比方说/bin/login命令, 每个用户登陆都会执行该命令, 替换后从而获取密码
+
+    - 2.内核级别rookit:
+
+        - 可以修改内核, 从而劫持api, 使本是执行a程序, 变为执行b程序
+
+```bash
+# 更新数据库
+sudo rkhunter --update
+
+# 检查
+sudo rkhunter --check
+```
+
+
+### 数据库相关
+
+#### [sqlmap: 自动检测和利用 SQL 注入漏洞，获得数据库服务器的权限。](https://github.com/sqlmapproject/sqlmap)
+
+#### [ghauri：自动检测和利用 SQL 注入漏洞](https://github.com/r0oth3x49/ghauri)
+
+- 支持布尔注入、错误注入、时间注入、堆叠注入
+- 支持 MySQL、Microsoft SQL Server、Postgres、Oracle、Microsoft Access 的注入
+- 支持基于 GET/POST的注入、基于 Header 注入、基于 Cookie 注入、表单数据注入、基于 JSON 注入
+- 支持代理选项
+- 支持从 txt 文件解析请求
+- 支持针对数据库、表、列和转储数据提取
+- 支持操作阶段恢复
+- 支持 urlencoding 跳过
+- 支持基于布尔值/时间注入的提取字符验证
+- 支持根据用户需求处理重定向
+
+#### 以redis为例的服务检查
+
+- 检查端口是否有暴露
+
+```sh
+# 查看本不应该对外暴露的服务redis, 是否监听0.0.0.0
+netstat -antlp
+# 查看INPUT链是否有暴露端口
+iptables -L -n
+
+# 扫描redis端口6379
+nmap -A -p 6379 -script redis-info 127.0.0.1
+```
+
+- 使用普通用户, 而不是root启动redis
+
+- redis配置文件加入密码验证
+
+    ```
+    # redis.conf
+    requirepass password
     ```
 
-    ```sh
-    # 重启clamd服务
-    systemctl restart clamav-daemon
-
-    # 验证clamd是否启用了TCP socket
-    ss -tulnp | grep clamd
-    tcp   LISTEN 0      15           0.0.0.0:3310      0.0.0.0:*    users:(("clamd",pid=895,fd=4))
-    ```
-
-### [gophish：开源的网络钓鱼平台。该项目提供了一个开箱即用的网络钓鱼平台，可用于模拟钓鱼攻击。它拥有友好的 Web 管理后台，支持邮件模板、批量发送邮件、网站克隆和数据可视化，适用于企业安全培训和渗透测试等场景。](https://github.com/gophish/gophish)
-
-### [cve-bin-tool：二进制漏洞扫描工具](https://github.com/intel/cve-bin-tool)
 
 
-### [trivy：漏洞扫描，一条命令就可以获取安全报告。包括容器、文件系统、虚拟机、操作系统、软件运行依赖、开源许可证是否合规使用等。](https://github.com/aquasecurity/trivy)
+### 网络相关
 
+#### [maltrail: 恶意流量检测。 它会自动对比各种恶意 IP 和域名的黑名单，一旦发现可疑连接就会报警。](https://github.com/stamparm/maltrail)
+
+#### [fscan：开源的内网安全扫描工具](https://github.com/shadow1ng/fscan)提供了一键自动化全方位的漏洞扫描。它使用方便、功能全面，支持端口扫描、常见的服务器爆破、Web 应用漏洞扫描、NetBIOS 嗅探等功能。
+
+#### [gophish：开源的网络钓鱼平台。该项目提供了一个开箱即用的网络钓鱼平台，可用于模拟钓鱼攻击。它拥有友好的 Web 管理后台，支持邮件模板、批量发送邮件、网站克隆和数据可视化，适用于企业安全培训和渗透测试等场景。](https://github.com/gophish/gophish)
 
 ### web
 
@@ -2140,6 +2160,8 @@ systemctl status clamav-daemon
 
 
 #### [beef: web渗透测试](https://github.com/beefproject/beef)
+
+#### [shannon: Fully autonomous AI hacker to find actual exploits in your web apps. Shannon has achieved a 96.15% success rate on the hint-free, source-aware XBOW Benchmark.](https://github.com/KeygraphHQ/shannon)
 
 #### [SafeLine（雷池）:WAF（web应用防火墙）。 通过过滤和监控 Web 应用与互联网之间的 HTTP 流量来保护 Web 服务。可以保护 Web 服务免受 SQL 注入、XSS、 代码注入、命令注入、CRLF 注入、ldap 注入、xpath 注入、RCE、XXE、SSRF、路径遍历、后门、暴力破解、CC、爬虫 等攻击。](https://github.com/chaitin/SafeLine)
 

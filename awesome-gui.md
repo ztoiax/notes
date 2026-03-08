@@ -32,6 +32,7 @@ tags: []
   * [other](#other-1)
 * [音乐](#音乐)
 * [音频](#音频)
+* [翻译](#翻译)
 * [桌面软件和常见软件的第三方客户端](#桌面软件和常见软件的第三方客户端)
 * [投屏和远程控制](#投屏和远程控制)
   * [ssh客户端](#ssh客户端)
@@ -45,6 +46,7 @@ tags: []
 * [微信相关](#微信相关)
 * [金融](#金融)
 * [其他](#其他)
+* [网页应用](#网页应用)
 * [类似项目](#类似项目)
 
 <!-- mtoc-end -->
@@ -80,6 +82,8 @@ tags: []
 
 - [xplorer](https://github.com/kimlimjustin/xplorer)
 
+- [FileExplorer: rust和Tauri和React写的跨平台文件管理器](https://github.com/conaticus/FileExplorer)
+
 ## 文件清理
 
 - [bleachbit: 清理工具](https://www.bleachbit.org/)
@@ -104,7 +108,6 @@ tags: []
 - [clouddrive：云盘管理](https://github.com/cloud-fs/cloud-fs.github.io/releases)
 
 - [小白羊网盘](https://github.com/gaozhangmin/aliyunpan)
-
 - [alist:可添加各种网盘的网页文件管理器](https://github.com/alist-org/alist)
     - 使用davfs2挂载
     ```sh
@@ -117,6 +120,9 @@ tags: []
     ```
 
 - [OpenList: alist被收购，这是alist社区版。](https://github.com/OpenListTeam/OpenList)
+
+- [YaoList: Rust+React版的alist](https://github.com/ChuYao233/YaoList)
+
 - [quark-auto-save: 夸克网盘签到、自动转存、命名整理、发推送提醒和刷新媒体库一条龙](https://github.com/Cp0204/quark-auto-save)
 
 - [taosync: 同步到网盘的工具。TaoSync是一个适用于OpenList v3+的自动化同步工具/Sync for OpenList/AList](https://github.com/dr34m-cn/taosync)
@@ -146,6 +152,8 @@ tags: []
 
 # 下载器
 
+- [Surge: 终端tui的高速下载工具，比ariac2快。这是一款采用 Go 语言开发的终端下载工具，可将下载文件自动切分为多个数据块并行下载，支持从多个镜像源下载、自动故障转移、顺序下载模式等功能。](https://github.com/surge-downloader/Surge)
+
 - [AriaNg: aria2的web gui。需要浏览器的插件进行启动](https://github.com/mayswind/AriaNg)
 
 - [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
@@ -156,6 +164,7 @@ tags: []
     - [gopeed-extension-youtube: Youtube video download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-youtube)
     - [gopeed-extension-twitter: Twitter media download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-twitter)
     - [gopeed-extension-huggingface: A gopeed-extension for downloading models and datasets from huggingface, hf-mirror and modelscope. Huggingface download](https://github.com/DSYZayn/gopeed-extension-huggingface)
+- [Hitomi-Downloader: yt-dlp的gui版](https://github.com/KurtBestor/Hitomi-Downloader)
 
 - [axel: cli命令行下载](https://github.com/axel-download-accelerator/axel)
 
@@ -193,12 +202,11 @@ tags: []
 
 - [res-downloader: 嗅探抓取资源。视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!](https://github.com/putyy/res-downloader?tab=readme-ov-file)
 
+- [VidBee: yt-dlp的gui版。还支持rss自动下载功能，只要订阅了up主后，发布的新视频可以自动下载。还有浏览器插件，可以下载的内容，页面上会显示下载按钮。](https://github.com/nexmoe/VidBee)
+
 # 图片
 
 - [upscayl：ai图片质量提升](https://github.com/upscayl/upscayl)
-
-- [pot-desktop：划词翻译，并支持ocr](https://github.com/pot-app/pot-desktop)
-    - [pot-app-plugin-list: 🌟Pot App Plugin Collection](https://github.com/pot-app/pot-app-plugin-list)
 
 - [PicGo：图床上传下载](https://github.com/Molunerfinn/PicGo)
 
@@ -290,6 +298,9 @@ tags: []
 
 - [jellyfin-desktop: Jellyfin Desktop Client](https://github.com/jellyfin/jellyfin-desktop)
 
+- [kdenlive: 视频剪辑](https://github.com/KDE/kdenlive)
+- [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
+
 # 音乐
 
 - [NSMusicS：支持各种云端平台](https://gitwhub.com/Super-Badmen-Viper/NSMusicS)
@@ -297,6 +308,7 @@ tags: []
 - [MoeKoeMusic: 一款开源简洁高颜值的酷狗第三方客户端](https://github.com/iAJue/MoeKoeMusic)
 
 - [SPlayer：网易云音乐](https://github.com/imsyy/SPlayer)
+- [VutronMusic: 高颜值的第三方网易云播放器；支持流媒体音乐，如navidrome、jellyfin、emby；支持本地音乐播放、离线歌单、逐字歌词、桌面歌词、Touch Bar歌词、Mac状态栏歌词显示、Linux-gnome与Linux-kde桌面状态栏歌词显示；支持降调降速，支持自定义主题等。支持 Windows / macOS / Linux](https://github.com/stark81/VutronMusic)
 
 - [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
 
@@ -314,6 +326,13 @@ tags: []
 
 - [easyeffects: 电脑音质提升软件-拯救你的破喇叭](https://github.com/wwmm/easyeffects)
 
+# 翻译
+
+
+- [pot-desktop：划词翻译，并支持ocr](https://github.com/pot-app/pot-desktop)
+    - [pot-app-plugin-list: 🌟Pot App Plugin Collection](https://github.com/pot-app/pot-app-plugin-list)
+
+- [MTranServer: 低资源占用速度快可私有部署的离线翻译模型服务器](https://github.com/xxnuo/MTranServer)
 # 桌面软件和常见软件的第三方客户端
 
 - [FreeTube: youtube](https://github.com/FreeTubeApp/FreeTube)
@@ -334,7 +353,7 @@ tags: []
 
 - [lan-mouse：键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/feschber/lan-mouse)
 
-- [deskflow：键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/deskflow/deskflow)
+- [deskflow：跨平台键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/deskflow/deskflow)
 
 - [crossdesk: 一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。](https://github.com/kunkundi/crossdesk)
 
@@ -386,6 +405,8 @@ tags: []
 
 - [zotero-gpt](https://github.com/MuiseDestiny/zotero-gpt)
 
+- [karakeep: 可以收藏links, notes and images。然后通过ai搜索搜索文本。](https://github.com/karakeep-app/karakeep/)
+
 # markdown文章知识管理、阅读器
 
 - [obsidian](https://github.com/obsidianmd/obsidian-releases)
@@ -395,6 +416,10 @@ tags: []
 - [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
 
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
+- [markdown-online-editor: 📝 基于 Vue2、Vditor，所构建的在线 Markdown 编辑器，支持绘制流程图、甘特图、时序图、任务列表、echarts 图表、五线谱，以及 PPT 预览、视频音频解析、HTML 自动转换为 Markdown 等功能。https://www.niceshare.site](https://github.com/nicejade/markdown-online-editor)
+
+- [Yank Note: 跨平台markdown编辑器，同时支持gui和web两种界面。可以跑代码、画图表、搞加密，甚至内置终端。Yank Note 提供了版本控制功能，每次修改都会自动记录，方便我们回头进行修改对比。ai智能补全。图表嵌入：支持 PlantUML、Drawio、ECharts、Mermaid 等多种图表工具；插件系统：可以自己写 JavaScript 插件扩展功能，真正的可编程编辑器。](https://yank-note.com/)
+
 
 # ide
 
@@ -421,6 +446,8 @@ tags: []
 - [WechatRealFriends：查看有没有朋友偷偷删掉或者拉黑你](https://github.com/StrayMeteor3337/WechatRealFriends)
 
 - [WeClone: 🚀从聊天记录创造数字分身的一站式解决方案💡 使用聊天记录微调大语言模型，让大模型有“那味儿”，并绑定到聊天机器人，实现自己的数字分身。 数字克隆/数字分身/数字永生/LLM/聊天机器人/LoRA](https://github.com/xming521/WeClone)
+
+- [WeFlow: 一个本地的微信聊天记录导出和年度报告应用](https://github.com/hicccc77/WeFlow)
 
 # 金融
 
@@ -566,7 +593,8 @@ tags: []
 
 - [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
 - [EcoPaste: 🎉跨平台的剪贴板管理工具](https://github.com/EcoPasteHub/EcoPaste)
-- [kando: 饼式鼠标快捷键](https://github.com/kando-menu/kando)
+
+- [kando: 跨平台的饼式鼠标快捷键](https://github.com/kando-menu/kando)
 
 - [winboat: 量级Windows应用运行方案来了](https://github.com/TibixDev/winboat)
     - [告别卡顿！轻量级Windows应用运行方案来了](https://mp.weixin.qq.com/s/jWL-uAb3gdf8-UXxIo6QYA)
@@ -582,6 +610,14 @@ tags: []
 - [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
     - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
     - [wayland-bongocat: bongocat for your desktop ₍^. .^₎](https://github.com/saatvik333/wayland-bongocat)
+
+- [stretchly: 跨平台的每个一段时间强制休息。](https://github.com/hovancik/stretchly)
+
+- [AiNiee: 一款专注于Ai翻译的工具，一键自动翻译RPG SLG游戏，Epub TXT小说，PDF Word MD文档，Srt Vtt Lrc字幕等等复杂长文本。](https://github.com/NEKOparapa/AiNiee)
+
+# 网页应用
+
+- [kodbox: 开源的网页文件管理器。](https://github.com/kalcaddle/kodbox)
 
 # 类似项目
 

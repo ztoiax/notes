@@ -13,7 +13,9 @@ tags: []
   * [逆向](#逆向)
   * [pe系统](#pe系统)
   * [app](#app)
-    * [文件](#文件)
+    * [桌面相关](#桌面相关)
+    * [文件相关](#文件相关)
+      * [文件管理器](#文件管理器)
     * [编辑器](#编辑器)
     * [终端、ssh终端](#终端ssh终端)
     * [下载器](#下载器)
@@ -58,42 +60,23 @@ tags: []
 
 - [Sysinternals(windows internal作者写的工具套件)](https://docs.microsoft.com/en-us/sysinternals/)
 
-- [GlazeWM窗口管理器](https://github.com/lars-berger/GlazeWM)
-
-- [agent-kilo/jwno:平铺窗口管理器，键盘驱动](https://github.com/agent-kilo/jwno)
-
 - [clink：让 Windows 原生的 cmd.exe 拥有类似 bash 一样强大的自动补全、历史记录、行编辑等功能](https://github.com/chrisant996/clink)
 
 - [Shell：拓展右键](https://github.com/moudey/Shell)
 
 - [wsl2-distro-manager：WSL 发行版图形管理工具。](https://github.com/bostrot/wsl2-distro-manager)
 
-- [g-helper](https://github.com/seerge/g-helper)一款轻量级的华硕奥创中心替代品。支持无缝切换显卡模式、调节屏幕刷新率、风扇曲线、电源功耗、键盘灯光等功能。
+- [g-helper：一款轻量级的华硕奥创中心替代品。支持无缝切换显卡模式、调节屏幕刷新率、风扇曲线、电源功耗、键盘灯光等功能。](https://github.com/seerge/g-helper)
 
-- [WingetUI](https://github.com/marticliment/WingetUI)带界面的 Windows 包管理器。该项目是一个为 Windows 常用的命令行包管理工具设计的用户界面，如 Winget、Scoop、Pip、NPM、.NET Tool 等。它的界面友好、设计美观、支持中文，通过它你可以轻松下载、安装、更新和卸载包管理器上发布的任何软件以及其它日常应用，如浏览器、PDF 阅读器等。
+- [WingetUI：带界面的 Windows 包管理器。该项目是一个为 Windows 常用的命令行包管理工具设计的用户界面，如 Winget、Scoop、Pip、NPM、.NET Tool 等。它的界面友好、设计美观、支持中文，通过它你可以轻松下载、安装、更新和卸载包管理器上发布的任何软件以及其它日常应用，如浏览器、PDF 阅读器等。](https://github.com/marticliment/WingetUI)
 
-- [OFGB](https://github.com/xM4ddy/OFGB)修改 Windows 注册表来禁用 Windows 11 系统自带的各种广告，比如开始菜单、文件资源管理器、锁屏、搜索、任务栏等位置的个性化广告。
+- [OFGB：修改 Windows 注册表来禁用 Windows 11 系统自带的各种广告，比如开始菜单、文件资源管理器、锁屏、搜索、任务栏等位置的个性化广告。](https://github.com/xM4ddy/OFGB)
 
 - [OpenArk：恶意程序分析与清理工具](https://github.com/BlackINT3/OpenArk)
 
 - [SteamTools：Steam 工具箱。可以加速steam和github网络](https://github.com/BeyondDimension/SteamTools)
 
 - [Bulk-Crap-Uninstaller：Windows 软件卸载工具，能够快速删除大量不需要的应用程序。它完全免费、开箱即用，支持批量和强制卸载、清理残留文件、检测隐藏或受保护的已注册应用等功能。](https://github.com/Klocman/Bulk-Crap-Uninstaller)
-
-- [FileConverter：右键轻松转换和压缩文件的工具。](https://github.com/Tichau/FileConverter)
-
-- [qttabbar：文件资源管理器添加标签](https://github.com/indiff/qttabbar)
-
-- [filepilot：第三方文件资源管理器](https://filepilot.tech/)
-
-- [MD3-Windows：windows美化](https://github.com/Runixe786/MD3-Windows)
-
-- [breeze-shell：鼠标右键的菜单简化为一级，并加入流畅动画](https://github.com/std-microblock/breeze-shell)
-- [AlexanderPro/SmartSystemMenu: 窗口菜单增强工具。这是一款用于扩展 Windows 系统窗口菜单功能的工具。它可以为所有窗口的系统菜单（即右键标题栏弹出的菜单）添加丰富且实用的自定义选项，如窗口置顶、调整透明度、改变窗口标题/图标、窗口对齐、跨屏移动、批量隐藏/最小化、窗口截图、剪贴板操作等。](https://github.com/AlexanderPro/SmartSystemMenu)
-- [w4po/ExplorerTabUtility:文件资源管理器增强工具，能够自动将多个窗口合并为单窗口多标签页模式。支持路径去重、标签搜索、批量打开/关闭/还原等功能，轻松告别桌面窗口杂乱的烦恼。](https://github.com/w4po/ExplorerTabUtility)
-
-- [kweatherman/Folcolor: 给文件夹上颜色](https://github.com/kweatherman/Folcolor)
-- [Maplespe/DWMBlurGlass: 给文件资源管理器加入毛玻璃效果](https://github.com/Maplespe/DWMBlurGlass)
 - [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
 
 
@@ -102,7 +85,6 @@ tags: []
     - [ramensoftware/windhawk-mods: The official collection of Windhawk mods](https://github.com/ramensoftware/windhawk-mods)
 
 - [ZyperWave/ZyperWinOptimize: ZyperWin++是一个轻便的Windows优化工具，适用于Win7-Win11最新版的优化，包括性能优化、服务项优化、垃圾清理等操作，还支持系统激活和Office快速安装。](https://github.com/ZyperWave/ZyperWinOptimize)
-- [Seelen-UI：高度可定制的 Windows 桌面美化工具。这是一款免费开源的 Windows 桌面增强工具，专注于高度自定义和效率提升。它采用 Rust 语言开发，结合 Tauri 框架与 Web 技术，支持窗口平铺管理、应用启动器、Dock、任务栏、动态壁纸、插件扩展等功能。](https://github.com/eythaann/Seelen-UI)
 - [Win11Debloat: 这是一个脚本，删除预装的自启动的冗余软件](https://github.com/Raphire/Win11Debloat)
 
 - [zen-desktop: 系统级广告拦截和隐私保护工具，支持 Windows、macOS 和 Linux 三大平台。](https://github.com/ZenPrivacy/zen-desktop)
@@ -110,9 +92,12 @@ tags: []
 
 - [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
 - [TaskExplorer: 强大的 Windows 任务管理器。这是一款适用于 Windows 平台的高级任务管理工具，相比系统自带的任务管理器，能够实时显示更详细的进程信息，包括线程堆栈、文件句柄和网络连接等。](https://github.com/DavidXanatos/TaskExplorer)
-
-- [LiteMonitor: 一款轻量、可定制的开源桌面硬件监控软件 — 实时监测 CPU、GPU、内存、磁盘、网络等系统性能。支持横竖屏显示、多语言、主题切换、透明度显示、三色报警，界面简洁且高度可配置。](https://github.com/Diorser/LiteMonitor)
 - [Sandboxie: 在沙盒中运行软件，避免不安分的软件，但数据会保留在沙盒之中](https://github.com/sandboxie-plus/Sandboxie)
+
+- [GreenDiskVisualizer: 基于Python构建的磁盘空间可视化分析软件，可利用MFT主文件表进行分析，旨在将磁盘内各文件夹所占空间以直观的方式展示出来，帮助使用者更好地了解磁盘空间的使用情况。](https://github.com/Green233233/GreenDiskVisualizer)
+- [Winhance: 开箱即用的 Windows 系统优化工具。这是一款基于 C# 开发的 Windows 10/11 一站式系统优化工具，无需重装系统即可定制、精简系统。它集成了软件管理、系统优化、界面定制等功能，支持一键卸载预装应用、性能调优和界面美化，适用于重装系统或新机初始化。](https://github.com/memstechtips/Winhance)
+
+- [TaskExplorer: 更强大的任务管理器](https://github.com/DavidXanatos/TaskExplorer)
 
 ## 逆向
 
@@ -129,7 +114,27 @@ tags: []
 - [edgeless：自定义pe的软件](https://home.edgeless.top/)
 ## app
 
-### 文件
+### 桌面相关
+
+- [Seelen-UI：高度可定制的 Windows 桌面美化工具。这是一款免费开源的 Windows 桌面增强工具，专注于高度自定义和效率提升。它采用 Rust 语言开发，结合 Tauri 框架与 Web 技术，支持窗口平铺管理、应用启动器、Dock、任务栏、动态壁纸、插件扩展等功能。](https://github.com/eythaann/Seelen-UI)
+
+- [GlazeWM窗口管理器](https://github.com/lars-berger/GlazeWM)
+
+- [jwno:平铺窗口管理器，键盘驱动](https://github.com/agent-kilo/jwno)
+
+- [FileConverter：右键轻松转换和压缩文件的工具。](https://github.com/Tichau/FileConverter)
+
+- [MFCMouseEffect: Windows 鼠标/光标特效（MFC/C++/Win32） | Mouse & cursor effects for Windows (MFC/C++/Win32)](https://github.com/sqmw/MFCMouseEffect)
+
+- [MD3-Windows：windows美化](https://github.com/Runixe786/MD3-Windows)
+
+- [breeze-shell：鼠标右键的菜单简化为一级，并加入流畅动画](https://github.com/std-microblock/breeze-shell)
+
+- [SmartSystemMenu: 窗口菜单增强工具。这是一款用于扩展 Windows 系统窗口菜单功能的工具。它可以为所有窗口的系统菜单（即右键标题栏弹出的菜单）添加丰富且实用的自定义选项，如窗口置顶、调整透明度、改变窗口标题/图标、窗口对齐、跨屏移动、批量隐藏/最小化、窗口截图、剪贴板操作等。](https://github.com/AlexanderPro/SmartSystemMenu)
+
+- [LiteMonitor: 一款轻量、可定制的开源桌面硬件监控软件 — 实时监测 CPU、GPU、内存、磁盘、网络等系统性能。支持横竖屏显示、多语言、主题切换、透明度显示、三色报警，界面简洁且高度可配置。](https://github.com/Diorser/LiteMonitor)
+
+### 文件相关
 
 - [everything-ai-chat: 一个现代化的 Everything 搜索客户端，将 AI 智能与极速本地搜索完美结合。](https://github.com/MaskerPRC/everything-ai-chat)
 
@@ -139,11 +144,27 @@ tags: []
 
 - [dupeguru: 查找重复文件](https://github.com/arsenetar/dupeguru)
 
+#### 文件管理器
+
+- [ExplorerTabUtility:文件资源管理器增强工具，能够自动将多个窗口合并为单窗口多标签页模式。支持路径去重、标签搜索、批量打开/关闭/还原等功能，轻松告别桌面窗口杂乱的烦恼。](https://github.com/w4po/ExplorerTabUtility)
+
+- [Folcolor: 给文件夹上颜色](https://github.com/kweatherman/Folcolor)
+
+- [DWMBlurGlass: 给文件资源管理器加入毛玻璃效果](https://github.com/Maplespe/DWMBlurGlass)
+
+- [FileExplorer: rust和Tauri和React写的跨平台文件管理器](https://github.com/conaticus/FileExplorer)
+
+- [qttabbar：文件资源管理器添加标签](https://github.com/indiff/qttabbar)
+
+- [filepilot：第三方文件资源管理器](https://filepilot.tech/)
+
 ### 编辑器
 
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
 
 - [WeMD: 更优雅的 Markdown 公众号编辑器](https://github.com/tenngoxars/WeMD)
+
+- [Yank Note: 跨平台markdown编辑器，同时支持gui和web两种界面。可以跑代码、画图表、搞加密，甚至内置终端。Yank Note 提供了版本控制功能，每次修改都会自动记录，方便我们回头进行修改对比。ai智能补全。图表嵌入：支持 PlantUML、Drawio、ECharts、Mermaid 等多种图表工具；插件系统：可以自己写 JavaScript 插件扩展功能，真正的可编程编辑器。](https://yank-note.com/)
 
 ### 终端、ssh终端
 
@@ -232,6 +253,7 @@ tags: []
 
 - [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
 
+- [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
 
 ### 游戏相关
 
@@ -245,6 +267,8 @@ tags: []
 - [w4po/ExplorerTabUtility:开箱即用的游戏变速器。这是一款完全免费、开源的 Windows 游戏加速工具。它通过 Hook 系统时间函数，实现对游戏速度的灵活调节，并提供简单易用的界面，兼容多种单机游戏。请勿用于网络游戏，以免导致账号被封！](https://github.com/w4po/ExplorerTabUtility)
 
 ### 其他
+
+- [UniGetUI: 它把 Scoop、Chocolatey、Pip 这些大名鼎鼎的极客包管理器，全都聚合在了一个类似应用商店的界面里。](https://github.com/marticliment/UniGetUI)
 
 - [TortoiseGit：windows最好的git gui客户端](https://github.com/TortoiseGit/TortoiseGit)
 
@@ -269,7 +293,8 @@ tags: []
 
 - [EcoPaste: 🎉跨平台的剪贴板管理工具](https://github.com/EcoPasteHub/EcoPaste)
 
-- [kando: 饼式鼠标快捷键](https://github.com/kando-menu/kando)
+- [kando: 跨平台的饼式鼠标快捷键](https://github.com/kando-menu/kando)
+
 - [PikPak_By_Shimily_Keygen: pikpak云盘的第三方客户端](https://github.com/oureveryday/PikPak_By_Shimily_Keygen?tab=readme-ov-file)
 
 - [MuJing: 一款通过电影、美剧或文档中的真实语境学习英语单词的应用，让您在原汁原味的情境中记忆词汇，提升学习效率。](https://github.com/tangshimin/MuJing)
@@ -285,3 +310,7 @@ tags: []
     - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
 
 - [STranslate: A ready-to-go translation ocr tool developed with WPF/WPF 开发的一款即用即走的翻译、OCR工具](https://github.com/STranslate/STranslate)
+
+- [deskflow：跨平台键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/deskflow/deskflow)
+
+- [stretchly: 跨平台的每个一段时间强制休息。](https://github.com/hovancik/stretchly)

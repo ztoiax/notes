@@ -46,6 +46,7 @@ tags: []
   * [QDiskInfo: 查看硬盘信息](#qdiskinfo-查看硬盘信息)
   * [gnome-power-statistics：笔记本电池信息gui](#gnome-power-statistics笔记本电池信息gui)
   * [upower：笔记本电池信息cli](#upower笔记本电池信息cli)
+  * [swiftfetch: A fast and efficient fetch tool for system information written in Rust, designed for simplicity and performance.](#swiftfetch-a-fast-and-efficient-fetch-tool-for-system-information-written-in-rust-designed-for-simplicity-and-performance)
 * [CPU](#cpu)
   * [cpu info](#cpu-info)
   * [s-tui: Terminal-based CPU stress and monitoring utility](#s-tui-terminal-based-cpu-stress-and-monitoring-utility)
@@ -893,6 +894,8 @@ sysbench --test=fileio --file-total-size=5G prepare
 ## gnome-power-statistics：笔记本电池信息gui
 
 ## upower：笔记本电池信息cli
+
+## [swiftfetch: A fast and efficient fetch tool for system information written in Rust, designed for simplicity and performance.](https://github.com/Ly-sec/swiftfetch)
 
 # CPU
 

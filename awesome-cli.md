@@ -37,6 +37,7 @@ tags: []
 * [File](#file)
   * [magika: google开发的ai识别文件，正确率99%](#magika-google开发的ai识别文件正确率99)
   * [mmv：批量命名mv](#mmv批量命名mv)
+  * [cpx: instead cp。拷贝文件时带进度条，支持并发拷贝和断点续传 ](#cpx-instead-cp拷贝文件时带进度条支持并发拷贝和断点续传-)
   * [[advcpmv: instead cp, my(https://github.com/jarun/advcpmv)](#advcpmv-instead-cp-myhttpsgithubcomjarunadvcpmv)
   * [fd: instead find](#fd-instead-find)
   * [tmsu: taging file and mount tag file](#tmsu-taging-file-and-mount-tag-file)
@@ -184,6 +185,8 @@ tags: []
 * [解决网络下载问题，如换源等](#解决网络下载问题如换源等)
   * [chsrc：全平台通用换源工具与框架](#chsrc全平台通用换源工具与框架)
   * [xixu-me/Xget: 超高性能、安全的一站式开源资源访问加速引擎。其性能远超传统加速器，为您提供跨多个平台的统一高效的加速体验，涵盖代码储存库、包管理、AI 推理 API、容器镜像、模型及数据集等 | Ultra-high performance, secure, all-in-one open-source resource acceleration engine. Significantly outperforms traditional accelerators, providing unified and efficient acceleration across multiple platforms](#xixu-mexget-超高性能安全的一站式开源资源访问加速引擎其性能远超传统加速器为您提供跨多个平台的统一高效的加速体验涵盖代码储存库包管理ai-推理-api容器镜像模型及数据集等--ultra-high-performance-secure-all-in-one-open-source-resource-acceleration-engine-significantly-outperforms-traditional-accelerators-providing-unified-and-efficient-acceleration-across-multiple-platforms)
+* [cicd](#cicd)
+  * [fnug: cicd tui版](#fnug-cicd-tui版)
 * [other](#other)
   * [progress：显示cp、mv进度条](#progress显示cpmv进度条)
   * [haxor-news: hacker new](#haxor-news-hacker-new)
@@ -229,8 +232,8 @@ tags: []
   * [ttyd：把终端变成服务，可以用浏览器访问](#ttyd把终端变成服务可以用浏览器访问)
   * [cotp: tui版的两步验证码。 TOTP/HOTP 身份验证器，它将繁琐的图形界面抛在脑后，让你在终端中也能轻松管理你的两步验证码。](#cotp-tui版的两步验证码-totphotp-身份验证器它将繁琐的图形界面抛在脑后让你在终端中也能轻松管理你的两步验证码)
   * [YouPlot: cli下画统计图](#youplot-cli下画统计图)
-  * [fnug: cicd tui版](#fnug-cicd-tui版)
   * [asciinema: 终端会话录制播放](#asciinema-终端会话录制播放)
+  * [flamelens: 火焰图tui版](#flamelens-火焰图tui版)
 * [系统相关](#系统相关)
   * [kmon：内核模块、dmesg的tui](#kmon内核模块dmesg的tui)
   * [nemu：qemu的tui](#nemuqemu的tui)
@@ -273,11 +276,13 @@ tags: []
   * [presenterm：以ppt形式在终端播放markdown](#presenterm以ppt形式在终端播放markdown)
   * [rucola：markdown管理tui](#rucolamarkdown管理tui)
   * [mermaid-cli：markdown转思维导图](#mermaid-climarkdown转思维导图)
+  * [hongdown: Markdown 文本的格式美化器，根据预设的规则，修改 Markdown 文本的风格样式。](#hongdown-markdown-文本的格式美化器根据预设的规则修改-markdown-文本的风格样式)
 * [log](#log)
   * [lnav：tui的vim模式，查看log、json文件](#lnavtui的vim模式查看logjson文件)
   * [hl: A fast and powerful log viewer and processor that converts JSON logs or logfmt logs into a clear human-readable format.](#hl-a-fast-and-powerful-log-viewer-and-processor-that-converts-json-logs-or-logfmt-logs-into-a-clear-human-readable-format)
   * [logdy](#logdy)
   * [tailspin](#tailspin)
+  * [teemux: 一个基于 JS 语言的命令行工具，将多个进程输出的日志放在一处查看，可以命令行查看，也可以浏览器查看。](#teemux-一个基于-js-语言的命令行工具将多个进程输出的日志放在一处查看可以命令行查看也可以浏览器查看)
 * [第三方app的命令行版](#第三方app的命令行版)
   * [himalaya：邮件tui](#himalaya邮件tui)
   * [go-musicfox: go-musicfox是用Go写的又一款网易云音乐命令行客户端，支持UnblockNeteaseMusic、各种音质级别、lastfm、MPRIS、MacOS交互响应（睡眠暂停、蓝牙耳机连接断开响应、菜单栏控制等）...](#go-musicfox-go-musicfox是用go写的又一款网易云音乐命令行客户端支持unblockneteasemusic各种音质级别lastfmmprismacos交互响应睡眠暂停蓝牙耳机连接断开响应菜单栏控制等)
@@ -380,6 +385,7 @@ sudo make O_NERD=1
 ## [mmv：批量命名mv](https://github.com/itchyny/mmv)
 
 - [运维漫谈：比mv命令更强大！教你如何在Linux用mmv命令实现高级文件重命名](https://mp.weixin.qq.com/s/Y-Q4XyYOfhjx1cSUWOv0-w)
+## [cpx: instead cp。拷贝文件时带进度条，支持并发拷贝和断点续传 ](https://github.com/11happy/cpx)
 
 ## [advcpmv: instead cp, my(https://github.com/jarun/advcpmv)
 
@@ -1031,6 +1037,11 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 
 ## [xixu-me/Xget: 超高性能、安全的一站式开源资源访问加速引擎。其性能远超传统加速器，为您提供跨多个平台的统一高效的加速体验，涵盖代码储存库、包管理、AI 推理 API、容器镜像、模型及数据集等 | Ultra-high performance, secure, all-in-one open-source resource acceleration engine. Significantly outperforms traditional accelerators, providing unified and efficient acceleration across multiple platforms](https://github.com/xixu-me/Xget)
 
+# cicd
+
+- [task: 告别 Makefile 复杂语法的构建工具。这是一款基于 Go 语言开发的现代化构建工具，可作为 GNU Make 的替代品。它采用更简单的 YAML 语法，支持跨平台、依赖管理、并行执行和条件触发等功能，适用于项目构建、开发环境管理和 CI/CD 集成。](https://github.com/go-task/task)
+
+## [fnug: cicd tui版](https://github.com/nickolaj-jepsen/fnug)
 # other
 
 ```sh
@@ -1382,8 +1393,9 @@ ttyd -p 8080 bash
 
 ## [YouPlot: cli下画统计图](https://github.com/red-data-tools/YouPlot)
 
-## [fnug: cicd tui版](https://github.com/nickolaj-jepsen/fnug)
 ## [asciinema: 终端会话录制播放](https://github.com/asciinema/asciinema)
+
+## [flamelens: 火焰图tui版](https://github.com/YS-L/flamelens)
 
 # 系统相关
 
@@ -1608,6 +1620,8 @@ markitdown path-to-file.pdf > document.md
 mmdc -i input.md -o output.svg
 ```
 
+## [hongdown: Markdown 文本的格式美化器，根据预设的规则，修改 Markdown 文本的风格样式。](https://github.com/dahlia/hongdown)
+
 # log
 
 ## [lnav：tui的vim模式，查看log、json文件](https://github.com/tstack/lnav)
@@ -1635,6 +1649,8 @@ journalctl -o json | lnav
 ## [logdy](https://github.com/logdyhq/logdy-core)
 
 ## [tailspin](https://github.com/bensadeh/tailspin)
+
+## [teemux: 一个基于 JS 语言的命令行工具，将多个进程输出的日志放在一处查看，可以命令行查看，也可以浏览器查看。](https://github.com/gajus/teemux)
 
 # 第三方app的命令行版
 
