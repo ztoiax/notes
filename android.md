@@ -12,10 +12,11 @@ tags: []
 * [第三方优秀资源](#第三方优秀资源)
   * [下载商店](#下载商店)
   * [cli](#cli)
-  * [gui](#gui)
+  * [系统相关](#系统相关)
   * [app](#app)
     * [其他](#其他)
     * [工具](#工具)
+    * [电脑投屏、电脑交互](#电脑投屏电脑交互)
     * [下载器](#下载器)
     * [多媒体相关](#多媒体相关)
       * [阅读器](#阅读器)
@@ -36,6 +37,7 @@ tags: []
     * [第三方客户端](#第三方客户端)
     * [自动化](#自动化)
     * [ai](#ai)
+      * [openclaw](#openclaw)
 * [刷机](#刷机)
   * [刷入recovery、magisk、lsposed](#刷入recoverymagisklsposed)
   * [frida](#frida)
@@ -90,21 +92,9 @@ tags: []
 
 - [Apktool: apk逆向工具](https://github.com/iBotPeaches/Apktool)
 
-## gui
+## 系统相关
 
 - [kite：小米性能监控工具](https://kite.mi.com/#/documents/instructions/quickstart?id=%e5%bf%ab%e9%80%9f%e5%bc%80%e5%a7%8b)
-
-- [ADB ToolboX：adb gui只支持windows](https://qx.wysteam.cn/download/)
-
-- [linkandroid：连接android](https://github.com/modstart-lib/linkandroid)
-
-- [aya: adb gui版.支持投屏,可以监控手机cpu,内存等](https://github.com/liriliri/aya)
-
-- [scrcpy: 投屏](https://github.com/Genymobile/scrcpy)
-
-- [QtScrcpy: 更好的scrcpy投屏](https://github.com/barry-ran/QtScrcpy)
-
-- [escrcpy: 📱 Display and control your Android device graphically with scrcpy.](https://github.com/viarotel-org/escrcpy)
 
 - [ApkToolPlus: gui版 apk 逆向分析工具](https://github.com/CYRUS-STUDIO/ApkToolPlus?tab=readme-ov-file)
 
@@ -254,6 +244,23 @@ tags: []
 - [Multi-Calculator-Android: 多功能计数器。包括汇率计算、存款利息、刻度尺、指南针、亲戚称呼等](https://github.com/YangDai2003/Multi-Calculator-Android)
 
 - [Level: 水平仪和刻度尺](https://github.com/woheller69/Level)
+
+### 电脑投屏、电脑交互
+
+- [ADB ToolboX：adb gui只支持windows](https://qx.wysteam.cn/download/)
+
+- [linkandroid：连接android](https://github.com/modstart-lib/linkandroid)
+
+- [aya: adb gui版.支持投屏,可以监控手机cpu,内存等](https://github.com/liriliri/aya)
+
+- [scrcpy: 投屏](https://github.com/Genymobile/scrcpy)
+
+- [QtScrcpy: 更好的scrcpy投屏](https://github.com/barry-ran/QtScrcpy)
+
+- [escrcpy: 📱 Display and control your Android device graphically with scrcpy.](https://github.com/viarotel-org/escrcpy)
+- [plain-app: 在浏览器中管理你的手机。这是一款 Kotlin 开发的 Android 应用，让你可以在同一局域网内通过任意电脑上的浏览器，轻松查看和管理手机中的联系人、短信、通话记录、文件和照片，并支持屏幕镜像、远程操控、文件传输等功能。](https://github.com/plainhub/plain-app)
+
+
 ### 下载器
 
 - [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
@@ -266,6 +273,8 @@ tags: []
 ### 多媒体相关
 
 #### 阅读器
+
+- [ReadAny：桌面端 + 安卓端的电子书阅读工具，自带 AI 功能、语音朗读和多端同步。](https://github.com/codedogQBY/ReadAny)
 
 - [anx-reader：这是一款用 Flutter 编写的电子书阅读软件，它免费且没广告，支持 WebDAV 同步电子书、笔记和阅读进度，适用于 Android 手机和平板电脑。](https://github.com/Anxcye/anx-reader)
 
@@ -318,6 +327,8 @@ tags: []
 - [mpvEx: A beautiful media player for android, based on mpv-android and built with Jetpack Compose. Forked from mpvKt](https://github.com/marlboro-advance/mpvEx)
 
 #### 音乐播放器
+
+- [NeriPlayer:简易多平台音视频聚合流媒体播放器 🎵。整合 网易云音乐 与 Bilibili 、qq音乐、youtube的 在线内容，并提供 流媒体缓存、应用内下载、本地导入、本地歌单管理、 可选 GitHub 私有仓库同步 等能力。](https://github.com/cwuom/NeriPlayer)
 
 - [MusicFree：音乐播放器。通过插件可以播放各大平台的音乐](https://github.com/maotoumao/MusicFree)
     - 插件：https://gitee.com/maotoumao/MusicFreePlugins/raw/master/plugins.json
@@ -462,6 +473,8 @@ tags: []
 
 - [olib-mobile: zlibrary第三方客户端](https://github.com/shiyi-0x7f/olib-mobile)
 
+- [JKVideo: 高颜值的第三方 B 站 React Native 客户端，支持安卓、H5、iOS | Bilibili-like app with DASH playback, danmaku, WBI sign & live streaming](https://github.com/tiajinsha/JKVideo)
+
 ### 自动化
 
 - [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
@@ -488,7 +501,16 @@ tags: []
 - [roubao: 开源的 AI 手机自动化助手。这是一款开源的 Android AI 手机自动化助手，无需电脑即可让用户通过自然语言指令操控手机自动完成任务。它基于视觉语言模型识别屏幕截图，结合委托执行或 GUI 自动化，能够完成复杂的 App 交互任务。](https://github.com/Turbo1123/roubao)
 
 - [happy: 用手机操控 Claude Code 和 Codex。这是一款可以远程操作 Claude Code 或 Codex 的工具，让你随时随地通过手机查看和远程控制 AI 编程助手，提供了 iOS、Android 和 Web 客户端。](https://github.com/slopus/happy)
+
+- [CCTV-Smartphone-AI-Monitoring: 将闲置的手机当作监控，并支持ai识别等功能。](https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring)
+
+#### openclaw
+
 - [ZeroClaw-Android: Run AI agents 24/7 on your Android phone. Native Rust core, 25+ providers (OpenAI, Claude, Gemini, Groq, DeepSeek, Ollama), encrypted key storage, plugin browser, Material You UI. Self-hosted alternative to Mac Mini setups. MIT licensed.](https://github.com/Natfii/ZeroClaw-Android)
+
+- [JVS Claw：阿里的手机版openclaw](https://jvs.wuying.aliyun.com/)
+
+- [openclaw-android: ：在 Android 上运行 OpenClaw。该项目提供两种在 Android 手机上运行 OpenClaw 智能体平台（非客户端）的方式。可通过 Termux 安装 glibc 动态链接器直接部署 Linux 二进制文件，也可通过直接安装打包好的 Android 应用实现一键安装 OpenClaw，后者不需要安装 Termux。](https://github.com/AidanPark/openclaw-android)
 
 # 刷机
 
@@ -767,10 +789,15 @@ tags: []
     - [mytv-android](https://github.com/yaoxieyoulei/mytv-android)
 
     - [LiteWebTV: 一款轻量优雅的WebTV电视软件](https://github.com/YukonKong/LiteWebTV)
+    - [utao: 油桃TV 电视浏览器 可看各大卫视CCTV直播 无需电视VIP 适配爱奇艺等主流视频平台](https://github.com/VonChange/utao)
 
     - BesTV粤视厅
 
+
+    - [ACAC: 一个第三方AcFun TV和Pad客户端，A third-party AcFun client for TV & Pad。](https://github.com/xiaye13579/ACAC)
     - [BBLL：第三方bilibili](https://github.com/xiaye13579/BBLL)
+    - [bilitv: 由flutter实现的TV版哔哩哔哩，类似于bbll和bilibilitv。](https://github.com/kkkunny/bilitv)
+
     - [smarttube：第三方youtube，没有广告](https://github.com/yuliskov/SmartTube)
     - YouTube for Fire TV：无需google服务
 

@@ -41,11 +41,11 @@ tags: []
         * [LM Studio：ollama gui版](#lm-studioollama-gui版)
         * [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#anything-llm一个gui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
         * [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#cherry-studiogui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
-        * [AionUi: gui管理Free, local, open-source 24/7 Cowork and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!](#aionui-gui管理free-local-open-source-247-cowork-and-openclaw-for-gemini-cli-claude-code-codex-opencode-qwen-code-goose-cli-auggie-and-more---star-if-you-like-it)
         * [cc-switch: gui配置管理。一键切换 Claude Code / Codex / Gemini CLI 的底层模型](#cc-switch-gui配置管理一键切换-claude-code--codex--gemini-cli-的底层模型)
         * [new-api: AI模型聚合管理中转分发系统，一个应用管理您的所有AI模型，支持将多种大模型转为统一格式调用，支持OpenAI、Claude、Gemini等格式，可供个人或者企业内部管理与分发渠道使用。🍥 A Unified AI Model Management & Distribution System. Aggregate all your LLMs into one app and access them via an OpenAI-compatible API, with native support for Claude (Messages) and Gemini formats.](#new-api-ai模型聚合管理中转分发系统一个应用管理您的所有ai模型支持将多种大模型转为统一格式调用支持openaiclaudegemini等格式可供个人或者企业内部管理与分发渠道使用-a-unified-ai-model-management--distribution-system-aggregate-all-your-llms-into-one-app-and-access-them-via-an-openai-compatible-api-with-native-support-for-claude-messages-and-gemini-formats)
       * [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](#shimmy一个只有-5mb-的单文件程序的ollama的代替品)
       * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
+    * [llmfit: 根据你电脑的性能，提供选择大模型的建议](#llmfit-根据你电脑的性能提供选择大模型的建议)
     * [agent客户端](#agent客户端)
     * [rag知识库相关](#rag知识库相关)
     * [其他命令行相关工具](#其他命令行相关工具)
@@ -79,6 +79,8 @@ tags: []
   * [ai编辑器](#ai编辑器)
   * [ai程序员](#ai程序员)
   * [ai终端](#ai终端)
+    * [token](#token)
+    * [claude-code](#claude-code)
   * [ai数据库终端](#ai数据库终端)
   * [ai爬虫和信息提取](#ai爬虫和信息提取)
   * [ai可视化](#ai可视化)
@@ -86,6 +88,9 @@ tags: []
   * [ai控制手机](#ai控制手机)
   * [ai agent（智能体）](#ai-agent智能体)
     * [在线使用](#在线使用-1)
+    * [ai控制电脑](#ai控制电脑)
+    * [openclaw](#openclaw)
+      * [云端openclaw](#云端openclaw)
   * [MCP](#mcp)
   * [A2A](#a2a)
   * [Claude skill](#claude-skill)
@@ -770,8 +775,6 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 ##### [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/CherryHQ/cherry-studio)
 
-##### [AionUi: gui管理Free, local, open-source 24/7 Cowork and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!](https://github.com/iOfficeAI/AionUi)
-
 ##### [cc-switch: gui配置管理。一键切换 Claude Code / Codex / Gemini CLI 的底层模型](https://github.com/farion1231/cc-switch)
 
 #####  [new-api: AI模型聚合管理中转分发系统，一个应用管理您的所有AI模型，支持将多种大模型转为统一格式调用，支持OpenAI、Claude、Gemini等格式，可供个人或者企业内部管理与分发渠道使用。🍥 A Unified AI Model Management & Distribution System. Aggregate all your LLMs into one app and access them via an OpenAI-compatible API, with native support for Claude (Messages) and Gemini formats.](https://github.com/QuantumNous/new-api)
@@ -790,6 +793,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - 显卡要支持webgpu：
     - 浏览器开启webgpu：`chrome://flags`下搜索`webgpu`然后启用。
+
+### [llmfit: 根据你电脑的性能，提供选择大模型的建议](https://github.com/AlexsJones/llmfit)
 
 ### agent客户端
 
@@ -1104,7 +1109,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [we0](https://github.com/we0-dev/we0)
 
-- [trae：字节跳动的基于vscode的ai编辑器。不支持linux](https://www.trae.ai/)
+- [trae：字节跳动的基于vscode的ai编辑器。](https://www.trae.ai/)
 
 - [Qoder：阿里的](https://caug.cn/)
 
@@ -1116,9 +1121,19 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [warp：自带ai的termianl](https://github.com/warpdotdev/Warp)
 
-- [codex: openai的](https://github.com/openai/codex?tab=Apache-2.0-1-ov-file)
+- [Chaterm:带有 AI 功能的智能终端工具，可以用自然语言完成命令行操作。 Open source AI terminal and SSH Client for EC2, Database and Kubernetes.](https://github.com/chaterm/Chaterm)
+
+- [crush: The glamourous AI coding agent for your favourite terminal 💘](https://github.com/charmbracelet/crush)
+
+### token
+
+- [rtk: 降低 Token 消耗的命令行工具。这是一款用于降低 AI 编程助手 Token 消耗的工具，通过压缩常见开发命令的输出、合并重复日志、删除代码注释和多余空行等方式，可将 Token 消耗减少 60-90%，有效延长套餐配额的使用时间。](https://github.com/rtk-ai/rtk)
+
+### claude-code
 
 - [claude-code: 终端里的 Claude 编码助手。该项目是 Claude 官方开源的 AI 编码助手，集成于终端内，能够理解整个代码库，并通过简单的自然语言命令，帮助开发者更高效地完成各类编码任务。](https://github.com/anthropics/claude-code)
+
+    - [everything-claude-code: Anthropic黑客马拉松冠军的claude code配置](https://github.com/affaan-m/everything-claude-code)
 
     - [Claude-Code-Usage-Monitor: Claude 用量实时监控助手。这是一个用于实时监控和记录开发者在使用 Claude AI 时产生的 Token 用量及费用的工具，支持用量统计、预算告警和套餐设置等功能。](https://github.com/Maciek-roboblog/Claude-Code-Usage-Monitor)
 
@@ -1126,6 +1141,11 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
     - [Trellis: Claude Code & Cursor（兼容 Cursor/Opencode）的一个辅助工具，可以注入上下文、开启并行任务等](https://github.com/mindfold-ai/Trellis)
 
     - [WellAlly-health: 一个基于 Claude Code 的个人医疗数据中心，定义了一组自己的命令和技能，用 AI 分析个人医疗数据（体检报告、影像片子、处方单、出院小结）](https://github.com/huifer/WellAlly-health)
+    - [lumo: 查看成本、Token、会话和编码时段数据](https://github.com/zhnd/lumo)
+    - [claude-hud: 实时显示 Claude Code 执行状态的插件。这是一个 Claude Code 插件，可实时显示 Claude Code 在做什么、上下文使用情况、运行的子智能体、工具调用和任务完成进度。](https://github.com/jarrodwatts/claude-hud)
+    - [geo-seo-claude: Claude Code 的 GEO 优化技能插件。这是一个 Claude Code 技能插件，以 GEO 优先、SEO 辅助的理念，通过 11 个 skills 和 5 个子智能体，帮助网站针对 AI 驱动的搜索引擎进行优化，支持评分、分析和测试等功能。](https://github.com/zubair-trabzada/geo-seo-claude)
+
+- [codex: openai的](https://github.com/openai/codex?tab=Apache-2.0-1-ov-file)
 
 - [gemini-cli: 谷歌 Gemini 命令行工具。该项目是 Gemini 官方开源的命令行工具，将 Google Gemini 的强大能力集成到终端环境。它基于百万级上下文，能够理解大型代码库的架构和逻辑，支持多模态输入输出、Google 搜索以及 MCP 等功能。](https://github.com/google-gemini/gemini-cli)
 
@@ -1150,21 +1170,14 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
     - [国产大模型接入 Claude Code 教程：以 Doubao-Seed-Code 为例](https://mp.weixin.qq.com/s/ptRFIddHT3eLLmQVPzOx_g)
 
 - [iflow-cli: 国产的claude code。还有手机版](https://github.com/iflow-ai/iflow-cli)
-
-- [Chaterm:带有 AI 功能的智能终端工具，可以用自然语言完成命令行操作。 Open source AI terminal and SSH Client for EC2, Database and Kubernetes.](https://github.com/chaterm/Chaterm)
-
-- [crush: The glamourous AI coding agent for your favourite terminal 💘](https://github.com/charmbracelet/crush)
 - [vibe-kanban: 集成claude code等终端，可以执行多个任务，因此不需要像claude code那样光等着ai执行，并且每个任务还是在git worktree下执行](https://github.com/BloopAI/vibe-kanban)
 
-- [openclaw: Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞](https://github.com/openclaw/openclaw)
-
-- [zeroclaw: rust版openclaw的 Agent 框架](https://github.com/zeroclaw-labs/zeroclaw)
-- [openfang: rust版openclaw的 Agent 操作系统。比zeroclaw功能更完善](https://github.com/RightNow-AI/openfang)
-
-- [nanobot: 轻量版OpenClaw](https://github.com/HKUDS/nanobot)
-
 - [openwork: Claude Cowork的平替开源版](https://github.com/different-ai/openwork)
+
 - [GitNexus: 无论是 Cursor 还是 Claude Code，都已经成了不少开发者每天必开的开发利器。然而，用 AI 写代码最怕遇到的是，刚修好了一个 Bug，却在意想不到的角落引爆了三个新 Bug。它能把整个代码库在本地嚼碎，将每一个依赖项、调用链条和工作流程都梳理得明明白白。接着通过极其聪明的检索机制，让 AI 真正读懂底层逻辑，不再漏掉关键上下文。](https://github.com/abhigyanpatwari/GitNexus)
+- [ai-cli-complete-notify: 面向 Claude code/Codex/Gemini 的多通道AI CLI 任务完成提醒，支持耗时阈值、桌面端与命令行、通用 Webhook（飞书/钉钉/企微）、Telegram、邮件、桌面/声音提示，配备自动监听日志，AI摘要等功能](https://github.com/ZekerTop/ai-cli-complete-notify)
+
+- [cc-connect: 把本地 AI 编程助手接入聊天应用。该项目能够将本地运行的 AI Agent 接到你常用的即时通讯平台，比如飞书、钉钉、Slack、Telegram、Discord、微信 等主流平台。同时支持 Claude Code、Cursor、Gemini CLI 等 7 种 AI 编程助手，实现通过聊天软件远程控制本地 AI Agent，执行各种开发相关任务。](https://github.com/chenhg5/cc-connect)
 
 ## ai数据库终端
 
@@ -1226,6 +1239,44 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [coze（扣子）：国内版](https://www.coze.cn/home)
 
 - dify vs coze：经过我个人的测试dify的知识库检索质量比coze要好很多
+
+### ai控制电脑
+
+- [TuriX：目前没有linux版](https://turix.ai/)
+
+### openclaw
+
+- [openclaw: Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞](https://github.com/openclaw/openclaw)
+
+- [zeroclaw: rust版openclaw的 Agent 框架](https://github.com/zeroclaw-labs/zeroclaw)
+- [openfang: rust版openclaw的 Agent 操作系统。比zeroclaw功能更完善](https://github.com/RightNow-AI/openfang)
+
+- [nanobot: 轻量版OpenClaw](https://github.com/HKUDS/nanobot)
+
+- [EdgeClaw:基于openClaw的由清华大学、中国人民大学等开发](https://github.com/OpenBMB/EdgeClaw)
+
+- [TrustClaw：龙虾 OpenClaw 的修改版，尽量消除代码的风险点。](https://www.trustclaw.app/)
+
+- [CoPaw: 阿里版openclaw](https://github.com/agentscope-ai/CoPaw)
+
+- [Qclaw：腾讯版openclaw](https://qclaw.qq.com/)
+
+- [WorkBuddy：腾讯版openclaw](https://www.codebuddy.cn/work/)
+
+- [AutoClaw：智谱的openclaw](https://autoglm.zhipuai.cn/autoclaw/)
+
+- [EasyClaw：猎豹的openclaw](https://easyclaw.com/zh-cn/)
+
+
+- [AionUi: gui管理Free, local, open-source 24/7 Cowork and OpenClaw for Gemini CLI, Claude Code, Codex, OpenCode, Qwen Code, Goose CLI, Auggie, and more | 🌟 Star if you like it!](https://github.com/iOfficeAI/AionUi)
+
+- [ClawX: openclaw的gui客户端](https://github.com/ValueCell-ai/ClawX)
+
+- [openclaw-docker-cn-im: OpenClaw 的中国IM平台整合Docker版本，预装并配置了飞书、钉钉、QQ机器人、企业微信等主流中国IM软件的插件，让您可以快速部署一个支持多个中国IM平台的 AI 机器人网关](https://github.com/justlovemaki/openclaw-docker-cn-im)
+
+#### 云端openclaw
+
+- [ArkClaw：字节的](https://console.volcengine.com/auth/login?redirectURI=%2Fark%2Fclaw)
 
 ## MCP
 

@@ -26,6 +26,7 @@ tags: []
       * [播放器](#播放器)
       * [字幕](#字幕)
       * [其他](#其他)
+    * [音乐](#音乐)
     * [游戏相关](#游戏相关)
     * [其他](#其他-1)
 
@@ -95,9 +96,12 @@ tags: []
 - [Sandboxie: 在沙盒中运行软件，避免不安分的软件，但数据会保留在沙盒之中](https://github.com/sandboxie-plus/Sandboxie)
 
 - [GreenDiskVisualizer: 基于Python构建的磁盘空间可视化分析软件，可利用MFT主文件表进行分析，旨在将磁盘内各文件夹所占空间以直观的方式展示出来，帮助使用者更好地了解磁盘空间的使用情况。](https://github.com/Green233233/GreenDiskVisualizer)
+
 - [Winhance: 开箱即用的 Windows 系统优化工具。这是一款基于 C# 开发的 Windows 10/11 一站式系统优化工具，无需重装系统即可定制、精简系统。它集成了软件管理、系统优化、界面定制等功能，支持一键卸载预装应用、性能调优和界面美化，适用于重装系统或新机初始化。](https://github.com/memstechtips/Winhance)
 
 - [TaskExplorer: 更强大的任务管理器](https://github.com/DavidXanatos/TaskExplorer)
+- [wsl2-distro-manager: wsl的管理器](https://github.com/bostrot/wsl2-distro-manager)
+- [DriverStoreExplorer: 驱动管理工具，支持快速查看、安装、卸载和备份驱动程序。它免安装、体积小，可自动比对驱动版本，识别旧版本或未使用的驱动，方便清理冗余驱动。](https://github.com/lostindark/DriverStoreExplorer)
 
 ## 逆向
 
@@ -158,6 +162,7 @@ tags: []
 
 - [filepilot：第三方文件资源管理器](https://filepilot.tech/)
 
+
 ### 编辑器
 
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
@@ -198,6 +203,8 @@ tags: []
 - [Tixati：跨平台的下载器，可以代替迅雷](https://tixati.com/)
 
 - [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
+
+- [Ghost-Downloader-3: A cross-platform QUIC AI-boost fluent-design multi-threaded downloader built with Python.](https://github.com/XiaoYouChR/Ghost-Downloader-3)
 
 #### 支持下载各种平台的下载器
 
@@ -254,6 +261,9 @@ tags: []
 - [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
 
 - [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
+### 音乐
+
+- [go-music-dl: 跨平台的一个基于 Go 语言的全网音乐搜索与下载工具。支持 Web 界面、TUI 终端 和 桌面应用 三种使用模式。内置网易云、QQ、酷狗、Bilibili、汽水音乐等 10+ 个主流平台，支持多源并发搜索与无损音质解析。music-dl交流群：1074285005](https://github.com/guohuiyuan/go-music-dl)
 
 ### 游戏相关
 
@@ -264,7 +274,9 @@ tags: []
 - [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
 
 - [Game-Cheats-Manager：游戏修改器管理工具](https://github.com/dyang886/Game-Cheats-Manager)
-- [w4po/ExplorerTabUtility:开箱即用的游戏变速器。这是一款完全免费、开源的 Windows 游戏加速工具。它通过 Hook 系统时间函数，实现对游戏速度的灵活调节，并提供简单易用的界面，兼容多种单机游戏。请勿用于网络游戏，以免导致账号被封！](https://github.com/w4po/ExplorerTabUtility)
+- [ExplorerTabUtility:开箱即用的游戏变速器。这是一款完全免费、开源的 Windows 游戏加速工具。它通过 Hook 系统时间函数，实现对游戏速度的灵活调节，并提供简单易用的界面，兼容多种单机游戏。请勿用于网络游戏，以免导致账号被封！](https://github.com/w4po/ExplorerTabUtility)
+
+- [game-save-manager: 一个简单的游戏存档管理器](https://github.com/mcthesw/game-save-manager)
 
 ### 其他
 

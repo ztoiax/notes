@@ -68,6 +68,8 @@ tags: []
   * [termscp：ftp、scp等的tui](#termscpftpscp等的tui)
   * [entr：监控文件变化时，执行命令](#entr监控文件变化时执行命令)
   * [rsyncy: 有进度条的rsync](#rsyncy-有进度条的rsync)
+  * [fclones: 查找重复文件](#fclones-查找重复文件)
+    * [fclones-gui: Interactive duplicate file finder and remover](#fclones-gui-interactive-duplicate-file-finder-and-remover)
 * [char](#char)
   * [tp：tui实时输出基础命令。如find、grep、jq等](#tptui实时输出基础命令如findgrepjq等)
   * [docfd：tui的grep。支持fuzzy](#docfdtui的grep支持fuzzy)
@@ -240,8 +242,11 @@ tags: []
   * [osqueryi：使用sql语句查询操作系统](#osqueryi使用sql语句查询操作系统)
   * [isd：systemd tui](#isdsystemd-tui)
   * [gocron: 代替cron，并提供web界面](#gocron-代替cron并提供web界面)
+  * [cronboard: cron tui](#cronboard-cron-tui)
   * [tufw: ufw防火墙的tui](#tufw-ufw防火墙的tui)
   * [iptable-web：iptable防火墙的web gui](#iptable-webiptable防火墙的web-gui)
+  * [cyme: instead lsusb](#cyme-instead-lsusb)
+  * [RackPeek: 这是一款轻量级个人 IT 基础设施管理工具，提供 WebUI 与 CLI 使用方式。它通过 YAML 文件存储数据，内置 Git 方便追踪变更历史，支持直观显示硬件参数、网络、服务信息，以及导出 SSH 配置、生成 Ansible 清单等功能。](#rackpeek-这是一款轻量级个人-it-基础设施管理工具提供-webui-与-cli-使用方式它通过-yaml-文件存储数据内置-git-方便追踪变更历史支持直观显示硬件参数网络服务信息以及导出-ssh-配置生成-ansible-清单等功能)
 * [磁盘备份](#磁盘备份)
   * [restic](#restic)
 * [pdf、mobi、epub、md](#pdfmobiepubmd)
@@ -543,6 +548,10 @@ ls *.js | entr -r node app.js
 ```
 
 ## [rsyncy: 有进度条的rsync](https://github.com/laktak/rsyncy)
+
+## [fclones: 查找重复文件](https://github.com/pkolaczk/fclones)
+
+### [fclones-gui: Interactive duplicate file finder and remover](https://github.com/pkolaczk/fclones-gui)
 
 # char
 
@@ -1426,11 +1435,15 @@ pip install isd-tui
 
 ## [gocron: 代替cron，并提供web界面](https://github.com/go-co-op/gocron)
 
+## [cronboard: cron tui](https://github.com/antoniorodr/cronboard)
+
 ## [tufw: ufw防火墙的tui](https://github.com/peltho/tufw)
 
 ## [iptable-web：iptable防火墙的web gui](https://gitee.com/shiya_liu/iptables-web)
 
-- [cyme: instead lsusb](https://github.com/tuna-f1sh/cyme)
+## [cyme: instead lsusb](https://github.com/tuna-f1sh/cyme)
+
+## [RackPeek: 这是一款轻量级个人 IT 基础设施管理工具，提供 WebUI 与 CLI 使用方式。它通过 YAML 文件存储数据，内置 Git 方便追踪变更历史，支持直观显示硬件参数、网络、服务信息，以及导出 SSH 配置、生成 Ansible 清单等功能。](https://github.com/Timmoth/RackPeek)
 
 # 磁盘备份
 

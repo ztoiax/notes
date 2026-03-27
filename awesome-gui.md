@@ -173,6 +173,8 @@ tags: []
 - [imfile：基于Motrix，因此imfile和Motrix只能安装其中一个](https://github.com/imfile-io/imfile-desktop)
     - 支持下载 HTTP、FTP、BitTorrent、Magnet 等
 
+- [motrix-next：Tauri和vue3从写motrix。支持aria2](https://github.com/AnInsomniacy/motrix-next)
+
 - [tribler：bt搜索和下载工具](https://www.tribler.org/download.html)：国内用户要设置无匿名，不然可能会出现资源下不动。
 
 - [rats-search：bt搜索和下载工具，可以打开别的客户端下载](https://github.com/DEgITx/rats-search)
@@ -195,6 +197,9 @@ tags: []
 - [FileCentipede: Cross-platform internet upload/download manager for HTTP(S), FTP(S), SSH, magnet-link, BitTorrent, m3u8, ed2k, and online videos. WebDAV client, FTP client, SSH client.](https://github.com/filecxx/FileCentipede)
 
 - [Tixati：跨平台的下载器，可以代替迅雷](https://tixati.com/)
+
+
+- [Ghost-Downloader-3: A cross-platform QUIC AI-boost fluent-design multi-threaded downloader built with Python.](https://github.com/XiaoYouChR/Ghost-Downloader-3)
 
 ### 支持下载各种平台的下载器
 
@@ -234,10 +239,11 @@ tags: []
 
 ![image](./Pictures/awesomegui/caesium-image-compressor.avif)
 
+- [shotwell: Read-only mirror of https://gitlab.gnome.org/GNOME/shotwell](https://github.com/GNOME/shotwell)
+
 ## [digikam：本地图片管理](https://www.digikam.org/)
 
 ## [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](https://github.com/Afilmory/afilmory)
-
 ## 截图
 
 - [deepin-screen-recorder：deepin的截图软件。支持录屏，长截图](https://github.com/linuxdeepin/deepin-screen-recorder)
@@ -268,6 +274,8 @@ tags: []
 # 视频
 
 ## 播放器
+
+- [NextPlayerCloud：neoplayer将 OpenList 与 MPV 播放器完美结合的本地播放解决方案，支持挂载各种云盘（阿里云盘、OneDrive、Google Drive、WebDAV、SMB 等）](https://github.com/NextPlayerCloud/NextPlayerCloud)
 
 - [NipaPlay-Reload: NipaPlay-Reload 是一个现代化的跨平台本地视频播放器，支持 Windows、macOS、Linux、Android 和 iOS。集成了弹幕显示、多格式字幕支持、多音频轨道切换，新番查看等功能，支持挂载Emby/Jellyfin媒体库。采用 Flutter 开发，提供统一的用户体验。](https://github.com/MCDFsteve/NipaPlay-Reload)
 
@@ -302,6 +310,10 @@ tags: []
 - [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
 
 # 音乐
+
+- [go-music-dl: 跨平台的一个基于 Go 语言的全网音乐搜索与下载工具。支持 Web 界面、TUI 终端 和 桌面应用 三种使用模式。内置网易云、QQ、酷狗、Bilibili、汽水音乐等 10+ 个主流平台，支持多源并发搜索与无损音质解析。music-dl交流群：1074285005](https://github.com/guohuiyuan/go-music-dl)
+
+- [EvolveUI: qml写的音乐播放器](https://github.com/sudoevolve/EvolveUI)
 
 - [NSMusicS：支持各种云端平台](https://gitwhub.com/Super-Badmen-Viper/NSMusicS)
 
@@ -398,6 +410,7 @@ tags: []
 
 - [pdfcraft: 无需上传文件的 PDF 全能工具箱。这是一款基于 Next.js 和 WebAssembly 构建的开源 PDF 工具箱，所有文件操作均在本地浏览器内完成，无需上传到外部服务器。它提供节点式编排 PDF 文件处理工作流，支持合并、拆分、OCR、格式转换等 90 多种功能。](https://github.com/PDFCraftTool/pdfcraft)
 
+- [ReadAny：桌面端 + 安卓端的电子书阅读工具，自带 AI 功能、语音朗读和多端同步。](https://github.com/codedogQBY/ReadAny)
 
 # note
 
@@ -618,6 +631,8 @@ tags: []
 # 网页应用
 
 - [kodbox: 开源的网页文件管理器。](https://github.com/kalcaddle/kodbox)
+
+- [wallpaper-engine-download-web: wallpaper免登录下载](https://github.com/0ran/wallpaper-engine-download-web)
 
 # 类似项目
 
