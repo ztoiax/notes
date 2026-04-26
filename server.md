@@ -36,6 +36,8 @@ tags: []
     * [DNS](#dns)
       * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
       * [Technitium DNS Server：自带web gui的dns 服务器](#technitium-dns-server自带web-gui的dns-服务器)
+      * [mosdns: 一个 DNS 转发器](#mosdns-一个-dns-转发器)
+      * [forgedns: rust写的mosdns](#forgedns-rust写的mosdns)
       * [smartdns:一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT，DoQ。](#smartdns一个本地dns服务器获取最快的网站ip获得最佳上网体验支持dohdotdoq)
     * [nfs](#nfs)
     * [proxy(代理)服务器](#proxy代理服务器)
@@ -109,6 +111,8 @@ tags: []
       * [在线工具](#在线工具)
 * [存储](#存储)
   * [rustfs:基于 Rust 的企业级分布式存储系统，旨在成为 MinIO 的一个开源替代品。](#rustfs基于-rust-的企业级分布式存储系统旨在成为-minio-的一个开源替代品)
+* [路由器](#路由器)
+  * [landscape: 家庭路由器系统。The goal is to make it easier to configure your favorite Linux distribution as a router. Built with Rust and eBPF.](#landscape-家庭路由器系统the-goal-is-to-make-it-easier-to-configure-your-favorite-linux-distribution-as-a-router-built-with-rust-and-ebpf)
 * [未读](#未读)
 
 <!-- mtoc-end -->
@@ -827,6 +831,10 @@ ngrep port 853
 ```
 
 #### [Technitium DNS Server：自带web gui的dns 服务器](https://technitium.com/dns/)
+
+#### [mosdns: 一个 DNS 转发器](https://github.com/IrineSistiana/mosdns)
+
+#### [forgedns: rust写的mosdns](https://github.com/SvenShi/forgedns)
 
 #### [smartdns:一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT，DoQ。](https://github.com/pymumu/smartdns)
 
@@ -2285,6 +2293,10 @@ paru -S hashcat-utils
 ## [rustfs:基于 Rust 的企业级分布式存储系统，旨在成为 MinIO 的一个开源替代品。](https://github.com/rustfs/rustfs)
 
 - [从被喷“假开源”到登顶 GitHub 热榜，这个开源项目上演王者归来！](https://mp.weixin.qq.com/s/7__cVbOQTIwan0laPvYIbg)
+
+# 路由器
+
+## [landscape: 家庭路由器系统。The goal is to make it easier to configure your favorite Linux distribution as a router. Built with Rust and eBPF.](https://github.com/ThisSeanZhang/landscape)
 
 # 未读
 

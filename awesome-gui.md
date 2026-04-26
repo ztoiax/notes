@@ -8,522 +8,72 @@ tags: []
 <!-- mtoc-start -->
 
 * [操作系统](#操作系统)
+  * [KODI相关的电视操作系统](#kodi相关的电视操作系统)
+  * [安卓](#安卓)
 * [file](#file)
   * [文件传输](#文件传输)
   * [文件管理器](#文件管理器)
   * [文件清理](#文件清理)
   * [云盘](#云盘)
-  * [other](#other)
-* [下载器](#下载器)
-  * [支持下载各种平台的下载器](#支持下载各种平台的下载器)
-* [图片](#图片)
-  * [image viewer(图片查看器)](#image-viewer图片查看器)
-    * [qt](#qt)
-    * [gtk](#gtk)
-    * [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](#caesium-image-compressor图片压缩配备了实时预览和批量处理的功能)
-  * [digikam：本地图片管理](#digikam本地图片管理)
-  * [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](#afilmory-本地图片管理modern-photo-gallery-for-photographers-with-s3github-sync-exif-details-maps-and-a-webgl-viewer)
-  * [截图](#截图)
-  * [ocr截图识别文字](#ocr截图识别文字)
-  * [图片压缩](#图片压缩)
-* [视频](#视频)
-  * [播放器](#播放器)
-  * [ai提升视频质量](#ai提升视频质量)
-  * [other](#other-1)
-* [音乐](#音乐)
-* [音频](#音频)
-* [翻译](#翻译)
-* [桌面软件和常见软件的第三方客户端](#桌面软件和常见软件的第三方客户端)
-* [投屏和远程控制](#投屏和远程控制)
-  * [ssh客户端](#ssh客户端)
-* [pdf、epub、mobi、markdown阅读器](#pdfepubmobimarkdown阅读器)
-* [note](#note)
-* [markdown文章知识管理、阅读器](#markdown文章知识管理阅读器)
-* [ide](#ide)
-* [硬件](#硬件)
-* [ai](#ai)
-* [模拟器](#模拟器)
-* [微信相关](#微信相关)
+  * [其他](#其他)
+* [多媒体相关](#多媒体相关)
+  * [下载器](#下载器)
+    * [支持下载各种平台的下载器](#支持下载各种平台的下载器)
+  * [图片](#图片)
+    * [image viewer(图片查看器)](#image-viewer图片查看器)
+      * [qt](#qt)
+      * [gtk](#gtk)
+      * [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](#caesium-image-compressor图片压缩配备了实时预览和批量处理的功能)
+    * [digikam：本地图片管理](#digikam本地图片管理)
+    * [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](#afilmory-本地图片管理modern-photo-gallery-for-photographers-with-s3github-sync-exif-details-maps-and-a-webgl-viewer)
+    * [截图](#截图)
+    * [录屏](#录屏)
+    * [ocr截图识别文字](#ocr截图识别文字)
+    * [图片压缩](#图片压缩)
+    * [提升画质](#提升画质)
+    * [其他](#其他-1)
+  * [视频](#视频)
+    * [播放器](#播放器)
+    * [ai提升视频质量](#ai提升视频质量)
+    * [剪辑](#剪辑)
+    * [其他](#其他-2)
+  * [音乐](#音乐)
+  * [音频](#音频)
+  * [追番](#追番)
+  * [阅读和笔记相关](#阅读和笔记相关)
+    * [阅读器](#阅读器)
+    * [markdown相关](#markdown相关)
+    * [note](#note)
+    * [画图](#画图)
+  * [游戏相关](#游戏相关)
+    * [模拟器](#模拟器)
+* [工具](#工具)
+  * [键盘鼠标相关](#键盘鼠标相关)
+  * [翻译](#翻译)
+  * [投屏和远程控制](#投屏和远程控制)
+    * [手机与电脑交互](#手机与电脑交互)
+    * [ssh客户端](#ssh客户端)
+  * [密码相关](#密码相关)
+  * [镜像u盘相关](#镜像u盘相关)
+* [第三方客户端](#第三方客户端)
+  * [微信相关](#微信相关)
 * [金融](#金融)
-* [其他](#其他)
-* [网页应用](#网页应用)
+* [桌面工具](#桌面工具)
+* [通信](#通信)
+* [其他](#其他-3)
 * [类似项目](#类似项目)
 
 <!-- mtoc-end -->
 
 # 操作系统
 
+## KODI相关的电视操作系统
+
 - [LibreELEC：基于KODI，适合用于电视；有docker等功能；复古游戏模拟器；自带smb](https://github.com/LibreELEC/LibreELEC.tv)
 
 - [CoreELEC：基于KODI，适合用于电视](https://github.com/CoreELEC/CoreELEC)
 
-# file
-
-## 文件传输
-
-- [localsend](https://github.com/localsend/localsend)
-
-- [kdeconnect：还可以控制手机](https://github.com/KDE/kdeconnect-kde)
-
-- [packet: android的AirDrop](https://github.com/nozwock/packet)
-
-- [deltachat-desktop: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-desktop)
-
-- [PairDrop: 文件传输，通过web浏览器](https://github.com/schlagmichdoch/PairDrop)
-- [alt-sendme: 这是一款采用 Rust 和 Tauri 构建的开源 P2P 文件传输工具，无需注册和服务器，即可实现端到端的文件传输。用户只需将文件拖入应用，将随机生成的传输凭证发给接收方，对方输入后即可轻松接收文件。](https://github.com/tonyantony300/alt-sendme)
-
-## 文件管理器
-
-- [dolphin](https://github.com/KDE/dolphin)
-
-- pcmanfm(文件管理器)
-
-- [sigma-file-manager](https://github.com/aleksey-hoffman/sigma-file-manager)
-
-- [xplorer](https://github.com/kimlimjustin/xplorer)
-
-- [FileExplorer: rust和Tauri和React写的跨平台文件管理器](https://github.com/conaticus/FileExplorer)
-
-## 文件清理
-
-- [bleachbit: 清理工具](https://www.bleachbit.org/)
-
-    ![image](./Pictures/awesomegui/bleachbit.avif)
-
-- [czkawka：多功能文件清理工具](https://github.com/qarmin/czkawka)
-    - 重复文件终结者
-    - 空文件夹清理
-    - 相似图片识别：连水印都不放过
-    - 视频清理：视觉相似的“侦探”
-    - 坏文件侦测：数据管理的“安全卫士”
-    - 无效符号链接修复：让系统更健康
-    - 垃圾文件清理：临时文件的“天敌”
-
-## 云盘
-
-- [蜗牛云盘：阿里云盘第三方](https://github.com/liupan1890/aliyunpan/issues/901)
-
-- [aliyunpan：阿里云盘第三方](https://github.com/liupan1890/aliyunpan)
-
-- [clouddrive：云盘管理](https://github.com/cloud-fs/cloud-fs.github.io/releases)
-
-- [小白羊网盘](https://github.com/gaozhangmin/aliyunpan)
-- [alist:可添加各种网盘的网页文件管理器](https://github.com/alist-org/alist)
-    - 使用davfs2挂载
-    ```sh
-    # 安装davfs2
-    sudo paclman -S davfs2
-
-    # mount到yun目录
-    mkdir yun
-    sudo mount -t davfs http://127.0.0.1:5244/dav yun
-    ```
-
-- [OpenList: alist被收购，这是alist社区版。](https://github.com/OpenListTeam/OpenList)
-
-- [YaoList: Rust+React版的alist](https://github.com/ChuYao233/YaoList)
-
-- [quark-auto-save: 夸克网盘签到、自动转存、命名整理、发推送提醒和刷新媒体库一条龙](https://github.com/Cp0204/quark-auto-save)
-
-- [taosync: 同步到网盘的工具。TaoSync是一个适用于OpenList v3+的自动化同步工具/Sync for OpenList/AList](https://github.com/dr34m-cn/taosync)
-
-## other
-
-- [filelight](https://kde.org/applications/en/filelight)
-
-    ![image](./Pictures/awesomegui/filelight.avif)
-
-- [stacer](https://github.com/oguzhaninan/Stacer)
-
-    ![image](./Pictures/awesomegui/stacer.avif)
-
-- [timeshif: backup](https://github.com/teejee2008/timeshift.avif)
-
-- [typora](https://www.typora.io/)
-
-    ![image](./Pictures/awesomegui/typora.avif)
-
-
-- [syncthing：文件同步](https://github.com/syncthing/syncthing)
-
-- [PeaZip: ：免费开源的文件压缩解压工具。这是一款免费、开源、跨平台的文件压缩和解压工具，支持超过 200 种压缩格式（7Z、ZIP、RAR、TAR、ISO、Zstd），具备文件压缩、解压、加密、分卷、校验、格式转换和批量操作等功能。支持linux、windows、macos](https://github.com/peazip/PeaZip)
-
-- [dupeguru: 查找重复文件](https://github.com/arsenetar/dupeguru)
-
-# 下载器
-
-- [Surge: 终端tui的高速下载工具，比ariac2快。这是一款采用 Go 语言开发的终端下载工具，可将下载文件自动切分为多个数据块并行下载，支持从多个镜像源下载、自动故障转移、顺序下载模式等功能。](https://github.com/surge-downloader/Surge)
-
-- [AriaNg: aria2的web gui。需要浏览器的插件进行启动](https://github.com/mayswind/AriaNg)
-
-- [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
-    - [gopeed-extension-wxmp: Gopeed 微信公众号视频下载扩展](https://github.com/monkeyWie/gopeed-extension-wxmp)
-    - [gopeed-extension-baiduwp: Gopeed 百度网盘下载扩展。](https://github.com/monkeyWie/gopeed-extension-baiduwp)
-    - [gopeed-extension-quark: Gopeed 扩展，用于解析夸克网盘分享链接并下载文件。](https://github.com/muyan556/gopeed-extension-quark)
-    - [gopeed-extension-bilibili: Bilibili video download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-bilibili)
-    - [gopeed-extension-youtube: Youtube video download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-youtube)
-    - [gopeed-extension-twitter: Twitter media download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-twitter)
-    - [gopeed-extension-huggingface: A gopeed-extension for downloading models and datasets from huggingface, hf-mirror and modelscope. Huggingface download](https://github.com/DSYZayn/gopeed-extension-huggingface)
-- [Hitomi-Downloader: yt-dlp的gui版](https://github.com/KurtBestor/Hitomi-Downloader)
-
-- [axel: cli命令行下载](https://github.com/axel-download-accelerator/axel)
-
-- [Motrix](https://github.com/agalwood/Motrix)
-
-- [imfile：基于Motrix，因此imfile和Motrix只能安装其中一个](https://github.com/imfile-io/imfile-desktop)
-    - 支持下载 HTTP、FTP、BitTorrent、Magnet 等
-
-- [motrix-next：Tauri和vue3从写motrix。支持aria2](https://github.com/AnInsomniacy/motrix-next)
-
-- [tribler：bt搜索和下载工具](https://www.tribler.org/download.html)：国内用户要设置无匿名，不然可能会出现资源下不动。
-
-- [rats-search：bt搜索和下载工具，可以打开别的客户端下载](https://github.com/DEgITx/rats-search)
-
-- [persepolis：aria2 gui](https://persepolisdm.github.io/)
-
-- [fdm](https://www.freedownloadmanager.org/zh/)
-
-- [xdman](https://xtremedownloadmanager.com/)
-
-- [mediago：视频下载器，支持m3u8](https://github.com/caorushizi/mediago)
-
-- [ab-download-manager：类似idm的下载器](https://github.com/amir1376/ab-download-manager)
-
-- [JDownloader.org - Official Homepage](https://jdownloader.org/home/index)
-
-- [amule: ed2k下载](https://github.com/amule-project/amule)
-
-- [mldonkey: 支持 ED2K、Kad、BitTorrent 等多种网络](https://github.com/ygrek/mldonkey)
-- [FileCentipede: Cross-platform internet upload/download manager for HTTP(S), FTP(S), SSH, magnet-link, BitTorrent, m3u8, ed2k, and online videos. WebDAV client, FTP client, SSH client.](https://github.com/filecxx/FileCentipede)
-
-- [Tixati：跨平台的下载器，可以代替迅雷](https://tixati.com/)
-
-
-- [Ghost-Downloader-3: A cross-platform QUIC AI-boost fluent-design multi-threaded downloader built with Python.](https://github.com/XiaoYouChR/Ghost-Downloader-3)
-
-### 支持下载各种平台的下载器
-
-- [ytDownloader: gui下载器，支持数百种平台如youtube、bilibli等](https://github.com/aandrew-me/ytDownloader)
-
-- [res-downloader: 嗅探抓取资源。视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!](https://github.com/putyy/res-downloader?tab=readme-ov-file)
-
-- [VidBee: yt-dlp的gui版。还支持rss自动下载功能，只要订阅了up主后，发布的新视频可以自动下载。还有浏览器插件，可以下载的内容，页面上会显示下载按钮。](https://github.com/nexmoe/VidBee)
-
-# 图片
-
-- [upscayl：ai图片质量提升](https://github.com/upscayl/upscayl)
-
-- [PicGo：图床上传下载](https://github.com/Molunerfinn/PicGo)
-
-- [Imagine: PNG/JPEG图片压缩工具](https://github.com/meowtec/Imagine)
-
-## image viewer(图片查看器)
-
-### qt
-
-- [qt-avif-image-plugin（avif格式支持）](https://github.com/novomesk/qt-avif-image-plugin)
-
-- [nomacs](https://github.com/nomacs/nomacs)
-
-- [qview](https://github.com/jurplel/qView)
-
-- [gwenview: KDE的](https://github.com/KDE/gwenview)
-
-- [KDE/digikam: digiKam is an advanced open-source digital photo management application that runs on Linux, Windows, and MacOS. The application provides a comprehensive set of tools for importing, managing, editing, and sharing photos and raw files.](https://github.com/KDE/digikam)
-
-### gtk
-
-- [gthumb：GNOME的](https://github.com/GNOME/gthumb)
-
-### [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](caesium-image-compressor)
-
-![image](./Pictures/awesomegui/caesium-image-compressor.avif)
-
-- [shotwell: Read-only mirror of https://gitlab.gnome.org/GNOME/shotwell](https://github.com/GNOME/shotwell)
-
-## [digikam：本地图片管理](https://www.digikam.org/)
-
-## [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](https://github.com/Afilmory/afilmory)
-## 截图
-
-- [deepin-screen-recorder：deepin的截图软件。支持录屏，长截图](https://github.com/linuxdeepin/deepin-screen-recorder)
-
-- [Snipaste：windows很出名的截图软件。支持窗口识别，固定截图](https://github.com/Snipaste)
-
-- [flameshot：火焰截图](https://github.com/flameshot-org/flameshot)
-
-- [Umi-OCR：ocr](https://github.com/hiroi-sora/Umi-OCR)
-
-- [kooha：wayland录屏](https://github.com/SeaDve/Kooha)
-
-- [wayfarer：录屏](https://github.com/stronnag/wayfarer)
-
-- [openscreen: 录屏加部分剪辑功能，可以更换背景，调整窗口大小，放大缩小等动效，添加文字等。满足最基本的录屏剪辑需求](https://github.com/siddharthvaddem/openscreen)
-
-## ocr截图识别文字
-
-- [TextSnatcher: 只支持英文](https://github.com/RajSolai/TextSnatcher)
-
-- [Umi-OCR: 使用PaddleOCR。支持截屏/批量导入图片，PDF文档识别，排除水印/页眉页脚，扫描/生成二维码。内置多国语言库。](https://github.com/hiroi-sora/Umi-OCR)
-
-## 图片压缩
-
-- [PicSharp: A modern, full-featured, high-performance, cross-platform image compression application 具有现代化UI、功能齐全、高性能、跨平台的图像压缩工具](https://github.com/AkiraBit/PicSharp)
-- [caesium-image-compressor: Caesium is an image compression software that helps you store, send and share digital pictures, supporting JPG, PNG, WebP and TIFF formats. You can quickly reduce the file size (and resolution, if you want) by preserving the overall quality of the image.](https://github.com/Lymphatus/caesium-image-compressor)
-
-# 视频
-
-## 播放器
-
-- [NextPlayerCloud：neoplayer将 OpenList 与 MPV 播放器完美结合的本地播放解决方案，支持挂载各种云盘（阿里云盘、OneDrive、Google Drive、WebDAV、SMB 等）](https://github.com/NextPlayerCloud/NextPlayerCloud)
-
-- [NipaPlay-Reload: NipaPlay-Reload 是一个现代化的跨平台本地视频播放器，支持 Windows、macOS、Linux、Android 和 iOS。集成了弹幕显示、多格式字幕支持、多音频轨道切换，新番查看等功能，支持挂载Emby/Jellyfin媒体库。采用 Flutter 开发，提供统一的用户体验。](https://github.com/MCDFsteve/NipaPlay-Reload)
-
-- [FreeBox: TVBox电脑版/姊妹软件，致力于TVBox功能和生态的跨平台扩展](https://github.com/kknifer7/FreeBox)
-
-- [biu: Bilibili音乐播放器](https://github.com/wood3n/biu)
-
-## ai提升视频质量
-
-- [video2x-qt6: Video2X视频增强命令的gui](https://github.com/k4yt3x/video2x-qt6)
-
-- [chaiNNer: A node-based image processing GUI aimed at making chaining image processing tasks easy and customizable. Born as an AI upscaling application, chaiNNer has grown into an extremely flexible and powerful programmatic image processing application.](https://github.com/chaiNNer-org/chaiNNer)
-
-## other
-
-- [mediainfo-gui: mediainfod的gui](https://github.com/lordmulder/mediainfo-gui)
-
-- [winff: ffmpeg gtk/qt ui](https://github.com/WinFF/winff/)
-
-- [pyvideotrans：给视频配音、翻译配音、添加字幕](https://github.com/jianchang512/pyvideotrans)
-- [VideoLingo: Netflix级字幕切割、翻译、对齐、甚至加上配音，一键全自动视频搬运AI字幕组](https://github.com/Huanshere/VideoLingo)
-
-- [lossless-cut：视频剪切软件，目标是成为 FFmpeg 的图形前端。](https://github.com/mifi/lossless-cut)
-
-- [videocr: 字幕提取](https://github.com/apm1467/videocr)
-
-- [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
-
-- [jellyfin-desktop: Jellyfin Desktop Client](https://github.com/jellyfin/jellyfin-desktop)
-
-- [kdenlive: 视频剪辑](https://github.com/KDE/kdenlive)
-- [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
-
-# 音乐
-
-- [go-music-dl: 跨平台的一个基于 Go 语言的全网音乐搜索与下载工具。支持 Web 界面、TUI 终端 和 桌面应用 三种使用模式。内置网易云、QQ、酷狗、Bilibili、汽水音乐等 10+ 个主流平台，支持多源并发搜索与无损音质解析。music-dl交流群：1074285005](https://github.com/guohuiyuan/go-music-dl)
-
-- [EvolveUI: qml写的音乐播放器](https://github.com/sudoevolve/EvolveUI)
-
-- [NSMusicS：支持各种云端平台](https://gitwhub.com/Super-Badmen-Viper/NSMusicS)
-
-- [MoeKoeMusic: 一款开源简洁高颜值的酷狗第三方客户端](https://github.com/iAJue/MoeKoeMusic)
-
-- [SPlayer：网易云音乐](https://github.com/imsyy/SPlayer)
-- [VutronMusic: 高颜值的第三方网易云播放器；支持流媒体音乐，如navidrome、jellyfin、emby；支持本地音乐播放、离线歌单、逐字歌词、桌面歌词、Touch Bar歌词、Mac状态栏歌词显示、Linux-gnome与Linux-kde桌面状态栏歌词显示；支持降调降速，支持自定义主题等。支持 Windows / macOS / Linux](https://github.com/stark81/VutronMusic)
-
-- [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
-
-- [lx-music-desktop: 一个基于 Electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
-
-    - [lx-music-source: 洛雪音乐源](https://github.com/pdone/lx-music-source)
-
-    - [lx-music-sync-server: 运行在 Node.js 上的 LX Music 数据同步服务](https://github.com/lyswhut/lx-music-sync-server)
-
-    - [any-listen: A cross-platform private music playback service](https://github.com/any-listen/any-listen?tab=readme-ov-file)
-
-# 音频
-
-- [SoundThread: Node based GUI for The Composers Desktop Project](https://github.com/j-p-higgins/SoundThread)
-
-- [easyeffects: 电脑音质提升软件-拯救你的破喇叭](https://github.com/wwmm/easyeffects)
-
-# 翻译
-
-
-- [pot-desktop：划词翻译，并支持ocr](https://github.com/pot-app/pot-desktop)
-    - [pot-app-plugin-list: 🌟Pot App Plugin Collection](https://github.com/pot-app/pot-app-plugin-list)
-
-- [MTranServer: 低资源占用速度快可私有部署的离线翻译模型服务器](https://github.com/xxnuo/MTranServer)
-# 桌面软件和常见软件的第三方客户端
-
-- [FreeTube: youtube](https://github.com/FreeTubeApp/FreeTube)
-
-- [Github-Store: 平台的 GitHub 应用商店。这是一款基于 Kotlin 开发的跨平台开源应用商店客户端，支持一键发现热门开源项目、下载安装包（如 APK、EXE、DMG 、 AppImage、DEB、RPM等），以及追踪已安装应用并提示更新。](https://github.com/rainxchzed/Github-Store)
-
-# 投屏和远程控制
-
-- [Sunshine：投屏(屏幕共享)服务端](https://github.com/LizardByte/Sunshine)
-
-- [apollo: 投屏(屏幕共享)服务端,比Sunshine更好](https://github.com/apolloconfig/apollo)
-
-- [moonlight-qt：投屏(屏幕共享)客户端](https://github.com/moonlight-stream/moonlight-qt)
-
-- [rustdesk](https://github.com/rustdesk/rustdesk)
-
-- [ToDesk](https://github.com/ji4ozhu/ToDesk)
-
-- [lan-mouse：键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/feschber/lan-mouse)
-
-- [deskflow：跨平台键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/deskflow/deskflow)
-
-- [crossdesk: 一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。](https://github.com/kunkundi/crossdesk)
-
-## ssh客户端
-
-- [shell360](https://github.com/shell360)
-
-- [xpipe：通过图形界面，将所有的服务器连接在一个地方管理。](https://github.com/xpipe-io/xpipe)
-
-- [termora](https://github.com/TermoraDev/termora)
-
-    - 支持 SSH 和本地终端
-    - 支持 Windows、macOS、Linux 平台
-    - 支持 Zmodem 协议
-    - 支持 SSH 端口转发
-    - 支持配置同步到 Gist
-    - 支持宏（录制脚本并回放）
-    - 支持关键词高亮
-    - 支持密钥管理器
-    - 支持将命令发送到多个会话
-    - 支持 Find Everywhere 快速跳转
-    - 支持数据加密
-
-# pdf、epub、mobi、markdown阅读器
-
-- [sioyek: pdf阅读器](https://github.com/ahrm/sioyek)
-
-- [zathura: pdf, epub阅读器](https://github.com/pwmt/zathura)
-
-- [koreader: An ebook reader application supporting PDF, DjVu, EPUB, FB2 and many more formats, running on Cervantes, Kindle, Kobo, PocketBook and Android devices](https://github.com/koreader/koreader)
-
-    - [koreader/koreader-sync-server: self hostable synchronization service for koreader devices](https://github.com/koreader/koreader-sync-server)
-    - [assistant.koplugin: Assistant: AI Helper Plugin for KOReader : lets you interact with AI language models (Claude, GPT-4, Gemini, DeepSeek, Ollama etc.) while reading](https://github.com/omer-faruq/assistant.koplugin)
-
-- [foliate: pdf, epub阅读器](https://github.com/johnfactotum/foliate)
-
-- [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
-
-- [note-gen:跨平台的 Markdown 笔记软件，支持接入 AI 模型](https://github.com/codexu/note-gen)
-
-- [marktext: markdown编辑器。typora免费代替品](https://github.com/marktext/marktext)
-
-- [pdfcraft: 无需上传文件的 PDF 全能工具箱。这是一款基于 Next.js 和 WebAssembly 构建的开源 PDF 工具箱，所有文件操作均在本地浏览器内完成，无需上传到外部服务器。它提供节点式编排 PDF 文件处理工作流，支持合并、拆分、OCR、格式转换等 90 多种功能。](https://github.com/PDFCraftTool/pdfcraft)
-
-- [ReadAny：桌面端 + 安卓端的电子书阅读工具，自带 AI 功能、语音朗读和多端同步。](https://github.com/codedogQBY/ReadAny)
-
-# note
-
-- [zotero：文献管理工具](https://github.com/zotero/zotero)
-
-- [zotero-gpt](https://github.com/MuiseDestiny/zotero-gpt)
-
-- [karakeep: 可以收藏links, notes and images。然后通过ai搜索搜索文本。](https://github.com/karakeep-app/karakeep/)
-
-# markdown文章知识管理、阅读器
-
-- [obsidian](https://github.com/obsidianmd/obsidian-releases)
-
-- [Zettlr](https://github.com/Zettlr/Zettlr)
-
-- [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
-
-- [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
-- [markdown-online-editor: 📝 基于 Vue2、Vditor，所构建的在线 Markdown 编辑器，支持绘制流程图、甘特图、时序图、任务列表、echarts 图表、五线谱，以及 PPT 预览、视频音频解析、HTML 自动转换为 Markdown 等功能。https://www.niceshare.site](https://github.com/nicejade/markdown-online-editor)
-
-- [Yank Note: 跨平台markdown编辑器，同时支持gui和web两种界面。可以跑代码、画图表、搞加密，甚至内置终端。Yank Note 提供了版本控制功能，每次修改都会自动记录，方便我们回头进行修改对比。ai智能补全。图表嵌入：支持 PlantUML、Drawio、ECharts、Mermaid 等多种图表工具；插件系统：可以自己写 JavaScript 插件扩展功能，真正的可编程编辑器。](https://yank-note.com/)
-
-
-# ide
-
-- [positron：数据科学 IDE](https://github.com/posit-dev/positron)基于 VSCode 构建了一个可复制的编写和发布的桌面开发环境，支持运行 Python 和 R 代码、自动补全等功能
-
-# 硬件
-
-- [corectrl：查看cpu、gpu信息，显示监控曲线图](https://gitlab.com/corectrl/corectrl)
-
-- [LACT：amd gpu控制器](https://github.com/ilya-zlobintsev/LACT)
-
-# ai
-
-- [NextChat：支持各种llm的客户端](https://github.com/ChatGPTNextWeb/NextChat)
-
-# 模拟器
-
-- [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
-
-- [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
-
-# 微信相关
-
-- [WechatRealFriends：查看有没有朋友偷偷删掉或者拉黑你](https://github.com/StrayMeteor3337/WechatRealFriends)
-
-- [WeClone: 🚀从聊天记录创造数字分身的一站式解决方案💡 使用聊天记录微调大语言模型，让大模型有“那味儿”，并绑定到聊天机器人，实现自己的数字分身。 数字克隆/数字分身/数字永生/LLM/聊天机器人/LoRA](https://github.com/xming521/WeClone)
-
-- [WeFlow: 一个本地的微信聊天记录导出和年度报告应用](https://github.com/hicccc77/WeFlow)
-
-# 金融
-
-- [OpenBB: Financial data platform for analysts, quants and AI agents.](https://github.com/OpenBB-finance/OpenBB)
-
-# 其他
-
-- [linux-wifi-hotspot](https://github.com/lakinduakash/linux-wifi-hotspot)
-
-- [noti: 任务完成后通知](https://github.com/variadico/noti)
-
-- [sunloginclient(向日葵运程控制gui版)](https://sunlogin.oray.com/download)
-
-- [keynav：键盘控制鼠标](https://github.com/jordansissel/keynav)
-
-- [keyviz: 实时显示键盘按键](https://github.com/mulaRahul/keyviz)
-
-- [lx-music-desktop：一个基于 electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
-
-- [增强版qbittorrent](https://github.com/c0re100/qBittorrent-Enhanced-Edition)
-    - [trackerslist](https://trackerslist.com/all.txt)
-    - [海盗湾](https://thepiratebay.org/index.html)
-
-- [qv2ray](https://github.com/Qv2ray/Qv2ray)
-
-- [nekoray:v2ray客户端](https://github.com/MatsuriDayo/nekoray)
-
-- [veracrypt：加密](https://github.com/veracrypt/VeraCrypt)
-
-- [session：加密通信](https://getsession.org/download)
-
-- [bitwarden：密码管理器](https://bitwarden.com/download/)
-
-- [timeshift](https://github.com/teejee2008/timeshift)
-
-- [gImageReader：ocr，但不太准确](https://github.com/manisandro/gImageReader)
-
-- [quivr：该项目利用生成式 AI 的能力，成为你的第二大脑。你可以将多种格式的文本、数据、语言和视频上传给它，之后再和它对话时，它会学习你上传的内容后回答你的问题，支持接入多种 LLM 和 Docker 一键部署。](https://github.com/QuivrHQ/quivr)
-
-- [netease-cloud-music-gtk：网易云音乐gtk4版](https://github.com/gmg137/netease-cloud-music-gtk)
-
-- [drawio-desktop](https://github.com/jgraph/drawio-desktop)
-
-- [etcher：USB/SD 启动盘制作工具](https://github.com/balena-io/etcher)
-
-- [stellarium：天象模拟软件](https://github.com/Stellarium/stellarium)
-    - 支持：windows、linux、macos、android、ios
-
-- [input-overlay：显示用户操作输入的 OBS 直播插件。该项目是用来在直播中显示键盘按键、鼠标移动和游戏手柄按钮的插件](https://github.com/univrsal/input-overlay)
-
-![image](./Pictures/awesomegui/input-overlay.avif)
-
-- [rubick：工具箱、启动框](https://github.com/rubickCenter/rubick)
-
-- [neko：该项目是运行在 Docker 容器中的自托管虚拟浏览器环境，为用户提供安全、隔离和功能齐全的虚拟浏览器。](https://github.com/m1k1o/neko)
-
-- [fluent-reader：rss订阅和阅读器](https://github.com/yang991178/fluent-reader)
-
-- [MrRSS: A modern, cross-platform desktop RSS reader. 一个现代化、跨平台的 RSS 阅读器.](https://github.com/WCY-dt/MrRSS)
-
-- [Folo: 聚合阅读器，有点类似于rss](https://github.com/RSSNext/Folo)
-
-- [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
+## 安卓
 
 - [redroid：docker上跑安卓](https://github.com/remote-android/redroid-doc)
 
@@ -546,8 +96,6 @@ tags: []
     # scrcpy投屏
     scrcpy -s localhost:5555
     ```
-
-- [linkandroid：开源的手机连接助手，方便连接 Android 和电脑。](https://github.com/modstart-lib/linkandroid)
 
 - [waydroid：安卓系统。并不是模拟器，而是直接构建](https://github.com/waydroid/waydroid)
 
@@ -598,41 +146,551 @@ tags: []
     git clone https://github.com/casualsnek/waydroid_script
     ```
 
-- [aya：简化对安卓设备的操作控制，可以看作 ADB 的图形用户界面](https://github.com/liriliri/aya)
+# file
 
-- [stock：股票分析](https://github.com/myhhub/stock)
+## 文件传输
+
+- [localsend](https://github.com/localsend/localsend)
+
+- [LANChat: 一款支持文件传输的跨平台局域网聊天软件，用Rust编写。A cross-platform LAN chat software that supports file transfer, written in Rust.](https://github.com/cap153/LANChat)
+
+- [kdeconnect：还可以控制手机](https://github.com/KDE/kdeconnect-kde)
+
+- [packet: android的AirDrop](https://github.com/nozwock/packet)
+
+- [deltachat-desktop: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-desktop)
+
+- [PairDrop: 文件传输，通过web浏览器](https://github.com/schlagmichdoch/PairDrop)
+- [alt-sendme: 这是一款采用 Rust 和 Tauri 构建的开源 P2P 文件传输工具，无需注册和服务器，即可实现端到端的文件传输。用户只需将文件拖入应用，将随机生成的传输凭证发给接收方，对方输入后即可轻松接收文件。](https://github.com/tonyantony300/alt-sendme)
+
+## 文件管理器
+
+- [dolphin](https://github.com/KDE/dolphin)
+
+- pcmanfm(文件管理器)
+
+- [sigma-file-manager](https://github.com/aleksey-hoffman/sigma-file-manager)
+
+- [xplorer](https://github.com/kimlimjustin/xplorer)
+
+- [FileExplorer: rust和Tauri和React写的跨平台文件管理器](https://github.com/conaticus/FileExplorer)
+
+- [kodbox: 开源的网页文件管理器。](https://github.com/kalcaddle/kodbox)
+
+## 文件清理
+
+- [bleachbit: 清理工具](https://www.bleachbit.org/)
+
+    ![image](./Pictures/awesomegui/bleachbit.avif)
+
+- [czkawka：多功能文件清理工具](https://github.com/qarmin/czkawka)
+    - 重复文件终结者
+    - 空文件夹清理
+    - 相似图片识别：连水印都不放过
+    - 视频清理：视觉相似的“侦探”
+    - 坏文件侦测：数据管理的“安全卫士”
+    - 无效符号链接修复：让系统更健康
+    - 垃圾文件清理：临时文件的“天敌”
+
+## 云盘
+
+- [蜗牛云盘：阿里云盘第三方](https://github.com/liupan1890/aliyunpan/issues/901)
+
+- [aliyunpan：阿里云盘第三方](https://github.com/liupan1890/aliyunpan)
+
+- [clouddrive：云盘管理](https://github.com/cloud-fs/cloud-fs.github.io/releases)
+
+- [小白羊网盘](https://github.com/gaozhangmin/aliyunpan)
+- [alist:可添加各种网盘的网页文件管理器](https://github.com/alist-org/alist)
+    - 使用davfs2挂载
+    ```sh
+    # 安装davfs2
+    sudo paclman -S davfs2
+
+    # mount到yun目录
+    mkdir yun
+    sudo mount -t davfs http://127.0.0.1:5244/dav yun
+    ```
+
+- [OpenList: alist被收购，这是alist社区版。](https://github.com/OpenListTeam/OpenList)
+
+- [YaoList: Rust+React版的alist](https://github.com/ChuYao233/YaoList)
+
+- [quark-auto-save: 夸克网盘签到、自动转存、命名整理、发推送提醒和刷新媒体库一条龙](https://github.com/Cp0204/quark-auto-save)
+
+- [taosync: 同步到网盘的工具。TaoSync是一个适用于OpenList v3+的自动化同步工具/Sync for OpenList/AList](https://github.com/dr34m-cn/taosync)
+
+## 其他
+
+- [filelight](https://kde.org/applications/en/filelight)
+
+    ![image](./Pictures/awesomegui/filelight.avif)
+
+- [stacer](https://github.com/oguzhaninan/Stacer)
+
+    ![image](./Pictures/awesomegui/stacer.avif)
+
+- [timeshif: backup](https://github.com/teejee2008/timeshift.avif)
+
+- [typora](https://www.typora.io/)
+
+    ![image](./Pictures/awesomegui/typora.avif)
+
+
+- [syncthing：文件同步](https://github.com/syncthing/syncthing)
+
+- [PeaZip: ：免费开源的文件压缩解压工具。这是一款免费、开源、跨平台的文件压缩和解压工具，支持超过 200 种压缩格式（7Z、ZIP、RAR、TAR、ISO、Zstd），具备文件压缩、解压、加密、分卷、校验、格式转换和批量操作等功能。支持linux、windows、macos](https://github.com/peazip/PeaZip)
+
+- [dupeguru: 查找重复文件](https://github.com/arsenetar/dupeguru)
+
+# 多媒体相关
+
+## 下载器
+
+- [Surge: 终端tui的高速下载工具，比ariac2快。这是一款采用 Go 语言开发的终端下载工具，可将下载文件自动切分为多个数据块并行下载，支持从多个镜像源下载、自动故障转移、顺序下载模式等功能。](https://github.com/surge-downloader/Surge)
+
+- [AriaNg: aria2的web gui。需要浏览器的插件进行启动](https://github.com/mayswind/AriaNg)
+
+- [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
+    - [gopeed-extension-wxmp: Gopeed 微信公众号视频下载扩展](https://github.com/monkeyWie/gopeed-extension-wxmp)
+    - [gopeed-extension-baiduwp: Gopeed 百度网盘下载扩展。](https://github.com/monkeyWie/gopeed-extension-baiduwp)
+    - [gopeed-extension-quark: Gopeed 扩展，用于解析夸克网盘分享链接并下载文件。](https://github.com/muyan556/gopeed-extension-quark)
+    - [gopeed-extension-bilibili: Bilibili video download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-bilibili)
+    - [gopeed-extension-youtube: Youtube video download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-youtube)
+    - [gopeed-extension-twitter: Twitter media download extension of gopeed.](https://github.com/monkeyWie/gopeed-extension-twitter)
+    - [gopeed-extension-huggingface: A gopeed-extension for downloading models and datasets from huggingface, hf-mirror and modelscope. Huggingface download](https://github.com/DSYZayn/gopeed-extension-huggingface)
+- [Hitomi-Downloader: yt-dlp的gui版](https://github.com/KurtBestor/Hitomi-Downloader)
+
+- [axel: cli命令行下载](https://github.com/axel-download-accelerator/axel)
+
+- [Motrix](https://github.com/agalwood/Motrix)
+
+- [imfile：基于Motrix，因此imfile和Motrix只能安装其中一个](https://github.com/imfile-io/imfile-desktop)
+    - 支持下载 HTTP、FTP、BitTorrent、Magnet 等
+
+- [motrix-next：Tauri和vue3从写motrix。支持aria2](https://github.com/AnInsomniacy/motrix-next)
+
+- [tribler：bt搜索和下载工具](https://www.tribler.org/download.html)：国内用户要设置无匿名，不然可能会出现资源下不动。
+
+- [rats-search：bt搜索和下载工具，可以打开别的客户端下载](https://github.com/DEgITx/rats-search)
+
+- [persepolis：aria2 gui](https://persepolisdm.github.io/)
+
+- [fdm](https://www.freedownloadmanager.org/zh/)
+
+- [xdman](https://xtremedownloadmanager.com/)
+
+- [mediago：视频下载器，支持m3u8](https://github.com/caorushizi/mediago)
+
+- [ab-download-manager：类似idm的下载器](https://github.com/amir1376/ab-download-manager)
+
+- [JDownloader.org - Official Homepage](https://jdownloader.org/home/index)
+
+- [amule: ed2k下载](https://github.com/amule-project/amule)
+
+- [mldonkey: 支持 ED2K、Kad、BitTorrent 等多种网络](https://github.com/ygrek/mldonkey)
+- [FileCentipede: Cross-platform internet upload/download manager for HTTP(S), FTP(S), SSH, magnet-link, BitTorrent, m3u8, ed2k, and online videos. WebDAV client, FTP client, SSH client.](https://github.com/filecxx/FileCentipede)
+
+- [Tixati：跨平台的下载器，可以代替迅雷](https://tixati.com/)
+
+- [Ghost-Downloader-3: A cross-platform QUIC AI-boost fluent-design multi-threaded downloader built with Python.](https://github.com/XiaoYouChR/Ghost-Downloader-3)
+
+- [增强版qbittorrent](https://github.com/c0re100/qBittorrent-Enhanced-Edition)
+    - [trackerslist](https://trackerslist.com/all.txt)
+    - [海盗湾](https://thepiratebay.org/index.html)
+
+### 支持下载各种平台的下载器
+
+- [ytDownloader: gui下载器，支持数百种平台如youtube、bilibli等](https://github.com/aandrew-me/ytDownloader)
+
+- [res-downloader: 嗅探抓取资源。视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!](https://github.com/putyy/res-downloader?tab=readme-ov-file)
+
+- [VidBee: yt-dlp的gui版。还支持rss自动下载功能，只要订阅了up主后，发布的新视频可以自动下载。还有浏览器插件，可以下载的内容，页面上会显示下载按钮。](https://github.com/nexmoe/VidBee)
+
+
+## 图片
+
+### image viewer(图片查看器)
+
+#### qt
+
+- [qt-avif-image-plugin（avif格式支持）](https://github.com/novomesk/qt-avif-image-plugin)
+
+- [nomacs](https://github.com/nomacs/nomacs)
+
+- [qview](https://github.com/jurplel/qView)
+
+- [gwenview: KDE的](https://github.com/KDE/gwenview)
+
+- [KDE/digikam: digiKam is an advanced open-source digital photo management application that runs on Linux, Windows, and MacOS. The application provides a comprehensive set of tools for importing, managing, editing, and sharing photos and raw files.](https://github.com/KDE/digikam)
+
+#### gtk
+
+- [gthumb：GNOME的](https://github.com/GNOME/gthumb)
+
+#### [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](caesium-image-compressor)
+
+![image](./Pictures/awesomegui/caesium-image-compressor.avif)
+
+- [shotwell: Read-only mirror of https://gitlab.gnome.org/GNOME/shotwell](https://github.com/GNOME/shotwell)
+
+### [digikam：本地图片管理](https://www.digikam.org/)
+
+### [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](https://github.com/Afilmory/afilmory)
+### 截图
+
+- [deepin-screen-recorder：deepin的截图软件。支持录屏，长截图](https://github.com/linuxdeepin/deepin-screen-recorder)
+
+- [Snipaste：windows很出名的截图软件。支持窗口识别，固定截图](https://github.com/Snipaste)
+
+- [flameshot：火焰截图](https://github.com/flameshot-org/flameshot)
+
+- [Umi-OCR：ocr](https://github.com/hiroi-sora/Umi-OCR)
+
+### 录屏
+
+- [kooha：wayland录屏](https://github.com/SeaDve/Kooha)
+
+- [wayfarer：录屏](https://github.com/stronnag/wayfarer)
+
+- [openscreen: 录屏加部分剪辑功能，可以更换背景，调整窗口大小，放大缩小等动效，添加文字等。满足最基本的录屏剪辑需求](https://github.com/siddharthvaddem/openscreen)
+- [Recordly: 录屏支持根据点击等操作自动追踪、缩放功能，并支持前置摄像头](https://github.com/webadderall/Recordly)
+
+### ocr截图识别文字
+
+- [TextSnatcher: 只支持英文](https://github.com/RajSolai/TextSnatcher)
+
+- [Umi-OCR: 使用PaddleOCR。支持截屏/批量导入图片，PDF文档识别，排除水印/页眉页脚，扫描/生成二维码。内置多国语言库。](https://github.com/hiroi-sora/Umi-OCR)
+
+### 图片压缩
+
+- [PicSharp: A modern, full-featured, high-performance, cross-platform image compression application 具有现代化UI、功能齐全、高性能、跨平台的图像压缩工具](https://github.com/AkiraBit/PicSharp)
+
+- [caesium-image-compressor: Caesium is an image compression software that helps you store, send and share digital pictures, supporting JPG, PNG, WebP and TIFF formats. You can quickly reduce the file size (and resolution, if you want) by preserving the overall quality of the image.](https://github.com/Lymphatus/caesium-image-compressor)
+
+- [Imagine: PNG/JPEG图片压缩工具](https://github.com/meowtec/Imagine)
+
+### 提升画质
+
+- [upscayl：ai图片质量提升](https://github.com/upscayl/upscayl)
+
+- [realesrgan-gui: 实用、美观的 Real-ESRGAN 图形界面，同时支持 Windows、Ubuntu 和 macOS 平台。现在也支持 Real-CUGAN 了！(Cross-platform GUI for image upscaler Real-ESRGAN with additional features. Now with Real-CUGAN support!)](https://github.com/TransparentLC/realesrgan-gui)
+
+### 其他
+
+- [PicGo：图床上传下载](https://github.com/Molunerfinn/PicGo)
+
+- [wallpaper-engine-download-web: wallpaper免登录下载](https://github.com/0ran/wallpaper-engine-download-web)
+
+## 视频
+
+### 播放器
+
+- [jellyfin-desktop: Jellyfin Desktop Client](https://github.com/jellyfin/jellyfin-desktop)
+
+- [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
+
+- [NextPlayerCloud：neoplayer将 OpenList 与 MPV 播放器完美结合的本地播放解决方案，支持挂载各种云盘（阿里云盘、OneDrive、Google Drive、WebDAV、SMB 等）](https://github.com/NextPlayerCloud/NextPlayerCloud)
+
+- [NipaPlay-Reload: NipaPlay-Reload 是一个现代化的跨平台本地视频播放器，支持 Windows、macOS、Linux、Android 和 iOS。集成了弹幕显示、多格式字幕支持、多音频轨道切换，新番查看等功能，支持挂载Emby/Jellyfin媒体库。采用 Flutter 开发，提供统一的用户体验。](https://github.com/MCDFsteve/NipaPlay-Reload)
+
+- [FreeBox: TVBox电脑版/姊妹软件，致力于TVBox功能和生态的跨平台扩展](https://github.com/kknifer7/FreeBox)
+
+### ai提升视频质量
+
+- [video2x-qt6: Video2X视频增强命令的gui](https://github.com/k4yt3x/video2x-qt6)
+
+- [chaiNNer: A node-based image processing GUI aimed at making chaining image processing tasks easy and customizable. Born as an AI upscaling application, chaiNNer has grown into an extremely flexible and powerful programmatic image processing application.](https://github.com/chaiNNer-org/chaiNNer)
+
+### 剪辑
+
+- [OpenCut:剪映开源版](https://github.com/OpenCut-app/OpenCut)
+
+- [VideoLingo: Netflix级字幕切割、翻译、对齐、甚至加上配音，一键全自动视频搬运AI字幕组](https://github.com/Huanshere/VideoLingo)
+
+- [lossless-cut：视频剪切软件，目标是成为 FFmpeg 的图形前端。](https://github.com/mifi/lossless-cut)
+
+- [kdenlive: 视频剪辑](https://github.com/KDE/kdenlive)
+
+### 其他
+
+- [mediainfo-gui: mediainfod的gui](https://github.com/lordmulder/mediainfo-gui)
+
+- [winff: ffmpeg gtk/qt ui](https://github.com/WinFF/winff/)
+
+- [pyvideotrans：给视频配音、翻译配音、添加字幕](https://github.com/jianchang512/pyvideotrans)
+
+- [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
+
+- [videocr: 字幕提取](https://github.com/apm1467/videocr)
+
+## 音乐
+
+- [biu: Bilibili音乐播放器](https://github.com/wood3n/biu)
+
+- [lx-music-desktop：一个基于 electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
+
+- [CeruMusic: 跨平台。Ceru Music 是基于 Electron 和 Vue 开发的跨平台桌面音乐播放器工具，借鉴洛雪音乐插件思想，提供插件运行框架与播放功能，不直接存储、提供任何音乐源文件。用户需通过自行选择、安装合规插件获取音乐相关数据，项目旨在为开发者提供桌面应用技术实践与学习案例，为用户提供合规的音乐播放工具框架。](https://github.com/timeshiftsauce/CeruMusic)
+
+- [go-music-dl: 跨平台的一个基于 Go 语言的全网音乐搜索与下载工具。支持 Web 界面、TUI 终端 和 桌面应用 三种使用模式。内置网易云、QQ、酷狗、Bilibili、汽水音乐等 10+ 个主流平台，支持多源并发搜索与无损音质解析。music-dl交流群：1074285005](https://github.com/guohuiyuan/go-music-dl)
+
+- [EvolveUI: qml写的音乐播放器](https://github.com/sudoevolve/EvolveUI)
+
+- [NSMusicS：支持各种云端平台](https://gitwhub.com/Super-Badmen-Viper/NSMusicS)
+
+- [MoeKoeMusic: 一款开源简洁高颜值的酷狗第三方客户端](https://github.com/iAJue/MoeKoeMusic)
+
+- [SPlayer：网易云音乐](https://github.com/imsyy/SPlayer)
+- [VutronMusic: 高颜值的第三方网易云播放器；支持流媒体音乐，如navidrome、jellyfin、emby；支持本地音乐播放、离线歌单、逐字歌词、桌面歌词、Touch Bar歌词、Mac状态栏歌词显示、Linux-gnome与Linux-kde桌面状态栏歌词显示；支持降调降速，支持自定义主题等。支持 Windows / macOS / Linux](https://github.com/stark81/VutronMusic)
+
+- [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
+
+- [lx-music-desktop: 一个基于 Electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
+
+    - [lx-music-source: 洛雪音乐源](https://github.com/pdone/lx-music-source)
+
+    - [lx-music-sync-server: 运行在 Node.js 上的 LX Music 数据同步服务](https://github.com/lyswhut/lx-music-sync-server)
+
+    - [any-listen: A cross-platform private music playback service](https://github.com/any-listen/any-listen?tab=readme-ov-file)
+
+## 音频
+
+- [SoundThread: Node based GUI for The Composers Desktop Project](https://github.com/j-p-higgins/SoundThread)
+
+- [easyeffects: 电脑音质提升软件-拯救你的破喇叭](https://github.com/wwmm/easyeffects)
+
+## 追番
+
+- [Kazumi: 基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕，支持实时超分辨率。](https://github.com/Predidit/Kazumi)
+
+## 阅读和笔记相关
+
+### 阅读器
+
+- [fluent-reader：rss订阅和阅读器](https://github.com/yang991178/fluent-reader)
+
+- [MrRSS: A modern, cross-platform desktop RSS reader. 一个现代化、跨平台的 RSS 阅读器.](https://github.com/WCY-dt/MrRSS)
+
+- [Folo: 聚合阅读器，有点类似于rss](https://github.com/RSSNext/Folo)
+
+- [sioyek: pdf阅读器](https://github.com/ahrm/sioyek)
+
+- [zathura: pdf, epub阅读器](https://github.com/pwmt/zathura)
+
+- [koreader: An ebook reader application supporting PDF, DjVu, EPUB, FB2 and many more formats, running on Cervantes, Kindle, Kobo, PocketBook and Android devices](https://github.com/koreader/koreader)
+
+    - [koreader/koreader-sync-server: self hostable synchronization service for koreader devices](https://github.com/koreader/koreader-sync-server)
+    - [assistant.koplugin: Assistant: AI Helper Plugin for KOReader : lets you interact with AI language models (Claude, GPT-4, Gemini, DeepSeek, Ollama etc.) while reading](https://github.com/omer-faruq/assistant.koplugin)
+
+- [foliate: pdf, epub阅读器](https://github.com/johnfactotum/foliate)
+
+- [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
+
+- [pdfcraft: 无需上传文件的 PDF 全能工具箱。这是一款基于 Next.js 和 WebAssembly 构建的开源 PDF 工具箱，所有文件操作均在本地浏览器内完成，无需上传到外部服务器。它提供节点式编排 PDF 文件处理工作流，支持合并、拆分、OCR、格式转换等 90 多种功能。](https://github.com/PDFCraftTool/pdfcraft)
+
+- [ReadAny：桌面端 + 安卓端的电子书阅读工具，自带 AI 功能、语音朗读和多端同步。](https://github.com/codedogQBY/ReadAny)
+
+### markdown相关
+
+- [obsidian](https://github.com/obsidianmd/obsidian-releases)
+
+- [Zettlr](https://github.com/Zettlr/Zettlr)
+
+- [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
+
+- [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
+- [markdown-online-editor: 📝 基于 Vue2、Vditor，所构建的在线 Markdown 编辑器，支持绘制流程图、甘特图、时序图、任务列表、echarts 图表、五线谱，以及 PPT 预览、视频音频解析、HTML 自动转换为 Markdown 等功能。https://www.niceshare.site](https://github.com/nicejade/markdown-online-editor)
+
+- [Yank Note: 跨平台markdown编辑器，同时支持gui和web两种界面。可以跑代码、画图表、搞加密，甚至内置终端。Yank Note 提供了版本控制功能，每次修改都会自动记录，方便我们回头进行修改对比。ai智能补全。图表嵌入：支持 PlantUML、Drawio、ECharts、Mermaid 等多种图表工具；插件系统：可以自己写 JavaScript 插件扩展功能，真正的可编程编辑器。](https://yank-note.com/)
+
+- [note-gen:跨平台的 Markdown 笔记软件，支持接入 AI 模型](https://github.com/codexu/note-gen)
+
+- [marktext: markdown编辑器。typora免费代替品](https://github.com/marktext/marktext)
+
+- [WeMD: 更优雅的 Markdown 公众号编辑器](https://github.com/tenngoxars/WeMD)
+
+### note
+
+- [zotero：文献管理工具](https://github.com/zotero/zotero)
+
+- [zotero-gpt](https://github.com/MuiseDestiny/zotero-gpt)
+
+- [karakeep: 可以收藏links, notes and images。然后通过ai搜索搜索文本。](https://github.com/karakeep-app/karakeep/)
+### 画图
+
+- [drawio-desktop](https://github.com/jgraph/drawio-desktop)
+
+## 游戏相关
+### 模拟器
+
+- [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
+
+- [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
+
+# 工具
+
+## 键盘鼠标相关
+
+- [input-overlay：显示用户操作输入的 OBS 直播插件。该项目是用来在直播中显示键盘按键、鼠标移动和游戏手柄按钮的插件](https://github.com/univrsal/input-overlay)
+
+![image](./Pictures/awesomegui/input-overlay.avif)
+
+- [keynav：键盘控制鼠标](https://github.com/jordansissel/keynav)
+
+- [keyviz: 实时显示键盘按键](https://github.com/mulaRahul/keyviz)
 
 - [MouseClick：鼠标连点器](https://github.com/SeaYJ/MouseClick)
 
-- [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
-- [EcoPaste: 🎉跨平台的剪贴板管理工具](https://github.com/EcoPasteHub/EcoPaste)
+## 翻译
 
-- [kando: 跨平台的饼式鼠标快捷键](https://github.com/kando-menu/kando)
 
-- [winboat: 量级Windows应用运行方案来了](https://github.com/TibixDev/winboat)
-    - [告别卡顿！轻量级Windows应用运行方案来了](https://mp.weixin.qq.com/s/jWL-uAb3gdf8-UXxIo6QYA)
-- [zen-desktop: 系统级广告拦截和隐私保护工具，支持 Windows、macOS 和 Linux 三大平台。](https://github.com/ZenPrivacy/zen-desktop)
+- [pot-desktop：划词翻译，并支持ocr](https://github.com/pot-app/pot-desktop)
+    - [pot-app-plugin-list: 🌟Pot App Plugin Collection](https://github.com/pot-app/pot-app-plugin-list)
+
+- [MTranServer: 低资源占用速度快可私有部署的离线翻译模型服务器](https://github.com/xxnuo/MTranServer)
+
+- [AiNiee: 一款专注于Ai翻译的工具，一键自动翻译RPG SLG游戏，Epub TXT小说，PDF Word MD文档，Srt Vtt Lrc字幕等等复杂长文本。](https://github.com/NEKOparapa/AiNiee)
+
+## 投屏和远程控制
+
+- [Sunshine：投屏(屏幕共享)服务端](https://github.com/LizardByte/Sunshine)
+
+- [apollo: 投屏(屏幕共享)服务端,比Sunshine更好](https://github.com/apolloconfig/apollo)
+
+- [moonlight-qt：投屏(屏幕共享)客户端](https://github.com/moonlight-stream/moonlight-qt)
+
+- [rustdesk](https://github.com/rustdesk/rustdesk)
+
+- [ToDesk](https://github.com/ji4ozhu/ToDesk)
+
+- [lan-mouse：键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/feschber/lan-mouse)
+
+- [deskflow：跨平台键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/deskflow/deskflow)
+
+- [crossdesk: 一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。](https://github.com/kunkundi/crossdesk)
+
+- [sunloginclient(向日葵运程控制gui版)](https://sunlogin.oray.com/download)
+### 手机与电脑交互
+
+- [SyncClipboard: 跨平台剪贴板同步、历史记录管理工具 / Cross-platform cipboard syncing, history management tool](https://github.com/Jeric-X/SyncClipboard)
+
+- [linkandroid：开源的手机连接助手，方便连接 Android 和电脑。](https://github.com/modstart-lib/linkandroid)
+
+- [aya：简化对安卓设备的操作控制，可以看作 ADB 的图形用户界面](https://github.com/liriliri/aya)
+
+- [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
+
+### ssh客户端
+
+- [RustConn:支持 SSH、RDP、VNC、SPICE、Telnet、Kubernetes 等主流协议 。 Modern connection manager for Linux with GTK4/Wayland-native interface.](https://github.com/totoshko88/RustConn)
+
+- [oxideterm: All-in-one terminal workspace — local shells, SSH, SFTP, remote IDE, AI agent, and file manager in a single native binary. Built with Tauri 2 and pure Rust SSH (no OpenSSL). Smart reconnect, MCP, RAG, plugins, 30+ themes, 11 languages.](https://github.com/AnalyseDeCircuit/oxideterm)
+
+- [shell360](https://github.com/shell360)
+
+- [xpipe：通过图形界面，将所有的服务器连接在一个地方管理。](https://github.com/xpipe-io/xpipe)
+
+- [termora](https://github.com/TermoraDev/termora)
+
+    - 支持 SSH 和本地终端
+    - 支持 Windows、macOS、Linux 平台
+    - 支持 Zmodem 协议
+    - 支持 SSH 端口转发
+    - 支持配置同步到 Gist
+    - 支持宏（录制脚本并回放）
+    - 支持关键词高亮
+    - 支持密钥管理器
+    - 支持将命令发送到多个会话
+    - 支持 Find Everywhere 快速跳转
+    - 支持数据加密
+
+## 密码相关
+
+- [veracrypt：加密](https://github.com/veracrypt/VeraCrypt)
+
+- [bitwarden：密码管理器](https://bitwarden.com/download/)
+
+- [vaultwarden: 密码管理器](https://github.com/dani-garcia/vaultwarden)
+
+- [keepassxc: 跨平台密码管理器](https://github.com/keepassxreboot/keepassxc)
+
+## 镜像u盘相关
+
+- [etcher：USB/SD 启动盘制作工具](https://github.com/balena-io/etcher)
+
+- [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
+# 第三方客户端
+
+- [netease-cloud-music-gtk：网易云音乐gtk4版](https://github.com/gmg137/netease-cloud-music-gtk)
+
+- [open-orpheus: 网易云音乐Electron版](https://github.com/YUCLing/open-orpheus)
+
+- [DTV: 抖音、b站、斗鱼、虎牙跨平台轻量化桌面客户端](https://github.com/chen-zeong/DTV)
+
+- [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
+
+- [FreeTube: youtube](https://github.com/FreeTubeApp/FreeTube)
+
+- [Github-Store: 平台的 GitHub 应用商店。这是一款基于 Kotlin 开发的跨平台开源应用商店客户端，支持一键发现热门开源项目、下载安装包（如 APK、EXE、DMG 、 AppImage、DEB、RPM等），以及追踪已安装应用并提示更新。](https://github.com/rainxchzed/Github-Store)
+
+## 微信相关
+
+- [WechatRealFriends：查看有没有朋友偷偷删掉或者拉黑你](https://github.com/StrayMeteor3337/WechatRealFriends)
+
+- [WeClone: 🚀从聊天记录创造数字分身的一站式解决方案💡 使用聊天记录微调大语言模型，让大模型有“那味儿”，并绑定到聊天机器人，实现自己的数字分身。 数字克隆/数字分身/数字永生/LLM/聊天机器人/LoRA](https://github.com/xming521/WeClone)
+
+- [WeFlow: 一个本地的微信聊天记录导出和年度报告应用](https://github.com/hicccc77/WeFlow)
+
+
+# 金融
+
+- [OpenBB: Financial data platform for analysts, quants and AI agents.](https://github.com/OpenBB-finance/OpenBB)
+
+- [stock：股票分析](https://github.com/myhhub/stock)
+
 - [OpenStock: 免费炫酷的股票市场应用。这是一款基于 Next.js、TailwindCSS 和 MongoDB 构建的股票市场平台，提供实时行情、图表（K 线图、热力图）、新闻资讯和个性化监控等功能，专注于数据展示与分析，不支持交易。](https://github.com/Open-Dev-Society/OpenStock)
 
-- [OpenCut:剪映开源版](https://github.com/OpenCut-app/OpenCut)
-- [keepassxc: 跨平台密码管理器](https://github.com/keepassxreboot/keepassxc)
-- [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
-- [godot: 游戏引擎编辑器 Multi-platform 2D and 3D game engine](https://github.com/godotengine/godot)
+# 桌面工具
 
+- [noti: 任务完成后通知](https://github.com/variadico/noti)
 
 - [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
     - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
     - [wayland-bongocat: bongocat for your desktop ₍^. .^₎](https://github.com/saatvik333/wayland-bongocat)
 
+- [EcoPaste: 🎉跨平台的剪贴板管理工具](https://github.com/EcoPasteHub/EcoPaste)
+
+- [kando: 跨平台的饼式鼠标快捷键](https://github.com/kando-menu/kando)
+
+# 通信
+
+- [session：加密通信](https://getsession.org/download)
+
+# 其他
+
+- [timeshift](https://github.com/teejee2008/timeshift)
+
+- [gImageReader：ocr，但不太准确](https://github.com/manisandro/gImageReader)
+
+- [quivr：该项目利用生成式 AI 的能力，成为你的第二大脑。你可以将多种格式的文本、数据、语言和视频上传给它，之后再和它对话时，它会学习你上传的内容后回答你的问题，支持接入多种 LLM 和 Docker 一键部署。](https://github.com/QuivrHQ/quivr)
+
+- [stellarium：天象模拟软件](https://github.com/Stellarium/stellarium)
+    - 支持：windows、linux、macos、android、ios
+
+- [rubick：工具箱、启动框](https://github.com/rubickCenter/rubick)
+
+- [neko：该项目是运行在 Docker 容器中的自托管虚拟浏览器环境，为用户提供安全、隔离和功能齐全的虚拟浏览器。](https://github.com/m1k1o/neko)
+
+- [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
+
+- [winboat: 量级Windows应用运行方案来了](https://github.com/TibixDev/winboat)
+    - [告别卡顿！轻量级Windows应用运行方案来了](https://mp.weixin.qq.com/s/jWL-uAb3gdf8-UXxIo6QYA)
+- [zen-desktop: 系统级广告拦截和隐私保护工具，支持 Windows、macOS 和 Linux 三大平台。](https://github.com/ZenPrivacy/zen-desktop)
+
+- [godot: 游戏引擎编辑器 Multi-platform 2D and 3D game engine](https://github.com/godotengine/godot)
+
+
 - [stretchly: 跨平台的每个一段时间强制休息。](https://github.com/hovancik/stretchly)
-
-- [AiNiee: 一款专注于Ai翻译的工具，一键自动翻译RPG SLG游戏，Epub TXT小说，PDF Word MD文档，Srt Vtt Lrc字幕等等复杂长文本。](https://github.com/NEKOparapa/AiNiee)
-
-# 网页应用
-
-- [kodbox: 开源的网页文件管理器。](https://github.com/kalcaddle/kodbox)
-
-- [wallpaper-engine-download-web: wallpaper免登录下载](https://github.com/0ran/wallpaper-engine-download-web)
 
 # 类似项目
 

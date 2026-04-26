@@ -43,10 +43,12 @@ tags: []
 * [查看硬件信息](#查看硬件信息)
   * [hardinfo2: 类似于windows的AIDA64](#hardinfo2-类似于windows的aida64)
   * [CPU-X：类似windows的cpu-z](#cpu-x类似windows的cpu-z)
+  * [GPU-Viewer: A front-end to glxinfo, vulkaninfo, clinfo and es2_info - Linux](#gpu-viewer-a-front-end-to-glxinfo-vulkaninfo-clinfo-and-es2_info---linux)
   * [QDiskInfo: 查看硬盘信息](#qdiskinfo-查看硬盘信息)
   * [gnome-power-statistics：笔记本电池信息gui](#gnome-power-statistics笔记本电池信息gui)
   * [upower：笔记本电池信息cli](#upower笔记本电池信息cli)
   * [swiftfetch: A fast and efficient fetch tool for system information written in Rust, designed for simplicity and performance.](#swiftfetch-a-fast-and-efficient-fetch-tool-for-system-information-written-in-rust-designed-for-simplicity-and-performance)
+* [gui工具](#gui工具)
 * [CPU](#cpu)
   * [cpu info](#cpu-info)
   * [s-tui: Terminal-based CPU stress and monitoring utility](#s-tui-terminal-based-cpu-stress-and-monitoring-utility)
@@ -889,6 +891,8 @@ sysbench --test=fileio --file-total-size=5G prepare
 
 ## [CPU-X：类似windows的cpu-z](https://github.com/TheTumultuousUnicornOfDarkness/CPU-X)
 
+## [GPU-Viewer: A front-end to glxinfo, vulkaninfo, clinfo and es2_info - Linux](https://github.com/arunsivaramanneo/GPU-Viewer)
+
 ## [QDiskInfo: 查看硬盘信息](https://github.com/edisionnano/QDiskInfo)
 
 ## gnome-power-statistics：笔记本电池信息gui
@@ -897,6 +901,12 @@ sysbench --test=fileio --file-total-size=5G prepare
 
 ## [swiftfetch: A fast and efficient fetch tool for system information written in Rust, designed for simplicity and performance.](https://github.com/Ly-sec/swiftfetch)
 
+
+# gui工具
+
+- [corectrl：查看cpu、gpu信息，显示监控曲线图](https://gitlab.com/corectrl/corectrl)
+
+- [LACT：amd gpu控制器](https://github.com/ilya-zlobintsev/LACT)
 # CPU
 
 ## cpu info

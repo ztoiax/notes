@@ -27,7 +27,11 @@ tags: []
       * [字幕](#字幕)
       * [其他](#其他)
     * [音乐](#音乐)
+    * [第三方客户端](#第三方客户端)
+    * [追番](#追番)
     * [游戏相关](#游戏相关)
+    * [网络相关](#网络相关)
+      * [代理工具](#代理工具)
     * [其他](#其他-1)
 
 <!-- mtoc-end -->
@@ -48,6 +52,7 @@ tags: []
 - [Microsoft-Activation-Scripts：破解windows、office](https://github.com/massgravel/Microsoft-Activation-Scripts)
 
 - [SophiApp：微调windows10，windows11](https://github.com/Sophia-Community/SophiApp)
+- [winutil: windows精简工具](https://github.com/ChrisTitusTech/winutil)
 
 - [winget-cli(windows的包管理器)](https://github.com/microsoft/winget-cli)
 
@@ -116,6 +121,7 @@ tags: []
 - [firpe：支持BIOS（Legacy）与UEFI两种启动模式。支持MTP驱动，使用DriveDroid下可以读取手机文件](https://firpe.cn/)
 
 - [edgeless：自定义pe的软件](https://home.edgeless.top/)
+
 ## app
 
 ### 桌面相关
@@ -214,6 +220,12 @@ tags: []
 
 ### 手机与电脑交互
 
+- [SyncClipboard: 跨平台剪贴板同步、历史记录管理工具 / Cross-platform cipboard syncing, history management tool](https://github.com/Jeric-X/SyncClipboard)
+
+- [localsend](https://github.com/localsend/localsend)
+
+- [LANChat: 一款支持文件传输的跨平台局域网聊天软件，用Rust编写。A cross-platform LAN chat software that supports file transfer, written in Rust.](https://github.com/cap153/LANChat)
+
 - [intel unison：手机电脑消息、文件传输]()
 
 - [FreeControl：监控手机类似scrcpy](https://github.com/pdone/FreeControl)
@@ -261,9 +273,20 @@ tags: []
 - [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
 
 - [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
+
 ### 音乐
 
 - [go-music-dl: 跨平台的一个基于 Go 语言的全网音乐搜索与下载工具。支持 Web 界面、TUI 终端 和 桌面应用 三种使用模式。内置网易云、QQ、酷狗、Bilibili、汽水音乐等 10+ 个主流平台，支持多源并发搜索与无损音质解析。music-dl交流群：1074285005](https://github.com/guohuiyuan/go-music-dl)
+
+- [CeruMusic: 跨平台。Ceru Music 是基于 Electron 和 Vue 开发的跨平台桌面音乐播放器工具，借鉴洛雪音乐插件思想，提供插件运行框架与播放功能，不直接存储、提供任何音乐源文件。用户需通过自行选择、安装合规插件获取音乐相关数据，项目旨在为开发者提供桌面应用技术实践与学习案例，为用户提供合规的音乐播放工具框架。](https://github.com/timeshiftsauce/CeruMusic)
+
+### 第三方客户端
+
+- [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
+
+### 追番
+
+- [Kazumi: 基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕，支持实时超分辨率。](https://github.com/Predidit/Kazumi)
 
 ### 游戏相关
 
@@ -277,6 +300,15 @@ tags: []
 - [ExplorerTabUtility:开箱即用的游戏变速器。这是一款完全免费、开源的 Windows 游戏加速工具。它通过 Hook 系统时间函数，实现对游戏速度的灵活调节，并提供简单易用的界面，兼容多种单机游戏。请勿用于网络游戏，以免导致账号被封！](https://github.com/w4po/ExplorerTabUtility)
 
 - [game-save-manager: 一个简单的游戏存档管理器](https://github.com/mcthesw/game-save-manager)
+
+- [Game-Cheats-Manager：搜索各种游戏的修改器](https://github.com/dyang886/Game-Cheats-Manager)
+### 网络相关
+
+#### 代理工具
+
+- [clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience](https://github.com/clash-verge-rev/clash-verge-rev)
+
+- [hiddify-app: Multi-platform auto-proxy client, supporting Sing-box, X-ray, TUIC, Hysteria, Reality, Trojan, SSH etc. It’s an open-source, secure and ad-free.](https://github.com/hiddify/hiddify-app)
 
 ### 其他
 

@@ -187,6 +187,7 @@ tags: []
 * [解决网络下载问题，如换源等](#解决网络下载问题如换源等)
   * [chsrc：全平台通用换源工具与框架](#chsrc全平台通用换源工具与框架)
   * [xixu-me/Xget: 超高性能、安全的一站式开源资源访问加速引擎。其性能远超传统加速器，为您提供跨多个平台的统一高效的加速体验，涵盖代码储存库、包管理、AI 推理 API、容器镜像、模型及数据集等 | Ultra-high performance, secure, all-in-one open-source resource acceleration engine. Significantly outperforms traditional accelerators, providing unified and efficient acceleration across multiple platforms](#xixu-mexget-超高性能安全的一站式开源资源访问加速引擎其性能远超传统加速器为您提供跨多个平台的统一高效的加速体验涵盖代码储存库包管理ai-推理-api容器镜像模型及数据集等--ultra-high-performance-secure-all-in-one-open-source-resource-acceleration-engine-significantly-outperforms-traditional-accelerators-providing-unified-and-efficient-acceleration-across-multiple-platforms)
+  * [lixian.online：获取 VSCode 插件、Chrome 扩展和 Docker 镜像的离线安装包的工具](#lixianonline获取-vscode-插件chrome-扩展和-docker-镜像的离线安装包的工具)
 * [cicd](#cicd)
   * [fnug: cicd tui版](#fnug-cicd-tui版)
 * [other](#other)
@@ -248,6 +249,9 @@ tags: []
   * [cyme: instead lsusb](#cyme-instead-lsusb)
   * [RackPeek: 这是一款轻量级个人 IT 基础设施管理工具，提供 WebUI 与 CLI 使用方式。它通过 YAML 文件存储数据，内置 Git 方便追踪变更历史，支持直观显示硬件参数、网络、服务信息，以及导出 SSH 配置、生成 Ansible 清单等功能。](#rackpeek-这是一款轻量级个人-it-基础设施管理工具提供-webui-与-cli-使用方式它通过-yaml-文件存储数据内置-git-方便追踪变更历史支持直观显示硬件参数网络服务信息以及导出-ssh-配置生成-ansible-清单等功能)
 * [磁盘备份](#磁盘备份)
+  * [deja dup](#deja-dup)
+  * [borgbackup/borg: Deduplicating archiver with compression and authenticated encryption.](#borgbackupborg-deduplicating-archiver-with-compression-and-authenticated-encryption)
+    * [borgwarehouse: A fast and modern WebUI for a BorgBackup's central repository server.](#borgwarehouse-a-fast-and-modern-webui-for-a-borgbackups-central-repository-server)
   * [restic](#restic)
 * [pdf、mobi、epub、md](#pdfmobiepubmd)
   * [转换工具](#转换工具)
@@ -1045,6 +1049,7 @@ lux -i "https://www.bilibili.com/video/BV1x54y1B7RE"
 ## [chsrc：全平台通用换源工具与框架](https://github.com/RubyMetric/chsrc)
 
 ## [xixu-me/Xget: 超高性能、安全的一站式开源资源访问加速引擎。其性能远超传统加速器，为您提供跨多个平台的统一高效的加速体验，涵盖代码储存库、包管理、AI 推理 API、容器镜像、模型及数据集等 | Ultra-high performance, secure, all-in-one open-source resource acceleration engine. Significantly outperforms traditional accelerators, providing unified and efficient acceleration across multiple platforms](https://github.com/xixu-me/Xget)
+## [lixian.online：获取 VSCode 插件、Chrome 扩展和 Docker 镜像的离线安装包的工具](https://lixian.online/)
 
 # cicd
 
@@ -1446,6 +1451,12 @@ pip install isd-tui
 ## [RackPeek: 这是一款轻量级个人 IT 基础设施管理工具，提供 WebUI 与 CLI 使用方式。它通过 YAML 文件存储数据，内置 Git 方便追踪变更历史，支持直观显示硬件参数、网络、服务信息，以及导出 SSH 配置、生成 Ansible 清单等功能。](https://github.com/Timmoth/RackPeek)
 
 # 磁盘备份
+
+## deja dup
+
+## [borgbackup/borg: Deduplicating archiver with compression and authenticated encryption.](https://github.com/borgbackup/borg)
+
+### [borgwarehouse: A fast and modern WebUI for a BorgBackup's central repository server.](https://github.com/Ravinou/borgwarehouse)
 
 ## [restic](https://github.com/restic/restic)
 

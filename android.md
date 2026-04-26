@@ -16,7 +16,7 @@ tags: []
   * [app](#app)
     * [其他](#其他)
     * [工具](#工具)
-    * [电脑投屏、电脑交互](#电脑投屏电脑交互)
+    * [手机与电脑交互](#手机与电脑交互)
     * [下载器](#下载器)
     * [多媒体相关](#多媒体相关)
       * [阅读器](#阅读器)
@@ -24,6 +24,7 @@ tags: []
       * [图片相关](#图片相关)
       * [视频播放器](#视频播放器)
       * [音乐播放器](#音乐播放器)
+      * [追番](#追番)
     * [应用管理](#应用管理)
       * [android四大组件](#android四大组件)
     * [文件管理器、云盘](#文件管理器云盘)
@@ -156,6 +157,8 @@ tags: []
 
 - [mgit：git客户端](https://github.com/maks/MGit)
 
+- [DroidGit: git服务器](https://github.com/Olsc/DroidGit)
+
 - [AuroraStore：匿名googleplay商店](https://github.com/whyorean/AuroraStore)
 
 - [fcitx5：开源输入法](https://github.com/fcitx5-android/fcitx5-android)
@@ -245,7 +248,9 @@ tags: []
 
 - [Level: 水平仪和刻度尺](https://github.com/woheller69/Level)
 
-### 电脑投屏、电脑交互
+### 手机与电脑交互
+
+- [syncclipboard-mobile: 跨平台SyncClipboard 移动应用](https://github.com/Jeric-X/syncclipboard-mobile)
 
 - [ADB ToolboX：adb gui只支持windows](https://qx.wysteam.cn/download/)
 
@@ -320,7 +325,7 @@ tags: []
 - [jellyfin-android：jellyfin视频服务的客户端](https://github.com/jellyfin/jellyfin-android)
 
     - [jellyfin-androidtv：电视客户端](https://github.com/jellyfin/jellyfin-androidtv)
-- [mpv-android-anime4k: 这是一个基于MPV播放器，支持Anime4K超分功能等多功能的安卓本地播放器，更多信息请看readme文件。](https://github.com/azxcvn/mpv-android-anime4k)
+- [mpv-android-anime4k: 这是一个基于MPV播放器，核心特色是开源实现 Anime4K 实时超分算法，针对动漫/动画/番剧视频风格进行优化，显著提升低分辨率动漫的观看体验。支持WebDAV和b站番剧等功能](https://github.com/azxcvn/mpv-android-anime4k)
 
 - [nextplayer: An Android native video player](https://github.com/anilbeesetti/nextplayer)
 
@@ -338,6 +343,12 @@ tags: []
 - [lx-music-mobile: 一个基于 React native 开发的音乐软件](https://github.com/lyswhut/lx-music-mobile)
     - [lx-music-source: 洛雪音乐源](https://github.com/pdone/lx-music-source)
 - [PixelPlayer: 高颜值多功能的 Android 音乐播放器。这是一款本地优先、注重隐私的 Android 音乐播放器，拥有美观的 Material You 动态主题 ，界面可随专辑封面或手机壁纸自动变化，支持歌词显示、自定义歌曲过渡、桌面小部件、投屏播放、听歌统计等功能。](https://github.com/theovilardo/PixelPlayer)
+
+#### 追番
+
+- [Kazumi: 基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕，支持实时超分辨率。](https://github.com/Predidit/Kazumi)
+
+- [animeko: 集找番、追番、看番的一站式弹幕追番平台，云收藏同步 (Bangumi)，离线缓存，BitTorrent，弹幕云过滤。100% Kotlin/Compose Multiplatform](https://github.com/open-ani/animeko)
 
 ### 应用管理
 
@@ -398,6 +409,8 @@ tags: []
 
 - [localsend：文件互传](https://github.com/localsend/localsend)
 
+- [LANChat: 一款支持文件传输的跨平台局域网聊天软件，用Rust编写。A cross-platform LAN chat software that supports file transfer, written in Rust.](https://github.com/cap153/LANChat)
+
 - [snapdrop-android: pairdrop客户端](https://github.com/fm-sys/snapdrop-android)
 
 - [kdeconnect：文件传输、剪切板同步、远程控制等](https://github.com/KDE/kdeconnect-android)
@@ -439,6 +452,8 @@ tags: []
 
 - [traffic-light: 简的 Android 流量监控应用。这是一款免费开源、体积小且无广告的 Android 网络流量监控工具，支持状态栏显示实时网速、历史数据和应用级流量统计等功能。](https://github.com/leekleak/traffic-light)
 
+- [hiddify-app: Multi-platform auto-proxy client, supporting Sing-box, X-ray, TUIC, Hysteria, Reality, Trojan, SSH etc. It’s an open-source, secure and ad-free.](https://github.com/hiddify/hiddify-app)
+
 ### 隐藏检查
 
 - [root等隐藏检查app清单](https://github.com/rushiranpise/detection)
@@ -460,6 +475,8 @@ tags: []
 
 ### 浏览器
 
+- [BetterVia: 让Via变得更好 / Make Via Better](https://github.com/JiGuroLGC/BetterVia)
+
 - [cromite: 支持chrome插件的手机浏览器](https://github.com/uazo/cromite)
 
 ### 第三方客户端
@@ -474,6 +491,8 @@ tags: []
 - [olib-mobile: zlibrary第三方客户端](https://github.com/shiyi-0x7f/olib-mobile)
 
 - [JKVideo: 高颜值的第三方 B 站 React Native 客户端，支持安卓、H5、iOS | Bilibili-like app with DASH playback, danmaku, WBI sign & live streaming](https://github.com/tiajinsha/JKVideo)
+
+- [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
 
 ### 自动化
 
@@ -498,6 +517,7 @@ tags: []
 - [SummaryExpressive: 总结YouTube, BiliBili, articles, images and documents with AI/LLM](https://github.com/kid1412621/SummaryExpressive)
 
 - [local-dream:在 Android 设备上运行 Stable Diffusion。这是一款专为 Android 用户打造的本地 Stable Diffusion AI 绘画应用，完全离线运行，兼容高通骁龙 NPU、CPU 和 GPU，支持文生图、图生图和图片修复等功能。](https://github.com/xororz/local-dream)
+
 - [roubao: 开源的 AI 手机自动化助手。这是一款开源的 Android AI 手机自动化助手，无需电脑即可让用户通过自然语言指令操控手机自动完成任务。它基于视觉语言模型识别屏幕截图，结合委托执行或 GUI 自动化，能够完成复杂的 App 交互任务。](https://github.com/Turbo1123/roubao)
 
 - [happy: 用手机操控 Claude Code 和 Codex。这是一款可以远程操作 Claude Code 或 Codex 的工具，让你随时随地通过手机查看和远程控制 AI 编程助手，提供了 iOS、Android 和 Web 客户端。](https://github.com/slopus/happy)
@@ -775,6 +795,8 @@ tags: []
     - X-plore
 
 - 浏览器
+
+    - [cojibrowser: The lightweight browser for Android TV](https://github.com/MVLStudio/cojibrowser)
     - emoton浏览器
     - via浏览器TV版
 
@@ -800,6 +822,8 @@ tags: []
 
     - [smarttube：第三方youtube，没有广告](https://github.com/yuliskov/SmartTube)
     - YouTube for Fire TV：无需google服务
+
+    - [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
 
 - 播放器
 

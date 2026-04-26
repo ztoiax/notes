@@ -40,6 +40,7 @@ tags: []
     * [创建timer定时器](#创建timer定时器)
       * [例子：timer定时器单元替代传统的 cron](#例子timer定时器单元替代传统的-cron)
   * [hostnamectl, localectl, timedatectl, loginctl命令](#hostnamectl-localectl-timedatectl-loginctl命令)
+  * [busctl分析dbus](#busctl分析dbus)
   * [systemd-homed用户登陆和管理](#systemd-homed用户登陆和管理)
   * [systemd-run](#systemd-run)
     * [前台进程](#前台进程)
@@ -1455,6 +1456,19 @@ loginctl show-session
 
 # 查看指定用户
 loginctl show-user tz
+```
+
+## busctl分析dbus
+
+```sh
+# 列出系统总线上所有的服务
+busctl list
+
+# 查看 systemd-logind 服务的详细信息
+busctl status org.freedesktop.login1
+
+# 直接调用一个 D-Bus 方法（比如让系统休眠）
+busctl call org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager Suspend boolean true
 ```
 
 ## systemd-homed用户登陆和管理

@@ -10,6 +10,8 @@ tags: []
 * [OSI 7层](#osi-7层)
   * [wifi工具](#wifi工具)
     * [impala: 🛜 TUI for managing wifi on Linux](#impala--tui-for-managing-wifi-on-linux)
+    * [linux-wifi-hotspot](#linux-wifi-hotspot)
+  * [代理工具](#代理工具)
   * [综合工具](#综合工具)
     * [nmcli](#nmcli)
       * [交互模式](#交互模式)
@@ -33,6 +35,7 @@ tags: []
     * [AdGuardian-Term: 基于终端的实时网络监控工具，专门为 AdGuard Home 设计的](#adguardian-term-基于终端的实时网络监控工具专门为-adguard-home-设计的)
     * [socat](#socat)
     * [nethogs: 统计每个进程的上传和下载的网速。相当于net 的top](#nethogs-统计每个进程的上传和下载的网速相当于net-的top)
+    * [littlesnitch-linux: 著名网络监控工具，可以看到每个应用跟什么网址通信](#littlesnitch-linux-著名网络监控工具可以看到每个应用跟什么网址通信)
   * [应用层](#应用层)
     * [http](#http)
       * [curl](#curl)
@@ -64,6 +67,7 @@ tags: []
     * [dns](#dns)
       * [tldx: 一键查找可用域名的工具。这是一款快速查询可用域名的命令行工具。它能够根据关键词、前缀、后缀和多种顶级域名，智能生成域名组合，并快速检测其可用性。](#tldx-一键查找可用域名的工具这是一款快速查询可用域名的命令行工具它能够根据关键词前缀后缀和多种顶级域名智能生成域名组合并快速检测其可用性)
       * [whois(查看域名注册信息)](#whois查看域名注册信息)
+      * [quien: 比whois更好的tui版dns查询](#quien-比whois更好的tui版dns查询)
       * [dnspeep：记录程序的dns请求,响应](#dnspeep记录程序的dns请求响应)
       * [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](#dns-detector从-dns-服务器获取某个网站的所有-ip-地址逐一进行延迟测试)
       * [dns-benchmark：测试全世界的 DNS 服务器](#dns-benchmark测试全世界的-dns-服务器)
@@ -182,6 +186,14 @@ tags: []
 ## wifi工具
 
 ### [impala: 🛜 TUI for managing wifi on Linux](https://github.com/pythops/impala)
+
+### [linux-wifi-hotspot](https://github.com/lakinduakash/linux-wifi-hotspot)
+
+## 代理工具
+
+- [clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience](https://github.com/clash-verge-rev/clash-verge-rev)
+
+- [hiddify-app: Multi-platform auto-proxy client, supporting Sing-box, X-ray, TUIC, Hysteria, Reality, Trojan, SSH etc. It’s an open-source, secure and ad-free.](https://github.com/hiddify/hiddify-app)
 
 ## 综合工具
 
@@ -684,6 +696,8 @@ sudo socat -t100 -x -v UNIX-LISTEN:/run/mysqld/mysqld.sock,mode=777,reuseaddr,fo
 
 ### [nethogs: 统计每个进程的上传和下载的网速。相当于net 的top](https://github.com/raboof/nethogs)
 
+### [littlesnitch-linux: 著名网络监控工具，可以看到每个应用跟什么网址通信](https://github.com/obdev/littlesnitch-linux)
+
 ## 应用层
 
 ### http
@@ -1148,6 +1162,8 @@ dig
 #### [tldx: 一键查找可用域名的工具。这是一款快速查询可用域名的命令行工具。它能够根据关键词、前缀、后缀和多种顶级域名，智能生成域名组合，并快速检测其可用性。](https://github.com/brandonyoungdev/tldx)
 
 #### whois(查看域名注册信息)
+
+#### [quien: 比whois更好的tui版dns查询](https://github.com/retlehs/quien)
 
 #### [dnspeep：记录程序的dns请求,响应](https://github.com/jvns/dnspeep)
 

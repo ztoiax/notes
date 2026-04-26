@@ -41,13 +41,16 @@ tags: []
         * [LM Studio：ollama gui版](#lm-studioollama-gui版)
         * [anything-llm：一个gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#anything-llm一个gui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
         * [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](#cherry-studiogui支持本地的ollama也支持在线的输入api即可还支持向量数据库)
-        * [cc-switch: gui配置管理。一键切换 Claude Code / Codex / Gemini CLI 的底层模型](#cc-switch-gui配置管理一键切换-claude-code--codex--gemini-cli-的底层模型)
+        * [jan: Jan is an open source alternative to ChatGPT that runs 100% offline on your computer.](#jan-jan-is-an-open-source-alternative-to-chatgpt-that-runs-100-offline-on-your-computer)
+        * [NextChat：支持各种llm的客户端](#nextchat支持各种llm的客户端)
         * [new-api: AI模型聚合管理中转分发系统，一个应用管理您的所有AI模型，支持将多种大模型转为统一格式调用，支持OpenAI、Claude、Gemini等格式，可供个人或者企业内部管理与分发渠道使用。🍥 A Unified AI Model Management & Distribution System. Aggregate all your LLMs into one app and access them via an OpenAI-compatible API, with native support for Claude (Messages) and Gemini formats.](#new-api-ai模型聚合管理中转分发系统一个应用管理您的所有ai模型支持将多种大模型转为统一格式调用支持openaiclaudegemini等格式可供个人或者企业内部管理与分发渠道使用-a-unified-ai-model-management--distribution-system-aggregate-all-your-llms-into-one-app-and-access-them-via-an-openai-compatible-api-with-native-support-for-claude-messages-and-gemini-formats)
       * [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](#shimmy一个只有-5mb-的单文件程序的ollama的代替品)
       * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
     * [llmfit: 根据你电脑的性能，提供选择大模型的建议](#llmfit-根据你电脑的性能提供选择大模型的建议)
+    * [记忆系统](#记忆系统)
     * [agent客户端](#agent客户端)
     * [rag知识库相关](#rag知识库相关)
+    * [llm安全相关](#llm安全相关)
     * [其他命令行相关工具](#其他命令行相关工具)
     * [其他应用](#其他应用)
   * [Transformer](#transformer)
@@ -58,12 +61,12 @@ tags: []
     * [抠图、抠视频](#抠图抠视频)
     * [图片、视频质量提升](#图片视频质量提升)
     * [ai视频剪辑](#ai视频剪辑)
-    * [ai生图生视频工作流](#ai生图生视频工作流)
   * [ai语音、音乐](#ai语音音乐)
     * [语音转文字](#语音转文字)
     * [文字转语音](#文字转语音)
     * [ai作曲（文字生成音乐、图片生成音乐）](#ai作曲文字生成音乐图片生成音乐)
     * [ai声音克隆（tts），可以实现让电影里的演员的英文配音变成国语](#ai声音克隆tts可以实现让电影里的演员的英文配音变成国语)
+  * [ai工作流UI](#ai工作流ui)
   * [ai数字人](#ai数字人)
   * [ai ocr](#ai-ocr)
   * [ai翻译](#ai翻译)
@@ -81,6 +84,7 @@ tags: []
   * [ai终端](#ai终端)
     * [token](#token)
     * [claude-code](#claude-code)
+    * [编排工具](#编排工具)
   * [ai数据库终端](#ai数据库终端)
   * [ai爬虫和信息提取](#ai爬虫和信息提取)
   * [ai可视化](#ai可视化)
@@ -90,7 +94,9 @@ tags: []
     * [在线使用](#在线使用-1)
     * [ai控制电脑](#ai控制电脑)
     * [openclaw](#openclaw)
+      * [ClawBot 插件](#clawbot-插件)
       * [云端openclaw](#云端openclaw)
+    * [hermes-agent: The agent that grows with you](#hermes-agent-the-agent-that-grows-with-you)
   * [MCP](#mcp)
   * [A2A](#a2a)
   * [Claude skill](#claude-skill)
@@ -775,7 +781,9 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 ##### [cherry-studio：gui。支持本地的ollama、也支持在线的（输入api即可），还支持向量数据库](https://github.com/CherryHQ/cherry-studio)
 
-##### [cc-switch: gui配置管理。一键切换 Claude Code / Codex / Gemini CLI 的底层模型](https://github.com/farion1231/cc-switch)
+##### [jan: Jan is an open source alternative to ChatGPT that runs 100% offline on your computer.](https://github.com/janhq/jan)
+
+##### [NextChat：支持各种llm的客户端](https://github.com/ChatGPTNextWeb/NextChat)
 
 #####  [new-api: AI模型聚合管理中转分发系统，一个应用管理您的所有AI模型，支持将多种大模型转为统一格式调用，支持OpenAI、Claude、Gemini等格式，可供个人或者企业内部管理与分发渠道使用。🍥 A Unified AI Model Management & Distribution System. Aggregate all your LLMs into one app and access them via an OpenAI-compatible API, with native support for Claude (Messages) and Gemini formats.](https://github.com/QuantumNous/new-api)
 
@@ -795,6 +803,9 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
     - 浏览器开启webgpu：`chrome://flags`下搜索`webgpu`然后启用。
 
 ### [llmfit: 根据你电脑的性能，提供选择大模型的建议](https://github.com/AlexsJones/llmfit)
+### 记忆系统
+
+- [mempalace:保存与llm的对话](https://github.com/MemPalace/mempalace)
 
 ### agent客户端
 
@@ -810,6 +821,10 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [qmd: 本地运行的智能知识库搜索工具。这是一款完全本地运行的智能搜索引擎，可用于检索个人文档、知识库、会议记录和 Markdown 文件。它集成了本地运行轻量化模型、BM25 全文检索、向量语义搜索和重排序等功能，开箱即用、无需联网、支持 MCP 协议，可作为 AI 助手和 Agent 工作流中的知识搜索工具。](https://github.com/tobi/qmd)
 
 - [bilibili-rag: B站收藏夹RAG知识库：收藏不吃灰，B 站收藏夹 → 语音转写 → 向量检索 → 对话问答](https://github.com/via007/bilibili-rag)
+
+### llm安全相关
+
+- [romptfoo：测试你的提示词、代理和RAG。红队/渗透测试/漏洞扫描，用于AI测试。比较GPT、Claude、Gemini、Llama等的性能。简单的声明式配置，集成命令行和CI/CD集成。被OpenAI和Anthropic使用。](https://github.com/promptfoo/promptfoo)
 
 ### 其他命令行相关工具
 
@@ -926,14 +941,11 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [dandere2x：使用waifu2x提升视频质量](https://github.com/akai-katto/dandere2x)
 
 - [hitpaw：商业软件需要付费，不支持linux](https://www.hitpaw.tw/)
+- [Real-ESRGAN: Real-ESRGAN aims at developing Practical Algorithms for General Image/Video Restoration.](https://github.com/xinntao/Real-ESRGAN)
 
 ### ai视频剪辑
 
 - [filmora：商业软件需要付费，不支持linux](https://filmora.wondershare.com/)
-
-### ai生图生视频工作流
-
-- [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
 
 ## ai语音、音乐
 
@@ -942,6 +954,10 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 ### 语音转文字
 
 - [whisper：openai的模型](https://github.com/openai/whisper)
+
+    - [Whisper-WebUI: A Web UI for easy subtitle using whisper model.](https://github.com/jhj0517/Whisper-WebUI)
+
+- [faster-whisper: Faster Whisper transcription with CTranslate2](https://github.com/SYSTRAN/faster-whisper)
 
 ### 文字转语音
 
@@ -969,6 +985,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 ### ai声音克隆（tts），可以实现让电影里的演员的英文配音变成国语
 
+- [OpenBMB/VoxCPM: VoxCPM2: Tokenizer-Free TTS for Multilingual Speech Generation, Creative Voice Design, and True-to-Life Cloning](https://github.com/OpenBMB/VoxCPM/)
+
 - [VibeVoice: 微软的](https://github.com/microsoft/VibeVoice)
 
 - [index-tts: b站的模型](https://github.com/index-tts/index-tts)
@@ -976,6 +994,12 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [GPT-SoVITS: 1 min voice data can also be used to train a good TTS model! (few shot voice cloning)](https://github.com/RVC-Boss/GPT-SoVITS)
     - [花儿不哭：项目作者](https://space.bilibili.com/5760446?spm_id_from=333.788.upinfo.detail.click)
 - [chatterbox: SoTA open-source TTS](https://github.com/resemble-ai/chatterbox)
+
+- [LuxTTS: A high-quality rapid TTS voice cloning model that reaches speeds of 150x realtime.](https://github.com/ysharma3501/LuxTTS)
+
+## ai工作流UI
+
+- [ComfyUI：文生图、声音克隆（tts）等工作流UI](https://github.com/comfyanonymous/ComfyUI)
 
 ## ai数字人
 
@@ -1054,6 +1078,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [Tabbit 浏览器 - AI 智能浏览器](https://www.tabbit-ai.com/)
 
+- [lightpanda: zig写的ai浏览器](https://github.com/lightpanda-io/browser)
+
 ## ai搜索
 
 - [scira：原名为MiniPerplx](https://github.com/zaidmukaddam/scira)
@@ -1131,6 +1157,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 ### claude-code
 
+- [claw-code: rust重写的claude-code](https://github.com/ultraworkers/claw-code)
+
 - [claude-code: 终端里的 Claude 编码助手。该项目是 Claude 官方开源的 AI 编码助手，集成于终端内，能够理解整个代码库，并通过简单的自然语言命令，帮助开发者更高效地完成各类编码任务。](https://github.com/anthropics/claude-code)
 
     - [everything-claude-code: Anthropic黑客马拉松冠军的claude code配置](https://github.com/affaan-m/everything-claude-code)
@@ -1146,6 +1174,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
     - [geo-seo-claude: Claude Code 的 GEO 优化技能插件。这是一个 Claude Code 技能插件，以 GEO 优先、SEO 辅助的理念，通过 11 个 skills 和 5 个子智能体，帮助网站针对 AI 驱动的搜索引擎进行优化，支持评分、分析和测试等功能。](https://github.com/zubair-trabzada/geo-seo-claude)
 
 - [codex: openai的](https://github.com/openai/codex?tab=Apache-2.0-1-ov-file)
+    - [oh-my-codex:Codex 的工作流层。 OmX - Oh My codeX: Your codex is not alone. Add hooks, agent teams, HUDs, and so much more.](https://github.com/Yeachan-Heo/oh-my-codex)
 
 - [gemini-cli: 谷歌 Gemini 命令行工具。该项目是 Gemini 官方开源的命令行工具，将 Google Gemini 的强大能力集成到终端环境。它基于百万级上下文，能够理解大型代码库的架构和逻辑，支持多模态输入输出、Google 搜索以及 MCP 等功能。](https://github.com/google-gemini/gemini-cli)
 
@@ -1178,6 +1207,16 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [ai-cli-complete-notify: 面向 Claude code/Codex/Gemini 的多通道AI CLI 任务完成提醒，支持耗时阈值、桌面端与命令行、通用 Webhook（飞书/钉钉/企微）、Telegram、邮件、桌面/声音提示，配备自动监听日志，AI摘要等功能](https://github.com/ZekerTop/ai-cli-complete-notify)
 
 - [cc-connect: 把本地 AI 编程助手接入聊天应用。该项目能够将本地运行的 AI Agent 接到你常用的即时通讯平台，比如飞书、钉钉、Slack、Telegram、Discord、微信 等主流平台。同时支持 Claude Code、Cursor、Gemini CLI 等 7 种 AI 编程助手，实现通过聊天软件远程控制本地 AI Agent，执行各种开发相关任务。](https://github.com/chenhg5/cc-connect)
+
+- [cc-switch: gui配置管理。一键切换 Claude Code / Codex / Gemini CLI 的底层模型](https://github.com/farion1231/cc-switch)
+
+### 编排工具
+
+- [multica: The open-source managed agents platform. Turn coding agents into real teammates — assign tasks, track progress, compound skills.](https://github.com/multica-ai/multica)
+
+- [termcanvas: An infinite canvas desktop app for visually managing terminals](https://github.com/blueberrycongee/termcanvas)
+
+- [opencove: Your infinite canvas workspace for agents, tasks, knowledge, and research. An infinite canvas for Claude Code, Codex, terminals, tasks, and notes.](https://github.com/DeadWaveWave/opencove)
 
 ## ai数据库终端
 
@@ -1229,6 +1268,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [A2UI：google开发的让agent生成ui来回答](https://github.com/google/A2UI)
 
+- [awesome-design-md: 根据大公司和常用模板，通过agent生成网页](https://github.com/VoltAgent/awesome-design-md)
+
 ### 在线使用
 
 - [Dify](https://cloud.dify.ai/apps)
@@ -1264,6 +1305,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [WorkBuddy：腾讯版openclaw](https://www.codebuddy.cn/work/)
 
 - [AutoClaw：智谱的openclaw](https://autoglm.zhipuai.cn/autoclaw/)
+- [stepclaw：阶跃星辰的openclaw](https://www.stepfun.com/openclaw)
 
 - [EasyClaw：猎豹的openclaw](https://easyclaw.com/zh-cn/)
 
@@ -1274,9 +1316,19 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [openclaw-docker-cn-im: OpenClaw 的中国IM平台整合Docker版本，预装并配置了飞书、钉钉、QQ机器人、企业微信等主流中国IM软件的插件，让您可以快速部署一个支持多个中国IM平台的 AI 机器人网关](https://github.com/justlovemaki/openclaw-docker-cn-im)
 
+##### ClawBot 插件
+
+- [awesome-openclaw-skills: The awesome collection of OpenClaw skills. 5,400+ skills filtered and categorized from the official OpenClaw Skills Registry.🦞](https://github.com/VoltAgent/awesome-openclaw-skills)
+
+- [openilink-hub: 开源微信 Bot 管理平台 + App 应用市场 | Self-hosted WeChat Bot Platform with App Marketplace | Lark · Slack · Discord · DingTalk · GitHub · Notion · 20+ Apps | AI Tools | 7 Language SDKs](https://github.com/openilink/openilink-hub)
+
+- [gbrain: Garry's Opinionated OpenClaw/Hermes Agent Brain](https://github.com/garrytan/gbrain)
+
 #### 云端openclaw
 
 - [ArkClaw：字节的](https://console.volcengine.com/auth/login?redirectURI=%2Fark%2Fclaw)
+
+### [hermes-agent: The agent that grows with you](https://github.com/NousResearch/hermes-agent)
 
 ## MCP
 
@@ -1296,6 +1348,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 ## Claude skill
 
 - [awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows](https://github.com/ComposioHQ/awesome-claude-skills)
+
+- [video-use：剪辑视频](https://github.com/browser-use/video-use)
 
 # 在线ai工具
 

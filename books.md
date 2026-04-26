@@ -54,7 +54,7 @@ tags: []
     * [机器学习](#机器学习)
     * [深度学习](#深度学习)
     * [llm大模型](#llm大模型)
-      * [agent](#agent)
+    * [agent](#agent)
       * [Claude Code](#claude-code)
       * [claude skill](#claude-skill)
   * [机器人](#机器人)
@@ -848,14 +848,28 @@ tags: []
 
 - [self-llm: 《开源大模型食用指南》针对中国宝宝量身打造的基于Linux环境快速微调（全参数/Lora）、部署国内外开源大模型（LLM）/多模态大模型（MLLM）教程](https://github.com/datawhalechina/self-llm#)
 
-#### agent
+### agent
 
 - [agentic-design-patterns-cn: 《Agentic Design Patterns》中文翻译版。这本书系统性地介绍了构建现代 AI 智能体（Agent）的实践方法与设计模式，包括提示链、RAG、MCP 和多智能体协作等内容。](https://github.com/ginobefun/agentic-design-patterns-cn)
+
+- [OpenMAIC: 清华多智能体互动课堂](https://github.com/THU-MAIC/OpenMAIC)
 
 #### Claude Code
 
 - [Claude Code in Action：Anthropic 官方的 Claude Code 免费入门教程，一共15节视频课，总长约1小时。](https://anthropic.skilljar.com/claude-code-in-action)
+
 - [learn-claude-code: 从零开始动手实现 AI Agent。该项目是讲解如何从零构建类似 Claude Code  的 AI Agent 工具，共计 12 节课，每节课都有一个可运行的 Python 文件。内容从最基础的 Agent 循环，逐步叠加工具调用、任务规划、子智能体、上下文压缩、多智能体协作和自主执行等功能，最终构建出一个完整的 AI Agent 系统。](https://github.com/shareAI-lab/learn-claude-code)
+
+- [Claude Code Unpacked：根据 Claude Code 泄漏的源码，一步步图解演示，输入提示词后软件内部如何处理。](https://ccunpacked.dev/)
+
+- [claude-howto:  Claude Code 从入门到高级的可视化教程](https://github.com/luongnv89/claude-howto)
+
+- [claude-code-book: 《御舆：解码 Agent Harness》42万字拆解 AI Agent 的Harness骨架与神经 —— Claude Code 架构深度剖析，15 章从对话循环到构建你自己的 Agent Harness。在线阅读网站：](https://github.com/lintsinghua/claude-code-book)
+
+- [Anatomy of the .claude/ Folder - by Avi Chawla：Claude Code 会生成 .claude/ 子目录，所有 AI 处理的底层数据都放在里面，本文研究这个目录到底有什么。](https://blog.dailydoseofds.com/p/anatomy-of-the-claude-folder)
+
+[andrej-karpathy-skills:  Karpathy 亲授的 Claude Code 使用秘籍](https://github.com/multica-ai/andrej-karpathy-skills)
+
 #### claude skill
 
 - [anthropics/skills: Claude 官方开源的 Skills 教程。该项目是 Anthropic 官方开源的 Agent Skills 仓库，介绍如何通过标准化的 SKILL.md 文件结构，将提示词和工具调用封装为插件形式，为 AI 助手提供可动态加载的技能包，以可复用的方式更好地完成特定任务。](https://github.com/anthropics/skills)
@@ -870,6 +884,8 @@ tags: []
 
 ### GPU
 
+- [Mvidia： 是一款从晶体管开始教你造 GPU 的交互式网页游戏。玩家扮演硬件工程师，从最基础的开关和逻辑门开始，逐步构建算术逻辑单元、处理器，最终到 GPU 和着色器编程。课程分五幕，目前前三幕已上线共 72 个关卡，每个关卡都有前置依赖，形成完整的知识图谱。](https://jaso1024.com/mvidia/)
+ 
 - [tiny-gpu](https://github.com/adam-maj/tiny-gpu)该项目是用 Verilog 语言实现的教育型 GPU 处理器，目的是讲解 GPU 硬件层面的基本原理，包括 GPU 的架构、并行和内存等方面。
 
 - [leetgpu-challenges: GPU 编程实战挑战。该项目提供了一系列类似 LeetCode 风格的 GPU 编程练习题，内含参考答案、测试用例和多种 GPU 编程框架的模板代码。](https://github.com/AlphaGPU/leetgpu-challenges)
@@ -1444,6 +1460,9 @@ tags: []
 
 - ai
 
+    - [差评前沿部](https://space.bilibili.com/3546877542795556)
+        > ai新闻
+
     - [卢菁老师_北大AI博士后](https://space.bilibili.com/503558013)
 
     - [檀东东Tango](https://space.bilibili.com/14739873)
@@ -1709,6 +1728,9 @@ RabbitMQ实战指南》作者
 
         - [知乎蓝大仙人：电视评测。智能电视选购网创始人](https://space.bilibili.com/34586446)
 
+    - [虽然但是张黑黑](https://space.bilibili.com/474447695)
+        > ai和芯片评测
+
     - [TESTV官方频道](https://space.bilibili.com/11336264)
         > 各种数码产品体验
 
@@ -1753,6 +1775,12 @@ RabbitMQ实战指南》作者
 
     - [立创开发板](https://space.bilibili.com/3493269579237436)
 
+    - [识食务者](https://space.bilibili.com/356619397)
+        > 厨电
+
+    - [Wilson学长](https://space.bilibili.com/13207529)
+        > 家电
+
     - [小极工场](https://space.bilibili.com/3546943439505489)
         > 家具、装修
 
@@ -1776,6 +1804,9 @@ RabbitMQ实战指南》作者
 
     - [LuvLetter](https://space.bilibili.com/546418)
         > 安卓、ios技术科普
+
+    - [HOMOLAB](https://space.bilibili.com/3537122193574340)
+        > 存储
 
     - [二进制的老王](https://space.bilibili.com/18731657)
         > 硬盘评测、硬盘数据恢复
@@ -1823,6 +1854,9 @@ RabbitMQ实战指南》作者
         > 历史地理
 
     - [光陷](https://space.bilibili.com/492351069)
+        > 城市地理
+
+    - [蜀霞客](https://space.bilibili.com/390186534/upload/video)
         > 城市地理
 
 - 微信公众号
@@ -1919,13 +1953,20 @@ RabbitMQ实战指南》作者
 
 ## 旅游
 
-- [行夫走卒](https://space.bilibili.com/2134726833)
+- 微信公众号
 
-- [烤棕熊的玉米](https://space.bilibili.com/173380440)
-    > 介绍当地的民情和民情相关的元素（如建筑、文艺作品等）。
+    - 万图路
+        > 文化旅游
 
-- [ThatEvanGuy](https://space.bilibili.com/3546939243104552/upload/video)
-    > 外国up主来中国
+- bilibili
+
+    - [行夫走卒](https://space.bilibili.com/2134726833)
+
+    - [烤棕熊的玉米](https://space.bilibili.com/173380440)
+        > 介绍当地的民情和民情相关的元素（如建筑、文艺作品等）。
+
+    - [ThatEvanGuy](https://space.bilibili.com/3546939243104552/upload/video)
+        > 外国up主来中国
 
 ## 买菜
 
@@ -2017,6 +2058,8 @@ RabbitMQ实战指南》作者
     - 北京反洗钱研究
     - 中信建设反洗钱
     - 中国人民公安大学学报
+    - 国际法研究
+        > 中国社会科学院国际法研究所
 
 ## 游戏
 
@@ -2026,28 +2069,52 @@ RabbitMQ实战指南》作者
 
 - bilibili
 
-    - [弓手冬郎](https://space.bilibili.com/35857776)：西游记和三国演义解说
-    - [木鱼水心](https://space.bilibili.com/927587)：经典影视长视频解说
-    - [非花映镜](https://space.bilibili.com/2810464)：黑泽明电影解说
-    - [培根悖论唠唠嗑](https://space.bilibili.com/386869863)：长视频影视解说，善于开脑洞、挖细节。
+    - [弓手冬郎](https://space.bilibili.com/35857776)
+        > 西游记和三国演义解说
 
-    - [CC琦先生](https://space.bilibili.com/90445151/)：金庸武侠
+    - [木鱼水心](https://space.bilibili.com/927587)
+        > 经典影视长视频解说
 
-    - [狗大蛋子](https://space.bilibili.com/18982710/video)：笑傲江湖
+    - [非花映镜](https://space.bilibili.com/2810464)
+        > 黑泽明电影解说
 
-    - [边江说](https://space.bilibili.com/424170847)：《冰与火之歌》解说，自己也是个小说家
+    - [培根悖论唠唠嗑](https://space.bilibili.com/386869863)
+        > 长视频影视解说，善于开脑洞、挖细节。
 
-    - [貔柴](https://space.bilibili.com/70942172)：宫斗剧
+    - [CC琦先生](https://space.bilibili.com/90445151/)
+        > 金庸武侠
+
+    - [狗大蛋子](https://space.bilibili.com/18982710/video)
+        > 笑傲江湖
+
+    - [解良人也](https://space.bilibili.com/2638959)
+        > 金庸小说解说
+
+    - [边江说](https://space.bilibili.com/424170847)
+        > 《冰与火之歌》解说，自己也是个小说家
+
+    - [貔柴](https://space.bilibili.com/70942172)
+        > 宫斗剧
 
     - [1900影剧室](https://space.bilibili.com/17223352)
 
     - [电影最TOP](https://space.bilibili.com/17819768)
+        > 好剧以长视频的方式解说
 
     - [扁豆看电影](https://space.bilibili.com/33488229)
+        > 社会类电影解说
 
-    - [M的蒙太奇笔记](https://space.bilibili.com/14427045)：哲学角度解说
+    - [我是十四哦丶](https://space.bilibili.com/7957044)
+        > 神探狄仁杰解说
 
-    - [费洛凡](https://space.bilibili.com/355155672/upload/video)：西方戏剧解说
+    - [M的蒙太奇笔记](https://space.bilibili.com/14427045)
+        > 哲学角度解说
+
+    - [费洛凡](https://space.bilibili.com/355155672/upload/video)
+        > 西方戏剧解说
+
+    - [42手册](https://space.bilibili.com/3493128782744453)
+        > 影视评论、哲学解读
 
 - 微信公众号
 
@@ -2350,6 +2417,7 @@ RabbitMQ实战指南》作者
     - [二二酸酸](https://space.bilibili.com/106685726)
 
     - [张小看的神奇宇宙：中国神话](https://space.bilibili.com/299604936)
+    - [文化遗产搬运委员会：中国神华、中国民俗](https://space.bilibili.com/4477242)
 
 - 微信公众号
 
@@ -2375,6 +2443,7 @@ RabbitMQ实战指南》作者
     - 媒介 | 批评
     - 文学与影视批评
     - 国际比较文学
+    - 古代文学前沿与评论
 
 ## 历史
 
@@ -2403,10 +2472,18 @@ RabbitMQ实战指南》作者
     - 文史知识
     - 汉学研究集刊
     - 世界中世纪史研究
+    - 清史研究杂志
+        > 中国人民大学
+    - 中华民族共同体研究期刊
+        > 中央民族大学
     - 西域研究
         > 新疆维吾尔自治区社会科学院
     - 西藏研究
         > 西藏自治区社会科学院
+    - 台湾历史研究
+        > 中国社会科学院台湾史研究所
+    - 中国边疆史地研究
+        > 中国社会科学院中国边疆研究所
     - 施展世界
     - 全球研究Global Studies Forum
     - 新史学丛刊
@@ -2516,6 +2593,7 @@ RabbitMQ实战指南》作者
     - 当代青年研究
     - 性研究ing
     - 南京大学学报
+    - 云南民族大学学报哲学社会科学
     - 华中科技大学学报社会科学版
     - 华东师范大学学报哲学社会科学版
     - 湖北大学学报
@@ -2577,6 +2655,8 @@ RabbitMQ实战指南》作者
     - 劳动法学习
     - 辽沈法律帮
     - 青鸟法援服务团
+    - 法学研究
+        > 中国社会科学院法学研究所
 
 - bilibili
 
@@ -2629,6 +2709,19 @@ RabbitMQ实战指南》作者
     - 中国人民银行
     - 国家金融与发展实验室
     - 经济研究
+        > 中国社会科学院经济研究所
+    - 经济学动态
+        > 中国社会科学院经济研究所
+    - 经济管理杂志
+        > 中国社会科学院工业经济研究所
+    - 中国工业经济
+        > 中国社会科学院工业经济研究所
+    - 中国农村经济中国农村观察
+        > 中国社会科学院农村经济研究所
+    - 财贸经济
+        > 中国社会科学院财经战略研究所
+    - 世界经济与政治
+        > 中国社会科学院世界经济与政治研究所
     - 经济学报
     - 债劵杂志
     - 税务研究
