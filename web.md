@@ -9,6 +9,7 @@ tags: []
 
 * [browsers](#browsers)
   * [chrome插件](#chrome插件)
+  * [命令行cli](#命令行cli)
 * [CGI和FastCGI](#cgi和fastcgi)
   * [CGI](#cgi)
   * [FastCGI](#fastcgi)
@@ -128,6 +129,14 @@ tags: []
 - [mouse-gestures: 鼠标手势](https://github.com/Chance-fyi/mouse-gestures)
 
 - [pakku.js: 拯救 B 站弹幕体验的浏览器插件。这是一款专为提升哔哩哔哩网站弹幕体验的浏览器插件，能够自动合并重复或相似的弹幕内容，还你清爽的弹幕视频体验。](https://github.com/xmcp/pakku.js)
+
+- [TabulaBili: 通过减少基于账号登录态和浏览历史的个性化推荐，让B站首页内容变得更泛化、更随机、更像公共热门流。](https://github.com/tjsky/TabulaBili)
+
+## 命令行cli
+
+- [chrome-devtools-cli: 一个 Rust 命令行工具，通过 DevTools 协议连接到系列里的 Chrome 浏览器，进行网页操作，默认自动连接，可供 AI Agent 调用。](https://github.com/aeroxy/chrome-devtools-cli)
+
+- [dev3000: Captures your web app's complete development timeline - server logs, browser events, console messages, network requests, and automatic screenshots - in a unified, timestamped feed for AI debugging.](https://github.com/vercel-labs/dev3000)
 
 # CGI和FastCGI
 

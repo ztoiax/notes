@@ -38,7 +38,8 @@ tags: []
       * [Technitium DNS Server：自带web gui的dns 服务器](#technitium-dns-server自带web-gui的dns-服务器)
       * [mosdns: 一个 DNS 转发器](#mosdns-一个-dns-转发器)
       * [forgedns: rust写的mosdns](#forgedns-rust写的mosdns)
-      * [smartdns:一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT，DoQ。](#smartdns一个本地dns服务器获取最快的网站ip获得最佳上网体验支持dohdotdoq)
+      * [smartdns:一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT，DoQ，DoH3](#smartdns一个本地dns服务器获取最快的网站ip获得最佳上网体验支持dohdotdoqdoh3)
+      * [smartdns-rs: A cross platform local DNS server (Dnsmasq like) written in rust to obtain the fastest website IP for the best Internet experience, supports DoT, DoQ, DoH, DoH3.](#smartdns-rs-a-cross-platform-local-dns-server-dnsmasq-like-written-in-rust-to-obtain-the-fastest-website-ip-for-the-best-internet-experience-supports-dot-doq-doh-doh3)
     * [nfs](#nfs)
     * [proxy(代理)服务器](#proxy代理服务器)
       * [squid](#squid)
@@ -46,6 +47,10 @@ tags: []
     * [VPN](#vpn)
       * [openvpn](#openvpn)
       * [wireguard](#wireguard)
+      * [netbird: go版wireguard](#netbird-go版wireguard)
+        * [netbirdio/dashboard: NetBird的weiui](#netbirdiodashboard-netbird的weiui)
+        * [netbird-tui: netbird的tui版本](#netbird-tui-netbird的tui版本)
+      * [netbird-tui: netbird的tui版本](#netbird-tui-netbird的tui版本-1)
       * [gotatun: rust版WireGuard](#gotatun-rust版wireguard)
     * [文件传输](#文件传输)
       * [samba](#samba)
@@ -82,7 +87,9 @@ tags: []
     * [metasploit](#metasploit)
     * [strix: AI 的安全测试工具，可自动对应用进行安全测试的 AI Agent。它能够集成到 CI/CD 流程，实现自动拉取代码并启动应用，然后模拟黑客行为寻找隐藏漏洞，支持漏洞检测/复现、自动修复、生成报告等功能。](#strix-ai-的安全测试工具可自动对应用进行安全测试的-ai-agent它能够集成到-cicd-流程实现自动拉取代码并启动应用然后模拟黑客行为寻找隐藏漏洞支持漏洞检测复现自动修复生成报告等功能)
     * [lynis（安全审计以及加固工具）](#lynis安全审计以及加固工具)
-    * [trivy：漏洞扫描，一条命令就可以获取安全报告。包括容器、文件系统、虚拟机、操作系统、软件运行依赖、开源许可证是否合规使用等。](#trivy漏洞扫描一条命令就可以获取安全报告包括容器文件系统虚拟机操作系统软件运行依赖开源许可证是否合规使用等)
+    * [综合工具](#综合工具)
+      * [hackingtool: awesome项目，包含高star的工具](#hackingtool-awesome项目包含高star的工具)
+      * [trivy：漏洞扫描，一条命令就可以获取安全报告。包括容器、文件系统、虚拟机、操作系统、软件运行依赖、开源许可证是否合规使用等。](#trivy漏洞扫描一条命令就可以获取安全报告包括容器文件系统虚拟机操作系统软件运行依赖开源许可证是否合规使用等)
     * [防火墙](#防火墙)
       * [tcp_wrappers: 第二层防火墙](#tcp_wrappers-第二层防火墙)
     * [文件相关](#文件相关)
@@ -836,9 +843,11 @@ ngrep port 853
 
 #### [forgedns: rust写的mosdns](https://github.com/SvenShi/forgedns)
 
-#### [smartdns:一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT，DoQ。](https://github.com/pymumu/smartdns)
+#### [smartdns:一个本地DNS服务器，获取最快的网站IP，获得最佳上网体验，支持DoH，DoT，DoQ，DoH3](https://github.com/pymumu/smartdns)
 
 - 与 DNSmasq 的 all-servers 不同，SmartDNS 返回的是访问速度最快的解析结果。
+
+#### [smartdns-rs: A cross platform local DNS server (Dnsmasq like) written in rust to obtain the fastest website IP for the best Internet experience, supports DoT, DoQ, DoH, DoH3.](https://github.com/mokeyish/smartdns-rs)
 
 - [easymosdns: 基于Mosdns-x的精准DNS分流策略，仅需几分钟即可搭建一台支持ECS的无污染DNS服务器。](https://github.com/pmkol/easymosdns)
 
@@ -1100,6 +1109,11 @@ openvpn --genkey secret /etc/openvpn/server/ta.key
     ```sh
     wg-quick up wg0
     ```
+
+#### [netbird: go版wireguard](https://github.com/netbirdio/netbird)
+##### [netbirdio/dashboard: NetBird的weiui](https://github.com/netbirdio/dashboard)
+##### [netbird-tui: netbird的tui版本](https://github.com/n0pashkov/netbird-tui)
+#### [netbird-tui: netbird的tui版本](https://github.com/n0pashkov/netbird-tui)
 
 #### [gotatun: rust版WireGuard](https://github.com/mullvad/gotatun)
 
@@ -1905,7 +1919,12 @@ lynis audit system
     ```
 
 
-### [trivy：漏洞扫描，一条命令就可以获取安全报告。包括容器、文件系统、虚拟机、操作系统、软件运行依赖、开源许可证是否合规使用等。](https://github.com/aquasecurity/trivy)
+### 综合工具
+
+#### [hackingtool: awesome项目，包含高star的工具](https://github.com/Z4nzu/hackingtool)
+
+#### [trivy：漏洞扫描，一条命令就可以获取安全报告。包括容器、文件系统、虚拟机、操作系统、软件运行依赖、开源许可证是否合规使用等。](https://github.com/aquasecurity/trivy)
+
 ### 防火墙
 
 #### tcp_wrappers: 第二层防火墙

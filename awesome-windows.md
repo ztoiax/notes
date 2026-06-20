@@ -11,6 +11,7 @@ tags: []
   * [系统](#系统)
   * [系统相关](#系统相关)
   * [逆向](#逆向)
+  * [镜像u盘相关](#镜像u盘相关)
   * [pe系统](#pe系统)
   * [app](#app)
     * [桌面相关](#桌面相关)
@@ -28,10 +29,12 @@ tags: []
       * [其他](#其他)
     * [音乐](#音乐)
     * [第三方客户端](#第三方客户端)
+    * [流行软件相关](#流行软件相关)
     * [追番](#追番)
     * [游戏相关](#游戏相关)
     * [网络相关](#网络相关)
       * [代理工具](#代理工具)
+    * [ai](#ai)
     * [其他](#其他-1)
 
 <!-- mtoc-end -->
@@ -72,6 +75,8 @@ tags: []
 
 - [wsl2-distro-manager：WSL 发行版图形管理工具。](https://github.com/bostrot/wsl2-distro-manager)
 
+- [wsl-dashboard: 轻量级的 WSL 实例管理面板。这是一款基于 Rust 和 Slint 开发的 Windows WSL 实例管理桌面应用，最小化到托盘仅占用约 10MB 内存。支持一键启动、停止、迁移、导出/克隆实例，以及端口转发、状态监控、网络管理、USB 设备挂载等功能，显著提升在 Windows 上管理 Linux 发行版的效率和体验。](https://github.com/owu/wsl-dashboard)
+
 - [g-helper：一款轻量级的华硕奥创中心替代品。支持无缝切换显卡模式、调节屏幕刷新率、风扇曲线、电源功耗、键盘灯光等功能。](https://github.com/seerge/g-helper)
 
 - [WingetUI：带界面的 Windows 包管理器。该项目是一个为 Windows 常用的命令行包管理工具设计的用户界面，如 Winget、Scoop、Pip、NPM、.NET Tool 等。它的界面友好、设计美观、支持中文，通过它你可以轻松下载、安装、更新和卸载包管理器上发布的任何软件以及其它日常应用，如浏览器、PDF 阅读器等。](https://github.com/marticliment/WingetUI)
@@ -108,19 +113,31 @@ tags: []
 - [wsl2-distro-manager: wsl的管理器](https://github.com/bostrot/wsl2-distro-manager)
 - [DriverStoreExplorer: 驱动管理工具，支持快速查看、安装、卸载和备份驱动程序。它免安装、体积小，可自动比对驱动版本，识别旧版本或未使用的驱动，方便清理冗余驱动。](https://github.com/lostindark/DriverStoreExplorer)
 
+- [systeminformer: 免安装的 Windows 监控工具。这是一款免安装的开源 Windows 系统监控与调试工具，可实时查看进程资源占用、网络活动、磁盘读写等信息，支持定位占用文件的进程、查看内核级调用栈和管理系统服务等功能。遇到文件无法删除？一查便知是被哪个进程占着。](https://github.com/winsiderss/systeminformer)
+
 ## 逆向
 
 [OpenArk：逆向工具](https://github.com/BlackINT3/OpenArk)
 - [RevokeMsgPatcher: :trollface: A hex editor for WeChat/QQ/TIM - PC版微信/QQ/TIM防撤回补丁（我已经看到了，撤回也没用了）](https://github.com/huiyadanli/RevokeMsgPatcher)
 - [OpenSpeedy:加速时间.比方说加速植物大战僵尸,但要关闭垂直同步,可以加速网盘下载等等.](https://github.com/Jesae/OpenSpeedy)
 
+## 镜像u盘相关
+
+- [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
+
 ## pe系统
+
+- [Ventoy：可以存放多个pe系统的u盘启动器](https://www.ventoy.net/cn/)
 
 - [在下莫老师：5款WindowsPE系统，纯净，强大，无广告](https://www.bilibili.com/video/BV19T411G7gW)
 
-- [firpe：支持BIOS（Legacy）与UEFI两种启动模式。支持MTP驱动，使用DriveDroid下可以读取手机文件](https://firpe.cn/)
+- [edgeless：可以自定义软件的pe，但不管你用不用这些软件都会占用内存](https://home.edgeless.top/)
 
-- [edgeless：自定义pe的软件](https://home.edgeless.top/)
+- [firpe：是edgeless pe的分支。支持BIOS（Legacy）与UEFI两种启动模式。支持MTP驱动，使用DriveDroid下可以读取手机文件](https://firpe.cn/)
+
+- [LightPE: 雷电PE。强大、可扩展、可定制的Windows PE系统。比edgeless和firpe好处是自定义扩展软件是用的时候才加载到内存。但不能再使用pe的过程中拔掉u盘](https://github.com/yiont/LightPE)
+
+- [微PE工具箱 - 超好用的装机维护工具](https://www.wepe.com.cn/)
 
 ## app
 
@@ -132,7 +149,13 @@ tags: []
 
 - [jwno:平铺窗口管理器，键盘驱动](https://github.com/agent-kilo/jwno)
 
+- [komorebi：窗口管理器](https://github.com/LGUG2Z/komorebi)
+
+- [glazewm：平铺窗口管理器，类似i3](https://github.com/glzr-io/glazewm)
+
 - [FileConverter：右键轻松转换和压缩文件的工具。](https://github.com/Tichau/FileConverter)
+
+- [GestureSign：触控板手势](https://github.com/TransposonY/GestureSign)
 
 - [MFCMouseEffect: Windows 鼠标/光标特效（MFC/C++/Win32） | Mouse & cursor effects for Windows (MFC/C++/Win32)](https://github.com/sqmw/MFCMouseEffect)
 
@@ -144,6 +167,9 @@ tags: []
 
 - [LiteMonitor: 一款轻量、可定制的开源桌面硬件监控软件 — 实时监测 CPU、GPU、内存、磁盘、网络等系统性能。支持横竖屏显示、多语言、主题切换、透明度显示、三色报警，界面简洁且高度可配置。](https://github.com/Diorser/LiteMonitor)
 
+- [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
+    - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
+
 ### 文件相关
 
 - [everything-ai-chat: 一个现代化的 Everything 搜索客户端，将 AI 智能与极速本地搜索完美结合。](https://github.com/MaskerPRC/everything-ai-chat)
@@ -153,6 +179,10 @@ tags: []
 - [transok：局域网文件传输](https://github.com/bent2685/transok-wails)
 
 - [dupeguru: 查找重复文件](https://github.com/arsenetar/dupeguru)
+
+- [tiez-clipboard: TieZ 是一款基于 Tauri 的跨平台剪贴板管理器。支持剪切板分类、持久化保存、同步，文件局域网传输等功能](https://github.com/jimuzhe/tiez-clipboard)
+
+- [pinkbin: 扫盘 · 看懂 · 删除。磁盘扫描+清理Agent（Tauri 2 + React + Rust）](https://github.com/cccyd2003-qwq/pinkbin)
 
 #### 文件管理器
 
@@ -283,6 +313,11 @@ tags: []
 ### 第三方客户端
 
 - [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
+### 流行软件相关
+
+- [WeChatMsg：提取微信聊天记录的工具。导出成 HTML、Word、Excel 和 txt 等格式的文档。导出的 HTML 文档，还原了微信聊天界面，而且包含文本、图片、视频、表情包、语音、文件、转账等记录，导出的数据可用于永久保存、生成年度报告和训练个人聊天助手。](https://github.com/LC044/WeChatMsg)
+
+- [chatlog: 专为微信聊天记录管理而设计的开源工具。它采用 Go 语言开发，提供了 TUI 界面、命令行工具和 HTTP API 服务，支持从本地数据库查询聊天记录、联系人、群聊等功能，以及 MCP SSE 协议，可与 AI 助手无缝集成。](https://github.com/sjzar/chatlog)
 
 ### 追番
 
@@ -302,6 +337,9 @@ tags: []
 - [game-save-manager: 一个简单的游戏存档管理器](https://github.com/mcthesw/game-save-manager)
 
 - [Game-Cheats-Manager：搜索各种游戏的修改器](https://github.com/dyang886/Game-Cheats-Manager)
+
+- [Magpie: 游戏画质超分辨率](https://github.com/Blinue/Magpie)
+
 ### 网络相关
 
 #### 代理工具
@@ -310,28 +348,22 @@ tags: []
 
 - [hiddify-app: Multi-platform auto-proxy client, supporting Sing-box, X-ray, TUIC, Hysteria, Reality, Trojan, SSH etc. It’s an open-source, secure and ad-free.](https://github.com/hiddify/hiddify-app)
 
+### ai
+
+- [Caption-Trans: 视频生成字幕](https://github.com/cddqssc/Caption-Trans)
+
 ### 其他
 
 - [UniGetUI: 它把 Scoop、Chocolatey、Pip 这些大名鼎鼎的极客包管理器，全都聚合在了一个类似应用商店的界面里。](https://github.com/marticliment/UniGetUI)
 
 - [TortoiseGit：windows最好的git gui客户端](https://github.com/TortoiseGit/TortoiseGit)
 
-- [komorebi：窗口管理器](https://github.com/LGUG2Z/komorebi)
-
 - [win-vind：提供 Vim 风格的快捷键，也可以把它当作 Windows 的快捷键设定器。](https://github.com/pit-ray/win-vind)
-
-- [GestureSign：触控板手势](https://github.com/TransposonY/GestureSign)
-
-- [glazewm：平铺窗口管理器，类似i3](https://github.com/glzr-io/glazewm)
 
 - [Macro-Deck：变成类似 Stream Deck 的远程自定义按键板，实现一键执行单步或多步操作，适用于直播和简化日常任务等场景。](https://github.com/Macro-Deck-App/Macro-Deck)
 
 - [OFGB：广告滚蛋 - 删除 Win11 各处广告的小工具](https://github.com/zetaloop/OFGB)
 
-
-- [WeChatMsg：提取微信聊天记录的工具。导出成 HTML、Word、Excel 和 txt 等格式的文档。导出的 HTML 文档，还原了微信聊天界面，而且包含文本、图片、视频、表情包、语音、文件、转账等记录，导出的数据可用于永久保存、生成年度报告和训练个人聊天助手。](https://github.com/LC044/WeChatMsg)
-
-- [chatlog: 专为微信聊天记录管理而设计的开源工具。它采用 Go 语言开发，提供了 TUI 界面、命令行工具和 HTTP API 服务，支持从本地数据库查询聊天记录、联系人、群聊等功能，以及 MCP SSE 协议，可与 AI 助手无缝集成。](https://github.com/sjzar/chatlog)
 
 - [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
 
@@ -349,9 +381,6 @@ tags: []
 - [MrRSS: A modern, cross-platform desktop RSS reader. 一个现代化、跨平台的 RSS 阅读器.](https://github.com/WCY-dt/MrRSS)
 
 - [keepassxc: 跨平台密码管理器](https://github.com/keepassxreboot/keepassxc)
-
-- [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
-    - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
 
 - [STranslate: A ready-to-go translation ocr tool developed with WPF/WPF 开发的一款即用即走的翻译、OCR工具](https://github.com/STranslate/STranslate)
 

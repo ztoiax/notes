@@ -54,6 +54,9 @@ tags: []
     * [机器学习](#机器学习)
     * [深度学习](#深度学习)
     * [llm大模型](#llm大模型)
+    * [prompt提示词](#prompt提示词)
+      * [文生图片](#文生图片)
+      * [数据库](#数据库)
     * [agent](#agent)
       * [Claude Code](#claude-code)
       * [claude skill](#claude-skill)
@@ -785,6 +788,7 @@ tags: []
 - [Markov Chains(马尔可夫链)](https://setosa.io/blog/2014/07/26/markov-chains/)
 
 - [《动手实战人工智能 AI By Doing》](https://aibydoing.com/intro)
+- [maths-cs-ai-compendium: 从数学到 AI 的开源自学手册。这是一本涵盖数学、计算机科学与人工智能的开源电子书，不堆砌公式、注重实际应用，配有 MCP 可作为 AI 助手的知识库使用。](https://github.com/HenryNdubuaku/maths-cs-ai-compendium)
 
 ### 机器学习
 
@@ -847,6 +851,42 @@ tags: []
 - [minimind：从0训练微型语言模型。2小时完全从0训练26M的小参数GPT](https://github.com/jingyaogong/minimind)
 
 - [self-llm: 《开源大模型食用指南》针对中国宝宝量身打造的基于Linux环境快速微调（全参数/Lora）、部署国内外开源大模型（LLM）/多模态大模型（MLLM）教程](https://github.com/datawhalechina/self-llm#)
+### prompt提示词
+
+- [poml: 微软开发的提示词标准化语言，类似html](https://github.com/microsoft/poml)-
+
+- [oenpai官方prompt工程](https://platform.openai.com/docs/guides/prompt-engineering)
+
+  - [（视频）LLM大模型入门：【人工智能】如何写好提示词， OpenAI官方提示工程指南！](https://www.bilibili.com/video/BV1TfHKe5Ej9)
+
+- [提示工程指南](https://www.promptingguide.ai/zh)
+
+- [Prompt-Engineering-Guide：全面的提示工程实战指南。这份教程致力于帮助用户掌握与大型语言模型（LLM）沟通的技巧。内容涵盖从基础到高级的提示工程技术，附有详细的实现指南和示例代码。](https://github.com/dair-ai/Prompt-Engineering-Guide)
+
+- [awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts)
+
+- [腾讯云开发者：我问了鹅厂程序员：你们工作中怎么用ChatGPT？如何高效Prompt？](https://blog.csdn.net/QcloudCommunity/article/details/130143855)
+
+- [腾讯云开发者：一文掌握Prompt：万能框架+优化技巧+常用指标](https://mp.weixin.qq.com/s/oKB8m_wX6p8SHNMx1R_hzw)
+
+- [腾讯技术工程：大模型Prompt技巧全解析](https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A)
+
+- [deepseek提示库](https://api-docs.deepseek.com/zh-cn/prompt-library/)
+
+- [阿里云开发者：AI联网搜索时的prompt小技巧](https://mp.weixin.qq.com/s/ZTdZY-jsyWwC2ELLF8byoQ)
+
+#### 文生图片
+
+- [awesome-gpt-image-2-prompts: Curated GPT-Image-2 prompts fot the Openai API：image examples across portraits, posters, UI mockups, character sheets, and community experiments.](https://github.com/EvoLinkAI/awesome-gpt-image-2-prompts)
+
+#### 数据库
+
+- [韩锋频道：DeepSeek 会是个好DBA吗？](https://mp.weixin.qq.com/s/xAzHrtZV-pGzyPuv8U2w2w)
+
+- [MySQL数据库联盟：如何通过ChatGPT优化MySQL的SQL语句](https://mp.weixin.qq.com/s?__biz=MzIyOTUzNjgwNg==&mid=2247484892&idx=1&sn=6207963a72bddf9e6c5fa70a57297a64&chksm=e8406095df37e98399b5e2f5347478f6e09061e3c0679e0231e117d0b8c88b1e32d61e622c7f&scene=21#wechat_redirect)
+
+- [MySQL数据库联盟：全网最全MySQL Prompt](https://mp.weixin.qq.com/s?__biz=MzIyOTUzNjgwNg==&mid=2247485114&idx=1&sn=9b09f028e20605ab9d1c561ac8303c7c&chksm=e84063f3df37eae564e6944793d124b28563101600e4727bc4158dff685cc959e54c6951267f&scene=178&cur_album_id=2861367280583032837#rd)
+
 
 ### agent
 
@@ -869,6 +909,8 @@ tags: []
 - [Anatomy of the .claude/ Folder - by Avi Chawla：Claude Code 会生成 .claude/ 子目录，所有 AI 处理的底层数据都放在里面，本文研究这个目录到底有什么。](https://blog.dailydoseofds.com/p/anatomy-of-the-claude-folder)
 
 [andrej-karpathy-skills:  Karpathy 亲授的 Claude Code 使用秘籍](https://github.com/multica-ai/andrej-karpathy-skills)
+
+- [How OpenAI uses Codex](https://cdn.openai.com/pdf/6a2631dc-783e-479b-b1a4-af0cfbd38630/how-openai-uses-codex.pdf)
 
 #### claude skill
 
@@ -1612,8 +1654,6 @@ RabbitMQ实战指南》作者
     - 山河以无恙
         > linux运维相关
 
-    - 运维漫谈
-        > linux运维相关
 
 - 折腾android相关：
 
@@ -1721,6 +1761,10 @@ RabbitMQ实战指南》作者
         - [苏星河牛通：常见app评测](https://space.bilibili.com/598464467)
 
         - [软件硬吃：苏星河牛通小号](https://space.bilibili.com/3546943355619807)
+    
+    - 显示器评测：
+        - [毅种循环的快乐生活](https://space.bilibili.com/245684615)
+        - [野生的装机宅](https://space.bilibili.com/941799)
 
     - 电视评测：
 
@@ -1894,6 +1938,7 @@ RabbitMQ实战指南》作者
 
 - bilibili
     - [洗头研究所](https://space.bilibili.com/535743630)
+    - [蛙博士：清洁相关](https://space.bilibili.com/1716352/upload/video)
 
 - 微信公众号
 
@@ -1999,6 +2044,9 @@ RabbitMQ实战指南》作者
 - [硬核料理男子Tiger](https://space.bilibili.com/12383027)
     > 科学烹饪
 
+- [烹调的逻辑](https://space.bilibili.com/259776716)
+    > 科学烹饪
+
 - [吉尔的小灯塔](https://space.bilibili.com/2013555)
     > 科学烹饪
 
@@ -2080,6 +2128,9 @@ RabbitMQ实战指南》作者
 
     - [培根悖论唠唠嗑](https://space.bilibili.com/386869863)
         > 长视频影视解说，善于开脑洞、挖细节。
+
+    - [Kimo桑](https://space.bilibili.com/14079696)
+        > 香港电影解说
 
     - [CC琦先生](https://space.bilibili.com/90445151/)
         > 金庸武侠
@@ -2239,6 +2290,9 @@ RabbitMQ实战指南》作者
     - [小骆爱空谈](https://space.bilibili.com/3494364386953276/upload/video)
         > 对国内哲学老师个人和他们之间的争论进行评论
 
+    - [JulianValenmont](https://space.bilibili.com/438331061)
+        > 分析哲学
+
 - 微信公众号
 
     - 哲学研究
@@ -2287,6 +2341,7 @@ RabbitMQ实战指南》作者
     - 法语现象学
     - 中国基督宗教研究
     - 神秘学研究
+    - 复旦西方史学史
 
     - 嘉映哲学
         > 陈嘉映
@@ -2374,7 +2429,8 @@ RabbitMQ实战指南》作者
         - 中国诸子研究院
             > 华东师范大学
 
-    - 佛教与印度哲学
+        - 老子道学文化研究所
+        - 佛教与印度哲学
         - 东方哲学与宗教
             > 半年刊由南京大学东方这些与宗教文化研究中心主办
         - 光华佛学
@@ -2383,11 +2439,15 @@ RabbitMQ实战指南》作者
             > 赖永海
         - 东方哲学践行
             > 王志成
+        - 花迹绽放之旅
 
     - 民间大众的哲学评论
         - 陈直Dharma
         - 现象学生活指南
         - 设计哲学
+
+    - 伊斯兰哲学
+        - monoromanarchy
 
 ## 艺术
 
@@ -2508,6 +2568,8 @@ RabbitMQ实战指南》作者
 
     - [施展世界](https://space.bilibili.com/1136919246)
 
+    - [邱文平](https://space.bilibili.com/1909219732)
+
 - 微信公众号
 
     - 治理研究
@@ -2528,6 +2590,7 @@ RabbitMQ实战指南》作者
     - 公共管理与政策评论
     - 美国研究
     - 公共管理共同体
+    - 政治学理论志
     - 比较政治学研究集刊CSSCI
     - 行政论坛编辑部
     - 中大行政评论
@@ -2594,6 +2657,7 @@ RabbitMQ实战指南》作者
     - 性研究ing
     - 南京大学学报
     - 云南民族大学学报哲学社会科学
+    - 中山大学学报社会科学版
     - 华中科技大学学报社会科学版
     - 华东师范大学学报哲学社会科学版
     - 湖北大学学报
@@ -2632,6 +2696,7 @@ RabbitMQ实战指南》作者
     - 斯文在线
         > 上海社会科学研究院文学研究所
 
+    - 性别与身体Bodies in Gendering
     - 北京大学学报
     - 中国社会科学院大学学报
     - 上海师范大学学报哲社版
@@ -2665,6 +2730,8 @@ RabbitMQ实战指南》作者
 ## 心理
 
 - 微信公众号
+
+    - 东方心理分析研究院
 
     - 京师心理大学堂
 
@@ -2757,11 +2824,6 @@ RabbitMQ实战指南》作者
     - Global U
         > 国仁全球大学堂
 
-    - New Economist
-        > 新经济学家智库
-
-    - 智本社
-
     - 伊洛
 
     - 泽平宏观
@@ -2800,9 +2862,6 @@ RabbitMQ实战指南》作者
         > 货币法则研习社的公众号
 
     - 东方证劵财富研究
-
-    - 粤开志恒宏观
-        > 粤开证劵首席罗志恒
 
     - 一瑜中的
         > 华创证劵首席张瑜
@@ -2874,7 +2933,6 @@ RabbitMQ实战指南》作者
     - 硬核姬老板
     - 发财老博士
     - 爱思考的老梨
-    - 丹江湖上的钓鱼翁
     - 唐书房
         > 股票
     - 财经时差
@@ -2898,6 +2956,9 @@ RabbitMQ实战指南》作者
 
     - 财新
         > 深度的财经新闻，但需要付费
+
+    - 思路打开MindStream
+        > 国际政治与财经新闻
 
 ## 城市规划
 
@@ -3026,6 +3087,9 @@ RabbitMQ实战指南》作者
     - [半耳聆](https://space.bilibili.com/495979927/upload/video)
         > 网络热门新闻的解读
 
+    - [那那那那老师](https://space.bilibili.com/18678023)
+        > 娱乐圈资本分析
+
     - [十厂长啊](https://space.bilibili.com/3546694587255191)
         > 各国政治和真实民情
 
@@ -3064,8 +3128,6 @@ RabbitMQ实战指南》作者
     - 腾讯新闻大声思考
         > 政治，经济，社会相关
     - 禁止右转
-
-    - 无法可说
 
     - 罗文益
     - 原子智库-腾讯新闻

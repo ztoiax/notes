@@ -74,6 +74,8 @@ tags: []
     * [gh-dash](#gh-dash)
     * [eget:一键获取 GitHub Release 安装包。这是一个用 Go 编写的命令行工具，可自动从 GitHub 检索、下载并安装开源项目已发布的二进制文件（Releases），无需手动查找和下载安装包。](#eget一键获取-github-release-安装包这是一个用-go-编写的命令行工具可自动从-github-检索下载并安装开源项目已发布的二进制文件releases无需手动查找和下载安装包)
     * [dra: GitHub Release 文件下载利器，支持自动化下载、智能匹配和一键安装](#dra-github-release-文件下载利器支持自动化下载智能匹配和一键安装)
+    * [GithubStarsManager: An app for managing github starred repositories.](#githubstarsmanager-an-app-for-managing-github-starred-repositories)
+    * [gh-dashboard: Open-source Github dashboard built on REST and GraphQL APIs: repositories, issues, pull requests, traffic, Actions, contributors, dependents, and a kanban board view.](#gh-dashboard-open-source-github-dashboard-built-on-rest-and-graphql-apis-repositories-issues-pull-requests-traffic-actions-contributors-dependents-and-a-kanban-board-view)
 * [reference](#reference)
 * [优秀文章](#优秀文章)
 * [关于 Git 的书](#关于-git-的书)
@@ -1095,6 +1097,10 @@ gh dash
 ### [eget:一键获取 GitHub Release 安装包。这是一个用 Go 编写的命令行工具，可自动从 GitHub 检索、下载并安装开源项目已发布的二进制文件（Releases），无需手动查找和下载安装包。](https://github.com/zyedidia/eget)
 
 ### [dra: GitHub Release 文件下载利器，支持自动化下载、智能匹配和一键安装](https://github.com/devmatteini/dra)
+
+### [GithubStarsManager: An app for managing github starred repositories.](https://github.com/AmintaCCCP/GithubStarsManager)
+
+### [gh-dashboard: Open-source Github dashboard built on REST and GraphQL APIs: repositories, issues, pull requests, traffic, Actions, contributors, dependents, and a kanban board view.](https://github.com/debba/gh-dashboard)
 
 # reference
 

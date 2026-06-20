@@ -40,6 +40,7 @@ tags: []
   * [音乐](#音乐)
   * [音频](#音频)
   * [追番](#追番)
+  * [邮件](#邮件)
   * [阅读和笔记相关](#阅读和笔记相关)
     * [阅读器](#阅读器)
     * [markdown相关](#markdown相关)
@@ -161,7 +162,10 @@ tags: []
 - [deltachat-desktop: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-desktop)
 
 - [PairDrop: 文件传输，通过web浏览器](https://github.com/schlagmichdoch/PairDrop)
+
 - [alt-sendme: 这是一款采用 Rust 和 Tauri 构建的开源 P2P 文件传输工具，无需注册和服务器，即可实现端到端的文件传输。用户只需将文件拖入应用，将随机生成的传输凭证发给接收方，对方输入后即可轻松接收文件。](https://github.com/tonyantony300/alt-sendme)
+
+- [tiez-clipboard: TieZ 是一款基于 Tauri 的跨平台剪贴板管理器。支持剪切板分类、持久化保存、同步，文件局域网传输等功能](https://github.com/jimuzhe/tiez-clipboard)
 
 ## 文件管理器
 
@@ -281,6 +285,8 @@ tags: []
 - [xdman](https://xtremedownloadmanager.com/)
 
 - [mediago：视频下载器，支持m3u8](https://github.com/caorushizi/mediago)
+
+- [Fluent-M3U8:视频下载器，支持m3u8。A cross-platform m3u8/mpd downloader based on PySide6 and QFluentWidgets.](https://github.com/zhiyiYo/Fluent-M3U8)
 
 - [ab-download-manager：类似idm的下载器](https://github.com/amir1376/ab-download-manager)
 
@@ -412,6 +418,8 @@ tags: []
 
 - [kdenlive: 视频剪辑](https://github.com/KDE/kdenlive)
 
+- [openreel-video: OpenReel Video - Professional browser-based video editor. Open source CapCut alternative. 100% browser-based, no installation, no cloud uploads, no watermarks.](https://github.com/Augani/openreel-video)
+
 ### 其他
 
 - [mediainfo-gui: mediainfod的gui](https://github.com/lordmulder/mediainfo-gui)
@@ -463,6 +471,10 @@ tags: []
 
 - [Kazumi: 基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕，支持实时超分辨率。](https://github.com/Predidit/Kazumi)
 
+## 邮件
+
+- [Pebble: A small yet beautiful email client.](https://github.com/QingJ01/Pebble)
+
 ## 阅读和笔记相关
 
 ### 阅读器
@@ -499,6 +511,7 @@ tags: []
 - [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
 
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
+
 - [markdown-online-editor: 📝 基于 Vue2、Vditor，所构建的在线 Markdown 编辑器，支持绘制流程图、甘特图、时序图、任务列表、echarts 图表、五线谱，以及 PPT 预览、视频音频解析、HTML 自动转换为 Markdown 等功能。https://www.niceshare.site](https://github.com/nicejade/markdown-online-editor)
 
 - [Yank Note: 跨平台markdown编辑器，同时支持gui和web两种界面。可以跑代码、画图表、搞加密，甚至内置终端。Yank Note 提供了版本控制功能，每次修改都会自动记录，方便我们回头进行修改对比。ai智能补全。图表嵌入：支持 PlantUML、Drawio、ECharts、Mermaid 等多种图表工具；插件系统：可以自己写 JavaScript 插件扩展功能，真正的可编程编辑器。](https://yank-note.com/)
@@ -508,6 +521,8 @@ tags: []
 - [marktext: markdown编辑器。typora免费代替品](https://github.com/marktext/marktext)
 
 - [WeMD: 更优雅的 Markdown 公众号编辑器](https://github.com/tenngoxars/WeMD)
+
+- [MarkFlowy: The AI Markdown Editor](https://github.com/drl990114/MarkFlowy)
 
 ### note
 
@@ -616,12 +631,13 @@ tags: []
 
 ## 镜像u盘相关
 
-- [etcher：USB/SD 启动盘制作工具](https://github.com/balena-io/etcher)
-
 - [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
+
 # 第三方客户端
 
 - [netease-cloud-music-gtk：网易云音乐gtk4版](https://github.com/gmg137/netease-cloud-music-gtk)
+
+- [folia-major: 网易云音乐Electron版。专注于绚丽的歌词动画效果的第三方网易云播放器](https://github.com/chthollyphile/folia-major)
 
 - [open-orpheus: 网易云音乐Electron版](https://github.com/YUCLing/open-orpheus)
 
@@ -643,6 +659,8 @@ tags: []
 
 
 # 金融
+
+- [FinceptTerminal: bloomberg的开源代替品](https://github.com/Fincept-Corporation/FinceptTerminal)
 
 - [OpenBB: Financial data platform for analysts, quants and AI agents.](https://github.com/OpenBB-finance/OpenBB)
 

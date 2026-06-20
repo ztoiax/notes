@@ -11,15 +11,13 @@ tags: []
 * [LLM](#llm)
   * [原理](#原理)
   * [使用](#使用)
-  * [性能排行榜](#性能排行榜)
+  * [性能排行榜、参数价格数据库](#性能排行榜参数价格数据库)
   * [项目](#项目)
     * [在线使用](#在线使用)
     * [专门领域项目](#专门领域项目)
   * [RAG和向量数据库](#rag和向量数据库)
     * [框架](#框架)
     * [embedding model（文本嵌入式模型）](#embedding-model文本嵌入式模型)
-  * [prompt提示词](#prompt提示词)
-    * [数据库](#数据库)
   * [微调](#微调)
   * [有趣的文章、访谈](#有趣的文章访谈)
     * [Sam Altman：Moore's Law for Everything](#sam-altmanmoores-law-for-everything)
@@ -82,7 +80,7 @@ tags: []
   * [ai编辑器](#ai编辑器)
   * [ai程序员](#ai程序员)
   * [ai终端](#ai终端)
-    * [token](#token)
+    * [统计token或减少token](#统计token或减少token)
     * [claude-code](#claude-code)
     * [编排工具](#编排工具)
   * [ai数据库终端](#ai数据库终端)
@@ -90,6 +88,7 @@ tags: []
   * [ai可视化](#ai可视化)
   * [ai金融模型](#ai金融模型)
   * [ai控制手机](#ai控制手机)
+  * [ai教育](#ai教育)
   * [ai agent（智能体）](#ai-agent智能体)
     * [在线使用](#在线使用-1)
     * [ai控制电脑](#ai控制电脑)
@@ -145,7 +144,14 @@ tags: []
 
 - [铭毅天下Elasticsearch：吴恩达 x Open AI ChatGPT ——如何写出好的提示词视频核心笔记](https://mp.weixin.qq.com/s/VkLNKRtN7KR3Gjttk1cpPg)
 
-## 性能排行榜
+## 性能排行榜、参数价格数据库
+
+- [Models.dev：大模型的参数、价格数据库](https://models.dev/)
+
+- [HN SOTA](https://hnup.date/hn-sota)
+    > 有人想出了一种方法，可以衡量大模型的人气。
+    >
+    > 具体来说，就是每天抓取"黑客新闻"热度最高的200个主题，筛选出编程和 AI 相关的主题，再根据每个主题下面的留言，看看讨论最多、评价最好的模型是什么。
 
 - [chatbot-arena-leaderboard：传统静态数据测试集榜](https://lmarena.ai/?leaderboard)
 
@@ -397,38 +403,6 @@ tags: []
 - [nomic-embed-text](https://huggingface.co/nomic-ai/nomic-embed-text-v1.5)
 
 - [mxbai-embed-large](https://huggingface.co/mixedbread-ai/mxbai-embed-large-v1)
-
-## prompt提示词
-
-- [poml: 微软开发的提示词标准化语言，类似html](https://github.com/microsoft/poml)-
-
-- [oenpai官方prompt工程](https://platform.openai.com/docs/guides/prompt-engineering)
-
-  - [（视频）LLM大模型入门：【人工智能】如何写好提示词， OpenAI官方提示工程指南！](https://www.bilibili.com/video/BV1TfHKe5Ej9)
-
-- [提示工程指南](https://www.promptingguide.ai/zh)
-
-- [Prompt-Engineering-Guide：全面的提示工程实战指南。这份教程致力于帮助用户掌握与大型语言模型（LLM）沟通的技巧。内容涵盖从基础到高级的提示工程技术，附有详细的实现指南和示例代码。](https://github.com/dair-ai/Prompt-Engineering-Guide)
-
-- [awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts)
-
-- [腾讯云开发者：我问了鹅厂程序员：你们工作中怎么用ChatGPT？如何高效Prompt？](https://blog.csdn.net/QcloudCommunity/article/details/130143855)
-
-- [腾讯云开发者：一文掌握Prompt：万能框架+优化技巧+常用指标](https://mp.weixin.qq.com/s/oKB8m_wX6p8SHNMx1R_hzw)
-
-- [腾讯技术工程：大模型Prompt技巧全解析](https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A)
-
-- [deepseek提示库](https://api-docs.deepseek.com/zh-cn/prompt-library/)
-
-- [阿里云开发者：AI联网搜索时的prompt小技巧](https://mp.weixin.qq.com/s/ZTdZY-jsyWwC2ELLF8byoQ)
-
-### 数据库
-
-- [韩锋频道：DeepSeek 会是个好DBA吗？](https://mp.weixin.qq.com/s/xAzHrtZV-pGzyPuv8U2w2w)
-
-- [MySQL数据库联盟：如何通过ChatGPT优化MySQL的SQL语句](https://mp.weixin.qq.com/s?__biz=MzIyOTUzNjgwNg==&mid=2247484892&idx=1&sn=6207963a72bddf9e6c5fa70a57297a64&chksm=e8406095df37e98399b5e2f5347478f6e09061e3c0679e0231e117d0b8c88b1e32d61e622c7f&scene=21#wechat_redirect)
-
-- [MySQL数据库联盟：全网最全MySQL Prompt](https://mp.weixin.qq.com/s?__biz=MzIyOTUzNjgwNg==&mid=2247485114&idx=1&sn=9b09f028e20605ab9d1c561ac8303c7c&chksm=e84063f3df37eae564e6944793d124b28563101600e4727bc4158dff685cc959e54c6951267f&scene=178&cur_album_id=2861367280583032837#rd)
 
 ## 微调
 
@@ -938,11 +912,30 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 ### 图片、视频质量提升
 
-- [dandere2x：使用waifu2x提升视频质量](https://github.com/akai-katto/dandere2x)
-
 - [hitpaw：商业软件需要付费，不支持linux](https://www.hitpaw.tw/)
-- [Real-ESRGAN: Real-ESRGAN aims at developing Practical Algorithms for General Image/Video Restoration.](https://github.com/xinntao/Real-ESRGAN)
 
+- 单个功能的工具
+
+    - [waifu2x: 放大动画图片的分辨率](https://github.com/nagadomi/waifu2x)
+
+        - [dandere2x：一种利用 waifu2x 快速放大动画视频的方法](https://github.com/akai-katto/dandere2x)
+
+    - [realcugan-ncnn-vulkan: b站的放大动画图片和视频分辨率](https://github.com/nihui/realcugan-ncnn-vulkan)
+
+    - [GFPGAN: 腾讯的修复人脸图片](https://github.com/TencentARC/GFPGAN)
+
+    - [Real-ESRGAN: 放大图片和视频分辨率](https://github.com/xinntao/Real-ESRGAN)
+        - [realesrgan-gui: 实用、美观的 Real-ESRGAN 图形界面，同时支持 Windows、Ubuntu 和 macOS 平台。现在也支持 Real-CUGAN 了！(Cross-platform GUI for image upscaler Real-ESRGAN with additional features. Now with Real-CUGAN support!)](https://github.com/TransparentLC/realesrgan-gui)
+        - [web-realesrgan: Run Real-ESRGAN/Real-CUGAN in Your Local Browser on Any Device. Powered by TensorFlow.js. Support computing with WebGL and WebGPU.](https://github.com/xororz/web-realesrgan)
+
+    - [ECCV2022-RIFE: 视频插帧](https://github.com/hzwer/ECCV2022-RIFE)
+
+- 综合工具
+
+    - [video2x: A machine learning-based video super resolution and frame interpolation framework. Est. Hack the Valley II, 2018.](https://github.com/k4yt3x/video2x)
+        - [video2x-qt6: Video2X的gui版](https://github.com/k4yt3x/video2x-qt6)
+
+    - [REAL-Video-Enhancer: Interpolate, Upscale, Decompress, and Denoise videos easily on Linux/Windows/MacOS.](https://github.com/TNTwise/REAL-Video-Enhancer)
 ### ai视频剪辑
 
 - [filmora：商业软件需要付费，不支持linux](https://filmora.wondershare.com/)
@@ -1080,6 +1073,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [lightpanda: zig写的ai浏览器](https://github.com/lightpanda-io/browser)
 
+- [camofox-browser: Stealth headless browser for AI agents — bypass Cloudflare, bot detection, and anti-scraping. Drop-in Puppeteer/Playwright replacement. · GitHub](https://github.com/jo-inc/camofox-browser)
+
 ## ai搜索
 
 - [scira：原名为MiniPerplx](https://github.com/zaidmukaddam/scira)
@@ -1150,10 +1145,15 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [Chaterm:带有 AI 功能的智能终端工具，可以用自然语言完成命令行操作。 Open source AI terminal and SSH Client for EC2, Database and Kubernetes.](https://github.com/chaterm/Chaterm)
 
 - [crush: The glamourous AI coding agent for your favourite terminal 💘](https://github.com/charmbracelet/crush)
+- [oh-my-pi: ⌥ AI Coding agent for the terminal — hash-anchored edits, optimized tool harness, LSP, Python, browser, subagents, and more](https://github.com/can1357/oh-my-pi)
 
-### token
+### 统计token或减少token
+
+- [codeburn: tui仪表盘，可以统计token](https://github.com/getagentseal/codeburn)
 
 - [rtk: 降低 Token 消耗的命令行工具。这是一款用于降低 AI 编程助手 Token 消耗的工具，通过压缩常见开发命令的输出、合并重复日志、删除代码注释和多余空行等方式，可将 Token 消耗减少 60-90%，有效延长套餐配额的使用时间。](https://github.com/rtk-ai/rtk)
+
+- [openwolf: Sharper context. Fewer tokens. Open-source middleware for Claude Code.](https://github.com/cytostack/openwolf)
 
 ### claude-code
 
@@ -1171,6 +1171,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
     - [WellAlly-health: 一个基于 Claude Code 的个人医疗数据中心，定义了一组自己的命令和技能，用 AI 分析个人医疗数据（体检报告、影像片子、处方单、出院小结）](https://github.com/huifer/WellAlly-health)
     - [lumo: 查看成本、Token、会话和编码时段数据](https://github.com/zhnd/lumo)
     - [claude-hud: 实时显示 Claude Code 执行状态的插件。这是一个 Claude Code 插件，可实时显示 Claude Code 在做什么、上下文使用情况、运行的子智能体、工具调用和任务完成进度。](https://github.com/jarrodwatts/claude-hud)
+    - [claude-mem: 让 Claude Code 拥有长期记忆。这是一款为 Claude Code 打造的持久化记忆插件，能够自动记录编码过程中的关键信息，并在后续会话中自动注入相关上下文。它支持语义压缩、跨会话记忆检索、上下文管理、隐私内容排除，以及 Web 界面查看记忆流。](https://github.com/thedotmack/claude-mem)
+
     - [geo-seo-claude: Claude Code 的 GEO 优化技能插件。这是一个 Claude Code 技能插件，以 GEO 优先、SEO 辅助的理念，通过 11 个 skills 和 5 个子智能体，帮助网站针对 AI 驱动的搜索引擎进行优化，支持评分、分析和测试等功能。](https://github.com/zubair-trabzada/geo-seo-claude)
 
 - [codex: openai的](https://github.com/openai/codex?tab=Apache-2.0-1-ov-file)
@@ -1185,6 +1187,9 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [copilot-cli: GitHub Copilot CLI brings the power of Copilot coding agent directly to your terminal.](https://github.com/github/copilot-cli)
 
 - [QwenLM/qwen-code: 阿里的code](https://github.com/QwenLM/qwen-code)
+
+- [kimi-code: Kimi Code CLI — The Starting Point for Next-Gen Agents](https://github.com/MoonshotAI/kimi-code)
+- [kimi-cli: Kimi Code CLI is your next CLI agent.](https://github.com/MoonshotAI/kimi-cli)
 
 - codebuddy：腾讯的code
 
@@ -1208,7 +1213,16 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [cc-connect: 把本地 AI 编程助手接入聊天应用。该项目能够将本地运行的 AI Agent 接到你常用的即时通讯平台，比如飞书、钉钉、Slack、Telegram、Discord、微信 等主流平台。同时支持 Claude Code、Cursor、Gemini CLI 等 7 种 AI 编程助手，实现通过聊天软件远程控制本地 AI Agent，执行各种开发相关任务。](https://github.com/chenhg5/cc-connect)
 
-- [cc-switch: gui配置管理。一键切换 Claude Code / Codex / Gemini CLI 的底层模型](https://github.com/farion1231/cc-switch)
+- [cc-switch: gui配置管理。一键切换 AI 渠道配置的工具。这是一款跨平台的 AI 编程助手增强工具，支持 Claude Code、Codex 和 Gemini CLI 等。它提供了一键切换 API 节点、自动故障转移、Skills 统一管理、用量追踪等功能，适用于 Windows、macOS 和 Linux 平台。](https://github.com/farion1231/cc-switch)
+
+- [paseo: 随时随地管理多个 AI 编程助手的平台。这是一款专为 Claude Code、Codex 和 OpenCode 打造的统一管理平台，提供 iOS、Android、桌面端、Web 和 CLI 等客户端，支持语音控制、跨设备协同和隔离开发等功能。](https://github.com/getpaseo/paseo)
+
+- [abtop: 像 top 一样监控 AI 编程助手的工具。这是一款监控多个 Claude Code、Codex CLI 等 AI 编程 Agent 的命令行工具，支持实时查看每个 Agent 会话的 token 用量、上下文窗口、速率限制和端口等信息。](https://github.com/graykode/abtop)
+- [WaLiCode：基于 Tauri + Claude Code 底层能力桥接，在 Claude Code 之上做服务与工作流增强，以 AI IDE 的方式进行辅助编码。深度集成文件系统与终端，让 AI 真正帮你写代码，而不只是给建议。](https://walicode.xiaofuge.cn/)
+
+- [DeepSeek-TUI: Coding agent for DeepSeek models that runs in your terminal](https://github.com/Hmbown/DeepSeek-TUI)
+
+- [DeepSeek-Reasonix: DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stability — leave it running.比deepseek-tui更能减少token](https://github.com/esengine/DeepSeek-Reasonix)
 
 ### 编排工具
 
@@ -1244,6 +1258,9 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 
 - [Open-AutoGLM: 智谱的手机端智能助理框架](https://github.com/zai-org/Open-AutoGLM)
+## ai教育
+
+- [DeepTutor: 港大AI个性化私教](https://github.com/HKUDS/DeepTutor)
 
 ## ai agent（智能体）
 

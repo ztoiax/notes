@@ -15,6 +15,7 @@ tags: []
   * [系统相关](#系统相关)
   * [app](#app)
     * [其他](#其他)
+    * [虚拟机相关](#虚拟机相关)
     * [工具](#工具)
     * [手机与电脑交互](#手机与电脑交互)
     * [下载器](#下载器)
@@ -32,16 +33,19 @@ tags: []
     * [数据清理](#数据清理)
     * [数据备份](#数据备份)
     * [网络相关](#网络相关)
+      * [代理工具](#代理工具)
     * [隐藏检查](#隐藏检查)
     * [游戏相关](#游戏相关)
     * [浏览器](#浏览器)
     * [第三方客户端](#第三方客户端)
     * [自动化](#自动化)
+    * [手机变成电脑外设](#手机变成电脑外设)
     * [ai](#ai)
       * [openclaw](#openclaw)
 * [刷机](#刷机)
   * [刷入recovery、magisk、lsposed](#刷入recoverymagisklsposed)
-  * [frida](#frida)
+  * [frida：hook逆向](#fridahook逆向)
+  * [AxManager: 通过无线adb连接，更方便的执行shell命令](#axmanager-通过无线adb连接更方便的执行shell命令)
   * [救砖](#救砖)
     * [magisk模块变砖](#magisk模块变砖)
   * [rom](#rom)
@@ -242,11 +246,16 @@ tags: []
 
 - [Gadgetbridge：开源的安卓应用，无需官方应用即可配对和管理各种智能设备（手表、手环、耳机等）。](https://gadgetbridge.org/)
 
+### 虚拟机相关
+
+- [tiny_computer: 给所有安卓 9 以上 arm64 设备的“PC 应用引擎”平替。你可以在小小电脑上安装 PC 级 WPS、CAJ Viewer、亿图图示等软件。](https://github.com/Cateners/tiny_computer)
+
 ### 工具
 
 - [Multi-Calculator-Android: 多功能计数器。包括汇率计算、存款利息、刻度尺、指南针、亲戚称呼等](https://github.com/YangDai2003/Multi-Calculator-Android)
 
 - [Level: 水平仪和刻度尺](https://github.com/woheller69/Level)
+- [skyadb: Android 上的 adb 客户端软件，可以很方便的管理安卓手机、平板、电视和盒子。](https://github.com/sky22333/skyadb)
 
 ### 手机与电脑交互
 
@@ -290,6 +299,10 @@ tags: []
 - [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
 
 - [legado-with-MD3: 使用 Material Design 3 全新设计的阅读 3.0](https://github.com/HapeLee/legado-with-MD3)
+
+
+- [oblivion-desktop: Oblivion Desktop - Unofficial Warp Client for Windows/Mac/Linux](https://github.com/bepass-org/oblivion-desktop)
+
 #### 编辑器
 
 - [Xed-Editor: 内置 Termux 终端可运行 Python 和 Node.js，支持 200+ 编程语言语法高亮、自动缩进和文件管理等功能。](https://github.com/Xed-Editor/Xed-Editor)
@@ -330,6 +343,7 @@ tags: []
 - [nextplayer: An Android native video player](https://github.com/anilbeesetti/nextplayer)
 
 - [mpvEx: A beautiful media player for android, based on mpv-android and built with Jetpack Compose. Forked from mpvKt](https://github.com/marlboro-advance/mpvEx)
+- [Ghosten-Player: 一个视频播放器，支持网盘直连、元数据刮削、IPTV、文件管理等 / A video player that supports direct connection to network disk, metadata scraping, IPTV, file management, etc.](https://github.com/GhostenEditor/Ghosten-Player)
 
 #### 音乐播放器
 
@@ -452,7 +466,15 @@ tags: []
 
 - [traffic-light: 简的 Android 流量监控应用。这是一款免费开源、体积小且无广告的 Android 网络流量监控工具，支持状态栏显示实时网速、历史数据和应用级流量统计等功能。](https://github.com/leekleak/traffic-light)
 
+#### 代理工具
+
+- [sing-box](https://github.com/SagerNet/sing-box/releases)
+
 - [hiddify-app: Multi-platform auto-proxy client, supporting Sing-box, X-ray, TUIC, Hysteria, Reality, Trojan, SSH etc. It’s an open-source, secure and ad-free.](https://github.com/hiddify/hiddify-app)
+
+- [NekoBoxForAndroid: NekoBox for Android / sing-box / universal proxy toolchain for Android](https://github.com/MatsuriDayo/NekoBoxForAndroid)
+
+- [MetaCubeX/ClashMetaForAndroid: A rule-based tunnel for Android.](https://github.com/MetaCubeX/ClashMetaForAndroid?utm_source=chatgpt.com)
 
 ### 隐藏检查
 
@@ -498,6 +520,12 @@ tags: []
 
 - [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
 
+### 手机变成电脑外设
+
+- [MicYou: 变成麦克风](https://github.com/LanRhyme/MicYou)
+
+- [AirMouse: 用手机当鼠标/键盘的极简解决方案](https://github.com/cornradio/airmouse)
+
 ### ai
 
 - [chatbox：支持各种llm大模型的客户端](https://github.com/Bin-Huang/chatbox)
@@ -524,6 +552,8 @@ tags: []
 
 - [CCTV-Smartphone-AI-Monitoring: 将闲置的手机当作监控，并支持ai识别等功能。](https://github.com/suzuran0y/CCTV-Smartphone-AI-Monitoring)
 
+- [paseo: 随时随地管理多个 AI 编程助手的平台。这是一款专为 Claude Code、Codex 和 OpenCode 打造的统一管理平台，提供 iOS、Android、桌面端、Web 和 CLI 等客户端，支持语音控制、跨设备协同和隔离开发等功能。](https://github.com/getpaseo/paseo)
+
 #### openclaw
 
 - [ZeroClaw-Android: Run AI agents 24/7 on your Android phone. Native Rust core, 25+ providers (OpenAI, Claude, Gemini, Groq, DeepSeek, Ollama), encrypted key storage, plugin browser, Material You UI. Self-hosted alternative to Mac Mini setups. MIT licensed.](https://github.com/Natfii/ZeroClaw-Android)
@@ -531,6 +561,8 @@ tags: []
 - [JVS Claw：阿里的手机版openclaw](https://jvs.wuying.aliyun.com/)
 
 - [openclaw-android: ：在 Android 上运行 OpenClaw。该项目提供两种在 Android 手机上运行 OpenClaw 智能体平台（非客户端）的方式。可通过 Termux 安装 glibc 动态链接器直接部署 Linux 二进制文件，也可通过直接安装打包好的 Android 应用实现一键安装 OpenClaw，后者不需要安装 Termux。](https://github.com/AidanPark/openclaw-android)
+
+- [OPPO-Mente-Lab/X-OmniClaw: an edge-native Multimodal Android Agent that integrates multimodal perception, memory and action · GitHub](https://github.com/OPPO-Mente-Lab/X-OmniClaw)
 
 # 刷机
 
@@ -668,6 +700,8 @@ tags: []
             - 注意：数据人民币app会残留未隐藏时检测的数据，记得清除全部数据
 
         - [ZygiskNext：替换内置的zygisk](https://github.com/Dr-TSNG/ZygiskNext)
+        - [ReZygisk: 替换内置的zygisk](https://github.com/PerformanC/ReZygisk)
+        - [NeoZygisk: 替换内置的zygisk](https://github.com/JingMatrix/NeoZygisk)
 
         - [liveboot：magisk模块版。修改开机启动动画为显示logcat、dmensg](https://github.com/symbuzzer/livebootmodule)
 
@@ -689,7 +723,11 @@ tags: []
         - [LSPosed](https://github.com/LSPosed/LSPosed)
             - 使用 暗码 `*#*#lsposed#*#*` 可以启动寄生管理器。
 
+        - [Vector: Modern Xposed Framework](https://github.com/JingMatrix/Vector)
+            > LSPosed的作者弃坑后，另有人接手的LSPosed
+
         - [xposed模块列表](https://github.com/Xposed-Modules-Repo)
+        - [xposed模块列表](https://modules.lsposed.org/)
 
         - [核心破解：降级安装](https://github.com/LSPosed/CorePatch)
         - [Hide-My-Applist：隐藏xposed](https://github.com/Dr-TSNG/Hide-My-Applist)
@@ -724,7 +762,7 @@ tags: []
 
         - [Jshook：对应用程序注入rhino/frida，你只需要会js就可以快速实现hook](https://github.com/Xposed-Modules-Repo/me.jsonet.jshook)
 
-## [frida](https://frida.re/docs/home/)
+## [frida：hook逆向](https://frida.re/docs/home/)
 
 - pc上安装frida
     ```sh
@@ -744,6 +782,8 @@ tags: []
     frida-ps -U
 
     ```
+
+## [AxManager: 通过无线adb连接，更方便的执行shell命令](https://github.com/fahrez182/AxManager)
 
 ## 救砖
 
@@ -771,27 +811,23 @@ tags: []
 
 # 电视app
 
-- 论坛
+- 应用商店或论坛
+
     - [智能电视网](https://www.znds.com/)
-
-    - [当贝市场：bilibili主页](https://space.bilibili.com/13359751)
-
-- 类似项目
-
-    - [TVAPP: 收集全网 Android TV电视盒子应用，涵盖影视、直播、K歌、工具、游戏等类型，整理优质APK资源，支持便捷下载与自动更新。提供安全验证、分类索引与兼容性标注，助力用户打造家庭影音娱乐中心！ ✅ TVBox/影视仓等影音壳接口配置源。](https://github.com/youhunwl/TVAPP)
-
-- 应用商店
-    - 当贝市场
-        - [当贝市场在线地址](https://www.dangbei.com/app/)
+    - [当贝市场在线地址](https://www.dangbei.com/app/)
+    - [野草助手](https://www.tvmao.com/sjapp/202467.html)
+    - 欢视助手：远程安装apk
     - emoton store：相当于海外版当贝商店
     - [电视猫在线地址](https://www.tvmao.com/tv/)
     - [黑域基地在线地址](https://www.hybase.com/shouji/tv/)
+    - [TVAPP：收集全网 Android TV电视盒子应用，涵盖影视、直播、K歌、工具、游戏等类型，整理优质APK资源，支持便捷下载与自动更新。提供安全验证、分类索引与兼容性标注，助力用户打造家庭影音娱乐中心！ ✅ TVBox/影视仓等影音壳接口配置源。](https://app.iyouhun.com/)
+    - [android-tv · GitHub Topics](https://github.com/topics/android-tv)
 
 - 文件管理
     - 小白文件管理器
+    - [AnExplorer: 📁 Another Android Explorer ( File Manager ) is an All-in-One Open source file manager. AnExplorer File Manager (File Explorer) is designed for all android devices including Phones, Phablets, Tablets, Chromecast, Wear OS, Android TV and Chromebooks. It's a fully designed with Material guidelines by Google.](https://github.com/1hakr/AnExplorer)
     - [猫头鹰文件](https://www.skyjos.cn/owlfiles/publishing/android_tv/)
     - File Manager Pro+
-    - es文件管理器
     - X-plore
 
 - 浏览器
@@ -818,12 +854,20 @@ tags: []
 
     - [ACAC: 一个第三方AcFun TV和Pad客户端，A third-party AcFun client for TV & Pad。](https://github.com/xiaye13579/ACAC)
     - [BBLL：第三方bilibili](https://github.com/xiaye13579/BBLL)
-    - [bilitv: 由flutter实现的TV版哔哩哔哩，类似于bbll和bilibilitv。](https://github.com/kkkunny/bilitv)
-
+    - [bilitv:由flutter实现的TV版哔哩哔哩，类似于bbll和bilibilitv。](https://github.com/kkkunny/bilitv)
+    - [BiliTV:由flutter实现的TV版哔哩哔哩](https://github.com/Hyper-Beast/BiliTV)
+    - [blbl: 一个使用原生Android开发的哔哩哔哩安卓客户端，支持触摸、遥控，以及安卓5](https://github.com/cat3399/blbl)
+    - [bv: 哔哩哔哩 的第三方 Android 应用。A third-party Android app for Bilibili.](https://github.com/aaa1115910/bv)
     - [smarttube：第三方youtube，没有广告](https://github.com/yuliskov/SmartTube)
     - YouTube for Fire TV：无需google服务
 
+    - [myDV: 第三方抖音](https://github.com/mytv-android/myDV)
+    - 云视听快TV：快手
+
+- 直播
     - [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
+
+    - [dart_simple_live：一个 APP 上看各种主流直播平台](https://github.com/xiaoyaocz/dart_simple_live)
 
 - 播放器
 
@@ -840,16 +884,20 @@ tags: []
 
     - 当贝播放
 
-- nas
-    - jellyfin
+- webdav
+    - [网易爆米花 - 智能媒体库&全能播放器](https://bmh.163.com/)
+    - [VidHubTV版_最新版VidHub下载_安卓电视APK_当贝市场](https://m.dangbei.com/wap-view-9090.html)
+    - [jellyfin-androidtv: Android TV Client for Jellyfin](https://github.com/jellyfin/jellyfin-androidtv)
     - emby
     - plex
 
-- ui
+- ui桌面
     - projectivy_launcher
     - emotn ui
     - 当贝桌面
     - 吾爱出品
+    - [at4k: AT4K Launcher](https://github.com/avadhesh18/at4k)
+    - [LtvLauncher: A minimal, open-source Android TV launcher featuring WiFi data usage widget, an inbuilt OLED friendly screensaver, and improved UX. A customized fork of FLauncher.](https://github.com/LeanBitLab/LtvLauncher)
 
 - 云盘
 
@@ -865,11 +913,16 @@ tags: []
 - 游戏机模拟器
     - 爱吾游戏宝盒
     - 小鸡模拟器
+    - 茱元游戏
     - 酷咖游戏
+
+- 游戏
+    - 跳一跳学习版
 
 - ktv
     - iktv
-    - 想唱就唱KTV
+    - [想唱就唱](https://www.tvmao.com/hmzt/vvxcjcyjmfb.htm)
+    - [KTVyrps: 也叫kktv，基于LXmusicDesktop的局域网KTV系统 - 手机点歌，电视唱歌，电脑后台](https://github.com/yrps111/KTVyrps)
 
 - 投屏
     - 当贝投屏
@@ -880,6 +933,7 @@ tags: []
 
 - 其他
     - AIDA64：查看硬件参数
+    - [电视屏幕大师TV版_最新版电视屏幕大师下载_安卓电视APK_当贝市场](https://m.dangbei.com/wap-view-3511.html)
     - 米家TV版：控制小米生态链设备
     - 搜狗输入法海信提取版
     - 东方财富通tv版

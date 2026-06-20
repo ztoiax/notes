@@ -20,14 +20,6 @@ tags: []
     * [somo: A human-friendly alternative to netstat for socket and port monitoring on Linux.](#somo-a-human-friendly-alternative-to-netstat-for-socket-and-port-monitoring-on-linux)
     * [snitch: tui版 ss](#snitch-tui版-ss)
     * [nc（连接服务器）](#nc连接服务器)
-    * [frp: 反向代理(内网穿透)](#frp-反向代理内网穿透)
-      * [端口](#端口)
-      * [sock](#sock)
-      * [文件服务器](#文件服务器)
-      * [http转https](#http转https)
-      * [tls](#tls)
-    * [frpc-desktop：跨平台的 frp 桌面客户端。](#frpc-desktop跨平台的-frp-桌面客户端)
-    * [nodepass: 内网穿透。免配单文件三合一运行模式，动态预热TLS/TCP单次连接池，TLS1.3加密分级，TCP/UDP协议串联/转换，RESTful API实例管理...](#nodepass-内网穿透免配单文件三合一运行模式动态预热tlstcp单次连接池tls13加密分级tcpudp协议串联转换restful-api实例管理)
     * [go-proxy：反向代理gui](#go-proxy反向代理gui)
     * [mtr结合了 ping 和 traceroute 的功能](#mtr结合了-ping-和-traceroute-的功能)
     * [ngrep（抓包）](#ngrep抓包)
@@ -36,6 +28,7 @@ tags: []
     * [socat](#socat)
     * [nethogs: 统计每个进程的上传和下载的网速。相当于net 的top](#nethogs-统计每个进程的上传和下载的网速相当于net-的top)
     * [littlesnitch-linux: 著名网络监控工具，可以看到每个应用跟什么网址通信](#littlesnitch-linux-著名网络监控工具可以看到每个应用跟什么网址通信)
+    * [nmlinux: 网络信息、ping、nmap、dns、traceroute等功能的gui](#nmlinux-网络信息pingnmapdnstraceroute等功能的gui)
   * [应用层](#应用层)
     * [http](#http)
       * [curl](#curl)
@@ -72,8 +65,6 @@ tags: []
       * [dns-detector（从 DNS 服务器获取某个网站的所有 IP 地址，逐一进行延迟测试）](#dns-detector从-dns-服务器获取某个网站的所有-ip-地址逐一进行延迟测试)
       * [dns-benchmark：测试全世界的 DNS 服务器](#dns-benchmark测试全世界的-dns-服务器)
       * [dns-benchmark-tool: 测试 DNS 服务器的命令行工具，可以测试本地到 DNS 服务器的延迟，以及 DNS 解析获取域名的 IP 地址的耗时。](#dns-benchmark-tool-测试-dns-服务器的命令行工具可以测试本地到-dns-服务器的延迟以及-dns-解析获取域名的-ip-地址的耗时)
-    * [socks](#socks)
-      * [tun2socks：将tcp/udp等流量转换为socks](#tun2socks将tcpudp等流量转换为socks)
     * [vpn、组网](#vpn组网)
       * [tailscale：WireGuard vpn](#tailscalewireguard-vpn)
       * [wg-easy/wg-easy:WireGuard web管理界面](#wg-easywg-easywireguard-web管理界面)
@@ -108,9 +99,21 @@ tags: []
     * [trippy（rust编写的tui，结合ping和traceroute）](#trippyrust编写的tui结合ping和traceroute)
     * [nping(代替 ping)](#nping代替-ping)
     * [hping](#hping)
-    * [ngrok：内网穿透（端口转发）](#ngrok内网穿透端口转发)
-    * [portr：python写的ngrok代替品](#portrpython写的ngrok代替品)
-    * [bore：tcp隧道](#boretcp隧道)
+    * [端口转发/内网穿透](#端口转发内网穿透)
+      * [ngrok：内网穿透（端口转发）](#ngrok内网穿透端口转发)
+      * [hostc: 内网穿透。不需要注册账号，不需要填 token，不需要改任何配置文件。运行一条命令，立刻拿到一个公网 HTTPS 地址，就这么简单。一句话讲清楚：把你本地的服务，直接暴露到公网，背后跑在 Cloudflare 的全球边缘节点上。](#hostc-内网穿透不需要注册账号不需要填-token不需要改任何配置文件运行一条命令立刻拿到一个公网-https-地址就这么简单一句话讲清楚把你本地的服务直接暴露到公网背后跑在-cloudflare-的全球边缘节点上)
+      * [portr：python写的ngrok代替品](#portrpython写的ngrok代替品)
+      * [bore：tcp隧道](#boretcp隧道)
+      * [boring: 通过toml配置文件，实现端口转发，比如ssh](#boring-通过toml配置文件实现端口转发比如ssh)
+      * [tun2socks：将tcp/udp等流量转换为socks](#tun2socks将tcpudp等流量转换为socks)
+      * [frp: 反向代理(内网穿透)](#frp-反向代理内网穿透)
+        * [端口](#端口)
+        * [sock](#sock)
+        * [文件服务器](#文件服务器)
+        * [http转https](#http转https)
+        * [tls](#tls)
+      * [frpc-desktop：跨平台的 frp 桌面客户端。](#frpc-desktop跨平台的-frp-桌面客户端)
+      * [nodepass: 内网穿透。免配单文件三合一运行模式，动态预热TLS/TCP单次连接池，TLS1.3加密分级，TCP/UDP协议串联/转换，RESTful API实例管理...](#nodepass-内网穿透免配单文件三合一运行模式动态预热tlstcp单次连接池tls13加密分级tcpudp协议串联转换restful-api实例管理)
   * [网络层](#网络层)
     * [ifconfig(net-tools)](#ifconfignet-tools)
     * [ip(iproute2)](#ipiproute2)
@@ -191,9 +194,13 @@ tags: []
 
 ## 代理工具
 
+- [sing-box: The universal proxy platform](https://github.com/SagerNet/sing-box)
+
 - [clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience](https://github.com/clash-verge-rev/clash-verge-rev)
 
 - [hiddify-app: Multi-platform auto-proxy client, supporting Sing-box, X-ray, TUIC, Hysteria, Reality, Trojan, SSH etc. It’s an open-source, secure and ad-free.](https://github.com/hiddify/hiddify-app)
+
+- [s-ui: An advanced Web Panel • Built for SagerNet/Sing-Box](https://github.com/alireza0/s-ui)
 
 ## 综合工具
 
@@ -358,195 +365,6 @@ nc -l -p 1234 > received_file
 nc 127.0.0.1 1234 < file_to_send
 ```
 
-### [frp: 反向代理(内网穿透)](https://github.com/fatedier/frp/blob/dev/README_zh.md)
-
-
-- web monitor
-
-```ini
-# frps.ini
-[common]
-bind_port = 7000
-
-dashboard_port = 7500
-# dashboard's username and password are both optional
-dashboard_user = admin
-dashboard_pwd = admin
-```
-
-
-- 开启加密和压缩
-```ini
-# frpc.ini
-[ssh]
-type = tcp
-local_port = 22
-remote_port = 6000
-
-use_encryption = true
-use_compression = true
-```
-
-#### 端口
-
-- 将8081的流量, 通过服务器的7000端口, 转发到8080
-
-- server
-```ini
-# frps.ini
-[common]
-bind_port = 7000
-```
-
-- client
-```ini
-# frpc.ini
-[common]
-server_addr = 127.0.0.1
-server_port = 7000
-
-[web]
-type = tcp
-local_ip = 127.0.0.1
-local_port = 8080
-remote_port = 8081
-```
-
-```sh
-# 启动server
-frps -c frps.ini
-
-# 启动client
-frpc -c frpc.ini
-```
-
-#### sock
-
-- client
-```ini
-# frpc.ini
-[common]
-server_addr = 127.0.0.1
-server_port = 7000
-
-[unix_domain_socket]
-type = tcp
-remote_port = 8081
-plugin = unix_domain_socket
-plugin_unix_path = /var/run/docker.sock
-```
-
-```sh
-curl http://127.0.0.1:8081/version
-```
-
-#### 文件服务器
-
-- client
-```ini
-# frpc.ini
-[common]
-server_addr = 127.0.0.1
-server_port = 7000
-
-[test_static_file]
-type = tcp
-remote_port = 8081
-plugin = static_file
-plugin_local_path = /tmp/dir
-plugin_strip_prefix = dir
-plugin_http_user = abc
-plugin_http_passwd = abc
-```
-
-```sh
-xdg-open http://127.0.0.1:8081/dir/
-```
-
-#### http转https
-
-- 生成ssl证书
-
-```sh
-openssl req -newkey rsa:4096 \
-            -x509 \
-            -sha256 \
-            -days 3650 \
-            -nodes \
-            -out server.crt \
-            -keyout server.key
-```
-
-- client
-```ini
-# frpc.ini
-[common]
-server_addr = 127.0.0.1
-server_port = 7000
-
-[web]
-type = tcp
-local_ip = 127.0.0.1
-remote_port = 8081
-
-plugin = https2http
-plugin_local_addr = 127.0.0.1:8080
-plugin_crt_path = ./server.crt
-plugin_key_path = ./server.key
-plugin_host_header_rewrite = 127.0.0.1
-plugin_header_X-From-Where = frp
-```
-
-```sh
-curl https://127.0.0.1:8081
-```
-
-#### tls
-
-- [生成tls密钥](https://github.com/fatedier/frp#tls)
-
-- server
-```ini
-# frps.ini
-[common]
-bind_port = 7000
-
-tls_only = true
-tls_enable = true
-tls_cert_file = server.crt
-tls_key_file = server.key
-tls_trusted_ca_file = ca.crt
-```
-
-- client
-```ini
-# frpc.ini
-[common]
-server_addr = 127.0.0.1
-server_port = 7000
-
-tls_enable = true
-tls_cert_file = client.crt
-tls_key_file = client.key
-tls_trusted_ca_file = ca.crt
-
-[web]
-type = tcp
-local_ip = 127.0.0.1
-local_port = 8080
-remote_port = 8081
-```
-
-```sh
-xdg-open http://127.0.0.1:8081/dir/
-```
-
-### [frpc-desktop：跨平台的 frp 桌面客户端。](https://github.com/luckjiawei/frpc-desktop)
-
-### [nodepass: 内网穿透。免配单文件三合一运行模式，动态预热TLS/TCP单次连接池，TLS1.3加密分级，TCP/UDP协议串联/转换，RESTful API实例管理...](https://github.com/yosebyte/nodepass)
-
-- [奇妙的Linux世界：比 FRP 快 10 倍！这款开源隧道工具重新定义内网穿透](https://mp.weixin.qq.com/s/EnEVMxzGBJ-U-CcZt7WQ2Q)
-
 ### [go-proxy：反向代理gui](https://github.com/yusing/go-proxy)
 
 ### mtr结合了 ping 和 traceroute 的功能
@@ -697,6 +515,8 @@ sudo socat -t100 -x -v UNIX-LISTEN:/run/mysqld/mysqld.sock,mode=777,reuseaddr,fo
 ### [nethogs: 统计每个进程的上传和下载的网速。相当于net 的top](https://github.com/raboof/nethogs)
 
 ### [littlesnitch-linux: 著名网络监控工具，可以看到每个应用跟什么网址通信](https://github.com/obdev/littlesnitch-linux)
+
+### [nmlinux: 网络信息、ping、nmap、dns、traceroute等功能的gui](https://github.com/thongor77/nmlinux)
 
 ## 应用层
 
@@ -1173,10 +993,6 @@ dig
 #### [dns-benchmark：测试全世界的 DNS 服务器](https://github.com/xxnuo/dns-benchmark)
 
 #### [dns-benchmark-tool: 测试 DNS 服务器的命令行工具，可以测试本地到 DNS 服务器的延迟，以及 DNS 解析获取域名的 IP 地址的耗时。](https://github.com/frankovo/dns-benchmark-tool?tab=readme-ov-file#installation)
-
-### socks
-
-#### [tun2socks：将tcp/udp等流量转换为socks](https://github.com/xjasonlyu/tun2socks)
 
 ### vpn、组网
 
@@ -1797,12 +1613,209 @@ hping3 -1 192.168.1.x --rand-dest -I enp27s0
 hping3 --traceroute -V -1 www.baidu.com
 ```
 
-### [ngrok：内网穿透（端口转发）](https://github.com/inconshreveable/ngrok)
+### 端口转发/内网穿透
 
-### [portr：python写的ngrok代替品](https://github.com/amalshaji/portr)
+#### [ngrok：内网穿透（端口转发）](https://github.com/inconshreveable/ngrok)
 
-### [bore：tcp隧道](https://github.com/ekzhang/bore)
+#### [hostc: 内网穿透。不需要注册账号，不需要填 token，不需要改任何配置文件。运行一条命令，立刻拿到一个公网 HTTPS 地址，就这么简单。一句话讲清楚：把你本地的服务，直接暴露到公网，背后跑在 Cloudflare 的全球边缘节点上。](https://github.com/akazwz/hostc)
 
+#### [portr：python写的ngrok代替品](https://github.com/amalshaji/portr)
+
+#### [bore：tcp隧道](https://github.com/ekzhang/bore)
+
+#### [boring: 通过toml配置文件，实现端口转发，比如ssh](https://github.com/alebeck/boring)
+
+#### [tun2socks：将tcp/udp等流量转换为socks](https://github.com/xjasonlyu/tun2socks)
+
+#### [frp: 反向代理(内网穿透)](https://github.com/fatedier/frp/blob/dev/README_zh.md)
+
+
+- web monitor
+
+```ini
+# frps.ini
+[common]
+bind_port = 7000
+
+dashboard_port = 7500
+# dashboard's username and password are both optional
+dashboard_user = admin
+dashboard_pwd = admin
+```
+
+
+- 开启加密和压缩
+```ini
+# frpc.ini
+[ssh]
+type = tcp
+local_port = 22
+remote_port = 6000
+
+use_encryption = true
+use_compression = true
+```
+
+##### 端口
+
+- 将8081的流量, 通过服务器的7000端口, 转发到8080
+
+- server
+```ini
+# frps.ini
+[common]
+bind_port = 7000
+```
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[web]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 8080
+remote_port = 8081
+```
+
+```sh
+# 启动server
+frps -c frps.ini
+
+# 启动client
+frpc -c frpc.ini
+```
+
+##### sock
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[unix_domain_socket]
+type = tcp
+remote_port = 8081
+plugin = unix_domain_socket
+plugin_unix_path = /var/run/docker.sock
+```
+
+```sh
+curl http://127.0.0.1:8081/version
+```
+
+##### 文件服务器
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[test_static_file]
+type = tcp
+remote_port = 8081
+plugin = static_file
+plugin_local_path = /tmp/dir
+plugin_strip_prefix = dir
+plugin_http_user = abc
+plugin_http_passwd = abc
+```
+
+```sh
+xdg-open http://127.0.0.1:8081/dir/
+```
+
+##### http转https
+
+- 生成ssl证书
+
+```sh
+openssl req -newkey rsa:4096 \
+            -x509 \
+            -sha256 \
+            -days 3650 \
+            -nodes \
+            -out server.crt \
+            -keyout server.key
+```
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+[web]
+type = tcp
+local_ip = 127.0.0.1
+remote_port = 8081
+
+plugin = https2http
+plugin_local_addr = 127.0.0.1:8080
+plugin_crt_path = ./server.crt
+plugin_key_path = ./server.key
+plugin_host_header_rewrite = 127.0.0.1
+plugin_header_X-From-Where = frp
+```
+
+```sh
+curl https://127.0.0.1:8081
+```
+
+##### tls
+
+- [生成tls密钥](https://github.com/fatedier/frp#tls)
+
+- server
+```ini
+# frps.ini
+[common]
+bind_port = 7000
+
+tls_only = true
+tls_enable = true
+tls_cert_file = server.crt
+tls_key_file = server.key
+tls_trusted_ca_file = ca.crt
+```
+
+- client
+```ini
+# frpc.ini
+[common]
+server_addr = 127.0.0.1
+server_port = 7000
+
+tls_enable = true
+tls_cert_file = client.crt
+tls_key_file = client.key
+tls_trusted_ca_file = ca.crt
+
+[web]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 8080
+remote_port = 8081
+```
+
+```sh
+xdg-open http://127.0.0.1:8081/dir/
+```
+
+
+#### [frpc-desktop：跨平台的 frp 桌面客户端。](https://github.com/luckjiawei/frpc-desktop)
+
+#### [nodepass: 内网穿透。免配单文件三合一运行模式，动态预热TLS/TCP单次连接池，TLS1.3加密分级，TCP/UDP协议串联/转换，RESTful API实例管理...](https://github.com/yosebyte/nodepass)
+
+- [奇妙的Linux世界：比 FRP 快 10 倍！这款开源隧道工具重新定义内网穿透](https://mp.weixin.qq.com/s/EnEVMxzGBJ-U-CcZt7WQ2Q)
 ## 网络层
 
 ### ifconfig(net-tools)

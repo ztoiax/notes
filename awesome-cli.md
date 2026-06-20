@@ -6,6 +6,7 @@ tags: []
 
 <!-- mtoc-start -->
 
+* [操作系统](#操作系统)
 * [terminal simulator (终端模拟器)](#terminal-simulator-终端模拟器)
   * [alacritty](#alacritty)
   * [wezterm:用rust写, 支持gpu加速](#wezterm用rust写-支持gpu加速)
@@ -15,11 +16,11 @@ tags: []
   * [termpair: 网页操作终端](#termpair-网页操作终端)
   * [sshx：通过浏览器远程访问，共享的终端。体验有点卡](#sshx通过浏览器远程访问共享的终端体验有点卡)
   * [ghostty：用zig写的](#ghostty用zig写的)
-  * [waveterm：ts写的，支持ai提醒](#wavetermts写的支持ai提醒)
   * [WindTerm：c写的类似vscode布局的终端](#windtermc写的类似vscode布局的终端)
   * [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](#nexterm适合多服务器管理支持ssh-vnc-and-rdp支持sftp支持proxmox-lxc-和-qemu-containers)
   * [electerm: 设计理念是将终端、文件管理器和远程连接工具融为一体，类似于XShell和Guake的结合体，但功能更全面，支持更多协议。Terminal/ssh/sftp/ftp/telnet/serialport/RDP/VNC client(linux, mac, win)](#electerm-设计理念是将终端文件管理器和远程连接工具融为一体类似于xshell和guake的结合体但功能更全面支持更多协议terminalsshsftpftptelnetserialportrdpvnc-clientlinux-mac-win)
   * [waveterm: 多功能终端。集合AI，浏览器，文件管理器，通过wsh命令可以浏览markdown、图片、视频等文件。](#waveterm-多功能终端集合ai浏览器文件管理器通过wsh命令可以浏览markdown图片视频等文件)
+  * [ratty: A GPU-rendered terminal emulator with inline 3D graphics 🐀🧀](#ratty-a-gpu-rendered-terminal-emulator-with-inline-3d-graphics-)
 * [File Browser](#file-browser)
   * [ranger](#ranger)
   * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
@@ -43,6 +44,7 @@ tags: []
   * [tmsu: taging file and mount tag file](#tmsu-taging-file-and-mount-tag-file)
   * [massren: using editor rename file](#massren-using-editor-rename-file)
   * [fselect: sql语句的ls](#fselect-sql语句的ls)
+  * [mq: markdown版jq](#mq-markdown版jq)
   * [jq:json处理](#jqjson处理)
   * [jql: json过滤器](#jql-json过滤器)
   * [jless:json查看器](#jlessjson查看器)
@@ -99,7 +101,6 @@ tags: []
   * [moar：instead more](#moarinstead-more)
   * [pet：Simple command-line snippet manager](#petsimple-command-line-snippet-manager)
   * [multitail：instead tail](#multitailinstead-tail)
-  * [logdy:内置 Web 界面，可通过浏览器像 tail -f 一样实时查看与过滤日志，支持多种输入模式和自定义解析器。](#logdy内置-web-界面可通过浏览器像-tail--f-一样实时查看与过滤日志支持多种输入模式和自定义解析器)
   * [cheat：instead man](#cheatinstead-man)
   * [tealdeer：instead man tldr ](#tealdeerinstead-man-tldr-)
   * [fx](#fx)
@@ -286,10 +287,16 @@ tags: []
   * [rucola：markdown管理tui](#rucolamarkdown管理tui)
   * [mermaid-cli：markdown转思维导图](#mermaid-climarkdown转思维导图)
   * [hongdown: Markdown 文本的格式美化器，根据预设的规则，修改 Markdown 文本的风格样式。](#hongdown-markdown-文本的格式美化器根据预设的规则修改-markdown-文本的风格样式)
+* [office](#office)
 * [log](#log)
+  * [gonzo: “日志界的k9s”。它把原始日志流实时转换成交互图表、热力图、趋势线，直接在终端里可视化！](#gonzo-日志界的k9s它把原始日志流实时转换成交互图表热力图趋势线直接在终端里可视化)
+  * [toolong: 无论5GB还是50GB，它都能瞬间打开，支持实时tail、合并、搜索、JSONL高亮。](#toolong-无论5gb还是50gb它都能瞬间打开支持实时tail合并搜索jsonl高亮)
+  * [lazyjournal: journalctl的“懒人救星”TUI，GitHub上被誉为“日志界的lazydocker”。它把journald、auditd、文件日志、Docker/Podman容器、Compose栈、Kubernetes Pod全部统一到一个交互界面。](#lazyjournal-journalctl的懒人救星tuigithub上被誉为日志界的lazydocker它把journaldauditd文件日志dockerpodman容器compose栈kubernetes-pod全部统一到一个交互界面)
+  * [humanlog: 现代应用爱打JSON日志，但嵌套太多看吐。Humanlog一键把JSON/logfmt转成清晰缩进文本，时间戳、level、message、context全排好！](#humanlog-现代应用爱打json日志但嵌套太多看吐humanlog一键把jsonlogfmt转成清晰缩进文本时间戳levelmessagecontext全排好)
+  * [goaccess: 把Nginx/Apache日志直接变成实时HTML/终端仪表盘！](#goaccess-把nginxapache日志直接变成实时html终端仪表盘)
   * [lnav：tui的vim模式，查看log、json文件](#lnavtui的vim模式查看logjson文件)
   * [hl: A fast and powerful log viewer and processor that converts JSON logs or logfmt logs into a clear human-readable format.](#hl-a-fast-and-powerful-log-viewer-and-processor-that-converts-json-logs-or-logfmt-logs-into-a-clear-human-readable-format)
-  * [logdy](#logdy)
+  * [logdy:内置 Web 界面，可通过浏览器像 tail -f 一样实时查看与过滤日志，支持多种输入模式和自定义解析器。](#logdy内置-web-界面可通过浏览器像-tail--f-一样实时查看与过滤日志支持多种输入模式和自定义解析器)
   * [tailspin](#tailspin)
   * [teemux: 一个基于 JS 语言的命令行工具，将多个进程输出的日志放在一处查看，可以命令行查看，也可以浏览器查看。](#teemux-一个基于-js-语言的命令行工具将多个进程输出的日志放在一处查看可以命令行查看也可以浏览器查看)
 * [第三方app的命令行版](#第三方app的命令行版)
@@ -303,6 +310,10 @@ tags: []
 * [reference](#reference)
 
 <!-- mtoc-end -->
+
+# 操作系统
+
+- [Redox：rust编写的os](https://www.redox-os.org/)
 
 # terminal simulator (终端模拟器)
 
@@ -331,8 +342,6 @@ tags: []
 
 ## [ghostty：用zig写的](https://github.com/ghostty-org/ghostty)
 
-## [waveterm：ts写的，支持ai提醒](https://github.com/wavetermdev/waveterm)
-
 ## [WindTerm：c写的类似vscode布局的终端](https://github.com/kingToolbox/WindTerm)
 
 ## [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](https://github.com/gnmyt/Nexterm)
@@ -340,6 +349,8 @@ tags: []
 ## [electerm: 设计理念是将终端、文件管理器和远程连接工具融为一体，类似于XShell和Guake的结合体，但功能更全面，支持更多协议。Terminal/ssh/sftp/ftp/telnet/serialport/RDP/VNC client(linux, mac, win)](https://github.com/electerm/electerm)
 
 ## [waveterm: 多功能终端。集合AI，浏览器，文件管理器，通过wsh命令可以浏览markdown、图片、视频等文件。](https://github.com/wavetermdev/waveterm)
+
+## [ratty: A GPU-rendered terminal emulator with inline 3D graphics 🐀🧀](https://github.com/orhun/ratty)
 
 # File Browser
 
@@ -410,6 +421,8 @@ alias cp="advcp -g"
 ## [massren: using editor rename file](https://github.com/laurent22/massren)
 
 ## [fselect: sql语句的ls](https://github.com/jhspetersson/fselect)
+
+## [mq: markdown版jq](https://github.com/harehare/mq)
 
 ## [jq:json处理](https://github.com/jqlang/jq)
 
@@ -633,17 +646,6 @@ fzf -e
 ![image](./Pictures/awesomecli/3.avif)
 
 ## multitail：instead tail
-
-## [logdy:内置 Web 界面，可通过浏览器像 tail -f 一样实时查看与过滤日志，支持多种输入模式和自定义解析器。](https://github.com/logdyhq/logdy-core)
-```sh
-# Use with any shell command
-$ tail -f file.log | logdy
-WebUI started, visit http://localhost:8080
-
-# Read log files
-$ logdy follow app-out.log --full-read
-WebUI started, visit http://localhost:8080
-```
 
 ## [cheat：instead man](https://github.com/cheat/cheat)
 
@@ -1646,7 +1648,21 @@ mmdc -i input.md -o output.svg
 
 ## [hongdown: Markdown 文本的格式美化器，根据预设的规则，修改 Markdown 文本的风格样式。](https://github.com/dahlia/hongdown)
 
+# office
+
+- [ppt-master: 你把 PDF、网址或者 Markdown 文档丢进去，然后告诉 AI 你要做什么风格的演示，它帮你生成可以直接在 PowerPoint 里编辑的精美文件。](https://github.com/hugohe3/ppt-master)
+
 # log
+
+## [gonzo: “日志界的k9s”。它把原始日志流实时转换成交互图表、热力图、趋势线，直接在终端里可视化！](https://github.com/control-theory/gonzo)
+
+## [toolong: 无论5GB还是50GB，它都能瞬间打开，支持实时tail、合并、搜索、JSONL高亮。](https://github.com/Textualize/toolong)
+
+## [lazyjournal: journalctl的“懒人救星”TUI，GitHub上被誉为“日志界的lazydocker”。它把journald、auditd、文件日志、Docker/Podman容器、Compose栈、Kubernetes Pod全部统一到一个交互界面。](https://github.com/Lifailon/lazyjournal)
+
+## [humanlog: 现代应用爱打JSON日志，但嵌套太多看吐。Humanlog一键把JSON/logfmt转成清晰缩进文本，时间戳、level、message、context全排好！](https://github.com/humanlogio/humanlog)
+
+## [goaccess: 把Nginx/Apache日志直接变成实时HTML/终端仪表盘！](https://github.com/allinurl/goaccess)
 
 ## [lnav：tui的vim模式，查看log、json文件](https://github.com/tstack/lnav)
 
@@ -1670,7 +1686,16 @@ journalctl -o json | lnav
 
 ## [hl: A fast and powerful log viewer and processor that converts JSON logs or logfmt logs into a clear human-readable format.](https://github.com/pamburus/hl)
 
-## [logdy](https://github.com/logdyhq/logdy-core)
+## [logdy:内置 Web 界面，可通过浏览器像 tail -f 一样实时查看与过滤日志，支持多种输入模式和自定义解析器。](https://github.com/logdyhq/logdy-core)
+```sh
+# Use with any shell command
+$ tail -f file.log | logdy
+WebUI started, visit http://localhost:8080
+
+# Read log files
+$ logdy follow app-out.log --full-read
+WebUI started, visit http://localhost:8080
+```
 
 ## [tailspin](https://github.com/bensadeh/tailspin)
 
