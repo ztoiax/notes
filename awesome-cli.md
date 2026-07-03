@@ -21,6 +21,7 @@ tags: []
   * [electerm: 设计理念是将终端、文件管理器和远程连接工具融为一体，类似于XShell和Guake的结合体，但功能更全面，支持更多协议。Terminal/ssh/sftp/ftp/telnet/serialport/RDP/VNC client(linux, mac, win)](#electerm-设计理念是将终端文件管理器和远程连接工具融为一体类似于xshell和guake的结合体但功能更全面支持更多协议terminalsshsftpftptelnetserialportrdpvnc-clientlinux-mac-win)
   * [waveterm: 多功能终端。集合AI，浏览器，文件管理器，通过wsh命令可以浏览markdown、图片、视频等文件。](#waveterm-多功能终端集合ai浏览器文件管理器通过wsh命令可以浏览markdown图片视频等文件)
   * [ratty: A GPU-rendered terminal emulator with inline 3D graphics 🐀🧀](#ratty-a-gpu-rendered-terminal-emulator-with-inline-3d-graphics-)
+  * [terax-ai: Lightweight (7MB) Terminal-first AI-native dev workspace](#terax-ai-lightweight-7mb-terminal-first-ai-native-dev-workspace)
 * [File Browser](#file-browser)
   * [ranger](#ranger)
   * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
@@ -351,6 +352,8 @@ tags: []
 ## [waveterm: 多功能终端。集合AI，浏览器，文件管理器，通过wsh命令可以浏览markdown、图片、视频等文件。](https://github.com/wavetermdev/waveterm)
 
 ## [ratty: A GPU-rendered terminal emulator with inline 3D graphics 🐀🧀](https://github.com/orhun/ratty)
+
+## [terax-ai: Lightweight (7MB) Terminal-first AI-native dev workspace](https://github.com/crynta/terax-ai)
 
 # File Browser
 

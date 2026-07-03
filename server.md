@@ -32,6 +32,7 @@ tags: []
     * [pdsh(ssh 并行管理)](#pdshssh-并行管理)
     * [pssh](#pssh)
     * [fail2ban：防止暴力破解。ssh密码错误n次后，锁定](#fail2ban防止暴力破解ssh密码错误n次后锁定)
+    * [ssh-at: ~/.ssh/config 的gui管理工具。](#ssh-at-sshconfig-的gui管理工具)
   * [服务(server)](#服务server)
     * [DNS](#dns)
       * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
@@ -805,6 +806,7 @@ pnuke -h /etc/pssh/hosts nginx
 ### [fail2ban：防止暴力破解。ssh密码错误n次后，锁定](https://github.com/fail2ban/fail2ban)
 
 - [（视频）林哥讲运维：一分钟学会：配置fail2ban保护ssh服务器](https://www.bilibili.com/video/BV1D4421S7Hq)
+### [ssh-at: ~/.ssh/config 的gui管理工具。](https://github.com/baerwang/ssh-at)
 
 ## 服务(server)
 

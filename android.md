@@ -10,14 +10,18 @@ tags: []
 * [原理](#原理)
   * [apk](#apk)
 * [第三方优秀资源](#第三方优秀资源)
-  * [下载商店](#下载商店)
-  * [cli](#cli)
-  * [系统相关](#系统相关)
+  * [电脑软件](#电脑软件)
+    * [下载商店](#下载商店)
+    * [cli](#cli)
+    * [系统相关](#系统相关)
   * [app](#app)
     * [其他](#其他)
-    * [虚拟机相关](#虚拟机相关)
     * [工具](#工具)
-    * [手机与电脑交互](#手机与电脑交互)
+    * [系统相关](#系统相关-1)
+    * [自动化](#自动化)
+    * [应用商店](#应用商店)
+    * [手机与电脑和其他设备交互](#手机与电脑和其他设备交互)
+      * [手机变成电脑外设](#手机变成电脑外设)
     * [下载器](#下载器)
     * [多媒体相关](#多媒体相关)
       * [阅读器](#阅读器)
@@ -37,9 +41,8 @@ tags: []
     * [隐藏检查](#隐藏检查)
     * [游戏相关](#游戏相关)
     * [浏览器](#浏览器)
+    * [聊天软件](#聊天软件)
     * [第三方客户端](#第三方客户端)
-    * [自动化](#自动化)
-    * [手机变成电脑外设](#手机变成电脑外设)
     * [ai](#ai)
       * [openclaw](#openclaw)
 * [刷机](#刷机)
@@ -74,7 +77,9 @@ tags: []
 
 # 第三方优秀资源
 
-## 下载商店
+## 电脑软件
+
+### 下载商店
 
 - [IzzyOnDroid F-Droid Repository](https://apt.izzysoft.de/fdroid/)
 
@@ -82,7 +87,7 @@ tags: []
 
 - [Obtainium: github商店](https://github.com/ImranR98/Obtainium)
 
-## cli
+### cli
 
 - [adb-sync](https://github.com/google/adb-sync)
 
@@ -97,7 +102,7 @@ tags: []
 
 - [Apktool: apk逆向工具](https://github.com/iBotPeaches/Apktool)
 
-## 系统相关
+### 系统相关
 
 - [kite：小米性能监控工具](https://kite.mi.com/#/documents/instructions/quickstart?id=%e5%bf%ab%e9%80%9f%e5%bc%80%e5%a7%8b)
 
@@ -108,6 +113,64 @@ tags: []
 ### 其他
 
 - [GmsCore：谷歌服务框架的开源替代品。该项目是一个开源的替代 Google Play 服务的解决方案，它可以让无法安装或不想用 Google 服务的用户，运行依赖谷歌服务的 Android 应用。](https://github.com/microg/GmsCore)
+- [mgit：git客户端](https://github.com/maks/MGit)
+
+- [DroidGit: git服务器](https://github.com/Olsc/DroidGit)
+
+- [fcitx5：开源输入法](https://github.com/fcitx5-android/fcitx5-android)
+
+- [bitwarden：密码管理器](https://bitwarden.com/download/)
+
+- [keepass2android: 跨平台密码管理器](https://github.com/PhilippC/keepass2android)
+
+- [SmsForwarder（短信转发器）：备用机监控，如应用，短信通知等](https://github.com/pppscn/SmsForwarder)
+
+- [feeel：锻炼动作教学](https://github.com/EnjoyingFOSS/feeel)
+
+- [ente：提供端到端加密的服务，内含基于此服务（Ente）的两款产品，它们分别是云相册（免费试用）和 2FA 验证器（永久免费）。永久免费的 Ente Auth，它可帮助你在移动设备上生成并存储两步验证 (2FA) 令牌。](https://github.com/ente-io/ente)
+
+- [RTranslator：实时翻译](https://github.com/niedev/RTranslator)
+
+- [shell360：ssh客户端](https://github.com/shell360)
+
+- [Ente Auth：一个开源的双因素认证码管理器](https://github.com/ente-io/ente)
+
+
+- [GoGoGo：地图定位修改](https://github.com/ZCShou/GoGoGo)
+
+- [Apk.1-Installer：apk.1安装，针对微信传apk文件](https://github.com/Ium-Lab/Apk.1-Installer)
+
+- [Amarok-Hider：隐藏私人文件和应用](https://github.com/deltazefiro/Amarok-Hider)
+
+- [ChangeDetection: 网站变更监控神器](https://github.com/bernaferrari/ChangeDetection)
+
+- [yike-app: 一个简约而不简单的记账 App](https://github.com/xiaojinzi123/yike-app)
+
+- [Voice-Recorder:极简的 Android 语音录音应用。这是一款极简易用的 Android 语音录音应用，支持离线录音、无广告、界面清爽，适用于会议记录、课堂笔记、采访、日常备忘等场景。](https://github.com/FossifyOrg/Voice-Recorder)
+
+- [TorrentSearch: 磁力搜索](https://github.com/prajwalch/TorrentSearch)
+
+### 工具
+
+- [Multi-Calculator-Android: 多功能计数器。包括汇率计算、存款利息、刻度尺、指南针、亲戚称呼等](https://github.com/YangDai2003/Multi-Calculator-Android)
+
+- [Level: 水平仪和刻度尺](https://github.com/woheller69/Level)
+
+### 系统相关
+
+- [AidLearning-FrameWork](https://github.com/aidlearning/AidLearning-FrameWork)
+
+- [KernelFlasher：刷、备份、恢复内核](https://github.com/capntrips/KernelFlasher)
+
+- [skyadb: Android 上的 adb 客户端软件，可以很方便的管理安卓手机、平板、电视和盒子。](https://github.com/sky22333/skyadb)
+
+- [AndroidBitmapMonitor：图片内存分析工具](https://github.com/shixinzhang/AndroidBitmapMonitor)
+
+- [Shizuku：为其他app解锁高级权限](https://github.com/RikkaApps/Shizuku)
+
+- [termux](https://github.com/termux/termux-app)
+
+    - [Termux 高级终端安装使用配置教程](https://www.sqlsec.com/2018/05/termux.html)
 
 - [busybox](https://github.com/meefik/busybox)
 
@@ -156,108 +219,40 @@ tags: []
 
 - [将 Python 程序变成 Android APK](https://github.com/kivy/python-for-android)
 
-- [f-droid：只上架开源app的应用商店](https://f-droid.org/)
-    - [f-droid clinet](https://github.com/Droid-ify/client)
-
-- [mgit：git客户端](https://github.com/maks/MGit)
-
-- [DroidGit: git服务器](https://github.com/Olsc/DroidGit)
-
-- [AuroraStore：匿名googleplay商店](https://github.com/whyorean/AuroraStore)
-
-- [fcitx5：开源输入法](https://github.com/fcitx5-android/fcitx5-android)
-
-- [AidLearning-FrameWork](https://github.com/aidlearning/AidLearning-FrameWork)
-
-- [termux](https://github.com/termux/termux-app)
-
-    - [Termux 高级终端安装使用配置教程](https://www.sqlsec.com/2018/05/termux.html)
-
-- [AndroidBitmapMonitor：图片内存分析工具](https://github.com/shixinzhang/AndroidBitmapMonitor)
-
-- [bitwarden：密码管理器](https://bitwarden.com/download/)
-
-- [Android-Touch-Helper：跳过广告](https://github.com/zfdang/Android-Touch-Helper)
-
-- [李跳跳：跳过广告](https://litiaotiao.cn/)
-
-- [KernelFlasher：刷、备份、恢复内核](https://github.com/capntrips/KernelFlasher)
-
-- [自定义屏幕点击](https://github.com/gkd-kit/gkd)
-    - [GKD第三方订阅](https://github.com/Adpro-Team/GKD_THS_List)
-
-- [Shizuku：为其他app解锁高级权限](https://github.com/RikkaApps/Shizuku)
-
-- [SmsForwarder（短信转发器）：备用机监控，如应用，短信通知等](https://github.com/pppscn/SmsForwarder)
-
-- [fdroidclient](https://github.com/f-droid/fdroidclient)免费、开源的 Android 应用商店。该项目是 F-Droid 的 Android 客户端，专门收集各类开源安卓软件（FOSS）的应用商店。
-
-
-- [feeel：锻炼动作教学](https://github.com/EnjoyingFOSS/feeel)
-
-- [ReadYou：rss订阅](https://github.com/Ashinch/ReadYou)
-
-- [FocusReader：rss订阅](https://github.com/allentown521/FocusReader)
-
-- [Folo: 聚合阅读器，有点类似于rss](https://github.com/RSSNext/Folo)
-
-- [Acode：代码编辑工具](https://github.com/deadlyjack/Acode)轻量级的 Web IDE，具有即时预览、控制台和丰富的插件等特点
-
-    ![image](./Pictures/android/Acode.avif)
-
-- [ente](https://github.com/ente-io/ente)：提供端到端加密的服务，内含基于此服务（Ente）的两款产品，它们分别是云相册（免费试用）和 2FA 验证器（永久免费）。永久免费的 Ente Auth，它可帮助你在移动设备上生成并存储两步验证 (2FA) 令牌。
-
-- [RTranslator：实时翻译](https://github.com/niedev/RTranslator)
-
-- [shell360：ssh客户端](https://github.com/shell360)
-
-- [Ente Auth：一个开源的双因素认证码管理器](https://github.com/ente-io/ente)
-
-
-- [GoGoGo：地图定位修改](https://github.com/ZCShou/GoGoGo)
-
-- [NewPipe：youtube客户端，免广告、免登陆订阅、有下载功能、免会员观看](https://github.com/TeamNewPipe/NewPipe)
-
 - [EtchDroid：无需root，将img写入插入otg线的u盘](https://github.com/EtchDroid/EtchDroid)
 
 - [AnLinux-App：安装linux](https://github.com/EXALAB/AnLinux-App)
     - [在下莫老师：坏了，这回给手机装Linux更简单了，利用Anlinux来手机变电脑](https://www.bilibili.com/video/BV1sK2nYpEEg)
 
-- [DualBootPatcher：多重引导。手机多系统启动](https://github.com/chenxiaolong/DualBootPatcher)
-
-- [Apk.1-Installer：apk.1安装，针对微信传apk文件](https://github.com/Ium-Lab/Apk.1-Installer)
-
 - [KernelFlasher：刷内核](https://github.com/capntrips/KernelFlasher)
 
-- [Amarok-Hider：隐藏私人文件和应用](https://github.com/deltazefiro/Amarok-Hider)
-
-- [KeyMapper：可以自定义 Android 设备的按键、指纹和手势操作。无需 ROOT 权限，支持蓝牙和有线键盘，提供灵活的按键重映射体验。](https://github.com/keymapperorg/KeyMapper)
-
-- [moonlight-android：投屏(屏幕共享)客户端](https://github.com/moonlight-stream/moonlight-android)
-
-- [ChangeDetection: 网站变更监控神器](https://github.com/bernaferrari/ChangeDetection)
-- [yike-app: 一个简约而不简单的记账 App](https://github.com/xiaojinzi123/yike-app)
-- [Voice-Recorder:极简的 Android 语音录音应用。这是一款极简易用的 Android 语音录音应用，支持离线录音、无广告、界面清爽，适用于会议记录、课堂笔记、采访、日常备忘等场景。](https://github.com/FossifyOrg/Voice-Recorder)
-
-- [keepass2android: 跨平台密码管理器](https://github.com/PhilippC/keepass2android)
-
-- [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
-
-
-- [Gadgetbridge：开源的安卓应用，无需官方应用即可配对和管理各种智能设备（手表、手环、耳机等）。](https://gadgetbridge.org/)
-
-### 虚拟机相关
+- [DualBootPatcher：多重引导。手机多系统启动](https://github.com/chenxiaolong/DualBootPatcher)
 
 - [tiny_computer: 给所有安卓 9 以上 arm64 设备的“PC 应用引擎”平替。你可以在小小电脑上安装 PC 级 WPS、CAJ Viewer、亿图图示等软件。](https://github.com/Cateners/tiny_computer)
 
-### 工具
+### 自动化
 
-- [Multi-Calculator-Android: 多功能计数器。包括汇率计算、存款利息、刻度尺、指南针、亲戚称呼等](https://github.com/YangDai2003/Multi-Calculator-Android)
+- [KeyMapper：可以自定义 Android 设备的按键、指纹和手势操作。无需 ROOT 权限，支持蓝牙和有线键盘，提供灵活的按键重映射体验。](https://github.com/keymapperorg/KeyMapper)
 
-- [Level: 水平仪和刻度尺](https://github.com/woheller69/Level)
-- [skyadb: Android 上的 adb 客户端软件，可以很方便的管理安卓手机、平板、电视和盒子。](https://github.com/sky22333/skyadb)
+- [Android-Touch-Helper：跳过广告](https://github.com/zfdang/Android-Touch-Helper)
 
-### 手机与电脑交互
+- [李跳跳：跳过广告](https://litiaotiao.cn/)
+
+- [自定义屏幕点击](https://github.com/gkd-kit/gkd)
+    - [GKD第三方订阅](https://github.com/Adpro-Team/GKD_THS_List)
+
+- [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
+
+
+### 应用商店
+- [f-droid：只上架开源app的应用商店](https://f-droid.org/)
+
+    - [f-droid clinet](https://github.com/Droid-ify/client)
+
+    - [fdroidclient：免费、开源的 Android 应用商店。该项目是 F-Droid 的 Android 客户端，专门收集各类开源安卓软件（FOSS）的应用商店。](https://github.com/f-droid/fdroidclient)
+
+- [AuroraStore：匿名googleplay商店](https://github.com/whyorean/AuroraStore)
+### 手机与电脑和其他设备交互
 
 - [syncclipboard-mobile: 跨平台SyncClipboard 移动应用](https://github.com/Jeric-X/syncclipboard-mobile)
 
@@ -269,12 +264,22 @@ tags: []
 
 - [scrcpy: 投屏](https://github.com/Genymobile/scrcpy)
 
+- [moonlight-android：投屏(屏幕共享)客户端](https://github.com/moonlight-stream/moonlight-android)
+
 - [QtScrcpy: 更好的scrcpy投屏](https://github.com/barry-ran/QtScrcpy)
 
 - [escrcpy: 📱 Display and control your Android device graphically with scrcpy.](https://github.com/viarotel-org/escrcpy)
 - [plain-app: 在浏览器中管理你的手机。这是一款 Kotlin 开发的 Android 应用，让你可以在同一局域网内通过任意电脑上的浏览器，轻松查看和管理手机中的联系人、短信、通话记录、文件和照片，并支持屏幕镜像、远程操控、文件传输等功能。](https://github.com/plainhub/plain-app)
 
+- [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
 
+- [Gadgetbridge：开源的安卓应用，无需官方应用即可配对和管理各种智能设备（手表、手环、耳机等）。](https://gadgetbridge.org/)
+
+#### 手机变成电脑外设
+
+- [MicYou: 变成麦克风](https://github.com/LanRhyme/MicYou)
+
+- [AirMouse: 用手机当鼠标/键盘的极简解决方案](https://github.com/cornradio/airmouse)
 ### 下载器
 
 - [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
@@ -303,11 +308,21 @@ tags: []
 
 - [oblivion-desktop: Oblivion Desktop - Unofficial Warp Client for Windows/Mac/Linux](https://github.com/bepass-org/oblivion-desktop)
 
+- [ReadYou：rss订阅](https://github.com/Ashinch/ReadYou)
+
+- [FocusReader：rss订阅](https://github.com/allentown521/FocusReader)
+
+- [Folo: 聚合阅读器，有点类似于rss](https://github.com/RSSNext/Folo)
+
 #### 编辑器
 
 - [Xed-Editor: 内置 Termux 终端可运行 Python 和 Node.js，支持 200+ 编程语言语法高亮、自动缩进和文件管理等功能。](https://github.com/Xed-Editor/Xed-Editor)
 
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
+
+- [Acode：代码编辑工具](https://github.com/deadlyjack/Acode)轻量级的 Web IDE，具有即时预览、控制台和丰富的插件等特点
+
+    ![image](./Pictures/android/Acode.avif)
 
 #### 图片相关
 
@@ -317,6 +332,8 @@ tags: []
 
 - [RealSR-NCNN-Android: ai图片放大](https://github.com/tumuyan/RealSR-NCNN-Android)
 
+- [EmojiFace: 将人脸替换成表情包](https://github.com/Steve-Mr/EmojiFace)
+
 #### 视频播放器
 
 - [tvbox手机版](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile)
@@ -324,6 +341,8 @@ tags: []
 - [my-tv-0: 我的電視·〇 電視視頻播放軟件，可以自定義視頻源](https://github.com/lizongying/my-tv-0)
 
 - 直播源
+
+    - [iptv-org/iptv: Collection of publicly available IPTV channels from all over the world](https://github.com/iptv-org/iptv)
 
     - [fanmingming/live: ✯ 可直连访问的电视/广播图标库与相关工具项目 ✯ 🔕 永久免费 直连访问 完整开源 不断完善的台标 支持IPv4/IPv6双栈访问 🔕](https://github.com/fanmingming/live)
     - [suxuang/myIPTV: 【典藏版】高清直播源涵盖几乎所有卫视节目，内置完美台标加节目预告](https://github.com/suxuang/myIPTV)
@@ -344,6 +363,7 @@ tags: []
 
 - [mpvEx: A beautiful media player for android, based on mpv-android and built with Jetpack Compose. Forked from mpvKt](https://github.com/marlboro-advance/mpvEx)
 - [Ghosten-Player: 一个视频播放器，支持网盘直连、元数据刮削、IPTV、文件管理等 / A video player that supports direct connection to network disk, metadata scraping, IPTV, file management, etc.](https://github.com/GhostenEditor/Ghosten-Player)
+- [NextPlayerCloud/NextPlayerCloud：neoplayer这是一个将 OpenList 与 MPV 播放器完美结合的本地播放解决方案，支持挂载各种云盘（阿里云盘、OneDrive、Google Drive、WebDAV、SMB 等），实现高速、流畅、无广告的本地化播放体验。](https://github.com/NextPlayerCloud/NextPlayerCloud)
 
 #### 音乐播放器
 
@@ -501,6 +521,10 @@ tags: []
 
 - [cromite: 支持chrome插件的手机浏览器](https://github.com/uazo/cromite)
 
+### 聊天软件
+
+- [simplex-chat/simplex-chat: SimpleX - the first messaging network operating without user identifiers of any kind - 100% private by design! iOS, Android and desktop apps 📱!](https://github.com/simplex-chat/simplex-chat)
+
 ### 第三方客户端
 
 - [pilipala：该项目是用 Flutter 开发的 B 站第三方客户端，支持 Android 和 iOS 平台。它提供了推荐视频列表、热门直播、番剧、离线缓存、回复评论、弹幕和搜索等功能。](https://github.com/guozhigq/pilipala)
@@ -516,15 +540,9 @@ tags: []
 
 - [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
 
-### 自动化
+- [qplayer: 一个界面由 QML 渲染的跨平台网易云音乐播放器](https://github.com/TIMER-err/qplayer)
 
-- [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
-
-### 手机变成电脑外设
-
-- [MicYou: 变成麦克风](https://github.com/LanRhyme/MicYou)
-
-- [AirMouse: 用手机当鼠标/键盘的极简解决方案](https://github.com/cornradio/airmouse)
+- [NewPipe：youtube客户端，免广告、免登陆订阅、有下载功能、免会员观看](https://github.com/TeamNewPipe/NewPipe)
 
 ### ai
 
@@ -857,6 +875,7 @@ tags: []
     - [bilitv:由flutter实现的TV版哔哩哔哩，类似于bbll和bilibilitv。](https://github.com/kkkunny/bilitv)
     - [BiliTV:由flutter实现的TV版哔哩哔哩](https://github.com/Hyper-Beast/BiliTV)
     - [blbl: 一个使用原生Android开发的哔哩哔哩安卓客户端，支持触摸、遥控，以及安卓5](https://github.com/cat3399/blbl)
+    - [BT: Bilibili TV client](https://github.com/chinasoul/BT)
     - [bv: 哔哩哔哩 的第三方 Android 应用。A third-party Android app for Bilibili.](https://github.com/aaa1115910/bv)
     - [smarttube：第三方youtube，没有广告](https://github.com/yuliskov/SmartTube)
     - YouTube for Fire TV：无需google服务
@@ -889,6 +908,7 @@ tags: []
     - [VidHubTV版_最新版VidHub下载_安卓电视APK_当贝市场](https://m.dangbei.com/wap-view-9090.html)
     - [jellyfin-androidtv: Android TV Client for Jellyfin](https://github.com/jellyfin/jellyfin-androidtv)
     - emby
+        - [NextPlayerCloud/Emfin: Emby三方TV客户端](https://github.com/NextPlayerCloud/Emfin)
     - plex
 
 - ui桌面

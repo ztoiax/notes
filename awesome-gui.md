@@ -61,6 +61,7 @@ tags: []
 * [金融](#金融)
 * [桌面工具](#桌面工具)
 * [通信](#通信)
+* [运行windows程序](#运行windows程序)
 * [其他](#其他-3)
 * [类似项目](#类似项目)
 
@@ -512,6 +513,8 @@ tags: []
 
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
 
+- [MarKing: Marking：现代化跨平台 Markdown 编辑器 - 专业级编辑体验 + 可视化表格编辑 + 强大导出功能](https://github.com/l06066hb/MarKing)
+
 - [markdown-online-editor: 📝 基于 Vue2、Vditor，所构建的在线 Markdown 编辑器，支持绘制流程图、甘特图、时序图、任务列表、echarts 图表、五线谱，以及 PPT 预览、视频音频解析、HTML 自动转换为 Markdown 等功能。https://www.niceshare.site](https://github.com/nicejade/markdown-online-editor)
 
 - [Yank Note: 跨平台markdown编辑器，同时支持gui和web两种界面。可以跑代码、画图表、搞加密，甚至内置终端。Yank Note 提供了版本控制功能，每次修改都会自动记录，方便我们回头进行修改对比。ai智能补全。图表嵌入：支持 PlantUML、Drawio、ECharts、Mermaid 等多种图表工具；插件系统：可以自己写 JavaScript 插件扩展功能，真正的可编程编辑器。](https://yank-note.com/)
@@ -578,13 +581,18 @@ tags: []
 
 - [ToDesk](https://github.com/ji4ozhu/ToDesk)
 
-- [lan-mouse：键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/feschber/lan-mouse)
+- [lan-mouse：跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/feschber/lan-mouse)
 
-- [deskflow：跨平台键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/deskflow/deskflow)
+- [input-leap: 跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/input-leap/input-leap)
+
+- [deskflow：跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/deskflow/deskflow)
+
+- [mykvm: 跨平台（windows、macos、linux）键盘和鼠标和剪切板共享](https://github.com/XxMinor/mykvm)
 
 - [crossdesk: 一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。](https://github.com/kunkundi/crossdesk)
 
 - [sunloginclient(向日葵运程控制gui版)](https://sunlogin.oray.com/download)
+
 ### 手机与电脑交互
 
 - [SyncClipboard: 跨平台剪贴板同步、历史记录管理工具 / Cross-platform cipboard syncing, history management tool](https://github.com/Jeric-X/SyncClipboard)
@@ -684,6 +692,12 @@ tags: []
 
 - [session：加密通信](https://getsession.org/download)
 
+# 运行windows程序
+
+- [winboat: 量级Windows应用运行方案来了](https://github.com/TibixDev/winboat)
+    - [告别卡顿！轻量级Windows应用运行方案来了](https://mp.weixin.qq.com/s/jWL-uAb3gdf8-UXxIo6QYA)
+
+- [winpodx: Windows pod system for Linux](https://github.com/kernalix7/winpodx)
 # 其他
 
 - [timeshift](https://github.com/teejee2008/timeshift)
@@ -701,8 +715,6 @@ tags: []
 
 - [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
 
-- [winboat: 量级Windows应用运行方案来了](https://github.com/TibixDev/winboat)
-    - [告别卡顿！轻量级Windows应用运行方案来了](https://mp.weixin.qq.com/s/jWL-uAb3gdf8-UXxIo6QYA)
 - [zen-desktop: 系统级广告拦截和隐私保护工具，支持 Windows、macOS 和 Linux 三大平台。](https://github.com/ZenPrivacy/zen-desktop)
 
 - [godot: 游戏引擎编辑器 Multi-platform 2D and 3D game engine](https://github.com/godotengine/godot)

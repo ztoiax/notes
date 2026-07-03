@@ -203,6 +203,8 @@ tags: []
 
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
 
+- [MarKing: Marking：现代化跨平台 Markdown 编辑器 - 专业级编辑体验 + 可视化表格编辑 + 强大导出功能](https://github.com/l06066hb/MarKing)
+
 - [WeMD: 更优雅的 Markdown 公众号编辑器](https://github.com/tenngoxars/WeMD)
 
 - [Yank Note: 跨平台markdown编辑器，同时支持gui和web两种界面。可以跑代码、画图表、搞加密，甚至内置终端。Yank Note 提供了版本控制功能，每次修改都会自动记录，方便我们回头进行修改对比。ai智能补全。图表嵌入：支持 PlantUML、Drawio、ECharts、Mermaid 等多种图表工具；插件系统：可以自己写 JavaScript 插件扩展功能，真正的可编程编辑器。](https://yank-note.com/)
@@ -384,6 +386,10 @@ tags: []
 
 - [STranslate: A ready-to-go translation ocr tool developed with WPF/WPF 开发的一款即用即走的翻译、OCR工具](https://github.com/STranslate/STranslate)
 
-- [deskflow：跨平台键盘和鼠标共享。一台电脑的键鼠控制其他电脑](https://github.com/deskflow/deskflow)
+- [lan-mouse：跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/feschber/lan-mouse)
+
+- [input-leap: 跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/input-leap/input-leap)
+
+- [deskflow：跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/deskflow/deskflow)
 
 - [stretchly: 跨平台的每个一段时间强制休息。](https://github.com/hovancik/stretchly)

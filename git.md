@@ -58,9 +58,13 @@ tags: []
     * [serie: git commit tui](#serie-git-commit-tui)
     * [gitmal: Git 仓库一键转静态网站。这是一款 Go 语言开发的工具，可轻松将 Git 仓库转换为静态网站。它通过解析仓库的文件结构、提交历史和代码内容，提供类似 GitHub 的浏览体验，适用于展示个人开源项目代码。](#gitmal-git-仓库一键转静态网站这是一款-go-语言开发的工具可轻松将-git-仓库转换为静态网站它通过解析仓库的文件结构提交历史和代码内容提供类似-github-的浏览体验适用于展示个人开源项目代码)
     * [worktrunk: Worktrunk is a CLI for Git worktree management, designed for parallel AI agent workflows](#worktrunk-worktrunk-is-a-cli-for-git-worktree-management-designed-for-parallel-ai-agent-workflows)
+    * [sem: Semantic version control => entity-level diffs, blame, and impact analysis on top of git. 28 languages via tree-sitter. Built for coding agents.](#sem-semantic-version-control--entity-level-diffs-blame-and-impact-analysis-on-top-of-git-28-languages-via-tree-sitter-built-for-coding-agents)
+    * [gitfolio: 一个类似 Gitea 的 Git 仓库管理系统，采用 Go 语言开发。](#gitfolio-一个类似-gitea-的-git-仓库管理系统采用-go-语言开发)
+* [其他版本控制系统](#其他版本控制系统)
   * [repo：google的git](#repogoogle的git)
-* [VFSForGit：微软的git](#vfsforgit微软的git)
-* [scalar：微软的新git](#scalar微软的新git)
+  * [VFSForGit：微软的git](#vfsforgit微软的git)
+  * [scalar：微软的新git](#scalar微软的新git)
+  * [lore:游戏公司 EpicGames 开源的一个版本管理系统。跟 Git 相比，它的最大特点是为二进制文件提供版本管理。它将大型的二进制文件拆分成一个个数据块，进行储存。每次提交，只保存有变动的数据块。](#lore游戏公司-epicgames-开源的一个版本管理系统跟-git-相比它的最大特点是为二进制文件提供版本管理它将大型的二进制文件拆分成一个个数据块进行储存每次提交只保存有变动的数据块)
 * [github](#github)
   * [api](#api)
   * [github工作流](#github工作流)
@@ -960,12 +964,17 @@ git diff | diffnav
 
 ### [worktrunk: Worktrunk is a CLI for Git worktree management, designed for parallel AI agent workflows](https://github.com/max-sixty/worktrunk)
 
+### [sem: Semantic version control => entity-level diffs, blame, and impact analysis on top of git. 28 languages via tree-sitter. Built for coding agents.](https://github.com/Ataraxy-Labs/sem)
+
+### [gitfolio: 一个类似 Gitea 的 Git 仓库管理系统，采用 Go 语言开发。](https://github.com/azhai/gitfolio)
+
+# 其他版本控制系统
 ## repo：google的git
 
 - 要解决存放 Android 源代码的需求，Google 有个工具叫“repo”。它可以管理多个 git repo，就好像一个巨大的 repo 一样。这个工具支持 Linux 和 macOS，但是 Windows 上基本没法用。
     - 同时，因为本质上其实还是一堆git库的集合，把文件从一个 git 挪到另一个，就会丢失历史。Google 的另一个工作是 Git protocol v2。它可以加速 repo 之间传输的速度。
 
-# [VFSForGit：微软的git](https://github.com/microsoft/VFSForGit)
+## [VFSForGit：微软的git](https://github.com/microsoft/VFSForGit)
 
 - 微软的 Windows 长期以来一直用的 fork 的 p4，叫做 source depot（SD），作为版本控制。在2015年的某个时候，p4 已经无法满足现代的敏捷开发和协作的需求，于是考虑切换到 git。即便代价非常大（切换了一个用了20年以上的系统，大量修改 bug 跟踪、自动编译、测试、部署系统，培训部门里的每个人，配发大容量 SSD。），也要坚持去做，因为都知道这才是未来。直接转的话，单个 git 库的大小是270GB，clone 一次得花12小时，checkout 花3小时，甚至连“git status”都要10分钟，简直没法用。于是有人开始考虑通过引入一些主从的特性来改进 git。但因为他们对开源社区的无知，甚至连搜索一下都不，就给这个东西起名叫 gvfs（git virtual files ystem)，全然不顾已经有叫这个名字的知名项目 GNOME virtual file system。被诟病了几年才改名叫 VFSForGit。
 
@@ -975,7 +984,9 @@ git diff | diffnav
 
 - 因此，微软换了个方向，新做了一个叫做 Scalar 的系统。这个就不用虚拟化了，也不会改变 git 的工作流。它是以扩展的形式，优化原有 git 的部分 clone 和稀疏 checkout，不再修改 git 的基础。但它的适用性仍然是个问题。目前只有微软 fork 的 git 和 Azure devops 支持这个。实际上 meta 和 google 也一直在等待着 git 能更好地支持单一巨型库，并时不时尝试从自己开发的系统里切换过去。
 
-# [scalar：微软的新git](https://github.com/microsoft/scalar)
+## [scalar：微软的新git](https://github.com/microsoft/scalar)
+
+## [lore:游戏公司 EpicGames 开源的一个版本管理系统。跟 Git 相比，它的最大特点是为二进制文件提供版本管理。它将大型的二进制文件拆分成一个个数据块，进行储存。每次提交，只保存有变动的数据块。](https://github.com/EpicGames/lore)
 
 # github
 
