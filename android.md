@@ -12,16 +12,24 @@ tags: []
 * [第三方优秀资源](#第三方优秀资源)
   * [电脑软件](#电脑软件)
     * [下载商店](#下载商店)
+      * [在线下载商店](#在线下载商店)
     * [cli](#cli)
     * [系统相关](#系统相关)
   * [app](#app)
     * [其他](#其他)
     * [工具](#工具)
     * [系统相关](#系统相关-1)
+      * [adb相关](#adb相关)
+      * [DNS相关](#dns相关)
+      * [性能监控](#性能监控)
+    * [手势相关](#手势相关)
     * [自动化](#自动化)
     * [应用商店](#应用商店)
     * [手机与电脑和其他设备交互](#手机与电脑和其他设备交互)
+      * [投屏和管理手机](#投屏和管理手机)
+      * [类似锤子的tnt交互](#类似锤子的tnt交互)
       * [手机变成电脑外设](#手机变成电脑外设)
+    * [手机运行linux系统](#手机运行linux系统)
     * [下载器](#下载器)
     * [多媒体相关](#多媒体相关)
       * [阅读器](#阅读器)
@@ -30,12 +38,16 @@ tags: []
       * [视频播放器](#视频播放器)
       * [音乐播放器](#音乐播放器)
       * [追番](#追番)
+      * [视频压缩](#视频压缩)
     * [应用管理](#应用管理)
       * [android四大组件](#android四大组件)
-    * [文件管理器、云盘](#文件管理器云盘)
-    * [文件互传、远程控制](#文件互传远程控制)
-    * [数据清理](#数据清理)
-    * [数据备份](#数据备份)
+    * [文件相关](#文件相关)
+      * [文件管理器](#文件管理器)
+      * [云盘webdav相关](#云盘webdav相关)
+      * [文件加密](#文件加密)
+      * [文件互传、远程控制](#文件互传远程控制)
+      * [数据清理](#数据清理)
+      * [数据、文件、图片备份等](#数据文件图片备份等)
     * [网络相关](#网络相关)
       * [代理工具](#代理工具)
     * [隐藏检查](#隐藏检查)
@@ -45,6 +57,7 @@ tags: []
     * [第三方客户端](#第三方客户端)
     * [ai](#ai)
       * [openclaw](#openclaw)
+      * [编排工具](#编排工具)
 * [刷机](#刷机)
   * [刷入recovery、magisk、lsposed](#刷入recoverymagisklsposed)
   * [frida：hook逆向](#fridahook逆向)
@@ -85,7 +98,13 @@ tags: []
 
 - [Github-Store: 平台的 GitHub 应用商店。这是一款基于 Kotlin 开发的跨平台开源应用商店客户端，支持一键发现热门开源项目、下载安装包（如 APK、EXE、DMG 、 AppImage、DEB、RPM等），以及追踪已安装应用并提示更新。](https://github.com/rainxchzed/Github-Store)
 
-- [Obtainium: github商店](https://github.com/ImranR98/Obtainium)
+- [Obtainium: 更新app的商店，可以导入多个源](https://github.com/ImranR98/Obtainium)
+
+- obtainxt：Obtainium的分支，功能更丰富
+
+#### 在线下载商店
+
+- [IzzyOnDroid F-Droid Repository](https://apt.izzysoft.de/fdroid/)
 
 ### cli
 
@@ -119,6 +138,8 @@ tags: []
 
 - [fcitx5：开源输入法](https://github.com/fcitx5-android/fcitx5-android)
 
+- [trime: 同文安卓輸入法平臺3.x/Android-rime/Rime Input Method Engine for Android](https://github.com/osfans/trime)
+
 - [bitwarden：密码管理器](https://bitwarden.com/download/)
 
 - [keepass2android: 跨平台密码管理器](https://github.com/PhilippC/keepass2android)
@@ -149,6 +170,8 @@ tags: []
 - [Voice-Recorder:极简的 Android 语音录音应用。这是一款极简易用的 Android 语音录音应用，支持离线录音、无广告、界面清爽，适用于会议记录、课堂笔记、采访、日常备忘等场景。](https://github.com/FossifyOrg/Voice-Recorder)
 
 - [TorrentSearch: 磁力搜索](https://github.com/prajwalch/TorrentSearch)
+
+- [ShizuCallRecorder: 电话录音](https://github.com/kitsumed/ShizuCallRecorder)
 
 ### 工具
 
@@ -230,9 +253,28 @@ tags: []
 
 - [tiny_computer: 给所有安卓 9 以上 arm64 设备的“PC 应用引擎”平替。你可以在小小电脑上安装 PC 级 WPS、CAJ Viewer、亿图图示等软件。](https://github.com/Cateners/tiny_computer)
 
-### 自动化
+#### adb相关
+
+- [甲壳虫ADB助手](https://github.com/didjdk/adbhelper)
+
+- [shevery: 可以执行adb命令，还有adb模块插件等](https://github.com/HmnDev-Tech/shevery)
+
+- [Wireless ADB: 开启adb远程端口](https://play.google.com/store/apps/details?id=com.origiq.wirelessadb&hl=en)
+
+#### DNS相关
+
+- [adns: A lightweight DNS-based ad blocker for Android with NextDNS built in](https://github.com/eyalm2000/adns)
+#### 性能监控
+
+- [FrameX-Android: Android FPS meter and performance overlay powered by Shizuku.](https://github.com/MaheshSharan/FrameX-Android)
+- [fpsviewer: A Real-time Fps Tool for Android](https://github.com/SilenceDut/fpsviewer)
+### 手势相关
+
+- [DroidLab: Gesture Toolkit - Apps on Google Play](https://play.google.com/store/apps/details?id=com.lightsourcelabs.droidlab&hl=en)
 
 - [KeyMapper：可以自定义 Android 设备的按键、指纹和手势操作。无需 ROOT 权限，支持蓝牙和有线键盘，提供灵活的按键重映射体验。](https://github.com/keymapperorg/KeyMapper)
+
+### 自动化
 
 - [Android-Touch-Helper：跳过广告](https://github.com/zfdang/Android-Touch-Helper)
 
@@ -243,8 +285,10 @@ tags: []
 
 - [maestro：移动端 UI 自动化测试框架。这是一款开源的移动端和 Web 应用 UI 自动化测试工具，它采用简单易懂的 YAML 语法编写测试脚本，内置容错机制和操作延迟容忍功能，支持 Android、iOS、Flutter 和桌面浏览器。](https://github.com/mobile-dev-inc/maestro)
 
+- [essentials: 支持冻结应用、自动化、google地图的pixel才有的省电模式、自定义状态栏图表、按键映射等等](https://github.com/sameerasw/essentials)
 
 ### 应用商店
+
 - [f-droid：只上架开源app的应用商店](https://f-droid.org/)
 
     - [f-droid clinet](https://github.com/Droid-ify/client)
@@ -258,28 +302,45 @@ tags: []
 
 - [ADB ToolboX：adb gui只支持windows](https://qx.wysteam.cn/download/)
 
-- [linkandroid：连接android](https://github.com/modstart-lib/linkandroid)
+
+- [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
+
+- [Gadgetbridge：开源的安卓应用，无需官方应用即可配对和管理各种智能设备（手表、手环、耳机等）。](https://gadgetbridge.org/)
+
+#### 投屏和管理手机
 
 - [aya: adb gui版.支持投屏,可以监控手机cpu,内存等](https://github.com/liriliri/aya)
 
 - [scrcpy: 投屏](https://github.com/Genymobile/scrcpy)
+
+- [App-Scrcpy: A scrcpy-inspired Android screen, audio, and control streaming client for Windows — built without ADB, using pure WebSocket communication.](https://github.com/Shrey113/App-Scrcpy)
 
 - [moonlight-android：投屏(屏幕共享)客户端](https://github.com/moonlight-stream/moonlight-android)
 
 - [QtScrcpy: 更好的scrcpy投屏](https://github.com/barry-ran/QtScrcpy)
 
 - [escrcpy: 📱 Display and control your Android device graphically with scrcpy.](https://github.com/viarotel-org/escrcpy)
+
+- [linkandroid：全能手机连接助手,简单 高清投屏,多设备,USB/无线连接,录屏 MP4/GIF录屏,截屏美化,命令行,强大文件管理,键盘鼠标OTG,应用管理。](https://github.com/modstart-lib/linkandroid)
+
 - [plain-app: 在浏览器中管理你的手机。这是一款 Kotlin 开发的 Android 应用，让你可以在同一局域网内通过任意电脑上的浏览器，轻松查看和管理手机中的联系人、短信、通话记录、文件和照片，并支持屏幕镜像、远程操控、文件传输等功能。](https://github.com/plainhub/plain-app)
 
-- [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
+- [Adb-Device-Manager-2: Dual-control Android management for Windows — ADB Mode (scrcpy GUI mirroring & control) and App Mode (calls, media, notifications, Audio Cast).](https://github.com/Shrey113/Adb-Device-Manager-2)
 
-- [Gadgetbridge：开源的安卓应用，无需官方应用即可配对和管理各种智能设备（手表、手环、耳机等）。](https://gadgetbridge.org/)
+#### 类似锤子的tnt交互
+
+- [Android-Dex: Enable a full desktop experience from any Android device over Wi‑Fi. No root, scrcpy-powered, Flutter desktop app with wireless ADB, per‑app audio, and quick controls.](https://github.com/Shrey113/Android-Dex)
 
 #### 手机变成电脑外设
 
 - [MicYou: 变成麦克风](https://github.com/LanRhyme/MicYou)
 
 - [AirMouse: 用手机当鼠标/键盘的极简解决方案](https://github.com/cornradio/airmouse)
+
+### 手机运行linux系统
+
+- [tiny_container: Click-to-run debian 13 with desktop environment on android!](https://github.com/Cateners/tiny_container)
+
 ### 下载器
 
 - [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
@@ -287,6 +348,7 @@ tags: []
 - [Tixati：跨平台的下载器，可以代替迅雷](https://tixati.com/)
 
 - [Seal：可以下载各大视频平台资源下载器](https://github.com/JunkFood02/Seal)
+
 - [ytdlnis: Full-featured audio/video downloader for Android using yt-dlp](https://github.com/deniscerri/ytdlnis)
 
 ### 多媒体相关
@@ -378,11 +440,19 @@ tags: []
     - [lx-music-source: 洛雪音乐源](https://github.com/pdone/lx-music-source)
 - [PixelPlayer: 高颜值多功能的 Android 音乐播放器。这是一款本地优先、注重隐私的 Android 音乐播放器，拥有美观的 Material You 动态主题 ，界面可随专辑封面或手机壁纸自动变化，支持歌词显示、自定义歌曲过渡、桌面小部件、投屏播放、听歌统计等功能。](https://github.com/theovilardo/PixelPlayer)
 
+- [PureMusic（棉花音乐）：音乐播放器。支持本地歌曲、百度网盘、阿里云盘、WebDAV、GoogleDrive、OneDrive、Dropbox等网盘歌曲播放，支持Plex、Emby、Jelly、Subsonic媒体服务器。](https://github.com/pure-music/PureMusic)
+
+- [StreamMusic（音流）：音乐播放器。支持 Android、iOS、MacOS、Windows 平台的 Subsonic/Navidrome/Jellyfin/Emby/AudioStation/Plex 客户端。](https://github.com/gitbobobo/StreamMusic)
+
 #### 追番
 
 - [Kazumi: 基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕，支持实时超分辨率。](https://github.com/Predidit/Kazumi)
 
 - [animeko: 集找番、追番、看番的一站式弹幕追番平台，云收藏同步 (Bangumi)，离线缓存，BitTorrent，弹幕云过滤。100% Kotlin/Compose Multiplatform](https://github.com/open-ani/animeko)
+
+#### 视频压缩
+
+- [Compressor: Lightning fast, ad free, super lightweight native video compressor for Android](https://github.com/JoshAtticus/Compressor)
 
 ### 应用管理
 
@@ -398,6 +468,8 @@ tags: []
 
 - [幸运破解器：破解](https://www.luckypatchers.com/)
 
+- [Pensum: android的windows任务管理器](https://github.com/troikoss/Pensum)
+
 #### android四大组件
 
 - [（写轮眼）论坛](https://bbs.letitfly.me/)
@@ -408,19 +480,21 @@ tags: []
 
 - [Thanox：需要xposed或magisk安装。可以修改四大组件](https://github.com/Tornaco/Thanox)
     - [官方文档](https://tornaco.github.io/Thanox-Docs/zh/)
+### 文件相关
 
-### 文件管理器、云盘
+- [ZenConverter: 文件格式转换。支持图片、视频、音频、pdf、docx文档等](https://github.com/Jasonzhu1207/ZenConverter)
+
+#### 文件管理器
 
 - [np管理器：模仿mt文件管理器](https://github.com/githubXiaowangzi/NP-Manager)
 
-- [syncthing：文件同步](https://github.com/syncthing/syncthing-android)
+- [gander: 用来查看各种文件的内容，支持PDF, Word, Excel, PowerPoint, photos, video, audio, Markdown and code。](https://github.com/mokshablr/gander)
 
 - [MaterialFiles：文件管理器](https://github.com/zhanghai/MaterialFiles)
 
 - [mixplorer](https://mixplorer.com)
 
-- [Emby服务端](https://emby.media/server-android.html)
-
+#### 云盘webdav相关
 
 - [AListLite：openlist（alist社区版，alist已经被收购）服务端](https://github.com/LeoHaoVIP/AListLiteAndroid)
 
@@ -430,14 +504,17 @@ tags: []
 
 - [AlistClient：alist客户端](https://github.com/BFWXKJGS/AlistClient)
 
-- [PureMusic（棉花音乐）：音乐播放器。支持本地歌曲、百度网盘、阿里云盘、WebDAV、GoogleDrive、OneDrive、Dropbox等网盘歌曲播放，支持Plex、Emby、Jelly、Subsonic媒体服务器。](https://github.com/pure-music/PureMusic)
+- [Emby服务端](https://emby.media/server-android.html)
 
-- [StreamMusic（音流）：音乐播放器。支持 Android、iOS、MacOS、Windows 平台的 Subsonic/Navidrome/Jellyfin/Emby/AudioStation/Plex 客户端。](https://github.com/gitbobobo/StreamMusic)
 - [蜗牛云盘](https://github.com/liupan1890/aliyunpan/issues/901)
 
 - [clouddrive：云盘管理](https://github.com/cloud-fs/cloud-fs.github.io/releases)
 
-### 文件互传、远程控制
+#### 文件加密
+
+- [Lockify：表面是个计算器，输入密码就可以查看加密文件](https://getlockifyapp.com/)
+
+#### 文件互传、远程控制
 
 - [unison：intel的手机电脑消息、文件传输]()
 
@@ -454,11 +531,11 @@ tags: []
 - [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
 - [connectbot: ssh](https://github.com/connectbot/connectbot)
 
-### 数据清理
+#### 数据清理
 
 - [sdmaid](https://github.com/d4rken-org/sdmaid-se)
 
-### 数据备份
+#### 数据、文件、图片备份等
 
 - [Android-DataBackup：数据备份](https://github.com/XayahSuSuSu/Android-DataBackup)
 
@@ -469,6 +546,8 @@ tags: []
 - [Nextcloud：私人云盘](https://github.com/nextcloud/android)
 
     - [memories：Nextcloud的照片管理](https://github.com/pulsejet/memories)
+
+- [syncthing：文件同步](https://github.com/syncthing/syncthing-android)
 
 ### 网络相关
 
@@ -581,6 +660,9 @@ tags: []
 - [openclaw-android: ：在 Android 上运行 OpenClaw。该项目提供两种在 Android 手机上运行 OpenClaw 智能体平台（非客户端）的方式。可通过 Termux 安装 glibc 动态链接器直接部署 Linux 二进制文件，也可通过直接安装打包好的 Android 应用实现一键安装 OpenClaw，后者不需要安装 Termux。](https://github.com/AidanPark/openclaw-android)
 
 - [OPPO-Mente-Lab/X-OmniClaw: an edge-native Multimodal Android Agent that integrates multimodal perception, memory and action · GitHub](https://github.com/OPPO-Mente-Lab/X-OmniClaw)
+#### 编排工具
+
+- [orca: 跨平台agent终端](https://github.com/stablyai/orca)
 
 # 刷机
 
@@ -833,13 +915,19 @@ tags: []
 
     - [智能电视网](https://www.znds.com/)
     - [当贝市场在线地址](https://www.dangbei.com/app/)
-    - [野草助手](https://www.tvmao.com/sjapp/202467.html)
-    - 欢视助手：远程安装apk
     - emoton store：相当于海外版当贝商店
     - [电视猫在线地址](https://www.tvmao.com/tv/)
     - [黑域基地在线地址](https://www.hybase.com/shouji/tv/)
     - [TVAPP：收集全网 Android TV电视盒子应用，涵盖影视、直播、K歌、工具、游戏等类型，整理优质APK资源，支持便捷下载与自动更新。提供安全验证、分类索引与兼容性标注，助力用户打造家庭影音娱乐中心！ ✅ TVBox/影视仓等影音壳接口配置源。](https://app.iyouhun.com/)
     - [android-tv · GitHub Topics](https://github.com/topics/android-tv)
+
+- 手机控制电脑或安装apk
+
+    - [TV-Control-Hub: An close-source Android app that turns your phone into a smart remote for Android TV and Google TV, with secure local control and modern UI.](https://github.com/Shrey113/TV-Control-Hub)
+
+    - [野草助手](https://www.tvmao.com/sjapp/202467.html)
+
+    - 欢视助手：远程安装apk
 
 - 文件管理
     - 小白文件管理器
@@ -881,7 +969,11 @@ tags: []
     - YouTube for Fire TV：无需google服务
 
     - [myDV: 第三方抖音](https://github.com/mytv-android/myDV)
+    - [mydv-Lite: 一个mydv的Lite版本](https://github.com/mytv-android/mydv-Lite)
+
     - 云视听快TV：快手
+
+    - [animeko: Animeko追番的安卓电视(Android TV)适配版本（建议安卓系统版本>=11）](https://github.com/GrahamZen/animeko)
 
 - 直播
     - [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)

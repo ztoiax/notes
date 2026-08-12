@@ -94,6 +94,7 @@ tags: []
   * [television：rust版fzf](#televisionrust版fzf)
   * [skim：rust 版fzf](#skimrust-版fzf)
   * [zf：zig版fzf](#zfzig版fzf)
+  * [hunk: Review-first terminal diff viewer for agentic coders](#hunk-review-first-terminal-diff-viewer-for-agentic-coders)
   * [diff-so-fancy：highlight git diff](#diff-so-fancyhighlight-git-diff)
   * [riff：instead diff](#riffinstead-diff)
   * [icdiff：instead diff](#icdiffinstead-diff)
@@ -115,6 +116,7 @@ tags: []
   * [sd：instead sed](#sdinstead-sed)
   * [sad：instead sed](#sadinstead-sed)
   * [CopyQ：剪切板管理，支持图片](#copyq剪切板管理支持图片)
+  * [tuxedo: A fast, keyboard-driven terminal UI for todo.txt.](#tuxedo-a-fast-keyboard-driven-terminal-ui-for-todotxt)
 * [disk](#disk)
   * [dysk：instead df](#dyskinstead-df)
   * [dfc：instead df](#dfcinstead-df)
@@ -630,6 +632,8 @@ fzf -e
 
 ## [zf：zig版fzf](https://github.com/natecraddock/zf)
 
+## [hunk: Review-first terminal diff viewer for agentic coders](https://github.com/modem-dev/hunk)
+
 ## [diff-so-fancy：highlight git diff](https://github.com/so-fancy/diff-so-fancy)
 
 ![image](./Pictures/awesomecli/10.avif)
@@ -720,6 +724,8 @@ ls filename | sad '1' '2' | delta
 ```
 
 ## [CopyQ：剪切板管理，支持图片](https://hluk.github.io/CopyQ/)
+
+## [tuxedo: A fast, keyboard-driven terminal UI for todo.txt.](https://github.com/webstonehq/tuxedo)
 
 # disk
 

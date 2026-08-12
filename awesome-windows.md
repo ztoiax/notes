@@ -10,6 +10,12 @@ tags: []
 * [windows](#windows)
   * [系统](#系统)
   * [系统相关](#系统相关)
+    * [激活破解](#激活破解)
+    * [优化相关](#优化相关)
+    * [终端相关](#终端相关)
+    * [安装与卸载相关包括驱动](#安装与卸载相关包括驱动)
+    * [性能监控、硬件参数调整相关](#性能监控硬件参数调整相关)
+    * [存储相关](#存储相关)
   * [逆向](#逆向)
   * [镜像u盘相关](#镜像u盘相关)
   * [pe系统](#pe系统)
@@ -17,6 +23,7 @@ tags: []
     * [桌面相关](#桌面相关)
     * [文件相关](#文件相关)
       * [文件管理器](#文件管理器)
+      * [清理相关](#清理相关)
     * [编辑器](#编辑器)
     * [终端、ssh终端](#终端ssh终端)
     * [下载器](#下载器)
@@ -32,6 +39,11 @@ tags: []
     * [流行软件相关](#流行软件相关)
     * [追番](#追番)
     * [游戏相关](#游戏相关)
+      * [Steam相关](#steam相关)
+      * [修改器和变速器](#修改器和变速器)
+      * [存档工具](#存档工具)
+      * [模拟器](#模拟器)
+    * [自动化](#自动化)
     * [网络相关](#网络相关)
       * [代理工具](#代理工具)
     * [ai](#ai)
@@ -50,75 +62,94 @@ tags: []
 
 ## 系统相关
 
-- [WSABuilds: Android子系统，可以启用android应用](https://github.com/MustardChef/WSABuilds)
-
-- [Microsoft-Activation-Scripts：破解windows、office](https://github.com/massgravel/Microsoft-Activation-Scripts)
-
-- [SophiApp：微调windows10，windows11](https://github.com/Sophia-Community/SophiApp)
-- [winutil: windows精简工具](https://github.com/ChrisTitusTech/winutil)
-
-- [winget-cli(windows的包管理器)](https://github.com/microsoft/winget-cli)
-
-- [terminal](https://github.com/microsoft/terminal)
-
 - [PowerToys](https://github.com/microsoft/PowerToys)
 
 - [pinginfoview：ping多个主机名和IP](https://www.nirsoft.net/utils/multiple_ping_tool.html)
 
-- [Microsoft-Activation-Scripts（windows激活，类似于kms）](https://github.com/massgravel/Microsoft-Activation-Scripts)
 
 - [Sysinternals(windows internal作者写的工具套件)](https://docs.microsoft.com/en-us/sysinternals/)
 
-- [clink：让 Windows 原生的 cmd.exe 拥有类似 bash 一样强大的自动补全、历史记录、行编辑等功能](https://github.com/chrisant996/clink)
-
 - [Shell：拓展右键](https://github.com/moudey/Shell)
 
-- [wsl2-distro-manager：WSL 发行版图形管理工具。](https://github.com/bostrot/wsl2-distro-manager)
-
-- [wsl-dashboard: 轻量级的 WSL 实例管理面板。这是一款基于 Rust 和 Slint 开发的 Windows WSL 实例管理桌面应用，最小化到托盘仅占用约 10MB 内存。支持一键启动、停止、迁移、导出/克隆实例，以及端口转发、状态监控、网络管理、USB 设备挂载等功能，显著提升在 Windows 上管理 Linux 发行版的效率和体验。](https://github.com/owu/wsl-dashboard)
-
-- [g-helper：一款轻量级的华硕奥创中心替代品。支持无缝切换显卡模式、调节屏幕刷新率、风扇曲线、电源功耗、键盘灯光等功能。](https://github.com/seerge/g-helper)
-
-- [WingetUI：带界面的 Windows 包管理器。该项目是一个为 Windows 常用的命令行包管理工具设计的用户界面，如 Winget、Scoop、Pip、NPM、.NET Tool 等。它的界面友好、设计美观、支持中文，通过它你可以轻松下载、安装、更新和卸载包管理器上发布的任何软件以及其它日常应用，如浏览器、PDF 阅读器等。](https://github.com/marticliment/WingetUI)
-
-- [OFGB：修改 Windows 注册表来禁用 Windows 11 系统自带的各种广告，比如开始菜单、文件资源管理器、锁屏、搜索、任务栏等位置的个性化广告。](https://github.com/xM4ddy/OFGB)
-
 - [OpenArk：恶意程序分析与清理工具](https://github.com/BlackINT3/OpenArk)
-
-- [SteamTools：Steam 工具箱。可以加速steam和github网络](https://github.com/BeyondDimension/SteamTools)
-
-- [Bulk-Crap-Uninstaller：Windows 软件卸载工具，能够快速删除大量不需要的应用程序。它完全免费、开箱即用，支持批量和强制卸载、清理残留文件、检测隐藏或受保护的已注册应用等功能。](https://github.com/Klocman/Bulk-Crap-Uninstaller)
-- [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
 
 
 - [windhawk: Windows 应用的自定义与扩展工具。这是一款专为 Windows 平台设计的软件定制与扩展框架，类似 Windows 版的 LSPosed。它通过全局注入和 Hook 技术，将原本需要手动修改二进制或注册表才能实现的界面与功能调整，做成可一键安装的 mod（插件）。用户可以像安装插件一样，轻松获取、安装和管理各种 mod，实现自定义目标程序的界面、功能和交互方式。](https://github.com/ramensoftware/windhawk)
 
     - [ramensoftware/windhawk-mods: The official collection of Windhawk mods](https://github.com/ramensoftware/windhawk-mods)
 
-- [ZyperWave/ZyperWinOptimize: ZyperWin++是一个轻便的Windows优化工具，适用于Win7-Win11最新版的优化，包括性能优化、服务项优化、垃圾清理等操作，还支持系统激活和Office快速安装。](https://github.com/ZyperWave/ZyperWinOptimize)
-- [Win11Debloat: 这是一个脚本，删除预装的自启动的冗余软件](https://github.com/Raphire/Win11Debloat)
-
 - [zen-desktop: 系统级广告拦截和隐私保护工具，支持 Windows、macOS 和 Linux 三大平台。](https://github.com/ZenPrivacy/zen-desktop)
-- [RyTuneX: 查看状态，有禁用更新等选项，可以卸载软件](https://github.com/rayenghanmi/RyTuneX)
 
 - [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
 - [TaskExplorer: 强大的 Windows 任务管理器。这是一款适用于 Windows 平台的高级任务管理工具，相比系统自带的任务管理器，能够实时显示更详细的进程信息，包括线程堆栈、文件句柄和网络连接等。](https://github.com/DavidXanatos/TaskExplorer)
 - [Sandboxie: 在沙盒中运行软件，避免不安分的软件，但数据会保留在沙盒之中](https://github.com/sandboxie-plus/Sandboxie)
 
-- [GreenDiskVisualizer: 基于Python构建的磁盘空间可视化分析软件，可利用MFT主文件表进行分析，旨在将磁盘内各文件夹所占空间以直观的方式展示出来，帮助使用者更好地了解磁盘空间的使用情况。](https://github.com/Green233233/GreenDiskVisualizer)
+### 激活破解
+
+
+- [Microsoft-Activation-Scripts：破解windows、office](https://github.com/massgravel/Microsoft-Activation-Scripts)
+- [Microsoft-Activation-Scripts（windows激活，类似于kms）](https://github.com/massgravel/Microsoft-Activation-Scripts)
+
+### 优化相关
+
+- [optimizerDuck: 系统优化工具](https://github.com/itsfatduck/optimizerDuck)
 
 - [Winhance: 开箱即用的 Windows 系统优化工具。这是一款基于 C# 开发的 Windows 10/11 一站式系统优化工具，无需重装系统即可定制、精简系统。它集成了软件管理、系统优化、界面定制等功能，支持一键卸载预装应用、性能调优和界面美化，适用于重装系统或新机初始化。](https://github.com/memstechtips/Winhance)
 
-- [TaskExplorer: 更强大的任务管理器](https://github.com/DavidXanatos/TaskExplorer)
-- [wsl2-distro-manager: wsl的管理器](https://github.com/bostrot/wsl2-distro-manager)
+- [ZyperWave/ZyperWinOptimize: ZyperWin++是一个轻便的Windows优化工具，适用于Win7-Win11最新版的优化，包括性能优化、服务项优化、垃圾清理等操作，还支持系统激活和Office快速安装。](https://github.com/ZyperWave/ZyperWinOptimize)
+
+- [Win11Debloat: 这是一个脚本，删除预装的自启动的冗余软件](https://github.com/Raphire/Win11Debloat)
+
+- [SophiApp：微调windows10，windows11](https://github.com/Sophia-Community/SophiApp)
+
+- [winutil: windows精简工具](https://github.com/ChrisTitusTech/winutil)
+
+- [OFGB：修改 Windows 注册表来禁用 Windows 11 系统自带的各种广告，比如开始菜单、文件资源管理器、锁屏、搜索、任务栏等位置的个性化广告。](https://github.com/xM4ddy/OFGB)
+
+### 终端相关
+
+- [terminal](https://github.com/microsoft/terminal)
+
+- [clink：让 Windows 原生的 cmd.exe 拥有类似 bash 一样强大的自动补全、历史记录、行编辑等功能](https://github.com/chrisant996/clink)
+
+- [wsl2-distro-manager：WSL 发行版图形管理工具。](https://github.com/bostrot/wsl2-distro-manager)
+
+- [wsl-dashboard: 轻量级的 WSL 实例管理面板。这是一款基于 Rust 和 Slint 开发的 Windows WSL 实例管理桌面应用，最小化到托盘仅占用约 10MB 内存。支持一键启动、停止、迁移、导出/克隆实例，以及端口转发、状态监控、网络管理、USB 设备挂载等功能，显著提升在 Windows 上管理 Linux 发行版的效率和体验。](https://github.com/owu/wsl-dashboard)
+
+- [winget-cli(windows的包管理器)](https://github.com/microsoft/winget-cli)
+
+- [WSABuilds: Android子系统，可以启用android应用](https://github.com/MustardChef/WSABuilds)
+
+### 安装与卸载相关包括驱动
+
 - [DriverStoreExplorer: 驱动管理工具，支持快速查看、安装、卸载和备份驱动程序。它免安装、体积小，可自动比对驱动版本，识别旧版本或未使用的驱动，方便清理冗余驱动。](https://github.com/lostindark/DriverStoreExplorer)
+
+- [RyTuneX: 查看状态，有禁用更新等选项，可以卸载软件](https://github.com/rayenghanmi/RyTuneX)
+
+- [Bulk-Crap-Uninstaller：Windows 软件卸载工具，能够快速删除大量不需要的应用程序。它完全免费、开箱即用，支持批量和强制卸载、清理残留文件、检测隐藏或受保护的已注册应用等功能。](https://github.com/Klocman/Bulk-Crap-Uninstaller)
+
+- [WingetUI：带界面的 Windows 包管理器。该项目是一个为 Windows 常用的命令行包管理工具设计的用户界面，如 Winget、Scoop、Pip、NPM、.NET Tool 等。它的界面友好、设计美观、支持中文，通过它你可以轻松下载、安装、更新和卸载包管理器上发布的任何软件以及其它日常应用，如浏览器、PDF 阅读器等。](https://github.com/marticliment/WingetUI)
+
+### 性能监控、硬件参数调整相关
 
 - [systeminformer: 免安装的 Windows 监控工具。这是一款免安装的开源 Windows 系统监控与调试工具，可实时查看进程资源占用、网络活动、磁盘读写等信息，支持定位占用文件的进程、查看内核级调用栈和管理系统服务等功能。遇到文件无法删除？一查便知是被哪个进程占着。](https://github.com/winsiderss/systeminformer)
 
+- [FanControl.Releases: This is the release repository for Fan Control, a highly customizable fan controlling software for Windows.](https://github.com/Rem0o/FanControl.Releases)
+
+### 存储相关
+
+- [windirstat: 用几何方块显示文件夹占用多少空间](https://github.com/windirstat/windirstat)
+
+- [GreenDiskVisualizer: 基于Python构建的磁盘空间可视化分析软件，可利用MFT主文件表进行分析，旨在将磁盘内各文件夹所占空间以直观的方式展示出来，帮助使用者更好地了解磁盘空间的使用情况。](https://github.com/Green233233/GreenDiskVisualizer)
+
+- [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
+
 ## 逆向
 
-[OpenArk：逆向工具](https://github.com/BlackINT3/OpenArk)
+- [OpenArk：逆向工具](https://github.com/BlackINT3/OpenArk)
+
 - [RevokeMsgPatcher: :trollface: A hex editor for WeChat/QQ/TIM - PC版微信/QQ/TIM防撤回补丁（我已经看到了，撤回也没用了）](https://github.com/huiyadanli/RevokeMsgPatcher)
+
 - [OpenSpeedy:加速时间.比方说加速植物大战僵尸,但要关闭垂直同步,可以加速网盘下载等等.](https://github.com/Jesae/OpenSpeedy)
 
 ## 镜像u盘相关
@@ -170,6 +201,8 @@ tags: []
 - [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
     - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
 
+- [markeron: 跨平台。在当前桌面上的画标记工具，可以画各种图案。](https://github.com/ifer47/markeron)
+
 ### 文件相关
 
 - [everything-ai-chat: 一个现代化的 Everything 搜索客户端，将 AI 智能与极速本地搜索完美结合。](https://github.com/MaskerPRC/everything-ai-chat)
@@ -181,8 +214,6 @@ tags: []
 - [dupeguru: 查找重复文件](https://github.com/arsenetar/dupeguru)
 
 - [tiez-clipboard: TieZ 是一款基于 Tauri 的跨平台剪贴板管理器。支持剪切板分类、持久化保存、同步，文件局域网传输等功能](https://github.com/jimuzhe/tiez-clipboard)
-
-- [pinkbin: 扫盘 · 看懂 · 删除。磁盘扫描+清理Agent（Tauri 2 + React + Rust）](https://github.com/cccyd2003-qwq/pinkbin)
 
 #### 文件管理器
 
@@ -198,6 +229,15 @@ tags: []
 
 - [filepilot：第三方文件资源管理器](https://filepilot.tech/)
 
+#### 清理相关
+
+- [pinkbin: 扫盘 · 看懂 · 删除。磁盘扫描+清理Agent（Tauri 2 + React + Rust）](https://github.com/cccyd2003-qwq/pinkbin)
+- [viap: Windows应用管理、数据迁移工具。可以将c盘的数据文件等，如浏览器chrome的数据迁移到其他盘，c盘只保留一个快捷方式。但只能使users目录，千万不要迁移其他目录。](https://github.com/Chunyu33/viap)
+
+- [NeatShift: 可以将c盘的数据文件等，如浏览器chrome的数据迁移到其他盘，c盘只保留一个快捷方式。但只能使users目录，千万不要迁移其他目录。](https://github.com/BytexGrid/NeatShift)
+
+- [FreeMove: 可以将c盘的数据文件等，如浏览器chrome的数据迁移到其他盘，c盘只保留一个快捷方式。但只能使users目录，千万不要迁移其他目录。](https://github.com/imDema/FreeMove)
+- [FluentCleaner: 可以代替cclenaer](https://github.com/builtbybel/FluentCleaner)
 
 ### 编辑器
 
@@ -315,6 +355,7 @@ tags: []
 ### 第三方客户端
 
 - [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
+
 ### 流行软件相关
 
 - [WeChatMsg：提取微信聊天记录的工具。导出成 HTML、Word、Excel 和 txt 等格式的文档。导出的 HTML 文档，还原了微信聊天界面，而且包含文本、图片、视频、表情包、语音、文件、转账等记录，导出的数据可用于永久保存、生成年度报告和训练个人聊天助手。](https://github.com/LC044/WeChatMsg)
@@ -327,20 +368,35 @@ tags: []
 
 ### 游戏相关
 
+- [Magpie: 游戏画质超分辨率](https://github.com/Blinue/Magpie)
+
+#### Steam相关
+
+- [SteamTools：Steam 工具箱。可以加速steam和github网络](https://github.com/BeyondDimension/SteamTools)
+
+#### 修改器和变速器
+
+- [ExplorerTabUtility:开箱即用的游戏变速器。这是一款完全免费、开源的 Windows 游戏加速工具。它通过 Hook 系统时间函数，实现对游戏速度的灵活调节，并提供简单易用的界面，兼容多种单机游戏。请勿用于网络游戏，以免导致账号被封！](https://github.com/w4po/ExplorerTabUtility)
+
+- [Game-Cheats-Manager：游戏修改器管理工具](https://github.com/dyang886/Game-Cheats-Manager)
+
+- [Game-Cheats-Manager：搜索各种游戏的修改器](https://github.com/dyang886/Game-Cheats-Manager)
+
+#### 存档工具
+
+- [ludusavi:一款游戏存档备份与恢复软件。自动识别游戏存档路径，一键备份恢复，支持多Steam、GOG、Epic等游戏平台](https://github.com/mtkennerly/ludusavi)
+
+- [game-save-manager: 一个简单的游戏存档管理器](https://github.com/mcthesw/game-save-manager)
+#### 模拟器
+
 - [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)
 
 - [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
 
 - [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
+### 自动化
 
-- [Game-Cheats-Manager：游戏修改器管理工具](https://github.com/dyang886/Game-Cheats-Manager)
-- [ExplorerTabUtility:开箱即用的游戏变速器。这是一款完全免费、开源的 Windows 游戏加速工具。它通过 Hook 系统时间函数，实现对游戏速度的灵活调节，并提供简单易用的界面，兼容多种单机游戏。请勿用于网络游戏，以免导致账号被封！](https://github.com/w4po/ExplorerTabUtility)
-
-- [game-save-manager: 一个简单的游戏存档管理器](https://github.com/mcthesw/game-save-manager)
-
-- [Game-Cheats-Manager：搜索各种游戏的修改器](https://github.com/dyang886/Game-Cheats-Manager)
-
-- [Magpie: 游戏画质超分辨率](https://github.com/Blinue/Magpie)
+- [keymouse-studio: 面向 Windows 的键鼠自动化工具，支持连点、定时点击、键鼠录制、脚本编辑与回放。](https://github.com/Geo-ff/keymouse-studio)
 
 ### 网络相关
 

@@ -64,6 +64,7 @@ tags: []
     * [文字转语音](#文字转语音)
     * [ai作曲（文字生成音乐、图片生成音乐）](#ai作曲文字生成音乐图片生成音乐)
     * [ai声音克隆（tts），可以实现让电影里的演员的英文配音变成国语](#ai声音克隆tts可以实现让电影里的演员的英文配音变成国语)
+  * [ai个人画像的推荐算法](#ai个人画像的推荐算法)
   * [ai工作流UI](#ai工作流ui)
   * [ai数字人](#ai数字人)
   * [ai ocr](#ai-ocr)
@@ -84,6 +85,7 @@ tags: []
     * [claude-code](#claude-code)
     * [编排工具](#编排工具)
   * [ai数据库终端](#ai数据库终端)
+  * [ai安全扫描漏洞](#ai安全扫描漏洞)
   * [ai爬虫和信息提取](#ai爬虫和信息提取)
   * [ai可视化](#ai可视化)
   * [ai金融模型](#ai金融模型)
@@ -990,6 +992,12 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [LuxTTS: A high-quality rapid TTS voice cloning model that reaches speeds of 150x realtime.](https://github.com/ysharma3501/LuxTTS)
 
+- [voicebox: 语音工具箱，收录了7款tts](https://github.com/jamiepine/voicebox)
+
+## ai个人画像的推荐算法
+
+- [OpenBiliClaw: 本地私有的跨平台 AI 内容发现 Agent——先深度理解你，再主动去 B站/小红书/抖音/YouTube/X/知乎/Reddit 找你会喜欢的内容。Local-first AI agent that learns who you are, then hunts content you'll love across platforms.](https://github.com/whiteguo233/OpenBiliClaw)
+
 ## ai工作流UI
 
 - [ComfyUI：文生图、声音克隆（tts）等工作流UI](https://github.com/comfyanonymous/ComfyUI)
@@ -1146,6 +1154,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [crush: The glamourous AI coding agent for your favourite terminal 💘](https://github.com/charmbracelet/crush)
 - [oh-my-pi: ⌥ AI Coding agent for the terminal — hash-anchored edits, optimized tool harness, LSP, Python, browser, subagents, and more](https://github.com/can1357/oh-my-pi)
+- [herdr: the runtime your coding agents live on](https://github.com/herdrdev/herdr)
 
 ### 统计token或减少token
 
@@ -1232,12 +1241,22 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [opencove: Your infinite canvas workspace for agents, tasks, knowledge, and research. An infinite canvas for Claude Code, Codex, terminals, tasks, and notes.](https://github.com/DeadWaveWave/opencove)
 
+- [herdr: agent终端，类似tmux。](https://github.com/ogulcancelik/herdr)
+
+- [cmux-gtk](https://github.com/douglas/cmux-gtk)
+
+- [orca: 跨平台agent终端](https://github.com/stablyai/orca)
+
 ## ai数据库终端
 
 - [aliyun/rdsai-cli: RDSAI CLI is a next-generation, AI-powered RDS CLI that transforms how you interact with the databasea](https://github.com/aliyun/rdsai-cli)
     - [RDSAI-CLI - 用AI重塑数据库终端CLI体验](https://mp.weixin.qq.com/s/5Vn-D52xMMoNwQtNwb_dMg)
 
 - [pg-aiguide: MCP server and Claude plugin for Postgres skills and documentation. Helps AI coding tools generate better PostgreSQL code.](https://github.com/timescale/pg-aiguide)
+
+## ai安全扫描漏洞
+
+- [codex-security: OpenAI 官方推出的命令行工具，用来扫描代码漏洞，基于 Codex。](https://github.com/openai/codex-security)
 
 ## ai爬虫和信息提取
 

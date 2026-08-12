@@ -10,6 +10,7 @@ tags: []
 * [操作系统](#操作系统)
   * [KODI相关的电视操作系统](#kodi相关的电视操作系统)
   * [安卓](#安卓)
+  * [nas](#nas)
 * [file](#file)
   * [文件传输](#文件传输)
   * [文件管理器](#文件管理器)
@@ -148,6 +149,12 @@ tags: []
     git clone https://github.com/casualsnek/waydroid_script
     ```
 
+## nas
+
+- [飞牛 fnOS - 免费 NAS 操作系统](https://fnnas.com/)
+
+- [GEAK OS - Smart NAS Operating System | AI-Powered Private Cloud](https://www.geakos.com/)
+
 # file
 
 ## 文件传输
@@ -246,6 +253,8 @@ tags: []
 
 - [PeaZip: ：免费开源的文件压缩解压工具。这是一款免费、开源、跨平台的文件压缩和解压工具，支持超过 200 种压缩格式（7Z、ZIP、RAR、TAR、ISO、Zstd），具备文件压缩、解压、加密、分卷、校验、格式转换和批量操作等功能。支持linux、windows、macos](https://github.com/peazip/PeaZip)
 
+- [Arqiver: qt的压缩解压工具](https://github.com/tsujan/Arqiver)
+
 - [dupeguru: 查找重复文件](https://github.com/arsenetar/dupeguru)
 
 # 多媒体相关
@@ -301,6 +310,8 @@ tags: []
 - [Tixati：跨平台的下载器，可以代替迅雷](https://tixati.com/)
 
 - [Ghost-Downloader-3: A cross-platform QUIC AI-boost fluent-design multi-threaded downloader built with Python.](https://github.com/XiaoYouChR/Ghost-Downloader-3)
+
+- [FluxDown: Rust 驱动的多协议下载管理器，支持 HTTP/FTP/BitTorrent 磁力链接及 HLS/DASH 流媒体，智能多线程加速与浏览器无缝集成。精美界面，极致性能，永久免费，零广告。](https://github.com/zerx-lab/FluxDown)
 
 - [增强版qbittorrent](https://github.com/c0re100/qBittorrent-Enhanced-Edition)
     - [trackerslist](https://trackerslist.com/all.txt)
@@ -477,6 +488,8 @@ tags: []
 - [Pebble: A small yet beautiful email client.](https://github.com/QingJ01/Pebble)
 
 ## 阅读和笔记相关
+
+- [edgeever: Serverless, 100% free, and open-source Evernote alternative on Cloudflare with native MCP | 无需服务器、0费用、原生支持 AI Agent 的开源自托管『印象笔记』](https://github.com/tianma-if/edgeever)
 
 ### 阅读器
 
@@ -687,6 +700,8 @@ tags: []
 - [EcoPaste: 🎉跨平台的剪贴板管理工具](https://github.com/EcoPasteHub/EcoPaste)
 
 - [kando: 跨平台的饼式鼠标快捷键](https://github.com/kando-menu/kando)
+
+- [markeron: 跨平台。在当前桌面上的画标记工具，可以画各种图案。](https://github.com/ifer47/markeron)
 
 # 通信
 

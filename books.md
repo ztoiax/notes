@@ -70,7 +70,7 @@ tags: []
   * [数学](#数学)
   * [英语](#英语)
   * [文档](#文档)
-  * [健康](#健康)
+  * [健康和健身](#健康和健身)
   * [gps](#gps)
   * [视频](#视频)
 * [学术期刊/学会](#学术期刊学会)
@@ -90,7 +90,7 @@ tags: []
   * [科技](#科技)
   * [地理和气象](#地理和气象)
   * [运动](#运动)
-  * [健康](#健康-1)
+  * [健康](#健康)
   * [食品和食品安全](#食品和食品安全)
   * [美食探店](#美食探店)
   * [旅游](#旅游)
@@ -1024,9 +1024,11 @@ tags: []
 
 - [How Google, Twitter, and Spotify built a culture of documentation](https://blog.doctave.com/2021/09/07/how-google-twitter-and-spotify-build-culture-of-documentation.html)
 
-## 健康
+## 健康和健身
 
 - [人体系统调优不完全指南](https://github.com/zijie0/HumanSystemOptimization)
+
+- [exercises-dataset: 健身动态图](https://github.com/hasaneyldrm/exercises-dataset)
 
 ## gps
 
@@ -2216,6 +2218,7 @@ RabbitMQ实战指南》作者
 
     - 人民音乐杂志
     - 杨燕迪音乐人文笔录
+    - 黄钟-武汉音乐学院
     - 音乐研究
     - 中国音乐学
     - 音乐艺术
@@ -2300,9 +2303,6 @@ RabbitMQ实战指南》作者
     - [小骆爱空谈](https://space.bilibili.com/3494364386953276/upload/video)
         > 对国内哲学老师个人和他们之间的争论进行评论
 
-    - [JulianValenmont](https://space.bilibili.com/438331061)
-        > 分析哲学
-
 - 微信公众号
 
     - 哲学研究
@@ -2372,6 +2372,8 @@ RabbitMQ实战指南》作者
     - 天行LAB
         > 北京师范大学天行教育哲学研究院
 
+    - 江海学刊
+        > 江苏省社会科学院
     - 诠释学书评
     - 公民哲学
     - 复旦哲学思想
@@ -2454,6 +2456,8 @@ RabbitMQ实战指南》作者
         - 东方哲学践行
             > 王志成
         - 花迹绽放之旅
+        - 白彤东
+            > 研究韩非
 
     - 民间大众的哲学评论
         - 陈直Dharma
@@ -3092,6 +3096,8 @@ RabbitMQ实战指南》作者
 
     - [咨云君](https://space.bilibili.com/1064527785)
         > 企业金融犯罪等
+
+    - [认知便利店M](https://space.bilibili.com/385047828)
 
     - [路口大爷](https://space.bilibili.com/1908067732)
 
