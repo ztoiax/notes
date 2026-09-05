@@ -47,6 +47,7 @@ tags: []
     * [diffnav：增强git diff功能](#diffnav增强git-diff功能)
     * [filter-repo-rs: 一个 Rust 语言写的工具，用来改写 Git 仓库历史，比如不小心提交了敏感信息，可以用它来修改提交历史。](#filter-repo-rs-一个-rust-语言写的工具用来改写-git-仓库历史比如不小心提交了敏感信息可以用它来修改提交历史)
     * [lazygit：git tui](#lazygitgit-tui)
+    * [gitu: A TUI Git client inspired by Magit](#gitu-a-tui-git-client-inspired-by-magit)
     * [gitui](#gitui)
     * [bit：instead git](#bitinstead-git)
     * [tig：git log](#tiggit-log)
@@ -60,6 +61,7 @@ tags: []
     * [worktrunk: Worktrunk is a CLI for Git worktree management, designed for parallel AI agent workflows](#worktrunk-worktrunk-is-a-cli-for-git-worktree-management-designed-for-parallel-ai-agent-workflows)
     * [sem: Semantic version control => entity-level diffs, blame, and impact analysis on top of git. 28 languages via tree-sitter. Built for coding agents.](#sem-semantic-version-control--entity-level-diffs-blame-and-impact-analysis-on-top-of-git-28-languages-via-tree-sitter-built-for-coding-agents)
     * [gitfolio: 一个类似 Gitea 的 Git 仓库管理系统，采用 Go 语言开发。](#gitfolio-一个类似-gitea-的-git-仓库管理系统采用-go-语言开发)
+    * [git-Agent：开源的跨平台 Git 桌面客户端，将工作区、提交历史、差异审查、三方合并放在一个窗口，支持 AI 功能。](#git-agent开源的跨平台-git-桌面客户端将工作区提交历史差异审查三方合并放在一个窗口支持-ai-功能)
 * [其他版本控制系统](#其他版本控制系统)
   * [repo：google的git](#repogoogle的git)
   * [VFSForGit：微软的git](#vfsforgit微软的git)
@@ -932,7 +934,10 @@ git diff | diffnav
 
 ### [lazygit：git tui](https://github.com/jesseduffield/lazygit)
 
+
 ![image](./Pictures/git/lazygit.avif)
+
+### [gitu: A TUI Git client inspired by Magit](https://github.com/altsem/gitu)
 
 ### [gitui](https://github.com/extrawurst/gitui)
 
@@ -967,6 +972,8 @@ git diff | diffnav
 ### [sem: Semantic version control => entity-level diffs, blame, and impact analysis on top of git. 28 languages via tree-sitter. Built for coding agents.](https://github.com/Ataraxy-Labs/sem)
 
 ### [gitfolio: 一个类似 Gitea 的 Git 仓库管理系统，采用 Go 语言开发。](https://github.com/azhai/gitfolio)
+
+### [git-Agent：开源的跨平台 Git 桌面客户端，将工作区、提交历史、差异审查、三方合并放在一个窗口，支持 AI 功能。](https://github.com/adoin/git-Agent)
 
 # 其他版本控制系统
 ## repo：google的git

@@ -98,6 +98,7 @@ tags: []
       * [ClawBot 插件](#clawbot-插件)
       * [云端openclaw](#云端openclaw)
     * [hermes-agent: The agent that grows with you](#hermes-agent-the-agent-that-grows-with-you)
+    * [deepseek-harness: DeepSeek Harness: Everything is a Plugin.](#deepseek-harness-deepseek-harness-everything-is-a-plugin)
   * [MCP](#mcp)
   * [A2A](#a2a)
   * [Claude skill](#claude-skill)
@@ -945,6 +946,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 ## ai语音、音乐
 
 - [UVR5：分离人声和背景音乐](https://github.com/Anjok07/ultimatevocalremovergui)
+- [SmartSub: 视频转字幕、字幕翻译、AI 配音与声音克隆、字幕烧录——免费开源的一站式桌面工具。基于 Whisper / FunASR 等本地模型离线语音转文字，批量处理 + 全平台 GPU 加速，跨 Windows / macOS / Linux。Free, open-source desktop app to generate, translate, dub & burn video subtitles — local Whisper speech-to-text, AI dubbing & voice cloning, offline, GPU-accelerated.](https://github.com/buxuku/smartsub)
 
 ### 语音转文字
 
@@ -1083,6 +1085,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [camofox-browser: Stealth headless browser for AI agents — bypass Cloudflare, bot detection, and anti-scraping. Drop-in Puppeteer/Playwright replacement. · GitHub](https://github.com/jo-inc/camofox-browser)
 
+- [cloudflare/cloudflare-os: Agent workspace built on Cloudflare Workers for creating documents, building apps, and running agents with your company’s context and systems.虽然名字里面有 OS，但其实是在浏览器里使用。](https://github.com/cloudflare/cloudflare-os)
+
 ## ai搜索
 
 - [scira：原名为MiniPerplx](https://github.com/zaidmukaddam/scira)
@@ -1153,8 +1157,11 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [Chaterm:带有 AI 功能的智能终端工具，可以用自然语言完成命令行操作。 Open source AI terminal and SSH Client for EC2, Database and Kubernetes.](https://github.com/chaterm/Chaterm)
 
 - [crush: The glamourous AI coding agent for your favourite terminal 💘](https://github.com/charmbracelet/crush)
+
 - [oh-my-pi: ⌥ AI Coding agent for the terminal — hash-anchored edits, optimized tool harness, LSP, Python, browser, subagents, and more](https://github.com/can1357/oh-my-pi)
+
 - [herdr: the runtime your coding agents live on](https://github.com/herdrdev/herdr)
+- [tty7: A terminal workbench in pure Rust: shells, persistent sessions, SSH, coding agents. GPU-rendered on Zed's gpui, VT core from Alacritty.](https://github.com/l0ng-ai/tty7)
 
 ### 统计token或减少token
 
@@ -1208,6 +1215,7 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
     ```
 
 - [GLM-4.5: 智谱的](https://github.com/zai-org/GLM-4.5)
+- [ZCode：智谱的](https://zcode.z.ai/en)
 
 - [Seed-Coder: 字节的豆包](https://github.com/ByteDance-Seed/Seed-Coder)
     - [国产大模型接入 Claude Code 教程：以 Doubao-Seed-Code 为例](https://mp.weixin.qq.com/s/ptRFIddHT3eLLmQVPzOx_g)
@@ -1232,6 +1240,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [DeepSeek-TUI: Coding agent for DeepSeek models that runs in your terminal](https://github.com/Hmbown/DeepSeek-TUI)
 
 - [DeepSeek-Reasonix: DeepSeek-native AI coding agent for your terminal. Engineered around prefix-cache stability — leave it running.比deepseek-tui更能减少token](https://github.com/esengine/DeepSeek-Reasonix)
+
+- [jcode: The most RAM efficient harness](https://github.com/1jehuang/jcode)
 
 ### 编排工具
 
@@ -1365,6 +1375,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [ArkClaw：字节的](https://console.volcengine.com/auth/login?redirectURI=%2Fark%2Fclaw)
 
 ### [hermes-agent: The agent that grows with you](https://github.com/NousResearch/hermes-agent)
+
+### [deepseek-harness: DeepSeek Harness: Everything is a Plugin.](https://github.com/deepseek-ai/deepseek-harness)
 
 ## MCP
 

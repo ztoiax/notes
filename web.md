@@ -100,6 +100,8 @@ tags: []
 
 - [kiss-translator: 开源沉浸式翻译](https://github.com/fishjar/kiss-translator)
 
+- [nextai-translator: 基于 ChatGPT API 的划词翻译浏览器插件和跨平台桌面端应用 - Browser extension and cross-platform desktop application for translation based on ChatGPT API.](https://github.com/nextai-translator/nextai-translator)
+
 - [hoverzoom: 鼠标悬浮放大图片和视频](https://github.com/extesy/hoverzoom)
 
 - [opendia: 浏览器插件，通过大模型控制浏览器。支持本地大模型](https://github.com/aaronjmars/opendia?tab=readme-ov-file)
@@ -135,6 +137,8 @@ tags: []
 - [pakku.js: 拯救 B 站弹幕体验的浏览器插件。这是一款专为提升哔哩哔哩网站弹幕体验的浏览器插件，能够自动合并重复或相似的弹幕内容，还你清爽的弹幕视频体验。](https://github.com/xmcp/pakku.js)
 
 - [TabulaBili: 通过减少基于账号登录态和浏览历史的个性化推荐，让B站首页内容变得更泛化、更随机、更像公共热门流。](https://github.com/tjsky/TabulaBili)
+
+- [blob-downloader: 用来将网页的 blob 链接后面的视频和文件导出下载。](https://github.com/aeroxy/blob-downloader)
 
 ## 命令行cli
 

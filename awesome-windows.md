@@ -26,6 +26,7 @@ tags: []
       * [清理相关](#清理相关)
     * [编辑器](#编辑器)
     * [终端、ssh终端](#终端ssh终端)
+    * [远程相关](#远程相关)
     * [下载器](#下载器)
       * [支持下载各种平台的下载器](#支持下载各种平台的下载器)
     * [手机与电脑交互](#手机与电脑交互)
@@ -46,6 +47,7 @@ tags: []
     * [自动化](#自动化)
     * [网络相关](#网络相关)
       * [代理工具](#代理工具)
+        * [clash](#clash)
     * [ai](#ai)
     * [其他](#其他-1)
 
@@ -135,6 +137,11 @@ tags: []
 - [systeminformer: 免安装的 Windows 监控工具。这是一款免安装的开源 Windows 系统监控与调试工具，可实时查看进程资源占用、网络活动、磁盘读写等信息，支持定位占用文件的进程、查看内核级调用栈和管理系统服务等功能。遇到文件无法删除？一查便知是被哪个进程占着。](https://github.com/winsiderss/systeminformer)
 
 - [FanControl.Releases: This is the release repository for Fan Control, a highly customizable fan controlling software for Windows.](https://github.com/Rem0o/FanControl.Releases)
+- [NexBox: NexBox 是一款专为现代玩家打造的游戏工具箱，集成了硬件监控、系统优化、游戏辅助等多种实用功能，帮助你获得更流畅的游戏体验。 其核心功能有：硬件监控 系统优化 辅助准心 监控悬浮框 显示器滤镜 DLSS模型修改 第三方工具](https://github.com/MuLiuSaMa/NexBox)
+
+- [tb: 图吧工具箱和卡硬工具箱](https://github.com/AdingApkgg/tb)
+    - [图吧工具箱 - DIY爱好者的必备工具合集](https://www.tbtool.cn/)
+    - [卡硬工具](https://tb.saop.cc/kb/)
 
 ### 存储相关
 
@@ -184,7 +191,7 @@ tags: []
 
 - [glazewm：平铺窗口管理器，类似i3](https://github.com/glzr-io/glazewm)
 
-- [FileConverter：右键轻松转换和压缩文件的工具。](https://github.com/Tichau/FileConverter)
+- [FileConverter：右键轻松转换文件格式和压缩文件的工具。](https://github.com/Tichau/FileConverter)
 
 - [GestureSign：触控板手势](https://github.com/TransposonY/GestureSign)
 
@@ -202,6 +209,8 @@ tags: []
     - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
 
 - [markeron: 跨平台。在当前桌面上的画标记工具，可以画各种图案。](https://github.com/ifer47/markeron)
+
+- [convenient_window_free：类似macos的某个功能，可以为软件窗口的边缘设置操作，也可以将软件贴边隐藏在屏幕的边缘。还包含鼠标手势操作等功能。](https://github.com/ximizhou/convenient_window_free)
 
 ### 文件相关
 
@@ -232,12 +241,17 @@ tags: []
 #### 清理相关
 
 - [pinkbin: 扫盘 · 看懂 · 删除。磁盘扫描+清理Agent（Tauri 2 + React + Rust）](https://github.com/cccyd2003-qwq/pinkbin)
+- [disk-butler: C盘管家，将磁盘占用画成彩色拼图。 - 给普通人的 Windows 磁盘与内存维护助手 (Tauri 2 + React)](https://github.com/YGTQ3/disk-butler/tree/main)
+
 - [viap: Windows应用管理、数据迁移工具。可以将c盘的数据文件等，如浏览器chrome的数据迁移到其他盘，c盘只保留一个快捷方式。但只能使users目录，千万不要迁移其他目录。](https://github.com/Chunyu33/viap)
 
 - [NeatShift: 可以将c盘的数据文件等，如浏览器chrome的数据迁移到其他盘，c盘只保留一个快捷方式。但只能使users目录，千万不要迁移其他目录。](https://github.com/BytexGrid/NeatShift)
 
 - [FreeMove: 可以将c盘的数据文件等，如浏览器chrome的数据迁移到其他盘，c盘只保留一个快捷方式。但只能使users目录，千万不要迁移其他目录。](https://github.com/imDema/FreeMove)
 - [FluentCleaner: 可以代替cclenaer](https://github.com/builtbybel/FluentCleaner)
+
+- [light-c: A free, minimalist, lightweight, and high-performance C-drive cleanup tool.](https://github.com/Chunyu33/light-c)
+- [RogueCleaner: 流氓软件克星：扫描和清理 Windows 流氓右键菜单、自启动、计划任务、服务、浏览器插件和文件关联残留](https://github.com/aakk007/RogueCleaner)
 
 ### 编辑器
 
@@ -272,6 +286,14 @@ tags: []
     - 支持将命令发送到多个会话
     - 支持 Find Everywhere 快速跳转
     - 支持数据加密
+
+### 远程相关
+
+- [crossdesk: 一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。](https://github.com/kunkundi/crossdesk)
+
+- [rustdesk：跨平台远程控制](https://github.com/rustdesk/rustdesk)
+
+- [SubnetDesk: LAN-only remote desktop based on RustDesk](https://github.com/zibo-chen/SubnetDesk)
 
 ### 下载器
 
@@ -313,12 +335,17 @@ tags: []
 
 #### 播放器
 
+- [mpv-Yaozhi: mpv-Yaozhi 自制整合包 -重构mpv播放内核 - 自制 UI 优化、可视化配置脚本、弹幕、中文 stats](https://github.com/Yaozhil/mpv-Yaozhi)
+
 - [NipaPlay-Reload: NipaPlay-Reload 是一个现代化的跨平台本地视频播放器，支持 Windows、macOS、Linux、Android 和 iOS。集成了弹幕显示、多格式字幕支持、多音频轨道切换，新番查看等功能，支持挂载Emby/Jellyfin媒体库。采用 Flutter 开发，提供统一的用户体验。](https://github.com/MCDFsteve/NipaPlay-Reload)
 
 - [Screenbox：视频播放器](https://github.com/huynhsontung/Screenbox)
 - [biu: Bilibili音乐播放器](https://github.com/wood3n/biu)
 
 - [jellyfin-desktop: Jellyfin Desktop Client](https://github.com/jellyfin/jellyfin-desktop)
+
+- [soia: High-performance cross-platform media player with HDR/Dolby Vision, WebDAV/DLNA/SMB streaming, dual subtitles, and browser remote control.](https://github.com/FengZeng/soia/#data-storage#1)
+- [Stremio-Kai: A refined all-in-one Stremio build for premium viewing: modern UI with enhanced metadata, intro skipping, smart automation and optional enhancements—all optimized for modest hardware.](https://github.com/allecsc/Stremio-Kai)
 
 #### 字幕
 
@@ -346,15 +373,28 @@ tags: []
 
 - [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
 
+- [Stremio/stremio-web: Stremio - Freedom to Stream](https://github.com/Stremio/stremio-web)
+
+- [bilicast：将浏览器的b站视频投屏](https://github.com/jianzhoujz/bilicast)
+
 ### 音乐
 
 - [go-music-dl: 跨平台的一个基于 Go 语言的全网音乐搜索与下载工具。支持 Web 界面、TUI 终端 和 桌面应用 三种使用模式。内置网易云、QQ、酷狗、Bilibili、汽水音乐等 10+ 个主流平台，支持多源并发搜索与无损音质解析。music-dl交流群：1074285005](https://github.com/guohuiyuan/go-music-dl)
 
 - [CeruMusic: 跨平台。Ceru Music 是基于 Electron 和 Vue 开发的跨平台桌面音乐播放器工具，借鉴洛雪音乐插件思想，提供插件运行框架与播放功能，不直接存储、提供任何音乐源文件。用户需通过自行选择、安装合规插件获取音乐相关数据，项目旨在为开发者提供桌面应用技术实践与学习案例，为用户提供合规的音乐播放工具框架。](https://github.com/timeshiftsauce/CeruMusic)
 
+- [harmonoid: 🎵 Plays & manages your music library. Looks beautiful & juicy. Available for Windows, GNU/Linux, macOS, Android & iOS.](https://github.com/harmonoid/harmonoid)
+
+- [FeelUOwn: 跨平台音乐播放器支持yotube、bilibili、网易云、qq音乐等插件](https://github.com/feeluown/FeelUOwn)
+
 ### 第三方客户端
 
 - [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
+
+- [PiliPlus: 使用Flutter开发的BiliBili第三方客户端](https://github.com/bggRGjQaUbCoE/PiliPlus)
+    - [PiliNara: 基于PiliPlus进行修改的,做了一些自用的改动.](https://github.com/nlsdt/PiliNara)
+
+- [wiliwili: 第三方B站客户端，目前可以运行在PC全平台、PSVita、PS4 、Xbox 和 Nintendo Switch上](https://github.com/xfangfang/wiliwili)
 
 ### 流行软件相关
 
@@ -368,7 +408,7 @@ tags: []
 
 ### 游戏相关
 
-- [Magpie: 游戏画质超分辨率](https://github.com/Blinue/Magpie)
+- [Magpie: 可以为不同的软件窗口设置不同的算法。因此可以为游戏添加dlss等功能，但这只是画面层面的而不是游戏引擎层面的。同样也可以为视频添加dlss等功能](https://github.com/Blinue/Magpie)
 
 #### Steam相关
 
@@ -402,9 +442,19 @@ tags: []
 
 #### 代理工具
 
-- [clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience](https://github.com/clash-verge-rev/clash-verge-rev)
+- [v2rayN: A GUI client for Windows, Linux and macOS, support Xray and sing-box and others](https://github.com/2dust/v2rayN)
 
 - [hiddify-app: Multi-platform auto-proxy client, supporting Sing-box, X-ray, TUIC, Hysteria, Reality, Trojan, SSH etc. It’s an open-source, secure and ad-free.](https://github.com/hiddify/hiddify-app)
+
+- [karing: Simple & Powerful proxy utility, Support routing rules for clash/sing-box](https://github.com/KaringX/karing)
+
+##### clash
+
+- [clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience](https://github.com/clash-verge-rev/clash-verge-rev)
+
+- [FlClash: A multi-platform proxy client based on ClashMeta,simple and easy to use, open-source and ad-free.](https://github.com/chen08209/FlClash)
+
+- [clashmi: Clash Mihomo for iOS/MacOS/Android/Windows/Linux](https://github.com/KaringX/clashmi)
 
 ### ai
 
@@ -435,7 +485,6 @@ tags: []
 
 - [Cap: 录屏](https://github.com/CapSoftware/Cap)
 
-- [crossdesk: 一款支持 Web 客户端访问的轻量级跨平台远程桌面软件。](https://github.com/kunkundi/crossdesk)
 - [MrRSS: A modern, cross-platform desktop RSS reader. 一个现代化、跨平台的 RSS 阅读器.](https://github.com/WCY-dt/MrRSS)
 
 - [keepassxc: 跨平台密码管理器](https://github.com/keepassxreboot/keepassxc)

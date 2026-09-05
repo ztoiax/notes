@@ -12,6 +12,7 @@ tags: []
     * [impala: 🛜 TUI for managing wifi on Linux](#impala--tui-for-managing-wifi-on-linux)
     * [linux-wifi-hotspot](#linux-wifi-hotspot)
   * [代理工具](#代理工具)
+    * [clash](#clash)
   * [综合工具](#综合工具)
     * [nmcli](#nmcli)
       * [交互模式](#交互模式)
@@ -71,6 +72,7 @@ tags: []
       * [chisel：在 HTTP 通信上建立 TCP/UDP 隧道](#chisel在-http-通信上建立-tcpudp-隧道)
       * [Easytier：异地组网](#easytier异地组网)
       * [vnt: An efficient VPN. 简便高效的异地组网、内网穿透工具](#vnt-an-efficient-vpn-简便高效的异地组网内网穿透工具)
+      * [cloudflare/cloudflared: Cloudflare Tunnel client。在内网的任何设备上运行它，它会主动向Cloudflare的边缘节点发起一条加密连接，从而在外网设备和Cloudflare网络之间架起一条专属的“秘密管道”。](#cloudflarecloudflared-cloudflare-tunnel-client在内网的任何设备上运行它它会主动向cloudflare的边缘节点发起一条加密连接从而在外网设备和cloudflare网络之间架起一条专属的秘密管道)
     * [下载工具](#下载工具)
       * [aim: 支持断点下载](#aim-支持断点下载)
   * [表示层](#表示层)
@@ -196,12 +198,23 @@ tags: []
 ## 代理工具
 
 - [sing-box: The universal proxy platform](https://github.com/SagerNet/sing-box)
+    - [sing-box-dashboard: Web dashboard for sing-box](https://github.com/SagerNet/sing-box-dashboard)
 
-- [clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience](https://github.com/clash-verge-rev/clash-verge-rev)
+    - [s-ui: An advanced Web Panel • Built for SagerNet/Sing-Box](https://github.com/alireza0/s-ui)
 
 - [hiddify-app: Multi-platform auto-proxy client, supporting Sing-box, X-ray, TUIC, Hysteria, Reality, Trojan, SSH etc. It’s an open-source, secure and ad-free.](https://github.com/hiddify/hiddify-app)
 
-- [s-ui: An advanced Web Panel • Built for SagerNet/Sing-Box](https://github.com/alireza0/s-ui)
+- [v2rayN: A GUI client for Windows, Linux and macOS, support Xray and sing-box and others](https://github.com/2dust/v2rayN)
+
+- [karing: Simple & Powerful proxy utility, Support routing rules for clash/sing-box](https://github.com/KaringX/karing)
+
+### clash
+
+- [clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience](https://github.com/clash-verge-rev/clash-verge-rev)
+
+- [FlClash: A multi-platform proxy client based on ClashMeta,simple and easy to use, open-source and ad-free.](https://github.com/chen08209/FlClash)
+
+- [clashmi: Clash Mihomo for iOS/MacOS/Android/Windows/Linux](https://github.com/KaringX/clashmi)
 
 ## 综合工具
 
@@ -1084,6 +1097,8 @@ sudo tailscale file get .
     ```
 
 #### [vnt: An efficient VPN. 简便高效的异地组网、内网穿透工具](https://github.com/vnt-dev/vnt)
+
+#### [cloudflare/cloudflared: Cloudflare Tunnel client。在内网的任何设备上运行它，它会主动向Cloudflare的边缘节点发起一条加密连接，从而在外网设备和Cloudflare网络之间架起一条专属的“秘密管道”。](https://github.com/cloudflare/cloudflared)
 
 ### 下载工具
 

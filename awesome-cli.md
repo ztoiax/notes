@@ -310,6 +310,7 @@ tags: []
   * [rtv(reddit cli)](#rtvreddit-cli)
   * [rainbowstream(twitter)](#rainbowstreamtwitter)
   * [haxor-news(hacknew)](#haxor-newshacknew)
+  * [zlib: A command-line tool for Z-Library. Search, download, send to Kindle, and integrate with AI agents.](#zlib-a-command-line-tool-for-z-library-search-download-send-to-kindle-and-integrate-with-ai-agents)
 * [reference](#reference)
 
 <!-- mtoc-end -->
@@ -1725,6 +1726,7 @@ WebUI started, visit http://localhost:8080
 
 ## [haxor-news(hacknew)](https://github.com/donnemartin/haxor-news)
 
+## [zlib: A command-line tool for Z-Library. Search, download, send to Kindle, and integrate with AI agents.](https://github.com/heartleo/zlib)
 
 # reference
 

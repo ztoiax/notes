@@ -25,8 +25,7 @@ tags: []
       * [qt](#qt)
       * [gtk](#gtk)
       * [caesium-image-compressor：图片压缩。配备了实时预览和批量处理的功能](#caesium-image-compressor图片压缩配备了实时预览和批量处理的功能)
-    * [digikam：本地图片管理](#digikam本地图片管理)
-    * [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](#afilmory-本地图片管理modern-photo-gallery-for-photographers-with-s3github-sync-exif-details-maps-and-a-webgl-viewer)
+    * [本地图片管理](#本地图片管理)
     * [截图](#截图)
     * [录屏](#录屏)
     * [ocr截图识别文字](#ocr截图识别文字)
@@ -35,6 +34,7 @@ tags: []
     * [其他](#其他-1)
   * [视频](#视频)
     * [播放器](#播放器)
+    * [服务](#服务)
     * [ai提升视频质量](#ai提升视频质量)
     * [剪辑](#剪辑)
     * [其他](#其他-2)
@@ -352,9 +352,14 @@ tags: []
 
 - [shotwell: Read-only mirror of https://gitlab.gnome.org/GNOME/shotwell](https://github.com/GNOME/shotwell)
 
-### [digikam：本地图片管理](https://www.digikam.org/)
+### 本地图片管理
 
-### [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](https://github.com/Afilmory/afilmory)
+- [lap: An offline-first photo manager for large local libraries](https://github.com/julyx10/lap)
+
+- [di管理gikam：本地图片管理](https://www.digikam.org/)
+
+- [afilmory: 本地图片管理。Modern photo gallery for photographers, with S3/GitHub sync, EXIF details, maps, and a WebGL viewer.](https://github.com/Afilmory/afilmory)
+
 ### 截图
 
 - [deepin-screen-recorder：deepin的截图软件。支持录屏，长截图](https://github.com/linuxdeepin/deepin-screen-recorder)
@@ -404,15 +409,47 @@ tags: []
 
 ### 播放器
 
+- [ModernZ: mpv的皮肤](https://github.com/Samillion/ModernZ)
+
 - [jellyfin-desktop: Jellyfin Desktop Client](https://github.com/jellyfin/jellyfin-desktop)
 
-- [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
+- [tsukimi: A simple third-party Jellyfin client for Linux](https://github.com/tsukinaha/tsukimi)
 
-- [NextPlayerCloud：neoplayer将 OpenList 与 MPV 播放器完美结合的本地播放解决方案，支持挂载各种云盘（阿里云盘、OneDrive、Google Drive、WebDAV、SMB 等）](https://github.com/NextPlayerCloud/NextPlayerCloud)
+- [Cinetry: 开源版网易爆米花。Cinetry音视频播放器，Jellyfin、Emby、CMS、IPTV、Webdav、Alist、Openlist、Subsonic、Navidrom、GD音乐台、audiobookshelf、道理鱼、飞牛影视数据导入，服务器一键切换，多服务器数据聚合搜索，支持Andorid、iOS、Windows、macOS、Linux、TV，不扫库，纯本地客户端](https://github.com/gstory0404/Cinetry)
 
 - [NipaPlay-Reload: NipaPlay-Reload 是一个现代化的跨平台本地视频播放器，支持 Windows、macOS、Linux、Android 和 iOS。集成了弹幕显示、多格式字幕支持、多音频轨道切换，新番查看等功能，支持挂载Emby/Jellyfin媒体库。采用 Flutter 开发，提供统一的用户体验。](https://github.com/MCDFsteve/NipaPlay-Reload)
 
 - [FreeBox: TVBox电脑版/姊妹软件，致力于TVBox功能和生态的跨平台扩展](https://github.com/kknifer7/FreeBox)
+
+- [soia: High-performance cross-platform media player with HDR/Dolby Vision, WebDAV/DLNA/SMB streaming, dual subtitles, and browser remote control.](https://github.com/FengZeng/soia/#data-storage#1)
+
+### 服务
+
+- [go2tv: 投屏到DLNA电视。甚至还有漂亮的web界面](https://github.com/alexballas/go2tv)
+    ```sh
+    # 命令行投屏
+    go2tv -l
+    go2tv -v test.mp4 -t http://192.168.1.35:16654
+
+    # 启用web
+    go2tv -server -media-root .
+    ```
+
+- [movcaster: 投屏到DLNA电视](https://github.com/juliocesar/movcaster)
+
+- [castor: 投屏到电视，支持web的视频](https://github.com/stupside/castor)
+
+- [bilicast：将浏览器的b站视频投屏](https://github.com/jianzhoujz/bilicast)
+
+- [Macast: 接受DLNA的投屏，然后用mpv播放](https://github.com/xfangfang/Macast)
+
+- [minidlna: MiniDLNA (aka ReadyDLNA) is server software with the aim of being fully compliant with DLNA/UPnP-AV clients. It is developed by a NETGEAR employee for the ReadyNAS product line](https://github.com/azatoth/minidlna)
+
+- [vuio: DLNA Media Server written in Rust, x64/ARM, Linux, Mac, Windows and Docker support](https://github.com/vuiodev/vuio)
+
+- [fluxcast: 屏幕镜像](https://github.com/IlyaP358/fluxcast)
+
+- [GNOME/gnome-network-displays: 屏幕镜像](https://github.com/GNOME/gnome-network-displays)
 
 ### ai提升视频质量
 
@@ -446,6 +483,8 @@ tags: []
 
 ## 音乐
 
+- [harmonoid: 🎵 Plays & manages your music library. Looks beautiful & juicy. Available for Windows, GNU/Linux, macOS, Android & iOS.](https://github.com/harmonoid/harmonoid)
+
 - [biu: Bilibili音乐播放器](https://github.com/wood3n/biu)
 
 - [lx-music-desktop：一个基于 electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
@@ -472,12 +511,15 @@ tags: []
     - [lx-music-sync-server: 运行在 Node.js 上的 LX Music 数据同步服务](https://github.com/lyswhut/lx-music-sync-server)
 
     - [any-listen: A cross-platform private music playback service](https://github.com/any-listen/any-listen?tab=readme-ov-file)
+- [FeelUOwn: 跨平台音乐播放器支持yotube、bilibili、网易云、qq音乐等插件](https://github.com/feeluown/FeelUOwn)
 
 ## 音频
 
 - [SoundThread: Node based GUI for The Composers Desktop Project](https://github.com/j-p-higgins/SoundThread)
 
 - [easyeffects: 电脑音质提升软件-拯救你的破喇叭](https://github.com/wwmm/easyeffects)
+
+- [Omniphony: Real-time spatial / object-based audio rendering engine (VBAP + binaural) for multichannel and 3D audio — speakers or headphones.](https://github.com/mgth/Omniphony)
 
 ## 追番
 
@@ -590,7 +632,9 @@ tags: []
 
 - [moonlight-qt：投屏(屏幕共享)客户端](https://github.com/moonlight-stream/moonlight-qt)
 
-- [rustdesk](https://github.com/rustdesk/rustdesk)
+- [rustdesk：跨平台远程控制](https://github.com/rustdesk/rustdesk)
+
+- [SubnetDesk: LAN-only remote desktop based on RustDesk](https://github.com/zibo-chen/SubnetDesk)
 
 - [ToDesk](https://github.com/ji4ozhu/ToDesk)
 
@@ -669,6 +713,11 @@ tags: []
 - [FreeTube: youtube](https://github.com/FreeTubeApp/FreeTube)
 
 - [Github-Store: 平台的 GitHub 应用商店。这是一款基于 Kotlin 开发的跨平台开源应用商店客户端，支持一键发现热门开源项目、下载安装包（如 APK、EXE、DMG 、 AppImage、DEB、RPM等），以及追踪已安装应用并提示更新。](https://github.com/rainxchzed/Github-Store)
+
+- [PiliPlus: 使用Flutter开发的BiliBili第三方客户端](https://github.com/bggRGjQaUbCoE/PiliPlus)
+    - [PiliNara: 基于PiliPlus进行修改的,做了一些自用的改动.](https://github.com/nlsdt/PiliNara)
+
+- [wiliwili: 第三方B站客户端，目前可以运行在PC全平台、PSVita、PS4 、Xbox 和 Nintendo Switch上](https://github.com/xfangfang/wiliwili)
 
 ## 微信相关
 

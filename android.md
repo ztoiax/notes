@@ -15,6 +15,7 @@ tags: []
       * [在线下载商店](#在线下载商店)
     * [cli](#cli)
     * [系统相关](#系统相关)
+  * [原生linux系统运行在手机上](#原生linux系统运行在手机上)
   * [app](#app)
     * [其他](#其他)
     * [工具](#工具)
@@ -29,13 +30,14 @@ tags: []
       * [投屏和管理手机](#投屏和管理手机)
       * [类似锤子的tnt交互](#类似锤子的tnt交互)
       * [手机变成电脑外设](#手机变成电脑外设)
-    * [手机运行linux系统](#手机运行linux系统)
     * [下载器](#下载器)
+    * [浏览器](#浏览器)
     * [多媒体相关](#多媒体相关)
       * [阅读器](#阅读器)
       * [编辑器](#编辑器)
       * [图片相关](#图片相关)
       * [视频播放器](#视频播放器)
+        * [基于mpv的修改版](#基于mpv的修改版)
       * [音乐播放器](#音乐播放器)
       * [追番](#追番)
       * [视频压缩](#视频压缩)
@@ -48,11 +50,15 @@ tags: []
       * [文件互传、远程控制](#文件互传远程控制)
       * [数据清理](#数据清理)
       * [数据、文件、图片备份等](#数据文件图片备份等)
+    * [游戏相关](#游戏相关)
     * [网络相关](#网络相关)
       * [代理工具](#代理工具)
+        * [clash](#clash)
+    * [安全渗透工具](#安全渗透工具)
+    * [手机运行linux系统](#手机运行linux系统)
     * [隐藏检查](#隐藏检查)
-    * [游戏相关](#游戏相关)
-    * [浏览器](#浏览器)
+    * [游戏相关](#游戏相关-1)
+    * [浏览器](#浏览器-1)
     * [聊天软件](#聊天软件)
     * [第三方客户端](#第三方客户端)
     * [ai](#ai)
@@ -105,6 +111,7 @@ tags: []
 #### 在线下载商店
 
 - [IzzyOnDroid F-Droid Repository](https://apt.izzysoft.de/fdroid/)
+- [Open Source Apps APK for Android - OpenAPK](https://www.openapk.net/)
 
 ### cli
 
@@ -126,6 +133,9 @@ tags: []
 - [kite：小米性能监控工具](https://kite.mi.com/#/documents/instructions/quickstart?id=%e5%bf%ab%e9%80%9f%e5%bc%80%e5%a7%8b)
 
 - [ApkToolPlus: gui版 apk 逆向分析工具](https://github.com/CYRUS-STUDIO/ApkToolPlus?tab=readme-ov-file)
+## 原生linux系统运行在手机上
+
+- [postmarketOS // real Linux distribution for phones](https://postmarketos.org/)
 
 ## app
 
@@ -139,6 +149,8 @@ tags: []
 - [fcitx5：开源输入法](https://github.com/fcitx5-android/fcitx5-android)
 
 - [trime: 同文安卓輸入法平臺3.x/Android-rime/Rime Input Method Engine for Android](https://github.com/osfans/trime)
+
+- [Xime: 我的自用安卓输入法，基于Rime 构建，部分功能由本人设计的本地AI模型驱动，支持五笔/拼音/自定义方案。](https://github.com/ximeiorg/Xime)
 
 - [bitwarden：密码管理器](https://bitwarden.com/download/)
 
@@ -190,6 +202,7 @@ tags: []
 - [AndroidBitmapMonitor：图片内存分析工具](https://github.com/shixinzhang/AndroidBitmapMonitor)
 
 - [Shizuku：为其他app解锁高级权限](https://github.com/RikkaApps/Shizuku)
+- [Nightzuku: Shizuku fork with Material 3 Expressive and Android SDK 37 updates](https://github.com/kerneldroid/Nightzuku)
 
 - [termux](https://github.com/termux/termux-app)
 
@@ -252,6 +265,9 @@ tags: []
 - [DualBootPatcher：多重引导。手机多系统启动](https://github.com/chenxiaolong/DualBootPatcher)
 
 - [tiny_computer: 给所有安卓 9 以上 arm64 设备的“PC 应用引擎”平替。你可以在小小电脑上安装 PC 级 WPS、CAJ Viewer、亿图图示等软件。](https://github.com/Cateners/tiny_computer)
+- [LogcatReader:查看日志](https://github.com/darshanparajuli/LogcatReader)
+
+- [InstallerX-Revived: 安装器](https://github.com/wxxsfxyzm/InstallerX-Revived)
 
 #### adb相关
 
@@ -264,10 +280,14 @@ tags: []
 #### DNS相关
 
 - [adns: A lightweight DNS-based ad blocker for Android with NextDNS built in](https://github.com/eyalm2000/adns)
+
 #### 性能监控
 
 - [FrameX-Android: Android FPS meter and performance overlay powered by Shizuku.](https://github.com/MaheshSharan/FrameX-Android)
 - [fpsviewer: A Real-time Fps Tool for Android](https://github.com/SilenceDut/fpsviewer)
+
+- [RvKernel-Manager: Android Kernel Manager with Material 3 Expressive Design](https://github.com/Rve27/RvKernel-Manager)
+
 ### 手势相关
 
 - [DroidLab: Gesture Toolkit - Apps on Google Play](https://play.google.com/store/apps/details?id=com.lightsourcelabs.droidlab&hl=en)
@@ -337,10 +357,6 @@ tags: []
 
 - [AirMouse: 用手机当鼠标/键盘的极简解决方案](https://github.com/cornradio/airmouse)
 
-### 手机运行linux系统
-
-- [tiny_container: Click-to-run debian 13 with desktop environment on android!](https://github.com/Cateners/tiny_container)
-
 ### 下载器
 
 - [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
@@ -350,6 +366,10 @@ tags: []
 - [Seal：可以下载各大视频平台资源下载器](https://github.com/JunkFood02/Seal)
 
 - [ytdlnis: Full-featured audio/video downloader for Android using yt-dlp](https://github.com/deniscerri/ytdlnis)
+
+### 浏览器
+
+- [candy-browser: Gesture-first Android browser with Material 3 Expressive design and local privacy tools](https://github.com/sk2andy/candy-browser)
 
 ### 多媒体相关
 
@@ -380,11 +400,17 @@ tags: []
 
 - [Xed-Editor: 内置 Termux 终端可运行 Python 和 Node.js，支持 200+ 编程语言语法高亮、自动缩进和文件管理等功能。](https://github.com/Xed-Editor/Xed-Editor)
 
+- [Kori: AI-powered Markdown notepad built with Compose Multiplatform.](https://github.com/YangDai2003/Kori)
+
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
 
 - [Acode：代码编辑工具](https://github.com/deadlyjack/Acode)轻量级的 Web IDE，具有即时预览、控制台和丰富的插件等特点
 
     ![image](./Pictures/android/Acode.avif)
+
+- [CodeAssist: An IDE for building Android applicatons on Android.](https://github.com/tyron12233/CodeAssist)
+
+- [opencode_mobile: opencode mobile](https://github.com/learning233/opencode_mobile)
 
 #### 图片相关
 
@@ -419,13 +445,24 @@ tags: []
 - [jellyfin-android：jellyfin视频服务的客户端](https://github.com/jellyfin/jellyfin-android)
 
     - [jellyfin-androidtv：电视客户端](https://github.com/jellyfin/jellyfin-androidtv)
-- [mpv-android-anime4k: 这是一个基于MPV播放器，核心特色是开源实现 Anime4K 实时超分算法，针对动漫/动画/番剧视频风格进行优化，显著提升低分辨率动漫的观看体验。支持WebDAV和b站番剧等功能](https://github.com/azxcvn/mpv-android-anime4k)
 
 - [nextplayer: An Android native video player](https://github.com/anilbeesetti/nextplayer)
 
-- [mpvEx: A beautiful media player for android, based on mpv-android and built with Jetpack Compose. Forked from mpvKt](https://github.com/marlboro-advance/mpvEx)
 - [Ghosten-Player: 一个视频播放器，支持网盘直连、元数据刮削、IPTV、文件管理等 / A video player that supports direct connection to network disk, metadata scraping, IPTV, file management, etc.](https://github.com/GhostenEditor/Ghosten-Player)
+
+##### 基于mpv的修改版
+
+- [mpv-android: 官方的mpv](https://github.com/mpv-android/mpv-android)
+
+- [mpvRex: A modern Android video player powered by libmpv, built with Jetpack Compose.](https://github.com/sfsakhawat999/mpvRex)
+
+- [mpvEx: A beautiful media player for android, based on mpv-android and built with Jetpack Compose. Forked from mpvKt](https://github.com/marlboro-advance/mpvEx)
+
+    - [mpvEx-CN: 此项目是mpvEx的个人汉化项目（与官方无任何直接关系），具体信息请看README文件](https://github.com/azxcvn/mpvEx-CN)
+
 - [NextPlayerCloud/NextPlayerCloud：neoplayer这是一个将 OpenList 与 MPV 播放器完美结合的本地播放解决方案，支持挂载各种云盘（阿里云盘、OneDrive、Google Drive、WebDAV、SMB 等），实现高速、流畅、无广告的本地化播放体验。](https://github.com/NextPlayerCloud/NextPlayerCloud)
+
+- [mpv-android-anime4k: 这是一个基于MPV播放器，核心特色是开源实现 Anime4K 实时超分算法，针对动漫/动画/番剧视频风格进行优化，显著提升低分辨率动漫的观看体验。支持WebDAV和b站番剧等功能](https://github.com/azxcvn/mpv-android-anime4k)
 
 #### 音乐播放器
 
@@ -443,6 +480,10 @@ tags: []
 - [PureMusic（棉花音乐）：音乐播放器。支持本地歌曲、百度网盘、阿里云盘、WebDAV、GoogleDrive、OneDrive、Dropbox等网盘歌曲播放，支持Plex、Emby、Jelly、Subsonic媒体服务器。](https://github.com/pure-music/PureMusic)
 
 - [StreamMusic（音流）：音乐播放器。支持 Android、iOS、MacOS、Windows 平台的 Subsonic/Navidrome/Jellyfin/Emby/AudioStation/Plex 客户端。](https://github.com/gitbobobo/StreamMusic)
+
+- [harmonoid: 🎵 Plays & manages your music library. Looks beautiful & juicy. Available for Windows, GNU/Linux, macOS, Android & iOS.](https://github.com/harmonoid/harmonoid)
+
+- [vivi-music: Vivi-Music is an expressive Material 3–based YouTube Music client for Android.](https://github.com/vivizzz007/vivi-music)
 
 #### 追番
 
@@ -528,7 +569,10 @@ tags: []
 
 - [deltachat-android: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-android)
 
-- [rustdesk：远程控制](https://github.com/rustdesk/rustdesk)
+- [rustdesk：跨平台远程控制](https://github.com/rustdesk/rustdesk)
+
+- [SubnetDesk: LAN-only remote desktop based on RustDesk](https://github.com/zibo-chen/SubnetDesk)
+
 - [connectbot: ssh](https://github.com/connectbot/connectbot)
 
 #### 数据清理
@@ -548,6 +592,9 @@ tags: []
     - [memories：Nextcloud的照片管理](https://github.com/pulsejet/memories)
 
 - [syncthing：文件同步](https://github.com/syncthing/syncthing-android)
+### 游戏相关
+
+- [Game-Hub: A simple launcher with material 3 expressive ui for all your games.](https://github.com/FeDeveloper95/Game-Hub)
 
 ### 网络相关
 
@@ -565,6 +612,8 @@ tags: []
 
 - [traffic-light: 简的 Android 流量监控应用。这是一款免费开源、体积小且无广告的 Android 网络流量监控工具，支持状态栏显示实时网速、历史数据和应用级流量统计等功能。](https://github.com/leekleak/traffic-light)
 
+- [rethink-app: DNS over HTTPS / DNS over Tor / DNSCrypt client, WireGuard proxifier, firewall, and connection tracker for Android.](https://github.com/celzero/rethink-app)
+
 #### 代理工具
 
 - [sing-box](https://github.com/SagerNet/sing-box/releases)
@@ -573,7 +622,31 @@ tags: []
 
 - [NekoBoxForAndroid: NekoBox for Android / sing-box / universal proxy toolchain for Android](https://github.com/MatsuriDayo/NekoBoxForAndroid)
 
-- [MetaCubeX/ClashMetaForAndroid: A rule-based tunnel for Android.](https://github.com/MetaCubeX/ClashMetaForAndroid?utm_source=chatgpt.com)
+- [v2rayNG: A V2Ray client for Android, support Xray core and v2fly core](https://github.com/2dust/v2rayNG)
+
+- [karing: Simple & Powerful proxy utility, Support routing rules for clash/sing-box](https://github.com/KaringX/karing)
+
+##### clash
+
+- [ClashMetaForAndroid: A rule-based tunnel for Android.](https://github.com/MetaCubeX/ClashMetaForAndroid?utm_source=chatgpt.com)
+
+- [FlClash: A multi-platform proxy client based on ClashMeta,simple and easy to use, open-source and ad-free.](https://github.com/chen08209/FlClash)
+
+- [clashmi: Clash Mihomo for iOS/MacOS/Android/Windows/Linux](https://github.com/KaringX/clashmi)
+
+### 安全渗透工具
+
+- [Kali NetHunter App Store - Android App Repository for Penetraton Testing and Forensics](https://store.nethunter.com/packages/com.offsec.nethunter/)
+
+- [ANDRAX-Mobile-Pentest-1: ANDRAX Advanced Penetration Testing Platform for Android Smartphones](https://github.com/noraj/ANDRAX-Mobile-Pentest-1)
+
+### 手机运行linux系统
+
+- [tiny_container: Click-to-run debian 13 with desktop environment on android!](https://github.com/Cateners/tiny_container)
+
+- [linuxdeploy: Install and run GNU/Linux on Android](https://github.com/meefik/linuxdeploy)
+
+- [Use Linux Anywhere - UserLAnd](https://userland.tech/)
 
 ### 隐藏检查
 
@@ -606,8 +679,6 @@ tags: []
 
 ### 第三方客户端
 
-- [pilipala：该项目是用 Flutter 开发的 B 站第三方客户端，支持 Android 和 iOS 平台。它提供了推荐视频列表、热门直播、番剧、离线缓存、回复评论、弹幕和搜索等功能。](https://github.com/guozhigq/pilipala)
-
 
 - [NewPipe：youtube开源版，可以按时间顺序浏览up的视频](https://github.com/TeamNewPipe/NewPipe)
 
@@ -623,11 +694,20 @@ tags: []
 
 - [NewPipe：youtube客户端，免广告、免登陆订阅、有下载功能、免会员观看](https://github.com/TeamNewPipe/NewPipe)
 
+- [bilibili-client-software-collection: 第三方开源B站客户端收集。包括tv、pc、手表、浏览器插件](https://github.com/oldsento/bilibili-client-software-collection#1)
+
+- [PiliPlus: 使用Flutter开发的BiliBili第三方客户端](https://github.com/bggRGjQaUbCoE/PiliPlus)
+
+    - [PiliNara: 基于PiliPlus进行修改的,做了一些自用的改动.](https://github.com/nlsdt/PiliNara)
+
+- [WikiReader: 无干扰阅读维基百科页面](https://github.com/nsh07/WikiReader)
+
 ### ai
 
 - [chatbox：支持各种llm大模型的客户端](https://github.com/Bin-Huang/chatbox)
 
 - [rikkahub: 支持各种llm大模型的客户端](https://github.com/rikkahub/rikkahub)
+- [LastChat: A Fork of Rikkahub with an overhauled UI and feature additions](https://github.com/Cocolalilal/LastChat)
 
 - [google-ai-edge/gallery: Google AI Edge 团队开源，旨在让用户能够在手机设备上轻松运行和测试 Edge AI 模型。它开箱即用、轻松切换模型，模型加载后可离线体验 AI 能力，支持多轮对话、图像问答、实时显示模型性能和提示词实验室等功能。](https://github.com/google-ai-edge/gallery)
 
@@ -950,9 +1030,10 @@ tags: []
 
     - 影视仓：类似于tvbox
 
-    - [mytv-android](https://github.com/yaoxieyoulei/mytv-android)
+    - [mytv-android/mytv-android: Material 3 Expressive 风格的Android/Android TV IPTV播放器，内建Media3,IJKplayer和 VLC。](https://github.com/mytv-android/mytv-android)
 
     - [LiteWebTV: 一款轻量优雅的WebTV电视软件](https://github.com/YukonKong/LiteWebTV)
+
     - [utao: 油桃TV 电视浏览器 可看各大卫视CCTV直播 无需电视VIP 适配爱奇艺等主流视频平台](https://github.com/VonChange/utao)
 
     - BesTV粤视厅
@@ -960,6 +1041,7 @@ tags: []
 
     - [ACAC: 一个第三方AcFun TV和Pad客户端，A third-party AcFun client for TV & Pad。](https://github.com/xiaye13579/ACAC)
     - [BBLL：第三方bilibili](https://github.com/xiaye13579/BBLL)
+        - [BBLLV5: 一个第三方哔哩哔哩客户端修复](https://github.com/swyefun/BBLLV5)
     - [bilitv:由flutter实现的TV版哔哩哔哩，类似于bbll和bilibilitv。](https://github.com/kkkunny/bilitv)
     - [BiliTV:由flutter实现的TV版哔哩哔哩](https://github.com/Hyper-Beast/BiliTV)
     - [blbl: 一个使用原生Android开发的哔哩哔哩安卓客户端，支持触摸、遥控，以及安卓5](https://github.com/cat3399/blbl)
@@ -990,6 +1072,14 @@ tags: []
             - speed test：测网速
 
     - [nova](https://github.com/nova-video-player/aos-AVP)
+
+    - [OrionTV: 一个基于 React Native TVOS 和 Expo 构建的播放器，旨在提供流畅的视频观看体验。](https://github.com/orion-lib/OrionTV)
+
+    - [Selene-TV: 以 MoonTV v100 版本 / Helios 为后端的 Android TV 客户端，针对遥控器设备优化](https://github.com/MoonTechLab/Selene-TV)
+
+    - [MoonTVPlus: MoonTVPlus 是基于 MoonTV v100 二次开发的增强版影视聚合播放器。它在原版基础上新增了外部播放器支持、视频超分、弹幕系统、评论抓取等实用功能，提供更强大的观影体验。](https://github.com/mtvpls/MoonTVPlus)
+
+    - [mpvNova: Android TV-first fork of mpv-android with a custom TV UI, audio controls, and decoder tools.](https://github.com/Laskco/mpvNova)
 
     - [vlc](https://www.videolan.org/vlc/download-android.html)
 
@@ -1033,8 +1123,15 @@ tags: []
 
 - ktv
     - iktv
+
+    - [麦动 KTV: 麦动 KTV Android 项目源码与离线曲库数据库分片](https://gitee.com/yangyachao-X/maidong-ktv)
+
+
     - [想唱就唱](https://www.tvmao.com/hmzt/vvxcjcyjmfb.htm)
+
     - [KTVyrps: 也叫kktv，基于LXmusicDesktop的局域网KTV系统 - 手机点歌，电视唱歌，电脑后台](https://github.com/yrps111/KTVyrps)
+
+    - [欢唱K歌](https://www.tvmao.com/hmsoft/709863.html)
 
 - 投屏
     - 当贝投屏

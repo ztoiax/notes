@@ -89,6 +89,7 @@ tags: []
 * [第三方软件](#第三方软件)
   * [服务端](#服务端)
   * [客户端](#客户端)
+    * [ai相关](#ai相关)
 * [reference article(优秀文章)](#reference-article优秀文章)
 * [podman](#podman)
   * [Podman Desktop：一个管理容器的gui。兼容docker引擎](#podman-desktop一个管理容器的gui兼容docker引擎)
@@ -4183,6 +4184,9 @@ docker run --rm -ti \
 
 - [sen: tui](https://github.com/TomasTomecek/sen)
 - [unregistry: 像 rsync 一样同步 Docker 镜像。该项目可通过简单的 docker pussh 命令，将本地 Docker 镜像直接推送到远程服务器，无需依赖外部容器镜像仓库。仅传输缺失的镜像层，比 docker save/load 更快。](https://github.com/psviderski/unregistry)
+### ai相关
+
+- [Docker-sbx：自带gui。Docker 官方推出的沙箱工具，把 Docker 容器当作沙箱，让 AI Agent 在里面运行，跟底层系统隔离。](https://www.docker.com/products/docker-sandboxes/)
 
 # reference article(优秀文章)
 

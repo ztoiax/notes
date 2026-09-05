@@ -1016,6 +1016,8 @@ tags: []
 
 - [everyone-can-use-english: 人人都能用英语。ai英语老师](https://github.com/ZuodaoTech/everyone-can-use-english)
 
+- [up: An advanced guide which might benefit you a lot 🎉 . 人生进阶指南 离谱的人生 离谱的英语学习指南/英语学习教程/英语学习/学英语](https://github.com/byoungd/up)
+
 ## 文档
 
 - [中文技术文档写作风格指南](https://zh-style-guide.readthedocs.io/zh_CN/latest/index.html)
@@ -1657,6 +1659,8 @@ RabbitMQ实战指南》作者
     - 山河以无恙
         > linux运维相关
 
+    - [HOMOLAB](https://space.bilibili.com/3537122193574340)
+        > sdd评测选购和存储方案
 
 - 折腾android相关：
 
@@ -1775,6 +1779,33 @@ RabbitMQ实战指南》作者
 
         - [知乎蓝大仙人：电视评测。智能电视选购网创始人](https://space.bilibili.com/34586446)
 
+    - 汽车评测：
+
+        - [艾驰腾新能源三电专修](https://space.bilibili.com/1551183337)
+            > 电池评测
+
+        - [超哥超车](https://space.bilibili.com/3546724748495813)
+
+    - 家电评测
+
+        - [识食务者](https://space.bilibili.com/356619397)
+            > 厨电
+
+        - [Wilson学长](https://space.bilibili.com/13207529)
+            > 家电
+
+        - [小极工场](https://space.bilibili.com/3546943439505489)
+            > 家具、装修
+
+        - [单毅讲装修](https://space.bilibili.com/222157543)
+            > 家电、装修
+
+        - [下尺报告](https://space.bilibili.com/387533776)
+            > 从插板视频了解到这个博主
+
+        - [多饮开水](https://space.bilibili.com/35649992)
+            > 插座开关评测
+
     - [虽然但是张黑黑](https://space.bilibili.com/474447695)
         > ai和芯片评测
 
@@ -1822,18 +1853,6 @@ RabbitMQ实战指南》作者
 
     - [立创开发板](https://space.bilibili.com/3493269579237436)
 
-    - [识食务者](https://space.bilibili.com/356619397)
-        > 厨电
-
-    - [Wilson学长](https://space.bilibili.com/13207529)
-        > 家电
-
-    - [小极工场](https://space.bilibili.com/3546943439505489)
-        > 家具、装修
-
-    - [单毅讲装修](https://space.bilibili.com/222157543)
-        > 家电、装修
-
     - [DIY一个忠先生](https://space.bilibili.com/223699988?spm_id_from=333.788.upinfo.detail.click)
         > 木工、DIY
 
@@ -1860,8 +1879,6 @@ RabbitMQ实战指南》作者
 
     - [钱韦德](https://space.bilibili.com/20274090)
         > 硬盘评测、nas体验
-
-    - [下尺报告](https://space.bilibili.com/387533776)
 
     - [阿Test正经比比](https://space.bilibili.com/434376696)
         > 科技、科技行业分析
@@ -1894,6 +1911,9 @@ RabbitMQ实战指南》作者
     - [轨迹球TRACKBALL](https://space.bilibili.com/22338935)
         > 城市地理，科普做得好
 
+    - [木石之懵](https://space.bilibili.com/3706924629494209)
+        > 人口和高铁流动的相关的城市地理
+
     - [有点意思研究所](https://space.bilibili.com/33397277)
         > 历史地理
 
@@ -1905,6 +1925,10 @@ RabbitMQ实战指南》作者
 
     - [蜀霞客](https://space.bilibili.com/390186534/upload/video)
         > 城市地理
+
+- yotube
+
+    - [Geography By Geoff - YouTube](https://www.youtube.com/@GeographyByGeoff)
 
 - 微信公众号
 
@@ -2260,6 +2284,8 @@ RabbitMQ实战指南》作者
 
 - bilibili
 
+    - [程乐松](https://space.bilibili.com/527691105)
+
     - [北大杨立华讲庄子](https://space.bilibili.com/1072908652)
 
     - [余明锋的哲学课](https://space.bilibili.com/630972858)
@@ -2423,7 +2449,7 @@ RabbitMQ实战指南》作者
         - 设计-建筑与现代性
             > 现代性、数字资本主义
 
-    - 国学
+    - 国学和印度哲学
         - 人文新陈来
             > 陈来
         - 船山学社
@@ -2455,6 +2481,8 @@ RabbitMQ实战指南》作者
             > 赖永海
         - 东方哲学践行
             > 王志成
+        - 闻风吧
+            > 《瑜伽》杂志主编
         - 花迹绽放之旅
         - 白彤东
             > 研究韩非
@@ -2562,6 +2590,7 @@ RabbitMQ实战指南》作者
         > 中国社会科学院台湾史研究所
     - 中国边疆史地研究
         > 中国社会科学院中国边疆研究所
+    - 藏人文化网
     - 施展世界
     - 全球研究Global Studies Forum
     - 新史学丛刊
@@ -3091,6 +3120,8 @@ RabbitMQ实战指南》作者
 
     - [卢克文工作室](https://www.bilibili.com/video/BV1bUwGe1Eew)
 
+    - [知库](https://space.bilibili.com/3546885910432596)
+
     - [动新闻](https://space.bilibili.com/482843134/upload/video)
         > 短视频动画地图还原新闻
 
@@ -3122,8 +3153,17 @@ RabbitMQ实战指南》作者
     - [广州禁毒](https://space.bilibili.com/443285454)
         > 预防毒品
 
-    - [印度胖亚瑟投稿视频-印度胖亚瑟视频分享-哔哩哔哩视频](https://space.bilibili.com/300159010)
+    - [印度胖亚瑟](https://space.bilibili.com/300159010)
         > 印度新闻
+
+    - [斯奎奇大王](https://space.bilibili.com/3546724557654138)
+        > 网名牢a，去美国马里兰州西雅图留学，主要讲美国社会的见闻。
+
+    - [拉萨藏狐](https://space.bilibili.com/2088559179)
+        > 牢a的朋友牢真。主要讲美国的邪教和西藏宗教余孽
+
+    - [330万人住公营福利房](https://space.bilibili.com/602999330)
+        > 讲香港的住房和民情
 
 - 微信公众号
 
