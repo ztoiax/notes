@@ -38,6 +38,7 @@ tags: []
       * [图片相关](#图片相关)
       * [视频播放器](#视频播放器)
         * [基于mpv的修改版](#基于mpv的修改版)
+        * [剪辑](#剪辑)
       * [音乐播放器](#音乐播放器)
       * [追番](#追番)
       * [视频压缩](#视频压缩)
@@ -50,6 +51,7 @@ tags: []
       * [文件互传、远程控制](#文件互传远程控制)
       * [数据清理](#数据清理)
       * [数据、文件、图片备份等](#数据文件图片备份等)
+      * [文件格式转换](#文件格式转换)
     * [游戏相关](#游戏相关)
     * [网络相关](#网络相关)
       * [代理工具](#代理工具)
@@ -61,6 +63,7 @@ tags: []
     * [浏览器](#浏览器-1)
     * [聊天软件](#聊天软件)
     * [第三方客户端](#第三方客户端)
+    * [美化](#美化)
     * [ai](#ai)
       * [openclaw](#openclaw)
       * [编排工具](#编排工具)
@@ -133,6 +136,9 @@ tags: []
 - [kite：小米性能监控工具](https://kite.mi.com/#/documents/instructions/quickstart?id=%e5%bf%ab%e9%80%9f%e5%bc%80%e5%a7%8b)
 
 - [ApkToolPlus: gui版 apk 逆向分析工具](https://github.com/CYRUS-STUDIO/ApkToolPlus?tab=readme-ov-file)
+
+- [ghostlock-app: 解bl锁](https://github.com/YuKongA/ghostlock-app)
+
 ## 原生linux系统运行在手机上
 
 - [postmarketOS // real Linux distribution for phones](https://postmarketos.org/)
@@ -202,6 +208,8 @@ tags: []
 - [AndroidBitmapMonitor：图片内存分析工具](https://github.com/shixinzhang/AndroidBitmapMonitor)
 
 - [Shizuku：为其他app解锁高级权限](https://github.com/RikkaApps/Shizuku)
+- [shizuku-next: Shizuku Next - 增强版 Shizuku：悬浮窗配对 + Shell终端 + 模块系统](https://github.com/yijiacloud/shizuku-next)
+- [shevery: Shevery - Modernized Android manager with Jetpack Compose, Material 3, and compatibility enhancements.](https://github.com/HmnDev-Tech/shevery)
 - [Nightzuku: Shizuku fork with Material 3 Expressive and Android SDK 37 updates](https://github.com/kerneldroid/Nightzuku)
 
 - [termux](https://github.com/termux/termux-app)
@@ -277,6 +285,8 @@ tags: []
 
 - [Wireless ADB: 开启adb远程端口](https://play.google.com/store/apps/details?id=com.origiq.wirelessadb&hl=en)
 
+- [ADB WiFi：开启adb远程端口。还有adb命令手册](https://www.dagui-smart.com/app/s/3)
+
 #### DNS相关
 
 - [adns: A lightweight DNS-based ad blocker for Android with NextDNS built in](https://github.com/eyalm2000/adns)
@@ -347,6 +357,8 @@ tags: []
 
 - [Adb-Device-Manager-2: Dual-control Android management for Windows — ADB Mode (scrcpy GUI mirroring & control) and App Mode (calls, media, notifications, Audio Cast).](https://github.com/Shrey113/Adb-Device-Manager-2)
 
+- [droidVNC-NG: Android 远程桌面工具。这是一款专为局域网设计的远程查看和控制 Android 设备的工具，打开浏览器即可操控手机，无需 Root 权限。支持鼠标键盘操作、剪贴板共享、文件传输和屏幕缩放等功能。](https://github.com/bk138/droidVNC-NG)
+
 #### 类似锤子的tnt交互
 
 - [Android-Dex: Enable a full desktop experience from any Android device over Wi‑Fi. No root, scrcpy-powered, Flutter desktop app with wireless ADB, per‑app audio, and quick controls.](https://github.com/Shrey113/Android-Dex)
@@ -366,6 +378,8 @@ tags: []
 - [Seal：可以下载各大视频平台资源下载器](https://github.com/JunkFood02/Seal)
 
 - [ytdlnis: Full-featured audio/video downloader for Android using yt-dlp](https://github.com/deniscerri/ytdlnis)
+
+- [Aria2Android: An Android app that allows you run aria2 on your device](https://github.com/devgianlu/Aria2Android)
 
 ### 浏览器
 
@@ -413,6 +427,8 @@ tags: []
 - [opencode_mobile: opencode mobile](https://github.com/learning233/opencode_mobile)
 
 #### 图片相关
+
+- [ShowcaseApp: 相册。支持webdav功能](https://github.com/mrjoechen/ShowcaseApp)
 
 - [aves: 相册](https://github.com/deckerst/aves)
 
@@ -463,6 +479,9 @@ tags: []
 - [NextPlayerCloud/NextPlayerCloud：neoplayer这是一个将 OpenList 与 MPV 播放器完美结合的本地播放解决方案，支持挂载各种云盘（阿里云盘、OneDrive、Google Drive、WebDAV、SMB 等），实现高速、流畅、无广告的本地化播放体验。](https://github.com/NextPlayerCloud/NextPlayerCloud)
 
 - [mpv-android-anime4k: 这是一个基于MPV播放器，核心特色是开源实现 Anime4K 实时超分算法，针对动漫/动画/番剧视频风格进行优化，显著提升低分辨率动漫的观看体验。支持WebDAV和b站番剧等功能](https://github.com/azxcvn/mpv-android-anime4k)
+##### 剪辑
+
+- [LibreCuts: LibreCuts is a free, open-source video editor for Android that prioritizes simplicity and efficiency.](https://github.com/tharunbirla/LibreCuts)
 
 #### 音乐播放器
 
@@ -484,6 +503,10 @@ tags: []
 - [harmonoid: 🎵 Plays & manages your music library. Looks beautiful & juicy. Available for Windows, GNU/Linux, macOS, Android & iOS.](https://github.com/harmonoid/harmonoid)
 
 - [vivi-music: Vivi-Music is an expressive Material 3–based YouTube Music client for Android.](https://github.com/vivizzz007/vivi-music)
+
+- [LastWave-Native: A High-Resolution Lossless Music Streaming & Player with Real-Time Synced Lyrics & Smart Discovery for Android, built with Material 3 Expressive design.](https://github.com/Clash-Projects/LastWave-Native)
+
+- [NeriPlayer: A native Android audio player that combines multi-source streaming, local control, rich lyrics, and self-hosted sync. / ✨ 一个把多源在线播放、本地管理、歌词体验和自建同步做进原生 Android 的音频播放器 🎵](https://github.com/cwuom/NeriPlayer)
 
 #### 追番
 
@@ -535,6 +558,8 @@ tags: []
 
 - [mixplorer](https://mixplorer.com)
 
+- [Fylo：material 3 expressive ui。支持几何方块显示文件夹占用多少空间、文件转换格式、图片大码、视频导出音轨等各种功能](https://play.google.com/store/apps/details?id=com.aeroloom.fylofilemanager&hl=en)
+
 #### 云盘webdav相关
 
 - [AListLite：openlist（alist社区版，alist已经被收购）服务端](https://github.com/LeoHaoVIP/AListLiteAndroid)
@@ -551,6 +576,9 @@ tags: []
 
 - [clouddrive：云盘管理](https://github.com/cloud-fs/cloud-fs.github.io/releases)
 
+- [diubangNASServer：一款安卓端的手机APP，可以将安装手机变为轻量级NAS，与DiuBangNAS客户端配套使用。](https://github.com/DianDanHuaJuan/diubangNASServer_Android)
+- [DiuBangNASClient: 与DiuBangNAS服务端配套使用的安卓应用。](https://github.com/DianDanHuaJuan/DiuBangNASClient)
+
 #### 文件加密
 
 - [Lockify：表面是个计算器，输入密码就可以查看加密文件](https://getlockifyapp.com/)
@@ -560,6 +588,8 @@ tags: []
 - [unison：intel的手机电脑消息、文件传输]()
 
 - [localsend：文件互传](https://github.com/localsend/localsend)
+
+- [lightningvine-docs: 闪电藤是基于LocalSend的二次开发产品，在原有局域网文件传输基础上，增加了webdav传输和云传输的能力，是一个万能的文件传输助手。](https://github.com/cmlanche/lightningvine-docs)
 
 - [LANChat: 一款支持文件传输的跨平台局域网聊天软件，用Rust编写。A cross-platform LAN chat software that supports file transfer, written in Rust.](https://github.com/cap153/LANChat)
 
@@ -592,6 +622,11 @@ tags: []
     - [memories：Nextcloud的照片管理](https://github.com/pulsejet/memories)
 
 - [syncthing：文件同步](https://github.com/syncthing/syncthing-android)
+
+#### 文件格式转换
+
+- [ZenConverter: 开源的安卓文件格式转换工具。这是一款无广告、免费的 Android 文件格式转换工具，所有转换都在手机本地完成，文件无需上传到服务器，支持音视频、图片、PDF、字体和字幕等文件。](https://github.com/Jasonzhu1207/ZenConverter)
+
 ### 游戏相关
 
 - [Game-Hub: A simple launcher with material 3 expressive ui for all your games.](https://github.com/FeDeveloper95/Game-Hub)
@@ -701,6 +736,14 @@ tags: []
     - [PiliNara: 基于PiliPlus进行修改的,做了一些自用的改动.](https://github.com/nlsdt/PiliNara)
 
 - [WikiReader: 无干扰阅读维基百科页面](https://github.com/nsh07/WikiReader)
+
+- [Echo-Music: An YouTube Music Client](https://github.com/EchoMusicApp/Echo-Music)
+
+- [md3Music: 酷狗概念版 第三方音乐播放器 Flutter + Rust](https://github.com/zzyoxml/md3Music)
+
+### 美化
+
+- [LockscreenWidgets：自定义小组件，可以在一个框内通过移动切换小组件](https://github.com/zacharee/LockscreenWidgets)
 
 ### ai
 
@@ -832,6 +875,8 @@ tags: []
             ```
 
     - 4.[KernelSU](https://github.com/tiann/KernelSU)
+        - [ReSukiSU: A KernelSU based root solution for Android](https://github.com/ReSukiSU/ReSukiSU)
+        - [KernelSU-KoWSU: personal fork, focused on lkm](https://github.com/deepongi-labs/KernelSU-KoWSU)
 
         - [小米开源的kernel列表](https://github.com/MiCode/Xiaomi_Kernel_OpenSource)
 
@@ -1009,7 +1054,13 @@ tags: []
 
     - 欢视助手：远程安装apk
 
+    - [Atharok / BT Remote：蓝牙连接电视的遥控，支持把手当作触控板鼠标功能等](https://gitlab.com/Atharok/BtRemote)
+
+    - [plain-app: 在浏览器中管理你的手机和电视。这是一款 Kotlin 开发的 Android 应用，让你可以在同一局域网内通过任意电脑上的浏览器，轻松查看和管理手机中的联系人、短信、通话记录、文件和照片，并支持屏幕镜像、远程操控、文件传输等功能。](https://github.com/plainhub/plain-app)
+
 - 文件管理
+
+    - [MaterialFiles：文件管理器](https://github.com/zhanghai/MaterialFiles)
     - 小白文件管理器
     - [AnExplorer: 📁 Another Android Explorer ( File Manager ) is an All-in-One Open source file manager. AnExplorer File Manager (File Explorer) is designed for all android devices including Phones, Phablets, Tablets, Chromecast, Wear OS, Android TV and Chromebooks. It's a fully designed with Material guidelines by Google.](https://github.com/1hakr/AnExplorer)
     - [猫头鹰文件](https://www.skyjos.cn/owlfiles/publishing/android_tv/)
@@ -1042,6 +1093,7 @@ tags: []
     - [ACAC: 一个第三方AcFun TV和Pad客户端，A third-party AcFun client for TV & Pad。](https://github.com/xiaye13579/ACAC)
     - [BBLL：第三方bilibili](https://github.com/xiaye13579/BBLL)
         - [BBLLV5: 一个第三方哔哩哔哩客户端修复](https://github.com/swyefun/BBLLV5)
+        - [MyTVB: AI复刻BLBL播放器，加了一些自己的功能。将就用吧~](https://github.com/qianxuntudou-ops/MyTVB)
     - [bilitv:由flutter实现的TV版哔哩哔哩，类似于bbll和bilibilitv。](https://github.com/kkkunny/bilitv)
     - [BiliTV:由flutter实现的TV版哔哩哔哩](https://github.com/Hyper-Beast/BiliTV)
     - [blbl: 一个使用原生Android开发的哔哩哔哩安卓客户端，支持触摸、遥控，以及安卓5](https://github.com/cat3399/blbl)
@@ -1085,13 +1137,18 @@ tags: []
 
     - 当贝播放
 
-- webdav
+- 可以播放webdav、有刮削海报功能等的播放器
     - [网易爆米花 - 智能媒体库&全能播放器](https://bmh.163.com/)
     - [VidHubTV版_最新版VidHub下载_安卓电视APK_当贝市场](https://m.dangbei.com/wap-view-9090.html)
+    - [飞牛影视tv版](https://fnnas.com/download?key=tv)
     - [jellyfin-androidtv: Android TV Client for Jellyfin](https://github.com/jellyfin/jellyfin-androidtv)
     - emby
         - [NextPlayerCloud/Emfin: Emby三方TV客户端](https://github.com/NextPlayerCloud/Emfin)
     - plex
+
+- 相册
+
+    - [ShowcaseApp: 通过导入源的相册。支持本地、webdav、smb、ftp、amazon s3、immich、mtphoto、github、gitee等功能](https://github.com/mrjoechen/ShowcaseApp)
 
 - ui桌面
     - projectivy_launcher
@@ -1117,6 +1174,7 @@ tags: []
     - 小鸡模拟器
     - 茱元游戏
     - 酷咖游戏
+    - [kawaks模拟器TV版下载-kawaks模拟器TV版最新版下载-游侠软件下载](https://m.ali213.net/android/582275.html)
 
 - 游戏
     - 跳一跳学习版

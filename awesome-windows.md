@@ -16,13 +16,19 @@ tags: []
     * [安装与卸载相关包括驱动](#安装与卸载相关包括驱动)
     * [性能监控、硬件参数调整相关](#性能监控硬件参数调整相关)
     * [存储相关](#存储相关)
+    * [杀毒相关](#杀毒相关)
   * [逆向](#逆向)
   * [镜像u盘相关](#镜像u盘相关)
   * [pe系统](#pe系统)
   * [app](#app)
     * [桌面相关](#桌面相关)
+      * [窗口管理器](#窗口管理器)
+      * [美化](#美化)
+      * [鼠标](#鼠标)
+      * [其他](#其他)
     * [文件相关](#文件相关)
       * [文件管理器](#文件管理器)
+      * [文件转换](#文件转换)
       * [清理相关](#清理相关)
     * [编辑器](#编辑器)
     * [终端、ssh终端](#终端ssh终端)
@@ -34,11 +40,14 @@ tags: []
     * [视频](#视频)
       * [播放器](#播放器)
       * [字幕](#字幕)
-      * [其他](#其他)
+      * [其他](#其他-1)
     * [音乐](#音乐)
+    * [音频](#音频)
+    * [输入法](#输入法)
     * [第三方客户端](#第三方客户端)
     * [流行软件相关](#流行软件相关)
     * [追番](#追番)
+    * [阅读器](#阅读器)
     * [游戏相关](#游戏相关)
       * [Steam相关](#steam相关)
       * [修改器和变速器](#修改器和变速器)
@@ -49,7 +58,7 @@ tags: []
       * [代理工具](#代理工具)
         * [clash](#clash)
     * [ai](#ai)
-    * [其他](#其他-1)
+    * [其他](#其他-2)
 
 <!-- mtoc-end -->
 
@@ -85,7 +94,6 @@ tags: []
 - [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
 - [TaskExplorer: 强大的 Windows 任务管理器。这是一款适用于 Windows 平台的高级任务管理工具，相比系统自带的任务管理器，能够实时显示更详细的进程信息，包括线程堆栈、文件句柄和网络连接等。](https://github.com/DavidXanatos/TaskExplorer)
 - [Sandboxie: 在沙盒中运行软件，避免不安分的软件，但数据会保留在沙盒之中](https://github.com/sandboxie-plus/Sandboxie)
-
 ### 激活破解
 
 
@@ -143,6 +151,10 @@ tags: []
     - [图吧工具箱 - DIY爱好者的必备工具合集](https://www.tbtool.cn/)
     - [卡硬工具](https://tb.saop.cc/kb/)
 
+- [tubatools: 图吧工具箱 winUI3 版](https://github.com/luolangaga/tubatools)
+
+- [LiteMonitor: 一款轻量、可定制的开源桌面硬件监控软件 — 实时监测 CPU、GPU、内存、磁盘、网络等系统性能。支持横竖屏显示、多语言、主题切换、透明度显示、三色报警，界面简洁且高度可配置。](https://github.com/Diorser/LiteMonitor)
+
 ### 存储相关
 
 - [windirstat: 用几何方块显示文件夹占用多少空间](https://github.com/windirstat/windirstat)
@@ -150,6 +162,10 @@ tags: []
 - [GreenDiskVisualizer: 基于Python构建的磁盘空间可视化分析软件，可利用MFT主文件表进行分析，旨在将磁盘内各文件夹所占空间以直观的方式展示出来，帮助使用者更好地了解磁盘空间的使用情况。](https://github.com/Green233233/GreenDiskVisualizer)
 
 - [RaiDrive：像 USB 驱动器一样安装云存储。支持webdav、ftp等协议](https://www.raidrive.com/zh-Hans/)
+
+### 杀毒相关
+
+- [PYAS: Python 写的杀毒软件。这是一款用 Python 和 C++ 开发的 Windows 杀毒软件，通过机器学习和行为监控拦截威胁，支持 PE 文件扫描、云端检测、签名校验，以及文件、进程和注册表等系统防护功能。](https://github.com/87owo/PYAS)
 
 ## 逆向
 
@@ -162,6 +178,8 @@ tags: []
 ## 镜像u盘相关
 
 - [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
+
+- [NTLite - Customize and Debloat Windows ISO and Live Installs](https://ntlite.com/)
 
 ## pe系统
 
@@ -182,6 +200,9 @@ tags: []
 ### 桌面相关
 
 - [Seelen-UI：高度可定制的 Windows 桌面美化工具。这是一款免费开源的 Windows 桌面增强工具，专注于高度自定义和效率提升。它采用 Rust 语言开发，结合 Tauri 框架与 Web 技术，支持窗口平铺管理、应用启动器、Dock、任务栏、动态壁纸、插件扩展等功能。](https://github.com/eythaann/Seelen-UI)
+- [rubick: 跨平台的类似启动的工具箱，原则是一切皆插件。基于 electron 的开源工具箱，自由集成丰富插件。](https://github.com/rubickCenter/rubick)
+
+#### 窗口管理器
 
 - [GlazeWM窗口管理器](https://github.com/lars-berger/GlazeWM)
 
@@ -191,26 +212,43 @@ tags: []
 
 - [glazewm：平铺窗口管理器，类似i3](https://github.com/glzr-io/glazewm)
 
-- [FileConverter：右键轻松转换文件格式和压缩文件的工具。](https://github.com/Tichau/FileConverter)
+#### 美化
+
+- [Rainmeter：桌面美化自定义组件](https://www.rainmeter.net/)
+    - [MD3-Windows: 类似android的Material皮肤，需要搭配Rainmeter桌面组件使用](https://github.com/Runixe786/MD3-Windows)
+
+- [markeron: 跨平台。在当前桌面上的画标记工具，可以画各种图案。](https://github.com/ifer47/markeron)
+
+- [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
+    - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
+
+- [BongoCat: 🩷 💘C × SDL3 × OpenGL, stir it up, mash it together! Bong~ Bongocat!!! Don't be shy, join here🧸: https://discord.gg/vf8jqnattk](https://github.com/vladelaina/BongoCat)
+
+- [DeskBox: 让 Windows 桌面井然有序。这是一款开源的 Windows 桌面整理工具，为桌面加入具有 Windows 原生质感的文件格子和日常工具。它内置待办、随记、搜索、天气和音乐控制等小组件，支持映射现有文件夹、自动整理桌面文件和 QuickLook 预览等功能。WinUI 3开发。](https://github.com/Tianyu199509/DeskBox)
+
+- [OpenFences: 开源版WPF。让桌面像围栏一样分类管理图标](https://github.com/chrisdfennell/OpenFences)
+
+#### 鼠标
+
+- [kando: 跨平台的饼式鼠标轮盘快捷键](https://github.com/kando-menu/kando)
+
+- [StarPie: StarPie 现代化 Windows 鼠标轮盘手势系统](https://github.com/SoftBlack42/StarPie)
+
+- [breeze-shell：鼠标右键的菜单简化为一级，并加入流畅动画](https://github.com/std-microblock/breeze-shell)
 
 - [GestureSign：触控板手势](https://github.com/TransposonY/GestureSign)
 
 - [MFCMouseEffect: Windows 鼠标/光标特效（MFC/C++/Win32） | Mouse & cursor effects for Windows (MFC/C++/Win32)](https://github.com/sqmw/MFCMouseEffect)
 
-- [MD3-Windows：windows美化](https://github.com/Runixe786/MD3-Windows)
-
-- [breeze-shell：鼠标右键的菜单简化为一级，并加入流畅动画](https://github.com/std-microblock/breeze-shell)
+#### 其他
 
 - [SmartSystemMenu: 窗口菜单增强工具。这是一款用于扩展 Windows 系统窗口菜单功能的工具。它可以为所有窗口的系统菜单（即右键标题栏弹出的菜单）添加丰富且实用的自定义选项，如窗口置顶、调整透明度、改变窗口标题/图标、窗口对齐、跨屏移动、批量隐藏/最小化、窗口截图、剪贴板操作等。](https://github.com/AlexanderPro/SmartSystemMenu)
 
-- [LiteMonitor: 一款轻量、可定制的开源桌面硬件监控软件 — 实时监测 CPU、GPU、内存、磁盘、网络等系统性能。支持横竖屏显示、多语言、主题切换、透明度显示、三色报警，界面简洁且高度可配置。](https://github.com/Diorser/LiteMonitor)
-
-- [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
-    - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
-
-- [markeron: 跨平台。在当前桌面上的画标记工具，可以画各种图案。](https://github.com/ifer47/markeron)
-
 - [convenient_window_free：类似macos的某个功能，可以为软件窗口的边缘设置操作，也可以将软件贴边隐藏在屏幕的边缘。还包含鼠标手势操作等功能。](https://github.com/ximizhou/convenient_window_free)
+
+- [FileConverter：右键轻松转换文件格式和压缩文件的工具。](https://github.com/Tichau/FileConverter)
+
+- [RightClickGuardian: Q萌且强力的 Windows 右键菜单管理器：全量扫描、真实菜单预览、图标显示与防回写守护。](https://github.com/linzifeng07/RightClickGuardian)
 
 ### 文件相关
 
@@ -238,9 +276,16 @@ tags: []
 
 - [filepilot：第三方文件资源管理器](https://filepilot.tech/)
 
+- [NanoFile：文件管理所有基础功能、文件标签、本地加密保险箱、全局秒级搜索、文件智能分类、筛选、全格式文件预览（Office预览、代码预览、图片预览、音视频预览等）](https://apps.microsoft.com/detail/9pgwd50gwcjw?hl=en-US&gl=AS)
+
+#### 文件转换
+
+- [flyingmouse-format: 飞鼠格式 FlyingMouse Format - Windows 免费文件格式转换工具（离线可用，内置 FFmpeg/LibreOffice/Poppler/Tesseract）。图片/文档/表格/PPT/PDF/音视频/WPS 格式互转 + OCR + 批量转换；音频仅支持普通格式。作者：牢蜂（LaoFeng）｜仅供个人免费使用，禁止商业售卖/转卖/套壳](https://github.com/LaoFeng-mouse/flyingmouse-format)
+
 #### 清理相关
 
 - [pinkbin: 扫盘 · 看懂 · 删除。磁盘扫描+清理Agent（Tauri 2 + React + Rust）](https://github.com/cccyd2003-qwq/pinkbin)
+
 - [disk-butler: C盘管家，将磁盘占用画成彩色拼图。 - 给普通人的 Windows 磁盘与内存维护助手 (Tauri 2 + React)](https://github.com/YGTQ3/disk-butler/tree/main)
 
 - [viap: Windows应用管理、数据迁移工具。可以将c盘的数据文件等，如浏览器chrome的数据迁移到其他盘，c盘只保留一个快捷方式。但只能使users目录，千万不要迁移其他目录。](https://github.com/Chunyu33/viap)
@@ -252,6 +297,7 @@ tags: []
 
 - [light-c: A free, minimalist, lightweight, and high-performance C-drive cleanup tool.](https://github.com/Chunyu33/light-c)
 - [RogueCleaner: 流氓软件克星：扫描和清理 Windows 流氓右键菜单、自启动、计划任务、服务、浏览器插件和文件关联残留](https://github.com/aakk007/RogueCleaner)
+- [MangoDisk: Safety-first disk cleaner and space analyzer for macOS and Windows, with duplicate cleanup, app uninstall, startup management, system optimization, and maintenance.](https://github.com/harry0703/MangoDisk)
 
 ### 编辑器
 
@@ -310,6 +356,8 @@ tags: []
 
 - [ytDownloader: gui下载器，支持数百种平台如youtube、bilibli等](https://github.com/aandrew-me/ytDownloader)
 
+- [videdown: 跨平台Videdown 是一款现代化的开源视频下载工具，让你可以从抖音 小红书 B站 YT Instagram等网站下载无水印高清视频](https://github.com/cshuangyy/videdown)
+
 - [res-downloader: 嗅探抓取资源。视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!](https://github.com/putyy/res-downloader?tab=readme-ov-file)
 
 ### 手机与电脑交互
@@ -317,6 +365,8 @@ tags: []
 - [SyncClipboard: 跨平台剪贴板同步、历史记录管理工具 / Cross-platform cipboard syncing, history management tool](https://github.com/Jeric-X/SyncClipboard)
 
 - [localsend](https://github.com/localsend/localsend)
+
+- [lightningvine-docs: 闪电藤是基于LocalSend的二次开发产品，在原有局域网文件传输基础上，增加了webdav传输和云传输的能力，是一个万能的文件传输助手。](https://github.com/cmlanche/lightningvine-docs)
 
 - [LANChat: 一款支持文件传输的跨平台局域网聊天软件，用Rust编写。A cross-platform LAN chat software that supports file transfer, written in Rust.](https://github.com/cap153/LANChat)
 
@@ -329,6 +379,9 @@ tags: []
 - [jark006/jarkViewer:  看图软件，适用于日常图片浏览及专业摄影作品预览等多种场景。它操作方便，支持多种快捷键，例如按下 I 键可快速查看图片详细信息。还支持读取 AI 生成图像的提示词（如有）、自动记忆上次窗口的位置和大小等实用功能。](https://github.com/jark006/jarkViewer)
 
 - [caesium-image-compressor: 图片压缩](https://github.com/Lymphatus/caesium-image-compressor)
+
+- [compressO: 跨平台视频和图片压缩](https://github.com/codeforreal1/compressO)
+
 - [snow-shot: 超好用的截图工具](https://github.com/mg-chao/snow-shot)
 
 ### 视频
@@ -346,6 +399,11 @@ tags: []
 
 - [soia: High-performance cross-platform media player with HDR/Dolby Vision, WebDAV/DLNA/SMB streaming, dual subtitles, and browser remote control.](https://github.com/FengZeng/soia/#data-storage#1)
 - [Stremio-Kai: A refined all-in-one Stremio build for premium viewing: modern UI with enhanced metadata, intro skipping, smart automation and optional enhancements—all optimized for modest hardware.](https://github.com/allecsc/Stremio-Kai)
+
+[SakuraAIPlayer：基于人工智能技术的革命性视频播放器，利用GPU加速的AI处理实现实时超分辨率、帧插值、去马赛克、美颜增强、换脸、多语言语音识别字幕及字幕翻译。](http://liga.tech/SakuraAIPlayer/)
+
+
+- [fntv-electron: 飞牛影视PC版](https://github.com/QiaoKes/fntv-electron)
 
 #### 字幕
 
@@ -368,6 +426,7 @@ tags: []
 - [video2x：视频和图像无损放大工具。该项目集成了多种超分辨率算法（如 Waifu2x、Anime4K、Real-ESRGAN），能够有效提高视频和图像的分辨率，并提供了图形界面（GUI）、Docker 和命令行界面（CLI）的使用方式](https://github.com/k4yt3x/video2x)
 
 - [FFmpegFreeUI: 3FUI 是 ffmpeg 在 Windows 上的轻度专业交互外壳，收录大量参数，界面美观，交互友好。此项目面向国内使用环境，让普通人也能够轻松压制视频和转换格式。](https://github.com/Lake1059/FFmpegFreeUI)
+- [ffmpeg_batch: ffmpeg ui](https://github.com/eibols/ffmpeg_batch)
 
 - [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
 
@@ -387,14 +446,32 @@ tags: []
 
 - [FeelUOwn: 跨平台音乐播放器支持yotube、bilibili、网易云、qq音乐等插件](https://github.com/feeluown/FeelUOwn)
 
+- [AlgerMusicPlayer: 跨平台第三方音乐播放器、本地服务、桌面歌词、音乐下载、远程控制](https://github.com/algerkong/algermusicplayer)
+
+### 音频
+
+- [audacity: 跨平台Audio Editor](https://github.com/audacity/audacity)
+
+### 输入法
+
+- [WindInput: 清风输入法 | 轻量、快速、可定制的开源中文输入法，专为五笔和码表输入方案设计（Windows / macOS）](https://github.com/huanfeng/WindInput)
+
 ### 第三方客户端
 
 - [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
 
-- [PiliPlus: 使用Flutter开发的BiliBili第三方客户端](https://github.com/bggRGjQaUbCoE/PiliPlus)
-    - [PiliNara: 基于PiliPlus进行修改的,做了一些自用的改动.](https://github.com/nlsdt/PiliNara)
+- [PikPak_By_Shimily_Keygen: pikpak云盘的第三方客户端](https://github.com/oureveryday/PikPak_By_Shimily_Keygen?tab=readme-ov-file)
 
-- [wiliwili: 第三方B站客户端，目前可以运行在PC全平台、PSVita、PS4 、Xbox 和 Nintendo Switch上](https://github.com/xfangfang/wiliwili)
+- bilibili
+
+    - [PiliPlus: 使用Flutter开发的BiliBili第三方客户端](https://github.com/bggRGjQaUbCoE/PiliPlus)
+        - [PiliNara: 基于PiliPlus进行修改的,做了一些自用的改动.](https://github.com/nlsdt/PiliNara)
+
+    - [Richasy/Bili.Copilot: B站第三方 Windows 桌面客户端，使用 Windows App SDK 构建的原生应用](https://github.com/Richasy/Bili.Copilot)
+
+    - [wiliwili: 第三方B站客户端，目前可以运行在PC全平台、PSVita、PS4 、Xbox 和 Nintendo Switch上](https://github.com/xfangfang/wiliwili)
+
+- [EchoMusic: 🎉 一个简约的第三方酷狗概念版音乐播放器](https://github.com/hoowhoami/EchoMusic)
 
 ### 流行软件相关
 
@@ -402,17 +479,28 @@ tags: []
 
 - [chatlog: 专为微信聊天记录管理而设计的开源工具。它采用 Go 语言开发，提供了 TUI 界面、命令行工具和 HTTP API 服务，支持从本地数据库查询聊天记录、联系人、群聊等功能，以及 MCP SSE 协议，可与 AI 助手无缝集成。](https://github.com/sjzar/chatlog)
 
+- [DiscordChatExporter:跨平台Saves Discord chat logs to a file](https://github.com/Tyrrrz/DiscordChatExporter)
+
 ### 追番
 
 - [Kazumi: 基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕，支持实时超分辨率。](https://github.com/Predidit/Kazumi)
 
+### 阅读器
+
+- [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
 ### 游戏相关
+
+- [Pavise-Game: Windows 游戏性能工具：把被后台进程抢走的 CPU、IO 与调度资源还给游戏。本地运行、不注入游戏进程、所有改动可还原/A Windows gaming performance tool that gives back the CPU, I/O and scheduling resources your background processes take. Runs locally, never injects into game processes, every change is reversible.](https://github.com/dulaiduwang003/Pavise-Game)
 
 - [Magpie: 可以为不同的软件窗口设置不同的算法。因此可以为游戏添加dlss等功能，但这只是画面层面的而不是游戏引擎层面的。同样也可以为视频添加dlss等功能](https://github.com/Blinue/Magpie)
 
+- [GameLingo：汉化翻译游戏](https://www.gamelingo.cn/)
+
 #### Steam相关
 
-- [SteamTools：Steam 工具箱。可以加速steam和github网络](https://github.com/BeyondDimension/SteamTools)
+- [BeyondDimension/SteamTools: 🛠「Watt Toolkit」是一个开源跨平台的多功能 Steam 工具箱。可以加速steam和github网络](https://github.com/BeyondDimension/SteamTools)
+
+- [YuqiEngine: 宇奇引擎 - 游戏性能优化工具](https://github.com/ZYY817/YuqiEngine)
 
 #### 修改器和变速器
 
@@ -429,6 +517,8 @@ tags: []
 - [game-save-manager: 一个简单的游戏存档管理器](https://github.com/mcthesw/game-save-manager)
 #### 模拟器
 
+- [RetroArch: 跨平台一站式复古游戏模拟器。该项目是 libretro 官方开发的跨平台模拟器，可动态加载各类游戏机模拟器和游戏引擎。它提供多种着色器、即时存档、手柄操作和视频录制等功能，支持 Windows、Linux、macOS、Android、iOS 以及 PS、Xbox、任天堂主机等平台。](https://github.com/libretro/RetroArch)
+
 - [shadPS4：开源的 PS4 模拟器。虽然项目仍处于早期开发阶段，能运行的游戏有限，但最新版已经能够成功运行《血源诅咒》和《黑暗之魂II》等游戏。](https://github.com/shadps4-emu/shadPS4)
 
 - [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
@@ -439,6 +529,8 @@ tags: []
 - [keymouse-studio: 面向 Windows 的键鼠自动化工具，支持连点、定时点击、键鼠录制、脚本编辑与回放。](https://github.com/Geo-ff/keymouse-studio)
 
 ### 网络相关
+
+- [HypoMux: CN Windows 多网卡聚合与网络加速工具。一键融合有线、Wi-Fi、热点等连接，实现多路径传输与智能流量调度。](https://github.com/Hypostasis-Cat/HypoMux)
 
 #### 代理工具
 
@@ -473,13 +565,7 @@ tags: []
 - [OFGB：广告滚蛋 - 删除 Win11 各处广告的小工具](https://github.com/zetaloop/OFGB)
 
 
-- [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
-
 - [EcoPaste: 🎉跨平台的剪贴板管理工具](https://github.com/EcoPasteHub/EcoPaste)
-
-- [kando: 跨平台的饼式鼠标快捷键](https://github.com/kando-menu/kando)
-
-- [PikPak_By_Shimily_Keygen: pikpak云盘的第三方客户端](https://github.com/oureveryday/PikPak_By_Shimily_Keygen?tab=readme-ov-file)
 
 - [MuJing: 一款通过电影、美剧或文档中的真实语境学习英语单词的应用，让您在原汁原味的情境中记忆词汇，提升学习效率。](https://github.com/tangshimin/MuJing)
 

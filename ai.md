@@ -45,8 +45,8 @@ tags: []
       * [shimmy:一个只有 5MB 的单文件程序的ollama的代替品](#shimmy一个只有-5mb-的单文件程序的ollama的代替品)
       * [transformers.js：在浏览器运行大模型（如deepseek-r1）](#transformersjs在浏览器运行大模型如deepseek-r1)
     * [llmfit: 根据你电脑的性能，提供选择大模型的建议](#llmfit-根据你电脑的性能提供选择大模型的建议)
+    * [airllm: 仅需 4GB 显存就能跑 70B 大模型。这是一个通过分层加载大幅降低推理显存占用的 Python 库，无需量化、蒸馏或剪枝，仅需 4GB 显存即可运行 70B 大模型。它支持 Llama 3.x、Qwen3、DeepSeek 等主流模型，并提供预取加速、8bit/4bit 量化](#airllm-仅需-4gb-显存就能跑-70b-大模型这是一个通过分层加载大幅降低推理显存占用的-python-库无需量化蒸馏或剪枝仅需-4gb-显存即可运行-70b-大模型它支持-llama-3xqwen3deepseek-等主流模型并提供预取加速8bit4bit-量化)
     * [记忆系统](#记忆系统)
-    * [agent客户端](#agent客户端)
     * [rag知识库相关](#rag知识库相关)
     * [llm安全相关](#llm安全相关)
     * [其他命令行相关工具](#其他命令行相关工具)
@@ -59,6 +59,7 @@ tags: []
     * [抠图、抠视频](#抠图抠视频)
     * [图片、视频质量提升](#图片视频质量提升)
     * [ai视频剪辑](#ai视频剪辑)
+    * [ai图片和视频帧语义搜索](#ai图片和视频帧语义搜索)
   * [ai语音、音乐](#ai语音音乐)
     * [语音转文字](#语音转文字)
     * [文字转语音](#文字转语音)
@@ -82,16 +83,11 @@ tags: []
   * [ai程序员](#ai程序员)
   * [ai终端](#ai终端)
     * [统计token或减少token](#统计token或减少token)
+  * [ai agent（智能体）](#ai-agent智能体)
+    * [agent cli](#agent-cli)
+    * [agent gui客户端](#agent-gui客户端)
     * [claude-code](#claude-code)
     * [编排工具](#编排工具)
-  * [ai数据库终端](#ai数据库终端)
-  * [ai安全扫描漏洞](#ai安全扫描漏洞)
-  * [ai爬虫和信息提取](#ai爬虫和信息提取)
-  * [ai可视化](#ai可视化)
-  * [ai金融模型](#ai金融模型)
-  * [ai控制手机](#ai控制手机)
-  * [ai教育](#ai教育)
-  * [ai agent（智能体）](#ai-agent智能体)
     * [在线使用](#在线使用-1)
     * [ai控制电脑](#ai控制电脑)
     * [openclaw](#openclaw)
@@ -99,6 +95,14 @@ tags: []
       * [云端openclaw](#云端openclaw)
     * [hermes-agent: The agent that grows with you](#hermes-agent-the-agent-that-grows-with-you)
     * [deepseek-harness: DeepSeek Harness: Everything is a Plugin.](#deepseek-harness-deepseek-harness-everything-is-a-plugin)
+    * [grokbot](#grokbot)
+  * [ai数据库终端](#ai数据库终端)
+  * [ai安全扫描漏洞](#ai安全扫描漏洞)
+  * [ai爬虫和信息提取](#ai爬虫和信息提取)
+  * [ai可视化](#ai可视化)
+  * [ai金融模型](#ai金融模型)
+  * [ai控制手机](#ai控制手机)
+  * [ai教育](#ai教育)
   * [MCP](#mcp)
   * [A2A](#a2a)
   * [Claude skill](#claude-skill)
@@ -780,18 +784,12 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
     - 浏览器开启webgpu：`chrome://flags`下搜索`webgpu`然后启用。
 
 ### [llmfit: 根据你电脑的性能，提供选择大模型的建议](https://github.com/AlexsJones/llmfit)
+
+### [airllm: 仅需 4GB 显存就能跑 70B 大模型。这是一个通过分层加载大幅降低推理显存占用的 Python 库，无需量化、蒸馏或剪枝，仅需 4GB 显存即可运行 70B 大模型。它支持 Llama 3.x、Qwen3、DeepSeek 等主流模型，并提供预取加速、8bit/4bit 量化](https://github.com/lyogavin/airllm)
+
 ### 记忆系统
 
 - [mempalace:保存与llm的对话](https://github.com/MemPalace/mempalace)
-
-### agent客户端
-
-- [opencode: The open source coding agent.](https://github.com/anomalyco/opencode)
-
-- [agent-studio: AgentX is a GPU-accelerated, cross-platform desktop application that brings AI agents to your workflow. 跨平台、原生 Agent 桌面。](https://github.com/sxhxliang/agent-studio)
-- [workany: 开源的 AI Agent 桌面客户端，能够执行任务、操作文件，类似于 Claude Cowork](https://github.com/workany-ai/workany)
-
-- [dexter: 金融相关的](https://github.com/virattt/dexter)
 
 ### rag知识库相关
 
@@ -942,6 +940,10 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 ### ai视频剪辑
 
 - [filmora：商业软件需要付费，不支持linux](https://filmora.wondershare.com/)
+
+### ai图片和视频帧语义搜索
+
+- [MaterialSearch: Semantic search. Search local photos and videos through natural language. AI语义搜索本地素材。以图搜图、查找本地素材、根据文字描述匹配画面、视频帧搜索、根据画面描述搜索视频。](https://github.com/chn-lee-yumi/MaterialSearch)
 
 ## ai语音、音乐
 
@@ -1171,6 +1173,45 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [openwolf: Sharper context. Fewer tokens. Open-source middleware for Claude Code.](https://github.com/cytostack/openwolf)
 
+## ai agent（智能体）
+
+### agent cli
+
+- [microsoft/apm: Agent Package Manager](https://github.com/microsoft/apm)
+
+- [ctx: 搜索agent session的历史](https://github.com/ctxrs/ctx)
+
+### agent gui客户端
+
+- [awesome-ai-agents: A list of AI autonomous agents](https://github.com/e2b-dev/awesome-ai-agents)
+
+- [500-AI-Agents-Projects: AI Agent 合集](https://github.com/ashishpatel26/500-AI-Agents-Projects)
+
+- [n8n: 自动化工作流](https://github.com/n8n-io/n8n)
+
+- [n8n-workflows:该项目收集了 2000+ 高质量、开箱即用的 n8n 自动工作流模板，涵盖官方示例、社区精华和用户实用场景。它内置一个基于 FastAPI 的本地搜索服务，支持全文搜索、分类筛选和 Mermaid 可视化展示，可一键下载 JSON 文件，方便导入你的 n8n 实例。](https://github.com/Zie619/n8n-workflows)
+
+- [coze-studio（扣子）: 字节code的开源版](https://github.com/coze-dev/coze-studio)
+
+- [dify: Production-ready platform for agentic workflow development.](https://github.com/langgenius/dify)
+
+- [OpenManus：manus的开源版](https://github.com/mannaandpoem/OpenManus)
+
+- [autogen：微软的智能体框架](https://github.com/microsoft/autogen)
+
+- [langgraph](https://github.com/langchain-ai/langgraph)
+  - [agent-service-toolkit：用 Python 快速搭建和运行基于 LangGraph 框架的 AI 代理服务。它结合 FastAPI、Streamlit 和 Pydantic 等技术栈，提供了用户界面、自定义 Agent、流式传输等功能，并集成了内容审核（LlamaGuard）和用户反馈机制（LangSmith），极大地简化了 AI Agent 应用的开发和优化过程。](https://github.com/JoshuaC215/agent-service-toolkit)
+
+- [A2UI：google开发的让agent生成ui来回答](https://github.com/google/A2UI)
+
+- [awesome-design-md: 根据大公司和常用模板，通过agent生成网页](https://github.com/VoltAgent/awesome-design-md)
+
+- [opencode: The open source coding agent.](https://github.com/anomalyco/opencode)
+
+- [agent-studio: AgentX is a GPU-accelerated, cross-platform desktop application that brings AI agents to your workflow. 跨平台、原生 Agent 桌面。](https://github.com/sxhxliang/agent-studio)
+- [workany: 开源的 AI Agent 桌面客户端，能够执行任务、操作文件，类似于 Claude Cowork](https://github.com/workany-ai/workany)
+
+- [dexter: 金融相关的](https://github.com/virattt/dexter)
 ### claude-code
 
 - [claw-code: rust重写的claude-code](https://github.com/ultraworkers/claw-code)
@@ -1257,65 +1298,6 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [orca: 跨平台agent终端](https://github.com/stablyai/orca)
 
-## ai数据库终端
-
-- [aliyun/rdsai-cli: RDSAI CLI is a next-generation, AI-powered RDS CLI that transforms how you interact with the databasea](https://github.com/aliyun/rdsai-cli)
-    - [RDSAI-CLI - 用AI重塑数据库终端CLI体验](https://mp.weixin.qq.com/s/5Vn-D52xMMoNwQtNwb_dMg)
-
-- [pg-aiguide: MCP server and Claude plugin for Postgres skills and documentation. Helps AI coding tools generate better PostgreSQL code.](https://github.com/timescale/pg-aiguide)
-
-## ai安全扫描漏洞
-
-- [codex-security: OpenAI 官方推出的命令行工具，用来扫描代码漏洞，基于 Codex。](https://github.com/openai/codex-security)
-
-## ai爬虫和信息提取
-
-- [后裔采集器](https://www.houyicaiji.com/)
-
-- [wiseflow：从网站/公众号/RSS等提取简洁的信息](https://github.com/TeamWiseFlow/wiseflow)
-
-## ai可视化
-
-- [data-formulator：微软的](https://github.com/microsoft/data-formulator)
-## ai金融模型
-
-- [Kronos: 清华大学开发的](https://github.com/shiyu-coder/Kronos)
-
-## ai控制手机
-
-- [droidrun：通过大模型，以自然语言操作安卓手机的 APP](https://github.com/droidrun/droidrun)
-
-
-- [Open-AutoGLM: 智谱的手机端智能助理框架](https://github.com/zai-org/Open-AutoGLM)
-## ai教育
-
-- [DeepTutor: 港大AI个性化私教](https://github.com/HKUDS/DeepTutor)
-
-## ai agent（智能体）
-
-- [awesome-ai-agents: A list of AI autonomous agents](https://github.com/e2b-dev/awesome-ai-agents)
-
-- [500-AI-Agents-Projects: AI Agent 合集](https://github.com/ashishpatel26/500-AI-Agents-Projects)
-
-- [n8n: 自动化工作流](https://github.com/n8n-io/n8n)
-
-- [n8n-workflows:该项目收集了 2000+ 高质量、开箱即用的 n8n 自动工作流模板，涵盖官方示例、社区精华和用户实用场景。它内置一个基于 FastAPI 的本地搜索服务，支持全文搜索、分类筛选和 Mermaid 可视化展示，可一键下载 JSON 文件，方便导入你的 n8n 实例。](https://github.com/Zie619/n8n-workflows)
-
-- [coze-studio（扣子）: 字节code的开源版](https://github.com/coze-dev/coze-studio)
-
-- [dify: Production-ready platform for agentic workflow development.](https://github.com/langgenius/dify)
-
-- [OpenManus：manus的开源版](https://github.com/mannaandpoem/OpenManus)
-
-- [autogen：微软的智能体框架](https://github.com/microsoft/autogen)
-
-- [langgraph](https://github.com/langchain-ai/langgraph)
-  - [agent-service-toolkit：用 Python 快速搭建和运行基于 LangGraph 框架的 AI 代理服务。它结合 FastAPI、Streamlit 和 Pydantic 等技术栈，提供了用户界面、自定义 Agent、流式传输等功能，并集成了内容审核（LlamaGuard）和用户反馈机制（LangSmith），极大地简化了 AI Agent 应用的开发和优化过程。](https://github.com/JoshuaC215/agent-service-toolkit)
-
-- [A2UI：google开发的让agent生成ui来回答](https://github.com/google/A2UI)
-
-- [awesome-design-md: 根据大公司和常用模板，通过agent生成网页](https://github.com/VoltAgent/awesome-design-md)
-
 ### 在线使用
 
 - [Dify](https://cloud.dify.ai/apps)
@@ -1377,6 +1359,44 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 ### [hermes-agent: The agent that grows with you](https://github.com/NousResearch/hermes-agent)
 
 ### [deepseek-harness: DeepSeek Harness: Everything is a Plugin.](https://github.com/deepseek-ai/deepseek-harness)
+
+### grokbot
+
+- [awesome-grok-bot: Curated bilingual list of Grok Bot resources — always-on AI teammates with their own cloud computer.](https://github.com/RongleCat/awesome-grok-bot)
+
+## ai数据库终端
+
+- [aliyun/rdsai-cli: RDSAI CLI is a next-generation, AI-powered RDS CLI that transforms how you interact with the databasea](https://github.com/aliyun/rdsai-cli)
+    - [RDSAI-CLI - 用AI重塑数据库终端CLI体验](https://mp.weixin.qq.com/s/5Vn-D52xMMoNwQtNwb_dMg)
+
+- [pg-aiguide: MCP server and Claude plugin for Postgres skills and documentation. Helps AI coding tools generate better PostgreSQL code.](https://github.com/timescale/pg-aiguide)
+
+## ai安全扫描漏洞
+
+- [codex-security: OpenAI 官方推出的命令行工具，用来扫描代码漏洞，基于 Codex。](https://github.com/openai/codex-security)
+
+## ai爬虫和信息提取
+
+- [后裔采集器](https://www.houyicaiji.com/)
+
+- [wiseflow：从网站/公众号/RSS等提取简洁的信息](https://github.com/TeamWiseFlow/wiseflow)
+
+## ai可视化
+
+- [data-formulator：微软的](https://github.com/microsoft/data-formulator)
+## ai金融模型
+
+- [Kronos: 清华大学开发的](https://github.com/shiyu-coder/Kronos)
+
+## ai控制手机
+
+- [droidrun：通过大模型，以自然语言操作安卓手机的 APP](https://github.com/droidrun/droidrun)
+
+
+- [Open-AutoGLM: 智谱的手机端智能助理框架](https://github.com/zai-org/Open-AutoGLM)
+## ai教育
+
+- [DeepTutor: 港大AI个性化私教](https://github.com/HKUDS/DeepTutor)
 
 ## MCP
 

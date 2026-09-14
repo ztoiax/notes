@@ -112,7 +112,7 @@ tags: []
   * [政治](#政治)
   * [军事](#军事)
   * [社会](#社会)
-  * [法律](#法律)
+  * [法学](#法学)
   * [心理](#心理)
   * [经济](#经济)
   * [金融](#金融)
@@ -2065,6 +2065,9 @@ RabbitMQ实战指南》作者
 - [万能工具人阿伟](https://space.bilibili.com/689222371)
     > 教做菜的原理
 
+- [我的样子平平无奇](https://space.bilibili.com/3334179)
+    > 教做菜
+
 - [猪肉婆吴素芬](https://space.bilibili.com/3493271997253876)
     > 顺德美食
 
@@ -2080,11 +2083,13 @@ RabbitMQ实战指南》作者
 - [吉尔的小灯塔](https://space.bilibili.com/2013555)
     > 科学烹饪
 
+- [药化猫科普社](https://space.bilibili.com/11099115)
+    > 科学处理菜
+
 - [马蹄厨房](https://space.bilibili.com/24301201/upload/video)
     > 粤菜
 
 - [猫哥揾食](https://space.bilibili.com/1501001552)
-
 
 ## 农业和水产
 
@@ -2757,10 +2762,12 @@ RabbitMQ实战指南》作者
 
     - [竹竹暴风雪](https://space.bilibili.com/354183985)
 
-## 法律
+## 法学
 
 - 微信公众号
 
+    - 郑戈
+        > 法哲学
     - 中国法律评论
     - 基层法治
     - 罗翔说刑法

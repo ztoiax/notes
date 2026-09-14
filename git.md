@@ -62,6 +62,7 @@ tags: []
     * [sem: Semantic version control => entity-level diffs, blame, and impact analysis on top of git. 28 languages via tree-sitter. Built for coding agents.](#sem-semantic-version-control--entity-level-diffs-blame-and-impact-analysis-on-top-of-git-28-languages-via-tree-sitter-built-for-coding-agents)
     * [gitfolio: 一个类似 Gitea 的 Git 仓库管理系统，采用 Go 语言开发。](#gitfolio-一个类似-gitea-的-git-仓库管理系统采用-go-语言开发)
     * [git-Agent：开源的跨平台 Git 桌面客户端，将工作区、提交历史、差异审查、三方合并放在一个窗口，支持 AI 功能。](#git-agent开源的跨平台-git-桌面客户端将工作区提交历史差异审查三方合并放在一个窗口支持-ai-功能)
+    * [tuicr: 方便在终端里做代码审查的工具。这是一款支持 Vim 快捷键的终端代码审查工具，可在命令行中连续浏览所有变更并添加评论。评论可作为正式 Review 一键提交至 GitHub、GitLab 或 Bitbucket，也能导出为 Markdown，兼容 git、jj 和 Mercurial。](#tuicr-方便在终端里做代码审查的工具这是一款支持-vim-快捷键的终端代码审查工具可在命令行中连续浏览所有变更并添加评论评论可作为正式-review-一键提交至-githubgitlab-或-bitbucket也能导出为-markdown兼容-gitjj-和-mercurial)
 * [其他版本控制系统](#其他版本控制系统)
   * [repo：google的git](#repogoogle的git)
   * [VFSForGit：微软的git](#vfsforgit微软的git)
@@ -76,6 +77,7 @@ tags: []
   * [clone下载子目录](#clone下载子目录)
   * [第三方github工具](#第三方github工具)
     * [gh](#gh)
+    * [gh-gfm-preview: 一个独立的/GitHub CLI 扩展，可以预览 GitHub Flavored Markdown，甚至可以离线使用。](#gh-gfm-preview-一个独立的github-cli-扩展可以预览-github-flavored-markdown甚至可以离线使用)
     * [github-cli官方文档](#github-cli官方文档)
     * [gh-dash](#gh-dash)
     * [eget:一键获取 GitHub Release 安装包。这是一个用 Go 编写的命令行工具，可自动从 GitHub 检索、下载并安装开源项目已发布的二进制文件（Releases），无需手动查找和下载安装包。](#eget一键获取-github-release-安装包这是一个用-go-编写的命令行工具可自动从-github-检索下载并安装开源项目已发布的二进制文件releases无需手动查找和下载安装包)
@@ -975,6 +977,8 @@ git diff | diffnav
 
 ### [git-Agent：开源的跨平台 Git 桌面客户端，将工作区、提交历史、差异审查、三方合并放在一个窗口，支持 AI 功能。](https://github.com/adoin/git-Agent)
 
+### [tuicr: 方便在终端里做代码审查的工具。这是一款支持 Vim 快捷键的终端代码审查工具，可在命令行中连续浏览所有变更并添加评论。评论可作为正式 Review 一键提交至 GitHub、GitLab 或 Bitbucket，也能导出为 Markdown，兼容 git、jj 和 Mercurial。](https://github.com/agavra/tuicr)
+
 # 其他版本控制系统
 ## repo：google的git
 
@@ -1097,6 +1101,8 @@ gh release create r1
 # 查看release
 gh release list
 ```
+
+### [gh-gfm-preview: 一个独立的/GitHub CLI 扩展，可以预览 GitHub Flavored Markdown，甚至可以离线使用。](https://github.com/thiagokokada/gh-gfm-preview)
 
 ### github-cli[官方文档](https://cli.github.com/manual/)
 

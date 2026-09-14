@@ -58,6 +58,7 @@ tags: []
   * [密码相关](#密码相关)
   * [镜像u盘相关](#镜像u盘相关)
 * [第三方客户端](#第三方客户端)
+* [流行软件相关](#流行软件相关)
   * [微信相关](#微信相关)
 * [金融](#金融)
 * [桌面工具](#桌面工具)
@@ -69,6 +70,8 @@ tags: []
 <!-- mtoc-end -->
 
 # 操作系统
+
+- [Redox：rust编写的os](https://www.redox-os.org/)
 
 ## KODI相关的电视操作系统
 
@@ -155,11 +158,19 @@ tags: []
 
 - [GEAK OS - Smart NAS Operating System | AI-Powered Private Cloud](https://www.geakos.com/)
 
+- [GeneralLibrary/fortOS: NAS OS](https://github.com/GeneralLibrary/fortOS)
 # file
 
 ## 文件传输
 
+
 - [localsend](https://github.com/localsend/localsend)
+
+- [lightningvine-docs: 闪电藤是基于LocalSend的二次开发产品，在原有局域网文件传输基础上，增加了webdav传输和云传输的能力，是一个万能的文件传输助手。](https://github.com/cmlanche/lightningvine-docs)
+
+- [LANFileShare: 将本地文件夹通过变成网站传输，支持局域网和公网](https://github.com/hasderhi/LANFileShare)
+
+- [LANDrop/LANDrop: Drop any files to any devices on your LAN.](https://github.com/LANDrop/LANDrop)
 
 - [LANChat: 一款支持文件传输的跨平台局域网聊天软件，用Rust编写。A cross-platform LAN chat software that supports file transfer, written in Rust.](https://github.com/cap153/LANChat)
 
@@ -203,6 +214,8 @@ tags: []
     - 坏文件侦测：数据管理的“安全卫士”
     - 无效符号链接修复：让系统更健康
     - 垃圾文件清理：临时文件的“天敌”
+
+- [WhoShitsonMyC: 通过扫描磁盘建立快照，实现磁盘空间变化对比轻量小工具](https://github.com/Kami958/WhoShitsonMyC)
 
 ## 云盘
 
@@ -321,6 +334,8 @@ tags: []
 
 - [ytDownloader: gui下载器，支持数百种平台如youtube、bilibli等](https://github.com/aandrew-me/ytDownloader)
 
+- [videdown: 跨平台Videdown 是一款现代化的开源视频下载工具，让你可以从抖音 小红书 B站 YT Instagram等网站下载无水印高清视频](https://github.com/cshuangyy/videdown)
+
 - [res-downloader: 嗅探抓取资源。视频号、小程序、抖音、快手、小红书、直播流、m3u8、酷狗、QQ音乐等常见网络资源下载!](https://github.com/putyy/res-downloader?tab=readme-ov-file)
 
 - [VidBee: yt-dlp的gui版。还支持rss自动下载功能，只要订阅了up主后，发布的新视频可以自动下载。还有浏览器插件，可以下载的内容，页面上会显示下载按钮。](https://github.com/nexmoe/VidBee)
@@ -393,6 +408,8 @@ tags: []
 
 - [Imagine: PNG/JPEG图片压缩工具](https://github.com/meowtec/Imagine)
 
+- [compressO: 跨平台视频和图片压缩](https://github.com/codeforreal1/compressO)
+
 ### 提升画质
 
 - [upscayl：ai图片质量提升](https://github.com/upscayl/upscayl)
@@ -422,6 +439,8 @@ tags: []
 - [FreeBox: TVBox电脑版/姊妹软件，致力于TVBox功能和生态的跨平台扩展](https://github.com/kknifer7/FreeBox)
 
 - [soia: High-performance cross-platform media player with HDR/Dolby Vision, WebDAV/DLNA/SMB streaming, dual subtitles, and browser remote control.](https://github.com/FengZeng/soia/#data-storage#1)
+
+- [fntv-electron: 飞牛影视PC版](https://github.com/QiaoKes/fntv-electron)
 
 ### 服务
 
@@ -513,6 +532,8 @@ tags: []
     - [any-listen: A cross-platform private music playback service](https://github.com/any-listen/any-listen?tab=readme-ov-file)
 - [FeelUOwn: 跨平台音乐播放器支持yotube、bilibili、网易云、qq音乐等插件](https://github.com/feeluown/FeelUOwn)
 
+- [AlgerMusicPlayer: 跨平台第三方音乐播放器、本地服务、桌面歌词、音乐下载、远程控制。支持网易云音乐](https://github.com/algerkong/algermusicplayer)
+
 ## 音频
 
 - [SoundThread: Node based GUI for The Composers Desktop Project](https://github.com/j-p-higgins/SoundThread)
@@ -520,6 +541,8 @@ tags: []
 - [easyeffects: 电脑音质提升软件-拯救你的破喇叭](https://github.com/wwmm/easyeffects)
 
 - [Omniphony: Real-time spatial / object-based audio rendering engine (VBAP + binaural) for multichannel and 3D audio — speakers or headphones.](https://github.com/mgth/Omniphony)
+
+- [audacity: 跨平台Audio Editor](https://github.com/audacity/audacity)
 
 ## 追番
 
@@ -594,7 +617,12 @@ tags: []
 - [drawio-desktop](https://github.com/jgraph/drawio-desktop)
 
 ## 游戏相关
+
+- [BeyondDimension/SteamTools: 🛠「Watt Toolkit」是一个开源跨平台的多功能 Steam 工具箱。可以加速steam和github网络](https://github.com/BeyondDimension/SteamTools)
+
 ### 模拟器
+
+- [RetroArch: 跨平台一站式复古游戏模拟器。该项目是 libretro 官方开发的跨平台模拟器，可动态加载各类游戏机模拟器和游戏引擎。它提供多种着色器、即时存档、手柄操作和视频录制等功能，支持 Windows、Linux、macOS、Android、iOS 以及 PS、Xbox、任天堂主机等平台。](https://github.com/libretro/RetroArch)
 
 - [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
 
@@ -719,6 +747,14 @@ tags: []
 
 - [wiliwili: 第三方B站客户端，目前可以运行在PC全平台、PSVita、PS4 、Xbox 和 Nintendo Switch上](https://github.com/xfangfang/wiliwili)
 
+- [EchoMusic: 🎉 一个简约的第三方酷狗概念版音乐播放器](https://github.com/hoowhoami/EchoMusic)
+
+# 流行软件相关
+
+- [DiscordChatExporter:跨平台Saves Discord chat logs to a file](https://github.com/Tyrrrz/DiscordChatExporter)
+
+- [ellermister/mybili: 哔哩哔哩收藏夹备份程序 ~ アレ 视频不见了哟！](https://github.com/ellermister/mybili)
+
 ## 微信相关
 
 - [WechatRealFriends：查看有没有朋友偷偷删掉或者拉黑你](https://github.com/StrayMeteor3337/WechatRealFriends)
@@ -726,7 +762,6 @@ tags: []
 - [WeClone: 🚀从聊天记录创造数字分身的一站式解决方案💡 使用聊天记录微调大语言模型，让大模型有“那味儿”，并绑定到聊天机器人，实现自己的数字分身。 数字克隆/数字分身/数字永生/LLM/聊天机器人/LoRA](https://github.com/xming521/WeClone)
 
 - [WeFlow: 一个本地的微信聊天记录导出和年度报告应用](https://github.com/hicccc77/WeFlow)
-
 
 # 金融
 
@@ -745,12 +780,15 @@ tags: []
 - [BongoCat: 🐱 跨平台互动桌宠 BongoCat，为桌面增添乐趣！](https://github.com/ayangweb/BongoCat)
     - [Awesome-BongoCat: 🚀 汇聚优质的第三方 BongoCat 模型！](https://github.com/ayangweb/Awesome-BongoCat)
     - [wayland-bongocat: bongocat for your desktop ₍^. .^₎](https://github.com/saatvik333/wayland-bongocat)
+- [BongoCat: 🩷 💘C × SDL3 × OpenGL, stir it up, mash it together! Bong~ Bongocat!!! Don't be shy, join here🧸: https://discord.gg/vf8jqnattk](https://github.com/vladelaina/BongoCat)
 
 - [EcoPaste: 🎉跨平台的剪贴板管理工具](https://github.com/EcoPasteHub/EcoPaste)
 
 - [kando: 跨平台的饼式鼠标快捷键](https://github.com/kando-menu/kando)
 
 - [markeron: 跨平台。在当前桌面上的画标记工具，可以画各种图案。](https://github.com/ifer47/markeron)
+
+- [rubick: 跨平台的类似启动的工具箱，原则是一切皆插件。基于 electron 的开源工具箱，自由集成丰富插件。](https://github.com/rubickCenter/rubick)
 
 # 通信
 

@@ -80,6 +80,7 @@ tags: []
       * [sshguard：阻止SSH暴力攻击](#sshguard阻止ssh暴力攻击)
       * [fail2ban：阻止SSH暴力攻击](#fail2ban阻止ssh暴力攻击)
       * [denyhosts：阻止SSH暴力攻击](#denyhosts阻止ssh暴力攻击)
+      * [endlessh-go: 一个抵御恶意的 SSH 登陆的工具，它不会阻断那些请求，而是让它们一直处在等待状态，从而增加对方的成本。它支持 Grafana 面板。](#endlessh-go-一个抵御恶意的-ssh-登陆的工具它不会阻断那些请求而是让它们一直处在等待状态从而增加对方的成本它支持-grafana-面板)
     * [firejail：安全运行软件](#firejail安全运行软件)
     * [重要文件加锁chattr -i](#重要文件加锁chattr--i)
     * [ntp(同步时间服务)](#ntp同步时间服务)
@@ -1801,6 +1802,8 @@ UseDNS no
 wget http://mirror.neu.edu.cn/fedora-epel/7/x86_64/d/denyhosts-2.9-4.el7.noarch.rpm
 rpm -ivh denyhosts-2.9-4.el7.noarch.rpm
 ```
+
+#### [endlessh-go: 一个抵御恶意的 SSH 登陆的工具，它不会阻断那些请求，而是让它们一直处在等待状态，从而增加对方的成本。它支持 Grafana 面板。](https://github.com/shizunge/endlessh-go)
 
 ### firejail：安全运行软件
 

@@ -140,6 +140,8 @@ tags: []
 
 - [blob-downloader: 用来将网页的 blob 链接后面的视频和文件导出下载。](https://github.com/aeroxy/blob-downloader)
 
+- [ellermister/mybili: 哔哩哔哩收藏夹备份程序 ~ アレ 视频不见了哟！](https://github.com/ellermister/mybili)
+
 ## 命令行cli
 
 - [chrome-devtools-cli: 一个 Rust 命令行工具，通过 DevTools 协议连接到系列里的 Chrome 浏览器，进行网页操作，默认自动连接，可供 AI Agent 调用。](https://github.com/aeroxy/chrome-devtools-cli)

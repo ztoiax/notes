@@ -2513,6 +2513,8 @@ curl https://argocd.kubernets.cn -I
 
 - [KubeDoor: 花折：基于K8S准入控制机制的微服务管控平台，多K8S统一监控、告警、展示最佳实践](https://github.com/CassInfra/KubeDoor)
 
+- [casos: 开箱即用的云操作系统。该项目是基于 Kubernetes 构建的云操作系统，将 API Server、Controller Manager 和 Scheduler 集成到单个可执行文件。无需搭建集群和编写 YAML，即可拥有一个带 Web 管理界面和应用商店的云操作系统。](https://github.com/casosorg/casos)
+
 ## 云原生
 
 - [云原生应用市场](https://hub.grapps.cn/)

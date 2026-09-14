@@ -6,7 +6,6 @@ tags: []
 
 <!-- mtoc-start -->
 
-* [操作系统](#操作系统)
 * [terminal simulator (终端模拟器)](#terminal-simulator-终端模拟器)
   * [alacritty](#alacritty)
   * [wezterm:用rust写, 支持gpu加速](#wezterm用rust写-支持gpu加速)
@@ -88,8 +87,8 @@ tags: []
   * [alder](#alder)
     * [highlight tree](#highlight-tree)
   * [lstr：instead tree](#lstrinstead-tree)
-  * [ag](#ag)
-    * [instead grep](#instead-grep)
+  * [ag：instead grep](#aginstead-grep)
+  * [krep: instead grep](#krep-instead-grep)
   * [fzf](#fzf)
   * [television：rust版fzf](#televisionrust版fzf)
   * [skim：rust 版fzf](#skimrust-版fzf)
@@ -314,10 +313,6 @@ tags: []
 * [reference](#reference)
 
 <!-- mtoc-end -->
-
-# 操作系统
-
-- [Redox：rust编写的os](https://www.redox-os.org/)
 
 # terminal simulator (终端模拟器)
 
@@ -612,9 +607,9 @@ ls *.js | entr -r node app.js
 
 ## [lstr：instead tree](https://github.com/bgreenwell/lstr)
 
-## ag
+## ag：instead grep
 
-### instead grep
+## [krep: instead grep](https://github.com/davidesantangelo/krep)
 
 ## [fzf](https://github.com/junegunn/fzf)
 
