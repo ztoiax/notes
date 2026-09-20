@@ -9,28 +9,34 @@ tags: []
 
 * [windows](#windows)
   * [系统](#系统)
+  * [pe系统](#pe系统)
+  * [将windows或便携式软件安装到u盘](#将windows或便携式软件安装到u盘)
   * [系统相关](#系统相关)
+    * [安装相关](#安装相关)
+      * [镜像u盘相关](#镜像u盘相关)
     * [激活破解](#激活破解)
     * [优化相关](#优化相关)
+    * [wsl](#wsl)
     * [终端相关](#终端相关)
     * [安装与卸载相关包括驱动](#安装与卸载相关包括驱动)
     * [性能监控、硬件参数调整相关](#性能监控硬件参数调整相关)
     * [存储相关](#存储相关)
     * [杀毒相关](#杀毒相关)
+    * [任务管理器](#任务管理器)
   * [逆向](#逆向)
-  * [镜像u盘相关](#镜像u盘相关)
-  * [pe系统](#pe系统)
   * [app](#app)
     * [桌面相关](#桌面相关)
       * [窗口管理器](#窗口管理器)
       * [美化](#美化)
       * [鼠标](#鼠标)
+      * [启动器](#启动器)
       * [其他](#其他)
     * [文件相关](#文件相关)
       * [文件管理器](#文件管理器)
       * [文件转换](#文件转换)
       * [清理相关](#清理相关)
-    * [编辑器](#编辑器)
+      * [云挂载](#云挂载)
+    * [markdown编辑器](#markdown编辑器)
     * [终端、ssh终端](#终端ssh终端)
     * [远程相关](#远程相关)
     * [下载器](#下载器)
@@ -66,10 +72,59 @@ tags: []
 
 ## 系统
 
+- [WinNew - 从微软服务器获取最新的原版Windows镜像](https://winnew.cn/)
+
+- [MSDN, 我告诉你 - 做一个安静的工具站](https://msdn.itellyou.cn/)
+
 - [Atlas：开源的精简版 Windows 10](https://github.com/Atlas-OS/Atlas)
 
 - [Rectify11：更好用的windows11](https://github.com/Rectify11/Installer)
+
 - [tiny11builder: 一个脚本精简windows11](https://github.com/ntdevlabs/tiny11builder)
+
+## pe系统
+
+- [Ventoy：可以存放多个pe系统的u盘启动器](https://www.ventoy.net/cn/)
+
+- [在下莫老师：5款WindowsPE系统，纯净，强大，无广告](https://www.bilibili.com/video/BV19T411G7gW)
+
+- [edgeless：可以自定义软件的pe，但不管你用不用这些软件都会占用内存](https://home.edgeless.top/)
+
+- [firpe：是edgeless pe的分支。支持BIOS（Legacy）与UEFI两种启动模式。支持MTP驱动，使用DriveDroid下可以读取手机文件](https://firpe.cn/)
+
+- [LightPE: 雷电PE。强大、可扩展、可定制的Windows PE系统。比edgeless和firpe好处是自定义扩展软件是用的时候才加载到内存。但不能再使用pe的过程中拔掉u盘](https://github.com/yiont/LightPE)
+
+- [微PE工具箱 - 超好用的装机维护工具](https://www.wepe.com.cn/)
+
+- [HotPE - 一个纯净、强大、优雅的PE工具箱](https://www.hotpe.top/)
+
+- [KuerPE](https://kuerpe.com/)
+
+- [蜂鸟PE - 小而强悍的维护系统](https://www.fengpe.cn/)
+
+- [Angel_天使WinPE-一个纯净、安全、优雅的PE工具](https://www.angel-pe.cn/)
+
+- [CowPE](https://cowpe.cn/)
+
+- [ComPE](https://www.win-compe.top/)
+
+- [glasspe](https://glasspe.cn/)
+
+- [Dawn PE - 破晓 PE 工具箱](https://www.dawnpe.com/)
+
+## 将windows或便携式软件安装到u盘
+
+- [（视频）Ventoy打造全能U盘！配备多个PE、Wintogo系统，号称目前最强U盘引导](https://www.bilibili.com/video/BV1Gd4y1h7fC)
+- [（视频）在下莫老师：利用Ventoy打造最强大的启动U盘，把PE、Win To Go统统塞进去](https://www.bilibili.com/video/BV1EZ4y18769)
+
+- [wtg-assistant: Deploy Windows To Go on USB devices.](https://github.com/nkc3g4/wtg-assistant)
+
+- [Windows2Go: A professional-grade application for creating portable, bootable Windows To Go installations on USB drives.](https://github.com/LMLK-seal/Windows2Go)
+
+- [PortableApps：是一个应用商店可以将便携式的软件安装到u盘](https://portableapps.com/)
+    - [enigma virtual box：如何PortableApps应用商店没有的软件，就可以使用这个软件自己编译成便携式软件](https://enigmaprotector.com/en/aboutvb.html)
+
+    - [（视频）小in分享【2026】把电脑装进U盘！PortableApps+Enigma Virtual Box 保姆级教程：从此软件随身带，即插即用！](https://www.bilibili.com/video/BV1NTcczhELM)
 
 ## 系统相关
 
@@ -92,8 +147,30 @@ tags: []
 - [zen-desktop: 系统级广告拦截和隐私保护工具，支持 Windows、macOS 和 Linux 三大平台。](https://github.com/ZenPrivacy/zen-desktop)
 
 - [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
-- [TaskExplorer: 强大的 Windows 任务管理器。这是一款适用于 Windows 平台的高级任务管理工具，相比系统自带的任务管理器，能够实时显示更详细的进程信息，包括线程堆栈、文件句柄和网络连接等。](https://github.com/DavidXanatos/TaskExplorer)
+
 - [Sandboxie: 在沙盒中运行软件，避免不安分的软件，但数据会保留在沙盒之中](https://github.com/sandboxie-plus/Sandboxie)
+
+### 安装相关
+
+- [SysRi一键重装 - 纯净、快速、好用的 Windows 重装工具](https://sysri.cn/)
+
+- [LetRecovery: 一款免费开源的 Windows 系统重装工具](https://github.com/NORMAL-EX/LetRecovery)
+
+- [CmzPrep｜Windows 系统重装与部署工具](https://www.cmzprep.com/)
+    - [在下莫老师：真 · 一键重装系统！CmzPrep，安装使用指南！](https://www.bilibili.com/video/BV1Ch411G7Rz)
+
+- [EasyRC 一键重装 v3.8.2.0 官方版](https://www.puresys.net/1283.html)
+
+#### 镜像u盘相关
+
+- [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
+
+- [Rufus - 轻松创建 USB 启动盘](https://rufus.ie/zh/)
+
+- [UltraISO - The Ultimate ISO CD/DVD Image Utility](https://www.ultraiso.com/)
+
+- [NTLite - Customize and Debloat Windows ISO and Live Installs](https://ntlite.com/)
+
 ### 激活破解
 
 
@@ -116,15 +193,23 @@ tags: []
 
 - [OFGB：修改 Windows 注册表来禁用 Windows 11 系统自带的各种广告，比如开始菜单、文件资源管理器、锁屏、搜索、任务栏等位置的个性化广告。](https://github.com/xM4ddy/OFGB)
 
+### wsl
+
+- [microsoft/wslg: 为wsl提供x或wayland图形界面](https://github.com/microsoft/wslg)
+
+- [wsl2-distro-manager：WSL 发行版图形管理工具。](https://github.com/bostrot/wsl2-distro-manager)
+
+- [wsl-ui: WSL2 Manager desktop application built with Tauri, Vite, React, and TypeScript](https://github.com/octasoft-ltd/wsl-ui/)
+
+- [wsl-dashboard: 轻量级的 WSL 实例管理面板。这是一款基于 Rust 和 Slint 开发的 Windows WSL 实例管理桌面应用，最小化到托盘仅占用约 10MB 内存。支持一键启动、停止、迁移、导出/克隆实例，以及端口转发、状态监控、网络管理、USB 设备挂载等功能，显著提升在 Windows 上管理 Linux 发行版的效率和体验。](https://github.com/owu/wsl-dashboard)
+
 ### 终端相关
+
+- [wispterm: 基于libghostty-vt写的加入ai功能的跨平台终端模拟器](https://github.com/xuzhougeng/wispterm)
 
 - [terminal](https://github.com/microsoft/terminal)
 
 - [clink：让 Windows 原生的 cmd.exe 拥有类似 bash 一样强大的自动补全、历史记录、行编辑等功能](https://github.com/chrisant996/clink)
-
-- [wsl2-distro-manager：WSL 发行版图形管理工具。](https://github.com/bostrot/wsl2-distro-manager)
-
-- [wsl-dashboard: 轻量级的 WSL 实例管理面板。这是一款基于 Rust 和 Slint 开发的 Windows WSL 实例管理桌面应用，最小化到托盘仅占用约 10MB 内存。支持一键启动、停止、迁移、导出/克隆实例，以及端口转发、状态监控、网络管理、USB 设备挂载等功能，显著提升在 Windows 上管理 Linux 发行版的效率和体验。](https://github.com/owu/wsl-dashboard)
 
 - [winget-cli(windows的包管理器)](https://github.com/microsoft/winget-cli)
 
@@ -147,6 +232,8 @@ tags: []
 - [FanControl.Releases: This is the release repository for Fan Control, a highly customizable fan controlling software for Windows.](https://github.com/Rem0o/FanControl.Releases)
 - [NexBox: NexBox 是一款专为现代玩家打造的游戏工具箱，集成了硬件监控、系统优化、游戏辅助等多种实用功能，帮助你获得更流畅的游戏体验。 其核心功能有：硬件监控 系统优化 辅助准心 监控悬浮框 显示器滤镜 DLSS模型修改 第三方工具](https://github.com/MuLiuSaMa/NexBox)
 
+- [LDTools：一个网页集成了各种工具箱的下载地址。有图吧、笔吧、teachpowerup、dism++、cpu-z、AIDA64、还有天梯图等等一大堆工具。](https://tool.pc.wiki/)
+
 - [tb: 图吧工具箱和卡硬工具箱](https://github.com/AdingApkgg/tb)
     - [图吧工具箱 - DIY爱好者的必备工具合集](https://www.tbtool.cn/)
     - [卡硬工具](https://tb.saop.cc/kb/)
@@ -167,6 +254,12 @@ tags: []
 
 - [PYAS: Python 写的杀毒软件。这是一款用 Python 和 C++ 开发的 Windows 杀毒软件，通过机器学习和行为监控拦截威胁，支持 PE 文件扫描、云端检测、签名校验，以及文件、进程和注册表等系统防护功能。](https://github.com/87owo/PYAS)
 
+### 任务管理器
+
+- [TaskExplorer: 强大的 Windows 任务管理器。这是一款适用于 Windows 平台的高级任务管理工具，相比系统自带的任务管理器，能够实时显示更详细的进程信息，包括线程堆栈、文件句柄和网络连接等。](https://github.com/DavidXanatos/TaskExplorer)
+
+- [Process Lasso：任务管理器](https://bitsum.com/)
+
 ## 逆向
 
 - [OpenArk：逆向工具](https://github.com/BlackINT3/OpenArk)
@@ -175,32 +268,9 @@ tags: []
 
 - [OpenSpeedy:加速时间.比方说加速植物大战僵尸,但要关闭垂直同步,可以加速网盘下载等等.](https://github.com/Jesae/OpenSpeedy)
 
-## 镜像u盘相关
-
-- [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
-
-- [NTLite - Customize and Debloat Windows ISO and Live Installs](https://ntlite.com/)
-
-## pe系统
-
-- [Ventoy：可以存放多个pe系统的u盘启动器](https://www.ventoy.net/cn/)
-
-- [在下莫老师：5款WindowsPE系统，纯净，强大，无广告](https://www.bilibili.com/video/BV19T411G7gW)
-
-- [edgeless：可以自定义软件的pe，但不管你用不用这些软件都会占用内存](https://home.edgeless.top/)
-
-- [firpe：是edgeless pe的分支。支持BIOS（Legacy）与UEFI两种启动模式。支持MTP驱动，使用DriveDroid下可以读取手机文件](https://firpe.cn/)
-
-- [LightPE: 雷电PE。强大、可扩展、可定制的Windows PE系统。比edgeless和firpe好处是自定义扩展软件是用的时候才加载到内存。但不能再使用pe的过程中拔掉u盘](https://github.com/yiont/LightPE)
-
-- [微PE工具箱 - 超好用的装机维护工具](https://www.wepe.com.cn/)
-
 ## app
 
 ### 桌面相关
-
-- [Seelen-UI：高度可定制的 Windows 桌面美化工具。这是一款免费开源的 Windows 桌面增强工具，专注于高度自定义和效率提升。它采用 Rust 语言开发，结合 Tauri 框架与 Web 技术，支持窗口平铺管理、应用启动器、Dock、任务栏、动态壁纸、插件扩展等功能。](https://github.com/eythaann/Seelen-UI)
-- [rubick: 跨平台的类似启动的工具箱，原则是一切皆插件。基于 electron 的开源工具箱，自由集成丰富插件。](https://github.com/rubickCenter/rubick)
 
 #### 窗口管理器
 
@@ -228,6 +298,10 @@ tags: []
 
 - [OpenFences: 开源版WPF。让桌面像围栏一样分类管理图标](https://github.com/chrisdfennell/OpenFences)
 
+- [WallpaperEM:WallpaperEM 是一款开源的动态壁纸引擎：浏览并下载 Steam 创意工坊（Wallpaper Engine）壁纸，一键应用到桌面。支持 视频 / GIF / 网页 / 场景（WebGL）/ 图片 五类壁纸、多显示器、托盘与全局快捷键；内置 MCP 服务，可以用 AI 直接创作壁纸工程。](https://github.com/oneincase/WallpaperEM)
+
+- [QuickLook: 空格预览文件](https://github.com/ql-win/quicklook)
+
 #### 鼠标
 
 - [kando: 跨平台的饼式鼠标轮盘快捷键](https://github.com/kando-menu/kando)
@@ -240,6 +314,21 @@ tags: []
 
 - [MFCMouseEffect: Windows 鼠标/光标特效（MFC/C++/Win32） | Mouse & cursor effects for Windows (MFC/C++/Win32)](https://github.com/sqmw/MFCMouseEffect)
 
+#### 启动器
+
+- [Quicker软件 您的指尖工具箱 - Quicker](https://getquicker.net/)
+    - [（视频）JOKER鹏少：八年了！一个能打的没有！](https://www.bilibili.com/video/BV1Dk8t6GEdJ)
+    - [（视频）Quicker动作之：Windows上的超级虫洞，一键直达，效率神器，窗口洞洞_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1nxYN6iEEe)
+
+- [Seelen-UI：高度可定制的 Windows 桌面美化工具。这是一款免费开源的 Windows 桌面增强工具，专注于高度自定义和效率提升。它采用 Rust 语言开发，结合 Tauri 框架与 Web 技术，支持窗口平铺管理、应用启动器、Dock、任务栏、动态壁纸、插件扩展等功能。](https://github.com/eythaann/Seelen-UI)
+
+- [ZTools: An open-source implementation of uTools, a high-performance, scalable application launcher and plugin platform | Supports macOS and Windows, 一个高性能、可扩展的应用启动器和插件平台 uTools 的开源实现 | 支持 macOS 和 Windows](https://github.com/ZToolsCenter/ZTools)
+
+- [magpie: 跨平台启动器。Spotlight-style local search for everything you saved and forgot: GitHub stars, local files, images, and bookmarks. Privacy-first, no full-disk scanning, fully on-device.](https://github.com/newdee/magpie)
+
+- [Everything：基于名称快速定位文件和文件夹。](https://www.voidtools.com/zh-cn/)
+    - [EverythingToolbar: Everything integration for the Windows taskbar.](https://github.com/srwi/EverythingToolbar)
+
 #### 其他
 
 - [SmartSystemMenu: 窗口菜单增强工具。这是一款用于扩展 Windows 系统窗口菜单功能的工具。它可以为所有窗口的系统菜单（即右键标题栏弹出的菜单）添加丰富且实用的自定义选项，如窗口置顶、调整透明度、改变窗口标题/图标、窗口对齐、跨屏移动、批量隐藏/最小化、窗口截图、剪贴板操作等。](https://github.com/AlexanderPro/SmartSystemMenu)
@@ -249,6 +338,15 @@ tags: []
 - [FileConverter：右键轻松转换文件格式和压缩文件的工具。](https://github.com/Tichau/FileConverter)
 
 - [RightClickGuardian: Q萌且强力的 Windows 右键菜单管理器：全量扫描、真实菜单预览、图标显示与防回写守护。](https://github.com/linzifeng07/RightClickGuardian)
+
+- [OrbitStart: OrbitStart 是一个本地优先、可扩展的 Windows 启动工作台，它将应用、网址、文件、工作区、脚本、插件和动作入口汇聚到一个统一的资源中心。（医学生业余时间vibe coding的小软件，非专业人士，轻喷）](https://github.com/xuxinxi14/OrbitStart)
+- [rubick: 跨平台的类似启动的工具箱，原则是一切皆插件。基于 electron 的开源工具箱，自由集成丰富插件。](https://github.com/rubickCenter/rubick)
+
+- [NetSpeed-Dynamic: Windows 灵动岛 🙌 NSD - Dynamic Island For Windows](https://github.com/GEORGEWWWU/NetSpeed-Dynamic)
+
+- [KeySteer: KeySteer 是 Windows 和 macOS 上的原生键盘操控工具。用 hjkl 移动和点击，用标签定位界面，再用 Window 模式移动、分屏、组合窗口。少一些来回伸手，多一些连贯操作。](https://github.com/dccif/KeySteer)
+
+- [Ditto: 剪切板](https://github.com/sabrogden/Ditto)
 
 ### 文件相关
 
@@ -261,6 +359,8 @@ tags: []
 - [dupeguru: 查找重复文件](https://github.com/arsenetar/dupeguru)
 
 - [tiez-clipboard: TieZ 是一款基于 Tauri 的跨平台剪贴板管理器。支持剪切板分类、持久化保存、同步，文件局域网传输等功能](https://github.com/jimuzhe/tiez-clipboard)
+
+- [FolderLock: windodws系统的文件夹加锁工具](https://github.com/ns2250225/FolderLock)
 
 #### 文件管理器
 
@@ -278,6 +378,9 @@ tags: []
 
 - [NanoFile：文件管理所有基础功能、文件标签、本地加密保险箱、全局秒级搜索、文件智能分类、筛选、全格式文件预览（Office预览、代码预览、图片预览、音视频预览等）](https://apps.microsoft.com/detail/9pgwd50gwcjw?hl=en-US&gl=AS)
 
+- [filestash：跨平台一个网页版的文件管理器，支持 S3、FTP、WebDAV、Git、Mysql、Backblaze 等各种协议和云服务。](https://github.com/mickael-kerjean/filestash)
+    - [fdrive: Universal File Sync](https://github.com/mickael-kerjean/fdrive)
+
 #### 文件转换
 
 - [flyingmouse-format: 飞鼠格式 FlyingMouse Format - Windows 免费文件格式转换工具（离线可用，内置 FFmpeg/LibreOffice/Poppler/Tesseract）。图片/文档/表格/PPT/PDF/音视频/WPS 格式互转 + OCR + 批量转换；音频仅支持普通格式。作者：牢蜂（LaoFeng）｜仅供个人免费使用，禁止商业售卖/转卖/套壳](https://github.com/LaoFeng-mouse/flyingmouse-format)
@@ -293,13 +396,21 @@ tags: []
 - [NeatShift: 可以将c盘的数据文件等，如浏览器chrome的数据迁移到其他盘，c盘只保留一个快捷方式。但只能使users目录，千万不要迁移其他目录。](https://github.com/BytexGrid/NeatShift)
 
 - [FreeMove: 可以将c盘的数据文件等，如浏览器chrome的数据迁移到其他盘，c盘只保留一个快捷方式。但只能使users目录，千万不要迁移其他目录。](https://github.com/imDema/FreeMove)
+
 - [FluentCleaner: 可以代替cclenaer](https://github.com/builtbybel/FluentCleaner)
 
 - [light-c: A free, minimalist, lightweight, and high-performance C-drive cleanup tool.](https://github.com/Chunyu33/light-c)
+
 - [RogueCleaner: 流氓软件克星：扫描和清理 Windows 流氓右键菜单、自启动、计划任务、服务、浏览器插件和文件关联残留](https://github.com/aakk007/RogueCleaner)
+
 - [MangoDisk: Safety-first disk cleaner and space analyzer for macOS and Windows, with duplicate cleanup, app uninstall, startup management, system optimization, and maintenance.](https://github.com/harry0703/MangoDisk)
 
-### 编辑器
+- [WhoShitsonMyC: 通过磁盘空间添加当前使用快照，方便对比之后的使用是增加还是减少了空间](https://github.com/Kami958/WhoShitsonMyC)
+#### 云挂载
+
+- [NetMount - 统一管理和挂载云存储设施](https://www.netmount.cn/)
+
+### markdown编辑器
 
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
 
@@ -309,7 +420,12 @@ tags: []
 
 - [Yank Note: 跨平台markdown编辑器，同时支持gui和web两种界面。可以跑代码、画图表、搞加密，甚至内置终端。Yank Note 提供了版本控制功能，每次修改都会自动记录，方便我们回头进行修改对比。ai智能补全。图表嵌入：支持 PlantUML、Drawio、ECharts、Mermaid 等多种图表工具；插件系统：可以自己写 JavaScript 插件扩展功能，真正的可编程编辑器。](https://yank-note.com/)
 
+- [ColaMD: 跨平台markdown编辑器](https://github.com/marswaveai/ColaMD)
+- [Gmark: 跨平台Rust + GPUI 打造的本地优先桌面编辑器：支持 Markdown、纯文本、JSON/JSONL、CSV/TSV，提供 Live/Source/Split/Preview、大文件按需读取、结构化视图、工作区搜索及 HTML/PNG/PDF 导出。](https://github.com/kongweiguang/Gmark)
+
 ### 终端、ssh终端
+
+- [ashell: 跨平台ashell is a modern, fast, GPUI Component-based desktop terminal client written in Rust.](https://github.com/rust-kotlin/ashell)
 
 - [electerm: 设计理念是将终端、文件管理器和远程连接工具融为一体，类似于XShell和Guake的结合体，但功能更全面，支持更多协议。Terminal/ssh/sftp/ftp/telnet/serialport/RDP/VNC client(linux, mac, win)](https://github.com/electerm/electerm)
 
@@ -352,6 +468,10 @@ tags: []
 
 - [Ghost-Downloader-3: A cross-platform QUIC AI-boost fluent-design multi-threaded downloader built with Python.](https://github.com/XiaoYouChR/Ghost-Downloader-3)
 
+- [FluxDown: Rust 驱动的多协议下载管理器，支持 HTTP/FTP/BitTorrent 磁力链接及 HLS/DASH 流媒体，智能多线程加速与浏览器无缝集成。精美界面，极致性能，永久免费，零广告。](https://github.com/zerx-lab/FluxDown)
+
+- [hydra: A fast, resilient, multi-source file retriever and download engine](https://github.com/ja7ad/hydra)
+
 #### 支持下载各种平台的下载器
 
 - [ytDownloader: gui下载器，支持数百种平台如youtube、bilibli等](https://github.com/aandrew-me/ytDownloader)
@@ -383,6 +503,9 @@ tags: []
 - [compressO: 跨平台视频和图片压缩](https://github.com/codeforreal1/compressO)
 
 - [snow-shot: 超好用的截图工具](https://github.com/mg-chao/snow-shot)
+- [wincam：录屏](https://github.com/lovettchris/wincam)
+
+- [Affinity：photoshot、indesign、lllustrator的代替品](https://www.canva.cn/affinity)
 
 ### 视频
 
@@ -418,6 +541,7 @@ tags: []
 - [video-subtitle-extractor: 视频硬字幕提取，生成srt文件。无需申请第三方API，本地实现文本识别。基于深度学习的视频字幕提取框架，包含字幕区域检测、字幕内容提取。A GUI tool for extracting hard-coded subtitle (hardsub) from videos and generating srt files.](https://github.com/YaoFANGUK/video-subtitle-extractor)
 
 - [videocr: 字幕提取](https://github.com/apm1467/videocr)
+- [Aria: 实时ai字幕](https://github.com/sayksii/aria)
 
 #### 其他
 
@@ -426,6 +550,7 @@ tags: []
 - [video2x：视频和图像无损放大工具。该项目集成了多种超分辨率算法（如 Waifu2x、Anime4K、Real-ESRGAN），能够有效提高视频和图像的分辨率，并提供了图形界面（GUI）、Docker 和命令行界面（CLI）的使用方式](https://github.com/k4yt3x/video2x)
 
 - [FFmpegFreeUI: 3FUI 是 ffmpeg 在 Windows 上的轻度专业交互外壳，收录大量参数，界面美观，交互友好。此项目面向国内使用环境，让普通人也能够轻松压制视频和转换格式。](https://github.com/Lake1059/FFmpegFreeUI)
+
 - [ffmpeg_batch: ffmpeg ui](https://github.com/eibols/ffmpeg_batch)
 
 - [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
@@ -448,9 +573,14 @@ tags: []
 
 - [AlgerMusicPlayer: 跨平台第三方音乐播放器、本地服务、桌面歌词、音乐下载、远程控制](https://github.com/algerkong/algermusicplayer)
 
+- [HotDownloader: 基于 Tauri 2 和 Vue 3 的跨平台音乐下载工具，支持桌面端（Windows/macOS/Linux）与 Android 端。](https://github.com/lerdb/HotDownloader)
+
+- [Moriafly/SPW: Salt Player for Windows（椒盐音乐 Windows 版）](https://github.com/Moriafly/SPW)
+
 ### 音频
 
 - [audacity: 跨平台Audio Editor](https://github.com/audacity/audacity)
+- [Ardour, free and open-source digital audio workstation | Ardour DAW](https://ardour.org/)
 
 ### 输入法
 
@@ -473,6 +603,8 @@ tags: []
 
 - [EchoMusic: 🎉 一个简约的第三方酷狗概念版音乐播放器](https://github.com/hoowhoami/EchoMusic)
 
+- [coolapk-desktop: 酷安跨平台桌面版](https://github.com/daimiaopeng/coolapk-desktop)
+
 ### 流行软件相关
 
 - [WeChatMsg：提取微信聊天记录的工具。导出成 HTML、Word、Excel 和 txt 等格式的文档。导出的 HTML 文档，还原了微信聊天界面，而且包含文本、图片、视频、表情包、语音、文件、转账等记录，导出的数据可用于永久保存、生成年度报告和训练个人聊天助手。](https://github.com/LC044/WeChatMsg)
@@ -488,6 +620,9 @@ tags: []
 ### 阅读器
 
 - [readest：沉浸式的电子书阅读器。这是一款为热爱阅读的用户量身打造的阅读软件，将极简设计与强大功能融合，为你带来专注、沉浸的阅读体验。它基于 Next.js 和 Tauri 开发，支持跨平台运行，现已支持 macOS、Windows、Linux 和 Web 平台，未来还将推出 iOS 和 Android 版本，实现真正的全平台覆盖](https://github.com/readest/readest)
+
+- [anx-reader: Featuring powerful AI capabilities and supporting various e-book formats, it makes reading smarter and more focused.](https://github.com/Anxcye/anx-reader/tree/develop)
+
 ### 游戏相关
 
 - [Pavise-Game: Windows 游戏性能工具：把被后台进程抢走的 CPU、IO 与调度资源还给游戏。本地运行、不注入游戏进程、所有改动可还原/A Windows gaming performance tool that gives back the CPU, I/O and scheduling resources your background processes take. Runs locally, never injects into game processes, every change is reversible.](https://github.com/dulaiduwang003/Pavise-Game)
@@ -524,6 +659,7 @@ tags: []
 - [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
 
 - [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
+
 ### 自动化
 
 - [keymouse-studio: 面向 Windows 的键鼠自动化工具，支持连点、定时点击、键鼠录制、脚本编辑与回放。](https://github.com/Geo-ff/keymouse-studio)
@@ -540,6 +676,8 @@ tags: []
 
 - [karing: Simple & Powerful proxy utility, Support routing rules for clash/sing-box](https://github.com/KaringX/karing)
 
+- [ProtonVPN/win-app: Official ProtonVPN Windows app](https://github.com/ProtonVPN/win-app)
+
 ##### clash
 
 - [clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience](https://github.com/clash-verge-rev/clash-verge-rev)
@@ -551,6 +689,8 @@ tags: []
 ### ai
 
 - [Caption-Trans: 视频生成字幕](https://github.com/cddqssc/Caption-Trans)
+
+- [Abu-Cowork: Open-source alternative to Claude Cowork — a local-first AI agent desktop app · multi-model · self-evolving skills · privacy-first · multi-Harness roadmap · DeepSeek Harness integration in progress](https://github.com/PM-Shawn/Abu-Cowork)
 
 ### 其他
 

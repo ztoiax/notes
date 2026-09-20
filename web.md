@@ -108,6 +108,8 @@ tags: []
 
 - [FluentRead：开源的浏览器翻译插件。这是一款沉浸式开源浏览器翻译插件，支持 20 多种传统和 AI 翻译引擎，以及双语对照、划词翻译等功能，帮助用户实现多语言网页沉浸式阅读体验。适用于外语学习、国际网站浏览和文档翻译等场景。](https://github.com/Bistutu/FluentRead)
 
+- [HoldTranslate-plugin-for-chrome：开源的浏览器翻译插件。](https://github.com/egggggod/HoldTranslate-plugin-for-chrome)
+
 - [screenity: 录屏](https://github.com/alyssaxuu/screenity)
 - [Xget-Now: 为 Chromium 和 Firefox 浏览器提供的 Xget 下载加速扩展，支持 GitHub、GitLab、npm、PyPI 等众多平台的文件下载加速](https://github.com/xixu-me/Xget-Now)
 
@@ -140,13 +142,17 @@ tags: []
 
 - [blob-downloader: 用来将网页的 blob 链接后面的视频和文件导出下载。](https://github.com/aeroxy/blob-downloader)
 
-- [ellermister/mybili: 哔哩哔哩收藏夹备份程序 ~ アレ 视频不见了哟！](https://github.com/ellermister/mybili)
+- [mybili: 哔哩哔哩收藏夹备份程序 ~ アレ 视频不见了哟！](https://github.com/ellermister/mybili)
+
+- [VirusDetector: Chrome/Edge 浏览器扩展，5 规则实时检测银狐木马钓鱼仿冒网站。域名仿冒 · ICP备案核查 · 下载拦截 · 链接分析 · 代码工程化 — 零依赖 Manifest V3。](https://github.com/Lolitide/VirusDetector)
 
 ## 命令行cli
 
 - [chrome-devtools-cli: 一个 Rust 命令行工具，通过 DevTools 协议连接到系列里的 Chrome 浏览器，进行网页操作，默认自动连接，可供 AI Agent 调用。](https://github.com/aeroxy/chrome-devtools-cli)
 
 - [dev3000: Captures your web app's complete development timeline - server logs, browser events, console messages, network requests, and automatic screenshots - in a unified, timestamped feed for AI debugging.](https://github.com/vercel-labs/dev3000)
+
+- [HackBrowserData: 一款命令行工具，用于从浏览器解密和导出浏览器数据（密码、历史记录、Cookie、书签、信用卡、下载历史、localStorage、sessionStorage 和扩展）。它支持最受欢迎的基于 Chromium 的浏览器和 Windows、macOS 和 Linux 上的 Firefox，以及 macOS 上的 Safari。](https://github.com/moonD4rk/HackBrowserData)
 
 # CGI和FastCGI
 

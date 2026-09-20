@@ -208,6 +208,8 @@ tags: []
 
 - [karing: Simple & Powerful proxy utility, Support routing rules for clash/sing-box](https://github.com/KaringX/karing)
 
+- [ProtonVPN/proton-vpn-gtk-app: Official ProtonVPN Linux app](https://github.com/ProtonVPN/proton-vpn-gtk-app)
+
 ### clash
 
 - [clash-verge-rev: A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience](https://github.com/clash-verge-rev/clash-verge-rev)

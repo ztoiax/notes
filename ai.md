@@ -85,6 +85,7 @@ tags: []
     * [统计token或减少token](#统计token或减少token)
   * [ai agent（智能体）](#ai-agent智能体)
     * [agent cli](#agent-cli)
+    * [agent终端](#agent终端)
     * [agent gui客户端](#agent-gui客户端)
     * [claude-code](#claude-code)
     * [编排工具](#编排工具)
@@ -152,6 +153,8 @@ tags: []
 - [铭毅天下Elasticsearch：吴恩达 x Open AI ChatGPT ——如何写出好的提示词视频核心笔记](https://mp.weixin.qq.com/s/VkLNKRtN7KR3Gjttk1cpPg)
 
 ## 性能排行榜、参数价格数据库
+
+- [AITier - AI模型排行榜、基准测试与天梯图](https://aitier.net/zh)
 
 - [Models.dev：大模型的参数、价格数据库](https://models.dev/)
 
@@ -1158,11 +1161,6 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [Chaterm:带有 AI 功能的智能终端工具，可以用自然语言完成命令行操作。 Open source AI terminal and SSH Client for EC2, Database and Kubernetes.](https://github.com/chaterm/Chaterm)
 
-- [crush: The glamourous AI coding agent for your favourite terminal 💘](https://github.com/charmbracelet/crush)
-
-- [oh-my-pi: ⌥ AI Coding agent for the terminal — hash-anchored edits, optimized tool harness, LSP, Python, browser, subagents, and more](https://github.com/can1357/oh-my-pi)
-
-- [herdr: the runtime your coding agents live on](https://github.com/herdrdev/herdr)
 - [tty7: A terminal workbench in pure Rust: shells, persistent sessions, SSH, coding agents. GPU-rendered on Zed's gpui, VT core from Alacritty.](https://github.com/l0ng-ai/tty7)
 
 ### 统计token或减少token
@@ -1180,6 +1178,16 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 - [microsoft/apm: Agent Package Manager](https://github.com/microsoft/apm)
 
 - [ctx: 搜索agent session的历史](https://github.com/ctxrs/ctx)
+
+### agent终端
+
+- [herdr: the runtime your coding agents live on](https://github.com/herdrdev/herdr)
+
+- [codux: ⬛ A native connected terminal for AI agent development. 为 AI Agent 开发而生的原生互联终端。](https://github.com/duxweb/codux)
+
+- [crush: The glamourous AI coding agent for your favourite terminal 💘](https://github.com/charmbracelet/crush)
+
+- [oh-my-pi: ⌥ AI Coding agent for the terminal — hash-anchored edits, optimized tool harness, LSP, Python, browser, subagents, and more](https://github.com/can1357/oh-my-pi)
 
 ### agent gui客户端
 

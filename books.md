@@ -1017,6 +1017,7 @@ tags: []
 - [everyone-can-use-english: 人人都能用英语。ai英语老师](https://github.com/ZuodaoTech/everyone-can-use-english)
 
 - [up: An advanced guide which might benefit you a lot 🎉 . 人生进阶指南 离谱的人生 离谱的英语学习指南/英语学习教程/英语学习/学英语](https://github.com/byoungd/up)
+- [TypeWords: Practice English, one strike, one step forward; 练习英语，一次敲击，一点进步；](https://github.com/zyronon/TypeWords)
 
 ## 文档
 
@@ -1839,6 +1840,9 @@ RabbitMQ实战指南》作者
     - [技术爬爬虾](https://space.bilibili.com/316183842)
         > linux服务折腾
 
+    - [老胡的终端国度](https://space.bilibili.com/3546784542493318)
+        > 折腾bsd系统
+
     - [无情开评](https://space.bilibili.com/514160575)
         > 服务器硬件评测
 
@@ -1913,6 +1917,9 @@ RabbitMQ实战指南》作者
 
     - [木石之懵](https://space.bilibili.com/3706924629494209)
         > 人口和高铁流动的相关的城市地理
+
+    - [南广带鱼](https://space.bilibili.com/295086372)
+        > 交通
 
     - [有点意思研究所](https://space.bilibili.com/33397277)
         > 历史地理

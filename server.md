@@ -34,6 +34,7 @@ tags: []
     * [fail2ban：防止暴力破解。ssh密码错误n次后，锁定](#fail2ban防止暴力破解ssh密码错误n次后锁定)
     * [ssh-at: ~/.ssh/config 的gui管理工具。](#ssh-at-sshconfig-的gui管理工具)
   * [服务(server)](#服务server)
+    * [邮件（mail）](#邮件mail)
     * [DNS](#dns)
       * [systemd-resolved (DNS over tls,cache server,LLMNR)](#systemd-resolved-dns-over-tlscache-serverllmnr)
       * [Technitium DNS Server：自带web gui的dns 服务器](#technitium-dns-server自带web-gui的dns-服务器)
@@ -810,6 +811,10 @@ pnuke -h /etc/pssh/hosts nginx
 ### [ssh-at: ~/.ssh/config 的gui管理工具。](https://github.com/baerwang/ssh-at)
 
 ## 服务(server)
+
+### 邮件（mail）
+
+- [mailez: Self-hosted mail server for your own domain: SMTP/IMAP/POP3, CardDAV/CalDAV, React webmail and admin console, one-command Docker Compose.](https://github.com/mailez-hq/mailez)
 
 ### DNS
 

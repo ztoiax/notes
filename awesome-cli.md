@@ -15,12 +15,15 @@ tags: []
   * [termpair: 网页操作终端](#termpair-网页操作终端)
   * [sshx：通过浏览器远程访问，共享的终端。体验有点卡](#sshx通过浏览器远程访问共享的终端体验有点卡)
   * [ghostty：用zig写的](#ghostty用zig写的)
+  * [wispterm: 基于libghostty-vt写的加入ai功能的跨平台终端模拟器](#wispterm-基于libghostty-vt写的加入ai功能的跨平台终端模拟器)
   * [WindTerm：c写的类似vscode布局的终端](#windtermc写的类似vscode布局的终端)
   * [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](#nexterm适合多服务器管理支持ssh-vnc-and-rdp支持sftp支持proxmox-lxc-和-qemu-containers)
   * [electerm: 设计理念是将终端、文件管理器和远程连接工具融为一体，类似于XShell和Guake的结合体，但功能更全面，支持更多协议。Terminal/ssh/sftp/ftp/telnet/serialport/RDP/VNC client(linux, mac, win)](#electerm-设计理念是将终端文件管理器和远程连接工具融为一体类似于xshell和guake的结合体但功能更全面支持更多协议terminalsshsftpftptelnetserialportrdpvnc-clientlinux-mac-win)
   * [waveterm: 多功能终端。集合AI，浏览器，文件管理器，通过wsh命令可以浏览markdown、图片、视频等文件。](#waveterm-多功能终端集合ai浏览器文件管理器通过wsh命令可以浏览markdown图片视频等文件)
   * [ratty: A GPU-rendered terminal emulator with inline 3D graphics 🐀🧀](#ratty-a-gpu-rendered-terminal-emulator-with-inline-3d-graphics-)
   * [terax-ai: Lightweight (7MB) Terminal-first AI-native dev workspace](#terax-ai-lightweight-7mb-terminal-first-ai-native-dev-workspace)
+  * [tuios: Terminal UI OS (Terminal Multiplexer)](#tuios-terminal-ui-os-terminal-multiplexer)
+  * [ashell: 跨平台ashell is a modern, fast, GPUI Component-based desktop terminal client written in Rust.](#ashell-跨平台ashell-is-a-modern-fast-gpui-component-based-desktop-terminal-client-written-in-rust)
 * [File Browser](#file-browser)
   * [ranger](#ranger)
   * [visidata: 支持查看sqlite的文件管理器](#visidata-支持查看sqlite的文件管理器)
@@ -89,6 +92,7 @@ tags: []
   * [lstr：instead tree](#lstrinstead-tree)
   * [ag：instead grep](#aginstead-grep)
   * [krep: instead grep](#krep-instead-grep)
+  * [tgrep: 微软写的grep，速度比rgrep快](#tgrep-微软写的grep速度比rgrep快)
   * [fzf](#fzf)
   * [television：rust版fzf](#televisionrust版fzf)
   * [skim：rust 版fzf](#skimrust-版fzf)
@@ -310,6 +314,9 @@ tags: []
   * [rainbowstream(twitter)](#rainbowstreamtwitter)
   * [haxor-news(hacknew)](#haxor-newshacknew)
   * [zlib: A command-line tool for Z-Library. Search, download, send to Kindle, and integrate with AI agents.](#zlib-a-command-line-tool-for-z-library-search-download-send-to-kindle-and-integrate-with-ai-agents)
+  * [protonpass/pass-cli：proton密码管理器](#protonpasspass-cliproton密码管理器)
+  * [capcut-cli: Independent, unofficial CLI to edit CapCut and JianYing (剪映) projects — subtitles, timing, speed, volume, templates, cut long-form to shorts. No API needed, reads draft_content.json and draft_info.json (剪映草稿) directly. Not affiliated with ByteDance.](#capcut-cli-independent-unofficial-cli-to-edit-capcut-and-jianying-剪映-projects--subtitles-timing-speed-volume-templates-cut-long-form-to-shorts-no-api-needed-reads-draft_contentjson-and-draft_infojson-剪映草稿-directly-not-affiliated-with-bytedance)
+* [逆向](#逆向)
 * [reference](#reference)
 
 <!-- mtoc-end -->
@@ -341,6 +348,8 @@ tags: []
 
 ## [ghostty：用zig写的](https://github.com/ghostty-org/ghostty)
 
+## [wispterm: 基于libghostty-vt写的加入ai功能的跨平台终端模拟器](https://github.com/xuzhougeng/wispterm)
+
 ## [WindTerm：c写的类似vscode布局的终端](https://github.com/kingToolbox/WindTerm)
 
 ## [Nexterm：适合多服务器管理。支持SSH, VNC and RDP，支持SFTP、支持Proxmox LXC 和 QEMU containers](https://github.com/gnmyt/Nexterm)
@@ -352,6 +361,10 @@ tags: []
 ## [ratty: A GPU-rendered terminal emulator with inline 3D graphics 🐀🧀](https://github.com/orhun/ratty)
 
 ## [terax-ai: Lightweight (7MB) Terminal-first AI-native dev workspace](https://github.com/crynta/terax-ai)
+
+## [tuios: Terminal UI OS (Terminal Multiplexer)](https://github.com/Gaurav-Gosain/tuios)
+
+## [ashell: 跨平台ashell is a modern, fast, GPUI Component-based desktop terminal client written in Rust.](https://github.com/rust-kotlin/ashell)
 
 # File Browser
 
@@ -610,6 +623,8 @@ ls *.js | entr -r node app.js
 ## ag：instead grep
 
 ## [krep: instead grep](https://github.com/davidesantangelo/krep)
+
+## [tgrep: 微软写的grep，速度比rgrep快](https://github.com/microsoft/tgrep)
 
 ## [fzf](https://github.com/junegunn/fzf)
 
@@ -1722,6 +1737,16 @@ WebUI started, visit http://localhost:8080
 ## [haxor-news(hacknew)](https://github.com/donnemartin/haxor-news)
 
 ## [zlib: A command-line tool for Z-Library. Search, download, send to Kindle, and integrate with AI agents.](https://github.com/heartleo/zlib)
+
+## [protonpass/pass-cli：proton密码管理器](https://github.com/protonpass/pass-cli)
+
+## [capcut-cli: Independent, unofficial CLI to edit CapCut and JianYing (剪映) projects — subtitles, timing, speed, volume, templates, cut long-form to shorts. No API needed, reads draft_content.json and draft_info.json (剪映草稿) directly. Not affiliated with ByteDance.](https://github.com/renezander030/capcut-cli)
+
+# 逆向
+
+- [radare2: UNIX-like reverse engineering framework and command-line toolset](https://github.com/radareorg/radare2)
+
+- [radare2-r2pipe: Access radare2 via pipe from any programming language!](https://github.com/radareorg/radare2-r2pipe)
 
 # reference
 

@@ -10,7 +10,10 @@ tags: []
 * [操作系统](#操作系统)
   * [KODI相关的电视操作系统](#kodi相关的电视操作系统)
   * [安卓](#安卓)
+  * [linux发行版](#linux发行版)
   * [nas](#nas)
+  * [其他os](#其他os)
+  * [虚拟机系统](#虚拟机系统)
 * [file](#file)
   * [文件传输](#文件传输)
   * [文件管理器](#文件管理器)
@@ -70,8 +73,6 @@ tags: []
 <!-- mtoc-end -->
 
 # 操作系统
-
-- [Redox：rust编写的os](https://www.redox-os.org/)
 
 ## KODI相关的电视操作系统
 
@@ -152,13 +153,45 @@ tags: []
     git clone https://github.com/casualsnek/waydroid_script
     ```
 
+## linux发行版
+
+- [DistroWatch: linux发行版排行榜网站](https://distrowatch.com/)
+
+- [SteamOS：基于archlinux](https://store.steampowered.com/steamos/)
+
+- [batocera.linux：包含各种游戏模拟器的linux发行版，开机就是游戏机](https://batocera.org/)
+    - [在下莫老师：Batocera+Ventoy，打造一个多合一终极模拟器游戏U盘](https://www.bilibili.com/video/BV1Vw411Y7Vm)
+
+- [FydeOS - 面向未来的操作系统，为中国用户打造的 ChromeOS](https://fydeos.com/)
+
+- [AnduinOS：基于ubuntu改造类似windows11界面的linux](https://www.anduinos.com/)
+
+- [microsoft/azurelinux: 微软自己的linux发行版，基于Fedora](https://github.com/microsoft/azurelinux)
+
+- [Astra Linux：俄罗斯国防部和军队的linux发行版](https://astralinux.ru/)
+
 ## nas
 
 - [飞牛 fnOS - 免费 NAS 操作系统](https://fnnas.com/)
 
 - [GEAK OS - Smart NAS Operating System | AI-Powered Private Cloud](https://www.geakos.com/)
 
-- [GeneralLibrary/fortOS: NAS OS](https://github.com/GeneralLibrary/fortOS)
+- [fortOS: NAS OS](https://github.com/GeneralLibrary/fortOS)
+
+## 其他os
+
+- [Redox：rust编写的os](https://www.redox-os.org/)
+
+- [ravynOS：基于Darwin、FreeBSD和苹果开源代码的早期（预测试）开源操作系统，旨在兼容macOS应用程序，且无硬件限制。](https://ravynos.com/)
+
+- [airyx: A BSD-based OS project that aims to provide an experience like and some compatibility with macOS](https://github.com/onyet/airyx)
+
+## 虚拟机系统
+
+- [android-lineage-qemu: LineageOS for QEMU virtual machines](https://github.com/jqssun/android-lineage-qemu)
+
+- [Bass OS - Android x86_64, Raspberry Pi & VirtIO Kiosk OS](https://bassos.navotpala.tech/)
+
 # file
 
 ## 文件传输
@@ -199,6 +232,9 @@ tags: []
 - [FileExplorer: rust和Tauri和React写的跨平台文件管理器](https://github.com/conaticus/FileExplorer)
 
 - [kodbox: 开源的网页文件管理器。](https://github.com/kalcaddle/kodbox)
+
+- [filestash：跨平台一个网页版的文件管理器，支持 S3、FTP、WebDAV、Git、Mysql、Backblaze 等各种协议和云服务。](https://github.com/mickael-kerjean/filestash)
+    - [fdrive: Universal File Sync](https://github.com/mickael-kerjean/fdrive)
 
 ## 文件清理
 
@@ -326,6 +362,8 @@ tags: []
 
 - [FluxDown: Rust 驱动的多协议下载管理器，支持 HTTP/FTP/BitTorrent 磁力链接及 HLS/DASH 流媒体，智能多线程加速与浏览器无缝集成。精美界面，极致性能，永久免费，零广告。](https://github.com/zerx-lab/FluxDown)
 
+- [hydra: A fast, resilient, multi-source file retriever and download engine](https://github.com/ja7ad/hydra)
+
 - [增强版qbittorrent](https://github.com/c0re100/qBittorrent-Enhanced-Edition)
     - [trackerslist](https://trackerslist.com/all.txt)
     - [海盗湾](https://thepiratebay.org/index.html)
@@ -422,6 +460,8 @@ tags: []
 
 - [wallpaper-engine-download-web: wallpaper免登录下载](https://github.com/0ran/wallpaper-engine-download-web)
 
+- [mini-photo-editor: 在线webgl照片编辑器，带有特效、滤镜和裁剪功能](https://github.com/xdadda/mini-photo-editor)
+
 ## 视频
 
 ### 播放器
@@ -496,7 +536,7 @@ tags: []
 
 - [pyvideotrans：给视频配音、翻译配音、添加字幕](https://github.com/jianchang512/pyvideotrans)
 
-- [HandBrake: 视频剪辑](https://github.com/HandBrake/HandBrake)
+- [HandBrake: 视频剪辑和压缩](https://github.com/HandBrake/HandBrake)
 
 - [videocr: 字幕提取](https://github.com/apm1467/videocr)
 
@@ -534,6 +574,8 @@ tags: []
 
 - [AlgerMusicPlayer: 跨平台第三方音乐播放器、本地服务、桌面歌词、音乐下载、远程控制。支持网易云音乐](https://github.com/algerkong/algermusicplayer)
 
+- [HotDownloader: 基于 Tauri 2 和 Vue 3 的跨平台音乐下载工具，支持桌面端（Windows/macOS/Linux）与 Android 端。](https://github.com/lerdb/HotDownloader)
+
 ## 音频
 
 - [SoundThread: Node based GUI for The Composers Desktop Project](https://github.com/j-p-higgins/SoundThread)
@@ -544,6 +586,8 @@ tags: []
 
 - [audacity: 跨平台Audio Editor](https://github.com/audacity/audacity)
 
+- [Ardour, free and open-source digital audio workstation | Ardour DAW](https://ardour.org/)
+
 ## 追番
 
 - [Kazumi: 基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕，支持实时超分辨率。](https://github.com/Predidit/Kazumi)
@@ -551,7 +595,6 @@ tags: []
 ## 邮件
 
 - [Pebble: A small yet beautiful email client.](https://github.com/QingJ01/Pebble)
-
 ## 阅读和笔记相关
 
 - [edgeever: Serverless, 100% free, and open-source Evernote alternative on Cloudflare with native MCP | 无需服务器、0费用、原生支持 AI Agent 的开源自托管『印象笔记』](https://github.com/tianma-if/edgeever)
@@ -563,6 +606,8 @@ tags: []
 - [MrRSS: A modern, cross-platform desktop RSS reader. 一个现代化、跨平台的 RSS 阅读器.](https://github.com/WCY-dt/MrRSS)
 
 - [Folo: 聚合阅读器，有点类似于rss](https://github.com/RSSNext/Folo)
+
+- [MrRSS: A modern, cross-platform, and free AI RSS reader. 一个现代化、跨平台且免费的 AI RSS 阅读器.](https://github.com/DevXDojo/MrRSS)
 
 - [sioyek: pdf阅读器](https://github.com/ahrm/sioyek)
 
@@ -590,6 +635,9 @@ tags: []
 - [siyuan: 思源笔记](https://github.com/siyuan-note/siyuan)
 
 - [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
+
+- [ColaMD: 跨平台markdown编辑器](https://github.com/marswaveai/ColaMD)
+- [Gmark: 跨平台Rust + GPUI 打造的本地优先桌面编辑器：支持 Markdown、纯文本、JSON/JSONL、CSV/TSV，提供 Live/Source/Split/Preview、大文件按需读取、结构化视图、工作区搜索及 HTML/PNG/PDF 导出。](https://github.com/kongweiguang/Gmark)
 
 - [MarKing: Marking：现代化跨平台 Markdown 编辑器 - 专业级编辑体验 + 可视化表格编辑 + 强大导出功能](https://github.com/l06066hb/MarKing)
 
@@ -749,6 +797,8 @@ tags: []
 
 - [EchoMusic: 🎉 一个简约的第三方酷狗概念版音乐播放器](https://github.com/hoowhoami/EchoMusic)
 
+- [coolapk-desktop: 酷安跨平台桌面版](https://github.com/daimiaopeng/coolapk-desktop)
+
 # 流行软件相关
 
 - [DiscordChatExporter:跨平台Saves Discord chat logs to a file](https://github.com/Tyrrrz/DiscordChatExporter)
@@ -789,6 +839,10 @@ tags: []
 - [markeron: 跨平台。在当前桌面上的画标记工具，可以画各种图案。](https://github.com/ifer47/markeron)
 
 - [rubick: 跨平台的类似启动的工具箱，原则是一切皆插件。基于 electron 的开源工具箱，自由集成丰富插件。](https://github.com/rubickCenter/rubick)
+
+- [magpie: 跨平台启动器。Spotlight-style local search for everything you saved and forgot: GitHub stars, local files, images, and bookmarks. Privacy-first, no full-disk scanning, fully on-device.](https://github.com/newdee/magpie)
+
+- [WallpaperEM:WallpaperEM 是一款开源的动态壁纸引擎：浏览并下载 Steam 创意工坊（Wallpaper Engine）壁纸，一键应用到桌面。支持 视频 / GIF / 网页 / 场景（WebGL）/ 图片 五类壁纸、多显示器、托盘与全局快捷键；内置 MCP 服务，可以用 AI 直接创作壁纸工程。](https://github.com/oneincase/WallpaperEM)
 
 # 通信
 

@@ -19,6 +19,8 @@ tags: []
   * [app](#app)
     * [其他](#其他)
     * [工具](#工具)
+      * [密码管理器](#密码管理器)
+      * [2fa验证](#2fa验证)
     * [系统相关](#系统相关-1)
       * [adb相关](#adb相关)
       * [DNS相关](#dns相关)
@@ -30,11 +32,14 @@ tags: []
       * [投屏和管理手机](#投屏和管理手机)
       * [类似锤子的tnt交互](#类似锤子的tnt交互)
       * [手机变成电脑外设](#手机变成电脑外设)
+      * [手机分享文件或应用给另一部手机](#手机分享文件或应用给另一部手机)
     * [下载器](#下载器)
     * [浏览器](#浏览器)
+    * [邮箱](#邮箱)
+    * [编辑器](#编辑器)
     * [多媒体相关](#多媒体相关)
       * [阅读器](#阅读器)
-      * [编辑器](#编辑器)
+      * [rss订阅](#rss订阅)
       * [图片相关](#图片相关)
       * [视频播放器](#视频播放器)
         * [基于mpv的修改版](#基于mpv的修改版)
@@ -76,7 +81,6 @@ tags: []
   * [rom](#rom)
   * [GSI](#gsi)
   * [小刘不是程序员：如何挂载安卓系统镜像？](#小刘不是程序员如何挂载安卓系统镜像)
-* [电视app](#电视app)
 * [类似项目](#类似项目)
 
 <!-- mtoc-end -->
@@ -139,6 +143,8 @@ tags: []
 
 - [ghostlock-app: 解bl锁](https://github.com/YuKongA/ghostlock-app)
 
+- [blutter: 逆向](https://github.com/worawit/blutter)
+
 ## 原生linux系统运行在手机上
 
 - [postmarketOS // real Linux distribution for phones](https://postmarketos.org/)
@@ -158,15 +164,9 @@ tags: []
 
 - [Xime: 我的自用安卓输入法，基于Rime 构建，部分功能由本人设计的本地AI模型驱动，支持五笔/拼音/自定义方案。](https://github.com/ximeiorg/Xime)
 
-- [bitwarden：密码管理器](https://bitwarden.com/download/)
-
-- [keepass2android: 跨平台密码管理器](https://github.com/PhilippC/keepass2android)
-
 - [SmsForwarder（短信转发器）：备用机监控，如应用，短信通知等](https://github.com/pppscn/SmsForwarder)
 
 - [feeel：锻炼动作教学](https://github.com/EnjoyingFOSS/feeel)
-
-- [ente：提供端到端加密的服务，内含基于此服务（Ente）的两款产品，它们分别是云相册（免费试用）和 2FA 验证器（永久免费）。永久免费的 Ente Auth，它可帮助你在移动设备上生成并存储两步验证 (2FA) 令牌。](https://github.com/ente-io/ente)
 
 - [RTranslator：实时翻译](https://github.com/niedev/RTranslator)
 
@@ -196,7 +196,21 @@ tags: []
 - [Multi-Calculator-Android: 多功能计数器。包括汇率计算、存款利息、刻度尺、指南针、亲戚称呼等](https://github.com/YangDai2003/Multi-Calculator-Android)
 
 - [Level: 水平仪和刻度尺](https://github.com/woheller69/Level)
+- [Ventoid: 手机通过转接器连接u盘后，可以将系统的iso镜像写入u盘的软件](https://github.com/GPLaider/Ventoid)
+- [tiefprompt: 悬浮在别的app窗口上的提词器，可以悬浮多个](https://github.com/Tiefseetauchner/tiefprompt)
 
+#### 密码管理器
+
+- [bitwarden：密码管理器](https://bitwarden.com/download/)
+
+- [protonpass/android-pass: Android code for the Proton Pass application](https://github.com/protonpass/android-pass)
+
+- [keepass2android: 跨平台密码管理器](https://github.com/PhilippC/keepass2android)
+#### 2fa验证
+
+- [ente：提供端到端加密的服务，内含基于此服务（Ente）的两款产品，它们分别是云相册（免费试用）和 2FA 验证器（永久免费）。永久免费的 Ente Auth，它可帮助你在移动设备上生成并存储两步验证 (2FA) 令牌。](https://github.com/ente-io/ente)
+
+- [protonpass/android-authenticator](https://github.com/protonpass/android-authenticator)
 ### 系统相关
 
 - [AidLearning-FrameWork](https://github.com/aidlearning/AidLearning-FrameWork)
@@ -211,6 +225,8 @@ tags: []
 - [shizuku-next: Shizuku Next - 增强版 Shizuku：悬浮窗配对 + Shell终端 + 模块系统](https://github.com/yijiacloud/shizuku-next)
 - [shevery: Shevery - Modernized Android manager with Jetpack Compose, Material 3, and compatibility enhancements.](https://github.com/HmnDev-Tech/shevery)
 - [Nightzuku: Shizuku fork with Material 3 Expressive and Android SDK 37 updates](https://github.com/kerneldroid/Nightzuku)
+
+- [Haven: Free SSH, VNC, RDP & SFTP client for Android](https://github.com/GlassHaven/Haven)
 
 - [termux](https://github.com/termux/termux-app)
 
@@ -325,7 +341,10 @@ tags: []
 
     - [fdroidclient：免费、开源的 Android 应用商店。该项目是 F-Droid 的 Android 客户端，专门收集各类开源安卓软件（FOSS）的应用商店。](https://github.com/f-droid/fdroidclient)
 
+    - [Neo-Store: An F-Droid client with modern UI and an arsenal of extra features.](https://github.com/NeoApplications/Neo-Store)
+
 - [AuroraStore：匿名googleplay商店](https://github.com/whyorean/AuroraStore)
+
 ### 手机与电脑和其他设备交互
 
 - [syncclipboard-mobile: 跨平台SyncClipboard 移动应用](https://github.com/Jeric-X/syncclipboard-mobile)
@@ -369,6 +388,10 @@ tags: []
 
 - [AirMouse: 用手机当鼠标/键盘的极简解决方案](https://github.com/cornradio/airmouse)
 
+#### 手机分享文件或应用给另一部手机
+
+- [Sharing: 通过浏览器分享文件或应用给另一部手机。对方不需要安装这个app](https://github.com/Ammar64/Sharing)
+
 ### 下载器
 
 - [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
@@ -384,6 +407,27 @@ tags: []
 ### 浏览器
 
 - [candy-browser: Gesture-first Android browser with Material 3 Expressive design and local privacy tools](https://github.com/sk2andy/candy-browser)
+
+### 邮箱
+
+- [ProtonMail/android-mail: Proton Mail Android app](https://github.com/ProtonMail/android-mail)
+
+### 编辑器
+
+- [Xed-Editor: 内置 Termux 终端可运行 Python 和 Node.js，支持 200+ 编程语言语法高亮、自动缩进和文件管理等功能。](https://github.com/Xed-Editor/Xed-Editor)
+
+- [Kori: AI-powered Markdown notepad built with Compose Multiplatform.](https://github.com/YangDai2003/Kori)
+
+- [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
+
+- [Acode：代码编辑工具](https://github.com/deadlyjack/Acode)轻量级的 Web IDE，具有即时预览、控制台和丰富的插件等特点
+
+    ![image](./Pictures/android/Acode.avif)
+
+- [CodeAssist: An IDE for building Android applicatons on Android.](https://github.com/tyron12233/CodeAssist)
+
+- [opencode_mobile: opencode mobile](https://github.com/learning233/opencode_mobile)
+
 
 ### 多媒体相关
 
@@ -404,27 +448,17 @@ tags: []
 
 - [oblivion-desktop: Oblivion Desktop - Unofficial Warp Client for Windows/Mac/Linux](https://github.com/bepass-org/oblivion-desktop)
 
+- [anx-reader: Featuring powerful AI capabilities and supporting various e-book formats, it makes reading smarter and more focused.](https://github.com/Anxcye/anx-reader/tree/develop)
+
+#### rss订阅
+
 - [ReadYou：rss订阅](https://github.com/Ashinch/ReadYou)
 
 - [FocusReader：rss订阅](https://github.com/allentown521/FocusReader)
 
+- [capyreader: A smallish Android RSS reader](https://github.com/jocmp/capyreader)
+
 - [Folo: 聚合阅读器，有点类似于rss](https://github.com/RSSNext/Folo)
-
-#### 编辑器
-
-- [Xed-Editor: 内置 Termux 终端可运行 Python 和 Node.js，支持 200+ 编程语言语法高亮、自动缩进和文件管理等功能。](https://github.com/Xed-Editor/Xed-Editor)
-
-- [Kori: AI-powered Markdown notepad built with Compose Multiplatform.](https://github.com/YangDai2003/Kori)
-
-- [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
-
-- [Acode：代码编辑工具](https://github.com/deadlyjack/Acode)轻量级的 Web IDE，具有即时预览、控制台和丰富的插件等特点
-
-    ![image](./Pictures/android/Acode.avif)
-
-- [CodeAssist: An IDE for building Android applicatons on Android.](https://github.com/tyron12233/CodeAssist)
-
-- [opencode_mobile: opencode mobile](https://github.com/learning233/opencode_mobile)
 
 #### 图片相关
 
@@ -485,6 +519,8 @@ tags: []
 
 #### 音乐播放器
 
+- [SaltPlayerSource: 椒盐音乐](https://github.com/Moriafly/SaltPlayerSource)
+
 - [NeriPlayer:简易多平台音视频聚合流媒体播放器 🎵。整合 网易云音乐 与 Bilibili 、qq音乐、youtube的 在线内容，并提供 流媒体缓存、应用内下载、本地导入、本地歌单管理、 可选 GitHub 私有仓库同步 等能力。](https://github.com/cwuom/NeriPlayer)
 
 - [MusicFree：音乐播放器。通过插件可以播放各大平台的音乐](https://github.com/maotoumao/MusicFree)
@@ -507,6 +543,8 @@ tags: []
 - [LastWave-Native: A High-Resolution Lossless Music Streaming & Player with Real-Time Synced Lyrics & Smart Discovery for Android, built with Material 3 Expressive design.](https://github.com/Clash-Projects/LastWave-Native)
 
 - [NeriPlayer: A native Android audio player that combines multi-source streaming, local control, rich lyrics, and self-hosted sync. / ✨ 一个把多源在线播放、本地管理、歌词体验和自建同步做进原生 Android 的音频播放器 🎵](https://github.com/cwuom/NeriPlayer)
+
+- [HotDownloader: 基于 Tauri 2 和 Vue 3 的跨平台音乐下载工具，支持桌面端（Windows/macOS/Linux）与 Android 端。](https://github.com/lerdb/HotDownloader)
 
 #### 追番
 
@@ -559,6 +597,15 @@ tags: []
 - [mixplorer](https://mixplorer.com)
 
 - [Fylo：material 3 expressive ui。支持几何方块显示文件夹占用多少空间、文件转换格式、图片大码、视频导出音轨等各种功能](https://play.google.com/store/apps/details?id=com.aeroloom.fylofilemanager&hl=en)
+
+- [filestash：跨平台一个网页版的文件管理器，支持 S3、FTP、WebDAV、Git、Mysql、Backblaze 等各种协议和云服务。](https://github.com/mickael-kerjean/filestash)
+    - [fdrive: Universal File Sync](https://github.com/mickael-kerjean/fdrive)
+
+- [AnExplorer: 📁 Another Android Explorer ( File Manager ) is an All-in-One Open source file manager. AnExplorer File Manager (File Explorer) is designed for all android devices including Phones, Phablets, Tablets, Chromecast, Wear OS, Android TV and Chromebooks. It's a fully designed with Material guidelines by Google.](https://github.com/1hakr/AnExplorer)
+
+- [AmazeFileManager: Material design file manager for Android](https://github.com/TeamAmaze/AmazeFileManager)
+
+- [Prism-File-Explorer: A modern, feature-rich, and lightweight file manager for Android, built entirely with Kotlin and Jetpack Compose.](https://github.com/Raival-e/Prism-File-Explorer)
 
 #### 云盘webdav相关
 
@@ -661,6 +708,8 @@ tags: []
 
 - [karing: Simple & Powerful proxy utility, Support routing rules for clash/sing-box](https://github.com/KaringX/karing)
 
+- [ProtonVPN/android-app: Official ProtonVPN Android app](https://github.com/ProtonVPN/android-app)
+
 ##### clash
 
 - [ClashMetaForAndroid: A rule-based tunnel for Android.](https://github.com/MetaCubeX/ClashMetaForAndroid?utm_source=chatgpt.com)
@@ -716,6 +765,8 @@ tags: []
 
 
 - [NewPipe：youtube开源版，可以按时间顺序浏览up的视频](https://github.com/TeamNewPipe/NewPipe)
+
+- [Flow: A modern, feature-rich YouTube and YouTube Music client with local recommendation for Android built with Jetpack Compose](https://github.com/A-EDev/flow)
 
 - [zhihu-plus-plus: 去广告、占用低、AI大模型powered的新时代知乎安卓端体验。](https://github.com/zly2006/zhihu-plus-plus)
 
@@ -1008,6 +1059,7 @@ tags: []
 
     ```
 
+
 ## [AxManager: 通过无线adb连接，更方便的执行shell命令](https://github.com/fahrez182/AxManager)
 
 ## 救砖
@@ -1033,177 +1085,6 @@ tags: []
 - [ErfanGSIs：制作GSI](https://github.com/erfanoabdi/ErfanGSIs)
 
 ## [小刘不是程序员：如何挂载安卓系统镜像？](https://www.bilibili.com/video/BV1gL411D7hE)
-
-# 电视app
-
-- 应用商店或论坛
-
-    - [智能电视网](https://www.znds.com/)
-    - [当贝市场在线地址](https://www.dangbei.com/app/)
-    - emoton store：相当于海外版当贝商店
-    - [电视猫在线地址](https://www.tvmao.com/tv/)
-    - [黑域基地在线地址](https://www.hybase.com/shouji/tv/)
-    - [TVAPP：收集全网 Android TV电视盒子应用，涵盖影视、直播、K歌、工具、游戏等类型，整理优质APK资源，支持便捷下载与自动更新。提供安全验证、分类索引与兼容性标注，助力用户打造家庭影音娱乐中心！ ✅ TVBox/影视仓等影音壳接口配置源。](https://app.iyouhun.com/)
-    - [android-tv · GitHub Topics](https://github.com/topics/android-tv)
-
-- 手机控制电脑或安装apk
-
-    - [TV-Control-Hub: An close-source Android app that turns your phone into a smart remote for Android TV and Google TV, with secure local control and modern UI.](https://github.com/Shrey113/TV-Control-Hub)
-
-    - [野草助手](https://www.tvmao.com/sjapp/202467.html)
-
-    - 欢视助手：远程安装apk
-
-    - [Atharok / BT Remote：蓝牙连接电视的遥控，支持把手当作触控板鼠标功能等](https://gitlab.com/Atharok/BtRemote)
-
-    - [plain-app: 在浏览器中管理你的手机和电视。这是一款 Kotlin 开发的 Android 应用，让你可以在同一局域网内通过任意电脑上的浏览器，轻松查看和管理手机中的联系人、短信、通话记录、文件和照片，并支持屏幕镜像、远程操控、文件传输等功能。](https://github.com/plainhub/plain-app)
-
-- 文件管理
-
-    - [MaterialFiles：文件管理器](https://github.com/zhanghai/MaterialFiles)
-    - 小白文件管理器
-    - [AnExplorer: 📁 Another Android Explorer ( File Manager ) is an All-in-One Open source file manager. AnExplorer File Manager (File Explorer) is designed for all android devices including Phones, Phablets, Tablets, Chromecast, Wear OS, Android TV and Chromebooks. It's a fully designed with Material guidelines by Google.](https://github.com/1hakr/AnExplorer)
-    - [猫头鹰文件](https://www.skyjos.cn/owlfiles/publishing/android_tv/)
-    - File Manager Pro+
-    - X-plore
-
-- 浏览器
-
-    - [cojibrowser: The lightweight browser for Android TV](https://github.com/MVLStudio/cojibrowser)
-    - emoton浏览器
-    - via浏览器TV版
-
-- 视频
-    - [tvbox：这个项目包含tvbox的其他版本和各种配置](https://github.com/qist/tvbox)
-        - https://ghp.ci/https://raw.githubusercontent.com/xianyuyimu/TVBOX-/main/TVBox/%E4%B8%80%E6%9C%A8%E5%A4%9A%E7%BA%BF%E8%B7%AF.json
-
-    - [OK影视：类似于tvbox](https://github.com/FongMi/Release)
-
-    - 影视仓：类似于tvbox
-
-    - [mytv-android/mytv-android: Material 3 Expressive 风格的Android/Android TV IPTV播放器，内建Media3,IJKplayer和 VLC。](https://github.com/mytv-android/mytv-android)
-
-    - [LiteWebTV: 一款轻量优雅的WebTV电视软件](https://github.com/YukonKong/LiteWebTV)
-
-    - [utao: 油桃TV 电视浏览器 可看各大卫视CCTV直播 无需电视VIP 适配爱奇艺等主流视频平台](https://github.com/VonChange/utao)
-
-    - BesTV粤视厅
-
-
-    - [ACAC: 一个第三方AcFun TV和Pad客户端，A third-party AcFun client for TV & Pad。](https://github.com/xiaye13579/ACAC)
-    - [BBLL：第三方bilibili](https://github.com/xiaye13579/BBLL)
-        - [BBLLV5: 一个第三方哔哩哔哩客户端修复](https://github.com/swyefun/BBLLV5)
-        - [MyTVB: AI复刻BLBL播放器，加了一些自己的功能。将就用吧~](https://github.com/qianxuntudou-ops/MyTVB)
-    - [bilitv:由flutter实现的TV版哔哩哔哩，类似于bbll和bilibilitv。](https://github.com/kkkunny/bilitv)
-    - [BiliTV:由flutter实现的TV版哔哩哔哩](https://github.com/Hyper-Beast/BiliTV)
-    - [blbl: 一个使用原生Android开发的哔哩哔哩安卓客户端，支持触摸、遥控，以及安卓5](https://github.com/cat3399/blbl)
-    - [BT: Bilibili TV client](https://github.com/chinasoul/BT)
-    - [bv: 哔哩哔哩 的第三方 Android 应用。A third-party Android app for Bilibili.](https://github.com/aaa1115910/bv)
-    - [smarttube：第三方youtube，没有广告](https://github.com/yuliskov/SmartTube)
-    - YouTube for Fire TV：无需google服务
-
-    - [myDV: 第三方抖音](https://github.com/mytv-android/myDV)
-    - [mydv-Lite: 一个mydv的Lite版本](https://github.com/mytv-android/mydv-Lite)
-
-    - 云视听快TV：快手
-
-    - [animeko: Animeko追番的安卓电视(Android TV)适配版本（建议安卓系统版本>=11）](https://github.com/GrahamZen/animeko)
-
-- 直播
-    - [pure_live_TV: 跨平台。纯粹直播:哔哩哔哩/虎牙/斗鱼/快手/抖音/网易cc/M38自定义源应有尽有。](https://github.com/liuchuancong/pure_live_TV)
-
-    - [dart_simple_live：一个 APP 上看各种主流直播平台](https://github.com/xiaoyaocz/dart_simple_live)
-
-- 播放器
-
-    - [kodi](https://kodi.tv/download/)
-        - 插件：
-            - PVR：iptv客户端
-            - opensubtitles：字幕
-            - 豆瓣刮削器
-            - speed test：测网速
-
-    - [nova](https://github.com/nova-video-player/aos-AVP)
-
-    - [OrionTV: 一个基于 React Native TVOS 和 Expo 构建的播放器，旨在提供流畅的视频观看体验。](https://github.com/orion-lib/OrionTV)
-
-    - [Selene-TV: 以 MoonTV v100 版本 / Helios 为后端的 Android TV 客户端，针对遥控器设备优化](https://github.com/MoonTechLab/Selene-TV)
-
-    - [MoonTVPlus: MoonTVPlus 是基于 MoonTV v100 二次开发的增强版影视聚合播放器。它在原版基础上新增了外部播放器支持、视频超分、弹幕系统、评论抓取等实用功能，提供更强大的观影体验。](https://github.com/mtvpls/MoonTVPlus)
-
-    - [mpvNova: Android TV-first fork of mpv-android with a custom TV UI, audio controls, and decoder tools.](https://github.com/Laskco/mpvNova)
-
-    - [vlc](https://www.videolan.org/vlc/download-android.html)
-
-    - 当贝播放
-
-- 可以播放webdav、有刮削海报功能等的播放器
-    - [网易爆米花 - 智能媒体库&全能播放器](https://bmh.163.com/)
-    - [VidHubTV版_最新版VidHub下载_安卓电视APK_当贝市场](https://m.dangbei.com/wap-view-9090.html)
-    - [飞牛影视tv版](https://fnnas.com/download?key=tv)
-    - [jellyfin-androidtv: Android TV Client for Jellyfin](https://github.com/jellyfin/jellyfin-androidtv)
-    - emby
-        - [NextPlayerCloud/Emfin: Emby三方TV客户端](https://github.com/NextPlayerCloud/Emfin)
-    - plex
-
-- 相册
-
-    - [ShowcaseApp: 通过导入源的相册。支持本地、webdav、smb、ftp、amazon s3、immich、mtphoto、github、gitee等功能](https://github.com/mrjoechen/ShowcaseApp)
-
-- ui桌面
-    - projectivy_launcher
-    - emotn ui
-    - 当贝桌面
-    - 吾爱出品
-    - [at4k: AT4K Launcher](https://github.com/avadhesh18/at4k)
-    - [LtvLauncher: A minimal, open-source Android TV launcher featuring WiFi data usage widget, an inbuilt OLED friendly screensaver, and improved UX. A customized fork of FLauncher.](https://github.com/LeanBitLab/LtvLauncher)
-
-- 云盘
-
-    - 阿里云盘第三方
-        - 小白云盘TV版：播放4k没问题，有自动挂载云盘功能，能解析所有音轨，支持kodi、nplayer、mx player播放器。
-        - 阿里云盘TV版：在线搜索资源最丰富，字幕资源最丰富。只支持调用kodi播放器
-        - 蜗牛云盘TV版：支持kodi、mx player播放器
-
-    - 天翼云盘TV
-    - 夸克网盘TV版
-    - 中国移动云盘
-
-- 游戏机模拟器
-    - 爱吾游戏宝盒
-    - 小鸡模拟器
-    - 茱元游戏
-    - 酷咖游戏
-    - [kawaks模拟器TV版下载-kawaks模拟器TV版最新版下载-游侠软件下载](https://m.ali213.net/android/582275.html)
-
-- 游戏
-    - 跳一跳学习版
-
-- ktv
-    - iktv
-
-    - [麦动 KTV: 麦动 KTV Android 项目源码与离线曲库数据库分片](https://gitee.com/yangyachao-X/maidong-ktv)
-
-
-    - [想唱就唱](https://www.tvmao.com/hmzt/vvxcjcyjmfb.htm)
-
-    - [KTVyrps: 也叫kktv，基于LXmusicDesktop的局域网KTV系统 - 手机点歌，电视唱歌，电脑后台](https://github.com/yrps111/KTVyrps)
-
-    - [欢唱K歌](https://www.tvmao.com/hmsoft/709863.html)
-
-- 投屏
-    - 当贝投屏
-
-- adb
-    - 手机使用甲壳虫ADB助手
-    - 手机使用atvTools
-
-- 其他
-    - AIDA64：查看硬件参数
-    - [电视屏幕大师TV版_最新版电视屏幕大师下载_安卓电视APK_当贝市场](https://m.dangbei.com/wap-view-3511.html)
-    - 米家TV版：控制小米生态链设备
-    - 搜狗输入法海信提取版
-    - 东方财富通tv版
 
 # 类似项目
 
