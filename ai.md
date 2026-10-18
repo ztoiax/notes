@@ -106,7 +106,7 @@ tags: []
   * [ai教育](#ai教育)
   * [MCP](#mcp)
   * [A2A](#a2a)
-  * [Claude skill](#claude-skill)
+  * [skill](#skill)
 * [在线ai工具](#在线ai工具)
 * [获取最新ai新闻](#获取最新ai新闻)
 * [类似项目](#类似项目)
@@ -1189,6 +1189,8 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [oh-my-pi: ⌥ AI Coding agent for the terminal — hash-anchored edits, optimized tool harness, LSP, Python, browser, subagents, and more](https://github.com/can1357/oh-my-pi)
 
+- [openmuse: A personal agent with a browser, terminal, files, and work that keeps going built with CopilotKit and AG-UI.](https://github.com/CopilotKit/openmuse)
+
 ### agent gui客户端
 
 - [awesome-ai-agents: A list of AI autonomous agents](https://github.com/e2b-dev/awesome-ai-agents)
@@ -1306,6 +1308,10 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 - [orca: 跨平台agent终端](https://github.com/stablyai/orca)
 
+- [google/ax: Google 开源的 Agent 工作负载编排器](https://github.com/google/ax)
+
+- [orca: 让多个 AI 编程智能体并行开发的 IDE。这是一款跨平台的 AI 编程智能体编排工具，能够让 Claude Code、Codex 等分别在独立的 Git 工作树中并行运行，并通过同一界面统一管理。它能将同一个提示词同时发送给多个 Agent，对比结果后合并最优方案。还可通过手机 App 查看进度、接收通知和发送指令，适用于 Windows、macOS 和 Linux。](https://github.com/stablyai/orca)
+
 ### 在线使用
 
 - [Dify](https://cloud.dify.ai/apps)
@@ -1421,9 +1427,11 @@ curl -fsSL https://cdn.useanything.com/latest/installer.sh | sh
 
 ## [A2A](https://github.com/google/A2A)
 
-## Claude skill
+## skill
 
 - [awesome-claude-skills: A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows](https://github.com/ComposioHQ/awesome-claude-skills)
+
+- [skills-manager: A lightweight desktop app to manage, sync, and organize AI agent skills across 50+ coding tools — Claude Code, Codex, Cursor, Copilot, Gemini CLI, and more.](https://github.com/xingkongliang/skills-manager)
 
 - [video-use：剪辑视频](https://github.com/browser-use/video-use)
 

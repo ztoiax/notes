@@ -12,6 +12,7 @@ tags: []
   * [安卓](#安卓)
   * [linux发行版](#linux发行版)
   * [nas](#nas)
+    * [nas软件](#nas软件)
   * [其他os](#其他os)
   * [虚拟机系统](#虚拟机系统)
 * [file](#file)
@@ -41,7 +42,10 @@ tags: []
     * [ai提升视频质量](#ai提升视频质量)
     * [剪辑](#剪辑)
     * [其他](#其他-2)
-  * [音乐](#音乐)
+  * [漫画](#漫画)
+  * [音乐播放器](#音乐播放器)
+    * [基于平台源的音乐播放器](#基于平台源的音乐播放器)
+    * [音乐下载](#音乐下载)
   * [音频](#音频)
   * [追番](#追番)
   * [邮件](#邮件)
@@ -57,9 +61,11 @@ tags: []
   * [翻译](#翻译)
   * [投屏和远程控制](#投屏和远程控制)
     * [手机与电脑交互](#手机与电脑交互)
+    * [电脑与电脑屏幕共享](#电脑与电脑屏幕共享)
     * [ssh客户端](#ssh客户端)
   * [密码相关](#密码相关)
   * [镜像u盘相关](#镜像u盘相关)
+* [浏览器](#浏览器)
 * [第三方客户端](#第三方客户端)
 * [流行软件相关](#流行软件相关)
   * [微信相关](#微信相关)
@@ -178,6 +184,12 @@ tags: []
 
 - [fortOS: NAS OS](https://github.com/GeneralLibrary/fortOS)
 
+- [istoreos: 提供一个人人会用的的路由、NAS系统 （目前活跃的分支是 istoreos-24.10，main或master分支不维护请勿使用）](https://github.com/istoreos/istoreos)
+
+### nas软件
+
+- [NasCabOS：windows nas面板服务端。支持android、tv、ios等客户端](https://nas.cab/)
+
 ## 其他os
 
 - [Redox：rust编写的os](https://www.redox-os.org/)
@@ -274,6 +286,8 @@ tags: []
     ```
 
 - [OpenList: alist被收购，这是alist社区版。](https://github.com/OpenListTeam/OpenList)
+    - [OpenList-Worker: OpenList-Worker 是官方 OpenListTeam/OpenList 项目的 TypeScript + Serverless 移植版，后端由 Go 重写为运行于 Workers 的 TypeScript 服务，前端保持一致的界面与交互体验。](https://github.com/OpenListTeam/OpenList-Worker)
+    - [NextList: 基于 JS/TS 重构 Go 内核服务，使其支持部署在service less环境下。](https://github.com/Mcchen1008/NextList)
 
 - [YaoList: Rust+React版的alist](https://github.com/ChuYao233/YaoList)
 
@@ -312,6 +326,8 @@ tags: []
 
 - [Surge: 终端tui的高速下载工具，比ariac2快。这是一款采用 Go 语言开发的终端下载工具，可将下载文件自动切分为多个数据块并行下载，支持从多个镜像源下载、自动故障转移、顺序下载模式等功能。](https://github.com/surge-downloader/Surge)
 
+- [aria2-next: 跨平台Redefining the next generation of aria2](https://github.com/AnInsomniacy/aria2-next)
+
 - [AriaNg: aria2的web gui。需要浏览器的插件进行启动](https://github.com/mayswind/AriaNg)
 
 - [gopeed: A modern download manager that supports all platforms. Built with Golang and Flutter.](https://github.com/GopeedLab/gopeed)
@@ -332,6 +348,7 @@ tags: []
     - 支持下载 HTTP、FTP、BitTorrent、Magnet 等
 
 - [motrix-next：Tauri和vue3从写motrix。支持aria2](https://github.com/AnInsomniacy/motrix-next)
+- [rayburst: 跨平台下载器。使用 Aria2 Next 作为下载引擎，这是一个维护的 aria2 分支](https://github.com/AnInsomniacy/rayburst)
 
 - [tribler：bt搜索和下载工具](https://www.tribler.org/download.html)：国内用户要设置无匿名，不然可能会出现资源下不动。
 
@@ -423,7 +440,15 @@ tags: []
 
 - [Umi-OCR：ocr](https://github.com/hiroi-sora/Umi-OCR)
 
+- [eSearch: 截屏 离线OCR 搜索翻译 以图搜图 贴图 录屏 万向滚动截屏 屏幕翻译 Screenshot Offline OCR Search Translate Search for picture Paste the picture on the screen Screen recorder Omnidirectional scrolling screenshot Screen translator 支持Windows Linux macOS](https://github.com/xushengfeng/eSearch)
+
+- [mark-shot: Qt 6 Wayland screenshot selection and annotation tool](https://github.com/jswysnemc/mark-shot)
+
+- [babry: 一个在wayland上旨在实现区域自动检测的截图工具](https://github.com/kregonia/babry)
+
 ### 录屏
+
+- [capptivo: 跨平台录屏。Give your demos the spotlight they deserve ( Mac/Windows/Linux ).](https://github.com/SECHAK-AG/capptivo)
 
 - [kooha：wayland录屏](https://github.com/SeaDve/Kooha)
 
@@ -516,6 +541,8 @@ tags: []
 
 - [chaiNNer: A node-based image processing GUI aimed at making chaining image processing tasks easy and customizable. Born as an AI upscaling application, chaiNNer has grown into an extremely flexible and powerful programmatic image processing application.](https://github.com/chaiNNer-org/chaiNNer)
 
+- [SnowLeopard-Vision: SnowLeopard Vision - local AI image and video enhancement tool](https://github.com/SnowLeopard-Elysia/SnowLeopard-Vision)
+
 ### 剪辑
 
 - [OpenCut:剪映开源版](https://github.com/OpenCut-app/OpenCut)
@@ -527,6 +554,8 @@ tags: []
 - [kdenlive: 视频剪辑](https://github.com/KDE/kdenlive)
 
 - [openreel-video: OpenReel Video - Professional browser-based video editor. Open source CapCut alternative. 100% browser-based, no installation, no cloud uploads, no watermarks.](https://github.com/Augani/openreel-video)
+
+- [cutia: An open-source, in-browser alternative to CapCut.](https://github.com/msgbyte/cutia)
 
 ### 其他
 
@@ -540,25 +569,29 @@ tags: []
 
 - [videocr: 字幕提取](https://github.com/apm1467/videocr)
 
-## 音乐
+## 漫画
+
+- [jasmine: A comic browser，support Android / iOS / MacOS / Windows / Linux.](https://github.com/ComicSparks/jasmine)
+## 音乐播放器
 
 - [harmonoid: 🎵 Plays & manages your music library. Looks beautiful & juicy. Available for Windows, GNU/Linux, macOS, Android & iOS.](https://github.com/harmonoid/harmonoid)
-
-- [biu: Bilibili音乐播放器](https://github.com/wood3n/biu)
-
-- [lx-music-desktop：一个基于 electron 的音乐软件](https://github.com/lyswhut/lx-music-desktop)
-
-- [CeruMusic: 跨平台。Ceru Music 是基于 Electron 和 Vue 开发的跨平台桌面音乐播放器工具，借鉴洛雪音乐插件思想，提供插件运行框架与播放功能，不直接存储、提供任何音乐源文件。用户需通过自行选择、安装合规插件获取音乐相关数据，项目旨在为开发者提供桌面应用技术实践与学习案例，为用户提供合规的音乐播放工具框架。](https://github.com/timeshiftsauce/CeruMusic)
-
-- [go-music-dl: 跨平台的一个基于 Go 语言的全网音乐搜索与下载工具。支持 Web 界面、TUI 终端 和 桌面应用 三种使用模式。内置网易云、QQ、酷狗、Bilibili、汽水音乐等 10+ 个主流平台，支持多源并发搜索与无损音质解析。music-dl交流群：1074285005](https://github.com/guohuiyuan/go-music-dl)
 
 - [EvolveUI: qml写的音乐播放器](https://github.com/sudoevolve/EvolveUI)
 
 - [NSMusicS：支持各种云端平台](https://gitwhub.com/Super-Badmen-Viper/NSMusicS)
 
+### 基于平台源的音乐播放器
+
+- [go-music-dl: 跨平台的一个基于 Go 语言的全网音乐搜索与下载工具。支持 Web 界面、TUI 终端 和 桌面应用 三种使用模式。内置网易云、QQ、酷狗、Bilibili、汽水音乐等 10+ 个主流平台，支持多源并发搜索与无损音质解析。music-dl交流群：1074285005](https://github.com/guohuiyuan/go-music-dl)
+
+- [biu: Bilibili音乐播放器](https://github.com/wood3n/biu)
+
+- [CeruMusic: 跨平台。Ceru Music 是基于 Electron 和 Vue 开发的跨平台桌面音乐播放器工具，借鉴洛雪音乐插件思想，提供插件运行框架与播放功能，不直接存储、提供任何音乐源文件。用户需通过自行选择、安装合规插件获取音乐相关数据，项目旨在为开发者提供桌面应用技术实践与学习案例，为用户提供合规的音乐播放工具框架。](https://github.com/timeshiftsauce/CeruMusic)
+
 - [MoeKoeMusic: 一款开源简洁高颜值的酷狗第三方客户端](https://github.com/iAJue/MoeKoeMusic)
 
 - [SPlayer：网易云音乐](https://github.com/imsyy/SPlayer)
+
 - [VutronMusic: 高颜值的第三方网易云播放器；支持流媒体音乐，如navidrome、jellyfin、emby；支持本地音乐播放、离线歌单、逐字歌词、桌面歌词、Touch Bar歌词、Mac状态栏歌词显示、Linux-gnome与Linux-kde桌面状态栏歌词显示；支持降调降速，支持自定义主题等。支持 Windows / macOS / Linux](https://github.com/stark81/VutronMusic)
 
 - [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
@@ -570,9 +603,15 @@ tags: []
     - [lx-music-sync-server: 运行在 Node.js 上的 LX Music 数据同步服务](https://github.com/lyswhut/lx-music-sync-server)
 
     - [any-listen: A cross-platform private music playback service](https://github.com/any-listen/any-listen?tab=readme-ov-file)
+
 - [FeelUOwn: 跨平台音乐播放器支持yotube、bilibili、网易云、qq音乐等插件](https://github.com/feeluown/FeelUOwn)
 
 - [AlgerMusicPlayer: 跨平台第三方音乐播放器、本地服务、桌面歌词、音乐下载、远程控制。支持网易云音乐](https://github.com/algerkong/algermusicplayer)
+
+- [FuoEvolve: 跨平台的第三方音乐播放器，支持多种源](https://github.com/feeluown/FuoEvolve)
+
+- [VutronMusic: 高颜值的第三方网易云播放器；通过自写插件可支持其他线上音乐服务；支持流媒体音乐，如navidrome、jellyfin、emby；支持本地音乐播放、离线歌单、逐字歌词、桌面歌词、Touch Bar歌词、Mac状态栏歌词显示、Linux-gnome与Linux-kde桌面状态栏歌词显示；支持降调降速，支持自定义主题等。支持 Windows / macOS / Linux](https://github.com/stark81/VutronMusic)
+### 音乐下载
 
 - [HotDownloader: 基于 Tauri 2 和 Vue 3 的跨平台音乐下载工具，支持桌面端（Windows/macOS/Linux）与 Android 端。](https://github.com/lerdb/HotDownloader)
 
@@ -625,6 +664,8 @@ tags: []
 - [pdfcraft: 无需上传文件的 PDF 全能工具箱。这是一款基于 Next.js 和 WebAssembly 构建的开源 PDF 工具箱，所有文件操作均在本地浏览器内完成，无需上传到外部服务器。它提供节点式编排 PDF 文件处理工作流，支持合并、拆分、OCR、格式转换等 90 多种功能。](https://github.com/PDFCraftTool/pdfcraft)
 
 - [ReadAny：桌面端 + 安卓端的电子书阅读工具，自带 AI 功能、语音朗读和多端同步。](https://github.com/codedogQBY/ReadAny)
+
+- [read-aware: 跨平台An ebook reader with a self-evolving agent: it remembers your reading across books, and plugins extend the reader and the agent alike.](https://github.com/ahpxex/read-aware)
 
 ### markdown相关
 
@@ -736,6 +777,13 @@ tags: []
 
 - [PC Bio Unlock：手机解锁电脑登陆界面](https://meis-apps.com/pc-bio-unlock/how-to-install)
 
+- [Macro-Deck: 可以自定义手机使其变成监控面板，从而更好的利用旧手机](https://github.com/Macro-Deck-App/Macro-Deck)
+
+### 电脑与电脑屏幕共享
+
+- [Piik: 跨平台屏幕共享。支持在官网在线共享浏览器的其中某个标签](https://github.com/TNTcraftHIM/Piik)
+    - [Piik官网和在线共享浏览器的某个标签](https://demo.piik.tv/)
+
 ### ssh客户端
 
 - [RustConn:支持 SSH、RDP、VNC、SPICE、Telnet、Kubernetes 等主流协议 。 Modern connection manager for Linux with GTK4/Wayland-native interface.](https://github.com/totoshko88/RustConn)
@@ -773,6 +821,10 @@ tags: []
 ## 镜像u盘相关
 
 - [balena-etcher：写镜像到u盘](https://github.com/balena-io/etcher)
+
+# 浏览器
+
+- [ovobrowsersupport/ovobrowser: 源码级 Chromium 指纹内核，检测站按普通 Chrome 评分。Source-level Chromium fingerprint kernel that passes bot detection tests. Not JS injection — C++ patches compiled into the binary.](https://github.com/ovobrowsersupport/ovobrowser)
 
 # 第三方客户端
 

@@ -1744,9 +1744,13 @@ WebUI started, visit http://localhost:8080
 
 # 逆向
 
+- [ghidra: 美国国家安全局研究局开发的跨平台逆向框架](https://github.com/nationalsecurityagency/ghidra)
+
 - [radare2: UNIX-like reverse engineering framework and command-line toolset](https://github.com/radareorg/radare2)
 
 - [radare2-r2pipe: Access radare2 via pipe from any programming language!](https://github.com/radareorg/radare2-r2pipe)
+
+- [iaito: Official radare2 GUI](https://github.com/radareorg/iaito)
 
 # reference
 

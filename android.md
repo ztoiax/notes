@@ -23,8 +23,7 @@ tags: []
       * [2fa验证](#2fa验证)
     * [系统相关](#系统相关-1)
       * [adb相关](#adb相关)
-      * [DNS相关](#dns相关)
-      * [性能监控](#性能监控)
+      * [性能监控和设备信息查看](#性能监控和设备信息查看)
     * [手势相关](#手势相关)
     * [自动化](#自动化)
     * [应用商店](#应用商店)
@@ -37,6 +36,7 @@ tags: []
     * [浏览器](#浏览器)
     * [邮箱](#邮箱)
     * [编辑器](#编辑器)
+      * [markdown编辑器](#markdown编辑器)
     * [多媒体相关](#多媒体相关)
       * [阅读器](#阅读器)
       * [rss订阅](#rss订阅)
@@ -45,7 +45,10 @@ tags: []
         * [基于mpv的修改版](#基于mpv的修改版)
         * [剪辑](#剪辑)
       * [音乐播放器](#音乐播放器)
-      * [追番](#追番)
+        * [基于平台源的音乐播放器](#基于平台源的音乐播放器)
+        * [音乐下载](#音乐下载)
+      * [动漫追番](#动漫追番)
+      * [漫画](#漫画)
       * [视频压缩](#视频压缩)
     * [应用管理](#应用管理)
       * [android四大组件](#android四大组件)
@@ -59,9 +62,11 @@ tags: []
       * [文件格式转换](#文件格式转换)
     * [游戏相关](#游戏相关)
     * [网络相关](#网络相关)
+      * [DNS相关](#dns相关)
       * [代理工具](#代理工具)
         * [clash](#clash)
     * [安全渗透工具](#安全渗透工具)
+    * [虚拟机](#虚拟机)
     * [手机运行linux系统](#手机运行linux系统)
     * [隐藏检查](#隐藏检查)
     * [游戏相关](#游戏相关-1)
@@ -73,14 +78,16 @@ tags: []
       * [openclaw](#openclaw)
       * [编排工具](#编排工具)
 * [刷机](#刷机)
+  * [解bl锁和root相关](#解bl锁和root相关)
   * [刷入recovery、magisk、lsposed](#刷入recoverymagisklsposed)
-  * [frida：hook逆向](#fridahook逆向)
-  * [AxManager: 通过无线adb连接，更方便的执行shell命令](#axmanager-通过无线adb连接更方便的执行shell命令)
   * [救砖](#救砖)
     * [magisk模块变砖](#magisk模块变砖)
   * [rom](#rom)
   * [GSI](#gsi)
   * [小刘不是程序员：如何挂载安卓系统镜像？](#小刘不是程序员如何挂载安卓系统镜像)
+* [逆向](#逆向)
+  * [ida-droid: run ida pro using proot on android](#ida-droid-run-ida-pro-using-proot-on-android)
+  * [frida：hook逆向](#fridahook逆向)
 * [类似项目](#类似项目)
 
 <!-- mtoc-end -->
@@ -135,13 +142,14 @@ tags: []
 
 - [Apktool: apk逆向工具](https://github.com/iBotPeaches/Apktool)
 
+- [android-cli](https://developer.android.com/tools/agents/android-cli)
+    - [android/skills](https://github.com/android/skills/tree/main)
+
 ### 系统相关
 
 - [kite：小米性能监控工具](https://kite.mi.com/#/documents/instructions/quickstart?id=%e5%bf%ab%e9%80%9f%e5%bc%80%e5%a7%8b)
 
 - [ApkToolPlus: gui版 apk 逆向分析工具](https://github.com/CYRUS-STUDIO/ApkToolPlus?tab=readme-ov-file)
-
-- [ghostlock-app: 解bl锁](https://github.com/YuKongA/ghostlock-app)
 
 - [blutter: 逆向](https://github.com/worawit/blutter)
 
@@ -186,6 +194,8 @@ tags: []
 - [yike-app: 一个简约而不简单的记账 App](https://github.com/xiaojinzi123/yike-app)
 
 - [Voice-Recorder:极简的 Android 语音录音应用。这是一款极简易用的 Android 语音录音应用，支持离线录音、无广告、界面清爽，适用于会议记录、课堂笔记、采访、日常备忘等场景。](https://github.com/FossifyOrg/Voice-Recorder)
+
+- [Alibi: 后台录音和拍视频](https://github.com/Myzel394/Alibi)
 
 - [TorrentSearch: 磁力搜索](https://github.com/prajwalch/TorrentSearch)
 
@@ -303,11 +313,11 @@ tags: []
 
 - [ADB WiFi：开启adb远程端口。还有adb命令手册](https://www.dagui-smart.com/app/s/3)
 
-#### DNS相关
+- [AxManager: 通过无线adb连接，更方便的执行shell命令](https://github.com/fahrez182/AxManager)
 
-- [adns: A lightweight DNS-based ad blocker for Android with NextDNS built in](https://github.com/eyalm2000/adns)
+#### 性能监控和设备信息查看
 
-#### 性能监控
+- 逸风工具箱（原澎湃工具箱）
 
 - [FrameX-Android: Android FPS meter and performance overlay powered by Shizuku.](https://github.com/MaheshSharan/FrameX-Android)
 - [fpsviewer: A Real-time Fps Tool for Android](https://github.com/SilenceDut/fpsviewer)
@@ -378,6 +388,12 @@ tags: []
 
 - [droidVNC-NG: Android 远程桌面工具。这是一款专为局域网设计的远程查看和控制 Android 设备的工具，打开浏览器即可操控手机，无需 Root 权限。支持鼠标键盘操作、剪贴板共享、文件传输和屏幕缩放等功能。](https://github.com/bk138/droidVNC-NG)
 
+- [rustdesk：跨平台远程控制](https://github.com/rustdesk/rustdesk)
+
+- [SubnetDesk: LAN-only remote desktop based on RustDesk](https://github.com/zibo-chen/SubnetDesk)
+
+- [Macro-Deck-Client-App: 可以自定义手机使其变成监控面板，从而更好的利用旧手机](https://github.com/Macro-Deck-App/Macro-Deck-Client-App)
+
 #### 类似锤子的tnt交互
 
 - [Android-Dex: Enable a full desktop experience from any Android device over Wi‑Fi. No root, scrcpy-powered, Flutter desktop app with wireless ADB, per‑app audio, and quick controls.](https://github.com/Shrey113/Android-Dex)
@@ -404,6 +420,9 @@ tags: []
 
 - [Aria2Android: An Android app that allows you run aria2 on your device](https://github.com/devgianlu/Aria2Android)
 
+
+- [aria2-next: 跨平台Redefining the next generation of aria2](https://github.com/AnInsomniacy/aria2-next)
+
 ### 浏览器
 
 - [candy-browser: Gesture-first Android browser with Material 3 Expressive design and local privacy tools](https://github.com/sk2andy/candy-browser)
@@ -418,8 +437,6 @@ tags: []
 
 - [Kori: AI-powered Markdown notepad built with Compose Multiplatform.](https://github.com/YangDai2003/Kori)
 
-- [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
-
 - [Acode：代码编辑工具](https://github.com/deadlyjack/Acode)轻量级的 Web IDE，具有即时预览、控制台和丰富的插件等特点
 
     ![image](./Pictures/android/Acode.avif)
@@ -428,6 +445,15 @@ tags: []
 
 - [opencode_mobile: opencode mobile](https://github.com/learning233/opencode_mobile)
 
+- [VSCodroid: VS Code ported to Android — a full IDE on-the-go for developers](https://github.com/rmyndharis/VSCodroid)
+
+- [VisioDroid Studio：面向 Android 端开发者：开项目、写代码、跑预览、配环境、接 AI，一套流程直接在移动设备上完成。](https://vds.toolx.top)
+
+#### markdown编辑器
+
+- [joplin: 跨平台markdown编辑器](https://github.com/laurent22/joplin)
+
+- [MarkNote: An open sourced markdown note-taking application for Android.](https://github.com/Shouheng88/MarkNote)
 
 ### 多媒体相关
 
@@ -449,6 +475,8 @@ tags: []
 - [oblivion-desktop: Oblivion Desktop - Unofficial Warp Client for Windows/Mac/Linux](https://github.com/bepass-org/oblivion-desktop)
 
 - [anx-reader: Featuring powerful AI capabilities and supporting various e-book formats, it makes reading smarter and more focused.](https://github.com/Anxcye/anx-reader/tree/develop)
+
+- [read-aware: 跨平台An ebook reader with a self-evolving agent: it remembers your reading across books, and plugins extend the reader and the agent alike.](https://github.com/ahpxex/read-aware)
 
 #### rss订阅
 
@@ -500,6 +528,8 @@ tags: []
 
 - [Ghosten-Player: 一个视频播放器，支持网盘直连、元数据刮削、IPTV、文件管理等 / A video player that supports direct connection to network disk, metadata scraping, IPTV, file management, etc.](https://github.com/GhostenEditor/Ghosten-Player)
 
+- [only_player: 增强的 Android 视频播放器。支持webdab、smb、ftp](https://github.com/Kindness-Kismet/only_player)
+
 ##### 基于mpv的修改版
 
 - [mpv-android: 官方的mpv](https://github.com/mpv-android/mpv-android)
@@ -519,17 +549,6 @@ tags: []
 
 #### 音乐播放器
 
-- [SaltPlayerSource: 椒盐音乐](https://github.com/Moriafly/SaltPlayerSource)
-
-- [NeriPlayer:简易多平台音视频聚合流媒体播放器 🎵。整合 网易云音乐 与 Bilibili 、qq音乐、youtube的 在线内容，并提供 流媒体缓存、应用内下载、本地导入、本地歌单管理、 可选 GitHub 私有仓库同步 等能力。](https://github.com/cwuom/NeriPlayer)
-
-- [MusicFree：音乐播放器。通过插件可以播放各大平台的音乐](https://github.com/maotoumao/MusicFree)
-    - 插件：https://gitee.com/maotoumao/MusicFreePlugins/raw/master/plugins.json
-
-- [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
-
-- [lx-music-mobile: 一个基于 React native 开发的音乐软件](https://github.com/lyswhut/lx-music-mobile)
-    - [lx-music-source: 洛雪音乐源](https://github.com/pdone/lx-music-source)
 - [PixelPlayer: 高颜值多功能的 Android 音乐播放器。这是一款本地优先、注重隐私的 Android 音乐播放器，拥有美观的 Material You 动态主题 ，界面可随专辑封面或手机壁纸自动变化，支持歌词显示、自定义歌曲过渡、桌面小部件、投屏播放、听歌统计等功能。](https://github.com/theovilardo/PixelPlayer)
 
 - [PureMusic（棉花音乐）：音乐播放器。支持本地歌曲、百度网盘、阿里云盘、WebDAV、GoogleDrive、OneDrive、Dropbox等网盘歌曲播放，支持Plex、Emby、Jelly、Subsonic媒体服务器。](https://github.com/pure-music/PureMusic)
@@ -538,19 +557,43 @@ tags: []
 
 - [harmonoid: 🎵 Plays & manages your music library. Looks beautiful & juicy. Available for Windows, GNU/Linux, macOS, Android & iOS.](https://github.com/harmonoid/harmonoid)
 
+- [SaltPlayerSource: 椒盐音乐](https://github.com/Moriafly/SaltPlayerSource)
+
+##### 基于平台源的音乐播放器
+
+- [LastWave-Native: 支持youtube源。A High-Resolution Lossless Music Streaming & Player with Real-Time Synced Lyrics & Smart Discovery for Android, built with Material 3 Expressive design.](https://github.com/Clash-Projects/LastWave-Native)
+
 - [vivi-music: Vivi-Music is an expressive Material 3–based YouTube Music client for Android.](https://github.com/vivizzz007/vivi-music)
 
-- [LastWave-Native: A High-Resolution Lossless Music Streaming & Player with Real-Time Synced Lyrics & Smart Discovery for Android, built with Material 3 Expressive design.](https://github.com/Clash-Projects/LastWave-Native)
+- [MusicFree：音乐播放器。通过插件可以播放各大平台的音乐](https://github.com/maotoumao/MusicFree)
+    - 插件：https://gitee.com/maotoumao/MusicFreePlugins/raw/master/plugins.json
 
-- [NeriPlayer: A native Android audio player that combines multi-source streaming, local control, rich lyrics, and self-hosted sync. / ✨ 一个把多源在线播放、本地管理、歌词体验和自建同步做进原生 Android 的音频播放器 🎵](https://github.com/cwuom/NeriPlayer)
+- [musicxx: 拟声。音乐播放器，通过插件可以播放各大平台的音乐，支持各种网盘和webdav](https://github.com/coolight7/musicxx)
+
+- [lx-music-mobile: 一个基于 React native 开发的音乐软件](https://github.com/lyswhut/lx-music-mobile)
+    - [lx-music-source: 洛雪音乐源](https://github.com/pdone/lx-music-source)
+
+- [NeriPlayer:简易多平台音视频聚合流媒体播放器 🎵。整合 网易云音乐 与 Bilibili 、qq音乐、youtube的 在线内容，并提供 流媒体缓存、应用内下载、本地导入、本地歌单管理、 可选 GitHub 私有仓库同步 等能力。](https://github.com/cwuom/NeriPlayer)
+
+- [AlgerMusicPlayer: 一个跨平台第三方音乐播放器、本地服务、桌面歌词、音乐下载、远程控制](https://github.com/algerkong/algermusicplayer)
+
+- [FuoEvolve: 跨平台的第三方音乐播放器，支持多种源](https://github.com/feeluown/FuoEvolve)
+
+- [ZMusic: 网易云音乐第三方。基于NetEasyMusicNodeJS,我们提供在线服务供无成本使用,但是服务器算力宽带有限,体验可能会不佳,支持Android,Windows,Linux](https://github.com/AboutUip/ZMusic)
+
+##### 音乐下载
 
 - [HotDownloader: 基于 Tauri 2 和 Vue 3 的跨平台音乐下载工具，支持桌面端（Windows/macOS/Linux）与 Android 端。](https://github.com/lerdb/HotDownloader)
 
-#### 追番
+#### 动漫追番
 
 - [Kazumi: 基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕，支持实时超分辨率。](https://github.com/Predidit/Kazumi)
 
 - [animeko: 集找番、追番、看番的一站式弹幕追番平台，云收藏同步 (Bangumi)，离线缓存，BitTorrent，弹幕云过滤。100% Kotlin/Compose Multiplatform](https://github.com/open-ani/animeko)
+
+#### 漫画
+
+- [jasmine: A comic browser，support Android / iOS / MacOS / Windows / Linux.](https://github.com/ComicSparks/jasmine)
 
 #### 视频压缩
 
@@ -607,6 +650,8 @@ tags: []
 
 - [Prism-File-Explorer: A modern, feature-rich, and lightweight file manager for Android, built entirely with Kotlin and Jetpack Compose.](https://github.com/Raival-e/Prism-File-Explorer)
 
+- [ZenFile: 一款现代化、精美、丰富的安卓文件管理器。支持FTP, SFTP, WebDAV, SMB/LAN](https://github.com/l930203811/ZenFile)
+
 #### 云盘webdav相关
 
 - [AListLite：openlist（alist社区版，alist已经被收购）服务端](https://github.com/LeoHaoVIP/AListLiteAndroid)
@@ -645,10 +690,6 @@ tags: []
 - [kdeconnect：文件传输、剪切板同步、远程控制等](https://github.com/KDE/kdeconnect-android)
 
 - [deltachat-android: 非局域网文件互传，同时也是聊天软件](https://github.com/deltachat/deltachat-android)
-
-- [rustdesk：跨平台远程控制](https://github.com/rustdesk/rustdesk)
-
-- [SubnetDesk: LAN-only remote desktop based on RustDesk](https://github.com/zibo-chen/SubnetDesk)
 
 - [connectbot: ssh](https://github.com/connectbot/connectbot)
 
@@ -694,6 +735,9 @@ tags: []
 
 - [traffic-light: 简的 Android 流量监控应用。这是一款免费开源、体积小且无广告的 Android 网络流量监控工具，支持状态栏显示实时网速、历史数据和应用级流量统计等功能。](https://github.com/leekleak/traffic-light)
 
+#### DNS相关
+
+- [adns: A lightweight DNS-based ad blocker for Android with NextDNS built in](https://github.com/eyalm2000/adns)
 - [rethink-app: DNS over HTTPS / DNS over Tor / DNSCrypt client, WireGuard proxifier, firewall, and connection tracker for Android.](https://github.com/celzero/rethink-app)
 
 #### 代理工具
@@ -724,6 +768,12 @@ tags: []
 
 - [ANDRAX-Mobile-Pentest-1: ANDRAX Advanced Penetration Testing Platform for Android Smartphones](https://github.com/noraj/ANDRAX-Mobile-Pentest-1)
 
+### 虚拟机
+
+- [Virtual Master：虚拟大师](https://www.virtualmaster.app/)
+
+- [DroidVM: 利用高通的Gunyah虚拟技术，开启虚拟机。目前只支持骁龙8 elite以上的的处理器](https://github.com/droid-vm/droidvm)
+
 ### 手机运行linux系统
 
 - [tiny_container: Click-to-run debian 13 with desktop environment on android!](https://github.com/Cateners/tiny_container)
@@ -731,6 +781,8 @@ tags: []
 - [linuxdeploy: Install and run GNU/Linux on Android](https://github.com/meefik/linuxdeploy)
 
 - [Use Linux Anywhere - UserLAnd](https://userland.tech/)
+
+- [Linux-Dsu: 安卓运行Ubuntu终端和Dsu一体化](https://github.com/hetianming/Linux-Dsu)
 
 ### 隐藏检查
 
@@ -743,6 +795,8 @@ tags: []
 - [ruru：隐藏检测（中文）](https://github.com/byxiaorun/Ruru/releases)
 
 ### 游戏相关
+
+- [小马模拟器：小鸡模拟器代替品](https://www.ponyemu.com/)
 
 - [ppsspp：psp模拟器](https://github.com/hrydgard/ppsspp)
 
@@ -867,6 +921,15 @@ tags: []
     adb reboot edl
     fastboot oem edl
     ```
+
+## 解bl锁和root相关
+
+- [ghostlock-app: 解bl锁](https://github.com/YuKongA/ghostlock-app)
+
+- [KSuRoot: KSuRoot 3.0 — 基于 CVE-2026-43499(GhostLock) 的一键 KernelSU 提权工具。新增「载荷构建」：用本机 boot.img 解析内核偏移并打出适配本机的载荷（通用方案 / vivo 专用）；内核 6.6+ 免 ADB；内置载荷固定上游 v1.0.0。Mod by hmascs](https://github.com/hmascs/KSuRoot)
+    - [（视频）左手GhostLock，右手KSuRoot，一键Root 不是梦【搞机纪年】](https://www.bilibili.com/video/BV1spem6aEGa)
+
+- [Payload-Dumper-Android: 对系统包提取boot.img等文件](https://github.com/rajmani7584/Payload-Dumper-Android)
 
 ## 刷入recovery、magisk、lsposed
 
@@ -1038,30 +1101,6 @@ tags: []
 
         - [Jshook：对应用程序注入rhino/frida，你只需要会js就可以快速实现hook](https://github.com/Xposed-Modules-Repo/me.jsonet.jshook)
 
-## [frida：hook逆向](https://frida.re/docs/home/)
-
-- pc上安装frida
-    ```sh
-    pip install frida-tools
-    ```
-- 手机上安装frida
-    - [下载frida-server](https://github.com/frida/frida/releases)
-    ```sh
-    adb push frida-server-16.0.18-android-arm64 /data/local/tmp/
-    adb shell "chmod 755 /data/local/tmp/frida-server-16.0.18-android-arm64"
-    adb shell "/data/local/tmp/frida-server-16.0.18-android-arm64 &"
-    ```
-
-- pc上操作
-    ```sh
-    # 查看手机上的安装应用
-    frida-ps -U
-
-    ```
-
-
-## [AxManager: 通过无线adb连接，更方便的执行shell命令](https://github.com/fahrez182/AxManager)
-
 ## 救砖
 
 ### magisk模块变砖
@@ -1084,7 +1123,35 @@ tags: []
 
 - [ErfanGSIs：制作GSI](https://github.com/erfanoabdi/ErfanGSIs)
 
+- [DSU-Sideloader: 通过DSU安装GSI](https://github.com/VegaBobo/DSU-Sideloader)
+
 ## [小刘不是程序员：如何挂载安卓系统镜像？](https://www.bilibili.com/video/BV1gL411D7hE)
+
+
+# 逆向
+
+## [ida-droid: run ida pro using proot on android](https://github.com/wsdx233/ida-droid)
+## [frida：hook逆向](https://frida.re/docs/home/)
+
+- pc上安装frida
+    ```sh
+    pip install frida-tools
+    ```
+- 手机上安装frida
+    - [下载frida-server](https://github.com/frida/frida/releases)
+    ```sh
+    adb push frida-server-16.0.18-android-arm64 /data/local/tmp/
+    adb shell "chmod 755 /data/local/tmp/frida-server-16.0.18-android-arm64"
+    adb shell "/data/local/tmp/frida-server-16.0.18-android-arm64 &"
+    ```
+
+- pc上操作
+    ```sh
+    # 查看手机上的安装应用
+    frida-ps -U
+
+    ```
+
 
 # 类似项目
 

@@ -146,6 +146,10 @@ tags: []
 
 - [VirusDetector: Chrome/Edge 浏览器扩展，5 规则实时检测银狐木马钓鱼仿冒网站。域名仿冒 · ICP备案核查 · 下载拦截 · 链接分析 · 代码工程化 — 零依赖 Manifest V3。](https://github.com/Lolitide/VirusDetector)
 
+- [bypass-paywalls-chrome-clean-magnolia1234: 绕过一些外网需要付费才能看得文章的付费墙，比方说纽约时报的一些文章](https://github.com/csns1/bypass-paywalls-chrome-clean-magnolia1234)
+
+- [WebRTC-Leak-Prevent: Prevent WebRTC leaks in Chromium browsers.](https://github.com/a8763506128977812212307169331690/WebRTC-Leak-Prevent)
+
 ## 命令行cli
 
 - [chrome-devtools-cli: 一个 Rust 命令行工具，通过 DevTools 协议连接到系列里的 Chrome 浏览器，进行网页操作，默认自动连接，可供 AI Agent 调用。](https://github.com/aeroxy/chrome-devtools-cli)

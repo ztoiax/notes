@@ -1,3 +1,9 @@
+---
+id: kvm
+aliases: []
+tags: []
+---
+
 
 <!-- mtoc-start -->
 
@@ -20,6 +26,7 @@
     * [克隆虚拟机](#克隆虚拟机)
   * [KSM(Kernel Samepage Merging)](#ksmkernel-samepage-merging)
   * [gpu虚拟化](#gpu虚拟化)
+  * [smolvm: An embeddable, portable, branchable virtual machine to safely run Agents locally.](#smolvm-an-embeddable-portable-branchable-virtual-machine-to-safely-run-agents-locally)
 * [第三方软件资源](#第三方软件资源)
 * [优秀文章](#优秀文章)
 
@@ -788,6 +795,8 @@ systemctl start ksmtuned
 
     - 这种方式是把本来再空间上并行（时间独占）的成百上千的GPU流水线进行的时间维度的分割和共享。各个GPU厂家都有类似的技术。Time-sliced 切分方式是按时间切分 GPU，每个 vGPU 对应物理 GPU 一段时间内的使用权。
     - 在此方式下，vGPU 上运行的进程被调度为串行运行，当有进程在某个 vGPU 上运行时，此 vGPU 会独占 GPU 引擎，其他 vGPU 都会等待。所有支持 vGPU 技术 GPU 卡都能支持 Time-sliced 的切分方式。
+
+## [smolvm: An embeddable, portable, branchable virtual machine to safely run Agents locally.](https://github.com/smol-machines/smolvm)
 
 # 第三方软件资源
 

@@ -87,6 +87,10 @@ tags: []
 
 - [utao: 油桃TV 电视浏览器 可看各大卫视CCTV直播 无需电视VIP 适配爱奇艺等主流视频平台](https://github.com/VonChange/utao)
 
+- [easy_tv_live: Easy TV Live App, a lightweight IPTV player, supports all platforms and Android TV big screens. Welcome to download and experience! 极简TV App，一款轻量级IPTV播放器，支持全平台以及安卓电视大屏欢迎下载体验!](https://github.com/aiyakuaile/easy_tv_live)
+
+- [冰红茶TV](https://www.tvmao.com/aisoft/633146.html)
+
 ### 客户端和第三方客户端
 
 - BesTV粤视厅
@@ -115,6 +119,8 @@ tags: []
 - [BT: Bilibili TV client](https://github.com/chinasoul/BT)
 
 - [bv: 哔哩哔哩 的第三方 Android 应用。A third-party Android app for Bilibili.](https://github.com/aaa1115910/bv)
+
+- [newBV: 哔哩哔哩 的第三方 Android TV 应用 BV 的个人修改版](https://github.com/Frost819/newBV)
 
 #### youtube
 
@@ -159,6 +165,8 @@ tags: []
 
 - [moneytoo/Player: ▶ Simple and lightweight, yet polished and powerful Android video player based on ExoPlayer](https://github.com/moneytoo/Player)
 
+- [OwnTV: Native Android TV IPTV player — Kotlin, Compose for TV, ExoPlayer + mpv. Xtream, M3U and Stalker portals, EPG, catch-up TV, profiles and downloads.](https://github.com/ahXN00/OwnTV)
+
 #### 可以播放webdav、有刮削海报功能等的播放器
 
 - [网易爆米花 - 智能媒体库&全能播放器](https://bmh.163.com/)
@@ -166,6 +174,7 @@ tags: []
 - [VidHubTV版_最新版VidHub下载_安卓电视APK_当贝市场](https://m.dangbei.com/wap-view-9090.html)
 
 - [Ghosten-Player: 一个视频播放器，支持网盘直连、元数据刮削、IPTV、文件管理等。支持阿里云盘、夸克网盘、Webdav和本地媒体文件，支持Emby和Jellyfin](https://github.com/GhostenEditor/Ghosten-Player)
+- [lomenTV-VDS: 播放NAS webdav网盘 影视剧集 TV播放器](https://github.com/jia070310/lomenTV-VDS)
 
 - [飞牛影视tv版](https://fnnas.com/download?key=tv)
 
@@ -174,6 +183,7 @@ tags: []
 - emby
     - [NextPlayerCloud/Emfin: Emby三方TV客户端](https://github.com/NextPlayerCloud/Emfin)
 - plex
+
 
 ### 流媒体
 
@@ -186,6 +196,8 @@ tags: []
 - [NuvioTV: Official Nuvio Android TV Repository](https://github.com/NuvioMedia/NuvioTV)
 
 - [Flixclusive: A jetpack compose media3 player application](https://github.com/flixclusiveorg/Flixclusive)
+
+- [hongguoTV: 安卓 TV 红果短剧客户端：项目规划、接口调研与可行性验证](https://github.com/N3urda/hongguoTV)
 
 ## 相册
 
@@ -202,7 +214,9 @@ tags: []
 - 吾爱出品
 
 - [at4k: AT4K Launcher](https://github.com/avadhesh18/at4k)
+
 - [LtvLauncher: A minimal, open-source Android TV launcher featuring WiFi data usage widget, an inbuilt OLED friendly screensaver, and improved UX. A customized fork of FLauncher.](https://github.com/LeanBitLab/LtvLauncher)
+- [Lumina-UI: A simple, beautiful and free Android TV launcher](https://github.com/somejuice/Lumina-UI)
 
 ## 云盘
 

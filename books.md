@@ -89,6 +89,7 @@ tags: []
   * [计算机](#计算机)
   * [科技](#科技)
   * [地理和气象](#地理和气象)
+  * [植物](#植物)
   * [运动](#运动)
   * [健康](#健康)
   * [食品和食品安全](#食品和食品安全)
@@ -1933,6 +1934,9 @@ RabbitMQ实战指南》作者
     - [蜀霞客](https://space.bilibili.com/390186534/upload/video)
         > 城市地理
 
+    - [中国旅游攻略](https://space.bilibili.com/375497159)
+        > 地理
+
 - yotube
 
     - [Geography By Geoff - YouTube](https://www.youtube.com/@GeographyByGeoff)
@@ -1943,6 +1947,12 @@ RabbitMQ实战指南》作者
     - 腔调地图
     - 王缉宪 缉步成章
         > 香港大学地理学主任
+
+## 植物
+
+- bilibili
+
+    - [TIC觅见丛邻](https://space.bilibili.com/108133402)
 
 ## 运动
 
@@ -3104,6 +3114,9 @@ RabbitMQ实战指南》作者
 
         - 未来智库
 
+        - 硬氪
+            > 36氪旗下的报道机器人
+
 ## 企业
 
 - 微信公众号
@@ -3175,6 +3188,9 @@ RabbitMQ实战指南》作者
 
     - [拉萨藏狐](https://space.bilibili.com/2088559179)
         > 牢a的朋友牢真。主要讲美国的邪教和西藏宗教余孽
+
+    - [精罗伯爵](https://space.bilibili.com/7457931)
+        > 西方政治和民情
 
     - [330万人住公营福利房](https://space.bilibili.com/602999330)
         > 讲香港的住房和民情

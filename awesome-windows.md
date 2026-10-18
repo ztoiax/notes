@@ -35,30 +35,40 @@ tags: []
       * [文件管理器](#文件管理器)
       * [文件转换](#文件转换)
       * [清理相关](#清理相关)
+      * [云盘](#云盘)
       * [云挂载](#云挂载)
+      * [解压缩](#解压缩)
     * [markdown编辑器](#markdown编辑器)
     * [终端、ssh终端](#终端ssh终端)
     * [远程相关](#远程相关)
     * [下载器](#下载器)
       * [支持下载各种平台的下载器](#支持下载各种平台的下载器)
     * [手机与电脑交互](#手机与电脑交互)
+    * [电脑与电脑屏幕共享](#电脑与电脑屏幕共享)
     * [图片](#图片)
+      * [截图和录屏](#截图和录屏)
     * [视频](#视频)
       * [播放器](#播放器)
       * [字幕](#字幕)
+      * [ai提升视频质量](#ai提升视频质量)
       * [其他](#其他-1)
-    * [音乐](#音乐)
+    * [音乐播放器](#音乐播放器)
+      * [基于平台源的音乐播放器](#基于平台源的音乐播放器)
+      * [音乐下载](#音乐下载)
     * [音频](#音频)
     * [输入法](#输入法)
     * [第三方客户端](#第三方客户端)
     * [流行软件相关](#流行软件相关)
-    * [追番](#追番)
+    * [动漫追番](#动漫追番)
+    * [漫画](#漫画)
     * [阅读器](#阅读器)
+    * [浏览器](#浏览器)
     * [游戏相关](#游戏相关)
       * [Steam相关](#steam相关)
       * [修改器和变速器](#修改器和变速器)
       * [存档工具](#存档工具)
       * [模拟器](#模拟器)
+    * [键盘鼠标相关](#键盘鼠标相关)
     * [自动化](#自动化)
     * [网络相关](#网络相关)
       * [代理工具](#代理工具)
@@ -240,6 +250,8 @@ tags: []
 
 - [tubatools: 图吧工具箱 winUI3 版](https://github.com/luolangaga/tubatools)
 
+- [BibaYanji: 笔吧验机：二手/新机到手后的验机工具](https://github.com/Bibapcs/BibaYanji)
+
 - [LiteMonitor: 一款轻量、可定制的开源桌面硬件监控软件 — 实时监测 CPU、GPU、内存、磁盘、网络等系统性能。支持横竖屏显示、多语言、主题切换、透明度显示、三色报警，界面简洁且高度可配置。](https://github.com/Diorser/LiteMonitor)
 
 ### 存储相关
@@ -261,6 +273,8 @@ tags: []
 - [Process Lasso：任务管理器](https://bitsum.com/)
 
 ## 逆向
+
+- [ghidra: 美国国家安全局研究局开发的跨平台逆向框架](https://github.com/nationalsecurityagency/ghidra)
 
 - [OpenArk：逆向工具](https://github.com/BlackINT3/OpenArk)
 
@@ -353,6 +367,7 @@ tags: []
 - [everything-ai-chat: 一个现代化的 Everything 搜索客户端，将 AI 智能与极速本地搜索完美结合。](https://github.com/MaskerPRC/everything-ai-chat)
 
 - [PeaZip: ：免费开源的文件压缩解压工具。这是一款免费、开源、跨平台的文件压缩和解压工具，支持超过 200 种压缩格式（7Z、ZIP、RAR、TAR、ISO、Zstd），具备文件压缩、解压、加密、分卷、校验、格式转换和批量操作等功能。支持linux、windows、macos](https://github.com/peazip/PeaZip)
+- [NanaZip: The 7-Zip derivative intended for the modern Windows experience](https://github.com/M2Team/Nanazip)
 
 - [transok：局域网文件传输](https://github.com/bent2685/transok-wails)
 
@@ -406,9 +421,22 @@ tags: []
 - [MangoDisk: Safety-first disk cleaner and space analyzer for macOS and Windows, with duplicate cleanup, app uninstall, startup management, system optimization, and maintenance.](https://github.com/harry0703/MangoDisk)
 
 - [WhoShitsonMyC: 通过磁盘空间添加当前使用快照，方便对比之后的使用是增加还是减少了空间](https://github.com/Kami958/WhoShitsonMyC)
+
+- [GiliSoft Total Repair](https://www.gilisoft.com/total-repair.htm)
+
+#### 云盘
+
+- [OpenList: alist被收购，这是alist社区版。](https://github.com/OpenListTeam/OpenList)
+    - [OpenList-Worker: OpenList-Worker 是官方 OpenListTeam/OpenList 项目的 TypeScript + Serverless 移植版，后端由 Go 重写为运行于 Workers 的 TypeScript 服务，前端保持一致的界面与交互体验。](https://github.com/OpenListTeam/OpenList-Worker)
+    - [NextList: 基于 JS/TS 重构 Go 内核服务，使其支持部署在service less环境下。](https://github.com/Mcchen1008/NextList)
+
 #### 云挂载
 
 - [NetMount - 统一管理和挂载云存储设施](https://www.netmount.cn/)
+
+#### 解压缩
+
+[Longyuyeee/long_Decompress: 全世界最好的解压缩神器](https://github.com/Longyuyeee/long_Decompress)
 
 ### markdown编辑器
 
@@ -472,6 +500,10 @@ tags: []
 
 - [hydra: A fast, resilient, multi-source file retriever and download engine](https://github.com/ja7ad/hydra)
 
+- [aria2-next: 跨平台Redefining the next generation of aria2](https://github.com/AnInsomniacy/aria2-next)
+
+- [rayburst: 跨平台下载器。使用 Aria2 Next 作为下载引擎，这是一个维护的 aria2 分支](https://github.com/AnInsomniacy/rayburst)
+
 #### 支持下载各种平台的下载器
 
 - [ytDownloader: gui下载器，支持数百种平台如youtube、bilibli等](https://github.com/aandrew-me/ytDownloader)
@@ -494,6 +526,13 @@ tags: []
 
 - [FreeControl：监控手机类似scrcpy](https://github.com/pdone/FreeControl)
 
+- [Macro-Deck: 可以自定义手机使其变成监控面板，从而更好的利用旧手机](https://github.com/Macro-Deck-App/Macro-Deck)
+
+### 电脑与电脑屏幕共享
+
+- [Piik: 跨平台屏幕共享。支持在官网在线共享浏览器的其中某个标签](https://github.com/TNTcraftHIM/Piik)
+    - [Piik官网和在线共享浏览器的某个标签](https://demo.piik.tv/)
+
 ### 图片
 
 - [jark006/jarkViewer:  看图软件，适用于日常图片浏览及专业摄影作品预览等多种场景。它操作方便，支持多种快捷键，例如按下 I 键可快速查看图片详细信息。还支持读取 AI 生成图像的提示词（如有）、自动记忆上次窗口的位置和大小等实用功能。](https://github.com/jark006/jarkViewer)
@@ -502,10 +541,21 @@ tags: []
 
 - [compressO: 跨平台视频和图片压缩](https://github.com/codeforreal1/compressO)
 
+- [Affinity：photoshot、indesign、lllustrator的代替品](https://www.canva.cn/affinity)
+
+- [snow-apps: Snow Apps repository, providing source code for Snow Shot and Snow Image Viewer.](https://github.com/mg-chao/snow-apps)
+
+#### 截图和录屏
+
+- [eSearch: 截屏 离线OCR 搜索翻译 以图搜图 贴图 录屏 万向滚动截屏 屏幕翻译 Screenshot Offline OCR Search Translate Search for picture Paste the picture on the screen Screen recorder Omnidirectional scrolling screenshot Screen translator 支持Windows Linux macOS](https://github.com/xushengfeng/eSearch)
+
 - [snow-shot: 超好用的截图工具](https://github.com/mg-chao/snow-shot)
+
 - [wincam：录屏](https://github.com/lovettchris/wincam)
 
-- [Affinity：photoshot、indesign、lllustrator的代替品](https://www.canva.cn/affinity)
+- [Cap: 录屏](https://github.com/CapSoftware/Cap)
+
+- [capptivo: 跨平台录屏。Give your demos the spotlight they deserve ( Mac/Windows/Linux ).](https://github.com/SECHAK-AG/capptivo)
 
 ### 视频
 
@@ -528,6 +578,8 @@ tags: []
 
 - [fntv-electron: 飞牛影视PC版](https://github.com/QiaoKes/fntv-electron)
 
+- [小幻影视：支持本地/115/Alist/SMB/WebDAV/Emby/Jellyfin/Plex的播放器](https://apps.microsoft.com/detail/9nb0h051m4v4?hl=zh-CN&gl=CN)
+
 #### 字幕
 
 - [subtitleedit: 生产视频字幕和翻译字幕](https://github.com/SubtitleEdit/subtitleedit)
@@ -542,6 +594,10 @@ tags: []
 
 - [videocr: 字幕提取](https://github.com/apm1467/videocr)
 - [Aria: 实时ai字幕](https://github.com/sayksii/aria)
+
+#### ai提升视频质量
+
+- [SnowLeopard-Vision: SnowLeopard Vision - local AI image and video enhancement tool](https://github.com/SnowLeopard-Elysia/SnowLeopard-Vision)
 
 #### 其他
 
@@ -561,21 +617,31 @@ tags: []
 
 - [bilicast：将浏览器的b站视频投屏](https://github.com/jianzhoujz/bilicast)
 
-### 音乐
+### 音乐播放器
+
+- [harmonoid: 🎵 Plays & manages your music library. Looks beautiful & juicy. Available for Windows, GNU/Linux, macOS, Android & iOS.](https://github.com/harmonoid/harmonoid)
+
+#### 基于平台源的音乐播放器
 
 - [go-music-dl: 跨平台的一个基于 Go 语言的全网音乐搜索与下载工具。支持 Web 界面、TUI 终端 和 桌面应用 三种使用模式。内置网易云、QQ、酷狗、Bilibili、汽水音乐等 10+ 个主流平台，支持多源并发搜索与无损音质解析。music-dl交流群：1074285005](https://github.com/guohuiyuan/go-music-dl)
 
 - [CeruMusic: 跨平台。Ceru Music 是基于 Electron 和 Vue 开发的跨平台桌面音乐播放器工具，借鉴洛雪音乐插件思想，提供插件运行框架与播放功能，不直接存储、提供任何音乐源文件。用户需通过自行选择、安装合规插件获取音乐相关数据，项目旨在为开发者提供桌面应用技术实践与学习案例，为用户提供合规的音乐播放工具框架。](https://github.com/timeshiftsauce/CeruMusic)
 
-- [harmonoid: 🎵 Plays & manages your music library. Looks beautiful & juicy. Available for Windows, GNU/Linux, macOS, Android & iOS.](https://github.com/harmonoid/harmonoid)
-
 - [FeelUOwn: 跨平台音乐播放器支持yotube、bilibili、网易云、qq音乐等插件](https://github.com/feeluown/FeelUOwn)
 
 - [AlgerMusicPlayer: 跨平台第三方音乐播放器、本地服务、桌面歌词、音乐下载、远程控制](https://github.com/algerkong/algermusicplayer)
 
-- [HotDownloader: 基于 Tauri 2 和 Vue 3 的跨平台音乐下载工具，支持桌面端（Windows/macOS/Linux）与 Android 端。](https://github.com/lerdb/HotDownloader)
-
 - [Moriafly/SPW: Salt Player for Windows（椒盐音乐 Windows 版）](https://github.com/Moriafly/SPW)
+
+- [AlgerMusicPlayer: 一个跨平台第三方音乐播放器、本地服务、桌面歌词、音乐下载、远程控制](https://github.com/algerkong/algermusicplayer)
+
+- [FuoEvolve: 跨平台的第三方音乐播放器，支持多种源](https://github.com/feeluown/FuoEvolve)
+
+- [VutronMusic: 高颜值的第三方网易云播放器；通过自写插件可支持其他线上音乐服务；支持流媒体音乐，如navidrome、jellyfin、emby；支持本地音乐播放、离线歌单、逐字歌词、桌面歌词、Touch Bar歌词、Mac状态栏歌词显示、Linux-gnome与Linux-kde桌面状态栏歌词显示；支持降调降速，支持自定义主题等。支持 Windows / macOS / Linux](https://github.com/stark81/VutronMusic)
+
+#### 音乐下载
+
+- [HotDownloader: 基于 Tauri 2 和 Vue 3 的跨平台音乐下载工具，支持桌面端（Windows/macOS/Linux）与 Android 端。](https://github.com/lerdb/HotDownloader)
 
 ### 音频
 
@@ -613,9 +679,13 @@ tags: []
 
 - [DiscordChatExporter:跨平台Saves Discord chat logs to a file](https://github.com/Tyrrrz/DiscordChatExporter)
 
-### 追番
+### 动漫追番
 
 - [Kazumi: 基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕，支持实时超分辨率。](https://github.com/Predidit/Kazumi)
+
+### 漫画
+
+- [jasmine: A comic browser，support Android / iOS / MacOS / Windows / Linux.](https://github.com/ComicSparks/jasmine)
 
 ### 阅读器
 
@@ -623,11 +693,18 @@ tags: []
 
 - [anx-reader: Featuring powerful AI capabilities and supporting various e-book formats, it makes reading smarter and more focused.](https://github.com/Anxcye/anx-reader/tree/develop)
 
+- [read-aware: 跨平台An ebook reader with a self-evolving agent: it remembers your reading across books, and plugins extend the reader and the agent alike.](https://github.com/ahpxex/read-aware)
+
+### 浏览器
+
+- [ovobrowsersupport/ovobrowser: 源码级 Chromium 指纹内核，检测站按普通 Chrome 评分。Source-level Chromium fingerprint kernel that passes bot detection tests. Not JS injection — C++ patches compiled into the binary.](https://github.com/ovobrowsersupport/ovobrowser)
+
 ### 游戏相关
 
 - [Pavise-Game: Windows 游戏性能工具：把被后台进程抢走的 CPU、IO 与调度资源还给游戏。本地运行、不注入游戏进程、所有改动可还原/A Windows gaming performance tool that gives back the CPU, I/O and scheduling resources your background processes take. Runs locally, never injects into game processes, every change is reversible.](https://github.com/dulaiduwang003/Pavise-Game)
 
 - [Magpie: 可以为不同的软件窗口设置不同的算法。因此可以为游戏添加dlss等功能，但这只是画面层面的而不是游戏引擎层面的。同样也可以为视频添加dlss等功能](https://github.com/Blinue/Magpie)
+- [RHI: 一键为游戏开启 HDR 的工具。这是一款 Windows 的游戏画质增强工具，能够自动扫描游戏并一键安装 ReShade 和对应的 HDR 模组，支持切换 DLSS 版本、自动开关系统 HDR、限制帧率和管理 NVIDIA 驱动配置。](https://github.com/RankFTW/RHI)
 
 - [GameLingo：汉化翻译游戏](https://www.gamelingo.cn/)
 
@@ -659,6 +736,16 @@ tags: []
 - [yuzu：switch模拟器](https://yuzu-mirror.github.io/)
 
 - [shadPS4：ps4模拟器](https://github.com/shadps4-emu/shadPS4)
+
+### 键盘鼠标相关
+
+- [lan-mouse：跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/feschber/lan-mouse)
+
+- [input-leap: 跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/input-leap/input-leap)
+
+- [deskflow：跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/deskflow/deskflow)
+
+- [openmouse: 免装驱动的网页版游戏鼠标设置工具。这是一款基于浏览器的游戏鼠标控制面板，连接鼠标后即可查看设备信息，调整 DPI、回报率等设置，不用安装驱动软件。它通过 WebHID 与鼠标通信，支持罗技、雷蛇、海盗船、HyperX、VGN、ATK 等品牌的鼠标。](https://github.com/OpenMouse-Project/openmouse)
 
 ### 自动化
 
@@ -709,18 +796,10 @@ tags: []
 
 - [MuJing: 一款通过电影、美剧或文档中的真实语境学习英语单词的应用，让您在原汁原味的情境中记忆词汇，提升学习效率。](https://github.com/tangshimin/MuJing)
 
-- [Cap: 录屏](https://github.com/CapSoftware/Cap)
-
 - [MrRSS: A modern, cross-platform desktop RSS reader. 一个现代化、跨平台的 RSS 阅读器.](https://github.com/WCY-dt/MrRSS)
 
 - [keepassxc: 跨平台密码管理器](https://github.com/keepassxreboot/keepassxc)
 
 - [STranslate: A ready-to-go translation ocr tool developed with WPF/WPF 开发的一款即用即走的翻译、OCR工具](https://github.com/STranslate/STranslate)
-
-- [lan-mouse：跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/feschber/lan-mouse)
-
-- [input-leap: 跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/input-leap/input-leap)
-
-- [deskflow：跨平台（windows、macos、linux）键盘和鼠标共享，只需移动到屏幕边缘键鼠即可切换电脑。一套键鼠控制多台电脑，相当于显示器的kvm技术](https://github.com/deskflow/deskflow)
 
 - [stretchly: 跨平台的每个一段时间强制休息。](https://github.com/hovancik/stretchly)
